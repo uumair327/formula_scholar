@@ -1,0 +1,140 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+
+import '../../../../core/core.dart';
+import '../../../../shared/shared.dart';
+import '../../domain/domain.dart';
+
+/// Profile hero card – gradient card with avatar, name, grade, and Pro badge.
+///
+/// Matches the React `ProfileHero` component.
+class ProfileHeroWidget extends StatelessWidget {
+  final UserProfile profile;
+
+  const ProfileHeroWidget({super.key, required this.profile});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingHero, vertical: AppDimensions.paddingSection),
+      decoration: const SignatureGlowDecoration(),
+      child: Row(
+        children: [
+          // Avatar with Pro badge
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                width: AppDimensions.avatarProfile,
+                height: AppDimensions.avatarProfile,
+                padding: const EdgeInsets.all(AppDimensions.switchPadding),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: AppColors.white.withValues(alpha: AppDimensions.opacitySubtle),
+                    width: AppDimensions.borderWidthThick,
+                  ),
+                ),
+                child: ClipOval(
+                  child: CachedNetworkImage(
+                    imageUrl: profile.avatarUrl,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      color: AppColors.primaryFixed,
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      color: AppColors.primaryFixed,
+                      child: const Icon(
+                        Icons.person,
+                        size: AppDimensions.avatarMD,
+                        color: AppColors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              // Pro badge
+              if (profile.isPro)
+                Positioned(
+                  bottom: -AppDimensions.borderWidthThick,
+                  right: -AppDimensions.borderWidthThick,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimensions.badgePaddingHorizontal,
+                      vertical: AppDimensions.badgePaddingVertical,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.secondaryFixed,
+                      borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+                      boxShadow: const [AppShadows.medium],
+                    ),
+                    child: Text(
+                      AppStrings.proBadge,
+                      style: AppTextStyles.overline.copyWith(
+                        color: AppColors.onSecondaryFixed,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(width: AppDimensions.paddingXXL),
+          // Name & grade
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  AppStrings.currentGrade,
+                  style: AppTextStyles.labelMedium.copyWith(
+                    color: AppColors.white.withValues(alpha: AppDimensions.opacityHigh),
+                    letterSpacing: AppDimensions.letterSpacingNormal,
+                  ),
+                ),
+                const SizedBox(height: AppDimensions.paddingXS),
+                Text(
+                  profile.name,
+                  style: AppTextStyles.headlineLarge.copyWith(
+                    color: AppColors.white,
+                  ),
+                ),
+                const SizedBox(height: AppDimensions.paddingSM),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppDimensions.chipPaddingHorizontal,
+                    vertical: AppDimensions.chipPaddingVertical,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.white.withValues(alpha: AppDimensions.opacityFaint),
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+                    border: Border.all(
+                      color: AppColors.white.withValues(alpha: AppDimensions.opacityFaint),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.school_outlined,
+                        size: AppDimensions.iconSM,
+                        color: AppColors.white.withValues(alpha: AppDimensions.opacityNearOpaque),
+                      ),
+                      const SizedBox(width: AppDimensions.chipPaddingVertical),
+                      Text(
+                        profile.grade,
+                        style: AppTextStyles.labelLarge.copyWith(
+                          color: AppColors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

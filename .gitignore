@@ -1,0 +1,198 @@
+# ══════════════════════════════════════════════════════════════════
+# Formula Scholar — Enterprise .gitignore
+# ══════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────── Flutter / Dart ───────────────
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+coverage/
+**/doc/api/
+**/ios/Flutter/.last_build_id
+*.dart.js
+*.js_
+*.js.deps
+*.js.map
+
+# Generated files (build_runner, injectable, freezed, etc.)
+*.g.dart
+*.freezed.dart
+*.mocks.dart
+# Keep injection.config.dart tracked since it's the DI wiring
+# !lib/core/di/injection.config.dart
+
+# ─────────────────────────────────── Android ──────────────────────
+**/android/**/gradle-wrapper.jar
+**/android/.gradle/
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+**/android/**/GeneratedPluginRegistrant.java
+**/android/key.properties
+**/android/**/*.keystore
+**/android/**/*.jks
+**/android/app/debug/
+**/android/app/profile/
+**/android/app/release/
+
+# ─────────────────────────────────── iOS / macOS ──────────────────
+**/ios/**/*.mode1v3
+**/ios/**/*.mode2v3
+**/ios/**/*.moved-aside
+**/ios/**/*.pbxuser
+**/ios/**/*.perspectivev3
+**/ios/**/DerivedData/
+**/ios/.symlinks/
+**/ios/**/Flutter/App.framework
+**/ios/**/Flutter/Flutter.framework
+**/ios/**/Flutter/Flutter.podspec
+**/ios/**/Flutter/Generated.xcconfig
+**/ios/**/Flutter/ephemeral/
+**/ios/**/Flutter/app.flx
+**/ios/**/Flutter/app.zip
+**/ios/**/Flutter/flutter_assets/
+**/ios/**/Pods/
+**/ios/**/.symlinks/
+**/ios/**/profile/
+**/ios/**/release/
+**/ios/**/GeneratedPluginRegistrant.*
+**/macos/Flutter/GeneratedPluginRegistrant.swift
+**/macos/Flutter/ephemeral/
+
+# ─────────────────────────────────── Web ──────────────────────────
+**/web/favicon.png.bak
+
+# ─────────────────────────────────── Windows ─────────────────────
+**/windows/flutter/generated_plugin_registrant.cc
+**/windows/flutter/generated_plugin_registrant.h
+**/windows/flutter/generated_plugins.cmake
+
+# ─────────────────────────────────── Linux ───────────────────────
+**/linux/flutter/generated_plugin_registrant.cc
+**/linux/flutter/generated_plugin_registrant.h
+**/linux/flutter/generated_plugins.cmake
+
+# ─────────────────────────────────── IDE / Editors ───────────────
+# IntelliJ / Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Vim / Neovim
+*.swp
+*.swo
+*~
+.netrwhist
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ─────────────────────────────────── OS Files ────────────────────
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ─────────────────────────────────── Secrets / Environment ───────
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.key
+*.cert
+*.crt
+google-services.json
+GoogleService-Info.plist
+firebase_app_id_file.json
+firebase_options.dart
+amplify/
+aws-exports.dart
+
+# ─────────────────────────────────── Build Artifacts ─────────────
+*.apk
+*.aab
+*.ipa
+*.app
+*.dSYM.zip
+*.dSYM
+app.*.symbols
+app.*.map.json
+
+# ─────────────────────────────────── Testing / Coverage ──────────
+coverage/
+test-results/
+*.lcov
+.test_coverage.yaml
+test_driver/screenshots/
+
+# ─────────────────────────────────── Logs / Debug ────────────────
+*.log
+*.log.*
+logs/
+crash_reports/
+analyze_output.txt
+dart_tree.txt
+dart_tree_new.txt
+file_list.txt
+
+# ─────────────────────────────────── Package Managers ─────────────
+node_modules/
+.npm
+.yarn/
+package-lock.json
+yarn.lock
+
+# ─────────────────────────────────── Misc ────────────────────────
+.history/
+.svn/
+.swiftpm/
+.build/
+.buildlog/
+migrate_working_dir/
+*.class
+*.pyc
+*.pyo
+__pycache__/
+*.patch
+*.diff
+*.orig
+*.rej
