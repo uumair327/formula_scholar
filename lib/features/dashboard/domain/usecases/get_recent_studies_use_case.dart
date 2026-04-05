@@ -11,9 +11,8 @@ import '../ports/dashboard_repository_port.dart';
 class GetRecentStudiesUseCase {
   final DashboardRepositoryPort _repository;
 
-  const GetRecentStudiesUseCase({
-    required DashboardRepositoryPort repository,
-  }) : _repository = repository;
+  const GetRecentStudiesUseCase({required DashboardRepositoryPort repository})
+    : _repository = repository;
 
   /// Executes the use case.
   Future<Result<List<RecentStudy>>> call() {

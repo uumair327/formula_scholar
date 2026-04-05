@@ -18,16 +18,137 @@ abstract final class AppStrings {
       'It might have been moved or the URL is incorrect.';
   static const String goHome = 'Go Home';
 
+  // ──────────────────────── Auth – Login ──────────────────────
+  static const String loginTitle = 'Welcome Back';
+  static const String loginSubtitle =
+      'Enter your credentials to access your sanctuary.';
+  static const String loginEmailLabel = 'Email or Username';
+  static const String loginEmailHint = 'scholar@formulaflow.com';
+  static const String loginPasswordLabel = 'Password';
+  static const String loginPasswordHint = '••••••••••••';
+  static const String loginForgotPassword = 'Forgot Password?';
+  static const String loginSignIn = 'Sign In';
+  static const String loginOr = 'OR';
+  static const String loginGoogle = 'Google';
+  static const String loginSchoolId = 'School ID';
+  static const String loginNoAccount = "Don't have an account?";
+  static const String loginSignUp = 'Sign Up';
+  static const String loginBrandTagline = 'Master every\nformula with\nease.';
+  static const String loginBrandDesc =
+      'The ultimate cognitive sanctuary for high school scholars. '
+      'Organize, learn, and excel in your mathematical journey.';
+  static const String loginStudentPortal = 'STUDENT PORTAL';
+  static const String loginErrorInvalidCredentials = 'Invalid credentials. Please try again.';
+
+  // ──────────────────────── Auth – Signup ─────────────────────
+  static const String signupTitle = 'Create your account';
+  static const String signupSubtitle =
+      'Start your journey into the Cognitive Sanctuary.';
+  static const String signupFullName = 'Full Name';
+  static const String signupFullNameHint = 'John Doe';
+  static const String signupEmail = 'Email Address';
+  static const String signupEmailHint = 'name@school.com';
+  static const String signupPassword = 'Password';
+  static const String signupConfirmPassword = 'Confirm Password';
+  static const String signupPasswordHint = '••••••••';
+  static const String signupTerms = 'I agree to the ';
+  static const String signupTermsLink = 'Terms of Service';
+  static const String signupAnd = ' and ';
+  static const String signupPrivacy = 'Privacy Policy';
+  static const String signupCreateAccount = 'Create Account';
+  static const String signupOrJoin = 'Or join with';
+  static const String signupFacebook = 'Facebook';
+  static const String signupHasAccount = 'Already have an account?';
+  static const String signupSignIn = 'Sign In';
+  static const String signupBrandTitle = 'Formula Sanctuary';
+  static const String signupBrandHeadline = 'Master the Flow of Knowledge.';
+  static const String signupBrandDesc =
+      'Join a sanctuary designed for focused learning. '
+      'Transform complex equations into intuitive steps.';
+  static const String signupTestimonial =
+      '"The formulas finally make sense. It doesn\'t feel like studying; it feels like exploring."';
+  static const String signupTestimonialName = 'Ishita Sharma';
+  static const String signupTestimonialRole = 'Class 9 Student';
+  static const String signupErrorFailed = 'Registration failed. Please try again.';
+
+  // ──────────────────────── Onboarding Step 1 – Location ──────
+  static const String step1Tag = 'Location Preference';
+  static const String step1Title = 'Where are you studying?';
+  static const String step1Subtitle =
+      "We'll tailor your formulas and curriculum based on your region's educational standards.";
+  static const String step1CountryLabel = 'Select Country';
+  static const String step1StateLabel = 'Select State or Region';
+  static const String step1StateHint = 'Search state (e.g. Maharashtra)';
+  static const String step1LocalizedTitle = 'Localized Content';
+  static const String step1LocalizedDesc =
+      'We automatically sync with CBSE, ICSE, and various State Board syllabi based on your choice.';
+  static const String step1PrivacyTitle = 'Privacy Guaranteed';
+  static const String step1PrivacyDesc =
+      'Your location is only used to personalize your curriculum roadmap.';
+  static const String step1Continue = 'Continue to Step 2';
+
+  // ──────────────────────── Onboarding Step 2 – Curriculum ────
+  static const String step2Tag = 'Curriculum Selection';
+  static const String step2Title = 'Select Your Curriculum';
+  static const String step2NotSureTitle = 'Not sure about your board?';
+  static const String step2NotSureDesc =
+      'Check your school ID card or textbook covers for the official board affiliation.';
+  static const String step2LearnMore = 'Learn more';
+
+  // ──────────────────────── Onboarding Step 3 – Subjects ──────
+  static const String step3Tag = 'Subject Focus';
+  static const String step3Title = 'What are your focus areas?';
+  static const String step3Subtitle =
+      'Choose the subjects you want to master first. You can always change this later.';
+
+  // ──────────────────────── Onboarding Step 4 – Goal ──────────
+  static const String step4Tag = 'Commitment';
+  static const String step4Title = 'Set your weekly goal';
+  static const String step4Subtitle =
+      'Consistency is the key to mastery. How much time can you dedicate?';
+  static const String step4Casual = 'Casual Learner';
+  static const String step4CasualDesc = '15 mins / day';
+  static const String step4Regular = 'Regular Scholar';
+  static const String step4RegularDesc = '30 mins / day';
+  static const String step4Intensive = 'Intensive Mastery';
+  static const String step4IntensiveDesc = '60+ mins / day';
+  static const String step4EnterSanctuary = 'Enter Sanctuary';
+
+  // ──────────────────────── Onboarding shared ─────────────────
+  static const String onboardingNeedHelp = 'Need Help?';
+  static const String onboardingBoardSubtitle =
+      'Personalize your journey by selecting your academic board. '
+      "We'll tailor your formulas and practice sets to your specific curriculum.";
+  static const String onboardingSelectBoard = 'Select Board';
+  static const String onboardingBoardChangeHint =
+      'Selected board can be changed later in Profile.';
+  static const String onboardingBoardSelected = 'BOARD SELECTED';
+  static const String onboardingJourneyProgress = 'Journey Progress';
+  static const String onboardingGradeSubtitle =
+      "We'll customize your FormulaFlow experience based on your current curriculum.";
+  static const String onboardingMostPopular = 'MOST POPULAR';
+  static const String onboardingGradeChangeHint =
+      'You can always change your grade in Profile settings later.';
+  static const String onboardingBack = 'Back';
+  static const String onboardingContinue = 'Continue';
+  static const String onboardingAppBrand = 'Formula Sanctuary';
+  static String onboardingStepOf(int current, int total) =>
+      'Step $current of $total';
+
   // ──────────────────────── Error Messages ───────────────────
   static const String failedToLoadProfile = 'Failed to load profile';
   static const String failedToLoadDashboard = 'Failed to load dashboard';
   static const String failedToLoadGeometry = 'Failed to load geometry topics';
   static const String failedToLoadFormulas = 'Failed to load formulas';
+  static const String failedToLoadPractice =
+      'Failed to load practice questions';
+  static const String failedToLoadSaved = 'Failed to load bookmarks';
 
   // ──────────────────────── Bottom Nav ───────────────────────
   static const String navHome = 'Home';
   static const String navChapters = 'Chapters';
-  static const String navCheatSheet = 'Cheat Sheet';
+  static const String navPractice = 'Practice';
+  static const String navSaved = 'Saved';
   static const String navProfile = 'Profile';
 
   // ──────────────────────── Dashboard ────────────────────────
@@ -50,13 +171,51 @@ abstract final class AppStrings {
   static const String continueStudying = 'Continue Studying';
   static const String lastViewedTemplate = 'Last viewed';
 
+  // Dashboard – Hero / Status Card
+  static const String dashboardSanctuary = 'Formula Sanctuary';
+  static const String dashboardActiveCurriculum = 'ACTIVE CURRICULUM';
+  static const String dashboardSwitchBoardGrade = 'Switch Board/Grade';
+  static const String dashboardHeroBadge = 'CBSE Syllabus • Grade 9';
+  static const String dashboardHeroTitle = 'Mastering Motion &\nLaws of Forces';
+  static const String dashboardHeroDescription =
+      "Continue your journey through Physics. You're 65% through the current chapter.";
+  static const String dashboardResumeLesson = 'Resume Lesson';
+  static const String dashboardAcademicPath = 'Academic Path';
+
+  // Dashboard – Subject Cards
+  static const String dashboardCuratedBadge = 'CBSE 9 CURATED';
+  static const String dashboardMathTitle = 'Polynomials & Geometrical Proofs';
+  static const String dashboardMathFormulas = '14 Formulas';
+  static const String dashboardGrade9Badge = 'GRADE 9';
+  static const String dashboardPhysicsTitle = 'Gravitation & Sound';
+  static const String dashboardPhysicsDesc =
+      'Universal law of gravitation and its implications in CBSE Grade IX science curriculum.';
+  static const String dashboardMastered75 = '75% MASTERED';
+  static const String dashboardChemistryTitle = 'Atoms & Molecules';
+  static const String dashboardLastViewed2Days = 'Last viewed 2 days ago';
+  static const String dashboardBiology = 'Biology';
+  static const String dashboardBiologyTitle = 'Cell: The Fundamental Unit';
+  static const String dashboardBiologyRecommended = 'Recommended for Boards';
+  static const String dashboardLive = 'LIVE';
+  static const String dashboardBoardReadyQuiz = 'Board Ready Quiz';
+  static const String dashboardQuizDesc =
+      'Test your knowledge on CBSE Chapter 2.';
+
+  // Dashboard – Formula Vault
+  static const String dashboardFormulaVault = 'My Formula Vault';
+  static const String dashboardVaultDesc = '42 saved items across 4 subjects';
+  static const String dashboardVaultMath = 'Quadratic Formula';
+  static const String dashboardVaultPhysics = 'Kinematic Eq 1';
+  static const String dashboardVaultChem = 'Ideal Gas Law';
+
   // ──────────────────────── Dashboard – Subjects ─────────────
   static const String numberSystemsGeometry = 'Number Systems & Geometry';
   static const String mathCardDescription =
-      'Master algebra, circles, and linear equations with visual proofs.';
+      'Detailed CBSE compliant formula sheets for algebraic identities and theorems specifically for Grade 9 students.';
   static const String mathematics = 'Mathematics';
   static const String physics = 'Physics';
-  static const String physicsDesc = 'Motion, Force, and Gravitation simplified.';
+  static const String physicsDesc =
+      'Motion, Force, and Gravitation simplified.';
   static const String enterLab = 'Enter Lab';
   static const String chemistry = 'Chemistry';
   static const String chemistryDesc =
@@ -75,13 +234,7 @@ abstract final class AppStrings {
   static const String twoHoursAgo = '2 hours ago';
   static const String yesterday = 'Yesterday';
 
-  // ──────────────────────── Geometry ─────────────────────────
-  static const String geometry = 'Geometry';
-  static const String visualizingSpace = 'Visualizing Space';
-  static const String geometryHeroDesc =
-      'Master the principles of shapes, sizes, and the relative position of '
-      'figures. Geometry is the language of the physical world.';
-  static const String chapter04 = 'CHAPTER 04';
+  // ──────────────────────── Chapters (generic) ───────────────
   static const String continueLearning = 'Continue Learning';
   static const String nearlyThere = 'Nearly there!';
   static const String formulasLabel = 'FORMULAS';
@@ -92,8 +245,14 @@ abstract final class AppStrings {
   static const String practiceQuiz = 'Practice Quiz';
   static const String cheatSheets = 'Cheat Sheets';
   static const String visualizer3d = '3D Visualizer';
+  static const String selectSubjectTitle = 'Select a Subject';
+  static const String selectSubjectDesc =
+      'Tap on a subject from the Home tab to start exploring chapters and formulas.';
 
-  // Geometry – Topics
+  // Chapters – Breadcrumb
+  static const String breadcrumbHome = 'HOME';
+
+  // Chapters – Math Topics
   static const String triangles = 'Triangles';
   static const String trianglesSubtitle =
       'Explore congruence, similarity, and the powerful Pythagorean theorem across different types of triangles.';
@@ -108,11 +267,6 @@ abstract final class AppStrings {
   static const String advancedPolygonsSubtitle =
       'Hexagons, Octagons & Sum of Angles';
 
-  // Geometry – Breadcrumb
-  static const String breadcrumbHome = 'HOME';
-  static const String breadcrumbMath = 'MATH';
-  static const String breadcrumbGeometry = 'GEOMETRY';
-
   // Geometry – Template patterns
   static String completedOfFormulas(int completed, int total) =>
       'Completed $completed of $total formulas';
@@ -120,36 +274,35 @@ abstract final class AppStrings {
   static String studyMeta(String subject, String lastViewed) =>
       '$subject • $lastViewed $lastViewedTemplate';
 
-  // ──────────────────────── Algebra ──────────────────────────
-  static const String algebraCheatSheet = 'Algebra Cheat Sheet';
-  static const String mathStandard = 'MATHEMATICS • 9TH STANDARD';
-  static const String quickRevisionMode = 'Quick Revision Mode';
-  static const String quickRevision = 'Quick Revision';
-  static const String detailedView = 'Detailed View';
-  static const String examTip = 'Exam Tip';
-  static const String examTipContent =
-      'Always check the sign in (a-b)² and (a-b)³ identities. '
-      'One small sign error can change the entire result!';
+  // Chapters – Algebra Topics
+  static const String polynomialIdentities = 'Polynomial Identities';
+  static const String polynomialIdentitiesSubtitle =
+      'Square of sum, difference of squares & more';
+  static const String linearEquations = 'Linear Equations';
+  static const String linearEquationsSubtitle =
+      'Standard form, slope-intercept & solutions';
 
-  // Algebra – Section Titles
-  static const String polynomialIdentities = 'POLYNOMIAL IDENTITIES';
-  static const String linearEquations = 'LINEAR EQUATIONS';
-  static const String cubicIdentities = 'CUBIC IDENTITIES';
+  // Chapters – Physics Topics
+  static const String motion = 'Motion';
+  static const String motionSubtitle =
+      'Speed, velocity, acceleration & equations of motion';
+  static const String forceAndLaws = 'Force & Laws of Motion';
+  static const String forceSubtitle =
+      "Newton's three laws and their applications";
+  static const String gravitation = 'Gravitation';
+  static const String gravitationSubtitle =
+      'Universal law, free fall & weight vs mass';
 
-  // Algebra – Formula Tags
-  static const String squareOfSum = 'Square of Sum';
-  static const String squareOfDifference = 'Square of Difference';
-  static const String differenceOfSquares = 'Difference of Squares';
-  static const String cubeOfSum = 'Cube of Sum';
-
-  // Algebra – Formula Badges
-  static const String essential = 'ESSENTIAL';
-  static const String standardForm = 'STANDARD FORM';
-
-  // Algebra – Formula Descriptions
-  static const String usedInQuadraticEquations = 'Used in Quadratic Equations';
-  static const String linearEquationDesc =
-      'Where a, b, c are real numbers and a, b are not both zero.';
+  // Chapters – Chemistry Topics
+  static const String matterInSurroundings = 'Matter in Our Surroundings';
+  static const String matterSubtitle =
+      'States of matter, evaporation & intermolecular forces';
+  static const String atomsAndMolecules = 'Atoms & Molecules';
+  static const String atomsSubtitle =
+      'Atomic mass, molecular formula & mole concept';
+  static const String structureOfAtom = 'Structure of the Atom';
+  static const String structureOfAtomSubtitle =
+      'Bohr model, electron configuration & isotopes';
 
   // ──────────────────────── Profile ──────────────────────────
   static const String myProgress = 'My Progress';
@@ -181,4 +334,35 @@ abstract final class AppStrings {
   static const String toggleDarkMode = 'Toggle Dark Mode';
   static const String helpAndSupport = 'Help & Support';
   static const String logout = 'Logout';
+
+  // ──────────────────────── Practice ──────────────────────────
+  static const String circlesAndAreas = 'Circles & Areas';
+  static const String geometryBasics = 'GEOMETRY BASICS';
+  static const String practiceQuestionLabel = 'QUESTION';
+  static const String ofLabel = 'of';
+  static const String ptsLabel = 'pts';
+  static const String correct = 'Correct!';
+  static const String plusPointsTemplate = '+10 Points';
+  static const String masteryLevelIncreasing = 'Mastery level increasing';
+  static const String areaOfCircleQuestion =
+      'Which of the following formulas correctly represents the area of a circle with radius r?';
+  static const String nextQuestion = 'Next Question';
+
+  // ──────────────────────── Saved / Bookmarks ─────────────────
+  static const String formulaFlow = 'FormulaFlow';
+  static const String connectionError = 'Connection Error';
+  static const String signalsCrossed = 'Signals are Crossed';
+  static const String connectionErrorDesc =
+      "We can't seem to reach the formula lab right now. "
+      'Check your connection and let\'s try that again.';
+  static const String tryAgain = 'Try Again';
+  static const String nothingHereYet = 'Nothing here yet';
+  static const String emptyBookmarksDesc =
+      'Your saved formulas will appear here. Start exploring and '
+      'bookmark the theorems you want to master.';
+  static const String browseLessons = 'Browse Lessons';
+  static const String proTip = 'Pro Tip';
+  static const String proTipContent =
+      'You can still access your recently viewed formulas '
+      'offline if they\'ve been cached previously.';
 }

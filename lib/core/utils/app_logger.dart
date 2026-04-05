@@ -73,11 +73,7 @@ class AppLogger {
     Object? error,
     StackTrace? stackTrace,
   }) {
-    _logger.e(
-      _format(message, tag),
-      error: error,
-      stackTrace: stackTrace,
-    );
+    _logger.e(_format(message, tag), error: error, stackTrace: stackTrace);
   }
 
   /// Fatal log for critical, unrecoverable failures.
@@ -90,10 +86,6 @@ class AppLogger {
     Object? error,
     StackTrace? stackTrace,
   }) {
-    _logger.f(
-      _format(message, tag),
-      error: error,
-      stackTrace: stackTrace,
-    );
+    _logger.f(_format(message, tag), error: error, stackTrace: stackTrace);
   }
 }

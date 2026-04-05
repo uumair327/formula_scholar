@@ -10,9 +10,8 @@ import '../../domain/domain.dart';
 class ProfileRepositoryImpl implements ProfileRepositoryPort {
   final ProfileDataSourcePort _dataSource;
 
-  const ProfileRepositoryImpl({
-    required ProfileDataSourcePort dataSource,
-  }) : _dataSource = dataSource;
+  const ProfileRepositoryImpl({required ProfileDataSourcePort dataSource})
+    : _dataSource = dataSource;
 
   @override
   Future<Result<UserProfile>> getUserProfile() async {
@@ -31,11 +30,13 @@ class ProfileRepositoryImpl implements ProfileRepositoryPort {
         error: e,
         stackTrace: stackTrace,
       );
-      return Error(CacheFailure(
-        message: 'Failed to load user profile',
-        originalError: e,
-        stackTrace: stackTrace,
-      ));
+      return Error(
+        CacheFailure(
+          message: 'Failed to load user profile',
+          originalError: e,
+          stackTrace: stackTrace,
+        ),
+      );
     }
   }
 
@@ -56,20 +57,19 @@ class ProfileRepositoryImpl implements ProfileRepositoryPort {
         error: e,
         stackTrace: stackTrace,
       );
-      return Error(CacheFailure(
-        message: 'Failed to load profile stats',
-        originalError: e,
-        stackTrace: stackTrace,
-      ));
+      return Error(
+        CacheFailure(
+          message: 'Failed to load profile stats',
+          originalError: e,
+          stackTrace: stackTrace,
+        ),
+      );
     }
   }
 
   @override
   Future<Result<List<SettingsItem>>> getSettingsItems() async {
-    AppLogger.trace(
-      'getSettingsItems() called',
-      tag: AppLogTags.profileRepo,
-    );
+    AppLogger.trace('getSettingsItems() called', tag: AppLogTags.profileRepo);
     try {
       final result = await _dataSource.getSettingsItems();
       AppLogger.info(
@@ -84,11 +84,13 @@ class ProfileRepositoryImpl implements ProfileRepositoryPort {
         error: e,
         stackTrace: stackTrace,
       );
-      return Error(CacheFailure(
-        message: 'Failed to load settings items',
-        originalError: e,
-        stackTrace: stackTrace,
-      ));
+      return Error(
+        CacheFailure(
+          message: 'Failed to load settings items',
+          originalError: e,
+          stackTrace: stackTrace,
+        ),
+      );
     }
   }
 }

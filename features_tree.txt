@@ -1,0 +1,272 @@
+Folder PATH listing
+Volume serial number is 5C25-3326
+C:\USERS\UUMAI\DOWNLOADS\ZIP\FORMULA_SCHOLAR\LIB\FEATURES
+|   features.dart
+|   
++---auth
+|   |   auth.dart
+|   |   
+|   +---data
+|   |   |   data.dart
+|   |   |   
+|   |   +---datasources
+|   |   |       auth_remote_data_source.dart
+|   |   |       
+|   |   \---repositories
+|   |           auth_repository_impl.dart
+|   |           
+|   +---domain
+|   |   |   domain.dart
+|   |   |   
+|   |   \---repositories
+|   |           auth_repository.dart
+|   |           
+|   \---presentation
+|       +---cubit
+|       |       auth_cubit.dart
+|       |       cubit.dart
+|       |       
+|       \---pages
+|               login_page.dart
+|               pages.dart
+|               signup_page.dart
+|               
++---chapters
+|   |   chapters.dart
+|   |   
+|   +---domain
+|   |   |   domain.dart
+|   |   |   
+|   |   +---entities
+|   |   |       chapter.dart
+|   |   |       
+|   |   +---ports
+|   |   |       chapters_data_source_port.dart
+|   |   |       chapters_repository_port.dart
+|   |   |       
+|   |   \---usecases
+|   |           get_chapters_use_case.dart
+|   |           
+|   +---infrastructure
+|   |   |   infrastructure.dart
+|   |   |   
+|   |   +---adapters
+|   |   |       chapters_local_adapter.dart
+|   |   |       
+|   |   \---repositories
+|   |           chapters_repository_impl.dart
+|   |           
+|   \---presentation
+|       |   presentation.dart
+|       |   
+|       +---cubit
+|       |       chapters_cubit.dart
+|       |       chapters_state.dart
+|       |       
+|       \---pages
+|               chapters_page.dart
+|               
++---dashboard
+|   |   dashboard.dart
+|   |   
+|   +---domain
+|   |   |   domain.dart
+|   |   |   
+|   |   +---entities
+|   |   |       formula_vault_item.dart
+|   |   |       recent_study.dart
+|   |   |       study_progress.dart
+|   |   |       subject.dart
+|   |   |       
+|   |   +---ports
+|   |   |       dashboard_data_source_port.dart
+|   |   |       dashboard_repository_port.dart
+|   |   |       
+|   |   \---usecases
+|   |           get_recent_studies_use_case.dart
+|   |           get_study_progress_use_case.dart
+|   |           get_subjects_use_case.dart
+|   |           
+|   +---infrastructure
+|   |   |   infrastructure.dart
+|   |   |   
+|   |   +---adapters
+|   |   |       dashboard_local_adapter.dart
+|   |   |       
+|   |   \---repositories
+|   |           dashboard_repository_impl.dart
+|   |           
+|   \---presentation
+|       |   presentation.dart
+|       |   
+|       +---cubit
+|       |       dashboard_cubit.dart
+|       |       dashboard_state.dart
+|       |       
+|       +---pages
+|       |       dashboard_page.dart
+|       |       
+|       \---widgets
+|               filter_chip_group.dart
+|               subject_card.dart
+|               widgets.dart
+|               
++---onboarding
+|   |   onboarding.dart
+|   |   
+|   +---domain
+|   |   |   domain.dart
+|   |   |   
+|   |   +---entities
+|   |   |       board.dart
+|   |   |       grade.dart
+|   |   |       
+|   |   +---ports
+|   |   |       onboarding_data_source_port.dart
+|   |   |       onboarding_repository_port.dart
+|   |   |       
+|   |   \---usecases
+|   |           get_boards_use_case.dart
+|   |           get_grades_use_case.dart
+|   |           
+|   +---infrastructure
+|   |   |   infrastructure.dart
+|   |   |   
+|   |   +---adapters
+|   |   |       onboarding_local_adapter.dart
+|   |   |       
+|   |   \---repositories
+|   |           onboarding_repository_impl.dart
+|   |           
+|   \---presentation
+|       |   presentation.dart
+|       |   
+|       +---cubit
+|       |       onboarding_cubit.dart
+|       |       onboarding_state.dart
+|       |       
+|       +---pages
+|       |       onboarding_step1_page.dart
+|       |       onboarding_step2_page.dart
+|       |       onboarding_step3_page.dart
+|       |       onboarding_step4_page.dart
+|       |       
+|       \---widgets
+|               onboarding_shell.dart
+|               widgets.dart
+|               
++---practice
+|   |   practice.dart
+|   |   
+|   +---domain
+|   |   |   domain.dart
+|   |   |   
+|   |   +---entities
+|   |   |       quiz_question.dart
+|   |   |       
+|   |   +---ports
+|   |   |       practice_data_source_port.dart
+|   |   |       practice_repository_port.dart
+|   |   |       
+|   |   \---usecases
+|   |           get_questions_use_case.dart
+|   |           
+|   +---infrastructure
+|   |   |   infrastructure.dart
+|   |   |   
+|   |   +---adapters
+|   |   |       practice_local_adapter.dart
+|   |   |       
+|   |   \---repositories
+|   |           practice_repository_impl.dart
+|   |           
+|   \---presentation
+|       |   presentation.dart
+|       |   
+|       +---cubit
+|       |       practice_cubit.dart
+|       |       practice_state.dart
+|       |       
+|       \---pages
+|               practice_page.dart
+|               
++---profile
+|   |   profile.dart
+|   |   
+|   +---domain
+|   |   |   domain.dart
+|   |   |   
+|   |   +---entities
+|   |   |       profile_stat.dart
+|   |   |       settings_item.dart
+|   |   |       user_profile.dart
+|   |   |       
+|   |   +---ports
+|   |   |       profile_data_source_port.dart
+|   |   |       profile_repository_port.dart
+|   |   |       
+|   |   \---usecases
+|   |           get_profile_stats_use_case.dart
+|   |           get_settings_items_use_case.dart
+|   |           get_user_profile_use_case.dart
+|   |           
+|   +---infrastructure
+|   |   |   infrastructure.dart
+|   |   |   
+|   |   +---adapters
+|   |   |       profile_local_adapter.dart
+|   |   |       
+|   |   \---repositories
+|   |           profile_repository_impl.dart
+|   |           
+|   \---presentation
+|       |   presentation.dart
+|       |   
+|       +---cubit
+|       |       profile_cubit.dart
+|       |       profile_state.dart
+|       |       
+|       +---pages
+|       |       profile_page.dart
+|       |       
+|       \---widgets
+|               encouragement_card_widget.dart
+|               profile_hero_widget.dart
+|               progress_stats_widget.dart
+|               settings_list_widget.dart
+|               
+\---saved
+    |   saved.dart
+    |   
+    +---domain
+    |   |   domain.dart
+    |   |   
+    |   +---entities
+    |   |       bookmarked_formula.dart
+    |   |       
+    |   +---ports
+    |   |       saved_data_source_port.dart
+    |   |       saved_repository_port.dart
+    |   |       
+    |   \---usecases
+    |           get_bookmarks_use_case.dart
+    |           
+    +---infrastructure
+    |   |   infrastructure.dart
+    |   |   
+    |   +---adapters
+    |   |       saved_local_adapter.dart
+    |   |       
+    |   \---repositories
+    |           saved_repository_impl.dart
+    |           
+    \---presentation
+        |   presentation.dart
+        |   
+        +---cubit
+        |       saved_cubit.dart
+        |       saved_state.dart
+        |       
+        \---pages
+                saved_page.dart
+                

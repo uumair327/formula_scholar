@@ -103,7 +103,10 @@ class SettingsListWidget extends StatelessWidget {
           onItemTapped(item.id);
         },
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingXL, vertical: AppDimensions.paddingLG),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppDimensions.paddingXL,
+            vertical: AppDimensions.paddingLG,
+          ),
           child: Row(
             children: [
               AppIconCircle(
@@ -113,15 +116,9 @@ class SettingsListWidget extends StatelessWidget {
               ),
               const SizedBox(width: AppDimensions.paddingLG),
               Expanded(
-                child: Text(
-                  item.label,
-                  style: AppTextStyles.labelLarge,
-                ),
+                child: Text(item.label, style: AppTextStyles.labelLarge),
               ),
-              const Icon(
-                Icons.chevron_right,
-                color: AppColors.outlineVariant,
-              ),
+              const Icon(Icons.chevron_right, color: AppColors.outlineVariant),
             ],
           ),
         ),
@@ -136,7 +133,10 @@ class SettingsListWidget extends StatelessWidget {
       child: InkWell(
         onTap: onDarkModeToggle,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingXL, vertical: AppDimensions.paddingLG),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppDimensions.paddingXL,
+            vertical: AppDimensions.paddingLG,
+          ),
           child: Row(
             children: [
               AppIconCircle(
@@ -175,17 +175,25 @@ class SettingsListWidget extends StatelessWidget {
       color: AppColors.transparent,
       child: InkWell(
         onTap: () {
-          AppLogger.warning('Logout tapped', tag: AppLogTags.settingsListWidget);
+          AppLogger.warning(
+            'Logout tapped',
+            tag: AppLogTags.settingsListWidget,
+          );
           onItemTapped(item.id);
         },
         splashColor: AppColors.errorContainer,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingXL, vertical: AppDimensions.paddingLG),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppDimensions.paddingXL,
+            vertical: AppDimensions.paddingLG,
+          ),
           child: Row(
             children: [
               AppIconCircle(
                 icon: icon,
-                backgroundColor: AppColors.errorContainer.withValues(alpha: AppDimensions.opacityLight),
+                backgroundColor: AppColors.errorContainer.withValues(
+                  alpha: AppDimensions.opacityLight,
+                ),
                 iconColor: AppColors.error,
               ),
               const SizedBox(width: AppDimensions.paddingLG),
@@ -203,7 +211,6 @@ class SettingsListWidget extends StatelessWidget {
       ),
     );
   }
-
 
   Widget _buildCustomSwitch(bool value) {
     return AnimatedContainer(

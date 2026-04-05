@@ -27,8 +27,9 @@ class AppErrorState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding:
-            const EdgeInsets.symmetric(horizontal: AppDimensions.paddingXXL),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppDimensions.paddingXXL,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -46,10 +47,7 @@ class AppErrorState extends StatelessWidget {
               ),
             ),
             const SizedBox(height: AppDimensions.paddingLG),
-            ElevatedButton(
-              onPressed: onRetry,
-              child: Text(retryLabel),
-            ),
+            ElevatedButton(onPressed: onRetry, child: Text(retryLabel)),
           ],
         ),
       ),

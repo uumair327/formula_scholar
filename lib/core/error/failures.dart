@@ -21,11 +21,7 @@ sealed class Failure extends Equatable {
   /// Stack trace from the original error for debugging.
   final StackTrace? stackTrace;
 
-  const Failure({
-    required this.message,
-    this.originalError,
-    this.stackTrace,
-  });
+  const Failure({required this.message, this.originalError, this.stackTrace});
 
   @override
   List<Object?> get props => [message];

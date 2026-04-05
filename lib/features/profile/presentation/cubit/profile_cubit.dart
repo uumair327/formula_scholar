@@ -9,20 +9,25 @@ import 'profile_state.dart';
 ///
 /// Depends on use cases (not repositories directly) following SRP.
 /// Uses [Result] pattern matching for typed error handling.
+/// Uses [CubitFailureLogger] mixin to eliminate boilerplate.
 @injectable
-class ProfileCubit extends Cubit<ProfileState> {
+class ProfileCubit extends Cubit<ProfileState>
+    with CubitFailureLogger<ProfileState> {
   final GetUserProfileUseCase _getUserProfile;
   final GetProfileStatsUseCase _getProfileStats;
   final GetSettingsItemsUseCase _getSettingsItems;
+
+  @override
+  String get logTag => AppLogTags.profileCubit;
 
   ProfileCubit({
     required GetUserProfileUseCase getUserProfile,
     required GetProfileStatsUseCase getProfileStats,
     required GetSettingsItemsUseCase getSettingsItems,
-  })  : _getUserProfile = getUserProfile,
-        _getProfileStats = getProfileStats,
-        _getSettingsItems = getSettingsItems,
-        super(const ProfileState());
+  }) : _getUserProfile = getUserProfile,
+       _getProfileStats = getProfileStats,
+       _getSettingsItems = getSettingsItems,
+       super(const ProfileState());
 
   /// Loads all profile data in parallel.
   Future<void> loadProfile() async {
@@ -38,17 +43,17 @@ class ProfileCubit extends Cubit<ProfileState> {
     // Pattern match on each result for typed error handling.
     final profile = switch (profileResult) {
       Success(:final data) => data,
-      Error(:final failure) => _logFailure('user profile', failure),
+      Error(:final failure) => logFailure('user profile', failure),
     };
 
     final stats = switch (statsResult) {
       Success(:final data) => data,
-      Error(:final failure) => _logFailure('profile stats', failure),
+      Error(:final failure) => logFailure('profile stats', failure),
     };
 
     final settingsItems = switch (settingsResult) {
       Success(:final data) => data,
-      Error(:final failure) => _logFailure('settings items', failure),
+      Error(:final failure) => logFailure('settings items', failure),
     };
 
     if (profile != null && stats != null && settingsItems != null) {
@@ -56,17 +61,21 @@ class ProfileCubit extends Cubit<ProfileState> {
         'Profile loaded successfully',
         tag: AppLogTags.profileCubit,
       );
-      emit(state.copyWith(
-        status: ProfileStatus.loaded,
-        profile: profile,
-        stats: stats,
-        settingsItems: settingsItems,
-      ));
+      emit(
+        state.copyWith(
+          status: ProfileStatus.loaded,
+          profile: profile,
+          stats: stats,
+          settingsItems: settingsItems,
+        ),
+      );
     } else {
-      emit(state.copyWith(
-        status: ProfileStatus.error,
-        errorMessage: AppStrings.failedToLoadProfile,
-      ));
+      emit(
+        state.copyWith(
+          status: ProfileStatus.error,
+          errorMessage: AppStrings.failedToLoadProfile,
+        ),
+      );
     }
   }
 
@@ -86,16 +95,5 @@ class ProfileCubit extends Cubit<ProfileState> {
       'Settings item tapped: $settingsId',
       tag: AppLogTags.profileCubit,
     );
-  }
-
-  /// Logs a failure and returns null to indicate the operation failed.
-  Null _logFailure(String operation, Failure failure) {
-    AppLogger.error(
-      'Failed to load $operation: ${failure.message}',
-      tag: AppLogTags.profileCubit,
-      error: failure.originalError,
-      stackTrace: failure.stackTrace,
-    );
-    return null;
   }
 }

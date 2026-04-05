@@ -37,7 +37,9 @@ abstract final class AppDimensions {
 
   // ──────────────────────── Font Sizes ───────────────────────
   static const double fontSizeXXS = 8.0;
+  static const double fontSizeXXSPlus = 9.0;
   static const double fontSizeXS = 10.0;
+  static const double fontSizeXSPlus = 11.0;
   static const double fontSizeSM = 12.0;
   static const double fontSizeMD = 14.0;
   static const double fontSizeLG = 16.0;
@@ -81,9 +83,13 @@ abstract final class AppDimensions {
 
   // ──────────────────────── Decorative Element Sizes ─────────
   static const double glowCircleSize = 180.0;
+  static const double glowCircleSizeSM = 126.0;
   static const double decorativeIconSize = 100.0;
   static const double decorativeOffset = -30.0;
   static const double decorativeOffsetLG = -40.0;
+
+  /// Fraction of screen height for decorative background positioning.
+  static const double decorativePositionFraction = 0.25;
 
   // ──────────────────────── Shadow / Blur ─────────────────────
   static const double blurRadiusXS = 2.0;
@@ -113,6 +119,7 @@ abstract final class AppDimensions {
   static const double switchPadding = 3.0;
 
   // ──────────────────────── Dot / Indicator ──────────────────
+  static const double dotIndicatorSize = 6.0;
   static const double sectionDotSize = 8.0;
   static const double borderWidth = 2.0;
   static const double borderWidthThick = 4.0;
@@ -122,16 +129,20 @@ abstract final class AppDimensions {
   static const double badgePaddingHorizontal = 10.0;
   static const double badgePaddingVertical = 4.0;
   static const double chipPaddingHorizontal = 14.0;
+  static const double chipPaddingHorizontalLG = 16.0;
   static const double chipPaddingVertical = 6.0;
+  static const double chipPaddingVerticalLG = 8.0;
 
   // ──────────────────────── Elevation ────────────────────────
   static const double elevationNone = 0.0;
   static const double elevationSM = 1.0;
+  static const double elevationMD = 8.0;
 
   // ──────────────────────── Grid ─────────────────────────────
   static const int masteryToolsCrossAxisCount = 2;
   static const double masteryToolsSpacing = 12.0;
   static const double masteryToolsAspectRatio = 1.6;
+  static const double vaultGridAspectRatio = 1.4;
 
   // ──────────────────────── Opacity ──────────────────────────
   static const double opacityFaint = 0.1;
@@ -142,8 +153,34 @@ abstract final class AppDimensions {
   static const double opacityHigh = 0.8;
   static const double opacityAppBar = 0.85;
   static const double opacityNearOpaque = 0.9;
+  static const double opacityOverlay = 0.05;
+  static const double opacityShadowLight = 0.15;
 
   // ──────────────────────── Transform ────────────────────────
   static const double rotationSubtle = 0.2;
+  static const double rotationMedium = 0.26;
   static const double avatarOverlapOffset = -8.0;
+
+  // ──────────────────────── Decorative / Background ──────────
+  static const double paddingSectionLG = 48.0;
+  static const double positionOffsetSM = -8.0;
+  static const double decorativeBlurLG = 384.0;
+  static const double decorativeBlurMD = 300.0;
+  static const double decorativeBlurSM = 280.0;
+  static const double decorativeCircleMD = 200.0;
+  static const double decorativeCircleSM = 150.0;
+  static const double decorativeCircleXS = 120.0;
+  static const double decorativeCircleTiny = 80.0;
+  static const double decorativeBlurRadius = 50.0;
+  static const double decorativeStrokeWidth = 12.0;
+
+  // ──────────────────────── Image / Illustration ─────────────
+  static const double imageXL = 128.0;
+  static const double imageLG = 64.0;
+  static const double imageMD = 48.0;
+  static const double imageXS = 250.0;
+
+  // ──────────────────────── Position Offsets ──────────────────
+  static const double positionTopLG = 100.0;
+  static const double positionBottomLG = 80.0;
 }

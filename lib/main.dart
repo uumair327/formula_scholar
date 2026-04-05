@@ -1,15 +1,24 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/core.dart';
+import 'firebase_options.dart';
+import 'shared/shared.dart';
 
 void main() {
   // Capture synchronous errors during widget binding.
   runZonedGuarded(
-    () {
+    () async {
       WidgetsFlutterBinding.ensureInitialized();
+
+      // Initialize Firebase before anything else.
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      AppLogger.info('Firebase initialized', tag: AppLogTags.main);
 
       // Initialize dependency injection (get_it + injectable).
       configureDependencies();
@@ -50,16 +59,22 @@ void main() {
 }
 
 /// Root widget for Formula Scholar.
+///
+/// Provides [SubjectSelectionCubit] above the router so all tabs
+/// (Chapters, Saved, Practice) can read the selected subject.
 class FormulaScholarApp extends StatelessWidget {
   const FormulaScholarApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: AppStrings.appName,
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      routerConfig: AppRouter.router,
+    return BlocProvider(
+      create: (_) => getIt<SubjectSelectionCubit>(),
+      child: MaterialApp.router(
+        title: AppStrings.appName,
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        routerConfig: AppRouter.router,
+      ),
     );
   }
 }

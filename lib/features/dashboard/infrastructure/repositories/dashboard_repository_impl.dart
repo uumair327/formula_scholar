@@ -14,16 +14,12 @@ import '../../domain/domain.dart';
 class DashboardRepositoryImpl implements DashboardRepositoryPort {
   final DashboardDataSourcePort _dataSource;
 
-  const DashboardRepositoryImpl({
-    required DashboardDataSourcePort dataSource,
-  }) : _dataSource = dataSource;
+  const DashboardRepositoryImpl({required DashboardDataSourcePort dataSource})
+    : _dataSource = dataSource;
 
   @override
   Future<Result<StudyProgress>> getStudyProgress() async {
-    AppLogger.trace(
-      'getStudyProgress() called',
-      tag: AppLogTags.dashboardRepo,
-    );
+    AppLogger.trace('getStudyProgress() called', tag: AppLogTags.dashboardRepo);
     try {
       final result = await _dataSource.getStudyProgress();
       AppLogger.info(
@@ -39,19 +35,21 @@ class DashboardRepositoryImpl implements DashboardRepositoryPort {
         error: e,
         stackTrace: stackTrace,
       );
-      return Error(CacheFailure(
-        message: 'Failed to load study progress',
-        originalError: e,
-        stackTrace: stackTrace,
-      ));
+      return Error(
+        CacheFailure(
+          message: 'Failed to load study progress',
+          originalError: e,
+          stackTrace: stackTrace,
+        ),
+      );
     }
   }
 
   @override
-  Future<Result<List<Subject>>> getSubjects() async {
+  Future<Result<List<Subject>>> getSubjects(String boardId, String gradeId) async {
     AppLogger.trace('getSubjects() called', tag: AppLogTags.dashboardRepo);
     try {
-      final result = await _dataSource.getSubjects();
+      final result = await _dataSource.getSubjects(boardId, gradeId);
       AppLogger.info(
         'getSubjects() succeeded: ${result.length} subjects',
         tag: AppLogTags.dashboardRepo,
@@ -64,20 +62,19 @@ class DashboardRepositoryImpl implements DashboardRepositoryPort {
         error: e,
         stackTrace: stackTrace,
       );
-      return Error(CacheFailure(
-        message: 'Failed to load subjects',
-        originalError: e,
-        stackTrace: stackTrace,
-      ));
+      return Error(
+        CacheFailure(
+          message: 'Failed to load subjects',
+          originalError: e,
+          stackTrace: stackTrace,
+        ),
+      );
     }
   }
 
   @override
   Future<Result<List<RecentStudy>>> getRecentStudies() async {
-    AppLogger.trace(
-      'getRecentStudies() called',
-      tag: AppLogTags.dashboardRepo,
-    );
+    AppLogger.trace('getRecentStudies() called', tag: AppLogTags.dashboardRepo);
     try {
       final result = await _dataSource.getRecentStudies();
       AppLogger.info(
@@ -92,11 +89,13 @@ class DashboardRepositoryImpl implements DashboardRepositoryPort {
         error: e,
         stackTrace: stackTrace,
       );
-      return Error(CacheFailure(
-        message: 'Failed to load recent studies',
-        originalError: e,
-        stackTrace: stackTrace,
-      ));
+      return Error(
+        CacheFailure(
+          message: 'Failed to load recent studies',
+          originalError: e,
+          stackTrace: stackTrace,
+        ),
+      );
     }
   }
 }

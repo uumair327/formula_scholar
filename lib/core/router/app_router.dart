@@ -6,10 +6,13 @@ import 'package:go_router/go_router.dart';
 import '../constants/constants.dart';
 import '../di/injection.dart';
 import '../utils/utils.dart';
-import '../../features/algebra/algebra.dart';
+import '../../features/auth/auth.dart';
+import '../../features/chapters/chapters.dart';
 import '../../features/dashboard/dashboard.dart';
-import '../../features/geometry/geometry.dart';
+import '../../features/onboarding/onboarding.dart';
+import '../../features/practice/practice.dart';
 import '../../features/profile/profile.dart';
+import '../../features/saved/saved.dart';
 import '../../shared/shared.dart';
 import 'app_page_transitions.dart';
 import 'app_router_observer.dart';
@@ -22,6 +25,7 @@ import 'app_router_observer.dart';
 /// - Registers [AppRouterObserver] for navigation logging.
 /// - Supplies an [errorBuilder] for 404 / not-found scenarios.
 /// - Guards debug diagnostics behind [kDebugMode].
+/// - Redirects unauthenticated users to login.
 ///
 /// **Dependency Injection:** Cubits are resolved from [getIt] (via
 /// `injectable`) instead of being manually constructed. This decouples
@@ -32,34 +36,135 @@ abstract final class AppRouter {
   static final GlobalKey<NavigatorState> _rootNavigatorKey =
       GlobalKey<NavigatorState>(debugLabel: 'root');
 
+  /// Auth pages that unauthenticated users are allowed to access.
+  static const _authPaths = {
+    AppRoutes.loginPath,
+    AppRoutes.signupPath,
+  };
+
   /// The singleton [GoRouter] instance consumed by [MaterialApp.router].
   static final GoRouter router = GoRouter(
     navigatorKey: _rootNavigatorKey,
-    initialLocation: AppRoutes.dashboardPath,
+    initialLocation: AppRoutes.loginPath,
     debugLogDiagnostics: kDebugMode,
     observers: [AppRouterObserver()],
 
     // ───────────── Error / Not-Found ─────────────
     errorBuilder: (context, state) {
-      AppLogger.warning(
-        'Unknown route: ${state.uri}',
-        tag: AppLogTags.router,
-      );
+      AppLogger.warning('Unknown route: ${state.uri}', tag: AppLogTags.router);
       return NotFoundPage(state: state);
     },
 
     // ───────────── Redirect Guard ────────────────
     redirect: (BuildContext context, GoRouterState state) {
-      AppLogger.trace(
-        'Redirect check: ${state.uri}',
-        tag: AppLogTags.router,
-      );
-      // TODO: Add auth / onboarding redirect logic here.
+      AppLogger.trace('Redirect check: ${state.uri}', tag: AppLogTags.router);
+
+      final authRepo = getIt<AuthRepositoryPort>();
+      final isLoggedIn = authRepo.currentUser != null;
+      final isAuthPage = _authPaths.contains(state.matchedLocation);
+
+      // If not logged in and NOT on auth page → redirect to login.
+      if (!isLoggedIn && !isAuthPage) {
+        AppLogger.info(
+          'Unauthenticated user redirected to login from ${state.uri}',
+          tag: AppLogTags.router,
+        );
+        return AppRoutes.loginPath;
+      }
+
+      // If logged in and on auth page → redirect to dashboard.
+      if (isLoggedIn && isAuthPage) {
+        AppLogger.info(
+          'Authenticated user redirected to dashboard from ${state.uri}',
+          tag: AppLogTags.router,
+        );
+        return AppRoutes.dashboardPath;
+      }
+
       return null;
     },
 
     // ───────────── Route Tree ────────────────────
     routes: [
+      // ─── Authentication ───
+      GoRoute(
+        path: AppRoutes.loginPath,
+        name: AppRoutes.loginName,
+        pageBuilder: (context, state) {
+          return AppPageTransitions.fadeTransition(
+            state: state,
+            child: BlocProvider(
+              create: (_) => getIt<AuthCubit>(),
+              child: const LoginPage(),
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.signupPath,
+        name: AppRoutes.signupName,
+        pageBuilder: (context, state) {
+          return AppPageTransitions.fadeTransition(
+            state: state,
+            child: BlocProvider(
+              create: (_) => getIt<AuthCubit>(),
+              child: const SignupPage(),
+            ),
+          );
+        },
+      ),
+
+      // ─── Onboarding (ShellRoute shares OnboardingCubit) ───
+      ShellRoute(
+        builder: (context, state, child) {
+          return BlocProvider(
+            create: (_) => getIt<OnboardingCubit>()..loadCountries(),
+            child: child,
+          );
+        },
+        routes: [
+          GoRoute(
+            path: AppRoutes.onboardingPath,
+            name: AppRoutes.onboardingName,
+            pageBuilder: (context, state) {
+              return AppPageTransitions.fadeTransition(
+                state: state,
+                child: const OnboardingStep1Page(),
+              );
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.onboardingStep2Path,
+            name: AppRoutes.onboardingStep2Name,
+            pageBuilder: (context, state) {
+              return AppPageTransitions.fadeTransition(
+                state: state,
+                child: const OnboardingStep2Page(),
+              );
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.onboardingStep3Path,
+            name: AppRoutes.onboardingStep3Name,
+            pageBuilder: (context, state) {
+              return AppPageTransitions.fadeTransition(
+                state: state,
+                child: const OnboardingStep3Page(),
+              );
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.onboardingStep4Path,
+            name: AppRoutes.onboardingStep4Name,
+            pageBuilder: (context, state) {
+              return AppPageTransitions.fadeTransition(
+                state: state,
+                child: const OnboardingStep4Page(),
+              );
+            },
+          ),
+        ],
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return MainShellPage(navigationShell: navigationShell);
@@ -84,18 +189,72 @@ abstract final class AppRouter {
             ],
           ),
 
-          // ─── Chapters Tab (Geometry) ───
+          // ─── Chapters Tab (generic — any subject) ───
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: AppRoutes.geometryPath,
-                name: AppRoutes.geometryName,
+                path: AppRoutes.chaptersPath,
+                name: AppRoutes.chaptersName,
                 pageBuilder: (context, state) {
                   return AppPageTransitions.fadeTransition(
                     state: state,
                     child: BlocProvider(
-                      create: (_) => getIt<GeometryCubit>()..loadTopics(),
-                      child: const GeometryPage(),
+                      create: (_) {
+                        final cubit = getIt<ChaptersCubit>();
+                        // Auto-load if subject is already selected.
+                        final selection = getIt<SubjectSelectionCubit>().state;
+                        if (selection.hasSelection) {
+                          cubit.loadChapters(selection.subject!.id);
+                        }
+                        return cubit;
+                      },
+                      child: const ChaptersPage(),
+                    ),
+                  );
+                },
+                routes: [
+                  // ─── Formula Detail (sub-route of Chapters) ───
+                  GoRoute(
+                    path: AppRoutes.formulaDetailPath,
+                    name: AppRoutes.formulaDetailName,
+                    pageBuilder: (context, state) {
+                      final subjectId =
+                          state.pathParameters['subjectId'] ?? '';
+                      final chapterId =
+                          state.pathParameters['chapterId'] ?? '';
+                      final chapterName =
+                          state.uri.queryParameters['name'] ?? 'Formulas';
+                      return AppPageTransitions.fadeTransition(
+                        state: state,
+                        child: BlocProvider(
+                          create: (_) => getIt<FormulasCubit>()
+                            ..loadFormulas(
+                              subjectId: subjectId,
+                              chapterId: chapterId,
+                              chapterName: chapterName,
+                            ),
+                          child: const FormulasPage(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+
+          // ─── Practice Tab ───
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.practicePath,
+                name: AppRoutes.practiceName,
+                pageBuilder: (context, state) {
+                  return AppPageTransitions.fadeTransition(
+                    state: state,
+                    child: BlocProvider(
+                      create: (_) => getIt<PracticeCubit>()..loadQuestions(),
+                      child: const PracticePage(),
                     ),
                   );
                 },
@@ -103,18 +262,18 @@ abstract final class AppRouter {
             ],
           ),
 
-          // ─── Cheat Sheet Tab (Algebra) ───
+          // ─── Saved Tab ───
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: AppRoutes.algebraPath,
-                name: AppRoutes.algebraName,
+                path: AppRoutes.savedPath,
+                name: AppRoutes.savedName,
                 pageBuilder: (context, state) {
                   return AppPageTransitions.fadeTransition(
                     state: state,
                     child: BlocProvider(
-                      create: (_) => getIt<AlgebraCubit>()..loadFormulas(),
-                      child: const AlgebraPage(),
+                      create: (_) => getIt<SavedCubit>()..loadBookmarks(),
+                      child: const SavedPage(),
                     ),
                   );
                 },

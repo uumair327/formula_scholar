@@ -12,10 +12,7 @@ class AppBlocObserver extends BlocObserver {
   @override
   void onCreate(BlocBase<dynamic> bloc) {
     super.onCreate(bloc);
-    AppLogger.trace(
-      '${bloc.runtimeType} created',
-      tag: AppLogTags.bloc,
-    );
+    AppLogger.trace('${bloc.runtimeType} created', tag: AppLogTags.bloc);
   }
 
   @override
@@ -42,9 +39,6 @@ class AppBlocObserver extends BlocObserver {
   @override
   void onClose(BlocBase<dynamic> bloc) {
     super.onClose(bloc);
-    AppLogger.trace(
-      '${bloc.runtimeType} closed',
-      tag: AppLogTags.bloc,
-    );
+    AppLogger.trace('${bloc.runtimeType} closed', tag: AppLogTags.bloc);
   }
 }

@@ -49,8 +49,9 @@ class AppIconCircle extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor,
         shape: borderRadius != null ? BoxShape.rectangle : BoxShape.circle,
-        borderRadius:
-            borderRadius != null ? BorderRadius.circular(borderRadius!) : null,
+        borderRadius: borderRadius != null
+            ? BorderRadius.circular(borderRadius!)
+            : null,
         boxShadow: boxShadow,
       ),
       child: Icon(icon, size: iconSize, color: iconColor),

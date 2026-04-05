@@ -6,16 +6,39 @@ import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
+import '../../../auth/auth.dart';
+import '../../domain/domain.dart';
 import '../cubit/dashboard_cubit.dart';
 import '../cubit/dashboard_state.dart';
+import '../widgets/widgets.dart';
 
 /// Dashboard page – the main landing screen of the app.
+///
+/// All content sections are **data-driven** — the subject grid,
+/// formula vault, and continue-studying list are rendered from
+/// state provided by [DashboardCubit]. No UI code references
+/// specific subjects (Math, Physics, etc.) ensuring any subject
+/// added by the backend renders correctly (Open/Closed Principle).
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DashboardCubit, DashboardState>(
+    return BlocListener<DashboardCubit, DashboardState>(
+      listenWhen: (prev, curr) => prev.subjects != curr.subjects,
+      listener: (context, state) {
+        if (state.subjects.isNotEmpty) {
+          final selectedSubjects = state.subjects.map((s) => SelectedSubject(
+            id: s.id,
+            name: s.name,
+            category: s.category,
+            description: s.description,
+            subtitle: s.subtitle ?? '',
+          )).toList();
+          context.read<SubjectSelectionCubit>().updateAvailableSubjects(selectedSubjects);
+        }
+      },
+      child: BlocBuilder<DashboardCubit, DashboardState>(
       builder: (context, state) {
         if (state.status == DashboardStatus.loading ||
             state.status == DashboardStatus.initial) {
@@ -26,8 +49,7 @@ class DashboardPage extends StatelessWidget {
           return Scaffold(
             body: AppErrorState(
               message: state.errorMessage,
-              onRetry: () =>
-                  context.read<DashboardCubit>().loadDashboard(),
+              onRetry: () => context.read<DashboardCubit>().loadDashboard(),
             ),
           );
         }
@@ -38,20 +60,19 @@ class DashboardPage extends StatelessWidget {
               _buildAppBar(context),
               SliverPadding(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: AppDimensions.paddingXL),
+                  horizontal: AppDimensions.paddingXL,
+                ),
                 sliver: SliverList(
                   delegate: SliverChildListDelegate([
                     const SizedBox(height: AppDimensions.paddingLG),
-                    _buildGreetingSection(),
-                    const SizedBox(height: AppDimensions.paddingLG),
-                    _buildGradeFilterChips(),
-                    const SizedBox(height: AppDimensions.paddingLG),
-                    _buildSearchBar(),
-                    const SizedBox(height: AppDimensions.paddingHero),
-                    _buildMasteryAndChallenge(state),
+                    _buildCurriculumFilterBar(context),
+                    const SizedBox(height: AppDimensions.paddingXL),
+                    _buildHeroStatusCard(state),
                     const SizedBox(height: AppDimensions.paddingSection),
-                    _buildExploreSubjects(context, state),
+                    _buildAcademicPath(context, state),
                     const SizedBox(height: AppDimensions.paddingSection),
+                    _buildFormulaVault(state),
+                    const SizedBox(height: AppDimensions.paddingLG),
                     _buildContinueStudying(state),
                     const SizedBox(height: AppDimensions.bottomNavPadding),
                   ]),
@@ -61,23 +82,48 @@ class DashboardPage extends StatelessWidget {
           ),
         );
       },
+      ),
     );
   }
 
+  // ──────────────────────── App Bar ─────────────────────────────
+
   SliverAppBar _buildAppBar(BuildContext context) {
+    final authRepo = getIt<AuthRepositoryPort>();
+    final user = authRepo.currentUser;
+    final userName = user?.displayName ?? AppStrings.dashboardSanctuary;
+    final photoUrl = user?.photoUrl ?? AppAssets.dashboardStudentProfileUrl;
+
     return SliverAppBar(
       floating: true,
       snap: true,
-      backgroundColor: AppColors.surface.withValues(alpha: AppDimensions.opacityHigh),
+      backgroundColor: AppColors.surface.withValues(
+        alpha: AppDimensions.opacityHigh,
+      ),
       surfaceTintColor: AppColors.transparent,
       title: Row(
         children: [
-          const AppAvatar(imageUrl: AppAssets.dashboardAvatarUrl),
+          Container(
+            width: AppDimensions.avatarMD,
+            height: AppDimensions.avatarMD,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.primaryFixed,
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: CachedNetworkImage(
+              imageUrl: photoUrl,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => const SizedBox(),
+              errorWidget: (context, url, error) =>
+                  const Icon(LucideIcons.user, color: AppColors.primary),
+            ),
+          ),
           const SizedBox(width: AppDimensions.paddingMD),
           Text(
-            AppStrings.welcomeScholar,
+            userName,
             style: AppTextStyles.headlineSmall.copyWith(
-              color: AppColors.onPrimaryFixedVariant,
+              color: AppColors.onSurface,
             ),
           ),
         ],
@@ -85,176 +131,244 @@ class DashboardPage extends StatelessWidget {
       actions: [
         IconButton(
           onPressed: () {
-            AppLogger.debug('Stats button tapped',
-                tag: AppLogTags.dashboardPage);
+            AppLogger.debug('Search tapped', tag: AppLogTags.dashboardPage);
           },
-          icon: const Icon(LucideIcons.barChart3, color: AppColors.primary),
+          icon: const Icon(LucideIcons.search, color: AppColors.outline),
         ),
         const SizedBox(width: AppDimensions.paddingSM),
       ],
     );
   }
 
-  Widget _buildGreetingSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          AppStrings.dashboard,
-          style: AppTextStyles.overline.copyWith(
-            color: AppColors.primary,
-            fontWeight: FontWeight.w700,
-            letterSpacing: AppDimensions.letterSpacingWide,
-          ),
-        ),
-        const SizedBox(height: AppDimensions.paddingXS),
-        Text(
-          AppStrings.hiSarahReady,
-          style: AppTextStyles.displayLarge,
-        ),
-      ],
-    );
-  }
+  // ──────────────────────── Curriculum Filter Bar ───────────────
 
-  Widget _buildGradeFilterChips() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          _GradeChip(label: AppStrings.grade9th, isActive: true),
-          const SizedBox(width: AppDimensions.paddingSM),
-          _GradeChip(label: AppStrings.grade10th, isActive: false),
-          const SizedBox(width: AppDimensions.paddingSM),
-          _GradeChip(label: AppStrings.grade11th, isActive: false),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSearchBar() {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
-        boxShadow: const [AppShadows.ghost],
-      ),
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: AppStrings.searchHint,
-          hintStyle: AppTextStyles.bodyMedium.copyWith(
-            color: AppColors.onSurfaceVariant.withValues(alpha: AppDimensions.opacityMedium),
-          ),
-          prefixIcon: const Padding(
-            padding: EdgeInsets.only(
-                left: AppDimensions.paddingXL, right: AppDimensions.paddingMD),
-            child: Icon(LucideIcons.search,
-                color: AppColors.outline, size: AppDimensions.iconMD),
-          ),
-          prefixIconConstraints: const BoxConstraints(minWidth: 0),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.paddingXL,
-            vertical: AppDimensions.paddingXL,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMasteryAndChallenge(DashboardState state) {
-    final progress = state.progress;
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isWide = constraints.maxWidth > AppDimensions.breakpointWide;
-        if (isWide) {
-          return IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+  Widget _buildCurriculumFilterBar(BuildContext context) {
+    return BlocBuilder<DashboardCubit, DashboardState>(
+      buildWhen: (prev, curr) =>
+          prev.selectedBoardIndex != curr.selectedBoardIndex ||
+          prev.selectedGradeIndex != curr.selectedGradeIndex ||
+          prev.availableBoards != curr.availableBoards ||
+          prev.availableGrades != curr.availableGrades,
+      builder: (context, state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Label row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(flex: 2, child: _buildMasteryCard(progress)),
-                const SizedBox(width: AppDimensions.paddingLG),
-                Expanded(child: _buildDailyChallengeCard()),
+                Row(
+                  children: [
+                    const Icon(
+                      LucideIcons.slidersHorizontal,
+                      size: AppDimensions.iconSM,
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                    const SizedBox(width: AppDimensions.paddingXS),
+                    Text(
+                      AppStrings.dashboardActiveCurriculum,
+                      style: AppTextStyles.labelSmall.copyWith(
+                        color: AppColors.onSurfaceVariant.withValues(
+                          alpha: AppDimensions.opacityMedium,
+                        ),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+                GestureDetector(
+                  onTap: () {
+                    AppLogger.info(
+                      'Switch Board/Grade tapped',
+                      tag: AppLogTags.dashboardPage,
+                    );
+                    context.go(AppRoutes.onboardingPath);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimensions.paddingSM,
+                      vertical: AppDimensions.paddingXXS,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryContainer.withValues(
+                        alpha: AppDimensions.opacityFaint,
+                      ),
+                      borderRadius: BorderRadius.circular(
+                        AppDimensions.radiusXXL,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          LucideIcons.arrowLeftRight,
+                          size: AppDimensions.iconSM,
+                          color: AppColors.primary,
+                        ),
+                        const SizedBox(width: AppDimensions.paddingXXS),
+                        Text(
+                          AppStrings.dashboardSwitchBoardGrade,
+                          style: AppTextStyles.labelSmall.copyWith(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w700,
+                            fontSize: AppDimensions.fontSizeXSPlus,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
-          );
-        }
-        return Column(
-          children: [
-            _buildMasteryCard(progress),
-            const SizedBox(height: AppDimensions.paddingLG),
-            _buildDailyChallengeCard(),
+            const SizedBox(height: AppDimensions.paddingSM),
+            // Filter chips row
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  // Board category chip group
+                  FilterChipGroup(
+                    icon: LucideIcons.layoutGrid,
+                    iconColor: AppColors.primary,
+                    chips: state.availableBoards,
+                    activeIndex: state.selectedBoardIndex,
+                    activeColor: AppColors.primary,
+                    onChanged: (index) {
+                      context.read<DashboardCubit>().switchBoard(index);
+                    },
+                  ),
+                  const SizedBox(width: AppDimensions.paddingSM),
+                  Container(
+                    width: 1,
+                    height: AppDimensions.paddingXXL,
+                    color: AppColors.surfaceContainerHighest,
+                  ),
+                  const SizedBox(width: AppDimensions.paddingSM),
+                  // Grade category chip group
+                  FilterChipGroup(
+                    icon: LucideIcons.graduationCap,
+                    iconColor: AppColors.secondary,
+                    chips: state.availableGrades,
+                    activeIndex: state.selectedGradeIndex,
+                    activeColor: AppColors.secondary,
+                    onChanged: (index) {
+                      context.read<DashboardCubit>().switchGrade(index);
+                    },
+                  ),
+                ],
+              ),
+            ),
           ],
         );
       },
     );
   }
 
-  Widget _buildMasteryCard(dynamic progress) {
-    return AppCard(
+  // ──────────────────────── Hero Status Card ────────────────────
+
+  Widget _buildHeroStatusCard(DashboardState state) {
+    return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingHero),
-      clipBehavior: Clip.hardEdge,
+      decoration: const SignatureGlowDecoration(),
       child: Stack(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(AppStrings.overallMastery,
-                  style: AppTextStyles.headlineMedium),
-              const SizedBox(height: AppDimensions.paddingSM),
+              // Curriculum badge
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppDimensions.chipPaddingHorizontal,
+                  vertical: AppDimensions.badgePaddingVertical,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.white.withValues(
+                    alpha: AppDimensions.opacitySubtle,
+                  ),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: AppDimensions.dotIndicatorSize,
+                      height: AppDimensions.dotIndicatorSize,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.secondaryFixed,
+                      ),
+                    ),
+                    const SizedBox(width: AppDimensions.paddingSM),
+                    Text(
+                      state.heroBadge,
+                      style: AppTextStyles.labelSmall.copyWith(
+                        color: AppColors.onPrimary,
+                        fontWeight: FontWeight.w700,
+                        fontSize: AppDimensions.fontSizeXS,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: AppDimensions.paddingLG),
+              // Title
               Text(
-                AppStrings.masteryDescription,
+                AppStrings.dashboardHeroTitle,
+                style: AppTextStyles.headlineLarge.copyWith(
+                  color: AppColors.onPrimary,
+                  fontWeight: FontWeight.w800,
+                  height: AppDimensions.lineHeightCompact,
+                ),
+              ),
+              const SizedBox(height: AppDimensions.paddingSM),
+              // Description
+              Text(
+                AppStrings.dashboardHeroDescription,
                 style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.onSurfaceVariant,
+                  color: AppColors.primaryFixed.withValues(
+                    alpha: AppDimensions.opacityNearOpaque,
+                  ),
                 ),
               ),
               const SizedBox(height: AppDimensions.paddingXL),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '${progress?.masteryPercentage?.toInt() ?? 0}%',
-                    style: AppTextStyles.displayLarge.copyWith(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w900,
+              // Resume button
+              ElevatedButton(
+                onPressed: () {
+                  AppLogger.debug(
+                    'Resume Lesson tapped',
+                    tag: AppLogTags.dashboardPage,
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.white,
+                  foregroundColor: AppColors.primary,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppDimensions.paddingHero,
+                    vertical: AppDimensions.progressBarLG,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      AppDimensions.radiusXXL,
                     ),
                   ),
-                  Text(
-                    '${progress?.completedChapters ?? 0}/${progress?.totalChapters ?? 0} ${AppStrings.chaptersLabel}',
-                    style: AppTextStyles.labelMedium.copyWith(
-                      color: AppColors.secondary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppDimensions.paddingMD),
-              ProgressBar(
-                percentage: progress?.masteryPercentage ?? 0,
-                height: AppDimensions.progressBarLG,
+                  elevation: AppDimensions.elevationMD,
+                  textStyle: AppTextStyles.labelLarge,
+                ),
+                child: const Text(AppStrings.dashboardResumeLesson),
               ),
             ],
           ),
+          // Decorative circle
           Positioned(
-            right: AppDimensions.decorativeOffsetLG,
-            bottom: AppDimensions.decorativeOffsetLG,
+            top: -AppDimensions.paddingSM,
+            right: -AppDimensions.paddingSM,
             child: Container(
-              width: AppDimensions.glowCircleSize,
-              height: AppDimensions.glowCircleSize,
+              width: AppDimensions.glowCircleSizeSM,
+              height: AppDimensions.glowCircleSizeSM,
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [AppColors.primary, AppColors.primaryContainer],
-                ),
                 shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.primary.withValues(alpha: AppDimensions.opacityFaint),
-                    blurRadius: AppDimensions.blurRadiusXL,
-                    spreadRadius: AppDimensions.spreadRadiusMD,
-                  ),
-                ],
+                color: AppColors.white.withValues(
+                  alpha: AppDimensions.opacityFaint,
+                ),
               ),
             ),
           ),
@@ -263,52 +377,202 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  Widget _buildDailyChallengeCard() {
-    return Container(
-      padding: const EdgeInsets.all(AppDimensions.paddingHero),
-      decoration: const SignatureGlowDecoration(),
+  // ──────────────────────── Academic Path ───────────────────────
+
+  Widget _buildAcademicPath(BuildContext context, DashboardState state) {
+    final subjects = state.subjects;
+    // Separate featured subject (first card, gets larger layout)
+    final featured = subjects.where((s) => s.isFeatured).toList();
+    final others = subjects.where((s) => !s.isFeatured).toList();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SectionHeader(
+          title: AppStrings.dashboardAcademicPath,
+          actionLabel: AppStrings.viewAll,
+          onAction: () {
+            AppLogger.debug('View All tapped', tag: AppLogTags.dashboardPage);
+            context.read<SubjectSelectionCubit>().clearSelection();
+            StatefulNavigationShell.of(context).goBranch(1);
+          },
+        ),
+        const SizedBox(height: AppDimensions.paddingLG),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final isWide = constraints.maxWidth > AppDimensions.breakpointWide;
+            if (isWide) {
+              return Column(
+                children: [
+                  // Row 1: featured + first other
+                  if (featured.isNotEmpty || others.isNotEmpty)
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          if (featured.isNotEmpty)
+                            Expanded(
+                              flex: 2,
+                              child: SubjectCard(
+                                subject: featured.first,
+                                onTap: () =>
+                                    _onSubjectTap(context, featured.first),
+                              ),
+                            ),
+                          if (featured.isNotEmpty && others.isNotEmpty)
+                            const SizedBox(width: AppDimensions.paddingLG),
+                          if (others.isNotEmpty)
+                            Expanded(child: SubjectCard(
+                              subject: others.first,
+                              onTap: () => _onSubjectTap(context, others.first),
+                            )),
+                        ],
+                      ),
+                    ),
+                  const SizedBox(height: AppDimensions.paddingLG),
+                  // Row 2: remaining others + quiz
+                  SizedBox(
+                    width: double.infinity,
+                    child: Wrap(
+                      spacing: AppDimensions.paddingLG,
+                      runSpacing: AppDimensions.paddingLG,
+                      alignment: WrapAlignment.start,
+                      children: [
+                        ...others.skip(1).map((subject) {
+                          // Roughly 50% width minus padding for 2-column layout
+                          final itemWidth = (constraints.maxWidth - AppDimensions.paddingLG) / 2.05;
+                          return SizedBox(
+                            width: itemWidth,
+                            child: SubjectCard(
+                              subject: subject,
+                              onTap: () => _onSubjectTap(context, subject),
+                            ),
+                          );
+                        }),
+                        SizedBox(
+                           width: (constraints.maxWidth - AppDimensions.paddingLG) / 2.05,
+                           child: _buildQuizCard(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }
+            // Mobile: stack all subjects vertically
+            return Column(
+              children: [
+                ...subjects.map(
+                  (subject) => Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: AppDimensions.paddingLG,
+                    ),
+                    child: SubjectCard(
+                      subject: subject,
+                      onTap: () => _onSubjectTap(context, subject),
+                    ),
+                  ),
+                ),
+                _buildQuizCard(),
+              ],
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  /// Handles tap on a subject card — selects the subject and
+  /// navigates to the Chapters tab.
+  void _onSubjectTap(BuildContext context, Subject subject) {
+    AppLogger.info(
+      'Navigating to Chapters (${subject.category})',
+      tag: AppLogTags.dashboardPage,
+    );
+    context.read<SubjectSelectionCubit>().selectSubject(
+      id: subject.id,
+      name: subject.name,
+      category: subject.category,
+      description: subject.description,
+      subtitle: subject.subtitle ?? '',
+    );
+    final shell = StatefulNavigationShell.of(context);
+    shell.goBranch(1);
+  }
+
+  // ──────────── Quiz Card ────────────
+
+  Widget _buildQuizCard() {
+    return AppCard(
+      color: AppColors.primary.withValues(alpha: AppDimensions.opacityOverlay),
+      padding: const EdgeInsets.all(AppDimensions.paddingXXL),
+      border: Border.all(
+        color: AppColors.primary.withValues(alpha: AppDimensions.opacityFaint),
+      ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AppIconCircle(
-            icon: LucideIcons.zap,
-            size: AppDimensions.avatarHero,
-            backgroundColor: AppColors.white.withValues(alpha: AppDimensions.opacitySubtle),
-            iconColor: AppColors.white,
-            iconSize: AppDimensions.iconXXL,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AppIconCircle(
+                icon: LucideIcons.helpCircle,
+                size: AppDimensions.avatarMD,
+                backgroundColor: AppColors.primaryFixed,
+                iconColor: AppColors.primary,
+                iconSize: AppDimensions.iconLG,
+                borderRadius: AppDimensions.radiusXL,
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppDimensions.paddingSM,
+                  vertical: AppDimensions.paddingXXS,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.error,
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
+                ),
+                child: Text(
+                  AppStrings.dashboardLive,
+                  style: AppTextStyles.labelSmall.copyWith(
+                    color: AppColors.white,
+                    fontSize: AppDimensions.fontSizeXXSPlus,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: AppDimensions.paddingLG),
           Text(
-            AppStrings.dailyChallenge,
-            style: AppTextStyles.titleLarge.copyWith(
-              color: AppColors.white,
-              fontWeight: FontWeight.w700,
-            ),
+            AppStrings.dashboardBoardReadyQuiz,
+            style: AppTextStyles.titleLarge,
           ),
           const SizedBox(height: AppDimensions.paddingXS),
           Text(
-            AppStrings.dailyChallengeDesc,
-            textAlign: TextAlign.center,
+            AppStrings.dashboardQuizDesc,
             style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.primaryFixedDim.withValues(alpha: AppDimensions.opacityNearOpaque),
+              color: AppColors.onSurfaceVariant,
             ),
           ),
-          const SizedBox(height: AppDimensions.paddingXL),
+          const SizedBox(height: AppDimensions.paddingLG),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                AppLogger.debug('Daily Challenge tapped',
-                    tag: AppLogTags.dashboardPage);
+                AppLogger.debug(
+                  'Start Quiz tapped',
+                  tag: AppLogTags.dashboardPage,
+                );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.white,
-                foregroundColor: AppColors.primary,
+                backgroundColor: AppColors.primary,
+                foregroundColor: AppColors.onPrimary,
                 padding: const EdgeInsets.symmetric(
-                    vertical: AppDimensions.progressBarLG),
+                  vertical: AppDimensions.progressBarMD,
+                ),
                 shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(AppDimensions.radiusXXL),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
                 ),
                 textStyle: AppTextStyles.labelLarge,
               ),
@@ -320,329 +584,139 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  Widget _buildExploreSubjects(BuildContext context, DashboardState state) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SectionHeader(
-          title: AppStrings.exploreSubjects,
-          actionLabel: AppStrings.viewAll,
-          onAction: () {
-            AppLogger.debug('View All tapped', tag: AppLogTags.dashboardPage);
-          },
-        ),
-        const SizedBox(height: AppDimensions.paddingLG),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final isWide =
-                constraints.maxWidth > AppDimensions.breakpointWide;
-            if (isWide) {
-              return Column(
-                children: [
-                  IntrinsicHeight(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Expanded(flex: 7, child: _buildMathCard(context)),
-                        const SizedBox(width: AppDimensions.paddingLG),
-                        Expanded(flex: 5, child: _buildPhysicsCard()),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: AppDimensions.paddingLG),
-                  IntrinsicHeight(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Expanded(flex: 5, child: _buildChemistryCard()),
-                        const SizedBox(width: AppDimensions.paddingLG),
-                        Expanded(
-                            flex: 7, child: _buildCheatSheetCard(context)),
-                      ],
-                    ),
-                  ),
-                ],
-              );
-            }
-            return Column(
-              children: [
-                _buildMathCard(context),
-                const SizedBox(height: AppDimensions.paddingLG),
-                _buildPhysicsCard(),
-                const SizedBox(height: AppDimensions.paddingLG),
-                _buildChemistryCard(),
-                const SizedBox(height: AppDimensions.paddingLG),
-                _buildCheatSheetCard(context),
-              ],
-            );
-          },
-        ),
-      ],
-    );
-  }
+  // ──────────────────────── Formula Vault ───────────────────────
 
-  Widget _buildMathCard(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        AppLogger.info('Navigating to Geometry',
-            tag: AppLogTags.dashboardPage);
-        context.goNamed(AppRoutes.geometryName);
-      },
-      child: AppCard(
-        padding: EdgeInsets.zero,
-        clipBehavior: Clip.antiAlias,
-        child: ConstrainedBox(
-          constraints:
-              const BoxConstraints(minHeight: AppDimensions.cardMinHeightLG),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final isWide =
-                  constraints.maxWidth > AppDimensions.breakpointCardHorizontal;
-              if (isWide) {
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+  Widget _buildFormulaVault(DashboardState state) {
+    return AppCard(
+      padding: const EdgeInsets.all(AppDimensions.paddingXXL),
+      border: Border.all(color: AppColors.surfaceContainerHigh),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(AppDimensions.paddingMD),
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceContainerLow,
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+                  boxShadow: const [AppShadows.subtle],
+                ),
+                child: const Icon(
+                  LucideIcons.folderOpen,
+                  size: AppDimensions.iconLG,
+                  color: AppColors.primary,
+                ),
+              ),
+              const SizedBox(width: AppDimensions.paddingLG),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      flex: 2,
-                      child: Padding(
-                        padding:
-                            const EdgeInsets.all(AppDimensions.paddingHero),
-                        child: _buildMathCardContent(),
+                    Text(
+                      AppStrings.dashboardFormulaVault,
+                      style: AppTextStyles.titleLarge,
+                    ),
+                    const SizedBox(height: AppDimensions.paddingXXS),
+                    Text(
+                      AppStrings.dashboardVaultDesc,
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
                       ),
                     ),
-                    Expanded(child: _buildMathCardImage()),
                   ],
-                );
-              }
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(AppDimensions.paddingXXL),
-                    child: _buildMathCardContent(),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppDimensions.paddingXL),
+          _buildVaultGrid(state),
+        ],
+      ),
+    );
+  }
+
+  /// Data-driven vault grid — items come from [DashboardState.vaultItems].
+  Widget _buildVaultGrid(DashboardState state) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isWide = constraints.maxWidth > AppDimensions.breakpointMedium;
+        final crossAxisCount = isWide ? 4 : 2;
+        // Items from state + an "add" slot
+        final vaultItems = state.vaultItems;
+        final totalCount = vaultItems.length + 1; // +1 for "add new" card
+
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            mainAxisSpacing: AppDimensions.paddingMD,
+            crossAxisSpacing: AppDimensions.paddingMD,
+            childAspectRatio: AppDimensions.vaultGridAspectRatio,
+          ),
+          itemCount: totalCount,
+          itemBuilder: (context, index) {
+            // Last card = "Add new" slot
+            if (index >= vaultItems.length) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceContainerLowest,
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+                  border: Border.all(
+                    color: AppColors.surfaceContainerHighest,
+                    width: AppDimensions.borderWidth,
                   ),
-                  SizedBox(
-                    height: AppDimensions.imagePreviewHeight,
-                    width: double.infinity,
-                    child: _buildMathCardImage(),
+                  boxShadow: const [AppShadows.subtle],
+                ),
+                child: const Center(
+                  child: Icon(
+                    LucideIcons.plus,
+                    size: AppDimensions.iconLG,
+                    color: AppColors.surfaceDim,
                   ),
-                ],
+                ),
               );
-            },
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMathCardContent() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const CategoryChip(label: AppStrings.mathematics),
-            const SizedBox(height: AppDimensions.paddingLG),
-            Text(
-              AppStrings.numberSystemsGeometry,
-              style: AppTextStyles.headlineLarge.copyWith(
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            const SizedBox(height: AppDimensions.paddingSM),
-            Text(
-              AppStrings.mathCardDescription,
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: AppDimensions.paddingXL),
-          child: Wrap(
-            spacing: AppDimensions.paddingSM,
-            children: const [
-              AppInfoChip(label: '8 Units'),
-              AppInfoChip(label: '124 Formulas'),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMathCardImage() {
-    return Container(
-      color: AppColors.primaryContainer.withValues(alpha: AppDimensions.opacitySubtle),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          Opacity(
-            opacity: 0.6,
-            child: CachedNetworkImage(
-              imageUrl: AppAssets.mathSubjectImageUrl,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => const SizedBox(),
-              errorWidget: (context, url, error) => const Icon(
-                LucideIcons.bookOpen,
-                size: AppDimensions.iconHero,
-                color: AppColors.primaryContainer,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPhysicsCard() {
-    return AppCard(
-      color: AppColors.tertiaryFixed,
-      padding: const EdgeInsets.all(AppDimensions.paddingXXL),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppIconCircle(
-                icon: LucideIcons.gauge,
-                size: AppDimensions.avatarLG,
-                backgroundColor: AppColors.white,
-                iconColor: AppColors.tertiary,
-                iconSize: AppDimensions.iconLG,
-                borderRadius: AppDimensions.radiusLG,
+            }
+            final item = vaultItems[index];
+            return Container(
+              padding: const EdgeInsets.all(AppDimensions.paddingLG),
+              decoration: BoxDecoration(
+                color: AppColors.surfaceContainerLowest,
+                borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+                border: Border.all(color: AppColors.surfaceContainerHigh),
                 boxShadow: const [AppShadows.subtle],
               ),
-              const SizedBox(height: AppDimensions.paddingXL),
-              Text(
-                AppStrings.physics,
-                style: AppTextStyles.headlineMedium.copyWith(
-                  color: AppColors.onTertiaryFixed,
-                ),
-              ),
-              const SizedBox(height: AppDimensions.paddingXS),
-              Text(
-                AppStrings.physicsDesc,
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.onTertiaryFixedVariant,
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: AppDimensions.paddingXXL),
-            child: AppActionRow(
-              label: AppStrings.enterLab,
-              color: AppColors.tertiary,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildChemistryCard() {
-    return AppCard(
-      color: AppColors.secondaryContainer,
-      padding: const EdgeInsets.all(AppDimensions.paddingXXL),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppIconCircle(
-                icon: LucideIcons.flaskConical,
-                size: AppDimensions.avatarLG,
-                backgroundColor: AppColors.white,
-                iconColor: AppColors.secondary,
-                iconSize: AppDimensions.iconLG,
-                borderRadius: AppDimensions.radiusLG,
-                boxShadow: const [AppShadows.subtle],
-              ),
-              const SizedBox(height: AppDimensions.paddingXL),
-              Text(
-                AppStrings.chemistry,
-                style: AppTextStyles.headlineMedium.copyWith(
-                  color: AppColors.onSecondaryFixed,
-                ),
-              ),
-              const SizedBox(height: AppDimensions.paddingXS),
-              Text(
-                AppStrings.chemistryDesc,
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.onSecondaryFixedVariant,
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: AppDimensions.paddingXXL),
-            child: AppActionRow(
-              label: AppStrings.exploreElements,
-              color: AppColors.secondary,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCheatSheetCard(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        AppLogger.info('Navigating to Algebra',
-            tag: AppLogTags.dashboardPage);
-        context.goNamed(AppRoutes.algebraName);
-      },
-      child: AppCard(
-        color: AppColors.surfaceContainerHigh,
-        padding: const EdgeInsets.all(AppDimensions.paddingXXL),
-        border: Border.all(
-          color: AppColors.outlineVariant.withValues(alpha: AppDimensions.opacityLight),
-          width: AppDimensions.borderWidth,
-          strokeAlign: BorderSide.strokeAlignInside,
-        ),
-        child: Row(
-          children: [
-            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    AppStrings.formulaCheatSheets,
-                    style: AppTextStyles.headlineSmall,
-                  ),
-                  const SizedBox(height: AppDimensions.paddingXS),
-                  Text(
-                    AppStrings.cheatSheetDesc,
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      color: AppColors.onSurfaceVariant,
+                    item.label,
+                    style: AppTextStyles.labelSmall.copyWith(
+                      color: AppColors.slate400,
+                      fontSize: AppDimensions.fontSizeXS,
                     ),
+                  ),
+                  const SizedBox(height: AppDimensions.paddingXXS),
+                  Text(
+                    item.title,
+                    style: AppTextStyles.labelLarge,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
-            ),
-            const SizedBox(width: AppDimensions.paddingLG),
-            const AppIconCircle(
-              icon: LucideIcons.download,
-              size: AppDimensions.avatarHero,
-              backgroundColor: AppColors.surfaceContainerLowest,
-              iconColor: AppColors.primary,
-              iconSize: AppDimensions.iconXL,
-            ),
-          ],
-        ),
-      ),
+            );
+          },
+        );
+      },
     );
   }
 
+  // ──────────────────────── Continue Studying ───────────────────
+
+  /// Data-driven recent studies list — uses [RecentStudy.iconName]
+  /// and [RecentStudy.colorValue] instead of hardcoded `isMath` checks.
   Widget _buildContinueStudying(DashboardState state) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -655,7 +729,10 @@ class DashboardPage extends StatelessWidget {
         ),
         const SizedBox(height: AppDimensions.paddingLG),
         ...state.recentStudies.map((study) {
-          final isGeometry = study.subject == AppStrings.geometry;
+          final iconData = AppIconMapper.resolve(study.iconName);
+          final accentColor = Color(study.colorValue);
+          final bgColor = Color(study.backgroundColorValue);
+
           return Padding(
             padding: const EdgeInsets.only(bottom: AppDimensions.paddingMD),
             child: AppCard(
@@ -663,16 +740,10 @@ class DashboardPage extends StatelessWidget {
               child: Row(
                 children: [
                   AppIconCircle(
-                    icon: isGeometry
-                        ? LucideIcons.calculator
-                        : LucideIcons.atom,
+                    icon: iconData,
                     size: AppDimensions.avatarLG,
-                    backgroundColor: isGeometry
-                        ? AppColors.primaryFixed
-                        : AppColors.secondaryFixed,
-                    iconColor: isGeometry
-                        ? AppColors.primary
-                        : AppColors.secondary,
+                    backgroundColor: bgColor,
+                    iconColor: accentColor,
                     iconSize: AppDimensions.iconLG,
                   ),
                   const SizedBox(width: AppDimensions.paddingLG),
@@ -707,46 +778,6 @@ class DashboardPage extends StatelessWidget {
           );
         }),
       ],
-    );
-  }
-}
-
-/// Grade filter chip widget (9th, 10th, 11th Standard).
-class _GradeChip extends StatelessWidget {
-  final String label;
-  final bool isActive;
-
-  const _GradeChip({required this.label, required this.isActive});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        AppLogger.debug('Grade chip tapped: $label',
-            tag: AppLogTags.dashboardPage);
-      },
-      child: AnimatedContainer(
-        duration: AppDurations.animationFast,
-        padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.paddingXL,
-            vertical: AppDimensions.progressBarMD),
-        decoration: BoxDecoration(
-          color: isActive
-              ? AppColors.primary
-              : AppColors.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
-          boxShadow: isActive ? const [AppShadows.chip] : null,
-        ),
-        child: Text(
-          label,
-          style: AppTextStyles.labelLarge.copyWith(
-            color: isActive
-                ? AppColors.onPrimary
-                : AppColors.onSurfaceVariant,
-            fontWeight: isActive ? FontWeight.w700 : FontWeight.w600,
-          ),
-        ),
-      ),
     );
   }
 }

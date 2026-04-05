@@ -12,9 +12,8 @@ import '../entities/study_progress.dart';
 class GetStudyProgressUseCase {
   final DashboardRepositoryPort _repository;
 
-  const GetStudyProgressUseCase({
-    required DashboardRepositoryPort repository,
-  }) : _repository = repository;
+  const GetStudyProgressUseCase({required DashboardRepositoryPort repository})
+    : _repository = repository;
 
   /// Executes the use case.
   Future<Result<StudyProgress>> call() {

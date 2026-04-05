@@ -15,7 +15,7 @@ abstract interface class DashboardRepositoryPort {
   Future<Result<StudyProgress>> getStudyProgress();
 
   /// Fetches the list of available subjects.
-  Future<Result<List<Subject>>> getSubjects();
+  Future<Result<List<Subject>>> getSubjects(String boardId, String gradeId);
 
   /// Fetches recent study activity.
   Future<Result<List<RecentStudy>>> getRecentStudies();

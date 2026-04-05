@@ -1,6 +1,7 @@
 /// Barrel file for the dashboard domain layer.
 library;
 
+export 'entities/formula_vault_item.dart';
 export 'entities/recent_study.dart';
 export 'entities/study_progress.dart';
 export 'entities/subject.dart';

@@ -68,7 +68,10 @@ class NotFoundPage extends StatelessWidget {
                     );
                     context.goNamed(AppRoutes.dashboardName);
                   },
-                  icon: const Icon(LucideIcons.home, size: AppDimensions.iconMD),
+                  icon: const Icon(
+                    LucideIcons.home,
+                    size: AppDimensions.iconMD,
+                  ),
                   label: const Text(AppStrings.goHome),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,

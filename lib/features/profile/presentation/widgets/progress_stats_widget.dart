@@ -32,7 +32,8 @@ class ProgressStatsWidget extends StatelessWidget {
         // Stats grid
         LayoutBuilder(
           builder: (context, constraints) {
-            final isWide = constraints.maxWidth > AppDimensions.breakpointMedium;
+            final isWide =
+                constraints.maxWidth > AppDimensions.breakpointMedium;
             if (isWide) {
               return Row(
                 children: stats.asMap().entries.map((entry) {

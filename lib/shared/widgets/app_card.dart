@@ -88,16 +88,18 @@ class AppSectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          const EdgeInsets.symmetric(horizontal: AppDimensions.paddingXS),
+      padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingXS),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             children: [
               if (leadingIcon != null) ...[
-                Icon(leadingIcon,
-                    size: AppDimensions.iconLG, color: leadingIconColor),
+                Icon(
+                  leadingIcon,
+                  size: AppDimensions.iconLG,
+                  color: leadingIconColor,
+                ),
                 const SizedBox(width: AppDimensions.paddingSM),
               ],
               Text(

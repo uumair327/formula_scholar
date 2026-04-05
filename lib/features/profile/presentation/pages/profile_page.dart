@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
+import '../../../auth/auth.dart';
 import '../cubit/profile_cubit.dart';
 import '../cubit/profile_state.dart';
 import '../widgets/encouragement_card_widget.dart';
@@ -28,8 +30,7 @@ class ProfilePage extends StatelessWidget {
           return Scaffold(
             body: AppErrorState(
               message: state.errorMessage,
-              onRetry: () =>
-                  context.read<ProfileCubit>().loadProfile(),
+              onRetry: () => context.read<ProfileCubit>().loadProfile(),
             ),
           );
         }
@@ -40,7 +41,8 @@ class ProfilePage extends StatelessWidget {
               _buildAppBar(context, state),
               SliverPadding(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: AppDimensions.paddingXL),
+                  horizontal: AppDimensions.paddingXL,
+                ),
                 sliver: SliverList(
                   delegate: SliverChildListDelegate([
                     const SizedBox(height: AppDimensions.paddingLG),
@@ -56,7 +58,11 @@ class ProfilePage extends StatelessWidget {
                         context.read<ProfileCubit>().toggleDarkMode();
                       },
                       onItemTapped: (id) {
-                        context.read<ProfileCubit>().onSettingsTapped(id);
+                        if (id == 'logout') {
+                          _handleLogout(context);
+                        } else {
+                          context.read<ProfileCubit>().onSettingsTapped(id);
+                        }
                       },
                     ),
                     const SizedBox(height: AppDimensions.paddingHero),
@@ -73,26 +79,46 @@ class ProfilePage extends StatelessWidget {
   }
 
   SliverAppBar _buildAppBar(BuildContext context, ProfileState state) {
+    final displayName = state.profile?.name ?? AppStrings.welcomeScholar;
+    final avatarUrl = state.profile?.avatarUrl ?? AppAssets.profileAvatarUrl;
+
     return SliverAppBar(
       floating: true,
       snap: true,
-      backgroundColor:
-          AppColors.surfaceContainerLowest.withValues(alpha: AppDimensions.opacityAppBar),
+      backgroundColor: AppColors.surfaceContainerLowest.withValues(
+        alpha: AppDimensions.opacityAppBar,
+      ),
       surfaceTintColor: AppColors.transparent,
       title: Row(
         children: [
           AppAvatar(
-            imageUrl: AppAssets.profileAvatarUrl,
+            imageUrl: avatarUrl,
             border: Border.all(
               color: AppColors.primaryContainer,
               width: AppDimensions.borderWidth,
             ),
           ),
           const SizedBox(width: AppDimensions.paddingMD),
-          Text(
-            AppStrings.welcomeScholar,
-            style: AppTextStyles.headlineSmall.copyWith(
-              color: AppColors.blue900,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  displayName,
+                  style: AppTextStyles.headlineSmall.copyWith(
+                    color: AppColors.blue900,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                if (state.profile?.email.isNotEmpty == true)
+                  Text(
+                    state.profile!.email,
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+              ],
             ),
           ),
         ],
@@ -100,16 +126,23 @@ class ProfilePage extends StatelessWidget {
       actions: [
         IconButton(
           onPressed: () {
-            AppLogger.debug('Leaderboard tapped',
-                tag: AppLogTags.profilePage);
+            AppLogger.debug('Leaderboard tapped', tag: AppLogTags.profilePage);
           },
-          icon: const Icon(
-            LucideIcons.barChart2,
-            color: AppColors.blue600,
-          ),
+          icon: const Icon(LucideIcons.barChart2, color: AppColors.blue600),
         ),
         const SizedBox(width: AppDimensions.paddingSM),
       ],
     );
+  }
+
+  /// Handles sign-out via [AuthCubit] resolved from DI.
+  Future<void> _handleLogout(BuildContext context) async {
+    AppLogger.info('Logout initiated from profile', tag: AppLogTags.profilePage);
+    final authCubit = getIt<AuthCubit>();
+    await authCubit.signOut();
+
+    if (context.mounted) {
+      context.go(AppRoutes.loginPath);
+    }
   }
 }

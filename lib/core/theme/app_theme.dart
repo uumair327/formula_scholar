@@ -48,7 +48,9 @@ abstract final class AppTheme {
         labelSmall: AppTextStyles.labelSmall,
       ),
       appBarTheme: AppBarTheme(
-        backgroundColor: AppColors.surface.withValues(alpha: AppDimensions.opacityHigh),
+        backgroundColor: AppColors.surface.withValues(
+          alpha: AppDimensions.opacityHigh,
+        ),
         elevation: AppDimensions.elevationNone,
         scrolledUnderElevation: AppDimensions.elevationSM,
         centerTitle: false,

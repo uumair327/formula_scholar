@@ -5,14 +5,16 @@ import '../../core/core.dart';
 /// Gradient box decoration matching the React app's `.signature-glow`.
 class SignatureGlowDecoration extends BoxDecoration {
   const SignatureGlowDecoration()
-      : super(
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [AppColors.primary, AppColors.primaryContainer],
-          ),
-          borderRadius: const BorderRadius.all(Radius.circular(AppDimensions.radiusLG)),
-        );
+    : super(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppColors.primary, AppColors.primaryContainer],
+        ),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(AppDimensions.radiusLG),
+        ),
+      );
 }
 
 /// Ghost shadow matching the React app's `.ghost-shadow`.
@@ -80,7 +82,10 @@ class CategoryChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingMD, vertical: AppDimensions.paddingXS),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDimensions.paddingMD,
+        vertical: AppDimensions.paddingXS,
+      ),
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXL),

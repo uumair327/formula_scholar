@@ -25,8 +25,31 @@ abstract final class AppAssets {
   static const String profileHeroAvatarUrl =
       'https://lh3.googleusercontent.com/aida-public/AB6AXuBKkvA68Xw_4MMjE_ZeYpjnn_GMFY_6fsx0palG7alaHlcXcKNElydYoC8igJDmRK45fEHqub0Ik-UyISt_8X2hAWiGx6CO96f69H5wjy-_h0wrAOOPPQb2Ee4h26x0d3Rj4fnVfTQ0nl8fVZJrSKQdE_KBqUjSwro_6Y5FXOs_--Q7bWqlMXVa9oxMD80ERceiEMB_L6OmD9KyenXUTIn79Lk-7i1w9tGPRimWM7pFMStyPBZ9JzJY4AGoGKMkjpw8FUFz4PUKUkU';
 
+  // ──────────────────────── Onboarding Images ─────────────────
+  /// Board selection decorative image.
+  static const String onboardingBoardImageUrl =
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuDVndYcp-dhzz3ArZ3CAUuKu94lnlqG7C_Tc3VUQgi0EwfrhJHPbBSYtFXLRxgu0XK-Rs17YpqSchKdtSV0qqIkfUz-glU6MperNXCZvSa_chXHHephTzzcnHyeDsh8bGusX2da-SQnSuuB2DqSt8gZSGpB619p--ZRONk2YbzTYXS-f0Y7eQke0MR9FJEC2LSUtXSw8_LG6H9ZdQU9Jt30cKMjOGyYQ_FiTzAc8ASVAR6OfzT5KeulC4wuZnY5bsho4VhuHM235mo';
+
+  /// Grade selection decorative image.
+  static const String onboardingGradeImageUrl =
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuDtblrwDJhjrTHMzKfelpYsibXnTr8-zRVZBT3NgZ4o0kwhR74z8ZxRsjra4pmxuD-PMYLmWTThmFCwW4kT514QsAwQfVokoW7QQg6v3W9d-Hgto9BdfjNf_Cwoaw1FRW-TgxfaL9iIFzDvSQ23rrxk1x79-j3CXhq3AGvqy9Qh18pmBBq5mJ9q8IFOBNpx0PdRWxCoK16ct6F4JhVs2CxJDpxGiKV_AlztNTyeqbDpmjqxRkRDrOg0CgauIUPPV_PnR2YK4De5Z_c';
+
+  /// Dashboard student profile image.
+  static const String dashboardStudentProfileUrl =
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuCjL6vWN18jDze2e5kebHX-lhzRubcD2vHSTKYvdUJHgUC6GS1CyrbrY0GD7bEyk2pROG0rkzlFmsRJLErDZJqP0tQFjFCsRZWvW37cH4xNMrLnGjAhh8EBbcEvqCgTHyjMMPUMaDgjE87j1gEVj1PABYSgG6cd33X-hre7s4fPJRS5CRy8UgVOPbnsz8KxBbpKkiNQnBILFHh5IzOmZYCBycepL_DlHNatUhDsLFpL9CZFkmxUuYa4-pSxDQcEBdbmr7ghugNqK0w';
+
   // ──────────────────────── Subject Images ───────────────────
   /// Math card image.
   static const String mathSubjectImageUrl =
       'https://lh3.googleusercontent.com/aida-public/AB6AXuDGcnx-d5vE09VCQyyxe3kzAJAjNRe73ZoTvBru_pry7NqFmQuugeUYMjeon5Lg4Ghz2xM-6DYHb4zNIalqBbYz3WSpb4DURHKNlbKuKG3ZZi3hTmiyzg2gkGr4Mz2yP8fLJOmcfd1ttlQrPhmCUKLFci5cCHUYDT0caPE_WTqVQmCnUGIKGO83R44linzTUPsnD6L4POfLkjAOk2SUQcUWA06VzmTxRTdnx0wWMnwgHCF5AuAbNjoJqua4fahjtfTWjqtEDsI52To';
+
+  // ──────────────────────── Practice ──────────────────────────
+  /// Pi symbol image for question card background.
+  static const String practiceQuestionImageUrl =
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuClyZ-0UYuRRBHxAK0Ii_GxesoYDVyrxZfvJWsymATBzNfEFu_iTlQKrn6WDEUNWXKoitdhKsUElgGpRyyEDswTW9KhMMYs5QimgyHDlitfY1ZJhQhiZOF7b4GxG2HZ-t9M95XrDj9ci-A4O49TQ6E3FzBYrSZEs9k4pH8cjHZeYeZcK5cCJ9fbre1soRe_zMPcEFzy3-XsnbRIvRP-wZLWM3lfBCxO1TpPnNRhgXNZULDzi3iu0pqVs0JAbFAFhDPU1sb6_0jjdHU';
+
+  // ──────────────────────── Saved / Error ─────────────────────
+  /// Error state illustration.
+  static const String errorIllustrationUrl =
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuB-nSvc76fIjpiONFJOm9fo83DD9a60s513jsP18UPrPYXTHUvoywIaKDT-4ycThS-WmDWiBK7tIi8JZmMb-2N-G6sGiSdW8BBTtvFZVlyTdcnxKVhv75vIj4rulOGvZUj6MxoptJzSk49LxTsplI8xGph080qaEz1ojy5TlMhbjJXKhiY6_e5sObnZPNEmLqCAutYNiOLg0q_WAapxUYMQo-jQ42G7UD4HmQnt6erbKGViDMdSdnvJcay9LGbODSoWyAAAsu6vgww';
 }

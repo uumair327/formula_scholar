@@ -11,9 +11,8 @@ import '../ports/profile_repository_port.dart';
 class GetUserProfileUseCase {
   final ProfileRepositoryPort _repository;
 
-  const GetUserProfileUseCase({
-    required ProfileRepositoryPort repository,
-  }) : _repository = repository;
+  const GetUserProfileUseCase({required ProfileRepositoryPort repository})
+    : _repository = repository;
 
   /// Executes the use case.
   Future<Result<UserProfile>> call() {

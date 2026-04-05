@@ -43,8 +43,15 @@ dependencies:
   equatable: ^2.0.8
   get_it: ^8.0.3
   injectable: ^2.5.0
+  dio: ^5.9.2
+  firebase_core: ^3.13.0
+  firebase_auth: ^5.6.0
+  cloud_firestore: ^5.6.0
+  google_sign_in: ^7.2.0
+  flutter_math_fork: ^0.7.4
 
 dev_dependencies:
+  dart_firebase_admin: any
   flutter_test:
     sdk: flutter
 

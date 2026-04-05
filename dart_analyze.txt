@@ -1,0 +1,5 @@
+Analyzing formula_scholar...
+
+  error - lib\features\auth\auth.dart:3:8 - Target of URI doesn't exist: 'data/data.dart'. Try creating the file referenced by the URI, or try using a URI for a file that does exist. - uri_does_not_exist
+
+1 issue found.

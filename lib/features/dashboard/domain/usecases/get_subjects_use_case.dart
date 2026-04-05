@@ -11,16 +11,15 @@ import '../ports/dashboard_repository_port.dart';
 class GetSubjectsUseCase {
   final DashboardRepositoryPort _repository;
 
-  const GetSubjectsUseCase({
-    required DashboardRepositoryPort repository,
-  }) : _repository = repository;
+  const GetSubjectsUseCase({required DashboardRepositoryPort repository})
+    : _repository = repository;
 
   /// Executes the use case.
-  Future<Result<List<Subject>>> call() {
+  Future<Result<List<Subject>>> call(String boardId, String gradeId) {
     AppLogger.trace(
-      'GetSubjectsUseCase called',
+      'GetSubjectsUseCase called for $boardId, $gradeId',
       tag: AppLogTags.dashboardCubit,
     );
-    return _repository.getSubjects();
+    return _repository.getSubjects(boardId, gradeId);
   }
 }

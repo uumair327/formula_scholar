@@ -24,8 +24,9 @@ abstract final class AppPageTransitions {
       reverseTransitionDuration: AppDurations.animationDefault,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         return FadeTransition(
-          opacity: CurveTween(curve: AppDurations.curveDefault)
-              .animate(animation),
+          opacity: CurveTween(
+            curve: AppDurations.curveDefault,
+          ).animate(animation),
           child: child,
         );
       },
@@ -47,17 +48,15 @@ abstract final class AppPageTransitions {
       transitionDuration: AppDurations.animationDefault,
       reverseTransitionDuration: AppDurations.animationDefault,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        final curved = CurveTween(curve: AppDurations.curveDefault)
-            .animate(animation);
+        final curved = CurveTween(
+          curve: AppDurations.curveDefault,
+        ).animate(animation);
         return SlideTransition(
           position: Tween<Offset>(
             begin: const Offset(0, 0.1),
             end: Offset.zero,
           ).animate(curved),
-          child: FadeTransition(
-            opacity: curved,
-            child: child,
-          ),
+          child: FadeTransition(opacity: curved, child: child),
         );
       },
     );
@@ -77,17 +76,15 @@ abstract final class AppPageTransitions {
       transitionDuration: AppDurations.animationDefault,
       reverseTransitionDuration: AppDurations.animationDefault,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        final curved = CurveTween(curve: AppDurations.curveDefault)
-            .animate(animation);
+        final curved = CurveTween(
+          curve: AppDurations.curveDefault,
+        ).animate(animation);
         return SlideTransition(
           position: Tween<Offset>(
             begin: const Offset(0.25, 0),
             end: Offset.zero,
           ).animate(curved),
-          child: FadeTransition(
-            opacity: curved,
-            child: child,
-          ),
+          child: FadeTransition(opacity: curved, child: child),
         );
       },
     );

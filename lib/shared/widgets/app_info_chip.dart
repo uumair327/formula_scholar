@@ -49,7 +49,8 @@ class AppInfoChip extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: textStyle ??
+        style:
+            textStyle ??
             AppTextStyles.bodySmall.copyWith(
               fontWeight: FontWeight.w500,
               color: textColor,

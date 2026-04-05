@@ -5,4 +5,5 @@
 /// ```
 library;
 
+export 'firebase_module.dart';
 export 'injection.dart';

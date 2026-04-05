@@ -16,7 +16,10 @@ class ProfileHeroWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingHero, vertical: AppDimensions.paddingSection),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDimensions.paddingHero,
+        vertical: AppDimensions.paddingSection,
+      ),
       decoration: const SignatureGlowDecoration(),
       child: Row(
         children: [
@@ -31,7 +34,9 @@ class ProfileHeroWidget extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: AppColors.white.withValues(alpha: AppDimensions.opacitySubtle),
+                    color: AppColors.white.withValues(
+                      alpha: AppDimensions.opacitySubtle,
+                    ),
                     width: AppDimensions.borderWidthThick,
                   ),
                 ),
@@ -39,9 +44,8 @@ class ProfileHeroWidget extends StatelessWidget {
                   child: CachedNetworkImage(
                     imageUrl: profile.avatarUrl,
                     fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(
-                      color: AppColors.primaryFixed,
-                    ),
+                    placeholder: (context, url) =>
+                        Container(color: AppColors.primaryFixed),
                     errorWidget: (context, url, error) => Container(
                       color: AppColors.primaryFixed,
                       child: const Icon(
@@ -65,7 +69,9 @@ class ProfileHeroWidget extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: AppColors.secondaryFixed,
-                      borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+                      borderRadius: BorderRadius.circular(
+                        AppDimensions.radiusXL,
+                      ),
                       boxShadow: const [AppShadows.medium],
                     ),
                     child: Text(
@@ -88,7 +94,9 @@ class ProfileHeroWidget extends StatelessWidget {
                 Text(
                   AppStrings.currentGrade,
                   style: AppTextStyles.labelMedium.copyWith(
-                    color: AppColors.white.withValues(alpha: AppDimensions.opacityHigh),
+                    color: AppColors.white.withValues(
+                      alpha: AppDimensions.opacityHigh,
+                    ),
                     letterSpacing: AppDimensions.letterSpacingNormal,
                   ),
                 ),
@@ -99,6 +107,18 @@ class ProfileHeroWidget extends StatelessWidget {
                     color: AppColors.white,
                   ),
                 ),
+                if (profile.email.isNotEmpty) ...[
+                  const SizedBox(height: AppDimensions.paddingXXS),
+                  Text(
+                    profile.email,
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: AppColors.white.withValues(
+                        alpha: AppDimensions.opacityHigh,
+                      ),
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
                 const SizedBox(height: AppDimensions.paddingSM),
                 Container(
                   padding: const EdgeInsets.symmetric(
@@ -106,10 +126,14 @@ class ProfileHeroWidget extends StatelessWidget {
                     vertical: AppDimensions.chipPaddingVertical,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.white.withValues(alpha: AppDimensions.opacityFaint),
+                    color: AppColors.white.withValues(
+                      alpha: AppDimensions.opacityFaint,
+                    ),
                     borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
                     border: Border.all(
-                      color: AppColors.white.withValues(alpha: AppDimensions.opacityFaint),
+                      color: AppColors.white.withValues(
+                        alpha: AppDimensions.opacityFaint,
+                      ),
                     ),
                   ),
                   child: Row(
@@ -118,7 +142,9 @@ class ProfileHeroWidget extends StatelessWidget {
                       Icon(
                         Icons.school_outlined,
                         size: AppDimensions.iconSM,
-                        color: AppColors.white.withValues(alpha: AppDimensions.opacityNearOpaque),
+                        color: AppColors.white.withValues(
+                          alpha: AppDimensions.opacityNearOpaque,
+                        ),
                       ),
                       const SizedBox(width: AppDimensions.chipPaddingVertical),
                       Text(

@@ -13,7 +13,9 @@ class EncouragementCardWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingXL),
       decoration: BoxDecoration(
-        color: AppColors.tertiaryContainer.withValues(alpha: AppDimensions.opacitySubtle),
+        color: AppColors.tertiaryContainer.withValues(
+          alpha: AppDimensions.opacitySubtle,
+        ),
         borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
         border: Border.all(
           color: AppColors.tertiaryContainer,
@@ -51,7 +53,9 @@ class EncouragementCardWidget extends StatelessWidget {
                 Text(
                   AppStrings.encouragementMessage,
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.onTertiaryContainer.withValues(alpha: AppDimensions.opacityHigh),
+                    color: AppColors.onTertiaryContainer.withValues(
+                      alpha: AppDimensions.opacityHigh,
+                    ),
                   ),
                 ),
               ],

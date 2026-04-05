@@ -5,4 +5,6 @@
 /// ```
 library;
 
+export 'cubit/subject_selection_cubit.dart';
+export 'cubit/subject_selection_state.dart';
 export 'widgets/widgets.dart';

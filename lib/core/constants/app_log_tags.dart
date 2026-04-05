@@ -13,6 +13,24 @@ abstract final class AppLogTags {
   static const String router = 'Router';
   static const String bloc = 'Bloc';
   static const String mainShellPage = 'MainShellPage';
+  static const String subjectSelection = 'SubjectSelection';
+
+  // ──────────────────────── Auth ──────────────────────────────
+  static const String loginPage = 'LoginPage';
+  static const String signupPage = 'SignupPage';
+  static const String authCubit = 'AuthCubit';
+
+  // ──────────────────────── Onboarding ─────────────────────────
+  // Presentation
+  static const String onboardingPage = 'OnboardingPage';
+  static const String onboardingCubit = 'OnboardingCubit';
+  static const String onboardingStep1Page = 'OnboardingStep1Page';
+  static const String onboardingStep2Page = 'OnboardingStep2Page';
+  static const String onboardingStep3Page = 'OnboardingStep3Page';
+  static const String onboardingStep4Page = 'OnboardingStep4Page';
+  // Data
+  static const String onboardingRepo = 'OnboardingRepo';
+  static const String onboardingDataSource = 'OnboardingDataSource';
 
   // ──────────────────────── Dashboard ─────────────────────────
   // Presentation
@@ -22,21 +40,21 @@ abstract final class AppLogTags {
   static const String dashboardRepo = 'DashboardRepo';
   static const String dashboardDataSource = 'DashboardDataSource';
 
-  // ──────────────────────── Geometry ──────────────────────────
+  // ──────────────────────── Chapters (generic) ─────────────────
   // Presentation
-  static const String geometryPage = 'GeometryPage';
-  static const String geometryCubit = 'GeometryCubit';
+  static const String chaptersPage = 'ChaptersPage';
+  static const String chaptersCubit = 'ChaptersCubit';
   // Data
-  static const String geometryRepo = 'GeometryRepo';
-  static const String geometryDataSource = 'GeometryDataSource';
+  static const String chaptersRepo = 'ChaptersRepo';
+  static const String chaptersDataSource = 'ChaptersDataSource';
 
-  // ──────────────────────── Algebra ───────────────────────────
+  // ──────────────────────── Formulas ────────────────────────────
   // Presentation
-  static const String algebraPage = 'AlgebraPage';
-  static const String algebraCubit = 'AlgebraCubit';
+  static const String formulasPage = 'FormulasPage';
+  static const String formulasCubit = 'FormulasCubit';
   // Data
-  static const String algebraRepo = 'AlgebraRepo';
-  static const String algebraDataSource = 'AlgebraDataSource';
+  static const String formulasRepo = 'FormulasRepo';
+  static const String formulasDataSource = 'FormulasDataSource';
 
   // ──────────────────────── Profile ───────────────────────────
   // Presentation
@@ -49,4 +67,20 @@ abstract final class AppLogTags {
   // Data
   static const String profileRepo = 'ProfileRepo';
   static const String profileDataSource = 'ProfileDataSource';
+
+  // ──────────────────────── Practice ───────────────────────────
+  // Presentation
+  static const String practicePage = 'PracticePage';
+  static const String practiceCubit = 'PracticeCubit';
+  // Data
+  static const String practiceRepo = 'PracticeRepo';
+  static const String practiceDataSource = 'PracticeDataSource';
+
+  // ──────────────────────── Saved ──────────────────────────────
+  // Presentation
+  static const String savedPage = 'SavedPage';
+  static const String savedCubit = 'SavedCubit';
+  // Data
+  static const String savedRepo = 'SavedRepo';
+  static const String savedDataSource = 'SavedDataSource';
 }

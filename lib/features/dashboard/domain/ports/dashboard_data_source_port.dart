@@ -19,8 +19,8 @@ abstract interface class DashboardDataSourcePort {
   /// Fetches the user's overall study progress.
   Future<StudyProgress> getStudyProgress();
 
-  /// Fetches the list of available subjects.
-  Future<List<Subject>> getSubjects();
+  /// Fetches the list of available subjects heavily filtered by curriculum.
+  Future<List<Subject>> getSubjects(String boardId, String gradeId);
 
   /// Fetches recent study activity.
   Future<List<RecentStudy>> getRecentStudies();

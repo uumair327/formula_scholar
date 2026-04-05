@@ -14,8 +14,8 @@ class StudyProgress extends Equatable {
 
   @override
   List<Object?> get props => [
-        masteryPercentage,
-        completedChapters,
-        totalChapters,
-      ];
+    masteryPercentage,
+    completedChapters,
+    totalChapters,
+  ];
 }

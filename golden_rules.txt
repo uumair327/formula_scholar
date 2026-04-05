@@ -1,0 +1,183 @@
+🚀 Golden Rules for Agentic AI Vibe Coding (Flutter)
+1. 🧠 Architecture First, Code Later
+
+If you skip this, everything breaks later.
+
+Use Clean Architecture (strict separation)
+presentation → UI, Bloc/Cubit
+domain → usecases, entities (pure Dart)
+data → repositories, API, DB
+
+👉 Rule:
+
+UI should NOT know about API, and API should NOT know about UI.
+
+2. 🧩 SOLID is Non-Negotiable
+
+Not theory—apply it daily:
+
+S → One class = one job
+O → Extend, don’t modify
+L → Replaceable implementations
+I → Small focused interfaces
+D → Depend on abstraction, not concrete
+
+👉 Example:
+
+Don’t call Dio directly in Bloc
+Use AuthRepository → implemented by AuthRepositoryImpl
+3. ⚡ Bloc/Cubit with Clear Responsibility
+
+Don’t overcomplicate state management.
+
+Cubit → simple state (forms, toggles)
+Bloc → complex flows (API, pagination, orchestration)
+
+👉 Rule:
+
+One feature = one Bloc (or small set), not a god Bloc
+
+4. 🌐 API Layer Must Be Replaceable
+
+You mentioned Dio—good. But structure matters:
+
+Use:
+ApiClient (Dio wrapper)
+Interceptors (auth, logging, retry)
+Never call Dio directly outside data layer
+
+👉 Rule:
+
+You should be able to replace Dio with something else in 1 day
+
+5. 🧱 Dependency Injection (injectable + get_it)
+
+No manual wiring everywhere.
+
+Register:
+Repositories
+UseCases
+API clients
+Use @injectable properly
+
+👉 Rule:
+
+No new keyword inside business logic
+
+6. 📦 Barrel Pattern for Scalability
+
+Keep imports clean:
+
+export 'bloc/login_bloc.dart';
+export 'view/login_page.dart';
+
+👉 Rule:
+
+Feature folder should feel like a mini-package
+
+7. 🎯 Centralized Constants (You mentioned this—good)
+
+But do it properly:
+
+AppColors
+AppDimens
+AppDurations
+AppStrings
+AppAssets
+
+👉 Rule:
+
+No magic numbers or strings in UI
+
+8. 🧾 Logging is Mandatory (Not Optional)
+
+Use a proper logger:
+
+Log:
+API requests/responses
+Errors
+State transitions (BlocObserver)
+
+👉 Rule:
+
+If something breaks, logs should tell you WHY in 10 seconds
+
+9. 🧭 go_router Done Right
+
+Routing should be:
+
+Declarative
+Centralized
+Typed (avoid string chaos)
+
+👉 Rule:
+
+Navigation should NOT contain business logic
+
+10. 🤖 Agent-Friendly Code (This is the REAL upgrade)
+
+Since you're aiming for AI-assisted / agentic coding, optimize for:
+
+✔ Predictability
+Same folder structure everywhere
+Same naming conventions
+✔ Small Units
+Small files → AI understands better
+Avoid 500-line widgets
+✔ Explicitness
+Avoid hidden magic
+Prefer clear flows over clever tricks
+
+👉 Rule:
+
+Code should be understandable by a junior dev OR an AI in seconds
+
+11. 🧪 Testable by Design
+
+If it’s not testable, it’s not scalable.
+
+Unit test:
+UseCases
+Repositories
+Mock dependencies
+
+👉 Rule:
+
+If testing feels hard → architecture is wrong
+
+12. 🧹 Consistency > Intelligence
+
+Most devs fail here.
+
+Same naming pattern everywhere:
+LoginBloc
+LoginEvent
+LoginState
+
+👉 Rule:
+
+Don’t be creative—be consistent
+
+🔥 What You're Missing (Hard Truth)
+
+You listed good tools, but:
+
+❌ Tools ≠ Architecture
+❌ Libraries ≠ Scalability
+❌ Patterns ≠ Discipline
+
+👉 Real difference:
+
+Average dev: “Uses Bloc”
+Strong dev: “Designs predictable systems that scale”
+
+⚡ Final Checklist (Save This)
+
+Before shipping any feature, ask:
+
+ Can I replace API layer easily?
+ Is business logic isolated from UI?
+ Is state predictable and minimal?
+ Are constants centralized?
+ Can AI (or a new dev) understand this quickly?
+ Are logs sufficient to debug instantly?

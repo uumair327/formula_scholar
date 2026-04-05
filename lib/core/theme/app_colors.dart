@@ -74,6 +74,15 @@ abstract final class AppColors {
   static const Color green200 = Color(0xFFBBF7D0);
   static const Color blue200 = Color(0xFFBFDBFE);
 
+  // Surface variants
+  static const Color surfaceDim = Color(0xFFD8DADF);
+  static const Color surfaceBright = Color(0xFFF7F9FF);
+  static const Color surfaceVariant = Color(0xFFE0E2E8);
+  static const Color surfaceTint = Color(0xFF00639A);
+  static const Color inverseSurface = Color(0xFF2D3135);
+  static const Color inverseOnSurface = Color(0xFFEFF1F6);
+  static const Color inversePrimary = Color(0xFF96CCFF);
+
   // Core utility colors
   static const Color white = Color(0xFFFFFFFF);
   static const Color transparent = Color(0x00000000);

@@ -5,7 +5,10 @@
 /// ```
 library;
 
-export 'algebra/algebra.dart';
+export 'auth/auth.dart';
+export 'chapters/chapters.dart';
 export 'dashboard/dashboard.dart';
-export 'geometry/geometry.dart';
+export 'onboarding/onboarding.dart';
+export 'practice/practice.dart';
 export 'profile/profile.dart';
+export 'saved/saved.dart';
