@@ -43,8 +43,22 @@ class SavedRepositoryImpl implements SavedRepositoryPort {
     try {
       await _dataSource.removeBookmark(formulaId);
       return const Success(null);
+    } on CacheException catch (e, stackTrace) {
+      return Error(
+        CacheFailure(
+          message: e.message,
+          originalError: e,
+          stackTrace: stackTrace,
+        ),
+      );
     } catch (e, stackTrace) {
-      return Error(CacheFailure(message: 'Failed to remove bookmark', originalError: e, stackTrace: stackTrace));
+      return Error(
+        CacheFailure(
+          message: 'Failed to remove bookmark',
+          originalError: e,
+          stackTrace: stackTrace,
+        ),
+      );
     }
   }
 }

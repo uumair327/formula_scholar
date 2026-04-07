@@ -1,9 +1,10 @@
 import 'package:injectable/injectable.dart';
+
 import '../../../../core/core.dart';
 import '../domain.dart';
 
 /// Use case to remove a bookmarked formula.
-@lazySingleton
+@injectable
 class RemoveBookmarkUseCase {
   final SavedRepositoryPort _repository;
 

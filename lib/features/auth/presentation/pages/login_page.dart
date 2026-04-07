@@ -34,7 +34,6 @@ class _LoginPageState extends State<LoginPage> {
 
   void _onSignIn() {
     if (_formKey.currentState?.validate() ?? false) {
-      AppLogger.debug('Sign in submitted', tag: AppLogTags.loginPage);
       context.read<AuthCubit>().signIn(
         email: _identityController.text.trim(),
         password: _passwordController.text,
@@ -48,10 +47,6 @@ class _LoginPageState extends State<LoginPage> {
       listenWhen: (prev, cur) => prev.status != cur.status,
       listener: (context, state) {
         if (state.status == AuthStatus.authenticated) {
-          AppLogger.info(
-            'Auth success — navigating to onboarding',
-            tag: AppLogTags.loginPage,
-          );
           context.go(AppRoutes.onboardingPath);
         } else if (state.status == AuthStatus.error &&
             state.errorMessage != null) {
@@ -457,10 +452,7 @@ class _FormContent extends StatelessWidget {
             children: [
               _AuthLabel(AppStrings.loginPasswordLabel),
               GestureDetector(
-                onTap: () => AppLogger.debug(
-                  'Forgot password tapped',
-                  tag: AppLogTags.loginPage,
-                ),
+                onTap: () {},
                 child: Text(
                   AppStrings.loginForgotPassword,
                   style: AppTextStyles.labelMedium.copyWith(
@@ -554,10 +546,6 @@ class _FormContent extends StatelessWidget {
                   label: AppStrings.loginGoogle,
                   icon: LucideIcons.globe,
                   onTap: () {
-                    AppLogger.debug(
-                      'Google login tapped',
-                      tag: AppLogTags.loginPage,
-                    );
                     context.read<AuthCubit>().signInWithGoogle();
                   },
                 ),
@@ -567,10 +555,7 @@ class _FormContent extends StatelessWidget {
                 child: _SocialButton(
                   label: AppStrings.loginSchoolId,
                   icon: LucideIcons.graduationCap,
-                  onTap: () => AppLogger.debug(
-                    'School ID login tapped',
-                    tag: AppLogTags.loginPage,
-                  ),
+                  onTap: () {},
                 ),
               ),
             ],
@@ -590,13 +575,7 @@ class _FormContent extends StatelessWidget {
                 ),
                 const SizedBox(width: AppDimensions.paddingXXS),
                 GestureDetector(
-                  onTap: () {
-                    AppLogger.debug(
-                      'Navigate to signup',
-                      tag: AppLogTags.loginPage,
-                    );
-                    context.go(AppRoutes.signupPath);
-                  },
+                  onTap: () => context.go(AppRoutes.signupPath),
                   child: Text(
                     AppStrings.loginSignUp,
                     style: AppTextStyles.bodyMedium.copyWith(

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/core.dart';
+import 'features/auth/auth.dart';
 import 'firebase_options.dart';
 import 'shared/shared.dart';
 
@@ -67,8 +68,11 @@ class FormulaScholarApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => getIt<SubjectSelectionCubit>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => getIt<AuthCubit>()),
+        BlocProvider(create: (_) => getIt<SubjectSelectionCubit>()),
+      ],
       child: MaterialApp.router(
         title: AppStrings.appName,
         debugShowCheckedModeBanner: false,

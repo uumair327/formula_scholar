@@ -20,7 +20,7 @@ class GetChaptersUseCase {
   Future<Result<List<Chapter>>> call(String subjectId) {
     AppLogger.trace(
       'GetChaptersUseCase called for subject=$subjectId',
-      tag: AppLogTags.chaptersCubit,
+      tag: AppLogTags.chaptersUseCase,
     );
     return _repository.getChapters(subjectId);
   }

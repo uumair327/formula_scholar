@@ -8,7 +8,17 @@ class GetBoardsUseCase {
 
   GetBoardsUseCase(this._repository);
 
-  Future<Result<PaginatedResponse<Board>>> execute(String countryId, {String? stateId, int limit = 20, String? startAfterId}) {
-    return _repository.getBoards(countryId, stateId: stateId, limit: limit, startAfterId: startAfterId);
+  Future<Result<PaginatedResponse<Board>>> call(
+    String countryId, {
+    String? stateId,
+    int limit = 20,
+    String? startAfterId,
+  }) {
+    return _repository.getBoards(
+      countryId,
+      stateId: stateId,
+      limit: limit,
+      startAfterId: startAfterId,
+    );
   }
 }

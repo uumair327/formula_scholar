@@ -18,7 +18,7 @@ class GetFormulasUseCase {
   Future<Result<List<Formula>>> call(String subjectId, String chapterId) {
     AppLogger.trace(
       'GetFormulasUseCase called for subject=$subjectId, chapter=$chapterId',
-      tag: AppLogTags.formulasCubit,
+      tag: AppLogTags.formulasUseCase,
     );
     return _repository.getFormulas(subjectId, chapterId);
   }

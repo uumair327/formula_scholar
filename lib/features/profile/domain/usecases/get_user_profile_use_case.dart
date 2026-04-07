@@ -18,7 +18,7 @@ class GetUserProfileUseCase {
   Future<Result<UserProfile>> call() {
     AppLogger.trace(
       'GetUserProfileUseCase called',
-      tag: AppLogTags.profileCubit,
+      tag: AppLogTags.profileUseCase,
     );
     return _repository.getUserProfile();
   }

@@ -54,6 +54,15 @@ class AuthFailure extends Failure {
   });
 }
 
+/// Authentication cancellation that should not be surfaced as an error.
+class CancelledFailure extends Failure {
+  const CancelledFailure({
+    required super.message,
+    super.originalError,
+    super.stackTrace,
+  });
+}
+
 /// Generic unexpected failure for unclassified errors.
 class UnexpectedFailure extends Failure {
   const UnexpectedFailure({

@@ -18,7 +18,7 @@ class GetProfileStatsUseCase {
   Future<Result<List<ProfileStat>>> call() {
     AppLogger.trace(
       'GetProfileStatsUseCase called',
-      tag: AppLogTags.profileCubit,
+      tag: AppLogTags.profileUseCase,
     );
     return _repository.getProfileStats();
   }

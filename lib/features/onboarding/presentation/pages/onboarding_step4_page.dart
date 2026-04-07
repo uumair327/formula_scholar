@@ -47,10 +47,6 @@ class _OnboardingStep4PageState extends State<OnboardingStep4Page> {
   String _selectedId = 'regular';
 
   void _onFinish() {
-    AppLogger.info(
-      'Step 4: goal=$_selectedId — onboarding complete',
-      tag: AppLogTags.onboardingStep4Page,
-    );
     context.go(AppRoutes.dashboardPath);
   }
 

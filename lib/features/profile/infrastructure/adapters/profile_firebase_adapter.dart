@@ -12,10 +12,44 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
 
   ProfileFirebaseAdapter(this._firestore, this._firebaseAuth);
 
+  String _readString(
+    Map<String, dynamic> data,
+    String key, {
+    String fallback = '',
+  }) {
+    final value = data[key];
+    if (value is String) return value;
+    if (value == null) return fallback;
+    return value.toString();
+  }
+
+  bool _readBool(
+    Map<String, dynamic> data,
+    String key, {
+    bool fallback = false,
+  }) {
+    final value = data[key];
+    if (value is bool) return value;
+    if (value is String) {
+      final normalized = value.trim().toLowerCase();
+      if (normalized == 'true' || normalized == '1' || normalized == 'yes') {
+        return true;
+      }
+      if (normalized == 'false' || normalized == '0' || normalized == 'no') {
+        return false;
+      }
+    }
+    if (value is num) return value != 0;
+    return fallback;
+  }
+
   @override
   Future<UserProfile> getUserProfile() async {
-    AppLogger.trace('getUserProfile() fetching from Firestore', tag: AppLogTags.profileDataSource);
-    
+    AppLogger.trace(
+      'getUserProfile() fetching from Firestore',
+      tag: AppLogTags.profileDataSource,
+    );
+
     final currentUser = _firebaseAuth.currentUser;
     if (currentUser == null) {
       return const UserProfile(
@@ -33,8 +67,11 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
     final authPhoto = currentUser.photoURL ?? '';
 
     // Merge with Firestore user doc for app-specific fields (grade, isPro).
-    final docSnapshot = await _firestore.collection('users').doc(currentUser.uid).get();
-    
+    final docSnapshot = await _firestore
+        .collection('users')
+        .doc(currentUser.uid)
+        .get();
+
     if (!docSnapshot.exists) {
       // Seed a baseline user doc for first-time users.
       final seedData = {
@@ -50,25 +87,46 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
         name: authName.isNotEmpty ? authName : 'Scholar',
         email: authEmail,
         grade: AppStrings.profileGrade,
-        avatarUrl: authPhoto.isNotEmpty ? authPhoto : AppAssets.profileHeroAvatarUrl,
+        avatarUrl: authPhoto.isNotEmpty
+            ? authPhoto
+            : AppAssets.profileHeroAvatarUrl,
         isPro: false,
       );
     }
 
     final data = docSnapshot.data()!;
+    final fsName = _readString(data, 'name', fallback: authName);
+    final fsEmail = _readString(data, 'email', fallback: authEmail);
+    final fsGrade = _readString(
+      data,
+      'grade',
+      fallback: AppStrings.profileGrade,
+    );
+    final fsAvatarUrl = _readString(
+      data,
+      'avatarUrl',
+      fallback: authPhoto.isNotEmpty
+          ? authPhoto
+          : AppAssets.profileHeroAvatarUrl,
+    );
+    final fsIsPro = _readBool(data, 'isPro', fallback: false);
+
     return UserProfile(
-      name: data['name'] ?? authName.isNotEmpty ? (data['name'] ?? authName) : 'Scholar',
-      email: data['email'] ?? authEmail,
-      grade: data['grade'] ?? AppStrings.profileGrade,
-      avatarUrl: data['avatarUrl'] ?? (authPhoto.isNotEmpty ? authPhoto : AppAssets.profileHeroAvatarUrl),
-      isPro: data['isPro'] ?? false,
+      name: fsName.isNotEmpty ? fsName : 'Scholar',
+      email: fsEmail,
+      grade: fsGrade,
+      avatarUrl: fsAvatarUrl,
+      isPro: fsIsPro,
     );
   }
 
   @override
   Future<List<ProfileStat>> getProfileStats() async {
-    AppLogger.trace('getProfileStats() fetching from Firestore', tag: AppLogTags.profileDataSource);
-    
+    AppLogger.trace(
+      'getProfileStats() fetching from Firestore',
+      tag: AppLogTags.profileDataSource,
+    );
+
     final uid = _firebaseAuth.currentUser?.uid;
     if (uid == null) {
       return const [
@@ -93,17 +151,23 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
       ];
     }
 
-    final docSnapshot = await _firestore.collection('users').doc(uid).collection('stats').doc('current').get();
+    final docSnapshot = await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('stats')
+        .doc('current')
+        .get();
     Map<String, dynamic> data;
 
     if (!docSnapshot.exists) {
       // Seed robust mock stats for UI presentation if backend hasn't initialized them yet
-      data = {
-        'formulas': 124,
-        'streak': 12,
-        'points': 2450,
-      };
-      await _firestore.collection('users').doc(uid).collection('stats').doc('current').set(data);
+      data = {'formulas': 124, 'streak': 12, 'points': 2450};
+      await _firestore
+          .collection('users')
+          .doc(uid)
+          .collection('stats')
+          .doc('current')
+          .set(data);
     } else {
       data = docSnapshot.data()!;
     }
@@ -131,7 +195,10 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
 
   @override
   Future<List<SettingsItem>> getSettingsItems() async {
-    AppLogger.trace('getSettingsItems() returning static client data', tag: AppLogTags.profileDataSource);
+    AppLogger.trace(
+      'getSettingsItems() returning static client data',
+      tag: AppLogTags.profileDataSource,
+    );
     return const [
       SettingsItem(
         id: 'account',

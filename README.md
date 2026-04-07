@@ -46,12 +46,13 @@ This project follows **Hexagonal Architecture (Ports & Adapters)** combined with
 ```
 
 ### Key Principles
-| Principle | Implementation |
-|-----------|---------------|
-| **SOLID** | Use Cases (SRP), Ports (ISP/DIP), Adapters (OCP/LSP) |
-| **Dependency Rule** | All deps point inward: Adapters → Domain ← Presentation |
-| **Result Type** | Sealed `Result<T>` (Success/Error) — no raw exceptions at boundaries |
-| **Typed Failures** | Sealed `Failure` hierarchy (Server, Cache, Auth, Unexpected) |
+
+| Principle           | Implementation                                                       |
+| ------------------- | -------------------------------------------------------------------- |
+| **SOLID**           | Use Cases (SRP), Ports (ISP/DIP), Adapters (OCP/LSP)                 |
+| **Dependency Rule** | All deps point inward: Adapters → Domain ← Presentation              |
+| **Result Type**     | Sealed `Result<T>` (Success/Error) — no raw exceptions at boundaries |
+| **Typed Failures**  | Sealed `Failure` hierarchy (Server, Cache, Auth, Unexpected)         |
 
 ---
 
@@ -88,15 +89,15 @@ lib/
 
 ## 🛠️ Tech Stack
 
-| Category | Technology |
-|----------|-----------|
-| **Framework** | Flutter 3.38.6 |
-| **Language** | Dart 3.10.7 |
-| **State Management** | flutter_bloc (Cubit) |
-| **Navigation** | go_router |
-| **DI** | get_it + injectable |
-| **Logging** | logger |
-| **Architecture** | Hexagonal (Ports & Adapters) |
+| Category             | Technology                   |
+| -------------------- | ---------------------------- |
+| **Framework**        | Flutter 3.38.6               |
+| **Language**         | Dart 3.10.7                  |
+| **State Management** | flutter_bloc (Cubit)         |
+| **Navigation**       | go_router                    |
+| **DI**               | get_it + injectable          |
+| **Logging**          | logger                       |
+| **Architecture**     | Hexagonal (Ports & Adapters) |
 
 ---
 
@@ -135,6 +136,12 @@ cp .env.example .env
 # (Not needed for local/development — the app runs with hardcoded data by default)
 ```
 
+### Firebase Secrets
+
+- `lib/firebase_options.dart` and `android/app/google-services.json` are generated per Firebase project.
+- Do not commit Firebase Admin SDK service-account JSON files.
+- Set `FIREBASE_SERVICE_ACCOUNT_PATH` locally when running the maintenance scripts, or pass the JSON path as the first CLI argument.
+
 ---
 
 ## 🔄 Swapping Backends
@@ -142,6 +149,7 @@ cp .env.example .env
 The app ships with a **local adapter** (hardcoded data). To integrate a real backend:
 
 1. Create a new adapter implementing the `DataSourcePort`:
+
    ```dart
    @LazySingleton(as: DashboardDataSourcePort)
    @Environment('firebase')
@@ -151,6 +159,7 @@ The app ships with a **local adapter** (hardcoded data). To integrate a real bac
 2. Add `@Environment('local')` to the existing local adapter
 
 3. Regenerate DI:
+
    ```bash
    dart run build_runner build --delete-conflicting-outputs
    ```
@@ -206,6 +215,12 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 5. Open a Pull Request
 
 Please read our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing.
+
+### Contributor Expectations
+
+- Run `flutter analyze` and `flutter test` before opening a PR.
+- Keep secrets out of commits and use the provided example environment files.
+- Follow the architecture boundaries described in `CONTRIBUTING.md`.
 
 ---
 

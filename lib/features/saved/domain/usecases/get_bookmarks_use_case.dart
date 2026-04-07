@@ -13,7 +13,7 @@ class GetBookmarksUseCase {
     : _repository = repository;
 
   Future<Result<List<BookmarkedFormula>>> call() {
-    AppLogger.trace('GetBookmarksUseCase called', tag: AppLogTags.savedCubit);
+    AppLogger.trace('GetBookmarksUseCase called', tag: AppLogTags.savedUseCase);
     return _repository.getBookmarks();
   }
 }

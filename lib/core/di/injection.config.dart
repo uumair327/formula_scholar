@@ -22,6 +22,8 @@ import '../../features/auth/domain/usecases/google_sign_in_use_case.dart'
 import '../../features/auth/domain/usecases/sign_in_use_case.dart' as _i362;
 import '../../features/auth/domain/usecases/sign_out_use_case.dart' as _i580;
 import '../../features/auth/domain/usecases/sign_up_use_case.dart' as _i1037;
+import '../../features/auth/domain/usecases/watch_auth_state_use_case.dart'
+    as _i873;
 import '../../features/auth/infrastructure/adapters/auth_firebase_adapter.dart'
     as _i117;
 import '../../features/auth/infrastructure/repositories/auth_repository_impl.dart'
@@ -240,7 +242,10 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i1037.SignUpUseCase>(
       () => _i1037.SignUpUseCase(gh<_i320.AuthRepositoryPort>()),
     );
-    gh.lazySingleton<_i221.RemoveBookmarkUseCase>(
+    gh.factory<_i873.WatchAuthStateUseCase>(
+      () => _i873.WatchAuthStateUseCase(gh<_i320.AuthRepositoryPort>()),
+    );
+    gh.factory<_i221.RemoveBookmarkUseCase>(
       () => _i221.RemoveBookmarkUseCase(gh<_i385.SavedRepositoryPort>()),
     );
     gh.factory<_i527.GetBookmarksUseCase>(
@@ -270,14 +275,6 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i224.OnboardingRepositoryImpl(gh<_i634.OnboardingDataSourcePort>()),
     );
-    gh.factory<_i117.AuthCubit>(
-      () => _i117.AuthCubit(
-        signIn: gh<_i140.SignInUseCase>(),
-        signUp: gh<_i140.SignUpUseCase>(),
-        signOut: gh<_i140.SignOutUseCase>(),
-        googleSignIn: gh<_i140.GoogleSignInUseCase>(),
-      ),
-    );
     gh.lazySingleton<_i95.DashboardRepositoryPort>(
       () => _i367.DashboardRepositoryImpl(
         dataSource: gh<_i95.DashboardDataSourcePort>(),
@@ -294,6 +291,15 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i509.GetStatesUseCase>(
       () => _i509.GetStatesUseCase(gh<_i634.OnboardingRepositoryPort>()),
+    );
+    gh.factory<_i117.AuthCubit>(
+      () => _i117.AuthCubit(
+        signIn: gh<_i140.SignInUseCase>(),
+        signUp: gh<_i140.SignUpUseCase>(),
+        signOut: gh<_i140.SignOutUseCase>(),
+        googleSignIn: gh<_i140.GoogleSignInUseCase>(),
+        watchAuthState: gh<_i140.WatchAuthStateUseCase>(),
+      ),
     );
     gh.factory<_i712.SavedCubit>(
       () => _i712.SavedCubit(

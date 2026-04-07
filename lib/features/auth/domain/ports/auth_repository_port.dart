@@ -11,7 +11,7 @@ import '../entities/auth_user.dart';
 /// not a concrete implementation.
 ///
 /// Returns [Result] to enforce typed error handling at the boundary.
-abstract class AuthRepositoryPort {
+abstract interface class AuthRepositoryPort {
   /// Signs in a user with [email] and [password].
   Future<Result<AuthUser>> signIn({
     required String email,

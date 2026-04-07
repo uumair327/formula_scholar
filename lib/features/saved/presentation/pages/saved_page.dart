@@ -26,58 +26,66 @@ class _SavedPageState extends State<SavedPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SavedCubit, SavedState>(
-      builder: (context, state) {
-        if (state.status == SavedStatus.loading ||
-            state.status == SavedStatus.initial) {
-          return const Scaffold(body: AppLoadingState());
-        }
+    return BlocBuilder<AuthCubit, AuthState>(
+      buildWhen: (prev, curr) => prev.user != curr.user,
+      builder: (context, authState) {
+        return BlocBuilder<SavedCubit, SavedState>(
+          buildWhen: (prev, curr) =>
+              prev.status != curr.status || prev.bookmarks != curr.bookmarks,
+          builder: (context, state) {
+            if (state.status == SavedStatus.loading ||
+                state.status == SavedStatus.initial) {
+              return const Scaffold(body: AppLoadingState());
+            }
 
-        if (state.status == SavedStatus.error) {
-          return Scaffold(
-            body: AppErrorState(
-              message: state.errorMessage,
-              onRetry: () => context.read<SavedCubit>().loadBookmarks(),
-            ),
-          );
-        }
+            if (state.status == SavedStatus.error) {
+              return Scaffold(
+                body: AppErrorState(
+                  message: state.errorMessage,
+                  onRetry: () => context.read<SavedCubit>().loadBookmarks(),
+                ),
+              );
+            }
 
-        if (state.isEmpty) {
-          // Show empty bookmarks state (matching prototype).
-          return Scaffold(
-            body: SafeArea(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.only(
-                  left: AppDimensions.paddingXXL,
-                  right: AppDimensions.paddingXXL,
-                  top: AppDimensions.paddingXXL,
-                  bottom: AppDimensions.bottomNavPadding,
+            if (state.isEmpty) {
+              // Show empty bookmarks state (matching prototype).
+              return Scaffold(
+                body: SafeArea(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.only(
+                      left: AppDimensions.paddingXXL,
+                      right: AppDimensions.paddingXXL,
+                      top: AppDimensions.paddingXXL,
+                      bottom: AppDimensions.bottomNavPadding,
+                    ),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: AppDimensions.paddingSection),
+                        _buildEmptyState(context),
+                        const SizedBox(height: AppDimensions.paddingSection),
+                        _buildProTipBanner(),
+                      ],
+                    ),
+                  ),
                 ),
-                child: Column(
-                  children: [
-                    const SizedBox(height: AppDimensions.paddingSection),
-                    _buildEmptyState(context),
-                    const SizedBox(height: AppDimensions.paddingSection),
-                    _buildProTipBanner(),
-                  ],
-                ),
+              );
+            }
+
+            // Show loaded bookmarks
+            return Scaffold(
+              appBar: _buildAppBar(context, authState.user),
+              body: ListView.separated(
+                padding: const EdgeInsets.all(AppDimensions.paddingXXL),
+                itemCount: state.bookmarks.length,
+                separatorBuilder: (_, __) =>
+                    const SizedBox(height: AppDimensions.paddingLG),
+                itemBuilder: (context, index) {
+                  final bookmark = state.bookmarks[index];
+                  return _BookmarkCard(bookmark: bookmark);
+                },
               ),
-            ),
-          );
-        }
-
-        // Show loaded bookmarks
-        return Scaffold(
-          appBar: _buildAppBar(context),
-          body: ListView.separated(
-            padding: const EdgeInsets.all(AppDimensions.paddingXXL),
-            itemCount: state.bookmarks.length,
-            separatorBuilder: (_, __) => const SizedBox(height: AppDimensions.paddingLG),
-            itemBuilder: (context, index) {
-              final bookmark = state.bookmarks[index];
-              return _BookmarkCard(bookmark: bookmark);
-            },
-          ),
+            );
+          },
         );
       },
     );
@@ -218,9 +226,7 @@ class _SavedPageState extends State<SavedPage> {
     );
   }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
-    final authRepo = getIt<AuthRepositoryPort>();
-    final user = authRepo.currentUser;
+  PreferredSizeWidget _buildAppBar(BuildContext context, AuthUser? user) {
     final photoUrl = user?.photoUrl ?? '';
 
     return AppBar(
@@ -301,7 +307,8 @@ class _BookmarkCard extends StatelessWidget {
                 ],
               ),
               IconButton(
-                onPressed: () => context.read<SavedCubit>().removeBookmark(bookmark.id),
+                onPressed: () =>
+                    context.read<SavedCubit>().removeBookmark(bookmark.id),
                 icon: const Icon(
                   Icons.bookmark,
                   size: AppDimensions.iconMD,

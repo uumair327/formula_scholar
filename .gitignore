@@ -1,5 +1,6 @@
 # ══════════════════════════════════════════════════════════════════
 # Formula Scholar — Enterprise .gitignore
+# Last Updated: 2026-04-07
 # ══════════════════════════════════════════════════════════════════
 
 # ─────────────────────────────────── Flutter / Dart ───────────────
@@ -28,6 +29,7 @@ coverage/
 # ─────────────────────────────────── Android ──────────────────────
 **/android/**/gradle-wrapper.jar
 **/android/.gradle/
+**/android/.kotlin/
 **/android/captures/
 **/android/gradlew
 **/android/gradlew.bat
@@ -131,21 +133,61 @@ $RECYCLE.BIN/
 .Trash-*
 .nfs*
 
-# ─────────────────────────────────── Secrets / Environment ───────
+# ─────────────────────── 🔐 SECRETS / CREDENTIALS ───────────────
+# Environment files
 .env
 .env.*
+.env.local
+.env.*.local
+*.local
 !.env.example
+.envrc
+
+# Local secret stores
+.secrets/
+.firebase/
+
+# TLS/SSL certificates
 *.pem
 *.p12
 *.key
 *.cert
 *.crt
+
+# Firebase configuration (SENSITIVE — regenerate via FlutterFire CLI)
 google-services.json
+**/google-services.json
 GoogleService-Info.plist
+**/GoogleService-Info.plist
 firebase_app_id_file.json
-firebase_options.dart
+lib/firebase_options.dart
+**/firebase_options.dart
+formula-scholar-firebase-adminsdk-*.json
+**/*-firebase-adminsdk-*.json
+
+# Firebase Admin SDK service account keys (CRITICAL — NEVER commit)
+*-firebase-adminsdk-*.json
+**/service-account*.json
+**/serviceAccount*.json
+*firebase-adminsdk*.json
+firebase-adminsdk*.json
+
+# Amplify / AWS
 amplify/
 aws-exports.dart
+
+# Android signing
+**/key.properties
+**/release.keystore
+**/upload-keystore.jks
+**/*.keystore
+**/*.jks
+*.mobileprovision
+*.p8
+
+# SHA fingerprint debug files (sensitive build info)
+sha_debug*.txt
+sha_release*.txt
 
 # ─────────────────────────────────── Build Artifacts ─────────────
 *.apk
@@ -170,8 +212,11 @@ test_driver/screenshots/
 logs/
 crash_reports/
 analyze_output.txt
+analyze_out.txt
+dart_analyze.txt
 dart_tree.txt
 dart_tree_new.txt
+features_tree.txt
 file_list.txt
 
 # ─────────────────────────────────── Package Managers ─────────────
@@ -180,6 +225,7 @@ node_modules/
 .yarn/
 package-lock.json
 yarn.lock
+pnpm-lock.yaml
 
 # ─────────────────────────────────── Misc ────────────────────────
 .history/
@@ -196,3 +242,7 @@ __pycache__/
 *.diff
 *.orig
 *.rej
+
+# Antigravity / AI Agent metadata
+.gemini/
+.antigravityignore

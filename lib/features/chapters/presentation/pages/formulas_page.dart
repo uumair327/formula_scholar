@@ -20,6 +20,8 @@ class FormulasPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FormulasCubit, FormulasState>(
+      buildWhen: (prev, curr) =>
+          prev.status != curr.status || prev.formulas != curr.formulas,
       builder: (context, state) {
         if (state.status == FormulasStatus.loading ||
             state.status == FormulasStatus.initial) {
@@ -33,10 +35,10 @@ class FormulasPage extends StatelessWidget {
               onRetry: () {
                 if (state.subjectId != null && state.chapterId != null) {
                   context.read<FormulasCubit>().loadFormulas(
-                        subjectId: state.subjectId!,
-                        chapterId: state.chapterId!,
-                        chapterName: state.chapterName,
-                      );
+                    subjectId: state.subjectId!,
+                    chapterId: state.chapterId!,
+                    chapterName: state.chapterName,
+                  );
                 }
               },
             ),
@@ -58,16 +60,16 @@ class FormulasPage extends StatelessWidget {
                     _buildProgressHeader(state),
                     const SizedBox(height: AppDimensions.paddingXXL),
                     ...state.formulas.asMap().entries.map(
-                          (entry) => Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: AppDimensions.paddingLG,
-                            ),
-                            child: _FormulaCard(
-                              formula: entry.value,
-                              index: entry.key,
-                            ),
-                          ),
+                      (entry) => Padding(
+                        padding: const EdgeInsets.only(
+                          bottom: AppDimensions.paddingLG,
                         ),
+                        child: _FormulaCard(
+                          formula: entry.value,
+                          index: entry.key,
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: AppDimensions.bottomNavPadding),
                   ]),
                 ),
@@ -91,10 +93,7 @@ class FormulasPage extends StatelessWidget {
       surfaceTintColor: AppColors.transparent,
       leading: IconButton(
         onPressed: () => context.pop(),
-        icon: const Icon(
-          LucideIcons.arrowLeft,
-          color: AppColors.onSurface,
-        ),
+        icon: const Icon(LucideIcons.arrowLeft, color: AppColors.onSurface),
       ),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,8 +183,7 @@ class FormulasPage extends StatelessWidget {
                   color: AppColors.white.withValues(
                     alpha: AppDimensions.opacitySubtle,
                   ),
-                  borderRadius:
-                      BorderRadius.circular(AppDimensions.radiusXXL),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
                 ),
                 child: Text(
                   '${state.progressPercent.toInt()}%',
@@ -269,13 +267,24 @@ class _FormulaCard extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  final subjectName = context.read<SubjectSelectionCubit>().state.subject?.name ?? 'Unknown Subject';
-                  context.read<FormulasCubit>().toggleBookmark(formula, subjectName);
+                  final subjectName =
+                      context
+                          .read<SubjectSelectionCubit>()
+                          .state
+                          .subject
+                          ?.name ??
+                      'Unknown Subject';
+                  context.read<FormulasCubit>().toggleBookmark(
+                    formula,
+                    subjectName,
+                  );
                 },
                 icon: Icon(
                   formula.isBookmarked ? Icons.bookmark : LucideIcons.bookmark,
                   size: AppDimensions.iconMD,
-                  color: formula.isBookmarked ? AppColors.primary : AppColors.outline,
+                  color: formula.isBookmarked
+                      ? AppColors.primary
+                      : AppColors.outline,
                 ),
               ),
             ],

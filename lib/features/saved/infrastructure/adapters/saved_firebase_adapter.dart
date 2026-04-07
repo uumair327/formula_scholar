@@ -14,8 +14,11 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
 
   @override
   Future<List<BookmarkedFormula>> getBookmarks() async {
-    AppLogger.trace('getBookmarks() fetching from Firestore', tag: AppLogTags.savedDataSource);
-    
+    AppLogger.trace(
+      'getBookmarks() fetching from Firestore',
+      tag: AppLogTags.savedDataSource,
+    );
+
     final uid = _firebaseAuth.currentUser?.uid;
     if (uid == null) {
       return [];
@@ -43,7 +46,9 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
   Future<void> removeBookmark(String formulaId) async {
     final uid = _firebaseAuth.currentUser?.uid;
     if (uid == null) {
-      throw Exception('User must be logged in to remove a bookmark');
+      throw const CacheException(
+        message: 'User must be logged in to remove a bookmark',
+      );
     }
     await _firestore
         .collection('users')

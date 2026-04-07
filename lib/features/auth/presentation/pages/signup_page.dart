@@ -40,14 +40,9 @@ class _SignupPageState extends State<SignupPage> {
 
   void _onCreateAccount() {
     if (!_agreedToTerms) {
-      AppLogger.debug(
-        'Sign-up blocked — terms not accepted',
-        tag: AppLogTags.signupPage,
-      );
       return;
     }
     if (_formKey.currentState?.validate() ?? false) {
-      AppLogger.debug('Sign-up submitted', tag: AppLogTags.signupPage);
       context.read<AuthCubit>().signUp(
         name: _nameController.text.trim(),
         email: _emailController.text.trim(),
@@ -62,10 +57,6 @@ class _SignupPageState extends State<SignupPage> {
       listenWhen: (prev, cur) => prev.status != cur.status,
       listener: (context, state) {
         if (state.status == AuthStatus.authenticated) {
-          AppLogger.info(
-            'Signup success — navigating to onboarding',
-            tag: AppLogTags.signupPage,
-          );
           context.go(AppRoutes.onboardingPath);
         } else if (state.status == AuthStatus.error &&
             state.errorMessage != null) {
@@ -604,13 +595,8 @@ class _SignupFormScroll extends StatelessWidget {
               children: [
                 Expanded(
                   child: OutlinedButton.icon(
-                    onPressed: () {
-                      AppLogger.debug(
-                        'Google signup tapped',
-                        tag: AppLogTags.signupPage,
-                      );
-                      context.read<AuthCubit>().signInWithGoogle();
-                    },
+                    onPressed: () =>
+                        context.read<AuthCubit>().signInWithGoogle(),
                     icon: Icon(
                       LucideIcons.globe,
                       size: AppDimensions.iconDefault,
@@ -662,13 +648,7 @@ class _SignupFormScroll extends StatelessWidget {
                   ),
                   const SizedBox(width: AppDimensions.paddingXXS),
                   GestureDetector(
-                    onTap: () {
-                      AppLogger.debug(
-                        'Navigate to login from signup',
-                        tag: AppLogTags.signupPage,
-                      );
-                      context.go(AppRoutes.loginPath);
-                    },
+                    onTap: () => context.go(AppRoutes.loginPath),
                     child: Text(
                       AppStrings.signupSignIn,
                       style: AppTextStyles.bodyMedium.copyWith(

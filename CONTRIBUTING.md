@@ -39,19 +39,25 @@ This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDU
    git checkout -b feature/your-feature-name
    ```
 
+### Local Secrets
+
+- Copy `.env.example` to `.env` for local values.
+- Set `FIREBASE_SERVICE_ACCOUNT_PATH` in your shell before running maintenance scripts, or pass the JSON path as the first command-line argument.
+- Never commit Firebase Admin SDK JSON files, keystores, or generated local Firebase config files.
+
 ---
 
 ## Development Workflow
 
 ### Branch Naming
 
-| Type | Pattern | Example |
-|------|---------|---------|
-| Feature | `feature/short-description` | `feature/dark-mode` |
-| Bug Fix | `fix/short-description` | `fix/login-crash` |
+| Type     | Pattern                      | Example                    |
+| -------- | ---------------------------- | -------------------------- |
+| Feature  | `feature/short-description`  | `feature/dark-mode`        |
+| Bug Fix  | `fix/short-description`      | `fix/login-crash`          |
 | Refactor | `refactor/short-description` | `refactor/dashboard-cubit` |
-| Docs | `docs/short-description` | `docs/api-readme` |
-| Chore | `chore/short-description` | `chore/update-deps` |
+| Docs     | `docs/short-description`     | `docs/api-readme`          |
+| Chore    | `chore/short-description`    | `chore/update-deps`        |
 
 ### Before Submitting
 
@@ -59,6 +65,8 @@ This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDU
 - [ ] Run `dart format lib` — must be fully formatted
 - [ ] Run `flutter test` — all tests must pass
 - [ ] Ensure no secrets, API keys, or credentials are committed
+- [ ] Check that new files are covered by `.gitignore` when appropriate
+- [ ] Keep CI green if the repo has workflow checks
 
 ---
 
@@ -67,29 +75,36 @@ This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDU
 This project uses **Hexagonal Architecture (Ports & Adapters)**. All contributions must follow these rules:
 
 ### 1. Domain Layer (Inner Ring) — Pure Dart Only
+
 - **Entities**: Extend `Equatable`, no Flutter imports
 - **Ports**: Abstract interfaces defining contracts (`*RepositoryPort`, `*DataSourcePort`)
 - **Use Cases**: One class per business operation, injectable via `@injectable`
 - **No dependencies** on Flutter, infrastructure, or presentation
 
 ### 2. Infrastructure Layer (Outer Ring) — Adapters
+
 - **Adapters** implement `DataSourcePort` interfaces
 - **Repository Impls** wrap adapter calls in `Result<T>` (Success/Error)
 - Annotated with `@LazySingleton(as: PortType)` for DI
 
 ### 3. Presentation Layer (Outer Ring) — UI
+
 - **Cubits** depend on **Use Cases**, not repositories
 - Use `Result` pattern matching (`switch`) for typed error handling
 - Pages use `BlocBuilder`/`BlocListener`
 
 ### 4. Dependency Rule
+
 All dependencies point **inward**:
+
 ```
 Infrastructure → Domain ← Presentation
 ```
+
 Never import from `infrastructure/` in `domain/` or `presentation/`.
 
 ### 5. Adding a New Feature
+
 ```
 lib/features/new_feature/
 ├── domain/
@@ -129,19 +144,19 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ### Types
 
-| Type | Description |
-|------|-------------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `docs` | Documentation only |
-| `style` | Formatting, no code change |
+| Type       | Description                                             |
+| ---------- | ------------------------------------------------------- |
+| `feat`     | New feature                                             |
+| `fix`      | Bug fix                                                 |
+| `docs`     | Documentation only                                      |
+| `style`    | Formatting, no code change                              |
 | `refactor` | Code change that neither fixes a bug nor adds a feature |
-| `perf` | Performance improvement |
-| `test` | Adding or correcting tests |
-| `build` | Build system or dependencies |
-| `ci` | CI/CD configuration |
-| `chore` | Other changes (tooling, config) |
-| `revert` | Reverts a previous commit |
+| `perf`     | Performance improvement                                 |
+| `test`     | Adding or correcting tests                              |
+| `build`    | Build system or dependencies                            |
+| `ci`       | CI/CD configuration                                     |
+| `chore`    | Other changes (tooling, config)                         |
+| `revert`   | Reverts a previous commit                               |
 
 ### Examples
 
@@ -182,22 +197,25 @@ ci: add GitHub Actions workflow for Flutter analyze
 ## Code Style
 
 ### Dart Formatting
+
 - Use `dart format` with default settings (line length 80)
 - Enable all recommended lints via `analysis_options.yaml`
 
 ### Naming Conventions
-| What | Convention | Example |
-|------|-----------|---------|
-| Files | `snake_case` | `dashboard_cubit.dart` |
-| Classes | `PascalCase` | `DashboardCubit` |
-| Ports | `PascalCase` + `Port` suffix | `DashboardRepositoryPort` |
-| Adapters | `PascalCase` + `Adapter` suffix | `DashboardLocalAdapter` |
-| Use Cases | `PascalCase` + `UseCase` suffix | `GetStudyProgressUseCase` |
-| Variables/functions | `camelCase` | `loadDashboard()` |
-| Constants | `camelCase` in class | `AppColors.primary` |
-| Log Tags | Defined in `AppLogTags` | Always use constants, never strings |
+
+| What                | Convention                      | Example                             |
+| ------------------- | ------------------------------- | ----------------------------------- |
+| Files               | `snake_case`                    | `dashboard_cubit.dart`              |
+| Classes             | `PascalCase`                    | `DashboardCubit`                    |
+| Ports               | `PascalCase` + `Port` suffix    | `DashboardRepositoryPort`           |
+| Adapters            | `PascalCase` + `Adapter` suffix | `DashboardLocalAdapter`             |
+| Use Cases           | `PascalCase` + `UseCase` suffix | `GetStudyProgressUseCase`           |
+| Variables/functions | `camelCase`                     | `loadDashboard()`                   |
+| Constants           | `camelCase` in class            | `AppColors.primary`                 |
+| Log Tags            | Defined in `AppLogTags`         | Always use constants, never strings |
 
 ### Documentation
+
 - All public APIs must have `///` doc comments
 - Port interfaces must describe their hexagonal role (primary/driven)
 - Use `@override` annotation on all overridden methods
@@ -207,6 +225,7 @@ ci: add GitHub Actions workflow for Flutter analyze
 ## Testing
 
 ### Test Structure
+
 ```
 test/
 ├── core/
@@ -228,6 +247,7 @@ test/
 ```
 
 ### Test Requirements
+
 - All use cases **must** have unit tests
 - All cubits **must** have unit tests covering all states
 - Repository impls should test both success and error paths

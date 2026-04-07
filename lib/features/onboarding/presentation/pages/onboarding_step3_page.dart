@@ -21,9 +21,15 @@ class OnboardingStep3Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<OnboardingCubit, OnboardingState>(
+      buildWhen: (prev, curr) =>
+          prev.status != curr.status ||
+          prev.grades != curr.grades ||
+          prev.selectedGrade != curr.selectedGrade,
       builder: (context, state) {
         if (state.status == OnboardingStatus.loading && state.grades.isEmpty) {
-          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         }
 
         return OnboardingShell(
@@ -34,7 +40,9 @@ class OnboardingStep3Page extends StatelessWidget {
             context.read<OnboardingCubit>().goBackToBoards();
             context.go(AppRoutes.onboardingStep2Path);
           },
-          onContinue: state.selectedGrade != null ? () => _onContinue(context) : null,
+          onContinue: state.selectedGrade != null
+              ? () => _onContinue(context)
+              : null,
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -46,7 +54,10 @@ class OnboardingStep3Page extends StatelessWidget {
               const SizedBox(height: AppDimensions.paddingXXL),
 
               if (state.grades.isEmpty)
-                Text('No grades available for this board.', style: AppTextStyles.bodyMedium),
+                Text(
+                  'No grades available for this board.',
+                  style: AppTextStyles.bodyMedium,
+                ),
 
               LayoutBuilder(
                 builder: (context, constraints) {
@@ -57,11 +68,16 @@ class OnboardingStep3Page extends StatelessWidget {
                           runSpacing: AppDimensions.paddingLG,
                           children: state.grades.map((g) {
                             return SizedBox(
-                              width: (constraints.maxWidth - AppDimensions.paddingLG) / 2,
+                              width:
+                                  (constraints.maxWidth -
+                                      AppDimensions.paddingLG) /
+                                  2,
                               child: _GradeCard(
                                 grade: g,
                                 isSelected: state.selectedGrade?.id == g.id,
-                                onTap: () => context.read<OnboardingCubit>().selectGrade(g),
+                                onTap: () => context
+                                    .read<OnboardingCubit>()
+                                    .selectGrade(g),
                               ),
                             );
                           }).toList(),
@@ -69,11 +85,15 @@ class OnboardingStep3Page extends StatelessWidget {
                       : Column(
                           children: state.grades.map((g) {
                             return Padding(
-                              padding: const EdgeInsets.only(bottom: AppDimensions.paddingLG),
+                              padding: const EdgeInsets.only(
+                                bottom: AppDimensions.paddingLG,
+                              ),
                               child: _GradeCard(
                                 grade: g,
                                 isSelected: state.selectedGrade?.id == g.id,
-                                onTap: () => context.read<OnboardingCubit>().selectGrade(g),
+                                onTap: () => context
+                                    .read<OnboardingCubit>()
+                                    .selectGrade(g),
                               ),
                             );
                           }).toList(),
@@ -111,7 +131,9 @@ class _GradeCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
           border: Border.all(
             color: isSelected
-                ? AppColors.primary.withValues(alpha: AppDimensions.opacityMedium)
+                ? AppColors.primary.withValues(
+                    alpha: AppDimensions.opacityMedium,
+                  )
                 : AppColors.transparent,
             width: isSelected
                 ? AppDimensions.borderWidthThick

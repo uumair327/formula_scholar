@@ -40,6 +40,9 @@ class ChaptersPage extends StatelessWidget {
                   )
                 else
                   BlocBuilder<ChaptersCubit, ChaptersState>(
+                    buildWhen: (prev, curr) =>
+                        prev.status != curr.status ||
+                        prev.chapters != curr.chapters,
                     builder: (context, state) {
                       if (state.status == ChaptersStatus.loading ||
                           state.status == ChaptersStatus.initial) {
@@ -52,10 +55,9 @@ class ChaptersPage extends StatelessWidget {
                         return SliverFillRemaining(
                           child: AppErrorState(
                             message: state.errorMessage,
-                            onRetry: () => context.read<ChaptersCubit>().loadChapters(
-                              subject!.id,
-                              forceReload: true,
-                            ),
+                            onRetry: () => context
+                                .read<ChaptersCubit>()
+                                .loadChapters(subject!.id, forceReload: true),
                           ),
                         );
                       }
@@ -70,7 +72,9 @@ class ChaptersPage extends StatelessWidget {
                             _buildHeroSection(subject!),
                             const SizedBox(height: AppDimensions.paddingXXL),
                             _buildChapterCards(state, subject.id),
-                            const SizedBox(height: AppDimensions.paddingSection),
+                            const SizedBox(
+                              height: AppDimensions.paddingSection,
+                            ),
                             _buildMasteryTools(),
                             const SizedBox(
                               height: AppDimensions.bottomNavPadding,
@@ -84,12 +88,7 @@ class ChaptersPage extends StatelessWidget {
             ),
             floatingActionButton: subjectState.hasSelection
                 ? FloatingActionButton(
-                    onPressed: () {
-                      AppLogger.debug(
-                        'Play FAB tapped',
-                        tag: AppLogTags.chaptersPage,
-                      );
-                    },
+                    onPressed: () {},
                     backgroundColor: AppColors.primary,
                     child: const Icon(LucideIcons.play, color: AppColors.white),
                   )
@@ -181,22 +180,20 @@ class ChaptersPage extends StatelessWidget {
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           itemCount: state.availableSubjects.length,
-          separatorBuilder: (context, index) => const SizedBox(
-            width: AppDimensions.paddingMD,
-          ),
+          separatorBuilder: (context, index) =>
+              const SizedBox(width: AppDimensions.paddingMD),
           itemBuilder: (context, index) {
             final subject = state.availableSubjects[index];
             final isSelected = state.subject?.id == subject.id;
 
             return GestureDetector(
               onTap: () {
-                AppLogger.debug('Subject Chip tapped: ${subject.name}', tag: AppLogTags.chaptersPage);
                 context.read<SubjectSelectionCubit>().selectSubject(
-                      id: subject.id,
-                      name: subject.name,
-                      category: subject.category,
-                      description: subject.description,
-                    );
+                  id: subject.id,
+                  name: subject.name,
+                  category: subject.category,
+                  description: subject.description,
+                );
               },
               child: AnimatedContainer(
                 duration: AppDurations.animationFast,
@@ -313,8 +310,7 @@ class ChaptersPage extends StatelessWidget {
         ...remaining.map((chapter) {
           // When _kUnlockAllChapters is false, locked chapters
           // show _LockedChapterCard instead.
-          final effectivelyLocked =
-              chapter.isLocked && !_kUnlockAllChapters;
+          final effectivelyLocked = chapter.isLocked && !_kUnlockAllChapters;
           return Padding(
             padding: const EdgeInsets.only(bottom: AppDimensions.paddingLG),
             child: effectivelyLocked
@@ -487,19 +483,13 @@ class _FeaturedChapterCard extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: () {
-                AppLogger.debug(
-                  'Continue Learning tapped: ${chapter.name}',
-                  tag: AppLogTags.chaptersPage,
-                );
                 context.goNamed(
                   AppRoutes.formulaDetailName,
                   pathParameters: {
                     'subjectId': subjectId,
                     'chapterId': chapter.id,
                   },
-                  queryParameters: {
-                    'name': chapter.name,
-                  },
+                  queryParameters: {'name': chapter.name},
                 );
               },
               icon: const Text(AppStrings.continueLearning),
@@ -589,19 +579,13 @@ class _CompactChapterCard extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  AppLogger.debug(
-                    'Start Now tapped: ${chapter.name}',
-                    tag: AppLogTags.chaptersPage,
-                  );
                   context.goNamed(
                     AppRoutes.formulaDetailName,
                     pathParameters: {
                       'subjectId': subjectId,
                       'chapterId': chapter.id,
                     },
-                    queryParameters: {
-                      'name': chapter.name,
-                    },
+                    queryParameters: {'name': chapter.name},
                   );
                 },
                 child: Text(

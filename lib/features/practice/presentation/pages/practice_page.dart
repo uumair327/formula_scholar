@@ -16,108 +16,115 @@ class PracticePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PracticeCubit, PracticeState>(
-      builder: (context, state) {
-        if (state.status == PracticeStatus.loading ||
-            state.status == PracticeStatus.initial) {
-          return const Scaffold(body: AppLoadingState());
-        }
+    return BlocBuilder<AuthCubit, AuthState>(
+      buildWhen: (prev, curr) => prev.user != curr.user,
+      builder: (context, authState) {
+        return BlocBuilder<PracticeCubit, PracticeState>(
+          buildWhen: (prev, curr) => prev.status != curr.status,
+          builder: (context, state) {
+            if (state.status == PracticeStatus.loading ||
+                state.status == PracticeStatus.initial) {
+              return const Scaffold(body: AppLoadingState());
+            }
 
-        if (state.status == PracticeStatus.error) {
-          return Scaffold(
-            body: AppErrorState(
-              message: state.errorMessage,
-              onRetry: () => context.read<PracticeCubit>().loadQuestions(),
-            ),
-          );
-        }
-
-        final question = state.currentQuestion;
-        if (question == null) return const SizedBox.shrink();
-
-        return Scaffold(
-          body: Stack(
-            children: [
-              // Background decorative blurs.
-              Positioned(
-                top:
-                    MediaQuery.of(context).size.height *
-                    AppDimensions.decorativePositionFraction,
-                right: -AppDimensions.decorativeCircleTiny,
-                child: Container(
-                  width: AppDimensions.decorativeBlurLG,
-                  height: AppDimensions.decorativeBlurLG,
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryContainer.withValues(
-                      alpha: AppDimensions.opacityFaint,
-                    ),
-                    shape: BoxShape.circle,
-                  ),
+            if (state.status == PracticeStatus.error) {
+              return Scaffold(
+                body: AppErrorState(
+                  message: state.errorMessage,
+                  onRetry: () => context.read<PracticeCubit>().loadQuestions(),
                 ),
-              ),
-              Positioned(
-                bottom:
-                    MediaQuery.of(context).size.height *
-                    AppDimensions.decorativePositionFraction,
-                left: -AppDimensions.decorativeCircleTiny,
-                child: Container(
-                  width: AppDimensions.decorativeBlurLG,
-                  height: AppDimensions.decorativeBlurLG,
-                  decoration: BoxDecoration(
-                    color: AppColors.secondaryContainer.withValues(
-                      alpha: AppDimensions.opacityFaint,
-                    ),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
+              );
+            }
 
-              // Main content.
-              SafeArea(
-                child: Column(
-                  children: [
-                    // Header.
-                    _buildHeader(context, state),
-                    // Scrollable content.
-                    Expanded(
-                      child: SingleChildScrollView(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppDimensions.paddingXXL,
+            final question = state.currentQuestion;
+            if (question == null) return const SizedBox.shrink();
+            final photoUrl = authState.user?.photoUrl ?? '';
+
+            return Scaffold(
+              body: Stack(
+                children: [
+                  // Background decorative blurs.
+                  Positioned(
+                    top:
+                        MediaQuery.of(context).size.height *
+                        AppDimensions.decorativePositionFraction,
+                    right: -AppDimensions.decorativeCircleTiny,
+                    child: Container(
+                      width: AppDimensions.decorativeBlurLG,
+                      height: AppDimensions.decorativeBlurLG,
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryContainer.withValues(
+                          alpha: AppDimensions.opacityFaint,
                         ),
-                        child: Column(
-                          children: [
-                            const SizedBox(height: AppDimensions.paddingLG),
-                            _buildProgressSection(state),
-                            const SizedBox(height: AppDimensions.paddingXXL),
-                            _buildQuestionCard(question),
-                            const SizedBox(height: AppDimensions.paddingXXL),
-                            _buildOptions(context, state, question),
-                            const SizedBox(
-                              height: AppDimensions.bottomNavPadding,
-                            ),
-                          ],
-                        ),
+                        shape: BoxShape.circle,
                       ),
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                  Positioned(
+                    bottom:
+                        MediaQuery.of(context).size.height *
+                        AppDimensions.decorativePositionFraction,
+                    left: -AppDimensions.decorativeCircleTiny,
+                    child: Container(
+                      width: AppDimensions.decorativeBlurLG,
+                      height: AppDimensions.decorativeBlurLG,
+                      decoration: BoxDecoration(
+                        color: AppColors.secondaryContainer.withValues(
+                          alpha: AppDimensions.opacityFaint,
+                        ),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
 
-              // Success toast.
-              if (state.showResult && state.isCorrect)
-                _buildSuccessToast(context),
-            ],
-          ),
+                  // Main content.
+                  SafeArea(
+                    child: Column(
+                      children: [
+                        // Header.
+                        _buildHeader(context, photoUrl),
+                        // Scrollable content.
+                        Expanded(
+                          child: SingleChildScrollView(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppDimensions.paddingXXL,
+                            ),
+                            child: Column(
+                              children: [
+                                const SizedBox(height: AppDimensions.paddingLG),
+                                _buildProgressSection(state),
+                                const SizedBox(
+                                  height: AppDimensions.paddingXXL,
+                                ),
+                                _buildQuestionCard(question),
+                                const SizedBox(
+                                  height: AppDimensions.paddingXXL,
+                                ),
+                                _buildOptions(context, state, question),
+                                const SizedBox(
+                                  height: AppDimensions.bottomNavPadding,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Success toast.
+                  if (state.showResult && state.isCorrect)
+                    _buildSuccessToast(context),
+                ],
+              ),
+            );
+          },
         );
       },
     );
   }
 
-  Widget _buildHeader(BuildContext context, PracticeState state) {
-    final authRepo = getIt<AuthRepositoryPort>();
-    final user = authRepo.currentUser;
-    final photoUrl = user?.photoUrl ?? '';
-
+  Widget _buildHeader(BuildContext context, String photoUrl) {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: AppDimensions.paddingXXL,

@@ -28,115 +28,124 @@ class DashboardPage extends StatelessWidget {
       listenWhen: (prev, curr) => prev.subjects != curr.subjects,
       listener: (context, state) {
         if (state.subjects.isNotEmpty) {
-          final selectedSubjects = state.subjects.map((s) => SelectedSubject(
-            id: s.id,
-            name: s.name,
-            category: s.category,
-            description: s.description,
-            subtitle: s.subtitle ?? '',
-          )).toList();
-          context.read<SubjectSelectionCubit>().updateAvailableSubjects(selectedSubjects);
+          final selectedSubjects = state.subjects
+              .map(
+                (s) => SelectedSubject(
+                  id: s.id,
+                  name: s.name,
+                  category: s.category,
+                  description: s.description,
+                  subtitle: s.subtitle ?? '',
+                ),
+              )
+              .toList();
+          context.read<SubjectSelectionCubit>().updateAvailableSubjects(
+            selectedSubjects,
+          );
         }
       },
       child: BlocBuilder<DashboardCubit, DashboardState>(
-      builder: (context, state) {
-        if (state.status == DashboardStatus.loading ||
-            state.status == DashboardStatus.initial) {
-          return const Scaffold(body: AppLoadingState());
-        }
+        buildWhen: (prev, curr) => prev.status != curr.status,
+        builder: (context, state) {
+          if (state.status == DashboardStatus.loading ||
+              state.status == DashboardStatus.initial) {
+            return const Scaffold(body: AppLoadingState());
+          }
 
-        if (state.status == DashboardStatus.error) {
+          if (state.status == DashboardStatus.error) {
+            return Scaffold(
+              body: AppErrorState(
+                message: state.errorMessage,
+                onRetry: () => context.read<DashboardCubit>().loadDashboard(),
+              ),
+            );
+          }
+
           return Scaffold(
-            body: AppErrorState(
-              message: state.errorMessage,
-              onRetry: () => context.read<DashboardCubit>().loadDashboard(),
+            body: CustomScrollView(
+              slivers: [
+                _buildAppBar(context),
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppDimensions.paddingXL,
+                  ),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate([
+                      const SizedBox(height: AppDimensions.paddingLG),
+                      _buildCurriculumFilterBar(context),
+                      const SizedBox(height: AppDimensions.paddingXL),
+                      _buildHeroStatusCard(state),
+                      const SizedBox(height: AppDimensions.paddingSection),
+                      _buildAcademicPath(context, state),
+                      const SizedBox(height: AppDimensions.paddingSection),
+                      _buildFormulaVault(state),
+                      const SizedBox(height: AppDimensions.paddingLG),
+                      _buildContinueStudying(state),
+                      const SizedBox(height: AppDimensions.bottomNavPadding),
+                    ]),
+                  ),
+                ),
+              ],
             ),
           );
-        }
-
-        return Scaffold(
-          body: CustomScrollView(
-            slivers: [
-              _buildAppBar(context),
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppDimensions.paddingXL,
-                ),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate([
-                    const SizedBox(height: AppDimensions.paddingLG),
-                    _buildCurriculumFilterBar(context),
-                    const SizedBox(height: AppDimensions.paddingXL),
-                    _buildHeroStatusCard(state),
-                    const SizedBox(height: AppDimensions.paddingSection),
-                    _buildAcademicPath(context, state),
-                    const SizedBox(height: AppDimensions.paddingSection),
-                    _buildFormulaVault(state),
-                    const SizedBox(height: AppDimensions.paddingLG),
-                    _buildContinueStudying(state),
-                    const SizedBox(height: AppDimensions.bottomNavPadding),
-                  ]),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+        },
       ),
     );
   }
 
   // ──────────────────────── App Bar ─────────────────────────────
 
-  SliverAppBar _buildAppBar(BuildContext context) {
-    final authRepo = getIt<AuthRepositoryPort>();
-    final user = authRepo.currentUser;
-    final userName = user?.displayName ?? AppStrings.dashboardSanctuary;
-    final photoUrl = user?.photoUrl ?? AppAssets.dashboardStudentProfileUrl;
+  Widget _buildAppBar(BuildContext context) {
+    return BlocBuilder<AuthCubit, AuthState>(
+      buildWhen: (prev, curr) => prev.user != curr.user,
+      builder: (context, authState) {
+        final user = authState.user;
+        final userName = user?.displayName ?? AppStrings.dashboardSanctuary;
+        final photoUrl = user?.photoUrl ?? AppAssets.dashboardStudentProfileUrl;
 
-    return SliverAppBar(
-      floating: true,
-      snap: true,
-      backgroundColor: AppColors.surface.withValues(
-        alpha: AppDimensions.opacityHigh,
-      ),
-      surfaceTintColor: AppColors.transparent,
-      title: Row(
-        children: [
-          Container(
-            width: AppDimensions.avatarMD,
-            height: AppDimensions.avatarMD,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.primaryFixed,
-            ),
-            clipBehavior: Clip.antiAlias,
-            child: CachedNetworkImage(
-              imageUrl: photoUrl,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => const SizedBox(),
-              errorWidget: (context, url, error) =>
-                  const Icon(LucideIcons.user, color: AppColors.primary),
-            ),
+        return SliverAppBar(
+          floating: true,
+          snap: true,
+          backgroundColor: AppColors.surface.withValues(
+            alpha: AppDimensions.opacityHigh,
           ),
-          const SizedBox(width: AppDimensions.paddingMD),
-          Text(
-            userName,
-            style: AppTextStyles.headlineSmall.copyWith(
-              color: AppColors.onSurface,
-            ),
+          surfaceTintColor: AppColors.transparent,
+          title: Row(
+            children: [
+              Container(
+                width: AppDimensions.avatarMD,
+                height: AppDimensions.avatarMD,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.primaryFixed,
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: CachedNetworkImage(
+                  imageUrl: photoUrl,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => const SizedBox(),
+                  errorWidget: (context, url, error) =>
+                      const Icon(LucideIcons.user, color: AppColors.primary),
+                ),
+              ),
+              const SizedBox(width: AppDimensions.paddingMD),
+              Text(
+                userName,
+                style: AppTextStyles.headlineSmall.copyWith(
+                  color: AppColors.onSurface,
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-      actions: [
-        IconButton(
-          onPressed: () {
-            AppLogger.debug('Search tapped', tag: AppLogTags.dashboardPage);
-          },
-          icon: const Icon(LucideIcons.search, color: AppColors.outline),
-        ),
-        const SizedBox(width: AppDimensions.paddingSM),
-      ],
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(LucideIcons.search, color: AppColors.outline),
+            ),
+            const SizedBox(width: AppDimensions.paddingSM),
+          ],
+        );
+      },
     );
   }
 
@@ -177,13 +186,7 @@ class DashboardPage extends StatelessWidget {
                   ],
                 ),
                 GestureDetector(
-                  onTap: () {
-                    AppLogger.info(
-                      'Switch Board/Grade tapped',
-                      tag: AppLogTags.dashboardPage,
-                    );
-                    context.go(AppRoutes.onboardingPath);
-                  },
+                  onTap: () => context.go(AppRoutes.onboardingPath),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppDimensions.paddingSM,
@@ -332,12 +335,7 @@ class DashboardPage extends StatelessWidget {
               const SizedBox(height: AppDimensions.paddingXL),
               // Resume button
               ElevatedButton(
-                onPressed: () {
-                  AppLogger.debug(
-                    'Resume Lesson tapped',
-                    tag: AppLogTags.dashboardPage,
-                  );
-                },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.white,
                   foregroundColor: AppColors.primary,
@@ -392,7 +390,6 @@ class DashboardPage extends StatelessWidget {
           title: AppStrings.dashboardAcademicPath,
           actionLabel: AppStrings.viewAll,
           onAction: () {
-            AppLogger.debug('View All tapped', tag: AppLogTags.dashboardPage);
             context.read<SubjectSelectionCubit>().clearSelection();
             StatefulNavigationShell.of(context).goBranch(1);
           },
@@ -422,10 +419,13 @@ class DashboardPage extends StatelessWidget {
                           if (featured.isNotEmpty && others.isNotEmpty)
                             const SizedBox(width: AppDimensions.paddingLG),
                           if (others.isNotEmpty)
-                            Expanded(child: SubjectCard(
-                              subject: others.first,
-                              onTap: () => _onSubjectTap(context, others.first),
-                            )),
+                            Expanded(
+                              child: SubjectCard(
+                                subject: others.first,
+                                onTap: () =>
+                                    _onSubjectTap(context, others.first),
+                              ),
+                            ),
                         ],
                       ),
                     ),
@@ -440,7 +440,9 @@ class DashboardPage extends StatelessWidget {
                       children: [
                         ...others.skip(1).map((subject) {
                           // Roughly 50% width minus padding for 2-column layout
-                          final itemWidth = (constraints.maxWidth - AppDimensions.paddingLG) / 2.05;
+                          final itemWidth =
+                              (constraints.maxWidth - AppDimensions.paddingLG) /
+                              2.05;
                           return SizedBox(
                             width: itemWidth,
                             child: SubjectCard(
@@ -450,8 +452,10 @@ class DashboardPage extends StatelessWidget {
                           );
                         }),
                         SizedBox(
-                           width: (constraints.maxWidth - AppDimensions.paddingLG) / 2.05,
-                           child: _buildQuizCard(),
+                          width:
+                              (constraints.maxWidth - AppDimensions.paddingLG) /
+                              2.05,
+                          child: _buildQuizCard(),
                         ),
                       ],
                     ),
@@ -485,10 +489,6 @@ class DashboardPage extends StatelessWidget {
   /// Handles tap on a subject card — selects the subject and
   /// navigates to the Chapters tab.
   void _onSubjectTap(BuildContext context, Subject subject) {
-    AppLogger.info(
-      'Navigating to Chapters (${subject.category})',
-      tag: AppLogTags.dashboardPage,
-    );
     context.read<SubjectSelectionCubit>().selectSubject(
       id: subject.id,
       name: subject.name,
@@ -559,12 +559,7 @@ class DashboardPage extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {
-                AppLogger.debug(
-                  'Start Quiz tapped',
-                  tag: AppLogTags.dashboardPage,
-                );
-              },
+              onPressed: () {},
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: AppColors.onPrimary,

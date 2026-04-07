@@ -8,7 +8,15 @@ class GetGradesUseCase {
 
   GetGradesUseCase(this._repository);
 
-  Future<Result<PaginatedResponse<Grade>>> execute(String boardId, {int limit = 20, String? startAfterId}) {
-    return _repository.getGrades(boardId, limit: limit, startAfterId: startAfterId);
+  Future<Result<PaginatedResponse<Grade>>> call(
+    String boardId, {
+    int limit = 20,
+    String? startAfterId,
+  }) {
+    return _repository.getGrades(
+      boardId,
+      limit: limit,
+      startAfterId: startAfterId,
+    );
   }
 }

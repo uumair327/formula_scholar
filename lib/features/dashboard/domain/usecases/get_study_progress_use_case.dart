@@ -19,7 +19,7 @@ class GetStudyProgressUseCase {
   Future<Result<StudyProgress>> call() {
     AppLogger.trace(
       'GetStudyProgressUseCase called',
-      tag: AppLogTags.dashboardCubit,
+      tag: AppLogTags.dashboardUseCase,
     );
     return _repository.getStudyProgress();
   }

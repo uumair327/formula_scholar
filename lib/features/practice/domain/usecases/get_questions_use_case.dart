@@ -15,7 +15,7 @@ class GetQuestionsUseCase {
   Future<Result<List<QuizQuestion>>> call() {
     AppLogger.trace(
       'GetQuestionsUseCase called',
-      tag: AppLogTags.practiceCubit,
+      tag: AppLogTags.practiceUseCase,
     );
     return _repository.getQuestions();
   }

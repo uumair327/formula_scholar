@@ -5,3 +5,4 @@ export 'usecases/google_sign_in_use_case.dart';
 export 'usecases/sign_in_use_case.dart';
 export 'usecases/sign_out_use_case.dart';
 export 'usecases/sign_up_use_case.dart';
+export 'usecases/watch_auth_state_use_case.dart';

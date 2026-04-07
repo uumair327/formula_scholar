@@ -42,9 +42,18 @@ class _OnboardingStep1PageState extends State<OnboardingStep1Page> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<OnboardingCubit, OnboardingState>(
+      buildWhen: (prev, curr) =>
+          prev.status != curr.status ||
+          prev.countries != curr.countries ||
+          prev.states != curr.states ||
+          prev.selectedCountry != curr.selectedCountry ||
+          prev.selectedState != curr.selectedState,
       builder: (context, state) {
-        if (state.status == OnboardingStatus.loading && state.countries.isEmpty) {
-          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+        if (state.status == OnboardingStatus.loading &&
+            state.countries.isEmpty) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         }
 
         return OnboardingShell(
@@ -69,16 +78,21 @@ class _OnboardingStep1PageState extends State<OnboardingStep1Page> {
                     countries: state.countries.map((c) => c.name).toList(),
                     selectedCountry: state.selectedCountry?.name ?? 'India',
                     stateController: _stateController,
-                    popularStates: state.states.map((s) => s.name).take(10).toList(),
+                    popularStates: state.states
+                        .map((s) => s.name)
+                        .take(10)
+                        .toList(),
                     selectedState: state.selectedState?.name,
                     onCountryChanged: (val) {
-                      final c = state.countries.firstWhere((e) => e.name == val);
+                      final c = state.countries.firstWhere(
+                        (e) => e.name == val,
+                      );
                       context.read<OnboardingCubit>().selectCountry(c);
                     },
                     onStateSelected: (st) {
-                       final s = state.states.firstWhere((e) => e.name == st);
-                       context.read<OnboardingCubit>().selectStateRegion(s);
-                       _stateController.text = st;
+                      final s = state.states.firstWhere((e) => e.name == st);
+                      context.read<OnboardingCubit>().selectStateRegion(s);
+                      _stateController.text = st;
                     },
                     onStateChanged: (_) {},
                   );

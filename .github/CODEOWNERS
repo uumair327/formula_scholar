@@ -1,0 +1,13 @@
+# Default review owner for repository changes.
+
+- @uumair327
+
+# Security-sensitive files should always have explicit review.
+
+/.github/ @uumair327
+/SECURITY.md @uumair327
+/docs/ @uumair327
+/docs/FIREBASE_SETUP.md @uumair327
+/.github/workflows/ @uumair327
+/lib/firebase_options.dart @uumair327
+/android/app/google-services.json @uumair327

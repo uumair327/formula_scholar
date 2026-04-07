@@ -29,7 +29,7 @@ class AuthFirebaseAdapter implements AuthDataSourcePort {
     try {
       AppLogger.trace(
         'Firebase signIn attempt for: $email',
-        tag: AppLogTags.authCubit,
+        tag: AppLogTags.authDataSource,
       );
 
       final credential = await _firebaseAuth.signInWithEmailAndPassword(
@@ -44,14 +44,14 @@ class AuthFirebaseAdapter implements AuthDataSourcePort {
 
       AppLogger.info(
         'Firebase signIn succeeded: ${user.uid}',
-        tag: AppLogTags.authCubit,
+        tag: AppLogTags.authDataSource,
       );
 
       return _mapFirebaseUser(user);
     } on fb.FirebaseAuthException catch (e) {
       AppLogger.error(
         'Firebase signIn error: ${e.code}',
-        tag: AppLogTags.authCubit,
+        tag: AppLogTags.authDataSource,
         error: e,
       );
       throw ServerException(message: _mapFirebaseError(e.code));
@@ -67,7 +67,7 @@ class AuthFirebaseAdapter implements AuthDataSourcePort {
     try {
       AppLogger.trace(
         'Firebase signUp attempt for: $email',
-        tag: AppLogTags.authCubit,
+        tag: AppLogTags.authDataSource,
       );
 
       final credential = await _firebaseAuth.createUserWithEmailAndPassword(
@@ -89,14 +89,14 @@ class AuthFirebaseAdapter implements AuthDataSourcePort {
 
       AppLogger.info(
         'Firebase signUp succeeded: ${updatedUser.uid}',
-        tag: AppLogTags.authCubit,
+        tag: AppLogTags.authDataSource,
       );
 
       return _mapFirebaseUser(updatedUser);
     } on fb.FirebaseAuthException catch (e) {
       AppLogger.error(
         'Firebase signUp error: ${e.code}',
-        tag: AppLogTags.authCubit,
+        tag: AppLogTags.authDataSource,
         error: e,
       );
       throw ServerException(message: _mapFirebaseError(e.code));
@@ -108,7 +108,7 @@ class AuthFirebaseAdapter implements AuthDataSourcePort {
     try {
       AppLogger.trace(
         'Google sign-in flow started',
-        tag: AppLogTags.authCubit,
+        tag: AppLogTags.authDataSource,
       );
 
       // Initialize the GoogleSignIn instance if not already done.
@@ -119,7 +119,7 @@ class AuthFirebaseAdapter implements AuthDataSourcePort {
 
       // Trigger the interactive native Google Sign-In flow.
       final googleAccount = await _googleSignIn.authenticate();
-      
+
       // Obtain the auth details from the authenticated Google account.
       final googleAuth = googleAccount.authentication;
 
@@ -129,8 +129,9 @@ class AuthFirebaseAdapter implements AuthDataSourcePort {
       );
 
       // Sign in to Firebase with the Google credential.
-      final userCredential =
-          await _firebaseAuth.signInWithCredential(credential);
+      final userCredential = await _firebaseAuth.signInWithCredential(
+        credential,
+      );
 
       final user = userCredential.user;
       if (user == null) {
@@ -141,7 +142,7 @@ class AuthFirebaseAdapter implements AuthDataSourcePort {
 
       AppLogger.info(
         'Google sign-in succeeded: ${user.uid}',
-        tag: AppLogTags.authCubit,
+        tag: AppLogTags.authDataSource,
       );
 
       return _mapFirebaseUser(user);
@@ -150,17 +151,17 @@ class AuthFirebaseAdapter implements AuthDataSourcePort {
     } on fb.FirebaseAuthException catch (e) {
       AppLogger.error(
         'Firebase Google sign-in error: ${e.code}',
-        tag: AppLogTags.authCubit,
+        tag: AppLogTags.authDataSource,
         error: e,
       );
       throw ServerException(message: _mapFirebaseError(e.code));
     } on gsi.GoogleSignInException catch (e) {
       if (e.code == gsi.GoogleSignInExceptionCode.canceled) {
-         throw const ServerException(message: 'Google sign-in was cancelled.');
+        throw const ServerException(message: 'Google sign-in was cancelled.');
       }
       AppLogger.error(
         'Google sign-in exception: ${e.code}',
-        tag: AppLogTags.authCubit,
+        tag: AppLogTags.authDataSource,
         error: e,
       );
       throw const ServerException(
@@ -169,7 +170,7 @@ class AuthFirebaseAdapter implements AuthDataSourcePort {
     } on Exception catch (e) {
       AppLogger.error(
         'Google sign-in unexpected error',
-        tag: AppLogTags.authCubit,
+        tag: AppLogTags.authDataSource,
         error: e,
       );
       throw ServerException(
@@ -180,7 +181,7 @@ class AuthFirebaseAdapter implements AuthDataSourcePort {
 
   @override
   Future<void> signOut() async {
-    AppLogger.info('Firebase signOut', tag: AppLogTags.authCubit);
+    AppLogger.info('Firebase signOut', tag: AppLogTags.authDataSource);
     // Sign out from Google to allow account selection on next login.
     try {
       if (!_googleSignInInitialized) {

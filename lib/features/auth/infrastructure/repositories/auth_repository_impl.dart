@@ -22,10 +22,13 @@ class AuthRepositoryImpl implements AuthRepositoryPort {
     required String password,
   }) async {
     try {
-      final user = await _remoteAdapter.signIn(email: email, password: password);
+      final user = await _remoteAdapter.signIn(
+        email: email,
+        password: password,
+      );
       AppLogger.info(
         'SignIn succeeded in repository: ${user.uid}',
-        tag: AppLogTags.authCubit,
+        tag: AppLogTags.authRepo,
       );
       return Success(user);
     } on Exception catch (e, stackTrace) {
@@ -33,7 +36,7 @@ class AuthRepositoryImpl implements AuthRepositoryPort {
         'SignIn failed in repository',
         error: e,
         stackTrace: stackTrace,
-        tag: AppLogTags.authCubit,
+        tag: AppLogTags.authRepo,
       );
       return Error(
         AuthFailure(
@@ -53,7 +56,7 @@ class AuthRepositoryImpl implements AuthRepositoryPort {
       final user = await _remoteAdapter.signInWithGoogle();
       AppLogger.info(
         'SignInWithGoogle succeeded in repository: ${user.uid}',
-        tag: AppLogTags.authCubit,
+        tag: AppLogTags.authRepo,
       );
       return Success(user);
     } on Exception catch (e, stackTrace) {
@@ -61,7 +64,7 @@ class AuthRepositoryImpl implements AuthRepositoryPort {
         'SignInWithGoogle failed in repository',
         error: e,
         stackTrace: stackTrace,
-        tag: AppLogTags.authCubit,
+        tag: AppLogTags.authRepo,
       );
       return Error(
         AuthFailure(
@@ -89,7 +92,7 @@ class AuthRepositoryImpl implements AuthRepositoryPort {
       );
       AppLogger.info(
         'SignUp succeeded in repository: ${user.uid}',
-        tag: AppLogTags.authCubit,
+        tag: AppLogTags.authRepo,
       );
       return Success(user);
     } on Exception catch (e, stackTrace) {
@@ -97,7 +100,7 @@ class AuthRepositoryImpl implements AuthRepositoryPort {
         'SignUp failed in repository',
         error: e,
         stackTrace: stackTrace,
-        tag: AppLogTags.authCubit,
+        tag: AppLogTags.authRepo,
       );
       return Error(
         AuthFailure(
@@ -115,14 +118,17 @@ class AuthRepositoryImpl implements AuthRepositoryPort {
   Future<Result<void>> signOut() async {
     try {
       await _remoteAdapter.signOut();
-      AppLogger.info('SignOut succeeded in repository', tag: AppLogTags.authCubit);
+      AppLogger.info(
+        'SignOut succeeded in repository',
+        tag: AppLogTags.authRepo,
+      );
       return const Success(null);
     } on Exception catch (e, stackTrace) {
       AppLogger.error(
         'SignOut failed in repository',
         error: e,
         stackTrace: stackTrace,
-        tag: AppLogTags.authCubit,
+        tag: AppLogTags.authRepo,
       );
       return Error(
         AuthFailure(

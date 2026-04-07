@@ -18,7 +18,7 @@ class GetSettingsItemsUseCase {
   Future<Result<List<SettingsItem>>> call() {
     AppLogger.trace(
       'GetSettingsItemsUseCase called',
-      tag: AppLogTags.profileCubit,
+      tag: AppLogTags.profileUseCase,
     );
     return _repository.getSettingsItems();
   }

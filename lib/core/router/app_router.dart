@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +18,28 @@ import '../../features/saved/saved.dart';
 import '../../shared/shared.dart';
 import 'app_page_transitions.dart';
 import 'app_router_observer.dart';
+
+class _AuthRouterNotifier extends ChangeNotifier {
+  final WatchAuthStateUseCase _watchAuthState;
+  late final StreamSubscription<AuthUser?> _subscription;
+  AuthUser? _currentUser;
+
+  _AuthRouterNotifier(this._watchAuthState) {
+    _currentUser = getIt<AuthRepositoryPort>().currentUser;
+    _subscription = _watchAuthState().listen((user) {
+      _currentUser = user;
+      notifyListeners();
+    });
+  }
+
+  bool get isLoggedIn => _currentUser != null;
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
+}
 
 /// Application router configuration using [GoRouter].
 ///
@@ -37,10 +61,11 @@ abstract final class AppRouter {
       GlobalKey<NavigatorState>(debugLabel: 'root');
 
   /// Auth pages that unauthenticated users are allowed to access.
-  static const _authPaths = {
-    AppRoutes.loginPath,
-    AppRoutes.signupPath,
-  };
+  static const _authPaths = {AppRoutes.loginPath, AppRoutes.signupPath};
+
+  static final _authNotifier = _AuthRouterNotifier(
+    getIt<WatchAuthStateUseCase>(),
+  );
 
   /// The singleton [GoRouter] instance consumed by [MaterialApp.router].
   static final GoRouter router = GoRouter(
@@ -48,6 +73,7 @@ abstract final class AppRouter {
     initialLocation: AppRoutes.loginPath,
     debugLogDiagnostics: kDebugMode,
     observers: [AppRouterObserver()],
+    refreshListenable: _authNotifier,
 
     // ───────────── Error / Not-Found ─────────────
     errorBuilder: (context, state) {
@@ -59,8 +85,7 @@ abstract final class AppRouter {
     redirect: (BuildContext context, GoRouterState state) {
       AppLogger.trace('Redirect check: ${state.uri}', tag: AppLogTags.router);
 
-      final authRepo = getIt<AuthRepositoryPort>();
-      final isLoggedIn = authRepo.currentUser != null;
+      final isLoggedIn = _authNotifier.isLoggedIn;
       final isAuthPage = _authPaths.contains(state.matchedLocation);
 
       // If not logged in and NOT on auth page → redirect to login.
@@ -93,10 +118,7 @@ abstract final class AppRouter {
         pageBuilder: (context, state) {
           return AppPageTransitions.fadeTransition(
             state: state,
-            child: BlocProvider(
-              create: (_) => getIt<AuthCubit>(),
-              child: const LoginPage(),
-            ),
+            child: const LoginPage(),
           );
         },
       ),
@@ -106,10 +128,7 @@ abstract final class AppRouter {
         pageBuilder: (context, state) {
           return AppPageTransitions.fadeTransition(
             state: state,
-            child: BlocProvider(
-              create: (_) => getIt<AuthCubit>(),
-              child: const SignupPage(),
-            ),
+            child: const SignupPage(),
           );
         },
       ),
@@ -118,7 +137,11 @@ abstract final class AppRouter {
       ShellRoute(
         builder: (context, state, child) {
           return BlocProvider(
-            create: (_) => getIt<OnboardingCubit>()..loadCountries(),
+            create: (_) {
+              final cubit = getIt<OnboardingCubit>();
+              Future.microtask(cubit.loadCountries);
+              return cubit;
+            },
             child: child,
           );
         },
@@ -180,7 +203,11 @@ abstract final class AppRouter {
                   return AppPageTransitions.fadeTransition(
                     state: state,
                     child: BlocProvider(
-                      create: (_) => getIt<DashboardCubit>()..loadDashboard(),
+                      create: (_) {
+                        final cubit = getIt<DashboardCubit>();
+                        Future.microtask(cubit.loadDashboard);
+                        return cubit;
+                      },
                       child: const DashboardPage(),
                     ),
                   );
@@ -204,7 +231,9 @@ abstract final class AppRouter {
                         // Auto-load if subject is already selected.
                         final selection = getIt<SubjectSelectionCubit>().state;
                         if (selection.hasSelection) {
-                          cubit.loadChapters(selection.subject!.id);
+                          Future.microtask(
+                            () => cubit.loadChapters(selection.subject!.id),
+                          );
                         }
                         return cubit;
                       },
@@ -218,10 +247,8 @@ abstract final class AppRouter {
                     path: AppRoutes.formulaDetailPath,
                     name: AppRoutes.formulaDetailName,
                     pageBuilder: (context, state) {
-                      final subjectId =
-                          state.pathParameters['subjectId'] ?? '';
-                      final chapterId =
-                          state.pathParameters['chapterId'] ?? '';
+                      final subjectId = state.pathParameters['subjectId'] ?? '';
+                      final chapterId = state.pathParameters['chapterId'] ?? '';
                       final chapterName =
                           state.uri.queryParameters['name'] ?? 'Formulas';
                       return AppPageTransitions.fadeTransition(
@@ -253,7 +280,11 @@ abstract final class AppRouter {
                   return AppPageTransitions.fadeTransition(
                     state: state,
                     child: BlocProvider(
-                      create: (_) => getIt<PracticeCubit>()..loadQuestions(),
+                      create: (_) {
+                        final cubit = getIt<PracticeCubit>();
+                        Future.microtask(cubit.loadQuestions);
+                        return cubit;
+                      },
                       child: const PracticePage(),
                     ),
                   );
@@ -272,7 +303,11 @@ abstract final class AppRouter {
                   return AppPageTransitions.fadeTransition(
                     state: state,
                     child: BlocProvider(
-                      create: (_) => getIt<SavedCubit>()..loadBookmarks(),
+                      create: (_) {
+                        final cubit = getIt<SavedCubit>();
+                        Future.microtask(cubit.loadBookmarks);
+                        return cubit;
+                      },
                       child: const SavedPage(),
                     ),
                   );
@@ -291,7 +326,11 @@ abstract final class AppRouter {
                   return AppPageTransitions.fadeTransition(
                     state: state,
                     child: BlocProvider(
-                      create: (_) => getIt<ProfileCubit>()..loadProfile(),
+                      create: (_) {
+                        final cubit = getIt<ProfileCubit>();
+                        Future.microtask(cubit.loadProfile);
+                        return cubit;
+                      },
                       child: const ProfilePage(),
                     ),
                   );

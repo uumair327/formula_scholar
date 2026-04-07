@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
@@ -48,29 +50,42 @@ class AuthCubit extends Cubit<AuthState> {
   final SignUpUseCase _signUp;
   final SignOutUseCase _signOut;
   final GoogleSignInUseCase _googleSignIn;
+  final WatchAuthStateUseCase _watchAuthState;
+  StreamSubscription<AuthUser?>? _authStateSubscription;
 
   AuthCubit({
     required SignInUseCase signIn,
     required SignUpUseCase signUp,
     required SignOutUseCase signOut,
     required GoogleSignInUseCase googleSignIn,
-  })  : _signIn = signIn,
-        _signUp = signUp,
-        _signOut = signOut,
-        _googleSignIn = googleSignIn,
-        super(const AuthState());
+    required WatchAuthStateUseCase watchAuthState,
+  }) : _signIn = signIn,
+       _signUp = signUp,
+       _signOut = signOut,
+       _googleSignIn = googleSignIn,
+       _watchAuthState = watchAuthState,
+       super(const AuthState()) {
+    _authStateSubscription = _watchAuthState().listen((user) {
+      if (user == null) {
+        emit(const AuthState(status: AuthStatus.unauthenticated));
+        return;
+      }
+
+      emit(
+        state.copyWith(
+          status: AuthStatus.authenticated,
+          user: user,
+          errorMessage: null,
+        ),
+      );
+    });
+  }
 
   /// Signs in the user via [SignInUseCase].
   ///
   /// Uses exhaustive `Result` pattern matching for typed error handling.
-  Future<void> signIn({
-    required String email,
-    required String password,
-  }) async {
-    AppLogger.info(
-      'Sign-in attempted for: $email',
-      tag: AppLogTags.authCubit,
-    );
+  Future<void> signIn({required String email, required String password}) async {
+    AppLogger.info('Sign-in attempted for: $email', tag: AppLogTags.authCubit);
     emit(state.copyWith(status: AuthStatus.loading));
 
     final result = await _signIn(email: email, password: password);
@@ -81,10 +96,7 @@ class AuthCubit extends Cubit<AuthState> {
           'Sign-in succeeded: ${data.uid}',
           tag: AppLogTags.authCubit,
         );
-        emit(state.copyWith(
-          status: AuthStatus.authenticated,
-          user: data,
-        ));
+        emit(state.copyWith(status: AuthStatus.authenticated, user: data));
       case Error(:final failure):
         AppLogger.error(
           'Sign-in failed: ${failure.message}',
@@ -92,10 +104,12 @@ class AuthCubit extends Cubit<AuthState> {
           error: failure.originalError,
           stackTrace: failure.stackTrace,
         );
-        emit(state.copyWith(
-          status: AuthStatus.error,
-          errorMessage: failure.message,
-        ));
+        emit(
+          state.copyWith(
+            status: AuthStatus.error,
+            errorMessage: failure.message,
+          ),
+        );
     }
   }
 
@@ -112,28 +126,21 @@ class AuthCubit extends Cubit<AuthState> {
           'Google sign-in succeeded: ${data.uid}',
           tag: AppLogTags.authCubit,
         );
-        emit(state.copyWith(
-          status: AuthStatus.authenticated,
-          user: data,
-        ));
+        emit(state.copyWith(status: AuthStatus.authenticated, user: data));
       case Error(:final failure):
-        // If the user simply closed the dialog, we might not want to show an error bar,
-        // but for now we display 'Google sign-in was cancelled.' 
+        final isCancelled = failure is CancelledFailure;
         AppLogger.error(
           'Google sign-in failed: ${failure.message}',
           tag: AppLogTags.authCubit,
           error: failure.originalError,
           stackTrace: failure.stackTrace,
         );
-        emit(state.copyWith(
-          // Return to unauthenticated state rather than error if cancelled, or keep error.
-          status: failure.message.contains('cancelled') 
-              ? AuthStatus.unauthenticated 
-              : AuthStatus.error,
-          errorMessage: failure.message.contains('cancelled')
-              ? null
-              : failure.message,
-        ));
+        emit(
+          state.copyWith(
+            status: isCancelled ? AuthStatus.unauthenticated : AuthStatus.error,
+            errorMessage: isCancelled ? null : failure.message,
+          ),
+        );
     }
   }
 
@@ -154,10 +161,7 @@ class AuthCubit extends Cubit<AuthState> {
           'Sign-up succeeded: ${data.uid}',
           tag: AppLogTags.authCubit,
         );
-        emit(state.copyWith(
-          status: AuthStatus.authenticated,
-          user: data,
-        ));
+        emit(state.copyWith(status: AuthStatus.authenticated, user: data));
       case Error(:final failure):
         AppLogger.error(
           'Sign-up failed: ${failure.message}',
@@ -165,10 +169,12 @@ class AuthCubit extends Cubit<AuthState> {
           error: failure.originalError,
           stackTrace: failure.stackTrace,
         );
-        emit(state.copyWith(
-          status: AuthStatus.error,
-          errorMessage: failure.message,
-        ));
+        emit(
+          state.copyWith(
+            status: AuthStatus.error,
+            errorMessage: failure.message,
+          ),
+        );
     }
   }
 
@@ -189,10 +195,18 @@ class AuthCubit extends Cubit<AuthState> {
           tag: AppLogTags.authCubit,
           error: failure.originalError,
         );
-        emit(state.copyWith(
-          status: AuthStatus.error,
-          errorMessage: failure.message,
-        ));
+        emit(
+          state.copyWith(
+            status: AuthStatus.error,
+            errorMessage: failure.message,
+          ),
+        );
     }
+  }
+
+  @override
+  Future<void> close() async {
+    await _authStateSubscription?.cancel();
+    return super.close();
   }
 }

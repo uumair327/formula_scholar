@@ -20,6 +20,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileCubit, ProfileState>(
+      buildWhen: (prev, curr) => prev.status != curr.status,
       builder: (context, state) {
         if (state.status == ProfileStatus.loading ||
             state.status == ProfileStatus.initial) {
@@ -125,9 +126,7 @@ class ProfilePage extends StatelessWidget {
       ),
       actions: [
         IconButton(
-          onPressed: () {
-            AppLogger.debug('Leaderboard tapped', tag: AppLogTags.profilePage);
-          },
+          onPressed: () {},
           icon: const Icon(LucideIcons.barChart2, color: AppColors.blue600),
         ),
         const SizedBox(width: AppDimensions.paddingSM),
@@ -137,9 +136,7 @@ class ProfilePage extends StatelessWidget {
 
   /// Handles sign-out via [AuthCubit] resolved from DI.
   Future<void> _handleLogout(BuildContext context) async {
-    AppLogger.info('Logout initiated from profile', tag: AppLogTags.profilePage);
-    final authCubit = getIt<AuthCubit>();
-    await authCubit.signOut();
+    await context.read<AuthCubit>().signOut();
 
     if (context.mounted) {
       context.go(AppRoutes.loginPath);

@@ -39,9 +39,15 @@ class OnboardingStep2Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<OnboardingCubit, OnboardingState>(
+      buildWhen: (prev, curr) =>
+          prev.status != curr.status ||
+          prev.boards != curr.boards ||
+          prev.selectedBoard != curr.selectedBoard,
       builder: (context, state) {
         if (state.status == OnboardingStatus.loading && state.boards.isEmpty) {
-          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         }
 
         return OnboardingShell(
@@ -52,7 +58,9 @@ class OnboardingStep2Page extends StatelessWidget {
             context.read<OnboardingCubit>().goBackToLocationSelection();
             context.go(AppRoutes.onboardingPath);
           },
-          onContinue: state.selectedBoard != null ? () => _onContinue(context) : null,
+          onContinue: state.selectedBoard != null
+              ? () => _onContinue(context)
+              : null,
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -63,7 +71,10 @@ class OnboardingStep2Page extends StatelessWidget {
               const SizedBox(height: AppDimensions.paddingXXL),
 
               if (state.boards.isEmpty)
-                 Text('No boards available for this region', style: AppTextStyles.bodyMedium),
+                Text(
+                  'No boards available for this region',
+                  style: AppTextStyles.bodyMedium,
+                ),
 
               // Curriculum grid
               LayoutBuilder(
@@ -75,13 +86,18 @@ class OnboardingStep2Page extends StatelessWidget {
                           runSpacing: AppDimensions.paddingLG,
                           children: state.boards.map((b) {
                             return SizedBox(
-                              width: (constraints.maxWidth - AppDimensions.paddingLG) / 2,
+                              width:
+                                  (constraints.maxWidth -
+                                      AppDimensions.paddingLG) /
+                                  2,
                               child: _CurriculumCard(
                                 board: b,
                                 isSelected: state.selectedBoard?.id == b.id,
                                 icon: _getIconForBoardType(b.type),
                                 color: _getColorForBoardType(b.type),
-                                onTap: () => context.read<OnboardingCubit>().selectBoard(b),
+                                onTap: () => context
+                                    .read<OnboardingCubit>()
+                                    .selectBoard(b),
                               ),
                             );
                           }).toList(),
@@ -97,7 +113,9 @@ class OnboardingStep2Page extends StatelessWidget {
                                 isSelected: state.selectedBoard?.id == b.id,
                                 icon: _getIconForBoardType(b.type),
                                 color: _getColorForBoardType(b.type),
-                                onTap: () => context.read<OnboardingCubit>().selectBoard(b),
+                                onTap: () => context
+                                    .read<OnboardingCubit>()
+                                    .selectBoard(b),
                               ),
                             );
                           }).toList(),
@@ -161,7 +179,6 @@ class OnboardingStep2Page extends StatelessWidget {
   }
 }
 
-
 class _CurriculumCard extends StatelessWidget {
   final Board board;
   final bool isSelected;
@@ -211,9 +228,7 @@ class _CurriculumCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: isSelected
                         ? color
-                        : color.withValues(
-                            alpha: AppDimensions.opacityFaint,
-                          ),
+                        : color.withValues(alpha: AppDimensions.opacityFaint),
                     borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                   ),
                   child: Icon(

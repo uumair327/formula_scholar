@@ -18,7 +18,7 @@ class GetRecentStudiesUseCase {
   Future<Result<List<RecentStudy>>> call() {
     AppLogger.trace(
       'GetRecentStudiesUseCase called',
-      tag: AppLogTags.dashboardCubit,
+      tag: AppLogTags.dashboardUseCase,
     );
     return _repository.getRecentStudies();
   }

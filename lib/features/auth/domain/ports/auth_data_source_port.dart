@@ -12,12 +12,9 @@ import '../entities/auth_user.dart';
 ///
 /// To swap providers, create a new adapter and update the DI registration
 /// — **zero changes** to domain, use cases, or presentation.
-abstract class AuthDataSourcePort {
+abstract interface class AuthDataSourcePort {
   /// Signs in with [email] and [password], returning the authenticated user.
-  Future<AuthUser> signIn({
-    required String email,
-    required String password,
-  });
+  Future<AuthUser> signIn({required String email, required String password});
 
   /// Creates a new account with [name], [email], and [password].
   Future<AuthUser> signUp({

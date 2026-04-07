@@ -8,7 +8,10 @@ class GetCountriesUseCase {
 
   GetCountriesUseCase(this._repository);
 
-  Future<Result<PaginatedResponse<Country>>> execute({int limit = 20, String? startAfterId}) {
+  Future<Result<PaginatedResponse<Country>>> call({
+    int limit = 20,
+    String? startAfterId,
+  }) {
     return _repository.getCountries(limit: limit, startAfterId: startAfterId);
   }
 }

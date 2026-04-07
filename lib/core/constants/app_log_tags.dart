@@ -19,6 +19,8 @@ abstract final class AppLogTags {
   static const String loginPage = 'LoginPage';
   static const String signupPage = 'SignupPage';
   static const String authCubit = 'AuthCubit';
+  static const String authRepo = 'AuthRepo';
+  static const String authDataSource = 'AuthDataSource';
 
   // ──────────────────────── Onboarding ─────────────────────────
   // Presentation
@@ -39,6 +41,7 @@ abstract final class AppLogTags {
   // Data
   static const String dashboardRepo = 'DashboardRepo';
   static const String dashboardDataSource = 'DashboardDataSource';
+  static const String dashboardUseCase = 'DashboardUseCase';
 
   // ──────────────────────── Chapters (generic) ─────────────────
   // Presentation
@@ -47,6 +50,8 @@ abstract final class AppLogTags {
   // Data
   static const String chaptersRepo = 'ChaptersRepo';
   static const String chaptersDataSource = 'ChaptersDataSource';
+  static const String chaptersUseCase = 'ChaptersUseCase';
+  static const String formulasUseCase = 'FormulasUseCase';
 
   // ──────────────────────── Formulas ────────────────────────────
   // Presentation
@@ -67,6 +72,7 @@ abstract final class AppLogTags {
   // Data
   static const String profileRepo = 'ProfileRepo';
   static const String profileDataSource = 'ProfileDataSource';
+  static const String profileUseCase = 'ProfileUseCase';
 
   // ──────────────────────── Practice ───────────────────────────
   // Presentation
@@ -75,6 +81,7 @@ abstract final class AppLogTags {
   // Data
   static const String practiceRepo = 'PracticeRepo';
   static const String practiceDataSource = 'PracticeDataSource';
+  static const String practiceUseCase = 'PracticeUseCase';
 
   // ──────────────────────── Saved ──────────────────────────────
   // Presentation
@@ -83,4 +90,5 @@ abstract final class AppLogTags {
   // Data
   static const String savedRepo = 'SavedRepo';
   static const String savedDataSource = 'SavedDataSource';
+  static const String savedUseCase = 'SavedUseCase';
 }

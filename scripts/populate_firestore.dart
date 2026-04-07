@@ -2,9 +2,23 @@ import 'dart:io';
 import 'package:dart_firebase_admin/dart_firebase_admin.dart';
 import 'package:dart_firebase_admin/firestore.dart';
 
-void main() async {
-  final serviceAccountPath =
-      r'C:\Users\uumai\Downloads\zip\formula_scholar\formula-scholar-firebase-adminsdk-fbsvc-8b4116cc0e.json';
+String resolveServiceAccountPath(List<String> args) {
+  if (args.isNotEmpty) {
+    return args.first;
+  }
+
+  final envPath = Platform.environment['FIREBASE_SERVICE_ACCOUNT_PATH'];
+  if (envPath != null && envPath.isNotEmpty) {
+    return envPath;
+  }
+
+  throw StateError(
+    'Set FIREBASE_SERVICE_ACCOUNT_PATH or pass the service account JSON path as the first argument.',
+  );
+}
+
+void main(List<String> args) async {
+  final serviceAccountPath = resolveServiceAccountPath(args);
 
   final admin = FirebaseAdminApp.initializeApp(
     'formula-scholar',
@@ -18,28 +32,69 @@ void main() async {
   // --- Onboarding: Boards & Grades ---
   print('Populating Boards & Grades...');
   final boardsRef = firestore.collection('boards');
-  
+
   final boardsData = [
-    {'id': 'cbse', 'name': 'CBSE', 'description': 'Central Board of Secondary Education'},
-    {'id': 'icse', 'name': 'ICSE', 'description': 'Council for Indian School Certificate'},
-    {'id': 'state', 'name': 'State Board', 'description': 'Regional Curriculum'},
-    {'id': 'igcse', 'name': 'IGCSE', 'description': 'International General Cert.'},
-    {'id': 'ib', 'name': 'IB Board', 'description': 'International Baccalaureate'},
+    {
+      'id': 'cbse',
+      'name': 'CBSE',
+      'description': 'Central Board of Secondary Education',
+    },
+    {
+      'id': 'icse',
+      'name': 'ICSE',
+      'description': 'Council for Indian School Certificate',
+    },
+    {
+      'id': 'state',
+      'name': 'State Board',
+      'description': 'Regional Curriculum',
+    },
+    {
+      'id': 'igcse',
+      'name': 'IGCSE',
+      'description': 'International General Cert.',
+    },
+    {
+      'id': 'ib',
+      'name': 'IB Board',
+      'description': 'International Baccalaureate',
+    },
   ];
 
   final gradesData = [
     {'id': 'class_8', 'label': 'Class 8', 'classNumber': 8, 'isPopular': false},
-    {'id': 'class_9', 'label': 'Class 9', 'classNumber': 9, 'subtitle': 'Foundation Year', 'isPopular': true},
-    {'id': 'class_10', 'label': 'Class 10', 'classNumber': 10, 'isPopular': false},
-    {'id': 'class_11', 'label': 'Class 11', 'classNumber': 11, 'isPopular': false},
-    {'id': 'class_12', 'label': 'Class 12', 'classNumber': 12, 'isPopular': false},
+    {
+      'id': 'class_9',
+      'label': 'Class 9',
+      'classNumber': 9,
+      'subtitle': 'Foundation Year',
+      'isPopular': true,
+    },
+    {
+      'id': 'class_10',
+      'label': 'Class 10',
+      'classNumber': 10,
+      'isPopular': false,
+    },
+    {
+      'id': 'class_11',
+      'label': 'Class 11',
+      'classNumber': 11,
+      'isPopular': false,
+    },
+    {
+      'id': 'class_12',
+      'label': 'Class 12',
+      'classNumber': 12,
+      'isPopular': false,
+    },
   ];
 
   for (var boardMap in boardsData) {
     print('  Adding board: ${boardMap['id']}');
     final boardDoc = boardsRef.doc(boardMap['id'] as String);
     await boardDoc.set(boardMap);
-    
+
     // Add grades as subcollection for each board
     final gradesRef = boardDoc.collection('grades');
     for (var gradeMap in gradesData) {
@@ -57,7 +112,8 @@ void main() async {
       'gradeId': 'class_9',
       'name': 'Mathematics',
       'subtitle': 'Polynomials & Geometrical Proofs',
-      'description': 'Detailed CBSE compliant formula sheets for algebraic identities and theorems.',
+      'description':
+          'Detailed CBSE compliant formula sheets for algebraic identities and theorems.',
       'category': 'Mathematics',
       'imageUrl': '',
       'unitCount': 8,
@@ -75,7 +131,8 @@ void main() async {
       'gradeId': 'class_9',
       'name': 'Physics',
       'subtitle': 'Gravitation & Sound',
-      'description': 'Universal law of gravitation and its implications in the Grade IX science curriculum.',
+      'description':
+          'Universal law of gravitation and its implications in the Grade IX science curriculum.',
       'category': 'Physics',
       'imageUrl': '',
       'unitCount': 6,
@@ -134,19 +191,91 @@ void main() async {
   print('Populating Chapters...');
   final chaptersData = {
     'math': [
-      {'id': 'polynomials', 'name': 'Polynomials', 'subtitle': 'Algebra & Equations', 'completedFormulas': 8, 'totalFormulas': 12, 'progressPercent': 65.0, 'status': 'inProgress'},
-      {'id': 'triangles', 'name': 'Triangles', 'subtitle': 'Geometry & Theorems', 'completedFormulas': 2, 'totalFormulas': 20, 'progressPercent': 10.0, 'status': 'notStarted'},
-      {'id': 'circles', 'name': 'Circles', 'subtitle': 'Theorems & Proofs', 'completedFormulas': 0, 'totalFormulas': 15, 'progressPercent': 0.0, 'status': 'locked'},
+      {
+        'id': 'polynomials',
+        'name': 'Polynomials',
+        'subtitle': 'Algebra & Equations',
+        'completedFormulas': 8,
+        'totalFormulas': 12,
+        'progressPercent': 65.0,
+        'status': 'inProgress',
+      },
+      {
+        'id': 'triangles',
+        'name': 'Triangles',
+        'subtitle': 'Geometry & Theorems',
+        'completedFormulas': 2,
+        'totalFormulas': 20,
+        'progressPercent': 10.0,
+        'status': 'notStarted',
+      },
+      {
+        'id': 'circles',
+        'name': 'Circles',
+        'subtitle': 'Theorems & Proofs',
+        'completedFormulas': 0,
+        'totalFormulas': 15,
+        'progressPercent': 0.0,
+        'status': 'locked',
+      },
     ],
     'physics': [
-      {'id': 'motion', 'name': 'Motion', 'subtitle': 'Velocity, acceleration & graphs', 'completedFormulas': 3, 'totalFormulas': 6, 'progressPercent': 50.0, 'status': 'inProgress'},
-      {'id': 'force', 'name': 'Force and Laws of Motion', 'subtitle': 'Newton’s three laws', 'completedFormulas': 0, 'totalFormulas': 5, 'progressPercent': 0.0, 'status': 'notStarted'},
-      {'id': 'gravitation', 'name': 'Gravitation', 'subtitle': 'Universal law & Free fall', 'completedFormulas': 0, 'totalFormulas': 4, 'progressPercent': 0.0, 'status': 'locked'},
+      {
+        'id': 'motion',
+        'name': 'Motion',
+        'subtitle': 'Velocity, acceleration & graphs',
+        'completedFormulas': 3,
+        'totalFormulas': 6,
+        'progressPercent': 50.0,
+        'status': 'inProgress',
+      },
+      {
+        'id': 'force',
+        'name': 'Force and Laws of Motion',
+        'subtitle': 'Newton’s three laws',
+        'completedFormulas': 0,
+        'totalFormulas': 5,
+        'progressPercent': 0.0,
+        'status': 'notStarted',
+      },
+      {
+        'id': 'gravitation',
+        'name': 'Gravitation',
+        'subtitle': 'Universal law & Free fall',
+        'completedFormulas': 0,
+        'totalFormulas': 4,
+        'progressPercent': 0.0,
+        'status': 'locked',
+      },
     ],
     'chemistry': [
-      {'id': 'matter', 'name': 'Matter in our Surroundings', 'subtitle': 'States of matter', 'completedFormulas': 2, 'totalFormulas': 4, 'progressPercent': 50.0, 'status': 'inProgress'},
-      {'id': 'atoms', 'name': 'Atoms and Molecules', 'subtitle': 'Moles & formulae', 'completedFormulas': 0, 'totalFormulas': 6, 'progressPercent': 0.0, 'status': 'notStarted'},
-      {'id': 'structure_of_atom', 'name': 'Structure of the Atom', 'subtitle': 'Electrons, protons & neutrons', 'completedFormulas': 0, 'totalFormulas': 5, 'progressPercent': 0.0, 'status': 'locked'},
+      {
+        'id': 'matter',
+        'name': 'Matter in our Surroundings',
+        'subtitle': 'States of matter',
+        'completedFormulas': 2,
+        'totalFormulas': 4,
+        'progressPercent': 50.0,
+        'status': 'inProgress',
+      },
+      {
+        'id': 'atoms',
+        'name': 'Atoms and Molecules',
+        'subtitle': 'Moles & formulae',
+        'completedFormulas': 0,
+        'totalFormulas': 6,
+        'progressPercent': 0.0,
+        'status': 'notStarted',
+      },
+      {
+        'id': 'structure_of_atom',
+        'name': 'Structure of the Atom',
+        'subtitle': 'Electrons, protons & neutrons',
+        'completedFormulas': 0,
+        'totalFormulas': 5,
+        'progressPercent': 0.0,
+        'status': 'locked',
+      },
     ],
   };
 
@@ -163,29 +292,112 @@ void main() async {
   print('Populating Formulas for Chapters...');
   final formulasData = {
     'polynomials': [
-      {'id': 'f1', 'title': 'Square of Sum', 'latex': r'(x + y)^2 = x^2 + 2xy + y^2', 'description': 'Used to expand the square of a sum of two terms.', 'isMastered': true},
-      {'id': 'f2', 'title': 'Square of Difference', 'latex': r'(x - y)^2 = x^2 - 2xy + y^2', 'description': 'Used to expand the square of a difference of two terms.', 'isMastered': true},
-      {'id': 'f3', 'title': 'Difference of Squares', 'latex': r'x^2 - y^2 = (x + y)(x - y)', 'description': 'Factors the difference of two squared terms.', 'isMastered': false},
-      {'id': 'f4', 'title': 'Square of Trinomial', 'latex': r'(x + y + z)^2 = x^2 + y^2 + z^2 + 2xy + 2yz + 2zx', 'description': 'Expands the square of a sum of three terms.', 'isMastered': false},
+      {
+        'id': 'f1',
+        'title': 'Square of Sum',
+        'latex': r'(x + y)^2 = x^2 + 2xy + y^2',
+        'description': 'Used to expand the square of a sum of two terms.',
+        'isMastered': true,
+      },
+      {
+        'id': 'f2',
+        'title': 'Square of Difference',
+        'latex': r'(x - y)^2 = x^2 - 2xy + y^2',
+        'description':
+            'Used to expand the square of a difference of two terms.',
+        'isMastered': true,
+      },
+      {
+        'id': 'f3',
+        'title': 'Difference of Squares',
+        'latex': r'x^2 - y^2 = (x + y)(x - y)',
+        'description': 'Factors the difference of two squared terms.',
+        'isMastered': false,
+      },
+      {
+        'id': 'f4',
+        'title': 'Square of Trinomial',
+        'latex': r'(x + y + z)^2 = x^2 + y^2 + z^2 + 2xy + 2yz + 2zx',
+        'description': 'Expands the square of a sum of three terms.',
+        'isMastered': false,
+      },
     ],
     'triangles': [
-      {'id': 'f1', 'title': 'SAS Congruence', 'latex': r'\triangle ABC \cong \triangle DEF \iff AB=DE, \angle B=\angle E, BC=EF', 'description': 'Side-Angle-Side congruence rule.', 'isMastered': false},
-      {'id': 'f2', 'title': 'ASA Congruence', 'latex': r'\triangle ABC \cong \triangle DEF \iff \angle B=\angle E, BC=EF, \angle C=\angle F', 'description': 'Angle-Side-Angle congruence rule.', 'isMastered': false},
-      {'id': 'f3', 'title': 'SSS Congruence', 'latex': r'\triangle ABC \cong \triangle DEF \iff AB=DE, BC=EF, AC=DF', 'description': 'Side-Side-Side congruence rule.', 'isMastered': false},
-      {'id': 'f4', 'title': 'Isosceles Triangle Theorem', 'latex': r'AB = AC \implies \angle B = \angle C', 'description': 'Angles opposite to equal sides of a triangle are equal.', 'isMastered': false},
+      {
+        'id': 'f1',
+        'title': 'SAS Congruence',
+        'latex':
+            r'\triangle ABC \cong \triangle DEF \iff AB=DE, \angle B=\angle E, BC=EF',
+        'description': 'Side-Angle-Side congruence rule.',
+        'isMastered': false,
+      },
+      {
+        'id': 'f2',
+        'title': 'ASA Congruence',
+        'latex':
+            r'\triangle ABC \cong \triangle DEF \iff \angle B=\angle E, BC=EF, \angle C=\angle F',
+        'description': 'Angle-Side-Angle congruence rule.',
+        'isMastered': false,
+      },
+      {
+        'id': 'f3',
+        'title': 'SSS Congruence',
+        'latex': r'\triangle ABC \cong \triangle DEF \iff AB=DE, BC=EF, AC=DF',
+        'description': 'Side-Side-Side congruence rule.',
+        'isMastered': false,
+      },
+      {
+        'id': 'f4',
+        'title': 'Isosceles Triangle Theorem',
+        'latex': r'AB = AC \implies \angle B = \angle C',
+        'description':
+            'Angles opposite to equal sides of a triangle are equal.',
+        'isMastered': false,
+      },
     ],
     'circles': [
-      {'id': 'f1', 'title': 'Equal Chords Theorem', 'latex': r'AB = CD \implies \angle AOB = \angle COD', 'description': 'Equal chords of a circle subtend equal angles at the center.', 'isMastered': false},
-      {'id': 'f2', 'title': 'Perpendicular from Center', 'latex': r'OM \perp AB \implies AM = MB', 'description': 'The perpendicular from the center of a circle to a chord bisects the chord.', 'isMastered': false},
-      {'id': 'f3', 'title': 'Angles in Same Segment', 'latex': r'\angle ACB = \angle ADB', 'description': 'Angles in the same segment of a circle are equal.', 'isMastered': false},
-      {'id': 'f4', 'title': 'Cyclic Quadrilateral', 'latex': r'\angle A + \angle C = 180^\circ', 'description': 'The sum of either pair of opposite angles of a cyclic quadrilateral is 180^\circ.', 'isMastered': false},
+      {
+        'id': 'f1',
+        'title': 'Equal Chords Theorem',
+        'latex': r'AB = CD \implies \angle AOB = \angle COD',
+        'description':
+            'Equal chords of a circle subtend equal angles at the center.',
+        'isMastered': false,
+      },
+      {
+        'id': 'f2',
+        'title': 'Perpendicular from Center',
+        'latex': r'OM \perp AB \implies AM = MB',
+        'description':
+            'The perpendicular from the center of a circle to a chord bisects the chord.',
+        'isMastered': false,
+      },
+      {
+        'id': 'f3',
+        'title': 'Angles in Same Segment',
+        'latex': r'\angle ACB = \angle ADB',
+        'description': 'Angles in the same segment of a circle are equal.',
+        'isMastered': false,
+      },
+      {
+        'id': 'f4',
+        'title': 'Cyclic Quadrilateral',
+        'latex': r'\angle A + \angle C = 180^\circ',
+        'description':
+            'The sum of either pair of opposite angles of a cyclic quadrilateral is 180^\circ.',
+        'isMastered': false,
+      },
     ],
   };
 
   for (var entry in formulasData.entries) {
     final chapterId = entry.key;
     final formulas = entry.value;
-    final formulasRef = subjectsRef.doc('math').collection('chapters').doc(chapterId).collection('formulas');
+    final formulasRef = subjectsRef
+        .doc('math')
+        .collection('chapters')
+        .doc(chapterId)
+        .collection('formulas');
     for (var fMap in formulas) {
       await formulasRef.doc(fMap['id'] as String).set(fMap);
     }
@@ -200,7 +412,8 @@ void main() async {
       'category': 'Geometry Basics',
       'topic': 'Circles & Areas',
       'questionText': 'What is the formula for the area of a circle?',
-      'imageUrl': 'https://lh3.googleusercontent.com/aida-public/AB6AXuClyZ-0UYuRRBHxAK0Ii_GxesoYDVyrxZfvJWsymATBzNfEFu_iTlQKrn6WDEUNWXKoitdhKsUElgGpRyyEDswTW9KhMMYs5QimgyHDlitfY1ZJhQhiZOF7b4GxG2HZ-t9M95XrDj9ci-A4O49TQ6E3FzBYrSZEs9k4pH8cjHZeYeZcK5cCJ9fbre1soRe_zMPcEFzy3-XsnbRIvRP-wZLWM3lfBCxO1TpPnNRhgXNZULDzi3iu0pqVs0JAbFAFhDPU1sb6_0jjdHU',
+      'imageUrl':
+          'https://lh3.googleusercontent.com/aida-public/AB6AXuClyZ-0UYuRRBHxAK0Ii_GxesoYDVyrxZfvJWsymATBzNfEFu_iTlQKrn6WDEUNWXKoitdhKsUElgGpRyyEDswTW9KhMMYs5QimgyHDlitfY1ZJhQhiZOF7b4GxG2HZ-t9M95XrDj9ci-A4O49TQ6E3FzBYrSZEs9k4pH8cjHZeYeZcK5cCJ9fbre1soRe_zMPcEFzy3-XsnbRIvRP-wZLWM3lfBCxO1TpPnNRhgXNZULDzi3iu0pqVs0JAbFAFhDPU1sb6_0jjdHU',
       'options': [
         {'id': 'A', 'text': '2πr'},
         {'id': 'B', 'text': 'πr²'},
@@ -214,8 +427,10 @@ void main() async {
       'id': 'q2',
       'category': 'Geometry Basics',
       'topic': 'Triangles',
-      'questionText': 'What is the area of a triangle with base b and height h?',
-      'imageUrl': 'https://lh3.googleusercontent.com/aida-public/AB6AXuClyZ-0UYuRRBHxAK0Ii_GxesoYDVyrxZfvJWsymATBzNfEFu_iTlQKrn6WDEUNWXKoitdhKsUElgGpRyyEDswTW9KhMMYs5QimgyHDlitfY1ZJhQhiZOF7b4GxG2HZ-t9M95XrDj9ci-A4O49TQ6E3FzBYrSZEs9k4pH8cjHZeYeZcK5cCJ9fbre1soRe_zMPcEFzy3-XsnbRIvRP-wZLWM3lfBCxO1TpPnNRhgXNZULDzi3iu0pqVs0JAbFAFhDPU1sb6_0jjdHU',
+      'questionText':
+          'What is the area of a triangle with base b and height h?',
+      'imageUrl':
+          'https://lh3.googleusercontent.com/aida-public/AB6AXuClyZ-0UYuRRBHxAK0Ii_GxesoYDVyrxZfvJWsymATBzNfEFu_iTlQKrn6WDEUNWXKoitdhKsUElgGpRyyEDswTW9KhMMYs5QimgyHDlitfY1ZJhQhiZOF7b4GxG2HZ-t9M95XrDj9ci-A4O49TQ6E3FzBYrSZEs9k4pH8cjHZeYeZcK5cCJ9fbre1soRe_zMPcEFzy3-XsnbRIvRP-wZLWM3lfBCxO1TpPnNRhgXNZULDzi3iu0pqVs0JAbFAFhDPU1sb6_0jjdHU',
       'options': [
         {'id': 'A', 'text': 'b × h'},
         {'id': 'B', 'text': '½ × b × h'},
@@ -230,7 +445,8 @@ void main() async {
       'category': 'Polynomial Identities',
       'topic': 'Circles & Areas', // kept from mock
       'questionText': 'Expand: (a + b)²',
-      'imageUrl': 'https://lh3.googleusercontent.com/aida-public/AB6AXuClyZ-0UYuRRBHxAK0Ii_GxesoYDVyrxZfvJWsymATBzNfEFu_iTlQKrn6WDEUNWXKoitdhKsUElgGpRyyEDswTW9KhMMYs5QimgyHDlitfY1ZJhQhiZOF7b4GxG2HZ-t9M95XrDj9ci-A4O49TQ6E3FzBYrSZEs9k4pH8cjHZeYeZcK5cCJ9fbre1soRe_zMPcEFzy3-XsnbRIvRP-wZLWM3lfBCxO1TpPnNRhgXNZULDzi3iu0pqVs0JAbFAFhDPU1sb6_0jjdHU',
+      'imageUrl':
+          'https://lh3.googleusercontent.com/aida-public/AB6AXuClyZ-0UYuRRBHxAK0Ii_GxesoYDVyrxZfvJWsymATBzNfEFu_iTlQKrn6WDEUNWXKoitdhKsUElgGpRyyEDswTW9KhMMYs5QimgyHDlitfY1ZJhQhiZOF7b4GxG2HZ-t9M95XrDj9ci-A4O49TQ6E3FzBYrSZEs9k4pH8cjHZeYeZcK5cCJ9fbre1soRe_zMPcEFzy3-XsnbRIvRP-wZLWM3lfBCxO1TpPnNRhgXNZULDzi3iu0pqVs0JAbFAFhDPU1sb6_0jjdHU',
       'options': [
         {'id': 'A', 'text': 'a² + b²'},
         {'id': 'B', 'text': 'a² + 2ab + b²'},
