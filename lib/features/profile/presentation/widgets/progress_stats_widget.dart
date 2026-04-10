@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
@@ -25,6 +26,14 @@ class ProgressStatsWidget extends StatelessWidget {
             AppLogger.debug(
               'View History tapped',
               tag: AppLogTags.progressStatsWidget,
+            );
+            ComingSoonSheet.show(
+              context,
+              featureName: AppStrings.viewHistory,
+              description:
+                  'Track your complete learning journey with detailed '
+                  'progress history, streaks, and milestone achievements.',
+              icon: LucideIcons.history,
             );
           },
         ),

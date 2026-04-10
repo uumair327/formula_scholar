@@ -99,7 +99,7 @@ class FormulasPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            state.chapterName ?? 'Formulas',
+            state.chapterName ?? AppStrings.formulasTitle,
             style: AppTextStyles.headlineSmall.copyWith(
               color: AppColors.onPrimaryFixedVariant,
             ),
@@ -107,7 +107,7 @@ class FormulasPage extends StatelessWidget {
           Row(
             children: [
               Text(
-                'CHAPTER',
+                AppStrings.chapterBreadcrumb,
                 style: AppTextStyles.overline.copyWith(
                   color: AppColors.outline,
                   fontSize: AppDimensions.fontSizeXS,
@@ -119,7 +119,7 @@ class FormulasPage extends StatelessWidget {
                 color: AppColors.slate400,
               ),
               Text(
-                'FORMULAS',
+                AppStrings.formulasBreadcrumb,
                 style: AppTextStyles.overline.copyWith(
                   color: AppColors.primary,
                   fontSize: AppDimensions.fontSizeXS,
@@ -159,7 +159,7 @@ class FormulasPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    state.chapterName ?? 'Chapter',
+                    state.chapterName ?? AppStrings.chapterLabel,
                     style: AppTextStyles.headlineMedium.copyWith(
                       color: AppColors.white,
                       fontWeight: FontWeight.w800,
@@ -167,7 +167,10 @@ class FormulasPage extends StatelessWidget {
                   ),
                   const SizedBox(height: AppDimensions.paddingXS),
                   Text(
-                    '${state.masteredCount} of ${state.totalCount} formulas mastered',
+                    AppStrings.formulasMasteredOf(
+                      state.masteredCount,
+                      state.totalCount,
+                    ),
                     style: AppTextStyles.bodySmall.copyWith(
                       color: AppColors.blue50,
                     ),
@@ -256,7 +259,7 @@ class _FormulaCard extends StatelessWidget {
                     ),
                     if (formula.isMastered)
                       Text(
-                        'MASTERED',
+                        AppStrings.masteredLabel,
                         style: AppTextStyles.overline.copyWith(
                           color: AppColors.secondary,
                           fontWeight: FontWeight.w700,
@@ -299,7 +302,7 @@ class _FormulaCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
               border: Border.all(
                 color: AppColors.surfaceContainerHigh,
-                width: 1,
+                width: AppDimensions.borderWidth,
               ),
             ),
             child: Center(

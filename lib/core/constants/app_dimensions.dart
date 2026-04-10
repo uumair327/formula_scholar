@@ -183,4 +183,8 @@ abstract final class AppDimensions {
   // ──────────────────────── Position Offsets ──────────────────
   static const double positionTopLG = 100.0;
   static const double positionBottomLG = 80.0;
+
+  // ──────────────────────── Container Heights ────────────────
+  /// Subject chip filter bar height.
+  static const double chipContainerHeight = 60.0;
 }

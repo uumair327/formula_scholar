@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/shared.dart';
 import '../cubit/auth_cubit.dart';
 
 /// Login page — the entry-point of the app before onboarding / dashboard.
@@ -436,42 +437,45 @@ class _FormContent extends StatelessWidget {
           const SizedBox(height: AppDimensions.paddingXXL),
 
           // ── Email/username field ──
-          _AuthLabel(AppStrings.loginEmailLabel),
-          const SizedBox(height: AppDimensions.paddingXS),
-          _AuthTextField(
+          AppTextField(
             controller: identityController,
-            hint: AppStrings.loginEmailHint,
+            label: AppStrings.loginEmailLabel,
+            hintText: AppStrings.loginEmailHint,
             prefixIcon: LucideIcons.user,
             keyboardType: TextInputType.emailAddress,
           ),
           const SizedBox(height: AppDimensions.paddingLG),
 
           // ── Password field ──
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _AuthLabel(AppStrings.loginPasswordLabel),
-              GestureDetector(
-                onTap: () {},
-                child: Text(
-                  AppStrings.loginForgotPassword,
-                  style: AppTextStyles.labelMedium.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w700,
-                  ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: GestureDetector(
+              onTap: () => ComingSoonSheet.show(
+                context,
+                featureName: AppStrings.loginForgotPassword,
+                description: 'Reset your password securely via email. '
+                    'We\'ll send you a verification link.',
+                icon: LucideIcons.keyRound,
+              ),
+              child: Text(
+                AppStrings.loginForgotPassword,
+                style: AppTextStyles.labelMedium.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
-            ],
+            ),
           ),
           const SizedBox(height: AppDimensions.paddingXS),
-          _AuthTextField(
+          AppTextField(
             controller: passwordController,
-            hint: AppStrings.loginPasswordHint,
+            label: AppStrings.loginPasswordLabel,
+            hintText: AppStrings.loginPasswordHint,
             prefixIcon: LucideIcons.lock,
             obscureText: obscurePassword,
-            suffixIcon: GestureDetector(
-              onTap: onToggleObscure,
-              child: Icon(
+            suffixIcon: IconButton(
+              onPressed: onToggleObscure,
+              icon: Icon(
                 obscurePassword ? LucideIcons.eye : LucideIcons.eyeOff,
                 size: AppDimensions.iconDefault,
                 color: AppColors.outline,
@@ -555,7 +559,14 @@ class _FormContent extends StatelessWidget {
                 child: _SocialButton(
                   label: AppStrings.loginSchoolId,
                   icon: LucideIcons.graduationCap,
-                  onTap: () {},
+                  onTap: () => ComingSoonSheet.show(
+                    context,
+                    featureName: AppStrings.loginSchoolId,
+                    description:
+                        'Sign in using your school-issued ID. '
+                        'Contact your school admin for credentials.',
+                    icon: LucideIcons.graduationCap,
+                  ),
                 ),
               ),
             ],
@@ -595,90 +606,8 @@ class _FormContent extends StatelessWidget {
 
 // ── Shared auth sub-widgets ───────────────────────────────────────
 
-class _AuthLabel extends StatelessWidget {
-  final String text;
 
-  const _AuthLabel(this.text);
 
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: AppTextStyles.labelMedium.copyWith(
-        color: AppColors.onSurfaceVariant,
-        fontWeight: FontWeight.w700,
-      ),
-    );
-  }
-}
-
-class _AuthTextField extends StatelessWidget {
-  final TextEditingController controller;
-  final String hint;
-  final IconData prefixIcon;
-  final bool obscureText;
-  final Widget? suffixIcon;
-  final TextInputType keyboardType;
-
-  const _AuthTextField({
-    required this.controller,
-    required this.hint,
-    required this.prefixIcon,
-    this.obscureText = false,
-    this.suffixIcon,
-    this.keyboardType = TextInputType.text,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      obscureText: obscureText,
-      keyboardType: keyboardType,
-      style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w500),
-      decoration: InputDecoration(
-        hintText: hint,
-        hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.outline),
-        prefixIcon: Padding(
-          padding: const EdgeInsets.only(left: AppDimensions.paddingMD),
-          child: Icon(
-            prefixIcon,
-            size: AppDimensions.iconDefault,
-            color: AppColors.outline,
-          ),
-        ),
-        prefixIconConstraints: const BoxConstraints(
-          minWidth: AppDimensions.avatarMD,
-        ),
-        suffixIcon: suffixIcon != null
-            ? Padding(
-                padding: const EdgeInsets.only(right: AppDimensions.paddingMD),
-                child: suffixIcon,
-              )
-            : null,
-        filled: true,
-        fillColor: AppColors.surfaceContainerHighest,
-        border: OutlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: AppColors.primary.withValues(
-              alpha: AppDimensions.opacitySubtle,
-            ),
-            width: AppDimensions.borderWidth,
-          ),
-          borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: AppDimensions.paddingMD,
-          vertical: AppDimensions.paddingLG,
-        ),
-      ),
-    );
-  }
-}
 
 class _SocialButton extends StatelessWidget {
   final String label;

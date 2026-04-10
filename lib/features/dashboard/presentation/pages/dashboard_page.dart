@@ -74,7 +74,7 @@ class DashboardPage extends StatelessWidget {
                       const SizedBox(height: AppDimensions.paddingLG),
                       _buildCurriculumFilterBar(context),
                       const SizedBox(height: AppDimensions.paddingXL),
-                      _buildHeroStatusCard(state),
+                      _buildHeroStatusCard(context, state),
                       const SizedBox(height: AppDimensions.paddingSection),
                       _buildAcademicPath(context, state),
                       const SizedBox(height: AppDimensions.paddingSection),
@@ -110,36 +110,47 @@ class DashboardPage extends StatelessWidget {
             alpha: AppDimensions.opacityHigh,
           ),
           surfaceTintColor: AppColors.transparent,
-          title: Row(
-            children: [
-              Container(
-                width: AppDimensions.avatarMD,
-                height: AppDimensions.avatarMD,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.primaryFixed,
+          title: GestureDetector(
+            onTap: () => context.go(AppRoutes.profilePath),
+            behavior: HitTestBehavior.opaque,
+            child: Row(
+              children: [
+                Container(
+                  width: AppDimensions.avatarMD,
+                  height: AppDimensions.avatarMD,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.primaryFixed,
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: CachedNetworkImage(
+                    imageUrl: photoUrl,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => const SizedBox(),
+                    errorWidget: (context, url, error) =>
+                        const Icon(LucideIcons.user, color: AppColors.primary),
+                  ),
                 ),
-                clipBehavior: Clip.antiAlias,
-                child: CachedNetworkImage(
-                  imageUrl: photoUrl,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => const SizedBox(),
-                  errorWidget: (context, url, error) =>
-                      const Icon(LucideIcons.user, color: AppColors.primary),
+                const SizedBox(width: AppDimensions.paddingMD),
+                Text(
+                  userName,
+                  style: AppTextStyles.headlineSmall.copyWith(
+                    color: AppColors.onSurface,
+                  ),
                 ),
-              ),
-              const SizedBox(width: AppDimensions.paddingMD),
-              Text(
-                userName,
-                style: AppTextStyles.headlineSmall.copyWith(
-                  color: AppColors.onSurface,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () => ComingSoonSheet.show(
+                context,
+                featureName: AppStrings.searchLabel,
+                description:
+                    'Search across all subjects, chapters, and formulas '
+                    'to quickly find what you need.',
+                icon: LucideIcons.search,
+              ),
               icon: const Icon(LucideIcons.search, color: AppColors.outline),
             ),
             const SizedBox(width: AppDimensions.paddingSM),
@@ -149,16 +160,9 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  // ──────────────────────── Curriculum Filter Bar ───────────────
-
   Widget _buildCurriculumFilterBar(BuildContext context) {
-    return BlocBuilder<DashboardCubit, DashboardState>(
-      buildWhen: (prev, curr) =>
-          prev.selectedBoardIndex != curr.selectedBoardIndex ||
-          prev.selectedGradeIndex != curr.selectedGradeIndex ||
-          prev.availableBoards != curr.availableBoards ||
-          prev.availableGrades != curr.availableGrades,
-      builder: (context, state) {
+    return BlocBuilder<CurriculumCubit, CurriculumState>(
+      builder: (context, curriculum) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -223,39 +227,33 @@ class DashboardPage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: AppDimensions.paddingSM),
-            // Filter chips row
+            // Active curriculum badge
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  // Board category chip group
-                  FilterChipGroup(
+                  // Board badge
+                  _CurriculumBadge(
                     icon: LucideIcons.layoutGrid,
                     iconColor: AppColors.primary,
-                    chips: state.availableBoards,
-                    activeIndex: state.selectedBoardIndex,
+                    label: curriculum.boardName,
+                    isActive: true,
                     activeColor: AppColors.primary,
-                    onChanged: (index) {
-                      context.read<DashboardCubit>().switchBoard(index);
-                    },
                   ),
                   const SizedBox(width: AppDimensions.paddingSM),
                   Container(
-                    width: 1,
+                    width: AppDimensions.borderWidth,
                     height: AppDimensions.paddingXXL,
                     color: AppColors.surfaceContainerHighest,
                   ),
                   const SizedBox(width: AppDimensions.paddingSM),
-                  // Grade category chip group
-                  FilterChipGroup(
+                  // Grade badge
+                  _CurriculumBadge(
                     icon: LucideIcons.graduationCap,
                     iconColor: AppColors.secondary,
-                    chips: state.availableGrades,
-                    activeIndex: state.selectedGradeIndex,
+                    label: curriculum.gradeLabel,
+                    isActive: true,
                     activeColor: AppColors.secondary,
-                    onChanged: (index) {
-                      context.read<DashboardCubit>().switchGrade(index);
-                    },
                   ),
                 ],
               ),
@@ -268,7 +266,7 @@ class DashboardPage extends StatelessWidget {
 
   // ──────────────────────── Hero Status Card ────────────────────
 
-  Widget _buildHeroStatusCard(DashboardState state) {
+  Widget _buildHeroStatusCard(BuildContext context, DashboardState state) {
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingHero),
       decoration: const SignatureGlowDecoration(),
@@ -335,7 +333,14 @@ class DashboardPage extends StatelessWidget {
               const SizedBox(height: AppDimensions.paddingXL),
               // Resume button
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () => ComingSoonSheet.show(
+                  context,
+                  featureName: AppStrings.dashboardResumeLesson,
+                  description:
+                      'Resume exactly where you left off and continue '
+                      'your learning journey seamlessly.',
+                  icon: LucideIcons.play,
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.white,
                   foregroundColor: AppColors.primary,
@@ -455,7 +460,7 @@ class DashboardPage extends StatelessWidget {
                           width:
                               (constraints.maxWidth - AppDimensions.paddingLG) /
                               2.05,
-                          child: _buildQuizCard(),
+                          child: _buildQuizCard(context),
                         ),
                       ],
                     ),
@@ -477,7 +482,7 @@ class DashboardPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                _buildQuizCard(),
+                _buildQuizCard(context),
               ],
             );
           },
@@ -502,7 +507,7 @@ class DashboardPage extends StatelessWidget {
 
   // ──────────── Quiz Card ────────────
 
-  Widget _buildQuizCard() {
+  Widget _buildQuizCard(BuildContext context) {
     return AppCard(
       color: AppColors.primary.withValues(alpha: AppDimensions.opacityOverlay),
       padding: const EdgeInsets.all(AppDimensions.paddingXXL),
@@ -559,7 +564,14 @@ class DashboardPage extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () => ComingSoonSheet.show(
+                context,
+                featureName: AppStrings.dashboardBoardReadyQuiz,
+                description:
+                    'Test your knowledge with board-specific quiz challenges '
+                    'and earn points for correct answers.',
+                icon: LucideIcons.helpCircle,
+              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: AppColors.onPrimary,
@@ -773,6 +785,54 @@ class DashboardPage extends StatelessWidget {
           );
         }),
       ],
+    );
+  }
+}
+
+/// A compact pill-shaped badge showing the active curriculum value.
+class _CurriculumBadge extends StatelessWidget {
+  final IconData icon;
+  final Color iconColor;
+  final String label;
+  final bool isActive;
+  final Color activeColor;
+
+  const _CurriculumBadge({
+    required this.icon,
+    required this.iconColor,
+    required this.label,
+    required this.isActive,
+    required this.activeColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDimensions.paddingMD,
+        vertical: AppDimensions.paddingXS,
+      ),
+      decoration: BoxDecoration(
+        color: activeColor.withValues(alpha: AppDimensions.opacityFaint),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
+        border: Border.all(
+          color: activeColor.withValues(alpha: AppDimensions.opacitySubtle),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: AppDimensions.iconSM, color: iconColor),
+          const SizedBox(width: AppDimensions.paddingXS),
+          Text(
+            label,
+            style: AppTextStyles.labelSmall.copyWith(
+              color: activeColor,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -6,8 +6,8 @@ enum DashboardStatus { initial, loading, loaded, error }
 
 /// State for the Dashboard feature.
 ///
-/// Includes the currently active board/grade selection plus available
-/// boards and grades so the filter chips can be rendered dynamically.
+/// The active board/grade come from the global [CurriculumCubit]
+/// and are stored here as display strings for the hero badge.
 class DashboardState extends Equatable {
   final DashboardStatus status;
   final StudyProgress? progress;
@@ -16,13 +16,9 @@ class DashboardState extends Equatable {
   final List<FormulaVaultItem> vaultItems;
   final String? errorMessage;
 
-  // Board / Grade curriculum context.
+  // Board / Grade display values (synced from CurriculumCubit).
   final String selectedBoardName;
   final String selectedGradeName;
-  final List<String> availableBoards;
-  final List<String> availableGrades;
-  final int selectedBoardIndex;
-  final int selectedGradeIndex;
 
   const DashboardState({
     this.status = DashboardStatus.initial,
@@ -33,10 +29,6 @@ class DashboardState extends Equatable {
     this.errorMessage,
     this.selectedBoardName = 'CBSE',
     this.selectedGradeName = '9th',
-    this.availableBoards = const ['CBSE', 'ICSE', 'MSBSHSE'],
-    this.availableGrades = const ['8th', '9th', '10th'],
-    this.selectedBoardIndex = 0,
-    this.selectedGradeIndex = 1,
   });
 
   /// Dynamic hero badge based on selected board and grade.
@@ -52,10 +44,6 @@ class DashboardState extends Equatable {
     String? errorMessage,
     String? selectedBoardName,
     String? selectedGradeName,
-    List<String>? availableBoards,
-    List<String>? availableGrades,
-    int? selectedBoardIndex,
-    int? selectedGradeIndex,
   }) {
     return DashboardState(
       status: status ?? this.status,
@@ -66,10 +54,6 @@ class DashboardState extends Equatable {
       errorMessage: errorMessage ?? this.errorMessage,
       selectedBoardName: selectedBoardName ?? this.selectedBoardName,
       selectedGradeName: selectedGradeName ?? this.selectedGradeName,
-      availableBoards: availableBoards ?? this.availableBoards,
-      availableGrades: availableGrades ?? this.availableGrades,
-      selectedBoardIndex: selectedBoardIndex ?? this.selectedBoardIndex,
-      selectedGradeIndex: selectedGradeIndex ?? this.selectedGradeIndex,
     );
   }
 
@@ -83,9 +67,5 @@ class DashboardState extends Equatable {
     errorMessage,
     selectedBoardName,
     selectedGradeName,
-    availableBoards,
-    availableGrades,
-    selectedBoardIndex,
-    selectedGradeIndex,
   ];
 }

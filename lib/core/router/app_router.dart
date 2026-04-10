@@ -133,6 +133,77 @@ abstract final class AppRouter {
         },
       ),
 
+      // ─── Profile Sub-Routes (Full-screen overlays) ───
+      GoRoute(
+        path: AppRoutes.accountInfoPath,
+        name: AppRoutes.accountInfoName,
+        pageBuilder: (context, state) {
+          return AppPageTransitions.fadeTransition(
+            state: state,
+            child: BlocProvider(
+              create: (_) {
+                final cubit = getIt<ProfileCubit>();
+                Future.microtask(cubit.loadProfile);
+                return cubit;
+              },
+              child: const AccountInformationPage(),
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.bookmarksPath,
+        name: AppRoutes.bookmarksName,
+        pageBuilder: (context, state) {
+          return AppPageTransitions.fadeTransition(
+            state: state,
+            child: const BookmarksPage(),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.notificationsPath,
+        name: AppRoutes.notificationsName,
+        pageBuilder: (context, state) {
+          return AppPageTransitions.fadeTransition(
+            state: state,
+            child: const NotificationsPage(),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.helpSupportPath,
+        name: AppRoutes.helpSupportName,
+        pageBuilder: (context, state) {
+          return AppPageTransitions.fadeTransition(
+            state: state,
+            child: const HelpSupportPage(),
+          );
+        },
+      ),
+
+      // ─── Legal / Compliance Pages ─────────────────────────
+      GoRoute(
+        path: AppRoutes.privacyPolicyPath,
+        name: AppRoutes.privacyPolicyName,
+        pageBuilder: (context, state) {
+          return AppPageTransitions.fadeTransition(
+            state: state,
+            child: LegalPage.privacyPolicy(),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.termsOfServicePath,
+        name: AppRoutes.termsOfServiceName,
+        pageBuilder: (context, state) {
+          return AppPageTransitions.fadeTransition(
+            state: state,
+            child: LegalPage.termsOfService(),
+          );
+        },
+      ),
+
       // ─── Onboarding (ShellRoute shares OnboardingCubit) ───
       ShellRoute(
         builder: (context, state, child) {

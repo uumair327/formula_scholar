@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 import '../cubit/onboarding_cubit.dart';
 import '../cubit/onboarding_state.dart';
@@ -155,7 +156,14 @@ class OnboardingStep2Page extends StatelessWidget {
                     ),
                     const SizedBox(width: AppDimensions.paddingMD),
                     TextButton.icon(
-                      onPressed: () {},
+                      onPressed: () => ComingSoonSheet.show(
+                        context,
+                        featureName: AppStrings.step2LearnMore,
+                        description:
+                            'Explore detailed information about each board '
+                            'and curriculum to make the best choice.',
+                        icon: LucideIcons.info,
+                      ),
                       icon: Icon(
                         LucideIcons.arrowRight,
                         size: AppDimensions.iconSM,

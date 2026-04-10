@@ -51,6 +51,7 @@ class AuthCubit extends Cubit<AuthState> {
   final SignOutUseCase _signOut;
   final GoogleSignInUseCase _googleSignIn;
   final WatchAuthStateUseCase _watchAuthState;
+  final DeleteAccountUseCase _deleteAccount;
   StreamSubscription<AuthUser?>? _authStateSubscription;
 
   AuthCubit({
@@ -59,11 +60,13 @@ class AuthCubit extends Cubit<AuthState> {
     required SignOutUseCase signOut,
     required GoogleSignInUseCase googleSignIn,
     required WatchAuthStateUseCase watchAuthState,
+    required DeleteAccountUseCase deleteAccount,
   }) : _signIn = signIn,
        _signUp = signUp,
        _signOut = signOut,
        _googleSignIn = googleSignIn,
        _watchAuthState = watchAuthState,
+       _deleteAccount = deleteAccount,
        super(const AuthState()) {
     _authStateSubscription = _watchAuthState().listen((user) {
       if (user == null) {
@@ -192,6 +195,32 @@ class AuthCubit extends Cubit<AuthState> {
       case Error(:final failure):
         AppLogger.error(
           'Sign-out failed: ${failure.message}',
+          tag: AppLogTags.authCubit,
+          error: failure.originalError,
+        );
+        emit(
+          state.copyWith(
+            status: AuthStatus.error,
+            errorMessage: failure.message,
+          ),
+        );
+    }
+  }
+
+  /// Deletes the current user's account permanently.
+  Future<void> deleteAccount() async {
+    AppLogger.info('Delete account attempted', tag: AppLogTags.authCubit);
+    emit(state.copyWith(status: AuthStatus.loading));
+
+    final result = await _deleteAccount();
+
+    switch (result) {
+      case Success():
+        AppLogger.info('Delete account succeeded', tag: AppLogTags.authCubit);
+        emit(const AuthState(status: AuthStatus.unauthenticated));
+      case Error(:final failure):
+        AppLogger.error(
+          'Delete account failed: ${failure.message}',
           tag: AppLogTags.authCubit,
           error: failure.originalError,
         );

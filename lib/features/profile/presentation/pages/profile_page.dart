@@ -58,13 +58,8 @@ class ProfilePage extends StatelessWidget {
                       onDarkModeToggle: () {
                         context.read<ProfileCubit>().toggleDarkMode();
                       },
-                      onItemTapped: (id) {
-                        if (id == 'logout') {
-                          _handleLogout(context);
-                        } else {
-                          context.read<ProfileCubit>().onSettingsTapped(id);
-                        }
-                      },
+                      onItemTapped: (id) =>
+                          _handleSettingsNavigation(context, id),
                     ),
                     const SizedBox(height: AppDimensions.paddingHero),
                     const EncouragementCardWidget(),
@@ -126,12 +121,37 @@ class ProfilePage extends StatelessWidget {
       ),
       actions: [
         IconButton(
-          onPressed: () {},
+          onPressed: () => ComingSoonSheet.show(
+            context,
+            featureName: 'Analytics Dashboard',
+            description:
+                'Track your learning analytics with detailed charts and insights. '
+                'See your progress over time and identify areas for improvement.',
+            icon: LucideIcons.barChart2,
+          ),
           icon: const Icon(LucideIcons.barChart2, color: AppColors.blue600),
         ),
         const SizedBox(width: AppDimensions.paddingSM),
       ],
     );
+  }
+
+  /// Routes settings item taps to the appropriate page or action.
+  void _handleSettingsNavigation(BuildContext context, String id) {
+    switch (id) {
+      case 'account':
+        context.push(AppRoutes.accountInfoPath);
+      case 'bookmarks':
+        context.push(AppRoutes.bookmarksPath);
+      case 'notifications':
+        context.push(AppRoutes.notificationsPath);
+      case 'help':
+        context.push(AppRoutes.helpSupportPath);
+      case 'logout':
+        _handleLogout(context);
+      default:
+        context.read<ProfileCubit>().onSettingsTapped(id);
+    }
   }
 
   /// Handles sign-out via [AuthCubit] resolved from DI.

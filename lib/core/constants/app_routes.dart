@@ -86,4 +86,30 @@ abstract final class AppRoutes {
   /// Used as a sub-route inside the Chapters shell branch.
   static const String formulaDetailPath = 'formulas/:subjectId/:chapterId';
   static const String formulaDetailName = 'formulaDetail';
+
+  // ──────────────────────── Profile Sub-Routes ───────────────
+  /// Account Information page.
+  static const String accountInfoPath = '/profile/account';
+  static const String accountInfoName = 'accountInfo';
+
+  /// My Bookmarks page.
+  static const String bookmarksPath = '/profile/bookmarks';
+  static const String bookmarksName = 'bookmarks';
+
+  /// Notifications settings page.
+  static const String notificationsPath = '/profile/notifications';
+  static const String notificationsName = 'notifications';
+
+  /// Help & Support page.
+  static const String helpSupportPath = '/profile/help';
+  static const String helpSupportName = 'helpSupport';
+
+  // ──────────────────────── Legal / Compliance ────────────────
+  /// Privacy Policy page (required for Play Store).
+  static const String privacyPolicyPath = '/legal/privacy';
+  static const String privacyPolicyName = 'privacyPolicy';
+
+  /// Terms of Service page (required for Play Store).
+  static const String termsOfServicePath = '/legal/terms';
+  static const String termsOfServiceName = 'termsOfService';
 }

@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 import 'dashboard_state.dart';
 
@@ -10,12 +11,16 @@ import 'dashboard_state.dart';
 /// Depends on **use cases** (not repositories directly) following SRP.
 /// Uses [Result] pattern matching for typed error handling.
 /// Uses [CubitFailureLogger] mixin to eliminate boilerplate.
+///
+/// Reads the user's selected board/grade from the global
+/// [CurriculumCubit] to ensure curriculum synchronization.
 @injectable
 class DashboardCubit extends Cubit<DashboardState>
     with CubitFailureLogger<DashboardState> {
   final GetStudyProgressUseCase _getStudyProgress;
   final GetSubjectsUseCase _getSubjects;
   final GetRecentStudiesUseCase _getRecentStudies;
+  final CurriculumCubit _curriculumCubit;
 
   @override
   String get logTag => AppLogTags.dashboardCubit;
@@ -24,25 +29,32 @@ class DashboardCubit extends Cubit<DashboardState>
     required GetStudyProgressUseCase getStudyProgress,
     required GetSubjectsUseCase getSubjects,
     required GetRecentStudiesUseCase getRecentStudies,
+    required CurriculumCubit curriculumCubit,
   }) : _getStudyProgress = getStudyProgress,
        _getSubjects = getSubjects,
        _getRecentStudies = getRecentStudies,
+       _curriculumCubit = curriculumCubit,
        super(const DashboardState());
 
   /// Loads all dashboard data in parallel.
+  ///
+  /// Reads board/grade from the global [CurriculumCubit] to ensure
+  /// curriculum sync across the app.
   Future<void> loadDashboard() async {
     AppLogger.info('Loading dashboard data', tag: AppLogTags.dashboardCubit);
     emit(state.copyWith(status: DashboardStatus.loading));
 
-    final boardName = state.availableBoards.isNotEmpty
-        ? state.availableBoards[state.selectedBoardIndex]
-        : 'CBSE';
-    final gradeName = state.availableGrades.isNotEmpty
-        ? state.availableGrades[state.selectedGradeIndex]
-        : '9th';
+    // Read the user's curriculum from the global cubit.
+    final curriculum = _curriculumCubit.state;
+    final boardId = curriculum.boardId;
+    final gradeId = curriculum.gradeId;
+    final boardName = curriculum.boardName;
+    final gradeLabel = curriculum.gradeLabel;
 
-    final boardId = _mapBoard(boardName);
-    final gradeId = _mapGrade(gradeName);
+    AppLogger.info(
+      'Dashboard using curriculum: board=$boardName ($boardId), grade=$gradeLabel ($gradeId)',
+      tag: AppLogTags.dashboardCubit,
+    );
 
     final (progressResult, subjectsResult, studiesResult) = await (
       _getStudyProgress(),
@@ -90,6 +102,8 @@ class DashboardCubit extends Cubit<DashboardState>
           subjects: subjects,
           recentStudies: recentStudies,
           vaultItems: vaultItems,
+          selectedBoardName: boardName,
+          selectedGradeName: gradeLabel,
         ),
       );
     } else {
@@ -99,75 +113,6 @@ class DashboardCubit extends Cubit<DashboardState>
           errorMessage: AppStrings.failedToLoadDashboard,
         ),
       );
-    }
-  }
-
-  /// Switches the active board in the filter bar.
-  void switchBoard(int index) {
-    final boards = state.availableBoards;
-    if (index < 0 || index >= boards.length) return;
-
-    AppLogger.info(
-      'Switching board to: ${boards[index]}',
-      tag: AppLogTags.dashboardCubit,
-    );
-
-    emit(
-      state.copyWith(
-        selectedBoardIndex: index,
-        selectedBoardName: boards[index],
-      ),
-    );
-    loadDashboard();
-  }
-
-  /// Switches the active grade in the filter bar.
-  void switchGrade(int index) {
-    final grades = state.availableGrades;
-    if (index < 0 || index >= grades.length) return;
-
-    AppLogger.info(
-      'Switching grade to: ${grades[index]}',
-      tag: AppLogTags.dashboardCubit,
-    );
-
-    emit(
-      state.copyWith(
-        selectedGradeIndex: index,
-        selectedGradeName: grades[index],
-      ),
-    );
-    loadDashboard();
-  }
-
-  String _mapBoard(String boardName) {
-    switch (boardName.toLowerCase()) {
-      case 'cbse':
-        return 'cbse';
-      case 'icse':
-        return 'icse';
-      case 'state':
-      case 'msbshse':
-        return 'msbshse';
-      default:
-        return 'cbse';
-    }
-  }
-
-  String _mapGrade(String gradeName) {
-    switch (gradeName.toLowerCase()) {
-      case '8th':
-        return 'class_8';
-      case '9th':
-        return 'class_9';
-      case '10th':
-        return 'class_10';
-      case '11th':
-        return 'class_11';
-      case '12th':
-        return 'class_12';
-      default:
-        return 'class_9';
     }
   }
 }

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/shared.dart';
+import '../cubit/onboarding_cubit.dart';
+import '../cubit/onboarding_state.dart';
 import '../widgets/onboarding_shell.dart';
 
 /// Onboarding Step 4 — Weekly study goal selection.
@@ -47,6 +51,22 @@ class _OnboardingStep4PageState extends State<OnboardingStep4Page> {
   String _selectedId = 'regular';
 
   void _onFinish() {
+    // Persist the user's board + grade selection from onboarding
+    // into the global CurriculumCubit so all tabs stay in sync.
+    final onboardingState = context.read<OnboardingCubit>().state;
+    final board = onboardingState.selectedBoard;
+    final grade = onboardingState.selectedGrade;
+
+    if (board != null && grade != null) {
+      context.read<CurriculumCubit>().setCurriculum(
+        boardId: board.id,
+        boardName: board.name,
+        gradeId: grade.id,
+        gradeLabel: grade.label,
+        gradeNumber: grade.classNumber,
+      );
+    }
+
     context.go(AppRoutes.dashboardPath);
   }
 

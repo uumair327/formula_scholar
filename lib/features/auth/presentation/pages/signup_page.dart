@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/shared.dart';
 import '../cubit/auth_cubit.dart';
 
 /// Sign-up page — account creation screen.
@@ -441,17 +442,19 @@ class _SignupFormScroll extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: _SignupField(
+                  child: AppTextField(
                     label: AppStrings.signupFullName,
-                    hint: AppStrings.signupFullNameHint,
+                    hintText: AppStrings.signupFullNameHint,
+                    prefixIcon: LucideIcons.user,
                     controller: nameController,
                   ),
                 ),
                 const SizedBox(width: AppDimensions.paddingLG),
                 Expanded(
-                  child: _SignupField(
+                  child: AppTextField(
                     label: AppStrings.signupEmail,
-                    hint: AppStrings.signupEmailHint,
+                    hintText: AppStrings.signupEmailHint,
+                    prefixIcon: LucideIcons.mail,
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                   ),
@@ -461,14 +464,15 @@ class _SignupFormScroll extends StatelessWidget {
             const SizedBox(height: AppDimensions.paddingLG),
 
             // ── Password ──
-            _SignupField(
+            AppTextField(
               label: AppStrings.signupPassword,
-              hint: AppStrings.signupPasswordHint,
+              hintText: AppStrings.signupPasswordHint,
               controller: passwordController,
+              prefixIcon: LucideIcons.lock,
               obscureText: obscurePassword,
-              suffixIcon: GestureDetector(
-                onTap: onTogglePassword,
-                child: Icon(
+              suffixIcon: IconButton(
+                onPressed: onTogglePassword,
+                icon: Icon(
                   obscurePassword ? LucideIcons.eye : LucideIcons.eyeOff,
                   color: AppColors.onSurfaceVariant,
                   size: AppDimensions.iconDefault,
@@ -478,14 +482,15 @@ class _SignupFormScroll extends StatelessWidget {
             const SizedBox(height: AppDimensions.paddingLG),
 
             // ── Confirm Password ──
-            _SignupField(
+            AppTextField(
               label: AppStrings.signupConfirmPassword,
-              hint: AppStrings.signupPasswordHint,
+              hintText: AppStrings.signupPasswordHint,
               controller: confirmController,
+              prefixIcon: LucideIcons.checkSquare,
               obscureText: obscureConfirm,
-              suffixIcon: GestureDetector(
-                onTap: onToggleConfirm,
-                child: Icon(
+              suffixIcon: IconButton(
+                onPressed: onToggleConfirm,
+                icon: Icon(
                   obscureConfirm ? LucideIcons.eyeOff : LucideIcons.eye,
                   color: AppColors.onSurfaceVariant,
                   size: AppDimensions.iconDefault,
@@ -504,30 +509,43 @@ class _SignupFormScroll extends StatelessWidget {
                 ),
                 const SizedBox(width: AppDimensions.paddingXS),
                 Expanded(
-                  child: RichText(
-                    text: TextSpan(
-                      style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.onSurfaceVariant,
+                  child: Wrap(
+                    children: [
+                      Text(
+                        AppStrings.signupTerms,
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: AppColors.onSurfaceVariant,
+                        ),
                       ),
-                      children: [
-                        TextSpan(text: AppStrings.signupTerms),
-                        TextSpan(
-                          text: AppStrings.signupTermsLink,
-                          style: TextStyle(
+                      GestureDetector(
+                        onTap: () =>
+                            context.pushNamed(AppRoutes.termsOfServiceName),
+                        child: Text(
+                          AppStrings.signupTermsLink,
+                          style: AppTextStyles.bodySmall.copyWith(
                             color: AppColors.primary,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        TextSpan(text: AppStrings.signupAnd),
-                        TextSpan(
-                          text: AppStrings.signupPrivacy,
-                          style: TextStyle(
+                      ),
+                      Text(
+                        AppStrings.signupAnd,
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: AppColors.onSurfaceVariant,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () =>
+                            context.pushNamed(AppRoutes.privacyPolicyName),
+                        child: Text(
+                          AppStrings.signupPrivacy,
+                          style: AppTextStyles.bodySmall.copyWith(
                             color: AppColors.primary,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -601,7 +619,7 @@ class _SignupFormScroll extends StatelessWidget {
                       LucideIcons.globe,
                       size: AppDimensions.iconDefault,
                     ),
-                    label: Text('Google'),
+                    label: Text(AppStrings.loginGoogle),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                         vertical: AppDimensions.paddingMD,
@@ -615,7 +633,14 @@ class _SignupFormScroll extends StatelessWidget {
                 const SizedBox(width: AppDimensions.paddingMD),
                 Expanded(
                   child: OutlinedButton.icon(
-                    onPressed: () {},
+                    onPressed: () => ComingSoonSheet.show(
+                      context,
+                      featureName: AppStrings.signupFacebook,
+                      description:
+                          'Sign up or sign in with your Facebook account '
+                          'for quick, one-tap access.',
+                      icon: LucideIcons.facebook,
+                    ),
                     icon: Icon(
                       LucideIcons.facebook,
                       size: AppDimensions.iconDefault,
@@ -663,88 +688,6 @@ class _SignupFormScroll extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-// ── Signup input field ─────────────────────────────────────────────
-
-class _SignupField extends StatelessWidget {
-  final String label;
-  final String hint;
-  final TextEditingController controller;
-  final bool obscureText;
-  final Widget? suffixIcon;
-  final TextInputType keyboardType;
-
-  const _SignupField({
-    required this.label,
-    required this.hint,
-    required this.controller,
-    this.obscureText = false,
-    this.suffixIcon,
-    this.keyboardType = TextInputType.text,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: AppTextStyles.labelMedium.copyWith(
-            color: AppColors.onSurface,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        const SizedBox(height: AppDimensions.paddingXS),
-        TextFormField(
-          controller: controller,
-          obscureText: obscureText,
-          keyboardType: keyboardType,
-          style: AppTextStyles.bodyMedium,
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.onSurfaceVariant.withValues(
-                alpha: AppDimensions.opacityMedium,
-              ),
-            ),
-            suffixIcon: suffixIcon != null
-                ? Padding(
-                    padding: const EdgeInsets.only(
-                      right: AppDimensions.paddingMD,
-                    ),
-                    child: suffixIcon,
-                  )
-                : null,
-            suffixIconConstraints: const BoxConstraints(
-              minWidth: 0,
-              minHeight: 0,
-            ),
-            filled: true,
-            fillColor: AppColors.surfaceContainerHighest,
-            border: OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: AppColors.primary.withValues(
-                  alpha: AppDimensions.opacitySubtle,
-                ),
-                width: AppDimensions.borderWidth,
-              ),
-              borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
-            ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: AppDimensions.paddingMD,
-              vertical: AppDimensions.paddingLG,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

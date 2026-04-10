@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart' as fb;
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart' as gsi;
 import 'package:injectable/injectable.dart';
 
@@ -17,8 +18,6 @@ import '../../domain/domain.dart';
 class AuthFirebaseAdapter implements AuthDataSourcePort {
   final fb.FirebaseAuth _firebaseAuth;
   final gsi.GoogleSignIn _googleSignIn;
-  bool _googleSignInInitialized = false;
-
   AuthFirebaseAdapter(this._firebaseAuth, this._googleSignIn);
 
   @override
@@ -111,29 +110,33 @@ class AuthFirebaseAdapter implements AuthDataSourcePort {
         tag: AppLogTags.authDataSource,
       );
 
-      // Initialize the GoogleSignIn instance if not already done.
-      if (!_googleSignInInitialized) {
-        await _googleSignIn.initialize();
-        _googleSignInInitialized = true;
+      fb.User? user;
+
+      if (kIsWeb) {
+        // On Web, use Firebase's native popup to bypass the strict GIS
+        // requirement that forces renderButton usage in google_sign_in v7+.
+        final provider = fb.GoogleAuthProvider();
+        final userCredential = await _firebaseAuth.signInWithPopup(provider);
+        user = userCredential.user;
+      } else {
+        // Trigger the interactive native Google Sign-In flow.
+        final googleAccount = await _googleSignIn.authenticate();
+
+        // Obtain the auth details from the authenticated Google account.
+        final googleAuth = googleAccount.authentication;
+
+        // Create a Firebase credential from the Google ID token.
+        final credential = fb.GoogleAuthProvider.credential(
+          idToken: googleAuth.idToken,
+        );
+
+        // Sign in to Firebase with the Google credential.
+        final userCredential = await _firebaseAuth.signInWithCredential(
+          credential,
+        );
+        user = userCredential.user;
       }
 
-      // Trigger the interactive native Google Sign-In flow.
-      final googleAccount = await _googleSignIn.authenticate();
-
-      // Obtain the auth details from the authenticated Google account.
-      final googleAuth = googleAccount.authentication;
-
-      // Create a Firebase credential from the Google ID token.
-      final credential = fb.GoogleAuthProvider.credential(
-        idToken: googleAuth.idToken,
-      );
-
-      // Sign in to Firebase with the Google credential.
-      final userCredential = await _firebaseAuth.signInWithCredential(
-        credential,
-      );
-
-      final user = userCredential.user;
       if (user == null) {
         throw const ServerException(
           message: 'Google sign-in returned null user.',
@@ -184,15 +187,39 @@ class AuthFirebaseAdapter implements AuthDataSourcePort {
     AppLogger.info('Firebase signOut', tag: AppLogTags.authDataSource);
     // Sign out from Google to allow account selection on next login.
     try {
-      if (!_googleSignInInitialized) {
-        await _googleSignIn.initialize();
-        _googleSignInInitialized = true;
+      if (!kIsWeb) {
+        await _googleSignIn.signOut();
       }
-      await _googleSignIn.signOut();
     } catch (_) {
       // Ignore Google sign-out failures
     }
     await _firebaseAuth.signOut();
+  }
+
+  @override
+  Future<void> deleteAccount() async {
+    AppLogger.info('Firebase deleteAccount', tag: AppLogTags.authDataSource);
+    final user = _firebaseAuth.currentUser;
+    if (user == null) {
+      throw const ServerException(message: 'No authenticated user to delete.');
+    }
+    
+    try {
+      await user.delete();
+      // GoogleSignIn sign out to clear native session context.
+      if (!kIsWeb) {
+        await _googleSignIn.disconnect();
+      }
+    } on fb.FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        throw const ServerException(
+          message: 'Please re-authenticate to delete your account.',
+        );
+      }
+      throw ServerException(message: _mapFirebaseError(e.code));
+    } catch (e) {
+      throw const ServerException(message: 'Failed to delete account.');
+    }
   }
 
   @override

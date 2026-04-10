@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/shared.dart';
 import '../cubit/onboarding_cubit.dart';
 import '../cubit/onboarding_state.dart';
 import '../widgets/onboarding_shell.dart';
@@ -161,24 +162,6 @@ class _LocationFormCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Country dropdown
-          Row(
-            children: [
-              Icon(
-                LucideIcons.globe,
-                color: AppColors.primary,
-                size: AppDimensions.iconDefault,
-              ),
-              const SizedBox(width: AppDimensions.paddingXS),
-              Text(
-                AppStrings.step1CountryLabel,
-                style: AppTextStyles.labelMedium.copyWith(
-                  color: AppColors.onSurfaceVariant,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppDimensions.paddingXS),
           DropdownButtonFormField<String>(
             initialValue: selectedCountry,
             onChanged: onCountryChanged,
@@ -186,10 +169,41 @@ class _LocationFormCard extends StatelessWidget {
                 .map((c) => DropdownMenuItem(value: c, child: Text(c)))
                 .toList(),
             decoration: InputDecoration(
+              labelText: AppStrings.step1CountryLabel,
+              labelStyle: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.onSurfaceVariant.withValues(
+                  alpha: AppDimensions.opacityMedium,
+                ),
+                fontWeight: FontWeight.w600,
+              ),
+              floatingLabelStyle: AppTextStyles.labelMedium.copyWith(
+                color: AppColors.primary,
+                fontWeight: FontWeight.w700,
+              ),
+              prefixIcon: Padding(
+                padding: const EdgeInsets.only(left: AppDimensions.paddingMD),
+                child: Icon(
+                  LucideIcons.globe,
+                  size: AppDimensions.iconDefault,
+                  color: AppColors.outline,
+                ),
+              ),
+              prefixIconConstraints: const BoxConstraints(
+                minWidth: AppDimensions.avatarMD,
+              ),
               filled: true,
               fillColor: AppColors.surfaceContainerHighest,
               border: OutlineInputBorder(
                 borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: AppColors.primary.withValues(
+                    alpha: AppDimensions.opacitySubtle,
+                  ),
+                  width: AppDimensions.borderWidth,
+                ),
                 borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
               ),
               contentPadding: const EdgeInsets.symmetric(
@@ -205,50 +219,16 @@ class _LocationFormCard extends StatelessWidget {
           const SizedBox(height: AppDimensions.paddingXL),
 
           // State search
-          Row(
-            children: [
-              Icon(
-                LucideIcons.mapPin,
-                color: AppColors.primary,
-                size: AppDimensions.iconDefault,
-              ),
-              const SizedBox(width: AppDimensions.paddingXS),
-              Text(
-                AppStrings.step1StateLabel,
-                style: AppTextStyles.labelMedium.copyWith(
-                  color: AppColors.onSurfaceVariant,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppDimensions.paddingXS),
-          TextField(
+          AppTextField(
             controller: stateController,
             onChanged: onStateChanged,
-            style: AppTextStyles.bodyMedium,
-            decoration: InputDecoration(
-              hintText: AppStrings.step1StateHint,
-              hintStyle: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.onSurfaceVariant.withValues(
-                  alpha: AppDimensions.opacityMedium,
-                ),
-              ),
-              suffixIcon: Icon(
-                LucideIcons.search,
-                size: AppDimensions.iconDefault,
-                color: AppColors.onSurfaceVariant,
-              ),
-              filled: true,
-              fillColor: AppColors.surfaceContainerHighest,
-              border: OutlineInputBorder(
-                borderSide: BorderSide.none,
-                borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: AppDimensions.paddingMD,
-                vertical: AppDimensions.paddingMD,
-              ),
+            label: AppStrings.step1StateLabel,
+            hintText: AppStrings.step1StateHint,
+            prefixIcon: LucideIcons.mapPin,
+            suffixIcon: Icon(
+              LucideIcons.search,
+              size: AppDimensions.iconDefault,
+              color: AppColors.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: AppDimensions.paddingSM),

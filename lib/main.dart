@@ -61,8 +61,8 @@ void main() {
 
 /// Root widget for Formula Scholar.
 ///
-/// Provides [SubjectSelectionCubit] above the router so all tabs
-/// (Chapters, Saved, Practice) can read the selected subject.
+/// Provides [SubjectSelectionCubit] and [CurriculumCubit] above
+/// the router so all tabs can read the selected subject and curriculum.
 class FormulaScholarApp extends StatelessWidget {
   const FormulaScholarApp({super.key});
 
@@ -72,6 +72,13 @@ class FormulaScholarApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => getIt<AuthCubit>()),
         BlocProvider(create: (_) => getIt<SubjectSelectionCubit>()),
+        BlocProvider(
+          create: (_) {
+            final cubit = getIt<CurriculumCubit>();
+            Future.microtask(cubit.loadFromFirestore);
+            return cubit;
+          },
+        ),
       ],
       child: MaterialApp.router(
         title: AppStrings.appName,

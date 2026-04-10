@@ -141,6 +141,34 @@ class AuthRepositoryImpl implements AuthRepositoryPort {
   }
 
   @override
+  Future<Result<void>> deleteAccount() async {
+    try {
+      await _remoteAdapter.deleteAccount();
+      AppLogger.info(
+        'DeleteAccount succeeded in repository',
+        tag: AppLogTags.authRepo,
+      );
+      return const Success(null);
+    } on Exception catch (e, stackTrace) {
+      AppLogger.error(
+        'DeleteAccount failed in repository',
+        error: e,
+        stackTrace: stackTrace,
+        tag: AppLogTags.authRepo,
+      );
+      return Error(
+        AuthFailure(
+          message: e is ServerException
+              ? e.message
+              : 'Failed to delete account. Please try again.',
+          originalError: e,
+          stackTrace: stackTrace,
+        ),
+      );
+    }
+  }
+
+  @override
   AuthUser? get currentUser => _remoteAdapter.currentUser;
 
   @override

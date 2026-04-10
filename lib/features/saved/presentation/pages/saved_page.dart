@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import '../../../../core/core.dart';
@@ -155,7 +156,14 @@ class _SavedPageState extends State<SavedPage> {
           const SizedBox(height: AppDimensions.paddingXXL),
           // Browse Lessons button.
           ElevatedButton.icon(
-            onPressed: () {},
+            onPressed: () => ComingSoonSheet.show(
+              context,
+              featureName: AppStrings.browseLessons,
+              description:
+                  'Explore all available subjects and chapters to find '
+                  'formulas worth bookmarking for quick access.',
+              icon: LucideIcons.compass,
+            ),
             icon: const Icon(LucideIcons.compass),
             label: const Text(AppStrings.browseLessons),
             style: ElevatedButton.styleFrom(
@@ -236,23 +244,27 @@ class _SavedPageState extends State<SavedPage> {
       surfaceTintColor: AppColors.transparent,
       title: Row(
         children: [
-          if (photoUrl.isNotEmpty)
-            AppAvatar(
-              imageUrl: photoUrl,
-              size: AppDimensions.avatarMD,
-              fallbackIcon: LucideIcons.bookmark,
-              fallbackIconColor: AppColors.primary,
-            )
-          else
-            Container(
-              width: AppDimensions.avatarMD,
-              height: AppDimensions.avatarMD,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.primaryFixed,
-              ),
-              child: const Icon(LucideIcons.bookmark, color: AppColors.primary),
-            ),
+          GestureDetector(
+            onTap: () => context.go(AppRoutes.profilePath),
+            behavior: HitTestBehavior.opaque,
+            child: photoUrl.isNotEmpty
+                ? AppAvatar(
+                    imageUrl: photoUrl,
+                    size: AppDimensions.avatarMD,
+                    fallbackIcon: LucideIcons.bookmark,
+                    fallbackIconColor: AppColors.primary,
+                  )
+                : Container(
+                    width: AppDimensions.avatarMD,
+                    height: AppDimensions.avatarMD,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.primaryFixed,
+                    ),
+                    child: const Icon(LucideIcons.bookmark,
+                        color: AppColors.primary),
+                  ),
+          ),
           const SizedBox(width: AppDimensions.paddingMD),
           Text(
             AppStrings.navSaved,

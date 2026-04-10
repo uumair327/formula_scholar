@@ -17,6 +17,8 @@ import 'package:injectable/injectable.dart' as _i526;
 
 import '../../features/auth/domain/domain.dart' as _i140;
 import '../../features/auth/domain/ports/auth_repository_port.dart' as _i320;
+import '../../features/auth/domain/usecases/delete_account_use_case.dart'
+    as _i519;
 import '../../features/auth/domain/usecases/google_sign_in_use_case.dart'
     as _i946;
 import '../../features/auth/domain/usecases/sign_in_use_case.dart' as _i362;
@@ -118,7 +120,9 @@ import '../../features/saved/infrastructure/adapters/saved_firebase_adapter.dart
 import '../../features/saved/infrastructure/repositories/saved_repository_impl.dart'
     as _i79;
 import '../../features/saved/presentation/cubit/saved_cubit.dart' as _i712;
+import '../../shared/cubit/curriculum_cubit.dart' as _i427;
 import '../../shared/cubit/subject_selection_cubit.dart' as _i414;
+import '../../shared/shared.dart' as _i914;
 import '../network/api_client.dart' as _i557;
 import '../network/api_interceptor.dart' as _i724;
 import 'firebase_module.dart' as _i616;
@@ -212,6 +216,12 @@ extension GetItInjectableX on _i174.GetIt {
         repository: gh<_i193.FormulasRepositoryPort>(),
       ),
     );
+    gh.lazySingleton<_i427.CurriculumCubit>(
+      () => _i427.CurriculumCubit(
+        gh<_i974.FirebaseFirestore>(),
+        gh<_i59.FirebaseAuth>(),
+      ),
+    );
     gh.lazySingleton<_i140.AuthDataSourcePort>(
       () => _i117.AuthFirebaseAdapter(
         gh<_i59.FirebaseAuth>(),
@@ -229,6 +239,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i385.SavedRepositoryPort>(
       () =>
           _i79.SavedRepositoryImpl(dataSource: gh<_i385.SavedDataSourcePort>()),
+    );
+    gh.factory<_i519.DeleteAccountUseCase>(
+      () => _i519.DeleteAccountUseCase(gh<_i320.AuthRepositoryPort>()),
     );
     gh.factory<_i946.GoogleSignInUseCase>(
       () => _i946.GoogleSignInUseCase(gh<_i320.AuthRepositoryPort>()),
@@ -257,6 +270,16 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i883.FormulasCubit(
         getFormulas: gh<_i750.GetFormulasUseCase>(),
         toggleBookmark: gh<_i750.ToggleBookmarkUseCase>(),
+      ),
+    );
+    gh.factory<_i117.AuthCubit>(
+      () => _i117.AuthCubit(
+        signIn: gh<_i140.SignInUseCase>(),
+        signUp: gh<_i140.SignUpUseCase>(),
+        signOut: gh<_i140.SignOutUseCase>(),
+        googleSignIn: gh<_i140.GoogleSignInUseCase>(),
+        watchAuthState: gh<_i140.WatchAuthStateUseCase>(),
+        deleteAccount: gh<_i140.DeleteAccountUseCase>(),
       ),
     );
     gh.factory<_i36.ProfileCubit>(
@@ -291,15 +314,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i509.GetStatesUseCase>(
       () => _i509.GetStatesUseCase(gh<_i634.OnboardingRepositoryPort>()),
-    );
-    gh.factory<_i117.AuthCubit>(
-      () => _i117.AuthCubit(
-        signIn: gh<_i140.SignInUseCase>(),
-        signUp: gh<_i140.SignUpUseCase>(),
-        signOut: gh<_i140.SignOutUseCase>(),
-        googleSignIn: gh<_i140.GoogleSignInUseCase>(),
-        watchAuthState: gh<_i140.WatchAuthStateUseCase>(),
-      ),
     );
     gh.factory<_i712.SavedCubit>(
       () => _i712.SavedCubit(
@@ -351,6 +365,7 @@ extension GetItInjectableX on _i174.GetIt {
         getStudyProgress: gh<_i95.GetStudyProgressUseCase>(),
         getSubjects: gh<_i95.GetSubjectsUseCase>(),
         getRecentStudies: gh<_i95.GetRecentStudiesUseCase>(),
+        curriculumCubit: gh<_i914.CurriculumCubit>(),
       ),
     );
     return this;

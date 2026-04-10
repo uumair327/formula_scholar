@@ -34,6 +34,9 @@ abstract interface class AuthRepositoryPort {
   /// Signs the current user out.
   Future<Result<void>> signOut();
 
+  /// Deletes the current user's account permanently.
+  Future<Result<void>> deleteAccount();
+
   /// Returns the currently signed-in user, or `null`.
   AuthUser? get currentUser;
 

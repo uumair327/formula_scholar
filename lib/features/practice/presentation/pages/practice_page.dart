@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
@@ -146,19 +147,22 @@ class PracticePage extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          if (photoUrl.isNotEmpty)
-            AppAvatar(
-              imageUrl: photoUrl,
-              size: AppDimensions.avatarSM,
-              fallbackIcon: LucideIcons.userCircle,
-              fallbackIconColor: AppColors.primary,
-            )
-          else
-            const Icon(
-              LucideIcons.userCircle,
-              size: AppDimensions.iconLG,
-              color: AppColors.primary,
-            ),
+          GestureDetector(
+            onTap: () => context.go(AppRoutes.profilePath),
+            behavior: HitTestBehavior.opaque,
+            child: photoUrl.isNotEmpty
+                ? AppAvatar(
+                    imageUrl: photoUrl,
+                    size: AppDimensions.avatarSM,
+                    fallbackIcon: LucideIcons.userCircle,
+                    fallbackIconColor: AppColors.primary,
+                  )
+                : const Icon(
+                    LucideIcons.userCircle,
+                    size: AppDimensions.iconLG,
+                    color: AppColors.primary,
+                  ),
+          ),
         ],
       ),
     );

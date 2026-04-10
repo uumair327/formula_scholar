@@ -56,6 +56,7 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
         name: 'Guest',
         email: '',
         grade: AppStrings.profileGrade,
+        board: '',
         avatarUrl: AppAssets.profileHeroAvatarUrl,
         isPro: false,
       );
@@ -66,7 +67,7 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
     final authEmail = currentUser.email ?? '';
     final authPhoto = currentUser.photoURL ?? '';
 
-    // Merge with Firestore user doc for app-specific fields (grade, isPro).
+    // Merge with Firestore user doc for app-specific fields (grade, board, isPro).
     final docSnapshot = await _firestore
         .collection('users')
         .doc(currentUser.uid)
@@ -87,6 +88,7 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
         name: authName.isNotEmpty ? authName : 'Scholar',
         email: authEmail,
         grade: AppStrings.profileGrade,
+        board: '',
         avatarUrl: authPhoto.isNotEmpty
             ? authPhoto
             : AppAssets.profileHeroAvatarUrl,
@@ -99,9 +101,10 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
     final fsEmail = _readString(data, 'email', fallback: authEmail);
     final fsGrade = _readString(
       data,
-      'grade',
-      fallback: AppStrings.profileGrade,
+      'gradeLabel',
+      fallback: _readString(data, 'grade', fallback: AppStrings.profileGrade),
     );
+    final fsBoard = _readString(data, 'boardName');
     final fsAvatarUrl = _readString(
       data,
       'avatarUrl',
@@ -115,6 +118,7 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
       name: fsName.isNotEmpty ? fsName : 'Scholar',
       email: fsEmail,
       grade: fsGrade,
+      board: fsBoard,
       avatarUrl: fsAvatarUrl,
       isPro: fsIsPro,
     );

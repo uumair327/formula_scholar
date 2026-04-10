@@ -32,6 +32,9 @@ abstract interface class AuthDataSourcePort {
   /// Signs the current user out.
   Future<void> signOut();
 
+  /// Deletes the current user's account permanently.
+  Future<void> deleteAccount();
+
   /// Returns the currently signed-in user, or `null` if unauthenticated.
   AuthUser? get currentUser;
 

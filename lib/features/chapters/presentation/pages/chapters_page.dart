@@ -88,7 +88,14 @@ class ChaptersPage extends StatelessWidget {
             ),
             floatingActionButton: subjectState.hasSelection
                 ? FloatingActionButton(
-                    onPressed: () {},
+                    onPressed: () => ComingSoonSheet.show(
+                      context,
+                      featureName: AppStrings.quickPractice,
+                      description:
+                          'Jump into a quick practice session for this '
+                          'subject with randomly selected formulas.',
+                      icon: LucideIcons.play,
+                    ),
                     backgroundColor: AppColors.primary,
                     child: const Icon(LucideIcons.play, color: AppColors.white),
                   )
@@ -172,7 +179,7 @@ class ChaptersPage extends StatelessWidget {
 
     return SliverToBoxAdapter(
       child: Container(
-        height: 60,
+        height: AppDimensions.chipContainerHeight,
         padding: const EdgeInsets.symmetric(
           horizontal: AppDimensions.paddingXL,
           vertical: AppDimensions.paddingSM,
@@ -368,25 +375,32 @@ class ChaptersPage extends StatelessWidget {
           itemCount: tools.length,
           itemBuilder: (context, index) {
             final tool = tools[index];
-            return AppCard(
-              color: AppColors.white,
-              boxShadow: const [AppShadows.subtle],
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    tool.icon,
-                    size: AppDimensions.iconXXL,
-                    color: tool.color,
-                  ),
-                  const SizedBox(height: AppDimensions.paddingSM),
-                  Text(
-                    tool.label,
-                    style: AppTextStyles.bodySmall.copyWith(
-                      fontWeight: FontWeight.w700,
+            return GestureDetector(
+              onTap: () => ComingSoonSheet.show(
+                context,
+                featureName: tool.label,
+                icon: tool.icon,
+              ),
+              child: AppCard(
+                color: AppColors.white,
+                boxShadow: const [AppShadows.subtle],
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      tool.icon,
+                      size: AppDimensions.iconXXL,
+                      color: tool.color,
                     ),
-                  ),
-                ],
+                    const SizedBox(height: AppDimensions.paddingSM),
+                    Text(
+                      tool.label,
+                      style: AppTextStyles.bodySmall.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           },

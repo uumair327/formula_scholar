@@ -148,7 +148,7 @@ class ProfileHeroWidget extends StatelessWidget {
                       ),
                       const SizedBox(width: AppDimensions.chipPaddingVertical),
                       Text(
-                        profile.grade,
+                        profile.curriculumLabel,
                         style: AppTextStyles.labelLarge.copyWith(
                           color: AppColors.white,
                         ),
