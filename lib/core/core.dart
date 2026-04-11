@@ -9,6 +9,7 @@ library;
 export 'constants/constants.dart';
 export 'di/di.dart';
 export 'domain/entities/paginated_response.dart';
+export 'domain/usecase.dart';
 export 'error/error.dart';
 export 'network/network.dart';
 export 'router/router.dart';

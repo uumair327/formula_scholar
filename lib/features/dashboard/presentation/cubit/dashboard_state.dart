@@ -3,8 +3,6 @@ import 'package:equatable/equatable.dart';
 import '../../../../core/core.dart';
 import '../../domain/domain.dart';
 
-const Object _unset = Object();
-
 enum DashboardStatus { initial, loading, loaded, error }
 
 /// State for the Dashboard feature.
@@ -43,7 +41,7 @@ class DashboardState extends Equatable {
     List<Subject>? subjects,
     List<RecentStudy>? recentStudies,
     List<FormulaVaultItem>? vaultItems,
-    Object? errorMessage = _unset,
+    Object? errorMessage = unset,
     String? selectedBoardName,
     String? selectedGradeName,
   }) {
@@ -53,7 +51,7 @@ class DashboardState extends Equatable {
       subjects: subjects ?? this.subjects,
       recentStudies: recentStudies ?? this.recentStudies,
       vaultItems: vaultItems ?? this.vaultItems,
-      errorMessage: identical(errorMessage, _unset)
+      errorMessage: identical(errorMessage, unset)
           ? this.errorMessage
           : errorMessage as String?,
       selectedBoardName: selectedBoardName ?? this.selectedBoardName,

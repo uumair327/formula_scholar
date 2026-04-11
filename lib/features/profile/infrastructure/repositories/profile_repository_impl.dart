@@ -31,7 +31,7 @@ class ProfileRepositoryImpl implements ProfileRepositoryPort {
         stackTrace: stackTrace,
       );
       return Error(
-        CacheFailure(
+        ServerFailure(
           message: 'Failed to load user profile',
           originalError: e,
           stackTrace: stackTrace,
@@ -58,7 +58,7 @@ class ProfileRepositoryImpl implements ProfileRepositoryPort {
         stackTrace: stackTrace,
       );
       return Error(
-        CacheFailure(
+        ServerFailure(
           message: 'Failed to load profile stats',
           originalError: e,
           stackTrace: stackTrace,
@@ -85,7 +85,7 @@ class ProfileRepositoryImpl implements ProfileRepositoryPort {
         stackTrace: stackTrace,
       );
       return Error(
-        CacheFailure(
+        ServerFailure(
           message: 'Failed to load settings items',
           originalError: e,
           stackTrace: stackTrace,

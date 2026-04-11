@@ -35,7 +35,7 @@ class ChaptersRepositoryImpl implements ChaptersRepositoryPort {
         stackTrace: stackTrace,
       );
       return Error(
-        CacheFailure(
+        ServerFailure(
           message: 'Failed to load chapters for $subjectId',
           originalError: e,
           stackTrace: stackTrace,

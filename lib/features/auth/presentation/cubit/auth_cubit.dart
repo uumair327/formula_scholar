@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
@@ -10,9 +11,7 @@ import '../../domain/domain.dart';
 
 enum AuthStatus { initial, loading, authenticated, unauthenticated, error }
 
-const Object _unset = Object();
-
-class AuthState {
+class AuthState extends Equatable {
   final AuthStatus status;
   final AuthUser? user;
   final String? errorMessage;
@@ -26,16 +25,19 @@ class AuthState {
   AuthState copyWith({
     AuthStatus? status,
     AuthUser? user,
-    Object? errorMessage = _unset,
+    Object? errorMessage = unset,
   }) {
     return AuthState(
       status: status ?? this.status,
       user: user ?? this.user,
-      errorMessage: identical(errorMessage, _unset)
+      errorMessage: identical(errorMessage, unset)
           ? this.errorMessage
           : errorMessage as String?,
     );
   }
+
+  @override
+  List<Object?> get props => [status, user, errorMessage];
 }
 
 // ── Cubit ──────────────────────────────────────────────────────────

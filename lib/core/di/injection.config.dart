@@ -139,6 +139,7 @@ import '../../shared/infrastructure/repositories/curriculum_repository_impl.dart
 import '../../shared/shared.dart' as _i914;
 import '../network/api_client.dart' as _i557;
 import '../network/api_interceptor.dart' as _i724;
+import '../network/retry_interceptor.dart' as _i10;
 import 'firebase_module.dart' as _i616;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -155,8 +156,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i116.GoogleSignIn>(() => firebaseModule.googleSignIn);
     gh.lazySingleton<_i947.ThemeCubit>(() => _i947.ThemeCubit());
     gh.lazySingleton<_i95.DashboardCachePort>(() => _i990.DashboardHiveCache());
+    gh.factory<_i10.RetryInterceptor>(
+      () => _i10.RetryInterceptor(
+        maxRetries: gh<int>(),
+        baseDelay: gh<Duration>(),
+      ),
+    );
     gh.lazySingleton<_i557.ApiClient>(
-      () => _i557.ApiClient(gh<_i724.ApiInterceptor>()),
+      () => _i557.ApiClient(
+        gh<_i724.ApiInterceptor>(),
+        gh<_i10.RetryInterceptor>(),
+      ),
     );
     gh.lazySingleton<_i750.ChaptersDataSourcePort>(
       () => _i560.ChaptersFirebaseAdapter(

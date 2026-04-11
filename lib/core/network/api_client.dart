@@ -2,16 +2,20 @@ import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 
 import 'api_interceptor.dart';
+import 'retry_interceptor.dart';
 
 /// Centralized API Client wrapper around Dio.
 ///
 /// Satisfies Golden Rule 4: API Layer Must Be Replaceable
 /// "Use: ApiClient (Dio wrapper)... Never call Dio directly outside data layer".
+///
+/// Interceptor order: RetryInterceptor → ApiInterceptor (logging).
+/// Retries resolve before the logger sees the final outcome.
 @lazySingleton
 class ApiClient {
   late final Dio _dio;
 
-  ApiClient(ApiInterceptor interceptor) {
+  ApiClient(ApiInterceptor interceptor, RetryInterceptor retryInterceptor) {
     _dio = Dio(
       BaseOptions(
         // Replace with actual production URL (or via env variables)
@@ -22,7 +26,8 @@ class ApiClient {
       ),
     );
 
-    _dio.interceptors.add(interceptor);
+    // Retry interceptor runs first, then logging interceptor.
+    _dio.interceptors.addAll([retryInterceptor, interceptor]);
   }
 
   /// Exposes standard GET

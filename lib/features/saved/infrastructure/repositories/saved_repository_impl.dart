@@ -29,7 +29,7 @@ class SavedRepositoryImpl implements SavedRepositoryPort {
         stackTrace: stackTrace,
       );
       return Error(
-        CacheFailure(
+        ServerFailure(
           message: 'Failed to load bookmarks',
           originalError: e,
           stackTrace: stackTrace,

@@ -21,10 +21,11 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
 
     final uid = _firebaseAuth.currentUser?.uid;
     if (uid == null) {
+      // Unauthenticated users see zero-state, not fake numbers.
       return const StudyProgress(
-        masteryPercentage: 65,
-        completedChapters: 14,
-        totalChapters: 22,
+        masteryPercentage: 0,
+        completedChapters: 0,
+        totalChapters: 0,
       );
     }
 
@@ -34,24 +35,17 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
         .collection('progress_summary')
         .doc('current')
         .get();
-    Map<String, dynamic> data;
 
     if (!docSnapshot.exists) {
-      data = {
-        'masteryPercentage': 65,
-        'completedChapters': 14,
-        'totalChapters': 22,
-      };
-      await _firestore
-          .collection('users')
-          .doc(uid)
-          .collection('progress_summary')
-          .doc('current')
-          .set(data);
-    } else {
-      data = docSnapshot.data()!;
+      // Return zero-state for new users — do NOT seed fake data.
+      return const StudyProgress(
+        masteryPercentage: 0,
+        completedChapters: 0,
+        totalChapters: 0,
+      );
     }
 
+    final data = docSnapshot.data()!;
     return StudyProgress(
       masteryPercentage: (data['masteryPercentage'] as num?)?.toDouble() ?? 0.0,
       completedChapters: data['completedChapters'] ?? 0,
@@ -99,26 +93,37 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
       'getRecentStudies() fetching from Firestore',
       tag: AppLogTags.dashboardDataSource,
     );
-    // You could query a 'recent_studies' collection here. Returning static or fetching from subjects.
-    return const [
-      RecentStudy(
-        id: '1',
-        title: 'Pythagorean Theorem',
-        subject: 'Mathematics',
-        lastViewed: '2 hours ago',
-        iconName: 'calculator',
-        colorValue: 0xFF00639A,
-        backgroundColorValue: 0xFFCEE5FF,
-      ),
-      RecentStudy(
-        id: '2',
-        title: "Newton's Third Law",
-        subject: 'Physics',
-        lastViewed: 'Yesterday',
-        iconName: 'rocket',
-        colorValue: 0xFF056C42,
-        backgroundColorValue: 0xFF9DF5BF,
-      ),
-    ];
+
+    final uid = _firebaseAuth.currentUser?.uid;
+    if (uid == null) {
+      return const [];
+    }
+
+    // Query the user's recent activity from Firestore.
+    final snapshot = await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('recent_studies')
+        .orderBy('viewedAt', descending: true)
+        .limit(5)
+        .get();
+
+    if (snapshot.docs.isEmpty) {
+      return const [];
+    }
+
+    return snapshot.docs.map((doc) {
+      final data = doc.data();
+      return RecentStudy(
+        id: data['id'] ?? doc.id,
+        title: data['title'] ?? '',
+        subject: data['subject'] ?? '',
+        lastViewed: data['lastViewed'] ?? '',
+        iconName: data['iconName'] ?? 'book-open',
+        colorValue: data['colorValue'] ?? 0xFF00639A,
+        backgroundColorValue: data['backgroundColorValue'] ?? 0xFFCEE5FF,
+      );
+    }).toList();
   }
 }
+

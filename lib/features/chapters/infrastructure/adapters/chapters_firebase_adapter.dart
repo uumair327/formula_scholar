@@ -28,7 +28,7 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
 
     final uid = _firebaseAuth.currentUser?.uid;
 
-    // 2. Fetch user progress for this subject
+    // 2. Fetch user progress for this subject (if authenticated)
     Map<String, dynamic> progressMap = {};
     if (uid != null) {
       final progressSnapshot = await _firestore
@@ -39,32 +39,15 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
           .collection('chapters')
           .get();
 
-      // Seed mock progress if it doesn't exist to show working UI
-      if (progressSnapshot.docs.isEmpty) {
-        await _seedMockProgress(uid, subjectId, snapshot.docs);
-        // Re-fetch after seeding
-        final newProgress = await _firestore
-            .collection('users')
-            .doc(uid)
-            .collection('progress')
-            .doc(subjectId)
-            .collection('chapters')
-            .get();
-        for (var doc in newProgress.docs) {
-          progressMap[doc.id] = doc.data();
-        }
-      } else {
-        for (var doc in progressSnapshot.docs) {
-          progressMap[doc.id] = doc.data();
-        }
+      for (final doc in progressSnapshot.docs) {
+        progressMap[doc.id] = doc.data();
       }
     }
 
     // 3. Merge data — always use doc.id as the canonical key
     return snapshot.docs.map((doc) {
       final data = doc.data();
-      // Look up progress by doc.id first (matches _seedMockProgress),
-      // then by data['id'] as fallback
+      // Look up progress by doc.id first, then by data['id'] as fallback
       final progressData = progressMap[doc.id] ?? progressMap[data['id']] ?? {};
       final hasProgress = (progressData as Map).isNotEmpty;
 
@@ -108,62 +91,5 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
         status: status,
       );
     }).toList();
-  }
-
-  Future<void> _seedMockProgress(
-    String uid,
-    String subjectId,
-    List<QueryDocumentSnapshot> staticChapters,
-  ) async {
-    AppLogger.info(
-      'Seeding mock progress for $subjectId',
-      tag: AppLogTags.chaptersDataSource,
-    );
-    final batch = _firestore.batch();
-
-    for (int i = 0; i < staticChapters.length; i++) {
-      final doc = staticChapters[i];
-      final staticData = doc.data() as Map<String, dynamic>;
-      final totalFormulas = staticData['totalFormulas'] ?? 10;
-
-      // Store progress keyed by doc.id (canonical Firestore key)
-      final ref = _firestore
-          .collection('users')
-          .doc(uid)
-          .collection('progress')
-          .doc(subjectId)
-          .collection('chapters')
-          .doc(doc.id);
-
-      int completed;
-      double progressPct;
-      String status;
-
-      if (i == 0) {
-        // Featured chapter — 65% progress, inProgress
-        completed = (totalFormulas * 0.65).round();
-        progressPct = 65.0;
-        status = 'inProgress';
-      } else if (i == 1) {
-        // Secondary chapter — small progress, shown as "START NOW"
-        completed = 2;
-        progressPct = totalFormulas > 0 ? (2 / totalFormulas) * 100 : 0;
-        status = 'notStarted';
-      } else {
-        // Remaining chapters — locked
-        completed = 0;
-        progressPct = 0;
-        status = 'locked';
-      }
-
-      batch.set(ref, {
-        'completedFormulas': completed,
-        'progressPercent': progressPct,
-        'status': status,
-        'lastUpdated': FieldValue.serverTimestamp(),
-      });
-    }
-
-    await batch.commit();
   }
 }

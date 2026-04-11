@@ -133,26 +133,7 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
 
     final uid = _firebaseAuth.currentUser?.uid;
     if (uid == null) {
-      return const [
-        ProfileStat(
-          id: 'formulas',
-          label: AppStrings.formulasMastered,
-          value: '124',
-          iconName: 'functions',
-        ),
-        ProfileStat(
-          id: 'streak',
-          label: AppStrings.daysStreak,
-          value: '12',
-          iconName: 'fire',
-        ),
-        ProfileStat(
-          id: 'points',
-          label: AppStrings.totalPoints,
-          value: '2450',
-          iconName: 'stars',
-        ),
-      ];
+      return _zeroStats();
     }
 
     final docSnapshot = await _firestore
@@ -161,20 +142,13 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
         .collection('stats')
         .doc('current')
         .get();
-    Map<String, dynamic> data;
 
     if (!docSnapshot.exists) {
-      // Seed robust mock stats for UI presentation if backend hasn't initialized them yet
-      data = {'formulas': 124, 'streak': 12, 'points': 2450};
-      await _firestore
-          .collection('users')
-          .doc(uid)
-          .collection('stats')
-          .doc('current')
-          .set(data);
-    } else {
-      data = docSnapshot.data()!;
+      // New user — return zero-state, do NOT seed fake data.
+      return _zeroStats();
     }
+
+    final data = docSnapshot.data()!;
     return [
       ProfileStat(
         id: 'formulas',
@@ -192,6 +166,30 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
         id: 'points',
         label: AppStrings.totalPoints,
         value: data['points']?.toString() ?? '0',
+        iconName: 'stars',
+      ),
+    ];
+  }
+
+  /// Returns zero-state stats for unauthenticated or brand-new users.
+  List<ProfileStat> _zeroStats() {
+    return const [
+      ProfileStat(
+        id: 'formulas',
+        label: AppStrings.formulasMastered,
+        value: '0',
+        iconName: 'functions',
+      ),
+      ProfileStat(
+        id: 'streak',
+        label: AppStrings.daysStreak,
+        value: '0',
+        iconName: 'fire',
+      ),
+      ProfileStat(
+        id: 'points',
+        label: AppStrings.totalPoints,
+        value: '0',
         iconName: 'stars',
       ),
     ];

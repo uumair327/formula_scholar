@@ -1,27 +1,14 @@
 # This file configures the analyzer, which statically analyzes Dart code to
 # check for errors, warnings, and lints.
 #
-# The issues identified by the analyzer are surfaced in the UI of Dart-enabled
-# IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
-# invoked from the command line by running `flutter analyze`.
+# Golden Rule 14: Agent-Friendly Code — strict linting catches issues before
+# they reach code review or production.
 
-# The following line activates a set of recommended lints for Flutter apps,
-# packages, and plugins designed to encourage good coding practices.
 include: package:flutter_lints/flutter.yaml
 
 linter:
-  # The lint rules applied to this project can be customized in the
-  # section below to disable rules from the `package:flutter_lints/flutter.yaml`
-  # included above or to enable additional rules. A list of all available lints
-  # and their documentation is published at https://dart.dev/lints.
-  #
-  # Instead of disabling a lint rule for the entire project in the
-  # section below, it can also be suppressed for a single line of code
-  # or a specific dart file by using the `// ignore: name_of_lint` and
-  # `// ignore_for_file: name_of_lint` syntax on the line or in the file
-  # producing the lint.
   rules:
-    # Strict lints based on Golden Rules
+    # ── Code Quality ──
     prefer_single_quotes: true
     always_declare_return_types: true
     cancel_subscriptions: true
@@ -30,5 +17,38 @@ linter:
     avoid_empty_else: true
     avoid_relative_lib_imports: true
 
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
+    # ── Const & Immutability ──
+    prefer_const_constructors: true
+    prefer_const_declarations: true
+    prefer_const_literals_to_create_immutables: true
+    prefer_final_locals: true
+    prefer_final_fields: true
+
+    # ── Safety ──
+    unawaited_futures: true
+    avoid_print: true
+    avoid_type_to_string: true
+    no_duplicate_case_values: true
+    prefer_void_to_null: true
+    unnecessary_await_in_return: true
+
+    # ── Style Consistency (Golden Rule 16) ──
+    sort_constructors_first: true
+    unnecessary_this: true
+    prefer_is_empty: true
+    prefer_is_not_empty: true
+    unnecessary_string_interpolations: true
+    use_string_buffers: true
+    unnecessary_null_checks: true
+    use_super_parameters: true
+
+    # ── Documentation ──
+    slash_for_doc_comments: true
+
+analyzer:
+  errors:
+    # Treat these as errors to enforce discipline:
+    unawaited_futures: warning
+    cancel_subscriptions: error
+    close_sinks: error
+    avoid_print: warning
