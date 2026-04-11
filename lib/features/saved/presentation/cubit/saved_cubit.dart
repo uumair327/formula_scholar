@@ -19,9 +19,9 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
   SavedCubit({
     required GetBookmarksUseCase getBookmarks,
     required RemoveBookmarkUseCase removeBookmark,
-  })  : _getBookmarks = getBookmarks,
-        _removeBookmark = removeBookmark,
-        super(const SavedState());
+  }) : _getBookmarks = getBookmarks,
+       _removeBookmark = removeBookmark,
+       super(const SavedState());
 
   /// Loads saved bookmarks.
   Future<void> loadBookmarks() async {
@@ -52,13 +52,20 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
   Future<void> removeBookmark(String formulaId) async {
     // Optimistic update
     final initialBookmarks = List<BookmarkedFormula>.from(state.bookmarks);
-    final updatedList = initialBookmarks.where((element) => element.id != formulaId).toList();
+    final updatedList = initialBookmarks
+        .where((element) => element.id != formulaId)
+        .toList();
     emit(state.copyWith(bookmarks: updatedList));
 
     final result = await _removeBookmark(formulaId);
     if (result is Error<void>) {
-       logFailure('remove bookmark', result.failure);
-       emit(state.copyWith(bookmarks: initialBookmarks, errorMessage: 'Failed to remove bookmark'));
+      logFailure('remove bookmark', result.failure);
+      emit(
+        state.copyWith(
+          bookmarks: initialBookmarks,
+          errorMessage: 'Failed to remove bookmark',
+        ),
+      );
     }
   }
 }

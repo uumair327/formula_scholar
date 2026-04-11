@@ -203,7 +203,7 @@ class AuthFirebaseAdapter implements AuthDataSourcePort {
     if (user == null) {
       throw const ServerException(message: 'No authenticated user to delete.');
     }
-    
+
     try {
       await user.delete();
       // GoogleSignIn sign out to clear native session context.

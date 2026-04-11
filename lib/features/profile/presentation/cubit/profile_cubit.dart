@@ -78,22 +78,4 @@ class ProfileCubit extends Cubit<ProfileState>
       );
     }
   }
-
-  /// Toggles dark mode (UI-only state for now).
-  void toggleDarkMode() {
-    final newValue = !state.isDarkMode;
-    AppLogger.debug(
-      'Dark mode toggled: $newValue',
-      tag: AppLogTags.profileCubit,
-    );
-    emit(state.copyWith(isDarkMode: newValue));
-  }
-
-  /// Handles settings item tap.
-  void onSettingsTapped(String settingsId) {
-    AppLogger.info(
-      'Settings item tapped: $settingsId',
-      tag: AppLogTags.profileCubit,
-    );
-  }
 }

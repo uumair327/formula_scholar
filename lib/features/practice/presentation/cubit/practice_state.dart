@@ -2,6 +2,8 @@ import 'package:equatable/equatable.dart';
 
 import '../../domain/domain.dart';
 
+const Object _unset = Object();
+
 enum PracticeStatus { initial, loading, loaded, error }
 
 /// State for the Practice quiz feature.
@@ -48,7 +50,7 @@ class PracticeState extends Equatable {
     String? selectedOptionId,
     bool? showResult,
     int? totalPoints,
-    String? errorMessage,
+    Object? errorMessage = _unset,
   }) {
     return PracticeState(
       status: status ?? this.status,
@@ -57,7 +59,9 @@ class PracticeState extends Equatable {
       selectedOptionId: selectedOptionId,
       showResult: showResult ?? this.showResult,
       totalPoints: totalPoints ?? this.totalPoints,
-      errorMessage: errorMessage ?? this.errorMessage,
+      errorMessage: identical(errorMessage, _unset)
+          ? this.errorMessage
+          : errorMessage as String?,
     );
   }
 

@@ -1,0 +1,56 @@
+import 'package:flutter_test/flutter_test.dart';
+
+import 'package:formula_scholar/core/error/result.dart';
+import 'package:formula_scholar/features/auth/domain/domain.dart';
+
+void main() {
+  group('GetCurrentAuthUserUseCase', () {
+    test('returns the current user from the repository', () {
+      const user = AuthUser(
+        uid: 'user-1',
+        email: 'scholar@example.com',
+        displayName: 'Scholar',
+      );
+      final repository = _FakeAuthRepository(currentUser: user);
+      final useCase = GetCurrentAuthUserUseCase(repository);
+
+      expect(useCase(), user);
+    });
+  });
+}
+
+class _FakeAuthRepository implements AuthRepositoryPort {
+  final AuthUser? _currentUser;
+
+  const _FakeAuthRepository({AuthUser? currentUser})
+    : _currentUser = currentUser;
+
+  @override
+  AuthUser? get currentUser => _currentUser;
+
+  @override
+  Stream<AuthUser?> authStateChanges() => const Stream<AuthUser?>.empty();
+
+  @override
+  Future<Result<void>> deleteAccount() async => const Success(null);
+
+  @override
+  Future<Result<AuthUser>> signIn({
+    required String email,
+    required String password,
+  }) async => throw UnimplementedError();
+
+  @override
+  Future<Result<AuthUser>> signInWithGoogle() async =>
+      throw UnimplementedError();
+
+  @override
+  Future<Result<void>> signOut() async => const Success(null);
+
+  @override
+  Future<Result<AuthUser>> signUp({
+    required String name,
+    required String email,
+    required String password,
+  }) async => throw UnimplementedError();
+}

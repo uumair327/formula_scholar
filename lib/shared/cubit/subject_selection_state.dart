@@ -1,9 +1,11 @@
 import 'package:equatable/equatable.dart';
 
+const Object _unset = Object();
+
 /// Minimal subject representation shared across features.
 ///
-/// Decoupled from [Subject] in the dashboard domain to avoid
-/// cross-feature dependency (Dependency Inversion Principle).
+/// Decoupled from feature-specific subject entities to avoid direct
+/// cross-feature dependencies in shared state.
 class SelectedSubject extends Equatable {
   final String id;
   final String name;
@@ -27,24 +29,32 @@ class SelectedSubject extends Equatable {
 class SubjectSelectionState extends Equatable {
   final SelectedSubject? subject;
   final List<SelectedSubject> availableSubjects;
+  final String? curriculumKey;
 
   const SubjectSelectionState({
     this.subject,
     this.availableSubjects = const [],
+    this.curriculumKey,
   });
 
   bool get hasSelection => subject != null;
 
   SubjectSelectionState copyWith({
-    SelectedSubject? subject,
+    Object? subject = _unset,
     List<SelectedSubject>? availableSubjects,
+    Object? curriculumKey = _unset,
   }) {
     return SubjectSelectionState(
-      subject: subject ?? this.subject,
+      subject: identical(subject, _unset)
+          ? this.subject
+          : subject as SelectedSubject?,
       availableSubjects: availableSubjects ?? this.availableSubjects,
+      curriculumKey: identical(curriculumKey, _unset)
+          ? this.curriculumKey
+          : curriculumKey as String?,
     );
   }
 
   @override
-  List<Object?> get props => [subject, availableSubjects];
+  List<Object?> get props => [subject, availableSubjects, curriculumKey];
 }

@@ -56,7 +56,8 @@ class DashboardPage extends StatelessWidget {
             return Scaffold(
               body: AppErrorState(
                 message: state.errorMessage,
-                onRetry: () => context.read<DashboardCubit>().loadDashboard(),
+                onRetry: () =>
+                    context.read<DashboardCubit>().retryLoadDashboard(),
               ),
             );
           }
@@ -80,7 +81,7 @@ class DashboardPage extends StatelessWidget {
                       const SizedBox(height: AppDimensions.paddingSection),
                       _buildFormulaVault(state),
                       const SizedBox(height: AppDimensions.paddingLG),
-                      _buildContinueStudying(state),
+                      _buildContinueStudying(context, state),
                       const SizedBox(height: AppDimensions.bottomNavPadding),
                     ]),
                   ),
@@ -162,7 +163,11 @@ class DashboardPage extends StatelessWidget {
 
   Widget _buildCurriculumFilterBar(BuildContext context) {
     return BlocBuilder<CurriculumCubit, CurriculumState>(
+      buildWhen: (prev, curr) =>
+          prev.curriculum != curr.curriculum ||
+          prev.isLoading != curr.isLoading,
       builder: (context, curriculum) {
+        final selection = curriculum.curriculum;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -236,7 +241,9 @@ class DashboardPage extends StatelessWidget {
                   _CurriculumBadge(
                     icon: LucideIcons.layoutGrid,
                     iconColor: AppColors.primary,
-                    label: curriculum.boardName,
+                    label:
+                        selection?.boardName ??
+                        AppStrings.dashboardCurriculumPending,
                     isActive: true,
                     activeColor: AppColors.primary,
                   ),
@@ -251,7 +258,9 @@ class DashboardPage extends StatelessWidget {
                   _CurriculumBadge(
                     icon: LucideIcons.graduationCap,
                     iconColor: AppColors.secondary,
-                    label: curriculum.gradeLabel,
+                    label:
+                        selection?.gradeLabel ??
+                        AppStrings.dashboardCurriculumPending,
                     isActive: true,
                     activeColor: AppColors.secondary,
                   ),
@@ -666,52 +675,80 @@ class DashboardPage extends StatelessWidget {
           itemBuilder: (context, index) {
             // Last card = "Add new" slot
             if (index >= vaultItems.length) {
-              return Container(
-                decoration: BoxDecoration(
-                  color: AppColors.surfaceContainerLowest,
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-                  border: Border.all(
-                    color: AppColors.surfaceContainerHighest,
-                    width: AppDimensions.borderWidth,
+              return Material(
+                color: AppColors.transparent,
+                child: InkWell(
+                  onTap: () => ComingSoonSheet.show(
+                    context,
+                    featureName: 'Create Formula',
+                    description:
+                        'Create your own custom formulas in the vault.',
+                    icon: LucideIcons.plus,
                   ),
-                  boxShadow: const [AppShadows.subtle],
-                ),
-                child: const Center(
-                  child: Icon(
-                    LucideIcons.plus,
-                    size: AppDimensions.iconLG,
-                    color: AppColors.surfaceDim,
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceContainerLowest,
+                      borderRadius: BorderRadius.circular(
+                        AppDimensions.radiusXL,
+                      ),
+                      border: Border.all(
+                        color: AppColors.surfaceContainerHighest,
+                        width: AppDimensions.borderWidth,
+                      ),
+                      boxShadow: const [AppShadows.subtle],
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        LucideIcons.plus,
+                        size: AppDimensions.iconLG,
+                        color: AppColors.surfaceDim,
+                      ),
+                    ),
                   ),
                 ),
               );
             }
             final item = vaultItems[index];
-            return Container(
-              padding: const EdgeInsets.all(AppDimensions.paddingLG),
-              decoration: BoxDecoration(
-                color: AppColors.surfaceContainerLowest,
+            return Material(
+              color: AppColors.transparent,
+              child: InkWell(
+                onTap: () => ComingSoonSheet.show(
+                  context,
+                  featureName: item.title,
+                  description:
+                      'Open this formula from your secure offline vault.',
+                  icon: LucideIcons.folderClosed,
+                ),
                 borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-                border: Border.all(color: AppColors.surfaceContainerHigh),
-                boxShadow: const [AppShadows.subtle],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    item.label,
-                    style: AppTextStyles.labelSmall.copyWith(
-                      color: AppColors.slate400,
-                      fontSize: AppDimensions.fontSizeXS,
-                    ),
+                child: Container(
+                  padding: const EdgeInsets.all(AppDimensions.paddingLG),
+                  decoration: BoxDecoration(
+                    color: AppColors.surfaceContainerLowest,
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+                    border: Border.all(color: AppColors.surfaceContainerHigh),
+                    boxShadow: const [AppShadows.subtle],
                   ),
-                  const SizedBox(height: AppDimensions.paddingXXS),
-                  Text(
-                    item.title,
-                    style: AppTextStyles.labelLarge,
-                    overflow: TextOverflow.ellipsis,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        item.label,
+                        style: AppTextStyles.labelSmall.copyWith(
+                          color: AppColors.slate400,
+                          fontSize: AppDimensions.fontSizeXS,
+                        ),
+                      ),
+                      const SizedBox(height: AppDimensions.paddingXXS),
+                      Text(
+                        item.title,
+                        style: AppTextStyles.labelLarge,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             );
           },
@@ -724,7 +761,7 @@ class DashboardPage extends StatelessWidget {
 
   /// Data-driven recent studies list — uses [RecentStudy.iconName]
   /// and [RecentStudy.colorValue] instead of hardcoded `isMath` checks.
-  Widget _buildContinueStudying(DashboardState state) {
+  Widget _buildContinueStudying(BuildContext context, DashboardState state) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -742,44 +779,57 @@ class DashboardPage extends StatelessWidget {
 
           return Padding(
             padding: const EdgeInsets.only(bottom: AppDimensions.paddingMD),
-            child: AppCard(
-              padding: const EdgeInsets.all(AppDimensions.paddingLG),
-              child: Row(
-                children: [
-                  AppIconCircle(
-                    icon: iconData,
-                    size: AppDimensions.avatarLG,
-                    backgroundColor: bgColor,
-                    iconColor: accentColor,
-                    iconSize: AppDimensions.iconLG,
-                  ),
-                  const SizedBox(width: AppDimensions.paddingLG),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          study.title,
-                          style: AppTextStyles.labelLarge,
-                          overflow: TextOverflow.ellipsis,
+            child: Material(
+              color: AppColors.transparent,
+              child: InkWell(
+                onTap: () => ComingSoonSheet.show(
+                  context,
+                  featureName: study.title,
+                  description:
+                      'Resume your study session for ${study.title} right where you left off.',
+                  icon: iconData,
+                ),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+                child: AppCard(
+                  padding: const EdgeInsets.all(AppDimensions.paddingLG),
+                  child: Row(
+                    children: [
+                      AppIconCircle(
+                        icon: iconData,
+                        size: AppDimensions.avatarLG,
+                        backgroundColor: bgColor,
+                        iconColor: accentColor,
+                        iconSize: AppDimensions.iconLG,
+                      ),
+                      const SizedBox(width: AppDimensions.paddingLG),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              study.title,
+                              style: AppTextStyles.labelLarge,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: AppDimensions.paddingXXS),
+                            Text(
+                              '${study.subject} • ${study.lastViewed}',
+                              style: AppTextStyles.bodySmall.copyWith(
+                                color: AppColors.onSurfaceVariant,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: AppDimensions.paddingXXS),
-                        Text(
-                          '${study.subject} • ${study.lastViewed}',
-                          style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.onSurfaceVariant,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
+                      ),
+                      const Icon(
+                        LucideIcons.chevronRight,
+                        size: AppDimensions.iconMD,
+                        color: AppColors.outline,
+                      ),
+                    ],
                   ),
-                  const Icon(
-                    LucideIcons.chevronRight,
-                    size: AppDimensions.iconMD,
-                    color: AppColors.outline,
-                  ),
-                ],
+                ),
               ),
             ),
           );

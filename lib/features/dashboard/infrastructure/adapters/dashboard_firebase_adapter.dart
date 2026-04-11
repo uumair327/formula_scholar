@@ -14,8 +14,11 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
 
   @override
   Future<StudyProgress> getStudyProgress() async {
-    AppLogger.trace('getStudyProgress() fetching from Firestore', tag: AppLogTags.dashboardDataSource);
-    
+    AppLogger.trace(
+      'getStudyProgress() fetching from Firestore',
+      tag: AppLogTags.dashboardDataSource,
+    );
+
     final uid = _firebaseAuth.currentUser?.uid;
     if (uid == null) {
       return const StudyProgress(
@@ -24,8 +27,13 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
         totalChapters: 22,
       );
     }
-    
-    final docSnapshot = await _firestore.collection('users').doc(uid).collection('progress_summary').doc('current').get();
+
+    final docSnapshot = await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('progress_summary')
+        .doc('current')
+        .get();
     Map<String, dynamic> data;
 
     if (!docSnapshot.exists) {
@@ -34,7 +42,12 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
         'completedChapters': 14,
         'totalChapters': 22,
       };
-      await _firestore.collection('users').doc(uid).collection('progress_summary').doc('current').set(data);
+      await _firestore
+          .collection('users')
+          .doc(uid)
+          .collection('progress_summary')
+          .doc('current')
+          .set(data);
     } else {
       data = docSnapshot.data()!;
     }
@@ -48,7 +61,10 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
 
   @override
   Future<List<Subject>> getSubjects(String boardId, String gradeId) async {
-    AppLogger.trace('getSubjects() fetching from Firestore', tag: AppLogTags.dashboardDataSource);
+    AppLogger.trace(
+      'getSubjects() fetching from Firestore',
+      tag: AppLogTags.dashboardDataSource,
+    );
     final snapshot = await _firestore
         .collection('subjects')
         .where('boardId', isEqualTo: boardId)
@@ -68,7 +84,9 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
         colorValue: data['colorValue'] ?? 0xFF00639A,
         badgeText: data['badgeText'],
         subtitle: data['subtitle'],
-        masteryPercentage: data['masteryPercentage'] != null ? (data['masteryPercentage'] as num).toDouble() : null,
+        masteryPercentage: data['masteryPercentage'] != null
+            ? (data['masteryPercentage'] as num).toDouble()
+            : null,
         lastViewed: data['lastViewed'],
         isFeatured: data['isFeatured'] ?? false,
       );
@@ -77,7 +95,10 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
 
   @override
   Future<List<RecentStudy>> getRecentStudies() async {
-    AppLogger.trace('getRecentStudies() fetching from Firestore', tag: AppLogTags.dashboardDataSource);
+    AppLogger.trace(
+      'getRecentStudies() fetching from Firestore',
+      tag: AppLogTags.dashboardDataSource,
+    );
     // You could query a 'recent_studies' collection here. Returning static or fetching from subjects.
     return const [
       RecentStudy(

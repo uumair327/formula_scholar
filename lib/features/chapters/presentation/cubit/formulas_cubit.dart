@@ -20,9 +20,9 @@ class FormulasCubit extends Cubit<FormulasState>
   FormulasCubit({
     required GetFormulasUseCase getFormulas,
     required ToggleBookmarkUseCase toggleBookmark,
-  })  : _getFormulas = getFormulas,
-        _toggleBookmark = toggleBookmark,
-        super(const FormulasState());
+  }) : _getFormulas = getFormulas,
+       _toggleBookmark = toggleBookmark,
+       super(const FormulasState());
 
   /// Loads formulas for the given [subjectId] and [chapterId].
   Future<void> loadFormulas({
@@ -34,12 +34,14 @@ class FormulasCubit extends Cubit<FormulasState>
       'Loading formulas for subject=$subjectId, chapter=$chapterId',
       tag: AppLogTags.formulasCubit,
     );
-    emit(state.copyWith(
-      status: FormulasStatus.loading,
-      subjectId: subjectId,
-      chapterId: chapterId,
-      chapterName: chapterName,
-    ));
+    emit(
+      state.copyWith(
+        status: FormulasStatus.loading,
+        subjectId: subjectId,
+        chapterId: chapterId,
+        chapterName: chapterName,
+      ),
+    );
 
     final result = await _getFormulas(subjectId, chapterId);
 
@@ -49,16 +51,15 @@ class FormulasCubit extends Cubit<FormulasState>
           'Loaded ${data.length} formulas for $chapterId',
           tag: AppLogTags.formulasCubit,
         );
-        emit(state.copyWith(
-          status: FormulasStatus.loaded,
-          formulas: data,
-        ));
+        emit(state.copyWith(status: FormulasStatus.loaded, formulas: data));
       case Error(:final failure):
         logFailure('formulas for $chapterId', failure);
-        emit(state.copyWith(
-          status: FormulasStatus.error,
-          errorMessage: failure.message,
-        ));
+        emit(
+          state.copyWith(
+            status: FormulasStatus.error,
+            errorMessage: failure.message,
+          ),
+        );
     }
   }
 
@@ -98,10 +99,12 @@ class FormulasCubit extends Cubit<FormulasState>
         }
         return f;
       }).toList();
-      emit(state.copyWith(
-        formulas: revertedList,
-        errorMessage: 'Failed to bookmark formula',
-      ));
+      emit(
+        state.copyWith(
+          formulas: revertedList,
+          errorMessage: 'Failed to bookmark formula',
+        ),
+      );
     }
   }
 }

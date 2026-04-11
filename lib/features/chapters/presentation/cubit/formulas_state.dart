@@ -2,6 +2,8 @@ import 'package:equatable/equatable.dart';
 
 import '../../domain/domain.dart';
 
+const Object _unset = Object();
+
 enum FormulasStatus { initial, loading, loaded, error }
 
 /// State for the Formulas detail screen.
@@ -33,7 +35,7 @@ class FormulasState extends Equatable {
     String? chapterId,
     String? chapterName,
     List<Formula>? formulas,
-    String? errorMessage,
+    Object? errorMessage = _unset,
   }) {
     return FormulasState(
       status: status ?? this.status,
@@ -41,11 +43,19 @@ class FormulasState extends Equatable {
       chapterId: chapterId ?? this.chapterId,
       chapterName: chapterName ?? this.chapterName,
       formulas: formulas ?? this.formulas,
-      errorMessage: errorMessage ?? this.errorMessage,
+      errorMessage: identical(errorMessage, _unset)
+          ? this.errorMessage
+          : errorMessage as String?,
     );
   }
 
   @override
-  List<Object?> get props =>
-      [status, subjectId, chapterId, chapterName, formulas, errorMessage];
+  List<Object?> get props => [
+    status,
+    subjectId,
+    chapterId,
+    chapterName,
+    formulas,
+    errorMessage,
+  ];
 }

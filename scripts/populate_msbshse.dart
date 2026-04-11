@@ -27,7 +27,7 @@ void main(List<String> args) async {
 
   final firestore = Firestore(admin);
 
-  print('Starting populating MSBSHSE Firestore data...');
+  stdout.writeln('Starting populating MSBSHSE Firestore data...');
 
   // --- MSBSHSE Board ---
   final boardsRef = firestore.collection('boards');
@@ -348,6 +348,8 @@ void main(List<String> args) async {
     }
   }
 
-  print('Done populating MSBSHSE data! Formulas and chapters added correctly.');
+  stdout.writeln(
+    'Done populating MSBSHSE data! Formulas and chapters added correctly.',
+  );
   exit(0);
 }

@@ -109,8 +109,10 @@ class BookmarksPage extends StatelessWidget {
       centerTitle: true,
       actions: [
         IconButton(
-          onPressed: () =>
-              ComingSoonSheet.show(context, featureName: AppStrings.searchBookmarks),
+          onPressed: () => ComingSoonSheet.show(
+            context,
+            featureName: AppStrings.searchBookmarks,
+          ),
           icon: const Icon(LucideIcons.search, color: AppColors.primary),
         ),
         const SizedBox(width: AppDimensions.paddingSM),
@@ -234,11 +236,7 @@ class BookmarksPage extends StatelessWidget {
               ],
             ),
           ),
-          Icon(
-            LucideIcons.bookmark,
-            size: AppDimensions.iconMD,
-            color: color,
-          ),
+          Icon(LucideIcons.bookmark, size: AppDimensions.iconMD, color: color),
         ],
       ),
     );

@@ -2,6 +2,8 @@ import 'package:equatable/equatable.dart';
 
 import '../../domain/domain.dart';
 
+const Object _unset = Object();
+
 enum ProfileStatus { initial, loading, loaded, error }
 
 /// State for the Profile feature.
@@ -10,7 +12,6 @@ class ProfileState extends Equatable {
   final UserProfile? profile;
   final List<ProfileStat> stats;
   final List<SettingsItem> settingsItems;
-  final bool isDarkMode;
   final String? errorMessage;
 
   const ProfileState({
@@ -18,7 +19,6 @@ class ProfileState extends Equatable {
     this.profile,
     this.stats = const [],
     this.settingsItems = const [],
-    this.isDarkMode = false,
     this.errorMessage,
   });
 
@@ -27,16 +27,16 @@ class ProfileState extends Equatable {
     UserProfile? profile,
     List<ProfileStat>? stats,
     List<SettingsItem>? settingsItems,
-    bool? isDarkMode,
-    String? errorMessage,
+    Object? errorMessage = _unset,
   }) {
     return ProfileState(
       status: status ?? this.status,
       profile: profile ?? this.profile,
       stats: stats ?? this.stats,
       settingsItems: settingsItems ?? this.settingsItems,
-      isDarkMode: isDarkMode ?? this.isDarkMode,
-      errorMessage: errorMessage ?? this.errorMessage,
+      errorMessage: identical(errorMessage, _unset)
+          ? this.errorMessage
+          : errorMessage as String?,
     );
   }
 
@@ -46,7 +46,6 @@ class ProfileState extends Equatable {
     profile,
     stats,
     settingsItems,
-    isDarkMode,
     errorMessage,
   ];
 }

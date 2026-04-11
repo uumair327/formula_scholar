@@ -20,12 +20,6 @@ class SavedPage extends StatefulWidget {
 
 class _SavedPageState extends State<SavedPage> {
   @override
-  void initState() {
-    super.initState();
-    context.read<SavedCubit>().loadBookmarks();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
       buildWhen: (prev, curr) => prev.user != curr.user,
@@ -78,7 +72,7 @@ class _SavedPageState extends State<SavedPage> {
               body: ListView.separated(
                 padding: const EdgeInsets.all(AppDimensions.paddingXXL),
                 itemCount: state.bookmarks.length,
-                separatorBuilder: (_, __) =>
+                separatorBuilder: (_, _) =>
                     const SizedBox(height: AppDimensions.paddingLG),
                 itemBuilder: (context, index) {
                   final bookmark = state.bookmarks[index];
@@ -261,8 +255,10 @@ class _SavedPageState extends State<SavedPage> {
                       shape: BoxShape.circle,
                       color: AppColors.primaryFixed,
                     ),
-                    child: const Icon(LucideIcons.bookmark,
-                        color: AppColors.primary),
+                    child: const Icon(
+                      LucideIcons.bookmark,
+                      color: AppColors.primary,
+                    ),
                   ),
           ),
           const SizedBox(width: AppDimensions.paddingMD),

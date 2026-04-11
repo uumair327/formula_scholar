@@ -46,9 +46,19 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return BlocListener<AuthCubit, AuthState>(
       listenWhen: (prev, cur) => prev.status != cur.status,
-      listener: (context, state) {
+      listener: (listenerContext, state) async {
         if (state.status == AuthStatus.authenticated) {
-          context.go(AppRoutes.onboardingPath);
+          final curriculumCubit = listenerContext.read<CurriculumCubit>();
+          await curriculumCubit.refresh();
+          if (!listenerContext.mounted) {
+            return;
+          }
+
+          listenerContext.go(
+            curriculumCubit.state.hasSelection
+                ? AppRoutes.dashboardPath
+                : AppRoutes.onboardingPath,
+          );
         } else if (state.status == AuthStatus.error &&
             state.errorMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -453,7 +463,8 @@ class _FormContent extends StatelessWidget {
               onTap: () => ComingSoonSheet.show(
                 context,
                 featureName: AppStrings.loginForgotPassword,
-                description: 'Reset your password securely via email. '
+                description:
+                    'Reset your password securely via email. '
                     'We\'ll send you a verification link.',
                 icon: LucideIcons.keyRound,
               ),
@@ -605,9 +616,6 @@ class _FormContent extends StatelessWidget {
 }
 
 // ── Shared auth sub-widgets ───────────────────────────────────────
-
-
-
 
 class _SocialButton extends StatelessWidget {
   final String label;

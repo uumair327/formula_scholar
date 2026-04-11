@@ -20,12 +20,13 @@ import 'app_page_transitions.dart';
 import 'app_router_observer.dart';
 
 class _AuthRouterNotifier extends ChangeNotifier {
+  final GetCurrentAuthUserUseCase _getCurrentAuthUser;
   final WatchAuthStateUseCase _watchAuthState;
   late final StreamSubscription<AuthUser?> _subscription;
   AuthUser? _currentUser;
 
-  _AuthRouterNotifier(this._watchAuthState) {
-    _currentUser = getIt<AuthRepositoryPort>().currentUser;
+  _AuthRouterNotifier(this._getCurrentAuthUser, this._watchAuthState) {
+    _currentUser = _getCurrentAuthUser();
     _subscription = _watchAuthState().listen((user) {
       _currentUser = user;
       notifyListeners();
@@ -64,13 +65,14 @@ abstract final class AppRouter {
   static const _authPaths = {AppRoutes.loginPath, AppRoutes.signupPath};
 
   static final _authNotifier = _AuthRouterNotifier(
+    getIt<GetCurrentAuthUserUseCase>(),
     getIt<WatchAuthStateUseCase>(),
   );
 
   /// The singleton [GoRouter] instance consumed by [MaterialApp.router].
   static final GoRouter router = GoRouter(
     navigatorKey: _rootNavigatorKey,
-    initialLocation: AppRoutes.loginPath,
+    initialLocation: AppRoutes.dashboardPath,
     debugLogDiagnostics: kDebugMode,
     observers: [AppRouterObserver()],
     refreshListenable: _authNotifier,
@@ -98,14 +100,6 @@ abstract final class AppRouter {
       }
 
       // If logged in and on auth page → redirect to dashboard.
-      if (isLoggedIn && isAuthPage) {
-        AppLogger.info(
-          'Authenticated user redirected to dashboard from ${state.uri}',
-          tag: AppLogTags.router,
-        );
-        return AppRoutes.dashboardPath;
-      }
-
       return null;
     },
 

@@ -12,18 +12,18 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
 
   @override
   Future<List<QuizQuestion>> getQuestions() async {
-    AppLogger.trace('getQuestions() fetching from Firestore', tag: AppLogTags.practiceDataSource);
+    AppLogger.trace(
+      'getQuestions() fetching from Firestore',
+      tag: AppLogTags.practiceDataSource,
+    );
     final snapshot = await _firestore.collection('practice_questions').get();
-    
+
     return snapshot.docs.map((doc) {
       final data = doc.data();
       final optionsList = data['options'] as List<dynamic>? ?? [];
       final options = optionsList.map((opt) {
         final optMap = opt as Map<String, dynamic>;
-        return QuizOption(
-          id: optMap['id'] ?? '',
-          text: optMap['text'] ?? '',
-        );
+        return QuizOption(id: optMap['id'] ?? '', text: optMap['text'] ?? '');
       }).toList();
 
       return QuizQuestion(

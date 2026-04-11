@@ -38,7 +38,8 @@ abstract final class AppStrings {
       'The ultimate cognitive sanctuary for high school scholars. '
       'Organize, learn, and excel in your mathematical journey.';
   static const String loginStudentPortal = 'STUDENT PORTAL';
-  static const String loginErrorInvalidCredentials = 'Invalid credentials. Please try again.';
+  static const String loginErrorInvalidCredentials =
+      'Invalid credentials. Please try again.';
 
   // ──────────────────────── Auth – Signup ─────────────────────
   static const String signupTitle = 'Create your account';
@@ -69,7 +70,8 @@ abstract final class AppStrings {
       '"The formulas finally make sense. It doesn\'t feel like studying; it feels like exploring."';
   static const String signupTestimonialName = 'Ishita Sharma';
   static const String signupTestimonialRole = 'Class 9 Student';
-  static const String signupErrorFailed = 'Registration failed. Please try again.';
+  static const String signupErrorFailed =
+      'Registration failed. Please try again.';
 
   // ──────────────────────── Onboarding Step 1 – Location ──────
   static const String step1Tag = 'Location Preference';
@@ -138,6 +140,10 @@ abstract final class AppStrings {
   // ──────────────────────── Error Messages ───────────────────
   static const String failedToLoadProfile = 'Failed to load profile';
   static const String failedToLoadDashboard = 'Failed to load dashboard';
+  static const String dashboardCurriculumPending =
+      'Syncing your board and grade...';
+  static const String dashboardCurriculumRequired =
+      'Select your board and grade to unlock your dashboard.';
   static const String failedToLoadGeometry = 'Failed to load geometry topics';
   static const String failedToLoadFormulas = 'Failed to load formulas';
   static const String failedToLoadPractice =
@@ -580,8 +586,7 @@ abstract final class AppStrings {
       'channels in the jurisdiction where the service provider is located.';
 
   // Legal footer
-  static const String legalFooterTitle =
-      'Your Privacy & Security Matter to Us';
+  static const String legalFooterTitle = 'Your Privacy & Security Matter to Us';
   static const String legalFooterDesc =
       'We are committed to protecting your personal information '
       'and providing a safe learning environment.';

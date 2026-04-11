@@ -53,10 +53,14 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
           .doc(chapterId)
           .collection('formulas')
           .get();
-      return reFetch.docs.map((doc) => _docToFormula(doc, bookmarkedIds.contains(doc.id))).toList();
+      return reFetch.docs
+          .map((doc) => _docToFormula(doc, bookmarkedIds.contains(doc.id)))
+          .toList();
     }
 
-    return snapshot.docs.map((doc) => _docToFormula(doc, bookmarkedIds.contains(doc.id))).toList();
+    return snapshot.docs
+        .map((doc) => _docToFormula(doc, bookmarkedIds.contains(doc.id)))
+        .toList();
   }
 
   Formula _docToFormula(QueryDocumentSnapshot doc, bool isBookmarked) {
@@ -86,7 +90,10 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
 
     if (formula.isBookmarked) {
       await docRef.delete();
-      AppLogger.info('Removed bookmark for ${formula.id}', tag: AppLogTags.formulasDataSource);
+      AppLogger.info(
+        'Removed bookmark for ${formula.id}',
+        tag: AppLogTags.formulasDataSource,
+      );
     } else {
       await docRef.set({
         'id': formula.id,
@@ -95,7 +102,10 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
         'formula': formula.latex,
         'savedAt': FieldValue.serverTimestamp(),
       });
-      AppLogger.info('Added bookmark for ${formula.id}', tag: AppLogTags.formulasDataSource);
+      AppLogger.info(
+        'Added bookmark for ${formula.id}',
+        tag: AppLogTags.formulasDataSource,
+      );
     }
   }
 
@@ -118,7 +128,8 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
         'id': 'f1',
         'title': 'Core Identity I',
         'latex': r'(a + b)^2 = a^2 + 2ab + b^2',
-        'description': 'Square of a binomial sum — the most fundamental algebraic expansion.',
+        'description':
+            'Square of a binomial sum — the most fundamental algebraic expansion.',
         'isMastered': true,
       },
       {

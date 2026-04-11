@@ -11,11 +11,7 @@ class LegalPage extends StatelessWidget {
   final String title;
   final List<LegalSection> sections;
 
-  const LegalPage({
-    super.key,
-    required this.title,
-    required this.sections,
-  });
+  const LegalPage({super.key, required this.title, required this.sections});
 
   /// Shows the Privacy Policy page.
   static Widget privacyPolicy() {
@@ -131,8 +127,9 @@ class LegalPage extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: AppColors.primaryFixed,
-                    borderRadius:
-                        BorderRadius.circular(AppDimensions.radiusXXL),
+                    borderRadius: BorderRadius.circular(
+                      AppDimensions.radiusXXL,
+                    ),
                   ),
                   child: Text(
                     AppStrings.legalEffectiveDate,
@@ -148,10 +145,7 @@ class LegalPage extends StatelessWidget {
                 ...sections.asMap().entries.map((entry) {
                   final index = entry.key;
                   final section = entry.value;
-                  return _LegalSectionCard(
-                    index: index + 1,
-                    section: section,
-                  );
+                  return _LegalSectionCard(index: index + 1, section: section);
                 }),
 
                 const SizedBox(height: AppDimensions.paddingXXL),
@@ -161,8 +155,7 @@ class LegalPage extends StatelessWidget {
                   padding: const EdgeInsets.all(AppDimensions.paddingXXL),
                   decoration: BoxDecoration(
                     color: AppColors.surfaceContainerLow,
-                    borderRadius:
-                        BorderRadius.circular(AppDimensions.radiusLG),
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
                   ),
                   child: Column(
                     children: [

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
@@ -6,14 +8,6 @@ import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 import 'dashboard_state.dart';
 
-/// Cubit managing the Dashboard screen's state.
-///
-/// Depends on **use cases** (not repositories directly) following SRP.
-/// Uses [Result] pattern matching for typed error handling.
-/// Uses [CubitFailureLogger] mixin to eliminate boilerplate.
-///
-/// Reads the user's selected board/grade from the global
-/// [CurriculumCubit] to ensure curriculum synchronization.
 @injectable
 class DashboardCubit extends Cubit<DashboardState>
     with CubitFailureLogger<DashboardState> {
@@ -21,6 +15,7 @@ class DashboardCubit extends Cubit<DashboardState>
   final GetSubjectsUseCase _getSubjects;
   final GetRecentStudiesUseCase _getRecentStudies;
   final CurriculumCubit _curriculumCubit;
+  late final StreamSubscription<CurriculumState> _curriculumSubscription;
 
   @override
   String get logTag => AppLogTags.dashboardCubit;
@@ -34,35 +29,70 @@ class DashboardCubit extends Cubit<DashboardState>
        _getSubjects = getSubjects,
        _getRecentStudies = getRecentStudies,
        _curriculumCubit = curriculumCubit,
-       super(const DashboardState());
+       super(const DashboardState()) {
+    _watchCurriculumChanges();
+  }
 
-  /// Loads all dashboard data in parallel.
-  ///
-  /// Reads board/grade from the global [CurriculumCubit] to ensure
-  /// curriculum sync across the app.
+  @override
+  Future<void> close() {
+    _curriculumSubscription.cancel();
+    return super.close();
+  }
+
+  void _watchCurriculumChanges() {
+    _curriculumSubscription = _curriculumCubit.stream.distinct().listen((
+      curriculumState,
+    ) {
+      if (!curriculumState.isLoading) {
+        Future.microtask(loadDashboard);
+      }
+    });
+  }
+
   Future<void> loadDashboard() async {
     AppLogger.info('Loading dashboard data', tag: AppLogTags.dashboardCubit);
     emit(state.copyWith(status: DashboardStatus.loading));
 
-    // Read the user's curriculum from the global cubit.
-    final curriculum = _curriculumCubit.state;
-    final boardId = curriculum.boardId;
-    final gradeId = curriculum.gradeId;
-    final boardName = curriculum.boardName;
-    final gradeLabel = curriculum.gradeLabel;
+    final curriculumState = _curriculumCubit.state;
+    if (curriculumState.isLoading) {
+      AppLogger.info(
+        'Curriculum still syncing, dashboard load deferred',
+        tag: AppLogTags.dashboardCubit,
+      );
+      return;
+    }
+
+    final curriculum = curriculumState.curriculum;
+    if (curriculum == null) {
+      AppLogger.warning(
+        'Dashboard load blocked because curriculum is missing',
+        tag: AppLogTags.dashboardCubit,
+      );
+      emit(
+        state.copyWith(
+          status: DashboardStatus.error,
+          errorMessage: AppStrings.dashboardCurriculumRequired,
+          subjects: const [],
+          recentStudies: const [],
+          vaultItems: const [],
+          selectedBoardName: '',
+          selectedGradeName: '',
+        ),
+      );
+      return;
+    }
 
     AppLogger.info(
-      'Dashboard using curriculum: board=$boardName ($boardId), grade=$gradeLabel ($gradeId)',
+      'Dashboard using curriculum: board=${curriculum.boardName} (${curriculum.boardId}), grade=${curriculum.gradeLabel} (${curriculum.gradeId})',
       tag: AppLogTags.dashboardCubit,
     );
 
     final (progressResult, subjectsResult, studiesResult) = await (
       _getStudyProgress(),
-      _getSubjects(boardId, gradeId),
+      _getSubjects(curriculum.boardId, curriculum.gradeId),
       _getRecentStudies(),
     ).wait;
 
-    // Pattern match on each result for typed error handling.
     final progress = switch (progressResult) {
       Success(:final data) => data,
       Error(:final failure) => logFailure('study progress', failure),
@@ -79,18 +109,12 @@ class DashboardCubit extends Cubit<DashboardState>
     };
 
     if (progress != null && subjects != null && recentStudies != null) {
-      AppLogger.info(
-        'Dashboard loaded: ${subjects.length} subjects',
-        tag: AppLogTags.dashboardCubit,
-      );
-
-      // Build vault items from subjects — data-driven, no hardcoding.
       final vaultItems = subjects
           .map(
-            (s) => FormulaVaultItem(
-              id: s.id,
-              label: s.category.toUpperCase(),
-              title: s.name.split(' & ').first, // Short label
+            (subject) => FormulaVaultItem(
+              id: subject.id,
+              label: subject.category.toUpperCase(),
+              title: subject.name.split(' & ').first,
             ),
           )
           .toList();
@@ -102,17 +126,37 @@ class DashboardCubit extends Cubit<DashboardState>
           subjects: subjects,
           recentStudies: recentStudies,
           vaultItems: vaultItems,
-          selectedBoardName: boardName,
-          selectedGradeName: gradeLabel,
+          selectedBoardName: curriculum.boardName,
+          selectedGradeName: curriculum.gradeLabel,
+          errorMessage: null,
         ),
       );
-    } else {
-      emit(
-        state.copyWith(
-          status: DashboardStatus.error,
-          errorMessage: AppStrings.failedToLoadDashboard,
-        ),
+      return;
+    }
+
+    emit(
+      state.copyWith(
+        status: DashboardStatus.error,
+        errorMessage: AppStrings.failedToLoadDashboard,
+      ),
+    );
+  }
+
+  Future<void> retryLoadDashboard({int maxAttempts = 2}) async {
+    for (var attempt = 1; attempt <= maxAttempts; attempt++) {
+      AppLogger.info(
+        'Retrying dashboard load (attempt $attempt/$maxAttempts)',
+        tag: AppLogTags.dashboardCubit,
       );
+
+      await loadDashboard();
+      if (state.status == DashboardStatus.loaded) {
+        return;
+      }
+
+      if (attempt < maxAttempts) {
+        await Future<void>.delayed(const Duration(milliseconds: 600));
+      }
     }
   }
 }

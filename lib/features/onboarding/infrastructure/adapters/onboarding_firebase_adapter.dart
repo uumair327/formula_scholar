@@ -11,12 +11,21 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
   OnboardingFirebaseAdapter(this._firestore);
 
   @override
-  Future<PaginatedResponse<Country>> getCountries({int limit = 20, String? startAfterId}) async {
-    AppLogger.trace('getCountries() fetching from Firestore', tag: AppLogTags.onboardingDataSource);
-    
+  Future<PaginatedResponse<Country>> getCountries({
+    int limit = 20,
+    String? startAfterId,
+  }) async {
+    AppLogger.trace(
+      'getCountries() fetching from Firestore',
+      tag: AppLogTags.onboardingDataSource,
+    );
+
     // Simulate pagination for brevity or implement real firestore doc snapshots
-    final snapshot = await _firestore.collection('countries').limit(limit).get();
-    
+    final snapshot = await _firestore
+        .collection('countries')
+        .limit(limit)
+        .get();
+
     final data = snapshot.docs.map((doc) {
       final map = doc.data();
       return Country(
@@ -35,8 +44,15 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
   }
 
   @override
-  Future<PaginatedResponse<StateRegion>> getStates(String countryId, {int limit = 20, String? startAfterId}) async {
-    AppLogger.trace('getStates($countryId) fetching from Firestore', tag: AppLogTags.onboardingDataSource);
+  Future<PaginatedResponse<StateRegion>> getStates(
+    String countryId, {
+    int limit = 20,
+    String? startAfterId,
+  }) async {
+    AppLogger.trace(
+      'getStates($countryId) fetching from Firestore',
+      tag: AppLogTags.onboardingDataSource,
+    );
     final snapshot = await _firestore
         .collection('countries')
         .doc(countryId)
@@ -62,15 +78,25 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
   }
 
   @override
-  Future<PaginatedResponse<Board>> getBoards(String countryId, {String? stateId, int limit = 20, String? startAfterId}) async {
-    AppLogger.trace('getBoards($countryId, $stateId) fetching from Firestore', tag: AppLogTags.onboardingDataSource);
-    
-    Query query = _firestore.collection('boards').where('countryId', isEqualTo: countryId);
+  Future<PaginatedResponse<Board>> getBoards(
+    String countryId, {
+    String? stateId,
+    int limit = 20,
+    String? startAfterId,
+  }) async {
+    AppLogger.trace(
+      'getBoards($countryId, $stateId) fetching from Firestore',
+      tag: AppLogTags.onboardingDataSource,
+    );
+
+    Query query = _firestore
+        .collection('boards')
+        .where('countryId', isEqualTo: countryId);
 
     final snapshot = await query.limit(limit).get();
     var data = snapshot.docs.map((doc) {
       final map = doc.data() as Map<String, dynamic>;
-      
+
       final typeStr = map['type'] as String? ?? 'state';
       BoardType type = BoardType.state;
       if (typeStr == 'national') type = BoardType.national;
@@ -89,7 +115,9 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
 
     if (stateId != null) {
       data = data.where((b) {
-        return b.type == BoardType.national || b.type == BoardType.private || b.stateId == stateId;
+        return b.type == BoardType.national ||
+            b.type == BoardType.private ||
+            b.stateId == stateId;
       }).toList();
     }
 
@@ -101,13 +129,22 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
   }
 
   @override
-  Future<PaginatedResponse<Grade>> getGrades(String boardId, {int limit = 20, String? startAfterId}) async {
-    AppLogger.trace('getGrades($boardId) fetching from Firestore', tag: AppLogTags.onboardingDataSource);
-    
+  Future<PaginatedResponse<Grade>> getGrades(
+    String boardId, {
+    int limit = 20,
+    String? startAfterId,
+  }) async {
+    AppLogger.trace(
+      'getGrades($boardId) fetching from Firestore',
+      tag: AppLogTags.onboardingDataSource,
+    );
+
     final snapshot = await _firestore
         .collection('boards')
         .doc(boardId)
-        .collection('classes') // changed from grades to classes conceptually, or keep 'grades' in DB
+        .collection(
+          'classes',
+        ) // changed from grades to classes conceptually, or keep 'grades' in DB
         .orderBy('classNumber')
         .limit(limit)
         .get();

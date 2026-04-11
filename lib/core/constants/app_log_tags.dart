@@ -15,6 +15,9 @@ abstract final class AppLogTags {
   static const String mainShellPage = 'MainShellPage';
   static const String subjectSelection = 'SubjectSelection';
   static const String curriculumCubit = 'CurriculumCubit';
+  static const String curriculumRepo = 'CurriculumRepo';
+  static const String curriculumDataSource = 'CurriculumDataSource';
+  static const String curriculumUseCase = 'CurriculumUseCase';
 
   // ──────────────────────── Auth ──────────────────────────────
   static const String loginPage = 'LoginPage';

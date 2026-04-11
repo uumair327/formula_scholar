@@ -27,10 +27,10 @@ void main(List<String> args) async {
 
   final firestore = Firestore(admin);
 
-  print('Starting populating Firestore...');
+  stdout.writeln('Starting populating Firestore...');
 
   // --- Onboarding: Boards & Grades ---
-  print('Populating Boards & Grades...');
+  stdout.writeln('Populating Boards & Grades...');
   final boardsRef = firestore.collection('boards');
 
   final boardsData = [
@@ -91,7 +91,7 @@ void main(List<String> args) async {
   ];
 
   for (var boardMap in boardsData) {
-    print('  Adding board: ${boardMap['id']}');
+    stdout.writeln('  Adding board: ${boardMap['id']}');
     final boardDoc = boardsRef.doc(boardMap['id'] as String);
     await boardDoc.set(boardMap);
 
@@ -103,7 +103,7 @@ void main(List<String> args) async {
   }
 
   // --- Dashboard: Subjects ---
-  print('Populating Subjects...');
+  stdout.writeln('Populating Subjects...');
   final subjectsRef = firestore.collection('subjects');
   final subjectsData = [
     {
@@ -183,12 +183,12 @@ void main(List<String> args) async {
   ];
 
   for (var subjectMap in subjectsData) {
-    print('  Adding subject: ${subjectMap['id']}');
+    stdout.writeln('  Adding subject: ${subjectMap['id']}');
     await subjectsRef.doc(subjectMap['id'] as String).set(subjectMap);
   }
 
   // --- Chapters (Subcollections of Subjects) ---
-  print('Populating Chapters...');
+  stdout.writeln('Populating Chapters...');
   final chaptersData = {
     'math': [
       {
@@ -289,7 +289,7 @@ void main(List<String> args) async {
   }
 
   // --- Formulas for specific chapters ---
-  print('Populating Formulas for Chapters...');
+  stdout.writeln('Populating Formulas for Chapters...');
   final formulasData = {
     'polynomials': [
       {
@@ -384,7 +384,7 @@ void main(List<String> args) async {
         'title': 'Cyclic Quadrilateral',
         'latex': r'\angle A + \angle C = 180^\circ',
         'description':
-            'The sum of either pair of opposite angles of a cyclic quadrilateral is 180^\circ.',
+            'The sum of either pair of opposite angles of a cyclic quadrilateral is 180^circ.',
         'isMastered': false,
       },
     ],
@@ -404,7 +404,7 @@ void main(List<String> args) async {
   }
 
   // --- Practice Questions ---
-  print('Populating Practice Questions...');
+  stdout.writeln('Populating Practice Questions...');
   final practiceRef = firestore.collection('practice_questions');
   final questionsData = [
     {
@@ -459,10 +459,10 @@ void main(List<String> args) async {
   ];
 
   for (var qMap in questionsData) {
-    print('  Adding practice question: ${qMap['id']}');
+    stdout.writeln('  Adding practice question: ${qMap['id']}');
     await practiceRef.doc(qMap['id'] as String).set(qMap);
   }
 
-  print('Done populating Firestore!');
+  stdout.writeln('Done populating Firestore!');
   exit(0);
 }

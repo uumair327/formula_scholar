@@ -5,6 +5,7 @@ export 'entities/formula_vault_item.dart';
 export 'entities/recent_study.dart';
 export 'entities/study_progress.dart';
 export 'entities/subject.dart';
+export 'ports/dashboard_cache_port.dart';
 export 'ports/dashboard_repository_port.dart';
 export 'ports/dashboard_data_source_port.dart';
 export 'usecases/get_study_progress_use_case.dart';

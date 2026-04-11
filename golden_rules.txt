@@ -1,183 +1,270 @@
-🚀 Golden Rules for Agentic AI Vibe Coding (Flutter)
-1. 🧠 Architecture First, Code Later
+# 🚀 Golden Rules for Agentic AI Vibe Coding (Flutter) — Production Standard
 
-If you skip this, everything breaks later.
+---
 
-Use Clean Architecture (strict separation)
-presentation → UI, Bloc/Cubit
-domain → usecases, entities (pure Dart)
-data → repositories, API, DB
+## 1. 🧠 Architecture is a Contract
 
-👉 Rule:
+* Follow strict dependency flow:
+  presentation → domain → data
+* UI depends only on UseCases
+* Domain has zero external dependencies
+* Data implements domain contracts
 
-UI should NOT know about API, and API should NOT know about UI.
+Rule:
+If UI imports Dio or API → architecture is broken
 
-2. 🧩 SOLID is Non-Negotiable
+---
 
-Not theory—apply it daily:
+## 2. 🧩 SOLID is Mandatory
 
-S → One class = one job
-O → Extend, don’t modify
-L → Replaceable implementations
-I → Small focused interfaces
-D → Depend on abstraction, not concrete
+* S: One class = one responsibility
+* O: Extend, don’t modify
+* L: Replaceable implementations
+* I: Small interfaces
+* D: Depend on abstractions
 
-👉 Example:
+Rule:
+If a change requires editing 3+ files → design is wrong
 
-Don’t call Dio directly in Bloc
-Use AuthRepository → implemented by AuthRepositoryImpl
-3. ⚡ Bloc/Cubit with Clear Responsibility
+---
 
-Don’t overcomplicate state management.
+## 3. ⚡ Predictable State Management
 
-Cubit → simple state (forms, toggles)
-Bloc → complex flows (API, pagination, orchestration)
+* Cubit → simple UI state
+* Bloc → complex flows (API, pagination)
 
-👉 Rule:
+Rules:
 
-One feature = one Bloc (or small set), not a god Bloc
+* One feature = one source of truth
+* No duplicate state
+* No business logic in UI
 
-4. 🌐 API Layer Must Be Replaceable
+---
 
-You mentioned Dio—good. But structure matters:
+## 4. 🌐 API Layer Must Be Swappable
 
-Use:
-ApiClient (Dio wrapper)
-Interceptors (auth, logging, retry)
-Never call Dio directly outside data layer
+Structure:
+UI → UseCase → Repository → DataSource → ApiClient
 
-👉 Rule:
+Rules:
 
-You should be able to replace Dio with something else in 1 day
+* No Dio outside data layer
+* Use interceptors (auth, retry, logging)
 
-5. 🧱 Dependency Injection (injectable + get_it)
+Rule:
+If replacing Dio breaks app → abstraction is wrong
 
-No manual wiring everywhere.
+---
 
-Register:
-Repositories
-UseCases
-API clients
-Use @injectable properly
+## 5. 🧱 Dependency Injection (injectable + get_it)
 
-👉 Rule:
+* No manual wiring
+* No `new` inside business logic
+* All dependencies injected
 
-No new keyword inside business logic
+---
 
-6. 📦 Barrel Pattern for Scalability
+## 6. 📦 Feature = Mini App
 
-Keep imports clean:
+Structure:
+feature/
+module/
+presentation/
+domain/
+data/
 
-export 'bloc/login_bloc.dart';
-export 'view/login_page.dart';
+Rules:
 
-👉 Rule:
+* Barrel exports only
+* No cross-feature imports
+* Feature should be portable
 
-Feature folder should feel like a mini-package
+---
 
-7. 🎯 Centralized Constants (You mentioned this—good)
+## 7. 🎯 No Magic Values
 
-But do it properly:
+Centralize:
 
-AppColors
-AppDimens
-AppDurations
-AppStrings
-AppAssets
+* AppColors
+* AppDimens
+* AppDurations
+* AppStrings
+* AppAssets
 
-👉 Rule:
+Rule:
+No hardcoded strings or numbers in UI
 
-No magic numbers or strings in UI
+---
 
-8. 🧾 Logging is Mandatory (Not Optional)
-
-Use a proper logger:
+## 8. 🧾 Logging = Observability
 
 Log:
-API requests/responses
-Errors
-State transitions (BlocObserver)
 
-👉 Rule:
+* API requests/responses
+* Errors
+* Bloc state changes
 
-If something breaks, logs should tell you WHY in 10 seconds
+Rule:
+Debug any issue within 10 seconds using logs
 
-9. 🧭 go_router Done Right
+---
 
-Routing should be:
+## 9. 🧭 Routing = Pure Navigation
 
-Declarative
-Centralized
-Typed (avoid string chaos)
+* Use go_router
+* No business logic in routes
+* Typed navigation only
 
-👉 Rule:
+---
 
-Navigation should NOT contain business logic
+## 10. 🔐 RBAC Enforcement
 
-10. 🤖 Agent-Friendly Code (This is the REAL upgrade)
+Apply at:
 
-Since you're aiming for AI-assisted / agentic coding, optimize for:
+* UI (hide features)
+* Bloc (block actions)
+* UseCase (final enforcement)
 
-✔ Predictability
-Same folder structure everywhere
-Same naming conventions
-✔ Small Units
-Small files → AI understands better
-Avoid 500-line widgets
-✔ Explicitness
-Avoid hidden magic
-Prefer clear flows over clever tricks
+Rule:
+If API works without permission → RBAC is broken
 
-👉 Rule:
+---
 
-Code should be understandable by a junior dev OR an AI in seconds
+## 11. 💾 State vs Cache Separation
 
-11. 🧪 Testable by Design
+* HydratedBloc → UI/session state
+* Hive → data caching
 
-If it’s not testable, it’s not scalable.
+Rule:
+HydratedBloc ≠ database
+Hive ≠ state manager
 
-Unit test:
-UseCases
-Repositories
-Mock dependencies
+---
 
-👉 Rule:
+## 12. 🔄 Pagination Must Be Deterministic
 
-If testing feels hard → architecture is wrong
+* No client-side filtering after pagination
+* No duplicate records
+* Immutable list updates only
 
-12. 🧹 Consistency > Intelligence
+---
 
-Most devs fail here.
+## 13. 🌐 Network Handling First-Class
 
-Same naming pattern everywhere:
-LoginBloc
-LoginEvent
-LoginState
+Handle:
 
-👉 Rule:
+* No internet
+* Timeout
+* Retry
+* Fallback
 
-Don’t be creative—be consistent
+Rule:
+App must never fail silently
 
-🔥 What You're Missing (Hard Truth)
+---
 
-You listed good tools, but:
+## 14. 🤖 Agent-Friendly Code
 
-❌ Tools ≠ Architecture
-❌ Libraries ≠ Scalability
-❌ Patterns ≠ Discipline
+* Small files (<200 lines)
+* Clear naming
+* Explicit logic
+* No hidden magic
 
-👉 Real difference:
+Rule:
+Code should be understandable instantly by dev or AI
 
-Average dev: “Uses Bloc”
-Strong dev: “Designs predictable systems that scale”
+---
 
-⚡ Final Checklist (Save This)
+## 15. 🧪 Testability by Design
 
-Before shipping any feature, ask:
+Test:
 
- Can I replace API layer easily?
- Is business logic isolated from UI?
- Is state predictable and minimal?
- Are constants centralized?
- Can AI (or a new dev) understand this quickly?
- Are logs sufficient to debug instantly?
+* UseCases
+* Repositories
+
+Rule:
+If testing is hard → architecture is wrong
+
+---
+
+## 16. 🧹 Consistency > Intelligence
+
+* Same naming patterns everywhere
+* Same folder structure
+* Same patterns
+
+Rule:
+Predictable code > clever code
+
+---
+
+## 17. 🔁 State Lifecycle Discipline
+
+Handle:
+
+* init
+* loading
+* success
+* failure
+* refresh
+* dispose
+
+Rule:
+No stale or ghost state
+
+---
+
+## 18. 🧨 Side Effects Isolation
+
+Examples:
+
+* navigation
+* dialogs
+* snackbars
+
+Rule:
+Bloc emits state → UI handles side effects
+
+---
+
+## 19. ⚙️ Feature Toggle Ready
+
+Support:
+
+* feature flags
+* role-based access
+* remote config
+
+---
+
+## 20. 🚫 Anti-Patterns to Avoid
+
+* God Bloc
+* Direct API in UI
+* Mutable state
+* Global variables
+* Overuse of HydratedBloc
+* Copy-paste logic
+
+---
+
+# ⚡ Final Checklist
+
+Before shipping:
+
+* API layer replaceable
+* UI has zero business logic
+* State predictable and minimal
+* No magic values
+* RBAC enforced
+* Logs sufficient
+* No stale state
+* Pagination correct
+* Code easy to understand
+
+---
+
+# 🧠 Final Truth
+
+Tools don’t scale systems.
+Discipline does.

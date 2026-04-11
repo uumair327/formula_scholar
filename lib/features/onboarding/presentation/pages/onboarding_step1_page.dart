@@ -23,13 +23,6 @@ class _OnboardingStep1PageState extends State<OnboardingStep1Page> {
   final _stateController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-    // Load countries when step 1 starts
-    context.read<OnboardingCubit>().loadCountries();
-  }
-
-  @override
   void dispose() {
     _stateController.dispose();
     super.dispose();

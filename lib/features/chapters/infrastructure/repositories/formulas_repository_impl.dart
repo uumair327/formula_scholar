@@ -47,7 +47,10 @@ class FormulasRepositoryImpl implements FormulasRepositoryPort {
   }
 
   @override
-  Future<Result<void>> toggleBookmark(Formula formula, String subjectName) async {
+  Future<Result<void>> toggleBookmark(
+    Formula formula,
+    String subjectName,
+  ) async {
     try {
       await _dataSource.toggleBookmark(formula, subjectName);
       return const Success(null);

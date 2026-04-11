@@ -130,15 +130,24 @@ class FormulasPage extends StatelessWidget {
         ],
       ),
       actions: [
-        AppIconCircle(
-          icon: LucideIcons.bookmark,
-          size: AppDimensions.avatarMD,
-          backgroundColor: AppColors.primaryFixed,
-          iconColor: AppColors.primary,
-          iconSize: AppDimensions.iconMD,
-          borderRadius: AppDimensions.radiusMD,
+        IconButton(
+          onPressed: () => ComingSoonSheet.show(
+            context,
+            featureName: 'Chapter Bookmarking',
+            description:
+                'Save entire chapters to your bookmarks for quick access later.',
+            icon: LucideIcons.bookmark,
+          ),
+          icon: AppIconCircle(
+            icon: LucideIcons.bookmark,
+            size: AppDimensions.avatarMD,
+            backgroundColor: AppColors.primaryFixed,
+            iconColor: AppColors.primary,
+            iconSize: AppDimensions.iconMD,
+            borderRadius: AppDimensions.radiusMD,
+          ),
         ),
-        const SizedBox(width: AppDimensions.paddingLG),
+        const SizedBox(width: AppDimensions.paddingSM),
       ],
     );
   }

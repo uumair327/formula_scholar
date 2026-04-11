@@ -43,6 +43,6 @@ void main(List<String> args) async {
       await doc.ref.delete();
     }
   }
-  print('Cleared old dummy formulas.');
+  stdout.writeln('Cleared old dummy formulas.');
   exit(0);
 }

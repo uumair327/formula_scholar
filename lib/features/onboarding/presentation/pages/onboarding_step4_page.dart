@@ -6,7 +6,6 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
 import '../cubit/onboarding_cubit.dart';
-import '../cubit/onboarding_state.dart';
 import '../widgets/onboarding_shell.dart';
 
 /// Onboarding Step 4 — Weekly study goal selection.
@@ -50,24 +49,17 @@ class _OnboardingStep4PageState extends State<OnboardingStep4Page> {
 
   String _selectedId = 'regular';
 
-  void _onFinish() {
-    // Persist the user's board + grade selection from onboarding
-    // into the global CurriculumCubit so all tabs stay in sync.
-    final onboardingState = context.read<OnboardingCubit>().state;
-    final board = onboardingState.selectedBoard;
-    final grade = onboardingState.selectedGrade;
-
-    if (board != null && grade != null) {
-      context.read<CurriculumCubit>().setCurriculum(
-        boardId: board.id,
-        boardName: board.name,
-        gradeId: grade.id,
-        gradeLabel: grade.label,
-        gradeNumber: grade.classNumber,
-      );
+  Future<void> _onFinish() async {
+    final onboardingCubit = context.read<OnboardingCubit>();
+    final curriculum = await onboardingCubit.completeOnboarding();
+    if (!mounted) {
+      return;
     }
 
-    context.go(AppRoutes.dashboardPath);
+    if (curriculum != null) {
+      context.read<CurriculumCubit>().applyCurriculum(curriculum);
+      context.go(AppRoutes.dashboardPath);
+    }
   }
 
   @override
@@ -77,7 +69,9 @@ class _OnboardingStep4PageState extends State<OnboardingStep4Page> {
       totalSteps: 4,
       continueLabel: AppStrings.step4EnterSanctuary,
       onBack: () => context.go(AppRoutes.onboardingStep3Path),
-      onContinue: _onFinish,
+      onContinue: () {
+        _onFinish();
+      },
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

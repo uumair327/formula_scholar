@@ -51,7 +51,8 @@ class _ComingSoonContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final desc = description ??
+    final desc =
+        description ??
         "We're working hard to bring you $featureName. "
             'Stay tuned for updates!';
 
@@ -82,10 +83,7 @@ class _ComingSoonContent extends StatelessWidget {
             duration: AppDurations.animationSlow,
             curve: AppDurations.curveEaseOutBack,
             builder: (context, value, child) {
-              return Transform.scale(
-                scale: value,
-                child: child,
-              );
+              return Transform.scale(scale: value, child: child);
             },
             child: Container(
               width: AppDimensions.avatarProfile,
@@ -169,7 +167,9 @@ class _ComingSoonContent extends StatelessWidget {
               _buildFeatureChip(LucideIcons.zap, AppStrings.comingSoonChip1),
               _buildFeatureChip(LucideIcons.bell, AppStrings.comingSoonChip2),
               _buildFeatureChip(
-                  LucideIcons.sparkles, AppStrings.comingSoonChip3),
+                LucideIcons.sparkles,
+                AppStrings.comingSoonChip3,
+              ),
             ],
           ),
           const SizedBox(height: AppDimensions.paddingXXL),
@@ -185,8 +185,7 @@ class _ComingSoonContent extends StatelessWidget {
                   vertical: AppDimensions.paddingLG,
                 ),
                 shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(AppDimensions.radiusXXL),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
                 ),
                 textStyle: AppTextStyles.labelLarge,
               ),

@@ -110,8 +110,7 @@ class HelpSupportPage extends StatelessWidget {
                   icon: LucideIcons.shield,
                   title: AppStrings.privacyPolicyTitle,
                   subtitle: AppStrings.privacyPolicyDesc,
-                  onTap: () =>
-                      context.pushNamed(AppRoutes.privacyPolicyName),
+                  onTap: () => context.pushNamed(AppRoutes.privacyPolicyName),
                 ),
                 const SizedBox(height: AppDimensions.paddingMD),
                 _buildResourceTile(
@@ -119,8 +118,7 @@ class HelpSupportPage extends StatelessWidget {
                   icon: LucideIcons.fileText,
                   title: AppStrings.termsOfServiceTitle,
                   subtitle: AppStrings.termsOfServiceDesc,
-                  onTap: () =>
-                      context.pushNamed(AppRoutes.termsOfServiceName),
+                  onTap: () => context.pushNamed(AppRoutes.termsOfServiceName),
                 ),
                 const SizedBox(height: AppDimensions.paddingXXL),
                 // App version info
@@ -178,9 +176,7 @@ class HelpSupportPage extends StatelessWidget {
           const SizedBox(height: AppDimensions.paddingLG),
           Text(
             AppStrings.helpHeroTitle,
-            style: AppTextStyles.headlineSmall.copyWith(
-              color: AppColors.white,
-            ),
+            style: AppTextStyles.headlineSmall.copyWith(color: AppColors.white),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppDimensions.paddingSM),
@@ -241,10 +237,7 @@ class HelpSupportPage extends StatelessWidget {
     );
   }
 
-  Widget _buildFaqCard({
-    required String question,
-    required String answer,
-  }) {
+  Widget _buildFaqCard({required String question, required String answer}) {
     return AppCard(
       padding: EdgeInsets.zero,
       child: Theme(
@@ -369,16 +362,12 @@ class HelpSupportPage extends StatelessWidget {
           const SizedBox(height: AppDimensions.paddingXXS),
           Text(
             AppStrings.appVersion,
-            style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.outline,
-            ),
+            style: AppTextStyles.bodySmall.copyWith(color: AppColors.outline),
           ),
           const SizedBox(height: AppDimensions.paddingXXS),
           Text(
             AppStrings.madeWithLove,
-            style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.outline,
-            ),
+            style: AppTextStyles.bodySmall.copyWith(color: AppColors.outline),
           ),
         ],
       ),

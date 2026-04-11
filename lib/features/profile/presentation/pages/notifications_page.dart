@@ -72,8 +72,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   color: AppColors.secondary,
                 ),
                 const SizedBox(height: AppDimensions.paddingXXL),
-                // Achievement notifications 
-                const AppSectionTitle(title: AppStrings.achievementNotifications),
+                // Achievement notifications
+                const AppSectionTitle(
+                  title: AppStrings.achievementNotifications,
+                ),
                 const SizedBox(height: AppDimensions.paddingLG),
                 _buildToggleTile(
                   icon: LucideIcons.trophy,

@@ -8,7 +8,6 @@ import '../../../../shared/shared.dart';
 import '../../../auth/auth.dart';
 import '../cubit/profile_cubit.dart';
 import '../cubit/profile_state.dart';
-import '../widgets/encouragement_card_widget.dart';
 import '../widgets/profile_hero_widget.dart';
 import '../widgets/progress_stats_widget.dart';
 import '../widgets/settings_list_widget.dart';
@@ -52,17 +51,21 @@ class ProfilePage extends StatelessWidget {
                     const SizedBox(height: AppDimensions.paddingHero),
                     ProgressStatsWidget(stats: state.stats),
                     const SizedBox(height: AppDimensions.paddingHero),
-                    SettingsListWidget(
-                      items: state.settingsItems,
-                      isDarkMode: state.isDarkMode,
-                      onDarkModeToggle: () {
-                        context.read<ProfileCubit>().toggleDarkMode();
+                    BlocBuilder<ThemeCubit, ThemeState>(
+                      buildWhen: (prev, curr) =>
+                          prev.isDarkMode != curr.isDarkMode,
+                      builder: (context, themeState) {
+                        return SettingsListWidget(
+                          items: state.settingsItems,
+                          isDarkMode: themeState.isDarkMode,
+                          onDarkModeToggle: () {
+                            context.read<ThemeCubit>().toggleTheme();
+                          },
+                          onItemTapped: (id) =>
+                              _handleSettingsNavigation(context, id),
+                        );
                       },
-                      onItemTapped: (id) =>
-                          _handleSettingsNavigation(context, id),
                     ),
-                    const SizedBox(height: AppDimensions.paddingHero),
-                    const EncouragementCardWidget(),
                     const SizedBox(height: AppDimensions.bottomNavPadding),
                   ]),
                 ),
@@ -141,16 +144,21 @@ class ProfilePage extends StatelessWidget {
     switch (id) {
       case 'account':
         context.push(AppRoutes.accountInfoPath);
+        return;
       case 'bookmarks':
         context.push(AppRoutes.bookmarksPath);
+        return;
       case 'notifications':
         context.push(AppRoutes.notificationsPath);
+        return;
       case 'help':
         context.push(AppRoutes.helpSupportPath);
+        return;
       case 'logout':
         _handleLogout(context);
+        return;
       default:
-        context.read<ProfileCubit>().onSettingsTapped(id);
+        return;
     }
   }
 

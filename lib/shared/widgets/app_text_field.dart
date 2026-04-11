@@ -73,10 +73,7 @@ class AppTextField extends StatelessWidget {
                 child: suffixIcon,
               )
             : null,
-        suffixIconConstraints: const BoxConstraints(
-          minWidth: 0,
-          minHeight: 0,
-        ),
+        suffixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
         filled: true,
         fillColor: AppColors.surfaceContainerHighest,
         border: OutlineInputBorder(

@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/domain/domain.dart';
 import '../../domain/domain.dart';
 import 'onboarding_state.dart';
 
@@ -12,16 +13,19 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   final GetStatesUseCase _getStates;
   final GetBoardsUseCase _getBoards;
   final GetGradesUseCase _getGrades;
+  final SaveCurriculumUseCase _saveCurriculum;
 
   OnboardingCubit({
     required GetCountriesUseCase getCountries,
     required GetStatesUseCase getStates,
     required GetBoardsUseCase getBoards,
     required GetGradesUseCase getGrades,
+    required SaveCurriculumUseCase saveCurriculum,
   }) : _getCountries = getCountries,
        _getStates = getStates,
        _getBoards = getBoards,
        _getGrades = getGrades,
+       _saveCurriculum = saveCurriculum,
        super(const OnboardingState());
 
   /// Loads available countries for Step 1.
@@ -169,6 +173,46 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       tag: AppLogTags.onboardingCubit,
     );
     emit(state.copyWith(selectedGrade: grade));
+  }
+
+  /// Persists the selected curriculum and marks onboarding as complete.
+  Future<SelectedCurriculum?> completeOnboarding() async {
+    final board = state.selectedBoard;
+    final grade = state.selectedGrade;
+
+    if (board == null || grade == null) {
+      AppLogger.warning(
+        'Cannot complete onboarding without board and grade selection',
+        tag: AppLogTags.onboardingCubit,
+      );
+      return null;
+    }
+
+    final curriculum = SelectedCurriculum(
+      boardId: board.id,
+      boardName: board.name,
+      gradeId: grade.id,
+      gradeLabel: grade.label,
+      gradeNumber: grade.classNumber,
+    );
+
+    AppLogger.info(
+      'Completing onboarding for board=${board.name}, grade=${grade.label}',
+      tag: AppLogTags.onboardingCubit,
+    );
+
+    try {
+      await _saveCurriculum(curriculum);
+      return curriculum;
+    } catch (e, st) {
+      AppLogger.error(
+        'Failed to persist curriculum during onboarding completion',
+        tag: AppLogTags.onboardingCubit,
+        error: e,
+        stackTrace: st,
+      );
+      return null;
+    }
   }
 
   /// Navigation helpers

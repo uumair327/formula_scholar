@@ -10,6 +10,8 @@ import '../../domain/domain.dart';
 
 enum AuthStatus { initial, loading, authenticated, unauthenticated, error }
 
+const Object _unset = Object();
+
 class AuthState {
   final AuthStatus status;
   final AuthUser? user;
@@ -24,12 +26,14 @@ class AuthState {
   AuthState copyWith({
     AuthStatus? status,
     AuthUser? user,
-    String? errorMessage,
+    Object? errorMessage = _unset,
   }) {
     return AuthState(
       status: status ?? this.status,
       user: user ?? this.user,
-      errorMessage: errorMessage ?? this.errorMessage,
+      errorMessage: identical(errorMessage, _unset)
+          ? this.errorMessage
+          : errorMessage as String?,
     );
   }
 }

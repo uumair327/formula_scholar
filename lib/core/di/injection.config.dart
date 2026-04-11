@@ -19,6 +19,8 @@ import '../../features/auth/domain/domain.dart' as _i140;
 import '../../features/auth/domain/ports/auth_repository_port.dart' as _i320;
 import '../../features/auth/domain/usecases/delete_account_use_case.dart'
     as _i519;
+import '../../features/auth/domain/usecases/get_current_auth_user_use_case.dart'
+    as _i155;
 import '../../features/auth/domain/usecases/google_sign_in_use_case.dart'
     as _i946;
 import '../../features/auth/domain/usecases/sign_in_use_case.dart' as _i362;
@@ -65,6 +67,8 @@ import '../../features/dashboard/domain/usecases/get_subjects_use_case.dart'
     as _i603;
 import '../../features/dashboard/infrastructure/adapters/dashboard_firebase_adapter.dart'
     as _i72;
+import '../../features/dashboard/infrastructure/repositories/dashboard_hive_cache.dart'
+    as _i990;
 import '../../features/dashboard/infrastructure/repositories/dashboard_repository_impl.dart'
     as _i367;
 import '../../features/dashboard/presentation/cubit/dashboard_cubit.dart'
@@ -122,6 +126,16 @@ import '../../features/saved/infrastructure/repositories/saved_repository_impl.d
 import '../../features/saved/presentation/cubit/saved_cubit.dart' as _i712;
 import '../../shared/cubit/curriculum_cubit.dart' as _i427;
 import '../../shared/cubit/subject_selection_cubit.dart' as _i414;
+import '../../shared/cubit/theme_cubit.dart' as _i947;
+import '../../shared/domain/domain.dart' as _i525;
+import '../../shared/domain/ports/curriculum_repository_port.dart' as _i1064;
+import '../../shared/domain/usecases/load_curriculum_use_case.dart' as _i1052;
+import '../../shared/domain/usecases/save_curriculum_use_case.dart' as _i1048;
+import '../../shared/domain/usecases/watch_curriculum_use_case.dart' as _i264;
+import '../../shared/infrastructure/adapters/curriculum_firebase_adapter.dart'
+    as _i303;
+import '../../shared/infrastructure/repositories/curriculum_repository_impl.dart'
+    as _i588;
 import '../../shared/shared.dart' as _i914;
 import '../network/api_client.dart' as _i557;
 import '../network/api_interceptor.dart' as _i724;
@@ -139,9 +153,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i59.FirebaseAuth>(() => firebaseModule.firebaseAuth);
     gh.lazySingleton<_i974.FirebaseFirestore>(() => firebaseModule.firestore);
     gh.lazySingleton<_i116.GoogleSignIn>(() => firebaseModule.googleSignIn);
-    gh.lazySingleton<_i414.SubjectSelectionCubit>(
-      () => _i414.SubjectSelectionCubit(),
-    );
+    gh.lazySingleton<_i947.ThemeCubit>(() => _i947.ThemeCubit());
+    gh.lazySingleton<_i95.DashboardCachePort>(() => _i990.DashboardHiveCache());
     gh.lazySingleton<_i557.ApiClient>(
       () => _i557.ApiClient(gh<_i724.ApiInterceptor>()),
     );
@@ -206,6 +219,12 @@ extension GetItInjectableX on _i174.GetIt {
         repository: gh<_i50.ProfileRepositoryPort>(),
       ),
     );
+    gh.lazySingleton<_i525.CurriculumDataSourcePort>(
+      () => _i303.CurriculumFirebaseAdapter(
+        gh<_i974.FirebaseFirestore>(),
+        gh<_i59.FirebaseAuth>(),
+      ),
+    );
     gh.factory<_i384.GetFormulasUseCase>(
       () => _i384.GetFormulasUseCase(
         repository: gh<_i193.FormulasRepositoryPort>(),
@@ -214,12 +233,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i614.ToggleBookmarkUseCase>(
       () => _i614.ToggleBookmarkUseCase(
         repository: gh<_i193.FormulasRepositoryPort>(),
-      ),
-    );
-    gh.lazySingleton<_i427.CurriculumCubit>(
-      () => _i427.CurriculumCubit(
-        gh<_i974.FirebaseFirestore>(),
-        gh<_i59.FirebaseAuth>(),
       ),
     );
     gh.lazySingleton<_i140.AuthDataSourcePort>(
@@ -242,6 +255,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i519.DeleteAccountUseCase>(
       () => _i519.DeleteAccountUseCase(gh<_i320.AuthRepositoryPort>()),
+    );
+    gh.factory<_i155.GetCurrentAuthUserUseCase>(
+      () => _i155.GetCurrentAuthUserUseCase(gh<_i320.AuthRepositoryPort>()),
     );
     gh.factory<_i946.GoogleSignInUseCase>(
       () => _i946.GoogleSignInUseCase(gh<_i320.AuthRepositoryPort>()),
@@ -282,6 +298,12 @@ extension GetItInjectableX on _i174.GetIt {
         deleteAccount: gh<_i140.DeleteAccountUseCase>(),
       ),
     );
+    gh.lazySingleton<_i95.DashboardRepositoryPort>(
+      () => _i367.DashboardRepositoryImpl(
+        dataSource: gh<_i95.DashboardDataSourcePort>(),
+        cache: gh<_i95.DashboardCachePort>(),
+      ),
+    );
     gh.factory<_i36.ProfileCubit>(
       () => _i36.ProfileCubit(
         getUserProfile: gh<_i193.GetUserProfileUseCase>(),
@@ -294,14 +316,13 @@ extension GetItInjectableX on _i174.GetIt {
         dataSource: gh<_i899.PracticeDataSourcePort>(),
       ),
     );
+    gh.lazySingleton<_i525.CurriculumRepositoryPort>(
+      () =>
+          _i588.CurriculumRepositoryImpl(gh<_i525.CurriculumDataSourcePort>()),
+    );
     gh.lazySingleton<_i634.OnboardingRepositoryPort>(
       () =>
           _i224.OnboardingRepositoryImpl(gh<_i634.OnboardingDataSourcePort>()),
-    );
-    gh.lazySingleton<_i95.DashboardRepositoryPort>(
-      () => _i367.DashboardRepositoryImpl(
-        dataSource: gh<_i95.DashboardDataSourcePort>(),
-      ),
     );
     gh.lazySingleton<_i543.GetBoardsUseCase>(
       () => _i543.GetBoardsUseCase(gh<_i634.OnboardingRepositoryPort>()),
@@ -337,12 +358,20 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i411.PracticeCubit>(
       () => _i411.PracticeCubit(getQuestions: gh<_i899.GetQuestionsUseCase>()),
     );
-    gh.factory<_i807.OnboardingCubit>(
-      () => _i807.OnboardingCubit(
-        getCountries: gh<_i634.GetCountriesUseCase>(),
-        getStates: gh<_i634.GetStatesUseCase>(),
-        getBoards: gh<_i634.GetBoardsUseCase>(),
-        getGrades: gh<_i634.GetGradesUseCase>(),
+    gh.factory<_i1052.LoadCurriculumUseCase>(
+      () => _i1052.LoadCurriculumUseCase(gh<_i1064.CurriculumRepositoryPort>()),
+    );
+    gh.factory<_i1048.SaveCurriculumUseCase>(
+      () => _i1048.SaveCurriculumUseCase(gh<_i1064.CurriculumRepositoryPort>()),
+    );
+    gh.factory<_i264.WatchCurriculumUseCase>(
+      () => _i264.WatchCurriculumUseCase(gh<_i1064.CurriculumRepositoryPort>()),
+    );
+    gh.lazySingleton<_i427.CurriculumCubit>(
+      () => _i427.CurriculumCubit(
+        loadCurriculum: gh<_i525.LoadCurriculumUseCase>(),
+        saveCurriculum: gh<_i525.SaveCurriculumUseCase>(),
+        watchCurriculum: gh<_i525.WatchCurriculumUseCase>(),
       ),
     );
     gh.factory<_i834.GetRecentStudiesUseCase>(
@@ -360,12 +389,26 @@ extension GetItInjectableX on _i174.GetIt {
         repository: gh<_i190.DashboardRepositoryPort>(),
       ),
     );
+    gh.factory<_i807.OnboardingCubit>(
+      () => _i807.OnboardingCubit(
+        getCountries: gh<_i634.GetCountriesUseCase>(),
+        getStates: gh<_i634.GetStatesUseCase>(),
+        getBoards: gh<_i634.GetBoardsUseCase>(),
+        getGrades: gh<_i634.GetGradesUseCase>(),
+        saveCurriculum: gh<_i525.SaveCurriculumUseCase>(),
+      ),
+    );
     gh.factory<_i24.DashboardCubit>(
       () => _i24.DashboardCubit(
         getStudyProgress: gh<_i95.GetStudyProgressUseCase>(),
         getSubjects: gh<_i95.GetSubjectsUseCase>(),
         getRecentStudies: gh<_i95.GetRecentStudiesUseCase>(),
         curriculumCubit: gh<_i914.CurriculumCubit>(),
+      ),
+    );
+    gh.lazySingleton<_i414.SubjectSelectionCubit>(
+      () => _i414.SubjectSelectionCubit(
+        watchCurriculum: gh<_i525.WatchCurriculumUseCase>(),
       ),
     );
     return this;

@@ -152,18 +152,30 @@ class ChaptersPage extends StatelessWidget {
         ],
       ),
       actions: [
-        AppIconCircle(
-          icon: LucideIcons.barChart3,
-          size: AppDimensions.avatarMD,
-          backgroundColor: AppColors.primaryFixed,
-          iconColor: AppColors.primary,
-          iconSize: AppDimensions.iconMD,
-          borderRadius: AppDimensions.radiusMD,
+        IconButton(
+          onPressed: () => ComingSoonSheet.show(
+            context,
+            featureName: 'Subject Analytics',
+            description:
+                'View deep analytics and mastery metrics for this specific subject.',
+            icon: LucideIcons.barChart3,
+          ),
+          icon: AppIconCircle(
+            icon: LucideIcons.barChart3,
+            size: AppDimensions.avatarMD,
+            backgroundColor: AppColors.primaryFixed,
+            iconColor: AppColors.primary,
+            iconSize: AppDimensions.iconMD,
+            borderRadius: AppDimensions.radiusMD,
+          ),
         ),
         const SizedBox(width: AppDimensions.paddingMD),
-        const AppAvatar(
-          imageUrl: AppAssets.geometryAvatarUrl,
-          placeholderColor: AppColors.surfaceContainerHighest,
+        GestureDetector(
+          onTap: () => context.push(AppRoutes.profilePath),
+          child: const AppAvatar(
+            imageUrl: AppAssets.geometryAvatarUrl,
+            placeholderColor: AppColors.surfaceContainerHighest,
+          ),
         ),
         const SizedBox(width: AppDimensions.paddingLG),
       ],

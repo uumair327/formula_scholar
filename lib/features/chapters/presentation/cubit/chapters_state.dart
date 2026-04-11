@@ -2,6 +2,8 @@ import 'package:equatable/equatable.dart';
 
 import '../../domain/domain.dart';
 
+const Object _unset = Object();
+
 enum ChaptersStatus { initial, loading, loaded, error }
 
 /// State for the generic Chapters feature.
@@ -38,13 +40,15 @@ class ChaptersState extends Equatable {
     ChaptersStatus? status,
     String? subjectId,
     List<Chapter>? chapters,
-    String? errorMessage,
+    Object? errorMessage = _unset,
   }) {
     return ChaptersState(
       status: status ?? this.status,
       subjectId: subjectId ?? this.subjectId,
       chapters: chapters ?? this.chapters,
-      errorMessage: errorMessage ?? this.errorMessage,
+      errorMessage: identical(errorMessage, _unset)
+          ? this.errorMessage
+          : errorMessage as String?,
     );
   }
 

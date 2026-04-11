@@ -28,9 +28,9 @@ void main(List<String> args) async {
   final firestore = Firestore(admin);
 
   final boardsSnap = await firestore.collection('boards').get();
-  print('BOARDS:');
+  stdout.writeln('BOARDS:');
   for (var doc in boardsSnap.docs) {
-    print('${doc.id}: ${doc.data()}');
+    stdout.writeln('${doc.id}: ${doc.data()}');
   }
 
   final msbshseSnap = await firestore
@@ -38,9 +38,9 @@ void main(List<String> args) async {
       .doc('msbshse')
       .collection('classes')
       .get();
-  print('CLASSES in msbshse:');
+  stdout.writeln('CLASSES in msbshse:');
   for (var doc in msbshseSnap.docs) {
-    print('${doc.id}: ${doc.data()}');
+    stdout.writeln('${doc.id}: ${doc.data()}');
   }
 
   final msbshseGradesSnap = await firestore
@@ -48,9 +48,9 @@ void main(List<String> args) async {
       .doc('msbshse')
       .collection('grades')
       .get();
-  print('GRADES in msbshse:');
+  stdout.writeln('GRADES in msbshse:');
   for (var doc in msbshseGradesSnap.docs) {
-    print('${doc.id}: ${doc.data()}');
+    stdout.writeln('${doc.id}: ${doc.data()}');
   }
 
   exit(0);

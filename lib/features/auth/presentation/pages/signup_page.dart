@@ -56,9 +56,19 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     return BlocListener<AuthCubit, AuthState>(
       listenWhen: (prev, cur) => prev.status != cur.status,
-      listener: (context, state) {
+      listener: (listenerContext, state) async {
         if (state.status == AuthStatus.authenticated) {
-          context.go(AppRoutes.onboardingPath);
+          final curriculumCubit = listenerContext.read<CurriculumCubit>();
+          await curriculumCubit.refresh();
+          if (!listenerContext.mounted) {
+            return;
+          }
+
+          listenerContext.go(
+            curriculumCubit.state.hasSelection
+                ? AppRoutes.dashboardPath
+                : AppRoutes.onboardingPath,
+          );
         } else if (state.status == AuthStatus.error &&
             state.errorMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(

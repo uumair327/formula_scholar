@@ -166,8 +166,7 @@ class AccountInformationPage extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: AppColors.secondaryFixed,
-                    borderRadius:
-                        BorderRadius.circular(AppDimensions.radiusXL),
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -300,7 +299,9 @@ class AccountInformationPage extends StatelessWidget {
               Navigator.of(dialogContext).pop();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(state.errorMessage ?? 'Failed to delete account'),
+                  content: Text(
+                    state.errorMessage ?? 'Failed to delete account',
+                  ),
                   backgroundColor: AppColors.error,
                 ),
               );
@@ -317,7 +318,9 @@ class AccountInformationPage extends StatelessWidget {
                 const SizedBox(width: AppDimensions.paddingMD),
                 Text(
                   'Delete Account',
-                  style: AppTextStyles.titleLarge.copyWith(color: AppColors.error),
+                  style: AppTextStyles.titleLarge.copyWith(
+                    color: AppColors.error,
+                  ),
                 ),
               ],
             ),
@@ -333,7 +336,9 @@ class AccountInformationPage extends StatelessWidget {
                 onPressed: () => Navigator.of(dialogContext).pop(),
                 child: Text(
                   'Cancel',
-                  style: AppTextStyles.labelLarge.copyWith(color: AppColors.outline),
+                  style: AppTextStyles.labelLarge.copyWith(
+                    color: AppColors.outline,
+                  ),
                 ),
               ),
               BlocBuilder<AuthCubit, AuthState>(
@@ -351,7 +356,9 @@ class AccountInformationPage extends StatelessWidget {
                         vertical: AppDimensions.paddingMD,
                       ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+                        borderRadius: BorderRadius.circular(
+                          AppDimensions.radiusLG,
+                        ),
                       ),
                     ),
                     child: isLoading

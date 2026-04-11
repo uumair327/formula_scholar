@@ -1,8 +1,12 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'core/core.dart';
 import 'features/auth/auth.dart';
@@ -14,6 +18,18 @@ void main() {
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
+
+      // Initialize Hive once for local data layer caches.
+      await Hive.initFlutter();
+
+      // Initialize HydratedBloc persistence storage.
+      HydratedBloc.storage = await HydratedStorage.build(
+        storageDirectory: kIsWeb
+            ? HydratedStorageDirectory.web
+            : HydratedStorageDirectory(
+                (await getApplicationDocumentsDirectory()).path,
+              ),
+      );
 
       // Initialize Firebase before anything else.
       await Firebase.initializeApp(
@@ -72,19 +88,20 @@ class FormulaScholarApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => getIt<AuthCubit>()),
         BlocProvider(create: (_) => getIt<SubjectSelectionCubit>()),
-        BlocProvider(
-          create: (_) {
-            final cubit = getIt<CurriculumCubit>();
-            Future.microtask(cubit.loadFromFirestore);
-            return cubit;
-          },
-        ),
+        BlocProvider(create: (_) => getIt<ThemeCubit>()),
+        BlocProvider(create: (_) => getIt<CurriculumCubit>()),
       ],
-      child: MaterialApp.router(
-        title: AppStrings.appName,
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        routerConfig: AppRouter.router,
+      child: BlocBuilder<ThemeCubit, ThemeState>(
+        builder: (context, themeState) {
+          return MaterialApp.router(
+            title: AppStrings.appName,
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: themeState.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+            routerConfig: AppRouter.router,
+          );
+        },
       ),
     );
   }
