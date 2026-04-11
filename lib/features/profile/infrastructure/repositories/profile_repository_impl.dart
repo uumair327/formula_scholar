@@ -5,92 +5,58 @@ import '../../domain/domain.dart';
 
 /// Concrete implementation of [ProfileRepositoryPort].
 ///
-/// Delegates to [ProfileDataSourcePort] and wraps results in [Result].
+/// Uses [safeOperation] for DRY error handling and [ProfileCachePort]
+/// for offline-first fallback on getUserProfile and getProfileStats.
+/// Settings items are static client data and don't need caching.
 @LazySingleton(as: ProfileRepositoryPort)
 class ProfileRepositoryImpl implements ProfileRepositoryPort {
   final ProfileDataSourcePort _dataSource;
+  final ProfileCachePort _cache;
 
-  const ProfileRepositoryImpl({required ProfileDataSourcePort dataSource})
-    : _dataSource = dataSource;
+  const ProfileRepositoryImpl({
+    required ProfileDataSourcePort dataSource,
+    required ProfileCachePort cache,
+  }) : _dataSource = dataSource,
+       _cache = cache;
 
   @override
-  Future<Result<UserProfile>> getUserProfile() async {
-    AppLogger.trace('getUserProfile() called', tag: AppLogTags.profileRepo);
-    try {
-      final result = await _dataSource.getUserProfile();
-      AppLogger.info(
-        'getUserProfile() succeeded: ${result.name}',
-        tag: AppLogTags.profileRepo,
-      );
-      return Success(result);
-    } catch (e, stackTrace) {
-      AppLogger.error(
-        'getUserProfile() failed',
-        tag: AppLogTags.profileRepo,
-        error: e,
-        stackTrace: stackTrace,
-      );
-      return Error(
-        ServerFailure(
-          message: 'Failed to load user profile',
-          originalError: e,
-          stackTrace: stackTrace,
-        ),
-      );
-    }
+  Future<Result<UserProfile>> getUserProfile() {
+    return safeOperation(
+      tag: AppLogTags.profileRepo,
+      operation: 'getUserProfile',
+      execute: () async {
+        final result = await _dataSource.getUserProfile();
+        await _cache.cacheUserProfile(result);
+        return result;
+      },
+      fallback: () => _cache.getUserProfile(),
+    );
   }
 
   @override
-  Future<Result<List<ProfileStat>>> getProfileStats() async {
-    AppLogger.trace('getProfileStats() called', tag: AppLogTags.profileRepo);
-    try {
-      final result = await _dataSource.getProfileStats();
-      AppLogger.info(
-        'getProfileStats() succeeded: ${result.length} stats',
-        tag: AppLogTags.profileRepo,
-      );
-      return Success(result);
-    } catch (e, stackTrace) {
-      AppLogger.error(
-        'getProfileStats() failed',
-        tag: AppLogTags.profileRepo,
-        error: e,
-        stackTrace: stackTrace,
-      );
-      return Error(
-        ServerFailure(
-          message: 'Failed to load profile stats',
-          originalError: e,
-          stackTrace: stackTrace,
-        ),
-      );
-    }
+  Future<Result<List<ProfileStat>>> getProfileStats() {
+    return safeOperation(
+      tag: AppLogTags.profileRepo,
+      operation: 'getProfileStats',
+      execute: () async {
+        final result = await _dataSource.getProfileStats();
+        await _cache.cacheProfileStats(result);
+        return result;
+      },
+      fallback: () async {
+        final cached = await _cache.getProfileStats();
+        return cached.isNotEmpty ? cached : null;
+      },
+    );
   }
 
   @override
-  Future<Result<List<SettingsItem>>> getSettingsItems() async {
-    AppLogger.trace('getSettingsItems() called', tag: AppLogTags.profileRepo);
-    try {
-      final result = await _dataSource.getSettingsItems();
-      AppLogger.info(
-        'getSettingsItems() succeeded: ${result.length} items',
-        tag: AppLogTags.profileRepo,
-      );
-      return Success(result);
-    } catch (e, stackTrace) {
-      AppLogger.error(
-        'getSettingsItems() failed',
-        tag: AppLogTags.profileRepo,
-        error: e,
-        stackTrace: stackTrace,
-      );
-      return Error(
-        ServerFailure(
-          message: 'Failed to load settings items',
-          originalError: e,
-          stackTrace: stackTrace,
-        ),
-      );
-    }
+  Future<Result<List<SettingsItem>>> getSettingsItems() {
+    // Settings are static client data — no cache needed.
+    return safeOperation(
+      tag: AppLogTags.profileRepo,
+      operation: 'getSettingsItems',
+      execute: () => _dataSource.getSettingsItems(),
+    );
   }
 }

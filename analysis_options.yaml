@@ -46,6 +46,11 @@ linter:
     slash_for_doc_comments: true
 
 analyzer:
+  # Server-side scripts use dart_firebase_admin which isn't a Flutter
+  # dependency. They are standalone Dart scripts run separately.
+  exclude:
+    - bin/**
+    - scripts/**
   errors:
     # Treat these as errors to enforce discipline:
     unawaited_futures: warning

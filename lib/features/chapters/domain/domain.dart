@@ -3,6 +3,7 @@ library;
 
 export 'entities/chapter.dart';
 export 'entities/formula.dart';
+export 'ports/chapters_cache_port.dart';
 export 'ports/chapters_repository_port.dart';
 export 'ports/chapters_data_source_port.dart';
 export 'ports/formulas_data_source_port.dart';

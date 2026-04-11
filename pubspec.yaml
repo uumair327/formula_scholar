@@ -50,7 +50,7 @@ dependencies:
   cloud_firestore: ^5.6.0
   google_sign_in: ^7.2.0
   flutter_math_fork: ^0.7.4
-  dart_firebase_admin: any
+  connectivity_plus: ^6.1.4
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   path_provider: ^2.1.5

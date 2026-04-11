@@ -4,61 +4,57 @@ import '../../../../core/core.dart';
 import '../../domain/domain.dart';
 
 /// Concrete implementation of [SavedRepositoryPort].
+///
+/// Uses [safeOperation] for DRY error handling and [SavedCachePort]
+/// for offline-first bookmark access.
 @LazySingleton(as: SavedRepositoryPort)
 class SavedRepositoryImpl implements SavedRepositoryPort {
   final SavedDataSourcePort _dataSource;
+  final SavedCachePort _cache;
 
-  const SavedRepositoryImpl({required SavedDataSourcePort dataSource})
-    : _dataSource = dataSource;
+  const SavedRepositoryImpl({
+    required SavedDataSourcePort dataSource,
+    required SavedCachePort cache,
+  }) : _dataSource = dataSource,
+       _cache = cache;
 
   @override
-  Future<Result<List<BookmarkedFormula>>> getBookmarks() async {
-    AppLogger.trace('getBookmarks() called', tag: AppLogTags.savedRepo);
-    try {
-      final result = await _dataSource.getBookmarks();
-      AppLogger.info(
-        'getBookmarks() succeeded: ${result.length} items',
-        tag: AppLogTags.savedRepo,
-      );
-      return Success(result);
-    } catch (e, stackTrace) {
-      AppLogger.error(
-        'getBookmarks() failed',
-        tag: AppLogTags.savedRepo,
-        error: e,
-        stackTrace: stackTrace,
-      );
-      return Error(
-        ServerFailure(
-          message: 'Failed to load bookmarks',
-          originalError: e,
-          stackTrace: stackTrace,
-        ),
-      );
-    }
+  Future<Result<List<BookmarkedFormula>>> getBookmarks() {
+    return safeOperation(
+      tag: AppLogTags.savedRepo,
+      operation: 'getBookmarks',
+      execute: () async {
+        final result = await _dataSource.getBookmarks();
+        await _cache.cacheBookmarks(result);
+        return result;
+      },
+      fallback: () async {
+        final cached = await _cache.getBookmarks();
+        return cached.isNotEmpty ? cached : null;
+      },
+    );
   }
 
   @override
-  Future<Result<void>> removeBookmark(String formulaId) async {
-    try {
-      await _dataSource.removeBookmark(formulaId);
-      return const Success(null);
-    } on CacheException catch (e, stackTrace) {
-      return Error(
-        CacheFailure(
-          message: e.message,
-          originalError: e,
-          stackTrace: stackTrace,
-        ),
-      );
-    } catch (e, stackTrace) {
-      return Error(
-        CacheFailure(
+  Future<Result<void>> removeBookmark(String formulaId) {
+    return safeOperation(
+      tag: AppLogTags.savedRepo,
+      operation: 'removeBookmark($formulaId)',
+      execute: () => _dataSource.removeBookmark(formulaId),
+      onError: (e, stackTrace) {
+        if (e is CacheException) {
+          return CacheFailure(
+            message: e.message,
+            originalError: e,
+            stackTrace: stackTrace,
+          );
+        }
+        return ServerFailure(
           message: 'Failed to remove bookmark',
           originalError: e,
           stackTrace: stackTrace,
-        ),
-      );
-    }
+        );
+      },
+    );
   }
 }

@@ -9,7 +9,8 @@ import '../../domain/domain.dart';
 /// The actual backend (local, Firebase, Supabase) is resolved by
 /// the DI container — this class never knows which one.
 ///
-/// Returns [Result] to enforce typed error handling at the boundary.
+/// Uses [safeOperation] for DRY error handling with [DashboardCachePort]
+/// fallback for offline-first behaviour.
 @LazySingleton(as: DashboardRepositoryPort)
 class DashboardRepositoryImpl implements DashboardRepositoryPort {
   final DashboardDataSourcePort _dataSource;
@@ -22,117 +23,53 @@ class DashboardRepositoryImpl implements DashboardRepositoryPort {
        _cache = cache;
 
   @override
-  Future<Result<StudyProgress>> getStudyProgress() async {
-    AppLogger.trace('getStudyProgress() called', tag: AppLogTags.dashboardRepo);
-    try {
-      final result = await _dataSource.getStudyProgress();
-      await _cache.cacheStudyProgress(result);
-      AppLogger.info(
-        'getStudyProgress() succeeded: '
-        '${result.masteryPercentage}% mastery',
-        tag: AppLogTags.dashboardRepo,
-      );
-      return Success(result);
-    } catch (e, stackTrace) {
-      final cached = await _cache.getStudyProgress();
-      if (cached != null) {
-        AppLogger.warning(
-          'getStudyProgress() remote failed, using cached data',
-          tag: AppLogTags.dashboardRepo,
-        );
-        return Success(cached);
-      }
-
-      AppLogger.error(
-        'getStudyProgress() failed',
-        tag: AppLogTags.dashboardRepo,
-        error: e,
-        stackTrace: stackTrace,
-      );
-      return Error(
-        ServerFailure(
-          message: 'Failed to load study progress',
-          originalError: e,
-          stackTrace: stackTrace,
-        ),
-      );
-    }
+  Future<Result<StudyProgress>> getStudyProgress() {
+    return safeOperation(
+      tag: AppLogTags.dashboardRepo,
+      operation: 'getStudyProgress',
+      execute: () async {
+        final result = await _dataSource.getStudyProgress();
+        await _cache.cacheStudyProgress(result);
+        return result;
+      },
+      fallback: () => _cache.getStudyProgress(),
+    );
   }
 
   @override
   Future<Result<List<Subject>>> getSubjects(
     String boardId,
     String gradeId,
-  ) async {
-    AppLogger.trace('getSubjects() called', tag: AppLogTags.dashboardRepo);
-    try {
-      final result = await _dataSource.getSubjects(boardId, gradeId);
-      await _cache.cacheSubjects(boardId, gradeId, result);
-      AppLogger.info(
-        'getSubjects() succeeded: ${result.length} subjects',
-        tag: AppLogTags.dashboardRepo,
-      );
-      return Success(result);
-    } catch (e, stackTrace) {
-      final cached = await _cache.getSubjects(boardId, gradeId);
-      if (cached.isNotEmpty) {
-        AppLogger.warning(
-          'getSubjects() remote failed, using cached data',
-          tag: AppLogTags.dashboardRepo,
-        );
-        return Success(cached);
-      }
-
-      AppLogger.error(
-        'getSubjects() failed',
-        tag: AppLogTags.dashboardRepo,
-        error: e,
-        stackTrace: stackTrace,
-      );
-      return Error(
-        ServerFailure(
-          message: 'Failed to load subjects',
-          originalError: e,
-          stackTrace: stackTrace,
-        ),
-      );
-    }
+  ) {
+    return safeOperation(
+      tag: AppLogTags.dashboardRepo,
+      operation: 'getSubjects',
+      execute: () async {
+        final result = await _dataSource.getSubjects(boardId, gradeId);
+        await _cache.cacheSubjects(boardId, gradeId, result);
+        return result;
+      },
+      fallback: () async {
+        final cached = await _cache.getSubjects(boardId, gradeId);
+        return cached.isNotEmpty ? cached : null;
+      },
+    );
   }
 
   @override
-  Future<Result<List<RecentStudy>>> getRecentStudies() async {
-    AppLogger.trace('getRecentStudies() called', tag: AppLogTags.dashboardRepo);
-    try {
-      final result = await _dataSource.getRecentStudies();
-      await _cache.cacheRecentStudies(result);
-      AppLogger.info(
-        'getRecentStudies() succeeded: ${result.length} studies',
-        tag: AppLogTags.dashboardRepo,
-      );
-      return Success(result);
-    } catch (e, stackTrace) {
-      final cached = await _cache.getRecentStudies();
-      if (cached.isNotEmpty) {
-        AppLogger.warning(
-          'getRecentStudies() remote failed, using cached data',
-          tag: AppLogTags.dashboardRepo,
-        );
-        return Success(cached);
-      }
-
-      AppLogger.error(
-        'getRecentStudies() failed',
-        tag: AppLogTags.dashboardRepo,
-        error: e,
-        stackTrace: stackTrace,
-      );
-      return Error(
-        ServerFailure(
-          message: 'Failed to load recent studies',
-          originalError: e,
-          stackTrace: stackTrace,
-        ),
-      );
-    }
+  Future<Result<List<RecentStudy>>> getRecentStudies() {
+    return safeOperation(
+      tag: AppLogTags.dashboardRepo,
+      operation: 'getRecentStudies',
+      execute: () async {
+        final result = await _dataSource.getRecentStudies();
+        await _cache.cacheRecentStudies(result);
+        return result;
+      },
+      fallback: () async {
+        final cached = await _cache.getRecentStudies();
+        return cached.isNotEmpty ? cached : null;
+      },
+    );
   }
 }
