@@ -35,6 +35,10 @@ class _FakeAuthRepository implements AuthRepositoryPort {
   Future<Result<void>> deleteAccount() async => const Success(null);
 
   @override
+  Future<Result<void>> sendPasswordResetEmail({required String email}) async =>
+      const Success(null);
+
+  @override
   Future<Result<AuthUser>> signIn({
     required String email,
     required String password,

@@ -11,41 +11,73 @@ import 'saved_state.dart';
 @injectable
 class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
   final GetBookmarksUseCase _getBookmarks;
+  final GetSavedChaptersUseCase _getSavedChapters;
   final RemoveBookmarkUseCase _removeBookmark;
+  final RemoveSavedChapterUseCase _removeSavedChapter;
+
+  String? _activeCurriculumKey;
 
   @override
   String get logTag => AppLogTags.savedCubit;
 
   SavedCubit({
     required GetBookmarksUseCase getBookmarks,
+    required GetSavedChaptersUseCase getSavedChapters,
     required RemoveBookmarkUseCase removeBookmark,
+    required RemoveSavedChapterUseCase removeSavedChapter,
   }) : _getBookmarks = getBookmarks,
+       _getSavedChapters = getSavedChapters,
        _removeBookmark = removeBookmark,
+       _removeSavedChapter = removeSavedChapter,
        super(const SavedState());
 
   /// Loads saved bookmarks.
-  Future<void> loadBookmarks() async {
+  Future<void> loadBookmarks({required String curriculumKey}) async {
+    _activeCurriculumKey = curriculumKey;
     AppLogger.info('Loading bookmarks', tag: AppLogTags.savedCubit);
     emit(state.copyWith(status: SavedStatus.loading));
 
-    final result = await _getBookmarks();
+    final formulasResult = await _getBookmarks(curriculumKey: curriculumKey);
+    final chaptersResult = await _getSavedChapters(
+      curriculumKey: curriculumKey,
+    );
 
-    switch (result) {
-      case Success(:final data):
-        AppLogger.info(
-          'Loaded ${data.length} bookmarks',
-          tag: AppLogTags.savedCubit,
-        );
-        emit(state.copyWith(status: SavedStatus.loaded, bookmarks: data));
-      case Error(:final failure):
-        logFailure('bookmarks', failure);
-        emit(
-          state.copyWith(
-            status: SavedStatus.error,
-            errorMessage: failure.message,
-          ),
-        );
+    if (formulasResult is Error<List<BookmarkedFormula>>) {
+      logFailure('bookmarks', formulasResult.failure);
+      emit(
+        state.copyWith(
+          status: SavedStatus.error,
+          errorMessage: formulasResult.failure.message,
+        ),
+      );
+      return;
     }
+
+    if (chaptersResult is Error<List<BookmarkedChapter>>) {
+      logFailure('saved chapters', chaptersResult.failure);
+      emit(
+        state.copyWith(
+          status: SavedStatus.error,
+          errorMessage: chaptersResult.failure.message,
+        ),
+      );
+      return;
+    }
+
+    final formulas = (formulasResult as Success<List<BookmarkedFormula>>).data;
+    final chapters = (chaptersResult as Success<List<BookmarkedChapter>>).data;
+
+    AppLogger.info(
+      'Loaded ${formulas.length} bookmarks and ${chapters.length} saved chapters',
+      tag: AppLogTags.savedCubit,
+    );
+    emit(
+      state.copyWith(
+        status: SavedStatus.loaded,
+        bookmarks: formulas,
+        chapters: chapters,
+      ),
+    );
   }
 
   /// Removes a bookmark and reloads.
@@ -64,6 +96,40 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
         state.copyWith(
           bookmarks: initialBookmarks,
           errorMessage: 'Failed to remove bookmark',
+        ),
+      );
+    }
+  }
+
+  /// Removes a saved chapter and updates state optimistically.
+  Future<void> removeSavedChapter({
+    required String subjectId,
+    required String chapterId,
+  }) async {
+    final curriculumKey = _activeCurriculumKey;
+    if (curriculumKey == null) {
+      emit(state.copyWith(errorMessage: 'No active curriculum selected'));
+      return;
+    }
+
+    final initialChapters = List<BookmarkedChapter>.from(state.chapters);
+    final updatedList = initialChapters
+        .where((c) => !(c.subjectId == subjectId && c.chapterId == chapterId))
+        .toList();
+    emit(state.copyWith(chapters: updatedList));
+
+    final result = await _removeSavedChapter(
+      curriculumKey: curriculumKey,
+      subjectId: subjectId,
+      chapterId: chapterId,
+    );
+
+    if (result is Error<void>) {
+      logFailure('remove saved chapter', result.failure);
+      emit(
+        state.copyWith(
+          chapters: initialChapters,
+          errorMessage: 'Failed to remove saved chapter',
         ),
       );
     }

@@ -29,6 +29,26 @@ void main(List<String> args) async {
 
   stdout.writeln('Starting populating Firestore...');
 
+  // --- Onboarding: Countries & States ---
+  stdout.writeln('Populating Countries & States...');
+  final countriesRef = firestore.collection('countries');
+  await countriesRef.doc('IN').set({
+    'name': 'India',
+    'isoCode': 'IN',
+    'flagUrl': '',
+  });
+
+  final indiaStatesRef = countriesRef.doc('IN').collection('states');
+  final indiaStates = [
+    {'id': 'MH', 'name': 'Maharashtra', 'stateCode': 'MH'},
+    {'id': 'DL', 'name': 'Delhi', 'stateCode': 'DL'},
+    {'id': 'KA', 'name': 'Karnataka', 'stateCode': 'KA'},
+    {'id': 'TN', 'name': 'Tamil Nadu', 'stateCode': 'TN'},
+  ];
+  for (final state in indiaStates) {
+    await indiaStatesRef.doc(state['id']).set(state);
+  }
+
   // --- Onboarding: Boards & Grades ---
   stdout.writeln('Populating Boards & Grades...');
   final boardsRef = firestore.collection('boards');
@@ -36,28 +56,26 @@ void main(List<String> args) async {
   final boardsData = [
     {
       'id': 'cbse',
+      'countryId': 'IN',
+      'type': 'national',
       'name': 'CBSE',
       'description': 'Central Board of Secondary Education',
     },
     {
       'id': 'icse',
+      'countryId': 'IN',
+      'type': 'private',
       'name': 'ICSE',
       'description': 'Council for Indian School Certificate',
     },
     {
-      'id': 'state',
-      'name': 'State Board',
-      'description': 'Regional Curriculum',
-    },
-    {
-      'id': 'igcse',
-      'name': 'IGCSE',
-      'description': 'International General Cert.',
-    },
-    {
-      'id': 'ib',
-      'name': 'IB Board',
-      'description': 'International Baccalaureate',
+      'id': 'msbshse',
+      'countryId': 'IN',
+      'stateId': 'MH',
+      'type': 'state',
+      'name': 'MSBSHSE',
+      'description':
+          'Maharashtra State Board of Secondary and Higher Secondary Education',
     },
   ];
 
@@ -95,9 +113,11 @@ void main(List<String> args) async {
     final boardDoc = boardsRef.doc(boardMap['id'] as String);
     await boardDoc.set(boardMap);
 
-    // Add grades as subcollection for each board
+    // Add both classes and grades subcollections for compatibility.
+    final classesRef = boardDoc.collection('classes');
     final gradesRef = boardDoc.collection('grades');
     for (var gradeMap in gradesData) {
+      await classesRef.doc(gradeMap['id'] as String).set(gradeMap);
       await gradesRef.doc(gradeMap['id'] as String).set(gradeMap);
     }
   }
@@ -409,6 +429,8 @@ void main(List<String> args) async {
   final questionsData = [
     {
       'id': 'q1',
+      'boardId': 'cbse',
+      'gradeId': 'class_9',
       'category': 'Geometry Basics',
       'topic': 'Circles & Areas',
       'questionText': 'What is the formula for the area of a circle?',
@@ -425,6 +447,8 @@ void main(List<String> args) async {
     },
     {
       'id': 'q2',
+      'boardId': 'cbse',
+      'gradeId': 'class_9',
       'category': 'Geometry Basics',
       'topic': 'Triangles',
       'questionText':
@@ -442,6 +466,8 @@ void main(List<String> args) async {
     },
     {
       'id': 'q3',
+      'boardId': 'cbse',
+      'gradeId': 'class_9',
       'category': 'Polynomial Identities',
       'topic': 'Circles & Areas', // kept from mock
       'questionText': 'Expand: (a + b)²',

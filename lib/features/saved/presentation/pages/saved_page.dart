@@ -26,7 +26,9 @@ class _SavedPageState extends State<SavedPage> {
       builder: (context, authState) {
         return BlocBuilder<SavedCubit, SavedState>(
           buildWhen: (prev, curr) =>
-              prev.status != curr.status || prev.bookmarks != curr.bookmarks,
+              prev.status != curr.status ||
+              prev.bookmarks != curr.bookmarks ||
+              prev.chapters != curr.chapters,
           builder: (context, state) {
             if (state.status == SavedStatus.loading ||
                 state.status == SavedStatus.initial) {
@@ -37,7 +39,17 @@ class _SavedPageState extends State<SavedPage> {
               return Scaffold(
                 body: AppErrorState(
                   message: state.errorMessage,
-                  onRetry: () => context.read<SavedCubit>().loadBookmarks(),
+                  onRetry: () {
+                    final curr = context
+                        .read<CurriculumCubit>()
+                        .state
+                        .curriculum;
+                    if (curr != null) {
+                      context.read<SavedCubit>().loadBookmarks(
+                        curriculumKey: curr.curriculumKey,
+                      );
+                    }
+                  },
                 ),
               );
             }
@@ -45,6 +57,7 @@ class _SavedPageState extends State<SavedPage> {
             if (state.isEmpty) {
               // Show empty bookmarks state (matching prototype).
               return Scaffold(
+                appBar: _buildAppBar(context, authState.user),
                 body: SafeArea(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.only(
@@ -66,18 +79,48 @@ class _SavedPageState extends State<SavedPage> {
               );
             }
 
-            // Show loaded bookmarks
+            // Show loaded bookmarks and chapters
             return Scaffold(
               appBar: _buildAppBar(context, authState.user),
-              body: ListView.separated(
+              body: ListView(
                 padding: const EdgeInsets.all(AppDimensions.paddingXXL),
-                itemCount: state.bookmarks.length,
-                separatorBuilder: (_, _) =>
+                children: [
+                  if (state.chapters.isNotEmpty) ...[
+                    Text(
+                      AppStrings.savedChapters,
+                      style: AppTextStyles.titleLarge.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                     const SizedBox(height: AppDimensions.paddingLG),
-                itemBuilder: (context, index) {
-                  final bookmark = state.bookmarks[index];
-                  return _BookmarkCard(bookmark: bookmark);
-                },
+                    ...state.chapters.map(
+                      (chapter) => Padding(
+                        padding: const EdgeInsets.only(
+                          bottom: AppDimensions.paddingLG,
+                        ),
+                        child: _SavedChapterCard(chapter: chapter),
+                      ),
+                    ),
+                    const SizedBox(height: AppDimensions.paddingMD),
+                  ],
+                  if (state.bookmarks.isNotEmpty) ...[
+                    Text(
+                      AppStrings.savedFormulas,
+                      style: AppTextStyles.titleLarge.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: AppDimensions.paddingLG),
+                    ...state.bookmarks.map(
+                      (bookmark) => Padding(
+                        padding: const EdgeInsets.only(
+                          bottom: AppDimensions.paddingLG,
+                        ),
+                        child: _BookmarkCard(bookmark: bookmark),
+                      ),
+                    ),
+                  ],
+                ],
               ),
             );
           },
@@ -150,14 +193,10 @@ class _SavedPageState extends State<SavedPage> {
           const SizedBox(height: AppDimensions.paddingXXL),
           // Browse Lessons button.
           ElevatedButton.icon(
-            onPressed: () => ComingSoonSheet.show(
-              context,
-              featureName: AppStrings.browseLessons,
-              description:
-                  'Explore all available subjects and chapters to find '
-                  'formulas worth bookmarking for quick access.',
-              icon: LucideIcons.compass,
-            ),
+            onPressed: () {
+              // Navigate to the Chapters tab (branch index 1).
+              StatefulNavigationShell.of(context).goBranch(1);
+            },
             icon: const Icon(LucideIcons.compass),
             label: const Text(AppStrings.browseLessons),
             style: ElevatedButton.styleFrom(
@@ -273,7 +312,14 @@ class _SavedPageState extends State<SavedPage> {
       centerTitle: false,
       actions: [
         IconButton(
-          onPressed: () => context.read<SavedCubit>().loadBookmarks(),
+          onPressed: () {
+            final curr = context.read<CurriculumCubit>().state.curriculum;
+            if (curr != null) {
+              context.read<SavedCubit>().loadBookmarks(
+                curriculumKey: curr.curriculumKey,
+              );
+            }
+          },
           icon: const Icon(LucideIcons.refreshCw, color: AppColors.outline),
         ),
         const SizedBox(width: AppDimensions.paddingSM),
@@ -342,15 +388,106 @@ class _BookmarkCard extends StatelessWidget {
               border: Border.all(color: AppColors.surfaceContainerHigh),
             ),
             child: Center(
-              child: Math.tex(
-                bookmark.formula,
-                textStyle: AppTextStyles.headlineSmall.copyWith(
-                  color: AppColors.onSurface,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Math.tex(
+                  bookmark.formula,
+                  textStyle: AppTextStyles.headlineSmall.copyWith(
+                    color: AppColors.onSurface,
+                  ),
                 ),
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.day}/${date.month}/${date.year}';
+  }
+}
+
+class _SavedChapterCard extends StatelessWidget {
+  final BookmarkedChapter chapter;
+
+  const _SavedChapterCard({required this.chapter});
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+        onTap: () {
+          context.goNamed(
+            AppRoutes.formulaDetailName,
+            pathParameters: {
+              'subjectId': chapter.subjectId,
+              'chapterId': chapter.chapterId,
+            },
+            queryParameters: {'name': chapter.chapterName},
+          );
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        chapter.subjectName,
+                        style: AppTextStyles.overline.copyWith(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Text(
+                        'SAVED ${_formatDate(chapter.savedAt)}',
+                        style: AppTextStyles.overline.copyWith(
+                          color: AppColors.outline,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    context.read<SavedCubit>().removeSavedChapter(
+                      subjectId: chapter.subjectId,
+                      chapterId: chapter.chapterId,
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.bookmark,
+                    size: AppDimensions.iconMD,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppDimensions.paddingSM),
+            Text(
+              chapter.chapterName,
+              style: AppTextStyles.titleLarge.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            if (chapter.chapterSubtitle.isNotEmpty) ...[
+              const SizedBox(height: AppDimensions.paddingXS),
+              Text(
+                chapter.chapterSubtitle,
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }

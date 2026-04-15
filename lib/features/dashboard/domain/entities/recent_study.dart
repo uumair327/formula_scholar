@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 /// recent study items without hardcoded icon/color lookups.
 class RecentStudy extends Equatable {
   final String id;
+  final String subjectId;
   final String title;
   final String subject;
   final String lastViewed;
@@ -22,6 +23,7 @@ class RecentStudy extends Equatable {
 
   const RecentStudy({
     required this.id,
+    this.subjectId = '',
     required this.title,
     required this.subject,
     required this.lastViewed,
@@ -31,5 +33,5 @@ class RecentStudy extends Equatable {
   });
 
   @override
-  List<Object?> get props => [id, title, subject];
+  List<Object?> get props => [id, subjectId, title, subject];
 }

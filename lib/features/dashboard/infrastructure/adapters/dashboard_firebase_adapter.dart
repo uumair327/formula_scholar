@@ -37,12 +37,7 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
         .get();
 
     if (!docSnapshot.exists) {
-      // Return zero-state for new users — do NOT seed fake data.
-      return const StudyProgress(
-        masteryPercentage: 0,
-        completedChapters: 0,
-        totalChapters: 0,
-      );
+      return _calculateProgressFromCurriculum(uid);
     }
 
     final data = docSnapshot.data()!;
@@ -53,17 +48,67 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
     );
   }
 
+  Future<StudyProgress> _calculateProgressFromCurriculum(String uid) async {
+    final userDoc = await _firestore.collection('users').doc(uid).get();
+    final userData = userDoc.data();
+    final boardId = userData?['boardId']?.toString();
+    final gradeId = userData?['gradeId']?.toString();
+
+    if (boardId == null || gradeId == null) {
+      return const StudyProgress(
+        masteryPercentage: 0,
+        completedChapters: 0,
+        totalChapters: 0,
+      );
+    }
+
+    final subjectSnapshot = await _fetchSubjects(boardId, gradeId);
+
+    if (subjectSnapshot.docs.isEmpty) {
+      return const StudyProgress(
+        masteryPercentage: 0,
+        completedChapters: 0,
+        totalChapters: 0,
+      );
+    }
+
+    var totalChapters = 0;
+    var completedChapters = 0;
+    var masterySum = 0.0;
+    var masteryCount = 0;
+
+    for (final subjectDoc in subjectSnapshot.docs) {
+      final data = subjectDoc.data();
+      final unitCount = (data['unitCount'] as num?)?.toInt() ?? 0;
+      totalChapters += unitCount;
+
+      final mastery = (data['masteryPercentage'] as num?)?.toDouble();
+      if (mastery != null) {
+        masterySum += mastery;
+        masteryCount += 1;
+        completedChapters += ((mastery / 100) * unitCount).round();
+      }
+    }
+
+    final masteryPercentage = masteryCount > 0
+        ? masterySum / masteryCount
+        : 0.0;
+    completedChapters = completedChapters.clamp(0, totalChapters);
+
+    return StudyProgress(
+      masteryPercentage: masteryPercentage,
+      completedChapters: completedChapters,
+      totalChapters: totalChapters,
+    );
+  }
+
   @override
   Future<List<Subject>> getSubjects(String boardId, String gradeId) async {
     AppLogger.trace(
       'getSubjects() fetching from Firestore',
       tag: AppLogTags.dashboardDataSource,
     );
-    final snapshot = await _firestore
-        .collection('subjects')
-        .where('boardId', isEqualTo: boardId)
-        .where('gradeId', isEqualTo: gradeId)
-        .get();
+    final snapshot = await _fetchSubjects(boardId, gradeId);
     return snapshot.docs.map((doc) {
       final data = doc.data();
       return Subject(
@@ -109,13 +154,14 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
         .get();
 
     if (snapshot.docs.isEmpty) {
-      return const [];
+      return _fallbackRecentStudiesFromSubjects(uid);
     }
 
     return snapshot.docs.map((doc) {
       final data = doc.data();
       return RecentStudy(
         id: data['id'] ?? doc.id,
+        subjectId: data['subjectId'] ?? '',
         title: data['title'] ?? '',
         subject: data['subject'] ?? '',
         lastViewed: data['lastViewed'] ?? '',
@@ -125,5 +171,80 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
       );
     }).toList();
   }
-}
 
+  Future<List<RecentStudy>> _fallbackRecentStudiesFromSubjects(
+    String uid,
+  ) async {
+    final userDoc = await _firestore.collection('users').doc(uid).get();
+    final userData = userDoc.data();
+    final boardId = userData?['boardId']?.toString();
+    final gradeId = userData?['gradeId']?.toString();
+    if (boardId == null || gradeId == null) {
+      return const [];
+    }
+
+    final subjectSnapshot = await _fetchSubjects(boardId, gradeId);
+
+    final docs = [...subjectSnapshot.docs];
+    docs.sort((a, b) {
+      final aMastery =
+          (a.data()['masteryPercentage'] as num?)?.toDouble() ?? 0.0;
+      final bMastery =
+          (b.data()['masteryPercentage'] as num?)?.toDouble() ?? 0.0;
+      return bMastery.compareTo(aMastery);
+    });
+
+    return docs.take(5).map((doc) {
+      final data = doc.data();
+      final name = data['name'] as String? ?? '';
+      final subtitle = data['subtitle'] as String? ?? name;
+      return RecentStudy(
+        id: doc.id,
+        subjectId: data['id'] as String? ?? doc.id,
+        title: subtitle,
+        subject: name,
+        lastViewed: data['lastViewed'] as String? ?? 'Recently updated',
+        iconName: data['iconName'] as String? ?? 'book-open',
+        colorValue: (data['colorValue'] as num?)?.toInt() ?? 0xFF00639A,
+        backgroundColorValue: 0xFFCEE5FF,
+      );
+    }).toList();
+  }
+
+  Future<QuerySnapshot<Map<String, dynamic>>> _fetchSubjects(
+    String boardId,
+    String gradeId,
+  ) async {
+    final primary = await _firestore
+        .collection('subjects')
+        .where('boardId', isEqualTo: boardId)
+        .where('gradeId', isEqualTo: gradeId)
+        .get();
+    if (primary.docs.isNotEmpty) {
+      return primary;
+    }
+
+    final alternateGradeId = _alternateGradeId(gradeId);
+    if (alternateGradeId == null || alternateGradeId == gradeId) {
+      return primary;
+    }
+
+    return _firestore
+        .collection('subjects')
+        .where('boardId', isEqualTo: boardId)
+        .where('gradeId', isEqualTo: alternateGradeId)
+        .get();
+  }
+
+  String? _alternateGradeId(String gradeId) {
+    final normalized = gradeId.trim().toLowerCase();
+    if (normalized.startsWith('class_')) {
+      return normalized.replaceFirst('class_', '');
+    }
+    final numeric = int.tryParse(normalized);
+    if (numeric != null) {
+      return 'class_$numeric';
+    }
+    return null;
+  }
+}

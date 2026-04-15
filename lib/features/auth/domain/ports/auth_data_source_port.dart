@@ -35,6 +35,9 @@ abstract interface class AuthDataSourcePort {
   /// Deletes the current user's account permanently.
   Future<void> deleteAccount();
 
+  /// Sends a password reset email to the given [email].
+  Future<void> sendPasswordResetEmail({required String email});
+
   /// Returns the currently signed-in user, or `null` if unauthenticated.
   AuthUser? get currentUser;
 

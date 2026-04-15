@@ -22,7 +22,7 @@ class SelectedSubject extends Equatable {
   });
 
   @override
-  List<Object?> get props => [id, name, category, subtitle];
+  List<Object?> get props => [id, name, category, description, subtitle];
 }
 
 /// State for subject selection, consumed by Chapters, Saved, Practice.

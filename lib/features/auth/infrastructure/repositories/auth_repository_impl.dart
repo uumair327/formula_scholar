@@ -169,6 +169,34 @@ class AuthRepositoryImpl implements AuthRepositoryPort {
   }
 
   @override
+  Future<Result<void>> sendPasswordResetEmail({required String email}) async {
+    try {
+      await _remoteAdapter.sendPasswordResetEmail(email: email);
+      AppLogger.info(
+        'Password reset email sent in repository',
+        tag: AppLogTags.authRepo,
+      );
+      return const Success(null);
+    } on Exception catch (e, stackTrace) {
+      AppLogger.error(
+        'Password reset failed in repository',
+        error: e,
+        stackTrace: stackTrace,
+        tag: AppLogTags.authRepo,
+      );
+      return Error(
+        AuthFailure(
+          message: e is ServerException
+              ? e.message
+              : 'Failed to send reset email. Please try again.',
+          originalError: e,
+          stackTrace: stackTrace,
+        ),
+      );
+    }
+  }
+
+  @override
   AuthUser? get currentUser => _remoteAdapter.currentUser;
 
   @override

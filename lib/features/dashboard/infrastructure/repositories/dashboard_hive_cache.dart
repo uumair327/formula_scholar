@@ -66,6 +66,7 @@ class DashboardHiveCache implements DashboardCachePort {
           .map(
             (study) => {
               'id': study.id,
+              'subjectId': study.subjectId,
               'title': study.title,
               'subject': study.subject,
               'lastViewed': study.lastViewed,
@@ -139,6 +140,7 @@ class DashboardHiveCache implements DashboardCachePort {
         .map(
           (item) => RecentStudy(
             id: item['id'] as String? ?? '',
+            subjectId: item['subjectId'] as String? ?? '',
             title: item['title'] as String? ?? '',
             subject: item['subject'] as String? ?? '',
             lastViewed: item['lastViewed'] as String? ?? '',

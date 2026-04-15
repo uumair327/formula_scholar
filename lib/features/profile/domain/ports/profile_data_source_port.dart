@@ -15,4 +15,6 @@ abstract interface class ProfileDataSourcePort {
 
   /// Fetches settings/menu items.
   Future<List<SettingsItem>> getSettingsItems();
+
+  Future<void> updateStudyGoal(String studyGoalId);
 }

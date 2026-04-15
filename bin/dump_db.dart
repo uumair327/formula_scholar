@@ -53,5 +53,25 @@ void main(List<String> args) async {
     stdout.writeln('${doc.id}: ${doc.data()}');
   }
 
+  final allSubjectsSnap = await firestore.collection('subjects').get();
+  final subjectsSnap = allSubjectsSnap.docs.where((subject) {
+    final data = subject.data();
+    return data['boardId'] == 'msbshse' && data['gradeId'] == 'class_9';
+  }).toList();
+  stdout.writeln('MSBSHSE SUBJECTS:');
+  for (final subject in subjectsSnap) {
+    stdout.writeln('${subject.id}: ${subject.data()}');
+    final toolsSnap = await firestore
+        .collection('subjects')
+        .doc(subject.id)
+        .collection('mastery_tools')
+        .orderBy('displayOrder')
+        .get();
+    stdout.writeln('  mastery_tools:');
+    for (final tool in toolsSnap.docs) {
+      stdout.writeln('    ${tool.id}: ${tool.data()}');
+    }
+  }
+
   exit(0);
 }

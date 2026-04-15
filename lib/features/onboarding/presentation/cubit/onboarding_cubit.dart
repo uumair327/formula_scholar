@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/domain/domain.dart';
 import '../../domain/domain.dart';
+import '../../../profile/domain/domain.dart';
 import 'onboarding_state.dart';
 
 /// Cubit managing the universal onboarding flow (location -> state -> board -> grade).
@@ -14,6 +15,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   final GetBoardsUseCase _getBoards;
   final GetGradesUseCase _getGrades;
   final SaveCurriculumUseCase _saveCurriculum;
+  final UpdateStudyGoalUseCase _updateStudyGoal;
 
   OnboardingCubit({
     required GetCountriesUseCase getCountries,
@@ -21,11 +23,13 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     required GetBoardsUseCase getBoards,
     required GetGradesUseCase getGrades,
     required SaveCurriculumUseCase saveCurriculum,
+    required UpdateStudyGoalUseCase updateStudyGoal,
   }) : _getCountries = getCountries,
        _getStates = getStates,
        _getBoards = getBoards,
        _getGrades = getGrades,
        _saveCurriculum = saveCurriculum,
+       _updateStudyGoal = updateStudyGoal,
        super(const OnboardingState());
 
   /// Loads available countries for Step 1.
@@ -175,8 +179,8 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     emit(state.copyWith(selectedGrade: grade));
   }
 
-  /// Persists the selected curriculum and marks onboarding as complete.
-  Future<SelectedCurriculum?> completeOnboarding() async {
+  /// Persists the selected curriculum and study goal, marks onboarding as complete.
+  Future<SelectedCurriculum?> completeOnboarding(String studyGoalId) async {
     final board = state.selectedBoard;
     final grade = state.selectedGrade;
 
@@ -197,12 +201,19 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     );
 
     AppLogger.info(
-      'Completing onboarding for board=${board.name}, grade=${grade.label}',
+      'Completing onboarding for board=${board.name}, grade=${grade.label}, goal=$studyGoalId',
       tag: AppLogTags.onboardingCubit,
     );
 
     try {
       await _saveCurriculum(curriculum);
+      final goalResult = await _updateStudyGoal(studyGoalId);
+      if (goalResult is Error) {
+        AppLogger.warning(
+          'Failed to save study goal during onboarding.',
+          tag: AppLogTags.onboardingCubit,
+        );
+      }
       return curriculum;
     } catch (e, st) {
       AppLogger.error(

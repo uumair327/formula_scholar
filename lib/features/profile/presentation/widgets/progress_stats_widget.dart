@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
+import 'profile_insights_sheet.dart';
 import '../../domain/domain.dart';
 
 /// Progress stats grid – displays stat cards.
@@ -10,8 +10,13 @@ import '../../domain/domain.dart';
 /// Matches the React `ProgressStats` component.
 class ProgressStatsWidget extends StatelessWidget {
   final List<ProfileStat> stats;
+  final String displayName;
 
-  const ProgressStatsWidget({super.key, required this.stats});
+  const ProgressStatsWidget({
+    super.key,
+    required this.stats,
+    this.displayName = AppStrings.welcomeScholar,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +32,10 @@ class ProgressStatsWidget extends StatelessWidget {
               'View History tapped',
               tag: AppLogTags.progressStatsWidget,
             );
-            ComingSoonSheet.show(
+            ProfileInsightsSheet.show(
               context,
-              featureName: AppStrings.viewHistory,
-              description:
-                  'Track your complete learning journey with detailed '
-                  'progress history, streaks, and milestone achievements.',
-              icon: LucideIcons.history,
+              displayName: displayName,
+              stats: stats,
             );
           },
         ),

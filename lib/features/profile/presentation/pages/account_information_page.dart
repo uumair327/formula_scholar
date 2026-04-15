@@ -300,7 +300,7 @@ class AccountInformationPage extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    state.errorMessage ?? 'Failed to delete account',
+                    state.errorMessage ?? AppStrings.deleteAccountFailed,
                   ),
                   backgroundColor: AppColors.error,
                 ),
@@ -317,7 +317,7 @@ class AccountInformationPage extends StatelessWidget {
                 const Icon(LucideIcons.alertTriangle, color: AppColors.error),
                 const SizedBox(width: AppDimensions.paddingMD),
                 Text(
-                  'Delete Account',
+                  AppStrings.deleteAccountTitle,
                   style: AppTextStyles.titleLarge.copyWith(
                     color: AppColors.error,
                   ),
@@ -325,8 +325,7 @@ class AccountInformationPage extends StatelessWidget {
               ],
             ),
             content: Text(
-              'Are you sure you want to permanently delete your account? '
-              'This action cannot be undone and all your data will be cleared.',
+              AppStrings.deleteAccountConfirmation,
               style: AppTextStyles.bodyMedium.copyWith(
                 color: AppColors.onSurfaceVariant,
               ),
@@ -335,7 +334,7 @@ class AccountInformationPage extends StatelessWidget {
               TextButton(
                 onPressed: () => Navigator.of(dialogContext).pop(),
                 child: Text(
-                  'Cancel',
+                  AppStrings.cancelLabel,
                   style: AppTextStyles.labelLarge.copyWith(
                     color: AppColors.outline,
                   ),
@@ -370,7 +369,7 @@ class AccountInformationPage extends StatelessWidget {
                               color: AppColors.white,
                             ),
                           )
-                        : const Text('Delete Permanently'),
+                        : const Text(AppStrings.deleteAccountButton),
                   );
                 },
               ),

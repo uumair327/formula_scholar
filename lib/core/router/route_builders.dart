@@ -1,4 +1,3 @@
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -66,16 +65,7 @@ abstract final class RouteBuilders {
           );
         },
       ),
-      GoRoute(
-        path: AppRoutes.bookmarksPath,
-        name: AppRoutes.bookmarksName,
-        pageBuilder: (context, state) {
-          return AppPageTransitions.fadeTransition(
-            state: state,
-            child: const BookmarksPage(),
-          );
-        },
-      ),
+
       GoRoute(
         path: AppRoutes.notificationsPath,
         name: AppRoutes.notificationsName,
@@ -236,9 +226,15 @@ abstract final class RouteBuilders {
                 create: (_) {
                   final cubit = getIt<ChaptersCubit>();
                   final selection = getIt<SubjectSelectionCubit>().state;
+                  final curriculum = getIt<CurriculumCubit>().state;
                   if (selection.hasSelection) {
                     Future.microtask(
-                      () => cubit.loadChapters(selection.subject!.id),
+                      () => cubit.loadChapters(
+                        selection.subject!.id,
+                        curriculumKey:
+                            curriculum.curriculum?.curriculumKey ??
+                            AppStrings.unknownCurriculum,
+                      ),
                     );
                   }
                   return cubit;
@@ -256,6 +252,8 @@ abstract final class RouteBuilders {
                 final chapterId = state.pathParameters['chapterId'] ?? '';
                 final chapterName =
                     state.uri.queryParameters['name'] ?? 'Formulas';
+                final curriculumKey =
+                    getIt<CurriculumCubit>().state.curriculum?.curriculumKey;
                 return AppPageTransitions.fadeTransition(
                   state: state,
                   child: BlocProvider(
@@ -264,6 +262,7 @@ abstract final class RouteBuilders {
                         subjectId: subjectId,
                         chapterId: chapterId,
                         chapterName: chapterName,
+                        curriculumKey: curriculumKey,
                       ),
                     child: const FormulasPage(),
                   ),
@@ -288,7 +287,15 @@ abstract final class RouteBuilders {
               child: BlocProvider(
                 create: (_) {
                   final cubit = getIt<PracticeCubit>();
-                  Future.microtask(cubit.loadQuestions);
+                  final curriculum = getIt<CurriculumCubit>().state;
+                  if (curriculum.hasSelection) {
+                    Future.microtask(
+                      () => cubit.loadQuestions(
+                        boardId: curriculum.boardId!,
+                        gradeId: curriculum.gradeId!,
+                      ),
+                    );
+                  }
                   return cubit;
                 },
                 child: const PracticePage(),
@@ -312,7 +319,14 @@ abstract final class RouteBuilders {
               child: BlocProvider(
                 create: (_) {
                   final cubit = getIt<SavedCubit>();
-                  Future.microtask(cubit.loadBookmarks);
+                  final curriculum = getIt<CurriculumCubit>().state.curriculum;
+                  if (curriculum != null) {
+                    Future.microtask(
+                      () => cubit.loadBookmarks(
+                        curriculumKey: curriculum.curriculumKey,
+                      ),
+                    );
+                  }
                   return cubit;
                 },
                 child: const SavedPage(),

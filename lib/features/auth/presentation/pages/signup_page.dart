@@ -6,6 +6,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
 import '../cubit/auth_cubit.dart';
+import '../../../profile/presentation/widgets/support_contact_sheet.dart';
 
 /// Sign-up page — account creation screen.
 ///
@@ -643,13 +644,13 @@ class _SignupFormScroll extends StatelessWidget {
                 const SizedBox(width: AppDimensions.paddingMD),
                 Expanded(
                   child: OutlinedButton.icon(
-                    onPressed: () => ComingSoonSheet.show(
+                    onPressed: () => SupportContactSheet.show(
                       context,
-                      featureName: AppStrings.signupFacebook,
-                      description:
-                          'Sign up or sign in with your Facebook account '
-                          'for quick, one-tap access.',
-                      icon: LucideIcons.facebook,
+                      title: AppStrings.signupFacebook,
+                      subtitle:
+                          'Facebook sign-in is not enabled in this build. '
+                          'Contact support if your school needs a different access path.',
+                      email: 'support@formulascholar.app',
                     ),
                     icon: Icon(
                       LucideIcons.facebook,

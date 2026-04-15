@@ -50,6 +50,15 @@ void main(List<String> args) async {
     'isPopular': true,
   });
 
+  // Backward compatibility for adapters still reading `grades` in some paths.
+  final legacyGradesRef = boardsRef.doc('msbshse').collection('grades');
+  await legacyGradesRef.doc('class_9').set({
+    'id': 'class_9',
+    'label': 'Class 9',
+    'classNumber': 9,
+    'isPopular': true,
+  });
+
   // --- Subjects ---
   final subjectsRef = firestore.collection('subjects');
   final msbSubjects = [
@@ -91,6 +100,59 @@ void main(List<String> args) async {
 
   for (var sub in msbSubjects) {
     await subjectsRef.doc(sub['id'] as String).set(sub);
+  }
+
+  // --- Mastery Tools (subject scoped) ---
+  // Seeded as a subcollection to keep chapters feature extensible
+  // without changing chapter/formula schemas.
+  final masteryTools = [
+    {
+      'id': 'video_lessons',
+      'label': 'Video Lessons',
+      'iconName': 'graduationCap',
+      'category': 'guided_learning',
+      'isEnabled': false,
+      'supportSubtitle':
+          'Video Lessons are currently being prepared. Contact support if you need access to guided tutorial content.',
+      'displayOrder': 1,
+    },
+    {
+      'id': 'practice_quiz',
+      'label': 'Practice Quiz',
+      'iconName': 'helpCircle',
+      'category': 'assessment',
+      'isEnabled': true,
+      'routeName': 'practice',
+      'displayOrder': 2,
+    },
+    {
+      'id': 'cheat_sheets',
+      'label': 'Cheat Sheets',
+      'iconName': 'fileText',
+      'category': 'quick_reference',
+      'isEnabled': false,
+      'supportSubtitle':
+          'Cheat Sheets provide quick formula reference guides. Contact support to request this feature for your curriculum.',
+      'displayOrder': 3,
+    },
+    {
+      'id': 'visualizer_3d',
+      'label': 'Visualizer 3D',
+      'iconName': 'box',
+      'category': 'visual_learning',
+      'isEnabled': false,
+      'supportSubtitle':
+          '3D Visualizer helps understand geometric concepts. Contact support to request 3D visualization tools.',
+      'displayOrder': 4,
+    },
+  ];
+
+  for (final sub in msbSubjects) {
+    final subjectId = sub['id'] as String;
+    final toolsRef = subjectsRef.doc(subjectId).collection('mastery_tools');
+    for (final tool in masteryTools) {
+      await toolsRef.doc(tool['id'] as String).set(tool);
+    }
   }
 
   // --- Chapters & Formulas ---
@@ -346,6 +408,49 @@ void main(List<String> args) async {
         });
       }
     }
+  }
+
+  // --- Practice Questions (board/grade scoped) ---
+  final practiceRef = firestore.collection('practice_questions');
+  final msbPractice = [
+    {
+      'id': 'msb_q1',
+      'boardId': 'msbshse',
+      'gradeId': 'class_9',
+      'category': 'Algebra Basics',
+      'topic': 'Polynomials',
+      'questionText': 'Which identity expands (a + b)^2 ?',
+      'imageUrl': '',
+      'options': [
+        {'id': 'A', 'text': 'a^2 + b^2'},
+        {'id': 'B', 'text': 'a^2 + 2ab + b^2'},
+        {'id': 'C', 'text': 'a^2 - 2ab + b^2'},
+        {'id': 'D', 'text': '2a + 2b'},
+      ],
+      'correctOptionId': 'B',
+      'points': 10,
+    },
+    {
+      'id': 'msb_q2',
+      'boardId': 'msbshse',
+      'gradeId': 'class_9',
+      'category': 'Geometry Basics',
+      'topic': 'Triangles',
+      'questionText': 'What is the sum of interior angles of a triangle?',
+      'imageUrl': '',
+      'options': [
+        {'id': 'A', 'text': '90 degrees'},
+        {'id': 'B', 'text': '120 degrees'},
+        {'id': 'C', 'text': '180 degrees'},
+        {'id': 'D', 'text': '360 degrees'},
+      ],
+      'correctOptionId': 'C',
+      'points': 10,
+    },
+  ];
+
+  for (final question in msbPractice) {
+    await practiceRef.doc(question['id'] as String).set(question);
   }
 
   stdout.writeln(

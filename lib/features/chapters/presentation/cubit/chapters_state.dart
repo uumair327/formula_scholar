@@ -10,13 +10,17 @@ enum ChaptersStatus { initial, loading, loaded, error }
 class ChaptersState extends Equatable {
   final ChaptersStatus status;
   final String? subjectId;
+  final String? curriculumKey;
   final List<Chapter> chapters;
+  final List<MasteryTool> masteryTools;
   final String? errorMessage;
 
   const ChaptersState({
     this.status = ChaptersStatus.initial,
     this.subjectId,
+    this.curriculumKey,
     this.chapters = const [],
+    this.masteryTools = const [],
     this.errorMessage,
   });
 
@@ -39,13 +43,17 @@ class ChaptersState extends Equatable {
   ChaptersState copyWith({
     ChaptersStatus? status,
     String? subjectId,
+    String? curriculumKey,
     List<Chapter>? chapters,
+    List<MasteryTool>? masteryTools,
     Object? errorMessage = _unset,
   }) {
     return ChaptersState(
       status: status ?? this.status,
       subjectId: subjectId ?? this.subjectId,
+      curriculumKey: curriculumKey ?? this.curriculumKey,
       chapters: chapters ?? this.chapters,
+      masteryTools: masteryTools ?? this.masteryTools,
       errorMessage: identical(errorMessage, _unset)
           ? this.errorMessage
           : errorMessage as String?,
@@ -53,5 +61,12 @@ class ChaptersState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, subjectId, chapters, errorMessage];
+  List<Object?> get props => [
+    status,
+    subjectId,
+    curriculumKey,
+    chapters,
+    masteryTools,
+    errorMessage,
+  ];
 }

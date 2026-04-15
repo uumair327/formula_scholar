@@ -27,6 +27,14 @@ abstract final class AppStrings {
   static const String loginPasswordLabel = 'Password';
   static const String loginPasswordHint = '••••••••••••';
   static const String loginForgotPassword = 'Forgot Password?';
+  static const String forgotPasswordTitle = 'Reset Password';
+  static const String forgotPasswordDesc =
+      'Enter your email address and we\'ll send you a link to reset your password.';
+  static const String forgotPasswordSend = 'Send Reset Link';
+  static const String forgotPasswordSuccess =
+      'Password reset link sent! Check your email inbox.';
+  static const String forgotPasswordCancel = 'Cancel';
+  static const String genericError = 'Something went wrong. Please try again.';
   static const String loginSignIn = 'Sign In';
   static const String loginOr = 'OR';
   static const String loginGoogle = 'Google';
@@ -187,6 +195,9 @@ abstract final class AppStrings {
       "Continue your journey through Physics. You're 65% through the current chapter.";
   static const String dashboardResumeLesson = 'Resume Lesson';
   static const String dashboardAcademicPath = 'Academic Path';
+  static String dashboardHeroTitleForTopic(String topic) => 'Mastering $topic';
+  static String dashboardHeroDescriptionWithProgress(int percent) =>
+      "You're $percent% through your current curriculum.";
 
   // Dashboard – Subject Cards
   static const String dashboardCuratedBadge = 'CBSE 9 CURATED';
@@ -206,10 +217,16 @@ abstract final class AppStrings {
   static const String dashboardBoardReadyQuiz = 'Board Ready Quiz';
   static const String dashboardQuizDesc =
       'Test your knowledge on CBSE Chapter 2.';
+  static const String dashboardNoRecentTitle = 'No recent activity yet';
+  static const String dashboardNoRecentDescription =
+      'Start learning from the chapters tab and your recent progress will appear here.';
+  static const String dashboardOpenChapters = 'Open Chapters';
 
   // Dashboard – Formula Vault
   static const String dashboardFormulaVault = 'My Formula Vault';
   static const String dashboardVaultDesc = '42 saved items across 4 subjects';
+  static String dashboardVaultDescWithCounts(int formulas, int subjects) =>
+      '$formulas formulas across $subjects subjects';
   static const String dashboardVaultMath = 'Quadratic Formula';
   static const String dashboardVaultPhysics = 'Kinematic Eq 1';
   static const String dashboardVaultChem = 'Ideal Gas Law';
@@ -243,6 +260,8 @@ abstract final class AppStrings {
   // ──────────────────────── Chapters (generic) ───────────────
   static const String continueLearning = 'Continue Learning';
   static const String nearlyThere = 'Nearly there!';
+  static const String keepGoing = 'Keep going!';
+  static const String justStarted = 'Just getting started';
   static const String formulasLabel = 'FORMULAS';
   static const String viewTopics = 'View Topics';
   static const String locked = 'LOCKED';
@@ -254,6 +273,13 @@ abstract final class AppStrings {
   static const String selectSubjectTitle = 'Select a Subject';
   static const String selectSubjectDesc =
       'Tap on a subject from the Home tab to start exploring chapters and formulas.';
+  static const String selectSubjectFirst = 'Please select a subject first';
+  static const String unknownGrade = 'Unknown Grade';
+  static const String unknownSubject = 'Unknown Subject';
+  static const String unknownCurriculum = 'unknown_curriculum';
+  static const String chapterBookmarkingFeature = 'Chapter Bookmarking';
+  static const String chapterBookmarkingDescription =
+      'Save entire chapters to your bookmarks for quick access later.';
 
   // Chapters – Breadcrumb
   static const String breadcrumbHome = 'HOME';
@@ -313,6 +339,12 @@ abstract final class AppStrings {
   // ──────────────────────── Profile ──────────────────────────
   static const String myProgress = 'My Progress';
   static const String viewHistory = 'View History';
+  static const String profileInsightsTitle = 'Profile Insights';
+  static const String profileInsightsSubtitle =
+      'Backend-fed progress at a glance';
+  static const String profileInsightsSource = 'Synced from Firestore';
+  static const String continuePracticing = 'Continue Practicing';
+  static const String browseChapters = 'Browse Chapters';
   static const String settings = 'Settings';
   static const String currentGrade = 'Current Grade';
   static const String proBadge = 'PRO';
@@ -353,6 +385,13 @@ abstract final class AppStrings {
   static const String areaOfCircleQuestion =
       'Which of the following formulas correctly represents the area of a circle with radius r?';
   static const String nextQuestion = 'Next Question';
+  static const String quizCompleteTitle = 'Quiz Complete!';
+  static const String quizCompleteDesc =
+      'Great effort! Review your results below.';
+  static const String playAgain = 'Play Again';
+  static const String wrongAnswer = 'Incorrect';
+  static const String tryNextTime = 'Review and try again next time';
+  static String quizScoreSummary(int points) => 'You scored $points points';
 
   // ──────────────────────── Saved / Bookmarks ─────────────────
   static const String formulaFlow = 'FormulaFlow';
@@ -391,6 +430,13 @@ abstract final class AppStrings {
   static const String editProfile = 'Edit Profile';
   static const String changePassword = 'Change Password';
   static const String deleteAccount = 'Delete Account';
+  static const String deleteAccountTitle = 'Delete Account';
+  static const String deleteAccountConfirmation =
+      'Are you sure you want to permanently delete your account? '
+      'This action cannot be undone and all your data will be cleared.';
+  static const String deleteAccountButton = 'Delete Permanently';
+  static const String cancelLabel = 'Cancel';
+  static const String deleteAccountFailed = 'Failed to delete account';
 
   // ──────────────────────── Bookmarks ────────────────────────
   static const String bookmarkCategories = 'Categories';

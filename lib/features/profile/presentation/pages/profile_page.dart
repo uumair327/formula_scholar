@@ -9,6 +9,7 @@ import '../../../auth/auth.dart';
 import '../cubit/profile_cubit.dart';
 import '../cubit/profile_state.dart';
 import '../widgets/profile_hero_widget.dart';
+import '../widgets/profile_insights_sheet.dart';
 import '../widgets/progress_stats_widget.dart';
 import '../widgets/settings_list_widget.dart';
 
@@ -21,6 +22,8 @@ class ProfilePage extends StatelessWidget {
     return BlocBuilder<ProfileCubit, ProfileState>(
       buildWhen: (prev, curr) => prev.status != curr.status,
       builder: (context, state) {
+        final displayName = state.profile?.name ?? AppStrings.welcomeScholar;
+
         if (state.status == ProfileStatus.loading ||
             state.status == ProfileStatus.initial) {
           return const Scaffold(body: AppLoadingState());
@@ -38,7 +41,7 @@ class ProfilePage extends StatelessWidget {
         return Scaffold(
           body: CustomScrollView(
             slivers: [
-              _buildAppBar(context, state),
+              _buildAppBar(context, state, displayName),
               SliverPadding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppDimensions.paddingXL,
@@ -49,7 +52,10 @@ class ProfilePage extends StatelessWidget {
                     if (state.profile != null)
                       ProfileHeroWidget(profile: state.profile!),
                     const SizedBox(height: AppDimensions.paddingHero),
-                    ProgressStatsWidget(stats: state.stats),
+                    ProgressStatsWidget(
+                      stats: state.stats,
+                      displayName: displayName,
+                    ),
                     const SizedBox(height: AppDimensions.paddingHero),
                     BlocBuilder<ThemeCubit, ThemeState>(
                       buildWhen: (prev, curr) =>
@@ -77,8 +83,11 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  SliverAppBar _buildAppBar(BuildContext context, ProfileState state) {
-    final displayName = state.profile?.name ?? AppStrings.welcomeScholar;
+  SliverAppBar _buildAppBar(
+    BuildContext context,
+    ProfileState state,
+    String displayName,
+  ) {
     final avatarUrl = state.profile?.avatarUrl ?? AppAssets.profileAvatarUrl;
 
     return SliverAppBar(
@@ -124,13 +133,10 @@ class ProfilePage extends StatelessWidget {
       ),
       actions: [
         IconButton(
-          onPressed: () => ComingSoonSheet.show(
+          onPressed: () => ProfileInsightsSheet.show(
             context,
-            featureName: 'Analytics Dashboard',
-            description:
-                'Track your learning analytics with detailed charts and insights. '
-                'See your progress over time and identify areas for improvement.',
-            icon: LucideIcons.barChart2,
+            displayName: state.profile?.name ?? AppStrings.welcomeScholar,
+            stats: state.stats,
           ),
           icon: const Icon(LucideIcons.barChart2, color: AppColors.blue600),
         ),
@@ -146,7 +152,7 @@ class ProfilePage extends StatelessWidget {
         context.push(AppRoutes.accountInfoPath);
         return;
       case 'bookmarks':
-        context.push(AppRoutes.bookmarksPath);
+        StatefulNavigationShell.of(context).goBranch(3);
         return;
       case 'notifications':
         context.push(AppRoutes.notificationsPath);

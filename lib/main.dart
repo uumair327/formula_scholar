@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:google_sign_in/google_sign_in.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +38,16 @@ void main() {
         options: DefaultFirebaseOptions.currentPlatform,
       );
       AppLogger.info('Firebase initialized', tag: AppLogTags.main);
+
+      // Initialize Google Sign-In with the Web OAuth client ID (type 3).
+      // Required by google_sign_in v7+ on Android to obtain ID tokens.
+      if (!kIsWeb) {
+        await GoogleSignIn.instance.initialize(
+          serverClientId:
+              '908985900149-7mfugc05cg73de4342l7koc2dommh694.apps.googleusercontent.com',
+        );
+        AppLogger.info('GoogleSignIn initialized', tag: AppLogTags.main);
+      }
 
       // Initialize dependency injection (get_it + injectable).
       configureDependencies();

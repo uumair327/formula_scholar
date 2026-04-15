@@ -12,10 +12,10 @@ import '../../domain/domain.dart';
 /// guaranteeing the UI always has data to display.
 @LazySingleton(as: FormulasDataSourcePort)
 class FormulasFirebaseAdapter implements FormulasDataSourcePort {
+  FormulasFirebaseAdapter(this._firestore, this._firebaseAuth);
+
   final FirebaseFirestore _firestore;
   final FirebaseAuth _firebaseAuth;
-
-  FormulasFirebaseAdapter(this._firestore, this._firebaseAuth);
 
   @override
   Future<List<Formula>> getFormulas(String subjectId, String chapterId) async {
@@ -33,6 +33,7 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
         .get();
 
     Set<String> bookmarkedIds = {};
+    final masteryMap = <String, bool>{};
     final uid = _firebaseAuth.currentUser?.uid;
     if (uid != null) {
       final bookmarksSnap = await _firestore
@@ -41,6 +42,19 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
           .collection('bookmarks')
           .get();
       bookmarkedIds = bookmarksSnap.docs.map((d) => d.id).toSet();
+
+      final masterySnap = await _firestore
+          .collection('users')
+          .doc(uid)
+          .collection('progress')
+          .doc(subjectId)
+          .collection('chapters')
+          .doc(chapterId)
+          .collection('formulas')
+          .get();
+      for (final doc in masterySnap.docs) {
+        masteryMap[doc.id] = doc.data()['isMastered'] as bool? ?? false;
+      }
     }
 
     if (snapshot.docs.isEmpty) {
@@ -54,29 +68,49 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
           .collection('formulas')
           .get();
       return reFetch.docs
-          .map((doc) => _docToFormula(doc, bookmarkedIds.contains(doc.id)))
+          .map(
+            (doc) => _docToFormula(
+              doc,
+              bookmarkedIds.contains(doc.id),
+              masteryOverride: masteryMap[doc.id],
+            ),
+          )
           .toList();
     }
 
     return snapshot.docs
-        .map((doc) => _docToFormula(doc, bookmarkedIds.contains(doc.id)))
+        .map(
+          (doc) => _docToFormula(
+            doc,
+            bookmarkedIds.contains(doc.id),
+            masteryOverride: masteryMap[doc.id],
+          ),
+        )
         .toList();
   }
 
-  Formula _docToFormula(QueryDocumentSnapshot doc, bool isBookmarked) {
+  Formula _docToFormula(
+    QueryDocumentSnapshot doc,
+    bool isBookmarked, {
+    bool? masteryOverride,
+  }) {
     final data = doc.data() as Map<String, dynamic>;
     return Formula(
       id: data['id'] ?? doc.id,
       title: data['title'] ?? '',
       latex: data['latex'] ?? '',
       description: data['description'] ?? '',
-      isMastered: data['isMastered'] ?? false,
+      isMastered: masteryOverride ?? (data['isMastered'] ?? false),
       isBookmarked: isBookmarked,
     );
   }
 
   @override
-  Future<void> toggleBookmark(Formula formula, String subjectName) async {
+  Future<void> toggleBookmark(
+    Formula formula,
+    String subjectName, {
+    required String curriculumKey,
+  }) async {
     final uid = _firebaseAuth.currentUser?.uid;
     if (uid == null) {
       throw Exception('User must be logged in to bookmark formulas');
@@ -100,6 +134,7 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
         'title': formula.title,
         'subject': subjectName,
         'formula': formula.latex,
+        'curriculumKey': curriculumKey,
         'savedAt': FieldValue.serverTimestamp(),
       });
       AppLogger.info(
@@ -107,6 +142,97 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
         tag: AppLogTags.formulasDataSource,
       );
     }
+  }
+
+  @override
+  Future<void> markChapterStarted(
+    String subjectId,
+    String chapterId, {
+    required String chapterName,
+    required int totalFormulas,
+  }) async {
+    final uid = _firebaseAuth.currentUser?.uid;
+    if (uid == null) {
+      return;
+    }
+
+    final chapterProgressRef = _chapterProgressRef(uid, subjectId, chapterId);
+    final snapshot = await chapterProgressRef.get();
+    final data = snapshot.data() ?? const <String, dynamic>{};
+
+    final completedFormulas = (data['completedFormulas'] as num?)?.toInt() ?? 0;
+    final progressPercent = totalFormulas > 0
+        ? (completedFormulas / totalFormulas) * 100
+        : 0.0;
+
+    await chapterProgressRef.set({
+      'chapterId': chapterId,
+      'chapterName': chapterName,
+      'status': completedFormulas > 0 ? 'inProgress' : 'notStarted',
+      'completedFormulas': completedFormulas,
+      'totalFormulas': totalFormulas,
+      'progressPercent': progressPercent,
+      'startedAt': data['startedAt'] ?? FieldValue.serverTimestamp(),
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+  }
+
+  @override
+  Future<void> toggleFormulaMastery(
+    String subjectId,
+    String chapterId,
+    String formulaId, {
+    required bool isMastered,
+    required int totalFormulas,
+    required String chapterName,
+  }) async {
+    final uid = _firebaseAuth.currentUser?.uid;
+    if (uid == null) {
+      throw Exception('User must be logged in to track progress');
+    }
+
+    final chapterProgressRef = _chapterProgressRef(uid, subjectId, chapterId);
+    final formulaRef = chapterProgressRef.collection('formulas').doc(formulaId);
+
+    await formulaRef.set({
+      'id': formulaId,
+      'isMastered': isMastered,
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+
+    final masteredSnap = await chapterProgressRef
+        .collection('formulas')
+        .where('isMastered', isEqualTo: true)
+        .get();
+
+    final completedFormulas = masteredSnap.docs.length;
+    final progressPercent = totalFormulas > 0
+        ? (completedFormulas / totalFormulas) * 100
+        : 0.0;
+
+    await chapterProgressRef.set({
+      'chapterId': chapterId,
+      'chapterName': chapterName,
+      'status': completedFormulas > 0 ? 'inProgress' : 'notStarted',
+      'completedFormulas': completedFormulas,
+      'totalFormulas': totalFormulas,
+      'progressPercent': progressPercent,
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+  }
+
+  DocumentReference<Map<String, dynamic>> _chapterProgressRef(
+    String uid,
+    String subjectId,
+    String chapterId,
+  ) {
+    return _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('progress')
+        .doc(subjectId)
+        .collection('chapters')
+        .doc(chapterId);
   }
 
   Future<void> _seedFormulas(String subjectId, String chapterId) async {

@@ -58,6 +58,7 @@ class AuthCubit extends Cubit<AuthState> {
   final GoogleSignInUseCase _googleSignIn;
   final WatchAuthStateUseCase _watchAuthState;
   final DeleteAccountUseCase _deleteAccount;
+  final ForgotPasswordUseCase _forgotPassword;
   StreamSubscription<AuthUser?>? _authStateSubscription;
 
   AuthCubit({
@@ -67,12 +68,14 @@ class AuthCubit extends Cubit<AuthState> {
     required GoogleSignInUseCase googleSignIn,
     required WatchAuthStateUseCase watchAuthState,
     required DeleteAccountUseCase deleteAccount,
+    required ForgotPasswordUseCase forgotPassword,
   }) : _signIn = signIn,
        _signUp = signUp,
        _signOut = signOut,
        _googleSignIn = googleSignIn,
        _watchAuthState = watchAuthState,
        _deleteAccount = deleteAccount,
+       _forgotPassword = forgotPassword,
        super(const AuthState()) {
     _authStateSubscription = _watchAuthState().listen((user) {
       if (user == null) {
@@ -236,6 +239,38 @@ class AuthCubit extends Cubit<AuthState> {
             errorMessage: failure.message,
           ),
         );
+    }
+  }
+
+  /// Sends a password reset email.
+  ///
+  /// Returns `true` if the email was sent successfully, `false` otherwise.
+  /// Does not change auth status — only sets error message on failure.
+  Future<bool> sendPasswordResetEmail({required String email}) async {
+    AppLogger.info(
+      'Password reset requested for: $email',
+      tag: AppLogTags.authCubit,
+    );
+
+    final result = await _forgotPassword(email: email);
+
+    switch (result) {
+      case Success():
+        AppLogger.info(
+          'Password reset email sent successfully',
+          tag: AppLogTags.authCubit,
+        );
+        return true;
+      case Error(:final failure):
+        AppLogger.error(
+          'Password reset failed: ${failure.message}',
+          tag: AppLogTags.authCubit,
+          error: failure.originalError,
+        );
+        emit(
+          state.copyWith(errorMessage: failure.message),
+        );
+        return false;
     }
   }
 

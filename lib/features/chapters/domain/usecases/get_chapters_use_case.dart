@@ -17,11 +17,14 @@ class GetChaptersUseCase {
     : _repository = repository;
 
   /// Executes the use case for the given [subjectId].
-  Future<Result<List<Chapter>>> call(String subjectId) {
+  Future<Result<List<Chapter>>> call(
+    String subjectId, {
+    required String curriculumKey,
+  }) {
     AppLogger.trace(
-      'GetChaptersUseCase called for subject=$subjectId',
+      'GetChaptersUseCase called for subject=$subjectId, curriculum=$curriculumKey',
       tag: AppLogTags.chaptersUseCase,
     );
-    return _repository.getChapters(subjectId);
+    return _repository.getChapters(subjectId, curriculumKey: curriculumKey);
   }
 }

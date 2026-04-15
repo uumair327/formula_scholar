@@ -51,7 +51,7 @@ class _OnboardingStep4PageState extends State<OnboardingStep4Page> {
 
   Future<void> _onFinish() async {
     final onboardingCubit = context.read<OnboardingCubit>();
-    final curriculum = await onboardingCubit.completeOnboarding();
+    final curriculum = await onboardingCubit.completeOnboarding(_selectedId);
     if (!mounted) {
       return;
     }

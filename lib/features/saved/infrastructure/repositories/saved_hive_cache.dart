@@ -8,6 +8,7 @@ import '../../domain/domain.dart';
 class SavedHiveCache implements SavedCachePort {
   static const String _boxName = 'saved_cache';
   static const String _bookmarksKey = 'bookmarks';
+  static const String _savedChaptersKey = 'saved_chapters';
 
   Future<Box<dynamic>> _box() => Hive.openBox<dynamic>(_boxName);
 
@@ -23,7 +24,30 @@ class SavedHiveCache implements SavedCachePort {
               'title': b.title,
               'subject': b.subject,
               'formula': b.formula,
+              'curriculumKey': b.curriculumKey,
               'savedAt': b.savedAt.toIso8601String(),
+            },
+          )
+          .toList(),
+    );
+  }
+
+  @override
+  Future<void> cacheSavedChapters(List<BookmarkedChapter> chapters) async {
+    final box = await _box();
+    await box.put(
+      _savedChaptersKey,
+      chapters
+          .map(
+            (c) => {
+              'id': c.id,
+              'chapterId': c.chapterId,
+              'chapterName': c.chapterName,
+              'chapterSubtitle': c.chapterSubtitle,
+              'subjectId': c.subjectId,
+              'subjectName': c.subjectName,
+              'curriculumKey': c.curriculumKey,
+              'savedAt': c.savedAt.toIso8601String(),
             },
           )
           .toList(),
@@ -47,7 +71,37 @@ class SavedHiveCache implements SavedCachePort {
             title: item['title'] as String? ?? '',
             subject: item['subject'] as String? ?? '',
             formula: item['formula'] as String? ?? '',
-            savedAt: DateTime.tryParse(item['savedAt'] as String? ?? '') ??
+            curriculumKey: item['curriculumKey'] as String? ?? '',
+            savedAt:
+                DateTime.tryParse(item['savedAt'] as String? ?? '') ??
+                DateTime.now(),
+          ),
+        )
+        .toList();
+  }
+
+  @override
+  Future<List<BookmarkedChapter>> getSavedChapters() async {
+    final box = await _box();
+    final cached = box.get(_savedChaptersKey) as List<dynamic>?;
+    if (cached == null) {
+      return const [];
+    }
+
+    return cached
+        .whereType<Map>()
+        .map((item) => Map<String, dynamic>.from(item))
+        .map(
+          (item) => BookmarkedChapter(
+            id: item['id'] as String? ?? '',
+            chapterId: item['chapterId'] as String? ?? '',
+            chapterName: item['chapterName'] as String? ?? '',
+            chapterSubtitle: item['chapterSubtitle'] as String? ?? '',
+            subjectId: item['subjectId'] as String? ?? '',
+            subjectName: item['subjectName'] as String? ?? '',
+            curriculumKey: item['curriculumKey'] as String? ?? '',
+            savedAt:
+                DateTime.tryParse(item['savedAt'] as String? ?? '') ??
                 DateTime.now(),
           ),
         )

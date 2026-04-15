@@ -92,10 +92,6 @@ abstract final class AppRoutes {
   static const String accountInfoPath = '/profile/account';
   static const String accountInfoName = 'accountInfo';
 
-  /// My Bookmarks page.
-  static const String bookmarksPath = '/profile/bookmarks';
-  static const String bookmarksName = 'bookmarks';
-
   /// Notifications settings page.
   static const String notificationsPath = '/profile/notifications';
   static const String notificationsName = 'notifications';

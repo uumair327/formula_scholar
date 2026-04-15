@@ -6,6 +6,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
 import '../cubit/auth_cubit.dart';
+import '../../../profile/presentation/widgets/support_contact_sheet.dart';
 
 /// Login page — the entry-point of the app before onboarding / dashboard.
 ///
@@ -460,14 +461,8 @@ class _FormContent extends StatelessWidget {
           Align(
             alignment: Alignment.centerRight,
             child: GestureDetector(
-              onTap: () => ComingSoonSheet.show(
-                context,
-                featureName: AppStrings.loginForgotPassword,
-                description:
-                    'Reset your password securely via email. '
-                    'We\'ll send you a verification link.',
-                icon: LucideIcons.keyRound,
-              ),
+              onTap: () =>
+                  _showForgotPasswordDialog(context, identityController.text),
               child: Text(
                 AppStrings.loginForgotPassword,
                 style: AppTextStyles.labelMedium.copyWith(
@@ -570,13 +565,13 @@ class _FormContent extends StatelessWidget {
                 child: _SocialButton(
                   label: AppStrings.loginSchoolId,
                   icon: LucideIcons.graduationCap,
-                  onTap: () => ComingSoonSheet.show(
+                  onTap: () => SupportContactSheet.show(
                     context,
-                    featureName: AppStrings.loginSchoolId,
-                    description:
-                        'Sign in using your school-issued ID. '
-                        'Contact your school admin for credentials.',
-                    icon: LucideIcons.graduationCap,
+                    title: AppStrings.loginSchoolId,
+                    subtitle:
+                        'School-ID sign-in is managed by your institution. '
+                        'Use this support channel to request the right setup steps.',
+                    email: 'support@formulascholar.app',
                   ),
                 ),
               ),
@@ -650,4 +645,83 @@ class _SocialButton extends StatelessWidget {
       ),
     );
   }
+}
+
+// ─────────────────────── Forgot Password Dialog ──────────────────
+/// Shows a dialog to collect email and trigger password reset.
+///
+/// Top-level so it can be called from both [_LoginPageState] and
+/// [_FormContent] widgets.
+void _showForgotPasswordDialog(BuildContext context, String prefillEmail) {
+  final resetEmailController = TextEditingController(text: prefillEmail);
+
+  showDialog<void>(
+    context: context,
+    builder: (dialogContext) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+        ),
+        title: const Text(AppStrings.forgotPasswordTitle),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              AppStrings.forgotPasswordDesc,
+              style: AppTextStyles.bodySmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: AppDimensions.paddingLG),
+            AppTextField(
+              controller: resetEmailController,
+              label: AppStrings.loginEmailLabel,
+              hintText: AppStrings.loginEmailHint,
+              prefixIcon: LucideIcons.mail,
+              keyboardType: TextInputType.emailAddress,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text(AppStrings.forgotPasswordCancel),
+          ),
+          FilledButton(
+            onPressed: () async {
+              final email = resetEmailController.text.trim();
+              if (email.isEmpty) return;
+
+              Navigator.of(dialogContext).pop();
+              final success = await context
+                  .read<AuthCubit>()
+                  .sendPasswordResetEmail(email: email);
+
+              if (!context.mounted) return;
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    success
+                        ? AppStrings.forgotPasswordSuccess
+                        : context.read<AuthCubit>().state.errorMessage ??
+                              AppStrings.genericError,
+                  ),
+                  backgroundColor: success
+                      ? AppColors.secondary
+                      : AppColors.error,
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
+                  ),
+                ),
+              );
+            },
+            child: const Text(AppStrings.forgotPasswordSend),
+          ),
+        ],
+      );
+    },
+  );
 }

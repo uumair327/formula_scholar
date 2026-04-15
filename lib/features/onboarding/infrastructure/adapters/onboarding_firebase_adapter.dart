@@ -6,9 +6,9 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: OnboardingDataSourcePort)
 class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
-  final FirebaseFirestore _firestore;
-
   OnboardingFirebaseAdapter(this._firestore);
+
+  final FirebaseFirestore _firestore;
 
   @override
   Future<PaginatedResponse<Country>> getCountries({
@@ -89,13 +89,13 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
       tag: AppLogTags.onboardingDataSource,
     );
 
-    Query query = _firestore
+    final query = _firestore
         .collection('boards')
         .where('countryId', isEqualTo: countryId);
 
     final snapshot = await query.limit(limit).get();
     var data = snapshot.docs.map((doc) {
-      final map = doc.data() as Map<String, dynamic>;
+      final map = doc.data();
 
       final typeStr = map['type'] as String? ?? 'state';
       BoardType type = BoardType.state;
@@ -139,15 +139,24 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
       tag: AppLogTags.onboardingDataSource,
     );
 
-    final snapshot = await _firestore
+    // Prefer the normalized `classes` path, but support legacy `grades` data.
+    final classesSnapshot = await _firestore
         .collection('boards')
         .doc(boardId)
-        .collection(
-          'classes',
-        ) // changed from grades to classes conceptually, or keep 'grades' in DB
+        .collection('classes')
         .orderBy('classNumber')
         .limit(limit)
         .get();
+
+    final snapshot = classesSnapshot.docs.isNotEmpty
+        ? classesSnapshot
+        : await _firestore
+              .collection('boards')
+              .doc(boardId)
+              .collection('grades')
+              .orderBy('classNumber')
+              .limit(limit)
+              .get();
 
     final data = snapshot.docs.map((doc) {
       final map = doc.data();

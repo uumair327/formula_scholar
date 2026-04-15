@@ -25,6 +25,7 @@ class Chapter extends Equatable {
   final int totalFormulas;
   final double progressPercent;
   final ChapterStatus status;
+  final bool isSaved;
 
   const Chapter({
     required this.id,
@@ -34,11 +35,12 @@ class Chapter extends Equatable {
     required this.totalFormulas,
     required this.progressPercent,
     this.status = ChapterStatus.notStarted,
+    this.isSaved = false,
   });
 
   bool get isInProgress => status == ChapterStatus.inProgress;
   bool get isLocked => status == ChapterStatus.locked;
 
   @override
-  List<Object?> get props => [id, name, status];
+  List<Object?> get props => [id, name, status, isSaved];
 }

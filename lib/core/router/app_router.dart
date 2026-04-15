@@ -49,6 +49,15 @@ abstract final class AppRouter {
   /// Auth pages that unauthenticated users are allowed to access.
   static const _authPaths = {AppRoutes.loginPath, AppRoutes.signupPath};
 
+  /// Onboarding paths – authenticated users are allowed here even
+  /// without a curriculum selection.
+  static const _onboardingPaths = {
+    AppRoutes.onboardingPath,
+    AppRoutes.onboardingStep2Path,
+    AppRoutes.onboardingStep3Path,
+    AppRoutes.onboardingStep4Path,
+  };
+
   static final _authNotifier = _AuthRouterNotifier(
     getIt<GetCurrentAuthUserUseCase>(),
     getIt<WatchAuthStateUseCase>(),
@@ -74,6 +83,9 @@ abstract final class AppRouter {
 
       final isLoggedIn = _authNotifier.isLoggedIn;
       final isAuthPage = _authPaths.contains(state.matchedLocation);
+      final isOnboardingPage = _onboardingPaths.contains(
+        state.matchedLocation,
+      );
 
       // If not logged in and NOT on auth page → redirect to login.
       if (!isLoggedIn && !isAuthPage) {
@@ -85,6 +97,28 @@ abstract final class AppRouter {
       }
 
       // If logged in and on auth page → redirect to dashboard.
+      if (isLoggedIn && isAuthPage) {
+        AppLogger.info(
+          'Authenticated user redirected to dashboard from ${state.uri}',
+          tag: AppLogTags.router,
+        );
+        return AppRoutes.dashboardPath;
+      }
+
+      // If logged in but no curriculum set and NOT on onboarding →
+      // redirect to onboarding so the user completes setup first.
+      if (isLoggedIn && !isOnboardingPage && !isAuthPage) {
+        final curriculumCubit = getIt<CurriculumCubit>();
+        if (curriculumCubit.state.isInitialized &&
+            !curriculumCubit.state.hasSelection) {
+          AppLogger.info(
+            'User without curriculum redirected to onboarding from ${state.uri}',
+            tag: AppLogTags.router,
+          );
+          return AppRoutes.onboardingPath;
+        }
+      }
+
       return null;
     },
 

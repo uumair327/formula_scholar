@@ -49,6 +49,11 @@ class FakeAuthDataSource implements AuthDataSourcePort {
   }
 
   @override
+  Future<void> sendPasswordResetEmail({required String email}) async {
+    if (errorToThrow != null) throw errorToThrow!;
+  }
+
+  @override
   AuthUser? get currentUser => fakeUser;
 
   @override

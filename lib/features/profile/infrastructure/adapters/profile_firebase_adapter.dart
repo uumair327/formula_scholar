@@ -237,4 +237,16 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
       ),
     ];
   }
+
+  @override
+  Future<void> updateStudyGoal(String studyGoalId) async {
+    final uid = _firebaseAuth.currentUser?.uid;
+    if (uid == null) {
+      throw const ServerException(message: 'User not authenticated');
+    }
+
+    await _firestore.collection('users').doc(uid).set({
+      'studyGoalId': studyGoalId,
+    }, SetOptions(merge: true));
+  }
 }

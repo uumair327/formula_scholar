@@ -13,47 +13,74 @@ import 'chapters_state.dart';
 @injectable
 class ChaptersCubit extends Cubit<ChaptersState>
     with CubitFailureLogger<ChaptersState> {
+  ChaptersCubit({
+    required GetChaptersUseCase getChapters,
+    required GetMasteryToolsUseCase getMasteryTools,
+  }) : _getChapters = getChapters,
+       _getMasteryTools = getMasteryTools,
+       super(const ChaptersState());
+
   final GetChaptersUseCase _getChapters;
+  final GetMasteryToolsUseCase _getMasteryTools;
 
   @override
   String get logTag => AppLogTags.chaptersCubit;
-
-  ChaptersCubit({required GetChaptersUseCase getChapters})
-    : _getChapters = getChapters,
-      super(const ChaptersState());
 
   /// Loads chapters for the given [subjectId].
   ///
   /// Skips reload if already loaded for the same subject.
   Future<void> loadChapters(
     String subjectId, {
+    required String curriculumKey,
     bool forceReload = false,
   }) async {
     if (!forceReload &&
         state.subjectId == subjectId &&
+        state.curriculumKey == curriculumKey &&
         state.status == ChaptersStatus.loaded) {
       AppLogger.debug(
-        'Chapters already loaded for $subjectId — skipping',
+        'Chapters already loaded for $subjectId, curriculum=$curriculumKey — skipping',
         tag: AppLogTags.chaptersCubit,
       );
       return;
     }
 
     AppLogger.info(
-      'Loading chapters for subject=$subjectId',
+      'Loading chapters for subject=$subjectId, curriculum=$curriculumKey',
       tag: AppLogTags.chaptersCubit,
     );
-    emit(state.copyWith(status: ChaptersStatus.loading, subjectId: subjectId));
+    emit(
+      state.copyWith(
+        status: ChaptersStatus.loading,
+        subjectId: subjectId,
+        curriculumKey: curriculumKey,
+      ),
+    );
 
-    final result = await _getChapters(subjectId);
+    final result = await _getChapters(subjectId, curriculumKey: curriculumKey);
 
     switch (result) {
       case Success(:final data):
+        List<MasteryTool> tools = const [];
+        final toolsResult = await _getMasteryTools(subjectId);
+        switch (toolsResult) {
+          case Success(:final data):
+            tools = data;
+          case Error(:final failure):
+            logFailure('mastery tools for $subjectId', failure);
+        }
+
         AppLogger.info(
           'Loaded ${data.length} chapters for $subjectId',
           tag: AppLogTags.chaptersCubit,
         );
-        emit(state.copyWith(status: ChaptersStatus.loaded, chapters: data));
+        emit(
+          state.copyWith(
+            status: ChaptersStatus.loaded,
+            chapters: data,
+            masteryTools: tools,
+          ),
+        );
       case Error(:final failure):
         logFailure('chapters for $subjectId', failure);
         emit(

@@ -21,7 +21,11 @@ class PracticePage extends StatelessWidget {
       buildWhen: (prev, curr) => prev.user != curr.user,
       builder: (context, authState) {
         return BlocBuilder<PracticeCubit, PracticeState>(
-          buildWhen: (prev, curr) => prev.status != curr.status,
+          buildWhen: (prev, curr) =>
+              prev.status != curr.status ||
+              prev.currentIndex != curr.currentIndex ||
+              prev.selectedOptionId != curr.selectedOptionId ||
+              prev.showResult != curr.showResult,
           builder: (context, state) {
             if (state.status == PracticeStatus.loading ||
                 state.status == PracticeStatus.initial) {
@@ -32,11 +36,22 @@ class PracticePage extends StatelessWidget {
               return Scaffold(
                 body: AppErrorState(
                   message: state.errorMessage,
-                  onRetry: () => context.read<PracticeCubit>().loadQuestions(),
+                  onRetry: () {
+                    final curr = context.read<CurriculumCubit>().state.curriculum;
+                    if (curr != null) {
+                      context.read<PracticeCubit>().loadQuestions(
+                        boardId: curr.boardId,
+                        gradeId: curr.gradeId,
+                      );
+                    }
+                  },
                 ),
               );
             }
 
+            if (state.status == PracticeStatus.completed) {
+              return _buildCompletionScreen(context, state, authState);
+            }
             final question = state.currentQuestion;
             if (question == null) return const SizedBox.shrink();
             final photoUrl = authState.user?.photoUrl ?? '';
@@ -116,6 +131,14 @@ class PracticePage extends StatelessWidget {
                   // Success toast.
                   if (state.showResult && state.isCorrect)
                     _buildSuccessToast(context),
+
+                  // Wrong-answer toast.
+                  if (state.showResult && !state.isCorrect)
+                    _buildWrongAnswerToast(context),
+
+                  // Next / Finish button.
+                  if (state.showResult)
+                    _buildNextButton(context, state),
                 ],
               ),
             );
@@ -296,6 +319,9 @@ class PracticePage extends StatelessWidget {
           final isSelected = state.selectedOptionId == option.id;
           final isCorrect = option.id == question.correctOptionId;
           final showCorrectState = state.showResult && isSelected && isCorrect;
+          final showWrongState = state.showResult && isSelected && !isCorrect;
+          // Also highlight the actual correct answer when wrong was selected.
+          final showCorrectHint = state.showResult && !state.isCorrect && isCorrect;
 
           return GestureDetector(
             onTap: () => context.read<PracticeCubit>().selectOption(option.id),
@@ -303,16 +329,22 @@ class PracticePage extends StatelessWidget {
               duration: AppDurations.animationDefault,
               padding: const EdgeInsets.all(AppDimensions.paddingXXL),
               decoration: BoxDecoration(
-                color: showCorrectState
+                color: showCorrectState || showCorrectHint
                     ? AppColors.secondaryContainer.withValues(
                         alpha: AppDimensions.opacitySubtle,
                       )
-                    : AppColors.surfaceContainerLowest,
+                    : showWrongState
+                        ? AppColors.error.withValues(
+                            alpha: AppDimensions.opacityFaint,
+                          )
+                        : AppColors.surfaceContainerLowest,
                 borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                 border: Border.all(
-                  color: showCorrectState
+                  color: showCorrectState || showCorrectHint
                       ? AppColors.secondary
-                      : AppColors.transparent,
+                      : showWrongState
+                          ? AppColors.error
+                          : AppColors.transparent,
                   width: AppDimensions.borderWidth,
                 ),
                 boxShadow: const [AppShadows.ghost],
@@ -325,16 +357,18 @@ class PracticePage extends StatelessWidget {
                     height: AppDimensions.avatarLG,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: showCorrectState
+                      color: showCorrectState || showCorrectHint
                           ? AppColors.secondary
-                          : AppColors.surfaceContainerHigh,
+                          : showWrongState
+                              ? AppColors.error
+                              : AppColors.surfaceContainerHigh,
                     ),
                     alignment: Alignment.center,
                     child: Text(
                       option.id,
                       style: AppTextStyles.titleMedium.copyWith(
                         fontWeight: FontWeight.w700,
-                        color: showCorrectState
+                        color: showCorrectState || showCorrectHint || showWrongState
                             ? AppColors.onSecondary
                             : AppColors.outline,
                       ),
@@ -345,20 +379,28 @@ class PracticePage extends StatelessWidget {
                     child: Text(
                       option.text,
                       style: AppTextStyles.titleMedium.copyWith(
-                        fontWeight: showCorrectState
+                        fontWeight: showCorrectState || showWrongState || showCorrectHint
                             ? FontWeight.w700
                             : FontWeight.w500,
-                        color: showCorrectState
+                        color: showCorrectState || showCorrectHint
                             ? AppColors.onSecondaryContainer
-                            : null,
+                            : showWrongState
+                                ? AppColors.error
+                                : null,
                       ),
                     ),
                   ),
-                  if (showCorrectState)
+                  if (showCorrectState || showCorrectHint)
                     const Icon(
                       LucideIcons.checkCircle2,
                       size: AppDimensions.iconLG,
                       color: AppColors.secondary,
+                    ),
+                  if (showWrongState)
+                    const Icon(
+                      LucideIcons.xCircle,
+                      size: AppDimensions.iconLG,
+                      color: AppColors.error,
                     ),
                 ],
               ),
@@ -458,6 +500,231 @@ class PracticePage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildWrongAnswerToast(BuildContext context) {
+    return Positioned(
+      bottom: AppDimensions.bottomNavPadding + AppDimensions.paddingXL,
+      left: AppDimensions.paddingXXL,
+      right: AppDimensions.paddingXXL,
+      child: Center(
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppDimensions.paddingHero,
+            vertical: AppDimensions.paddingLG,
+          ),
+          decoration: BoxDecoration(
+            color: AppColors.error,
+            borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
+            boxShadow: const [AppShadows.medium],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(AppDimensions.paddingXS),
+                decoration: BoxDecoration(
+                  color: AppColors.onError.withValues(
+                    alpha: AppDimensions.opacitySubtle,
+                  ),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  LucideIcons.xCircle,
+                  size: AppDimensions.iconMD,
+                  color: AppColors.onError,
+                ),
+              ),
+              const SizedBox(width: AppDimensions.paddingLG),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    AppStrings.wrongAnswer,
+                    style: AppTextStyles.labelLarge.copyWith(
+                      color: AppColors.onError,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Text(
+                    AppStrings.tryNextTime,
+                    style: AppTextStyles.labelSmall.copyWith(
+                      color: AppColors.onError.withValues(
+                        alpha: AppDimensions.opacityHigh,
+                      ),
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: AppDimensions.letterSpacingWide,
+                      fontSize: AppDimensions.fontSizeXS,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNextButton(BuildContext context, PracticeState state) {
+    return Positioned(
+      bottom: AppDimensions.paddingLG,
+      left: AppDimensions.paddingXXL,
+      right: AppDimensions.paddingXXL,
+      child: SafeArea(
+        child: FilledButton(
+          onPressed: () => context.read<PracticeCubit>().nextQuestion(),
+          style: FilledButton.styleFrom(
+            padding: const EdgeInsets.symmetric(
+              vertical: AppDimensions.paddingLG,
+            ),
+            shape: const StadiumBorder(),
+          ),
+          child: Text(
+            state.isLastQuestion
+                ? AppStrings.quizCompleteTitle
+                : AppStrings.nextQuestion,
+            style: AppTextStyles.labelLarge.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCompletionScreen(
+    BuildContext context,
+    PracticeState state,
+    AuthState authState,
+  ) {
+    final photoUrl = authState.user?.photoUrl ?? '';
+    return Scaffold(
+      body: SafeArea(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(AppDimensions.paddingHero),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: AppDimensions.imageXL,
+                  height: AppDimensions.imageXL,
+                  decoration: const BoxDecoration(
+                    color: AppColors.secondaryFixed,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    LucideIcons.trophy,
+                    size: AppDimensions.imageLG,
+                    color: AppColors.secondary,
+                  ),
+                ),
+                const SizedBox(height: AppDimensions.paddingHero),
+                Text(
+                  AppStrings.quizCompleteTitle,
+                  style: AppTextStyles.headlineLarge.copyWith(
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.onSurface,
+                  ),
+                ),
+                const SizedBox(height: AppDimensions.paddingSM),
+                Text(
+                  AppStrings.quizCompleteDesc,
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.bodyLarge.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: AppDimensions.paddingHero),
+                // Score card
+                AppCard(
+                  padding: const EdgeInsets.all(AppDimensions.paddingXXL),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _ScoreStat(
+                        icon: LucideIcons.star,
+                        value: '${state.totalPoints}',
+                        label: AppStrings.ptsLabel,
+                        color: AppColors.secondary,
+                      ),
+                      _ScoreStat(
+                        icon: LucideIcons.checkCircle2,
+                        value: '${state.totalQuestions}',
+                        label: AppStrings.practiceQuestionLabel,
+                        color: AppColors.primary,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: AppDimensions.paddingHero),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: () =>
+                        context.read<PracticeCubit>().resetQuiz(),
+                    icon: const Icon(LucideIcons.refreshCw),
+                    label: Text(
+                      AppStrings.playAgain,
+                      style: AppTextStyles.labelLarge.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppDimensions.paddingLG,
+                      ),
+                      shape: const StadiumBorder(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Small stat display used in the completion screen.
+class _ScoreStat extends StatelessWidget {
+  final IconData icon;
+  final String value;
+  final String label;
+  final Color color;
+
+  const _ScoreStat({
+    required this.icon,
+    required this.value,
+    required this.label,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Icon(icon, size: AppDimensions.iconLG, color: color),
+        const SizedBox(height: AppDimensions.paddingSM),
+        Text(
+          value,
+          style: AppTextStyles.headlineMedium.copyWith(
+            fontWeight: FontWeight.w800,
+            color: color,
+          ),
+        ),
+        Text(
+          label,
+          style: AppTextStyles.labelSmall.copyWith(
+            color: AppColors.outline,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
     );
   }
 }

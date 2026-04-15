@@ -4,10 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 import '../cubit/onboarding_cubit.dart';
 import '../cubit/onboarding_state.dart';
+import '../widgets/onboarding_board_guide_sheet.dart';
 import '../widgets/onboarding_shell.dart';
 
 /// Onboarding Step 2 — Curriculum / Board selection.
@@ -156,13 +156,12 @@ class OnboardingStep2Page extends StatelessWidget {
                     ),
                     const SizedBox(width: AppDimensions.paddingMD),
                     TextButton.icon(
-                      onPressed: () => ComingSoonSheet.show(
+                      onPressed: () => OnboardingBoardGuideSheet.show(
                         context,
-                        featureName: AppStrings.step2LearnMore,
-                        description:
-                            'Explore detailed information about each board '
-                            'and curriculum to make the best choice.',
-                        icon: LucideIcons.info,
+                        boards: state.boards,
+                        selectedBoardId: state.selectedBoard?.id,
+                        onSelectBoard: (board) =>
+                            context.read<OnboardingCubit>().selectBoard(board),
                       ),
                       icon: Icon(
                         LucideIcons.arrowRight,

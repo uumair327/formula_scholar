@@ -4,18 +4,34 @@ import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
+import '../widgets/support_contact_sheet.dart';
 
 /// Help & Support page – FAQ and contact options.
 ///
 /// Accessible from profile settings. Features expandable FAQ cards,
 /// contact options, and app version info.
-class HelpSupportPage extends StatelessWidget {
+class HelpSupportPage extends StatefulWidget {
   const HelpSupportPage({super.key});
+
+  @override
+  State<HelpSupportPage> createState() => _HelpSupportPageState();
+}
+
+class _HelpSupportPageState extends State<HelpSupportPage> {
+  final ScrollController _scrollController = ScrollController();
+  final GlobalKey _faqSectionKey = GlobalKey();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
+        controller: _scrollController,
         slivers: [
           _buildAppBar(context),
           SliverPadding(
@@ -66,7 +82,12 @@ class HelpSupportPage extends StatelessWidget {
                 ),
                 const SizedBox(height: AppDimensions.paddingXXL),
                 // FAQ section
-                const AppSectionTitle(title: AppStrings.frequentlyAsked),
+                Container(
+                  key: _faqSectionKey,
+                  child: const AppSectionTitle(
+                    title: AppStrings.frequentlyAsked,
+                  ),
+                ),
                 const SizedBox(height: AppDimensions.paddingLG),
                 _buildFaqCard(
                   question: AppStrings.faq1Question,
@@ -204,7 +225,7 @@ class HelpSupportPage extends StatelessWidget {
     return Material(
       color: AppColors.transparent,
       child: InkWell(
-        onTap: () => ComingSoonSheet.show(context, featureName: label),
+        onTap: () => _handleQuickAction(context, label),
         borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
         child: AppCard(
           padding: const EdgeInsets.symmetric(
@@ -296,7 +317,7 @@ class HelpSupportPage extends StatelessWidget {
     return Material(
       color: AppColors.transparent,
       child: InkWell(
-        onTap: onTap ?? () => ComingSoonSheet.show(context, featureName: title),
+        onTap: onTap ?? () => _handleResourceTap(context, title),
         borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
         child: AppCard(
           padding: const EdgeInsets.symmetric(
@@ -371,6 +392,52 @@ class HelpSupportPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _handleQuickAction(BuildContext context, String label) {
+    if (label == AppStrings.faqLabel) {
+      _scrollToFaq();
+      return;
+    }
+
+    final subtitle = label == AppStrings.chatWithUs
+        ? 'Get help from the support team with common account and learning issues.'
+        : 'Copy the support email so you can reach us directly from your inbox.';
+
+    SupportContactSheet.show(
+      context,
+      title: label,
+      subtitle: subtitle,
+      email: 'support@formulascholar.app',
+    );
+  }
+
+  void _handleResourceTap(BuildContext context, String title) {
+    if (title == AppStrings.userGuide || title == AppStrings.videoTutorials) {
+      SupportContactSheet.show(
+        context,
+        title: title,
+        subtitle:
+            'These learning resources are curated from the live app flow. '
+            'Use the FAQ and contact sheet while the richer resource library is being expanded.',
+        email: 'support@formulascholar.app',
+      );
+      return;
+    }
+
+    ComingSoonSheet.show(context, featureName: title);
+  }
+
+  void _scrollToFaq() {
+    final targetContext = _faqSectionKey.currentContext;
+    if (targetContext == null) return;
+
+    Scrollable.ensureVisible(
+      targetContext,
+      duration: AppDurations.animationDefault,
+      curve: Curves.easeInOut,
+      alignment: 0.05,
     );
   }
 }

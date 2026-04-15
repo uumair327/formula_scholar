@@ -4,7 +4,7 @@ import '../../domain/domain.dart';
 
 const Object _unset = Object();
 
-enum PracticeStatus { initial, loading, loaded, error }
+enum PracticeStatus { initial, loading, loaded, completed, error }
 
 /// State for the Practice quiz feature.
 class PracticeState extends Equatable {
@@ -15,6 +15,8 @@ class PracticeState extends Equatable {
   final bool showResult;
   final int totalPoints;
   final String? errorMessage;
+  final String? boardId;
+  final String? gradeId;
 
   const PracticeState({
     this.status = PracticeStatus.initial,
@@ -24,6 +26,8 @@ class PracticeState extends Equatable {
     this.showResult = false,
     this.totalPoints = 0,
     this.errorMessage,
+    this.boardId,
+    this.gradeId,
   });
 
   /// The current question being displayed.
@@ -43,25 +47,35 @@ class PracticeState extends Equatable {
       currentQuestion != null &&
       selectedOptionId == currentQuestion!.correctOptionId;
 
+  /// Whether the user is on the last question.
+  bool get isLastQuestion =>
+      totalQuestions > 0 && currentIndex >= totalQuestions - 1;
+
   PracticeState copyWith({
     PracticeStatus? status,
     List<QuizQuestion>? questions,
     int? currentIndex,
-    String? selectedOptionId,
+    Object? selectedOptionId = _unset,
     bool? showResult,
     int? totalPoints,
     Object? errorMessage = _unset,
+    String? boardId,
+    String? gradeId,
   }) {
     return PracticeState(
       status: status ?? this.status,
       questions: questions ?? this.questions,
       currentIndex: currentIndex ?? this.currentIndex,
-      selectedOptionId: selectedOptionId,
+      selectedOptionId: identical(selectedOptionId, _unset)
+          ? this.selectedOptionId
+          : selectedOptionId as String?,
       showResult: showResult ?? this.showResult,
       totalPoints: totalPoints ?? this.totalPoints,
       errorMessage: identical(errorMessage, _unset)
           ? this.errorMessage
           : errorMessage as String?,
+      boardId: boardId ?? this.boardId,
+      gradeId: gradeId ?? this.gradeId,
     );
   }
 
@@ -74,5 +88,7 @@ class PracticeState extends Equatable {
     showResult,
     totalPoints,
     errorMessage,
+    boardId,
+    gradeId,
   ];
 }

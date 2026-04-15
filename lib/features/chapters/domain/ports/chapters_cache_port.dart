@@ -6,8 +6,12 @@ import '../entities/chapter.dart';
 /// chapters from local storage (e.g. Hive) so the app works offline.
 abstract interface class ChaptersCachePort {
   /// Persists chapters for a specific subject into local cache.
-  Future<void> cacheChapters(String subjectId, List<Chapter> chapters);
+  Future<void> cacheChapters(
+    String subjectId,
+    String curriculumKey,
+    List<Chapter> chapters,
+  );
 
   /// Retrieves cached chapters for a subject. Returns empty list if none.
-  Future<List<Chapter>> getChapters(String subjectId);
+  Future<List<Chapter>> getChapters(String subjectId, String curriculumKey);
 }

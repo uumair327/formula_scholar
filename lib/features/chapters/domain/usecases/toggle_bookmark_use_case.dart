@@ -12,7 +12,7 @@ class ToggleBookmarkUseCase {
   const ToggleBookmarkUseCase({required FormulasRepositoryPort repository})
     : _repository = repository;
 
-  Future<Result<void>> call(Formula formula, String subjectName) {
-    return _repository.toggleBookmark(formula, subjectName);
+  Future<Result<void>> call(Formula formula, String subjectName, {required String curriculumKey}) {
+    return _repository.toggleBookmark(formula, subjectName, curriculumKey: curriculumKey);
   }
 }

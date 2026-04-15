@@ -13,6 +13,7 @@ class FormulasState extends Equatable {
   final String? chapterId;
   final String? chapterName;
   final List<Formula> formulas;
+  final bool isChapterSaved;
   final String? errorMessage;
 
   const FormulasState({
@@ -21,6 +22,7 @@ class FormulasState extends Equatable {
     this.chapterId,
     this.chapterName,
     this.formulas = const [],
+    this.isChapterSaved = false,
     this.errorMessage,
   });
 
@@ -35,6 +37,7 @@ class FormulasState extends Equatable {
     String? chapterId,
     String? chapterName,
     List<Formula>? formulas,
+    bool? isChapterSaved,
     Object? errorMessage = _unset,
   }) {
     return FormulasState(
@@ -43,6 +46,7 @@ class FormulasState extends Equatable {
       chapterId: chapterId ?? this.chapterId,
       chapterName: chapterName ?? this.chapterName,
       formulas: formulas ?? this.formulas,
+      isChapterSaved: isChapterSaved ?? this.isChapterSaved,
       errorMessage: identical(errorMessage, _unset)
           ? this.errorMessage
           : errorMessage as String?,
@@ -56,6 +60,7 @@ class FormulasState extends Equatable {
     chapterId,
     chapterName,
     formulas,
+    isChapterSaved,
     errorMessage,
   ];
 }

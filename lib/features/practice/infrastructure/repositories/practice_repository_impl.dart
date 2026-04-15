@@ -16,11 +16,17 @@ class PracticeRepositoryImpl implements PracticeRepositoryPort {
     : _dataSource = dataSource;
 
   @override
-  Future<Result<List<QuizQuestion>>> getQuestions() {
+  Future<Result<List<QuizQuestion>>> getQuestions({
+    required String boardId,
+    required String gradeId,
+  }) {
     return safeOperation(
       tag: AppLogTags.practiceRepo,
-      operation: 'getQuestions',
-      execute: () => _dataSource.getQuestions(),
+      operation: 'getQuestions(board=$boardId, grade=$gradeId)',
+      execute: () => _dataSource.getQuestions(
+        boardId: boardId,
+        gradeId: gradeId,
+      ),
     );
   }
 }

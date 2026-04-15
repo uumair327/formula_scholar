@@ -223,6 +223,28 @@ class AuthFirebaseAdapter implements AuthDataSourcePort {
   }
 
   @override
+  Future<void> sendPasswordResetEmail({required String email}) async {
+    try {
+      AppLogger.trace(
+        'Sending password reset email to: $email',
+        tag: AppLogTags.authDataSource,
+      );
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+      AppLogger.info(
+        'Password reset email sent to: $email',
+        tag: AppLogTags.authDataSource,
+      );
+    } on fb.FirebaseAuthException catch (e) {
+      AppLogger.error(
+        'Password reset error: ${e.code}',
+        tag: AppLogTags.authDataSource,
+        error: e,
+      );
+      throw ServerException(message: _mapFirebaseError(e.code));
+    }
+  }
+
+  @override
   AuthUser? get currentUser {
     final user = _firebaseAuth.currentUser;
     return user != null ? _mapFirebaseUser(user) : null;

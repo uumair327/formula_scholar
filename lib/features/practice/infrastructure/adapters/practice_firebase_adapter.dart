@@ -6,17 +6,37 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: PracticeDataSourcePort)
 class PracticeFirebaseAdapter implements PracticeDataSourcePort {
-  final FirebaseFirestore _firestore;
-
   PracticeFirebaseAdapter(this._firestore);
 
+  final FirebaseFirestore _firestore;
+
   @override
-  Future<List<QuizQuestion>> getQuestions() async {
+  Future<List<QuizQuestion>> getQuestions({
+    required String boardId,
+    required String gradeId,
+  }) async {
     AppLogger.trace(
-      'getQuestions() fetching from Firestore',
+      'getQuestions() fetching from Firestore for board=$boardId, grade=$gradeId',
       tag: AppLogTags.practiceDataSource,
     );
-    final snapshot = await _firestore.collection('practice_questions').get();
+    var snapshot = await _firestore
+        .collection('practice_questions')
+        .where('boardId', isEqualTo: boardId)
+        .where('gradeId', isEqualTo: gradeId)
+        .get();
+
+    // Backward compatibility for older datasets that don't yet store
+    // boardId/gradeId on each question document.
+    if (snapshot.docs.isEmpty) {
+      AppLogger.warning(
+        'No board/grade-scoped practice questions found; falling back to legacy dataset',
+        tag: AppLogTags.practiceDataSource,
+      );
+      snapshot = await _firestore
+          .collection('practice_questions')
+          .limit(20)
+          .get();
+    }
 
     return snapshot.docs.map((doc) {
       final data = doc.data();

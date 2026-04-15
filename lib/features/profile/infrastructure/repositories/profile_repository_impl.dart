@@ -59,4 +59,13 @@ class ProfileRepositoryImpl implements ProfileRepositoryPort {
       execute: () => _dataSource.getSettingsItems(),
     );
   }
+
+  @override
+  Future<Result<void>> updateStudyGoal(String studyGoalId) {
+    return safeOperation(
+      tag: AppLogTags.profileRepo,
+      operation: 'updateStudyGoal',
+      execute: () => _dataSource.updateStudyGoal(studyGoalId),
+    );
+  }
 }

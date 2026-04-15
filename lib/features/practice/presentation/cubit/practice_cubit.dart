@@ -21,11 +21,18 @@ class PracticeCubit extends Cubit<PracticeState>
       super(const PracticeState());
 
   /// Loads quiz questions.
-  Future<void> loadQuestions() async {
+  Future<void> loadQuestions({
+    required String boardId,
+    required String gradeId,
+  }) async {
     AppLogger.info('Loading practice questions', tag: AppLogTags.practiceCubit);
-    emit(state.copyWith(status: PracticeStatus.loading));
+    emit(state.copyWith(
+      status: PracticeStatus.loading,
+      boardId: boardId,
+      gradeId: gradeId,
+    ));
 
-    final result = await _getQuestions();
+    final result = await _getQuestions(boardId: boardId, gradeId: gradeId);
 
     switch (result) {
       case Success(:final data):
@@ -68,12 +75,40 @@ class PracticeCubit extends Cubit<PracticeState>
     );
   }
 
-  /// Moves to the next question.
+  /// Moves to the next question, or completes the quiz if on the last one.
   void nextQuestion() {
     if (state.currentIndex < state.totalQuestions - 1) {
       emit(
-        state.copyWith(currentIndex: state.currentIndex + 1, showResult: false),
+        state.copyWith(
+          currentIndex: state.currentIndex + 1,
+          selectedOptionId: null,
+          showResult: false,
+        ),
       );
+    } else {
+      // All questions answered — mark quiz as completed.
+      AppLogger.info(
+        'Quiz completed — ${state.totalPoints} total points',
+        tag: AppLogTags.practiceCubit,
+      );
+      emit(state.copyWith(status: PracticeStatus.completed, showResult: false));
+    }
+  }
+
+  /// Resets the quiz for a replay.
+  void resetQuiz() {
+    AppLogger.info('Quiz reset requested', tag: AppLogTags.practiceCubit);
+    final boardId = state.boardId;
+    final gradeId = state.gradeId;
+    emit(
+      PracticeState(
+        status: PracticeStatus.initial,
+        boardId: boardId,
+        gradeId: gradeId,
+      ),
+    );
+    if (boardId != null && gradeId != null) {
+      loadQuestions(boardId: boardId, gradeId: gradeId);
     }
   }
 }

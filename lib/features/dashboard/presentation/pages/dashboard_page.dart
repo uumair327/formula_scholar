@@ -79,7 +79,7 @@ class DashboardPage extends StatelessWidget {
                       const SizedBox(height: AppDimensions.paddingSection),
                       _buildAcademicPath(context, state),
                       const SizedBox(height: AppDimensions.paddingSection),
-                      _buildFormulaVault(state),
+                      _buildFormulaVault(context, state),
                       const SizedBox(height: AppDimensions.paddingLG),
                       _buildContinueStudying(context, state),
                       const SizedBox(height: AppDimensions.bottomNavPadding),
@@ -144,14 +144,11 @@ class DashboardPage extends StatelessWidget {
           ),
           actions: [
             IconButton(
-              onPressed: () => ComingSoonSheet.show(
-                context,
-                featureName: AppStrings.searchLabel,
-                description:
-                    'Search across all subjects, chapters, and formulas '
-                    'to quickly find what you need.',
-                icon: LucideIcons.search,
-              ),
+              onPressed: () {
+                // Navigate to Chapters tab for browsing
+                final shell = StatefulNavigationShell.of(context);
+                shell.goBranch(1);
+              },
               icon: const Icon(LucideIcons.search, color: AppColors.outline),
             ),
             const SizedBox(width: AppDimensions.paddingSM),
@@ -322,7 +319,7 @@ class DashboardPage extends StatelessWidget {
               const SizedBox(height: AppDimensions.paddingLG),
               // Title
               Text(
-                AppStrings.dashboardHeroTitle,
+                state.heroTitle,
                 style: AppTextStyles.headlineLarge.copyWith(
                   color: AppColors.onPrimary,
                   fontWeight: FontWeight.w800,
@@ -332,7 +329,7 @@ class DashboardPage extends StatelessWidget {
               const SizedBox(height: AppDimensions.paddingSM),
               // Description
               Text(
-                AppStrings.dashboardHeroDescription,
+                state.heroDescription,
                 style: AppTextStyles.bodyMedium.copyWith(
                   color: AppColors.primaryFixed.withValues(
                     alpha: AppDimensions.opacityNearOpaque,
@@ -342,14 +339,9 @@ class DashboardPage extends StatelessWidget {
               const SizedBox(height: AppDimensions.paddingXL),
               // Resume button
               ElevatedButton(
-                onPressed: () => ComingSoonSheet.show(
-                  context,
-                  featureName: AppStrings.dashboardResumeLesson,
-                  description:
-                      'Resume exactly where you left off and continue '
-                      'your learning journey seamlessly.',
-                  icon: LucideIcons.play,
-                ),
+                onPressed: () {
+                  _resumeLearning(context, state);
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.white,
                   foregroundColor: AppColors.primary,
@@ -387,6 +379,20 @@ class DashboardPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _resumeLearning(BuildContext context, DashboardState state) {
+    final featured = state.subjects.where((s) => s.isFeatured).toList();
+    if (featured.isNotEmpty) {
+      _onSubjectTap(context, featured.first);
+      return;
+    }
+    if (state.subjects.isNotEmpty) {
+      _onSubjectTap(context, state.subjects.first);
+      return;
+    }
+    context.read<SubjectSelectionCubit>().clearSelection();
+    StatefulNavigationShell.of(context).goBranch(1);
   }
 
   // ──────────────────────── Academic Path ───────────────────────
@@ -573,14 +579,11 @@ class DashboardPage extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () => ComingSoonSheet.show(
-                context,
-                featureName: AppStrings.dashboardBoardReadyQuiz,
-                description:
-                    'Test your knowledge with board-specific quiz challenges '
-                    'and earn points for correct answers.',
-                icon: LucideIcons.helpCircle,
-              ),
+              onPressed: () {
+                // Navigate to Practice tab (index 2)
+                final shell = StatefulNavigationShell.of(context);
+                shell.goBranch(2);
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: AppColors.onPrimary,
@@ -602,7 +605,7 @@ class DashboardPage extends StatelessWidget {
 
   // ──────────────────────── Formula Vault ───────────────────────
 
-  Widget _buildFormulaVault(DashboardState state) {
+  Widget _buildFormulaVault(BuildContext context, DashboardState state) {
     return AppCard(
       padding: const EdgeInsets.all(AppDimensions.paddingXXL),
       border: Border.all(color: AppColors.surfaceContainerHigh),
@@ -635,7 +638,7 @@ class DashboardPage extends StatelessWidget {
                     ),
                     const SizedBox(height: AppDimensions.paddingXXS),
                     Text(
-                      AppStrings.dashboardVaultDesc,
+                      state.vaultDescription,
                       style: AppTextStyles.bodySmall.copyWith(
                         color: AppColors.onSurfaceVariant,
                       ),
@@ -646,14 +649,14 @@ class DashboardPage extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppDimensions.paddingXL),
-          _buildVaultGrid(state),
+          _buildVaultGrid(context, state),
         ],
       ),
     );
   }
 
   /// Data-driven vault grid — items come from [DashboardState.vaultItems].
-  Widget _buildVaultGrid(DashboardState state) {
+  Widget _buildVaultGrid(BuildContext context, DashboardState state) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isWide = constraints.maxWidth > AppDimensions.breakpointMedium;
@@ -678,13 +681,11 @@ class DashboardPage extends StatelessWidget {
               return Material(
                 color: AppColors.transparent,
                 child: InkWell(
-                  onTap: () => ComingSoonSheet.show(
-                    context,
-                    featureName: 'Create Formula',
-                    description:
-                        'Create your own custom formulas in the vault.',
-                    icon: LucideIcons.plus,
-                  ),
+                  onTap: () {
+                    // Navigate to Saved tab (index 3)
+                    final shell = StatefulNavigationShell.of(context);
+                    shell.goBranch(3);
+                  },
                   borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
                   child: Container(
                     decoration: BoxDecoration(
@@ -713,13 +714,9 @@ class DashboardPage extends StatelessWidget {
             return Material(
               color: AppColors.transparent,
               child: InkWell(
-                onTap: () => ComingSoonSheet.show(
-                  context,
-                  featureName: item.title,
-                  description:
-                      'Open this formula from your secure offline vault.',
-                  icon: LucideIcons.folderClosed,
-                ),
+                onTap: () {
+                  _navigateFromVaultItem(context, state, item);
+                },
                 borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
                 child: Container(
                   padding: const EdgeInsets.all(AppDimensions.paddingLG),
@@ -757,11 +754,66 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
+  void _navigateFromVaultItem(
+    BuildContext context,
+    DashboardState state,
+    FormulaVaultItem item,
+  ) {
+    Subject? subject;
+    for (final s in state.subjects) {
+      if (s.id == item.id) {
+        subject = s;
+        break;
+      }
+    }
+
+    if (subject != null) {
+      _onSubjectTap(context, subject);
+      return;
+    }
+
+    StatefulNavigationShell.of(context).goBranch(3);
+  }
+
   // ──────────────────────── Continue Studying ───────────────────
 
   /// Data-driven recent studies list — uses [RecentStudy.iconName]
   /// and [RecentStudy.colorValue] instead of hardcoded `isMath` checks.
   Widget _buildContinueStudying(BuildContext context, DashboardState state) {
+    if (state.recentStudies.isEmpty) {
+      return AppCard(
+        padding: const EdgeInsets.all(AppDimensions.paddingXXL),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              AppStrings.continueStudying,
+              style: AppTextStyles.headlineSmall.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: AppDimensions.paddingMD),
+            Text(
+              AppStrings.dashboardNoRecentTitle,
+              style: AppTextStyles.titleLarge,
+            ),
+            const SizedBox(height: AppDimensions.paddingXS),
+            Text(
+              AppStrings.dashboardNoRecentDescription,
+              style: AppTextStyles.bodySmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: AppDimensions.paddingLG),
+            ElevatedButton(
+              onPressed: () => StatefulNavigationShell.of(context).goBranch(1),
+              child: const Text(AppStrings.dashboardOpenChapters),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -782,13 +834,9 @@ class DashboardPage extends StatelessWidget {
             child: Material(
               color: AppColors.transparent,
               child: InkWell(
-                onTap: () => ComingSoonSheet.show(
-                  context,
-                  featureName: study.title,
-                  description:
-                      'Resume your study session for ${study.title} right where you left off.',
-                  icon: iconData,
-                ),
+                onTap: () {
+                  _onRecentStudyTap(context, state, study);
+                },
                 borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
                 child: AppCard(
                   padding: const EdgeInsets.all(AppDimensions.paddingLG),
@@ -836,6 +884,32 @@ class DashboardPage extends StatelessWidget {
         }),
       ],
     );
+  }
+
+  void _onRecentStudyTap(
+    BuildContext context,
+    DashboardState state,
+    RecentStudy study,
+  ) {
+    if (study.subjectId.isNotEmpty) {
+      final byId = state.subjects
+          .where((s) => s.id == study.subjectId)
+          .toList();
+      if (byId.isNotEmpty) {
+        _onSubjectTap(context, byId.first);
+        return;
+      }
+    }
+
+    final byName = state.subjects
+        .where((s) => s.name.toLowerCase() == study.subject.toLowerCase())
+        .toList();
+    if (byName.isNotEmpty) {
+      _onSubjectTap(context, byName.first);
+      return;
+    }
+
+    StatefulNavigationShell.of(context).goBranch(1);
   }
 }
 

@@ -10,3 +10,4 @@ export 'ports/profile_data_source_port.dart';
 export 'usecases/get_user_profile_use_case.dart';
 export 'usecases/get_profile_stats_use_case.dart';
 export 'usecases/get_settings_items_use_case.dart';
+export 'usecases/update_study_goal_use_case.dart';

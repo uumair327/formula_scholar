@@ -18,6 +18,8 @@ class SelectedCurriculum extends Equatable {
 
   String get displayBadge => '$boardName Syllabus • Grade $gradeLabel';
 
+  String get curriculumKey => '${boardId}_$gradeId';
+
   @override
   List<Object?> get props => [
     boardId,

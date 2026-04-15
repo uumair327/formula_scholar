@@ -21,7 +21,9 @@ class FormulasPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<FormulasCubit, FormulasState>(
       buildWhen: (prev, curr) =>
-          prev.status != curr.status || prev.formulas != curr.formulas,
+          prev.status != curr.status ||
+          prev.formulas != curr.formulas ||
+          prev.isChapterSaved != curr.isChapterSaved,
       builder: (context, state) {
         if (state.status == FormulasStatus.loading ||
             state.status == FormulasStatus.initial) {
@@ -34,10 +36,16 @@ class FormulasPage extends StatelessWidget {
               message: state.errorMessage,
               onRetry: () {
                 if (state.subjectId != null && state.chapterId != null) {
+                  final curriculumKey = context
+                      .read<CurriculumCubit>()
+                      .state
+                      .curriculum
+                      ?.curriculumKey;
                   context.read<FormulasCubit>().loadFormulas(
                     subjectId: state.subjectId!,
                     chapterId: state.chapterId!,
                     chapterName: state.chapterName,
+                    curriculumKey: curriculumKey,
                   );
                 }
               },
@@ -130,22 +138,42 @@ class FormulasPage extends StatelessWidget {
         ],
       ),
       actions: [
-        IconButton(
-          onPressed: () => ComingSoonSheet.show(
-            context,
-            featureName: 'Chapter Bookmarking',
-            description:
-                'Save entire chapters to your bookmarks for quick access later.',
-            icon: LucideIcons.bookmark,
-          ),
-          icon: AppIconCircle(
-            icon: LucideIcons.bookmark,
-            size: AppDimensions.avatarMD,
-            backgroundColor: AppColors.primaryFixed,
-            iconColor: AppColors.primary,
-            iconSize: AppDimensions.iconMD,
-            borderRadius: AppDimensions.radiusMD,
-          ),
+        BlocBuilder<FormulasCubit, FormulasState>(
+          buildWhen: (prev, curr) => prev.isChapterSaved != curr.isChapterSaved,
+          builder: (context, state) {
+            return IconButton(
+              onPressed: () {
+                final subjectName =
+                    context.read<SubjectSelectionCubit>().state.subject?.name ??
+                    AppStrings.unknownSubject;
+                final curriculumKey =
+                    context
+                        .read<CurriculumCubit>()
+                        .state
+                        .curriculum
+                        ?.curriculumKey ??
+                    AppStrings.unknownCurriculum;
+
+                context.read<FormulasCubit>().toggleChapterBookmark(
+                  state.chapterName ?? AppStrings.chapterLabel,
+                  subjectName,
+                  curriculumKey: curriculumKey,
+                );
+              },
+              icon: AppIconCircle(
+                icon: state.isChapterSaved
+                    ? Icons.bookmark
+                    : LucideIcons.bookmark,
+                size: AppDimensions.avatarMD,
+                backgroundColor: AppColors.primaryFixed,
+                iconColor: state.isChapterSaved
+                    ? AppColors.primary
+                    : AppColors.primary,
+                iconSize: AppDimensions.iconMD,
+                borderRadius: AppDimensions.radiusMD,
+              ),
+            );
+          },
         ),
         const SizedBox(width: AppDimensions.paddingSM),
       ],
@@ -228,10 +256,10 @@ class FormulasPage extends StatelessWidget {
 
 /// A single formula card with LaTeX preview, title, and mastery status.
 class _FormulaCard extends StatelessWidget {
+  const _FormulaCard({required this.formula, required this.index});
+
   final Formula formula;
   final int index;
-
-  const _FormulaCard({required this.formula, required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -241,19 +269,24 @@ class _FormulaCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              AppIconCircle(
-                icon: formula.isMastered
-                    ? LucideIcons.checkCircle
-                    : LucideIcons.circle,
-                size: AppDimensions.avatarLG,
-                backgroundColor: formula.isMastered
-                    ? AppColors.secondaryFixed
-                    : AppColors.surfaceContainerHighest,
-                iconColor: formula.isMastered
-                    ? AppColors.secondary
-                    : AppColors.onSurfaceVariant,
-                iconSize: AppDimensions.iconLG,
-                borderRadius: AppDimensions.radiusMD,
+              IconButton(
+                onPressed: () {
+                  context.read<FormulasCubit>().toggleMastery(formula);
+                },
+                icon: AppIconCircle(
+                  icon: formula.isMastered
+                      ? LucideIcons.checkCircle
+                      : LucideIcons.circle,
+                  size: AppDimensions.avatarLG,
+                  backgroundColor: formula.isMastered
+                      ? AppColors.secondaryFixed
+                      : AppColors.surfaceContainerHighest,
+                  iconColor: formula.isMastered
+                      ? AppColors.secondary
+                      : AppColors.onSurfaceVariant,
+                  iconSize: AppDimensions.iconLG,
+                  borderRadius: AppDimensions.radiusMD,
+                ),
               ),
               const SizedBox(width: AppDimensions.paddingLG),
               Expanded(
@@ -285,10 +318,19 @@ class _FormulaCard extends StatelessWidget {
                           .state
                           .subject
                           ?.name ??
-                      'Unknown Subject';
+                      AppStrings.unknownSubject;
+                  final curriculumKey =
+                      context
+                          .read<CurriculumCubit>()
+                          .state
+                          .curriculum
+                          ?.curriculumKey ??
+                      AppStrings.unknownCurriculum;
+
                   context.read<FormulasCubit>().toggleBookmark(
                     formula,
                     subjectName,
+                    curriculumKey: curriculumKey,
                   );
                 },
                 icon: Icon(

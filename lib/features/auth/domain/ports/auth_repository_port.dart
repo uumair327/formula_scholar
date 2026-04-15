@@ -37,6 +37,9 @@ abstract interface class AuthRepositoryPort {
   /// Deletes the current user's account permanently.
   Future<Result<void>> deleteAccount();
 
+  /// Sends a password reset email to the given [email].
+  Future<Result<void>> sendPasswordResetEmail({required String email});
+
   /// Returns the currently signed-in user, or `null`.
   AuthUser? get currentUser;
 

@@ -35,6 +35,43 @@ class DashboardState extends Equatable {
     return '$selectedBoardName Syllabus • Grade $selectedGradeName';
   }
 
+  String get heroTitle {
+    final featured = subjects
+        .where((s) => s.isFeatured)
+        .cast<Subject?>()
+        .firstWhere(
+          (s) => s != null,
+          orElse: () => subjects.isNotEmpty ? subjects.first : null,
+        );
+
+    if (featured == null) {
+      return AppStrings.dashboardHeroTitle;
+    }
+
+    final headline = featured.subtitle?.trim();
+    if (headline != null && headline.isNotEmpty) {
+      return AppStrings.dashboardHeroTitleForTopic(headline);
+    }
+
+    return AppStrings.dashboardHeroTitleForTopic(featured.name);
+  }
+
+  String get heroDescription {
+    final mastery = progress?.masteryPercentage ?? 0;
+    return AppStrings.dashboardHeroDescriptionWithProgress(mastery.toInt());
+  }
+
+  String get vaultDescription {
+    final formulaCount = subjects.fold<int>(
+      0,
+      (sum, subject) => sum + subject.formulaCount,
+    );
+    return AppStrings.dashboardVaultDescWithCounts(
+      formulaCount,
+      subjects.length,
+    );
+  }
+
   DashboardState copyWith({
     DashboardStatus? status,
     StudyProgress? progress,

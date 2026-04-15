@@ -5,44 +5,106 @@ import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
-import '../../domain/domain.dart';
+import '../../../auth/auth.dart';
 import '../cubit/chapters_cubit.dart';
 import '../cubit/chapters_state.dart';
+import '../widgets/chapter_cards.dart';
+import '../widgets/mastery_tools_section.dart';
+import '../widgets/no_subject_selected_state.dart';
+import '../widgets/subject_analytics_sheet.dart';
 
 /// Generic chapters page – renders content for ANY subject.
 ///
 /// The same page UI serves Geometry, Algebra, Physics, Chemistry, etc.
 /// Content is driven by data from [ChaptersCubit], not hardcoded per subject.
-class ChaptersPage extends StatelessWidget {
+class ChaptersPage extends StatefulWidget {
   const ChaptersPage({super.key});
+
+  @override
+  State<ChaptersPage> createState() => _ChaptersPageState();
+}
+
+class _ChaptersPageState extends State<ChaptersPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Trigger initial load if a subject is already selected (e.g. hydrated).
+    // BlocListener only fires on *changes*, not on existing state.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _ensureChaptersLoaded();
+    });
+  }
+
+  /// If a subject is already selected, load its chapters.
+  /// If no subject is selected but available subjects exist, auto-select
+  /// the first one so the user always sees content on the Chapters tab.
+  void _ensureChaptersLoaded() {
+    final selectionCubit = context.read<SubjectSelectionCubit>();
+    final subjectState = selectionCubit.state;
+    final curriculumKey =
+        context.read<CurriculumCubit>().state.curriculum?.curriculumKey ??
+        AppStrings.unknownCurriculum;
+
+    if (subjectState.hasSelection) {
+      context.read<ChaptersCubit>().loadChapters(
+        subjectState.subject!.id,
+        curriculumKey: curriculumKey,
+      );
+    } else if (subjectState.availableSubjects.isNotEmpty) {
+      final first = subjectState.availableSubjects.first;
+      selectionCubit.selectSubject(
+        id: first.id,
+        name: first.name,
+        category: first.category,
+        description: first.description,
+        subtitle: first.subtitle,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<SubjectSelectionCubit, SubjectSelectionState>(
       listener: (context, subjectState) {
         if (subjectState.hasSelection) {
-          context.read<ChaptersCubit>().loadChapters(subjectState.subject!.id);
+          final curriculumKey =
+              context.read<CurriculumCubit>().state.curriculum?.curriculumKey ??
+              AppStrings.unknownCurriculum;
+          context.read<ChaptersCubit>().loadChapters(
+            subjectState.subject!.id,
+            curriculumKey: curriculumKey,
+          );
         }
       },
       child: BlocBuilder<SubjectSelectionCubit, SubjectSelectionState>(
         builder: (context, subjectState) {
           final subject = subjectState.subject;
 
+          // If no subject selected yet but subjects are available,
+          // auto-select after they arrive (e.g. from dashboard loading).
+          if (!subjectState.hasSelection &&
+              subjectState.availableSubjects.isNotEmpty) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _ensureChaptersLoaded();
+            });
+          }
+
           return Scaffold(
             body: CustomScrollView(
               slivers: [
-                _buildAppBar(context, subject),
+                _buildAppBar(context, subjectState),
                 _buildSubjectChips(context, subjectState),
                 if (!subjectState.hasSelection)
                   const SliverFillRemaining(
                     hasScrollBody: false,
-                    child: _NoSubjectSelectedState(),
+                    child: NoSubjectSelectedState(),
                   )
                 else
                   BlocBuilder<ChaptersCubit, ChaptersState>(
                     buildWhen: (prev, curr) =>
                         prev.status != curr.status ||
-                        prev.chapters != curr.chapters,
+                        prev.chapters != curr.chapters ||
+                        prev.masteryTools != curr.masteryTools,
                     builder: (context, state) {
                       if (state.status == ChaptersStatus.loading ||
                           state.status == ChaptersStatus.initial) {
@@ -55,9 +117,18 @@ class ChaptersPage extends StatelessWidget {
                         return SliverFillRemaining(
                           child: AppErrorState(
                             message: state.errorMessage,
-                            onRetry: () => context
-                                .read<ChaptersCubit>()
-                                .loadChapters(subject!.id, forceReload: true),
+                            onRetry: () =>
+                                context.read<ChaptersCubit>().loadChapters(
+                                  subject!.id,
+                                  curriculumKey:
+                                      context
+                                          .read<CurriculumCubit>()
+                                          .state
+                                          .curriculum
+                                          ?.curriculumKey ??
+                                      AppStrings.unknownCurriculum,
+                                  forceReload: true,
+                                ),
                           ),
                         );
                       }
@@ -69,13 +140,13 @@ class ChaptersPage extends StatelessWidget {
                         sliver: SliverList(
                           delegate: SliverChildListDelegate([
                             const SizedBox(height: AppDimensions.paddingLG),
-                            _buildHeroSection(subject!),
+                            _buildHeroSection(subjectState.subject!),
                             const SizedBox(height: AppDimensions.paddingXXL),
-                            _buildChapterCards(state, subject.id),
+                            _buildChapterCards(state, subjectState.subject!.id),
                             const SizedBox(
                               height: AppDimensions.paddingSection,
                             ),
-                            _buildMasteryTools(),
+                            MasteryToolsSection(tools: state.masteryTools),
                             const SizedBox(
                               height: AppDimensions.bottomNavPadding,
                             ),
@@ -88,14 +159,11 @@ class ChaptersPage extends StatelessWidget {
             ),
             floatingActionButton: subjectState.hasSelection
                 ? FloatingActionButton(
-                    onPressed: () => ComingSoonSheet.show(
-                      context,
-                      featureName: AppStrings.quickPractice,
-                      description:
-                          'Jump into a quick practice session for this '
-                          'subject with randomly selected formulas.',
-                      icon: LucideIcons.play,
-                    ),
+                    onPressed: () {
+                      // Navigate to Practice tab (index 2)
+                      final shell = StatefulNavigationShell.of(context);
+                      shell.goBranch(2);
+                    },
                     backgroundColor: AppColors.primary,
                     child: const Icon(LucideIcons.play, color: AppColors.white),
                   )
@@ -108,7 +176,11 @@ class ChaptersPage extends StatelessWidget {
 
   // ──────────────────────── App Bar ─────────────────────────────
 
-  SliverAppBar _buildAppBar(BuildContext context, SelectedSubject? subject) {
+  SliverAppBar _buildAppBar(
+    BuildContext context,
+    SubjectSelectionState subjectState,
+  ) {
+    final subject = subjectState.subject;
     return SliverAppBar(
       floating: true,
       snap: true,
@@ -153,14 +225,38 @@ class ChaptersPage extends StatelessWidget {
       ),
       actions: [
         IconButton(
-          onPressed: () => ComingSoonSheet.show(
-            context,
-            featureName: 'Subject Analytics',
-            description:
-                'View deep analytics and mastery metrics for this specific subject.',
-            icon: LucideIcons.barChart3,
-          ),
-          icon: AppIconCircle(
+          onPressed: () {
+            if (subject == null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text(AppStrings.selectSubjectFirst)),
+              );
+              return;
+            }
+            final chapterState = context.read<ChaptersCubit>().state;
+
+            // Calculate totals
+            var total = 0;
+            var completed = 0;
+            for (var chapter in chapterState.chapters) {
+              total += chapter.totalFormulas;
+              completed += chapter.completedFormulas;
+            }
+            final progress = total > 0
+                ? ((completed / total) * 100).toInt()
+                : 0;
+
+            SubjectAnalyticsSheet.show(
+              context,
+              subjectName: subject.name,
+              progressPercent: progress,
+              completedFormulas: completed,
+              totalFormulas: total,
+              grade:
+                  context.read<CurriculumCubit>().state.gradeLabel ??
+                  AppStrings.unknownGrade,
+            );
+          },
+          icon: const AppIconCircle(
             icon: LucideIcons.barChart3,
             size: AppDimensions.avatarMD,
             backgroundColor: AppColors.primaryFixed,
@@ -170,12 +266,20 @@ class ChaptersPage extends StatelessWidget {
           ),
         ),
         const SizedBox(width: AppDimensions.paddingMD),
-        GestureDetector(
-          onTap: () => context.push(AppRoutes.profilePath),
-          child: const AppAvatar(
-            imageUrl: AppAssets.geometryAvatarUrl,
-            placeholderColor: AppColors.surfaceContainerHighest,
-          ),
+        BlocBuilder<AuthCubit, AuthState>(
+          buildWhen: (prev, curr) => prev.user != curr.user,
+          builder: (context, authState) {
+            final photoUrl =
+                authState.user?.photoUrl ??
+                AppAssets.dashboardStudentProfileUrl;
+            return GestureDetector(
+              onTap: () => context.push(AppRoutes.profilePath),
+              child: AppAvatar(
+                imageUrl: photoUrl,
+                placeholderColor: AppColors.surfaceContainerHighest,
+              ),
+            );
+          },
         ),
         const SizedBox(width: AppDimensions.paddingLG),
       ],
@@ -311,9 +415,6 @@ class ChaptersPage extends StatelessWidget {
 
   // ──────────────────────── Chapter Cards ───────────────────────
 
-  /// Feature flag: set to `false` to re-enable chapter locking.
-  static const bool _kUnlockAllChapters = true;
-
   Widget _buildChapterCards(ChaptersState state, String subjectId) {
     if (state.chapters.isEmpty) return const SizedBox();
 
@@ -323,424 +424,22 @@ class ChaptersPage extends StatelessWidget {
     return Column(
       children: [
         if (featured != null) ...[
-          _FeaturedChapterCard(chapter: featured, subjectId: subjectId),
+          FeaturedChapterCard(chapter: featured, subjectId: subjectId),
           const SizedBox(height: AppDimensions.paddingLG),
         ],
         ...remaining.map((chapter) {
-          // When _kUnlockAllChapters is false, locked chapters
-          // show _LockedChapterCard instead.
-          final effectivelyLocked = chapter.isLocked && !_kUnlockAllChapters;
+          // When unlockAllChapters is false, locked chapters
+          // show LockedChapterCard instead.
+          final effectivelyLocked =
+              chapter.isLocked && !AppFeatureFlags.unlockAllChapters;
           return Padding(
             padding: const EdgeInsets.only(bottom: AppDimensions.paddingLG),
             child: effectivelyLocked
-                ? _LockedChapterCard(chapter: chapter)
-                : _CompactChapterCard(chapter: chapter, subjectId: subjectId),
+                ? LockedChapterCard(chapter: chapter)
+                : CompactChapterCard(chapter: chapter, subjectId: subjectId),
           );
         }),
       ],
     );
   }
-
-  // ──────────────────────── Mastery Tools ───────────────────────
-
-  Widget _buildMasteryTools() {
-    final tools = [
-      _MasteryTool(
-        icon: LucideIcons.graduationCap,
-        label: AppStrings.videoLessons,
-        color: AppColors.primary,
-      ),
-      _MasteryTool(
-        icon: LucideIcons.helpCircle,
-        label: AppStrings.practiceQuiz,
-        color: AppColors.secondary,
-      ),
-      _MasteryTool(
-        icon: LucideIcons.fileText,
-        label: AppStrings.cheatSheets,
-        color: AppColors.orange500,
-      ),
-      _MasteryTool(
-        icon: LucideIcons.box,
-        label: AppStrings.visualizer3d,
-        color: AppColors.tertiary,
-      ),
-    ];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AppSectionTitle(
-          title: AppStrings.masteryTools,
-          leadingIcon: LucideIcons.sparkles,
-        ),
-        const SizedBox(height: AppDimensions.paddingLG),
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: AppDimensions.masteryToolsCrossAxisCount,
-            mainAxisSpacing: AppDimensions.masteryToolsSpacing,
-            crossAxisSpacing: AppDimensions.masteryToolsSpacing,
-            childAspectRatio: AppDimensions.masteryToolsAspectRatio,
-          ),
-          itemCount: tools.length,
-          itemBuilder: (context, index) {
-            final tool = tools[index];
-            return GestureDetector(
-              onTap: () => ComingSoonSheet.show(
-                context,
-                featureName: tool.label,
-                icon: tool.icon,
-              ),
-              child: AppCard(
-                color: AppColors.white,
-                boxShadow: const [AppShadows.subtle],
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      tool.icon,
-                      size: AppDimensions.iconXXL,
-                      color: tool.color,
-                    ),
-                    const SizedBox(height: AppDimensions.paddingSM),
-                    Text(
-                      tool.label,
-                      style: AppTextStyles.bodySmall.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
-      ],
-    );
-  }
-}
-
-// ═══════════════════════════════════════════════════════════════════
-//  PRIVATE WIDGET COMPONENTS
-// ═══════════════════════════════════════════════════════════════════
-
-/// Featured card – highest-progress chapter, shown prominently.
-class _FeaturedChapterCard extends StatelessWidget {
-  final Chapter chapter;
-  final String subjectId;
-  const _FeaturedChapterCard({required this.chapter, required this.subjectId});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppCard(
-      padding: const EdgeInsets.all(AppDimensions.paddingXXL),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              AppIconCircle(
-                icon: LucideIcons.triangle,
-                size: AppDimensions.avatarXL,
-                backgroundColor: AppColors.primaryFixed,
-                iconColor: AppColors.primary,
-                iconSize: AppDimensions.iconXL,
-                borderRadius: AppDimensions.radiusLG,
-              ),
-              AppInfoChip(
-                label: AppStrings.percentDone(chapter.progressPercent.toInt()),
-                backgroundColor: AppColors.secondaryContainer,
-                textColor: AppColors.onSecondaryContainer,
-                textStyle: AppTextStyles.bodySmall.copyWith(
-                  color: AppColors.onSecondaryContainer,
-                  fontWeight: FontWeight.w700,
-                ),
-                horizontalPadding: AppDimensions.progressBarLG,
-                verticalPadding: AppDimensions.chipPaddingVertical,
-              ),
-            ],
-          ),
-          const SizedBox(height: AppDimensions.paddingXL),
-          Text(chapter.name, style: AppTextStyles.headlineMedium),
-          const SizedBox(height: AppDimensions.paddingSM),
-          Text(
-            chapter.subtitle,
-            style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.onSurfaceVariant,
-              height: AppDimensions.lineHeightDefault,
-            ),
-          ),
-          const SizedBox(height: AppDimensions.paddingXL),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                AppStrings.completedOfFormulas(
-                  chapter.completedFormulas,
-                  chapter.totalFormulas,
-                ),
-                style: AppTextStyles.bodySmall.copyWith(
-                  color: AppColors.outline,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              Text(
-                AppStrings.nearlyThere,
-                style: AppTextStyles.bodySmall.copyWith(
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppDimensions.paddingSM),
-          ProgressBar(
-            percentage: chapter.progressPercent,
-            height: AppDimensions.progressBarMD,
-            backgroundColor: AppColors.secondaryFixedDim.withValues(
-              alpha: AppDimensions.opacityLight,
-            ),
-          ),
-          const SizedBox(height: AppDimensions.paddingXXL),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: () {
-                context.goNamed(
-                  AppRoutes.formulaDetailName,
-                  pathParameters: {
-                    'subjectId': subjectId,
-                    'chapterId': chapter.id,
-                  },
-                  queryParameters: {'name': chapter.name},
-                );
-              },
-              icon: const Text(AppStrings.continueLearning),
-              label: const Icon(
-                LucideIcons.arrowRight,
-                size: AppDimensions.iconMD,
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.white,
-                padding: const EdgeInsets.symmetric(
-                  vertical: AppDimensions.paddingLG,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
-                ),
-                textStyle: AppTextStyles.labelLarge,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Compact card – regular chapters with progress bar.
-class _CompactChapterCard extends StatelessWidget {
-  final Chapter chapter;
-  final String subjectId;
-  const _CompactChapterCard({required this.chapter, required this.subjectId});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppCard(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              AppIconCircle(
-                icon: LucideIcons.bookOpen,
-                size: AppDimensions.avatarLG,
-                backgroundColor: chapter.isInProgress
-                    ? AppColors.tertiaryFixed
-                    : AppColors.surfaceContainerHighest,
-                iconColor: chapter.isInProgress
-                    ? AppColors.tertiary
-                    : AppColors.onSurfaceVariant,
-                iconSize: AppDimensions.iconLG,
-                borderRadius: AppDimensions.radiusMD,
-              ),
-              const SizedBox(width: AppDimensions.paddingLG),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(chapter.name, style: AppTextStyles.titleLarge),
-                    Text(
-                      chapter.subtitle,
-                      style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.onSurfaceVariant,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppDimensions.paddingLG),
-          ProgressBar(
-            percentage: chapter.progressPercent,
-            barColor: AppColors.primary,
-            backgroundColor: AppColors.surfaceContainerHighest,
-            height: AppDimensions.progressBarSM,
-          ),
-          const SizedBox(height: AppDimensions.paddingSM),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '${chapter.completedFormulas}/${chapter.totalFormulas} ${AppStrings.formulasLabel}',
-                style: AppTextStyles.overline.copyWith(
-                  color: AppColors.outline,
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  context.goNamed(
-                    AppRoutes.formulaDetailName,
-                    pathParameters: {
-                      'subjectId': subjectId,
-                      'chapterId': chapter.id,
-                    },
-                    queryParameters: {'name': chapter.name},
-                  );
-                },
-                child: Text(
-                  AppStrings.startNow.toUpperCase(),
-                  style: AppTextStyles.overline.copyWith(
-                    color: AppColors.primary,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Locked card – chapter not yet available.
-class _LockedChapterCard extends StatelessWidget {
-  final Chapter chapter;
-  const _LockedChapterCard({required this.chapter});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppDimensions.paddingXL),
-      decoration: BoxDecoration(
-        color: AppColors.tertiaryContainer.withValues(
-          alpha: AppDimensions.opacitySubtle,
-        ),
-        borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
-        border: Border.all(
-          color: AppColors.tertiaryFixedDim.withValues(
-            alpha: AppDimensions.opacityLight,
-          ),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            chapter.name,
-            style: AppTextStyles.labelLarge.copyWith(color: AppColors.tertiary),
-          ),
-          const SizedBox(height: AppDimensions.paddingXS),
-          Text(
-            chapter.subtitle,
-            style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.onTertiaryContainer.withValues(
-                alpha: AppDimensions.opacityHigh,
-              ),
-            ),
-          ),
-          const SizedBox(height: AppDimensions.paddingMD),
-          Row(
-            children: [
-              AppInfoChip(
-                label: AppStrings.locked,
-                backgroundColor: AppColors.white.withValues(
-                  alpha: AppDimensions.opacityMediumLight,
-                ),
-                textColor: AppColors.tertiary,
-                textStyle: AppTextStyles.overline.copyWith(
-                  color: AppColors.tertiary,
-                ),
-              ),
-              const SizedBox(width: AppDimensions.paddingSM),
-              const Icon(
-                LucideIcons.lock,
-                size: AppDimensions.iconSM,
-                color: AppColors.tertiary,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Empty state when no subject is selected.
-class _NoSubjectSelectedState extends StatelessWidget {
-  const _NoSubjectSelectedState();
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppDimensions.paddingSection),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              LucideIcons.bookOpen,
-              size: AppDimensions.iconHero,
-              color: AppColors.outline.withValues(
-                alpha: AppDimensions.opacityMedium,
-              ),
-            ),
-            const SizedBox(height: AppDimensions.paddingXXL),
-            Text(
-              AppStrings.selectSubjectTitle,
-              style: AppTextStyles.headlineSmall.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: AppDimensions.paddingSM),
-            Text(
-              AppStrings.selectSubjectDesc,
-              textAlign: TextAlign.center,
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _MasteryTool {
-  final IconData icon;
-  final String label;
-  final Color color;
-
-  const _MasteryTool({
-    required this.icon,
-    required this.label,
-    required this.color,
-  });
 }

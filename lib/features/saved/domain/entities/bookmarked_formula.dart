@@ -7,6 +7,7 @@ class BookmarkedFormula extends Equatable {
   final String subject;
   final String formula;
   final DateTime savedAt;
+  final String curriculumKey;
 
   const BookmarkedFormula({
     required this.id,
@@ -14,8 +15,10 @@ class BookmarkedFormula extends Equatable {
     required this.subject,
     required this.formula,
     required this.savedAt,
+    required this.curriculumKey,
   });
 
   @override
-  List<Object?> get props => [id, title, subject, formula, savedAt];
+  List<Object?> get props => [id, title, subject, formula, savedAt, curriculumKey];
 }
+
