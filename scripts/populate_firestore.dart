@@ -207,6 +207,58 @@ void main(List<String> args) async {
     await subjectsRef.doc(subjectMap['id'] as String).set(subjectMap);
   }
 
+  // --- Chapters: Mastery Tools ---
+  stdout.writeln('Populating Mastery Tools...');
+  final masteryTools = [
+    {
+      'id': 'video_lessons',
+      'label': 'Video Lessons',
+      'iconName': 'graduationCap',
+      'category': 'guided_learning',
+      'isEnabled': false,
+      'supportSubtitle':
+          'Video Lessons are currently being prepared. Contact support if you need access to guided tutorial content.',
+      'displayOrder': 1,
+    },
+    {
+      'id': 'practice_quiz',
+      'label': 'Practice Quiz',
+      'iconName': 'helpCircle',
+      'category': 'assessment',
+      'isEnabled': true,
+      'routeName': 'practice',
+      'displayOrder': 2,
+    },
+    {
+      'id': 'cheat_sheets',
+      'label': 'Cheat Sheets',
+      'iconName': 'fileText',
+      'category': 'quick_reference',
+      'isEnabled': false,
+      'supportSubtitle':
+          'Cheat Sheets provide quick formula reference guides. Contact support to request this feature for your curriculum.',
+      'displayOrder': 3,
+    },
+    {
+      'id': 'visualizer_3d',
+      'label': 'Visualizer 3D',
+      'iconName': 'box',
+      'category': 'visual_learning',
+      'isEnabled': false,
+      'supportSubtitle':
+          '3D Visualizer helps understand geometric concepts. Contact support to request 3D visualization tools.',
+      'displayOrder': 4,
+    },
+  ];
+
+  for (final subjectMap in subjectsData) {
+    final subjectId = subjectMap['id'] as String;
+    final toolsRef = subjectsRef.doc(subjectId).collection('mastery_tools');
+    for (final tool in masteryTools) {
+      await toolsRef.doc(tool['id'] as String).set(tool);
+    }
+  }
+
   // --- Chapters (Subcollections of Subjects) ---
   stdout.writeln('Populating Chapters...');
   final chaptersData = {

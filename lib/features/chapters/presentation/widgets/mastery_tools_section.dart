@@ -36,7 +36,7 @@ class MasteryToolsSection extends StatelessWidget {
                 const SizedBox(width: AppDimensions.paddingMD),
                 Expanded(
                   child: Text(
-                    'Mastery tools are syncing from backend. Please try again in a moment.',
+                    AppStrings.masteryToolsSyncing,
                     style: AppTextStyles.bodySmall.copyWith(
                       color: AppColors.onSurfaceVariant,
                     ),

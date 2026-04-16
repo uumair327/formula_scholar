@@ -221,6 +221,10 @@ abstract final class AppStrings {
   static const String dashboardNoRecentDescription =
       'Start learning from the chapters tab and your recent progress will appear here.';
   static const String dashboardOpenChapters = 'Open Chapters';
+  static const String chaptersNoContentTitle = 'No chapters available yet';
+  static const String chaptersNoContentDescription =
+      'This subject has not been populated with chapters yet. Try another subject or check back after the backend sync finishes.';
+  static const String chaptersBrowseSubjects = 'Browse Subjects';
 
   // Dashboard – Formula Vault
   static const String dashboardFormulaVault = 'My Formula Vault';
@@ -230,6 +234,10 @@ abstract final class AppStrings {
   static const String dashboardVaultMath = 'Quadratic Formula';
   static const String dashboardVaultPhysics = 'Kinematic Eq 1';
   static const String dashboardVaultChem = 'Ideal Gas Law';
+
+  // ──────────────────────── Chapters – Mastery Tools ────────
+  static const String masteryToolsSyncing =
+      'Mastery tools are syncing from backend. Please try again in a moment.';
 
   // ──────────────────────── Dashboard – Subjects ─────────────
   static const String numberSystemsGeometry = 'Number Systems & Geometry';
@@ -372,6 +380,15 @@ abstract final class AppStrings {
   static const String toggleDarkMode = 'Toggle Dark Mode';
   static const String helpAndSupport = 'Help & Support';
   static const String logout = 'Logout';
+  static const String editProfileTitle = 'Edit Profile';
+  static const String editProfileSubtitle =
+      'Update your display name and avatar from one place.';
+  static const String profileNameLabel = 'Display Name';
+  static const String profileAvatarUrlLabel = 'Avatar URL';
+  static const String saveChanges = 'Save Changes';
+  static const String profileUpdatedSuccess = 'Profile updated successfully.';
+  static const String failedToUpdateProfile = 'Failed to update profile';
+  static const String profileNameRequired = 'Display name is required';
 
   // ──────────────────────── Practice ──────────────────────────
   static const String circlesAndAreas = 'Circles & Areas';
@@ -388,6 +405,9 @@ abstract final class AppStrings {
   static const String quizCompleteTitle = 'Quiz Complete!';
   static const String quizCompleteDesc =
       'Great effort! Review your results below.';
+  static const String practiceNoQuestionsTitle = 'No practice questions yet';
+  static const String practiceNoQuestionsDesc =
+      'Your current curriculum does not have practice questions available yet. Try again soon or open Chapters to keep learning.';
   static const String playAgain = 'Play Again';
   static const String wrongAnswer = 'Incorrect';
   static const String tryNextTime = 'Review and try again next time';

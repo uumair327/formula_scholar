@@ -37,7 +37,10 @@ class PracticePage extends StatelessWidget {
                 body: AppErrorState(
                   message: state.errorMessage,
                   onRetry: () {
-                    final curr = context.read<CurriculumCubit>().state.curriculum;
+                    final curr = context
+                        .read<CurriculumCubit>()
+                        .state
+                        .curriculum;
                     if (curr != null) {
                       context.read<PracticeCubit>().loadQuestions(
                         boardId: curr.boardId,
@@ -53,7 +56,9 @@ class PracticePage extends StatelessWidget {
               return _buildCompletionScreen(context, state, authState);
             }
             final question = state.currentQuestion;
-            if (question == null) return const SizedBox.shrink();
+            if (state.totalQuestions == 0 || question == null) {
+              return _buildEmptyState(context, authState);
+            }
             final photoUrl = authState.user?.photoUrl ?? '';
 
             return Scaffold(
@@ -137,14 +142,100 @@ class PracticePage extends StatelessWidget {
                     _buildWrongAnswerToast(context),
 
                   // Next / Finish button.
-                  if (state.showResult)
-                    _buildNextButton(context, state),
+                  if (state.showResult) _buildNextButton(context, state),
                 ],
               ),
             );
           },
         );
       },
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context, AuthState authState) {
+    final photoUrl = authState.user?.photoUrl ?? '';
+
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildHeader(context, photoUrl),
+            Expanded(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppDimensions.paddingXXL),
+                  child: AppCard(
+                    padding: const EdgeInsets.all(AppDimensions.paddingXXL),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: AppDimensions.imageXL,
+                          height: AppDimensions.imageXL,
+                          decoration: const BoxDecoration(
+                            color: AppColors.primaryFixed,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            LucideIcons.bookOpen,
+                            size: AppDimensions.imageLG,
+                            color: AppColors.primary,
+                          ),
+                        ),
+                        const SizedBox(height: AppDimensions.paddingXXL),
+                        Text(
+                          AppStrings.practiceNoQuestionsTitle,
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.headlineSmall.copyWith(
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        const SizedBox(height: AppDimensions.paddingSM),
+                        Text(
+                          AppStrings.practiceNoQuestionsDesc,
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: AppColors.onSurfaceVariant,
+                          ),
+                        ),
+                        const SizedBox(height: AppDimensions.paddingXXL),
+                        Wrap(
+                          spacing: AppDimensions.paddingMD,
+                          runSpacing: AppDimensions.paddingMD,
+                          alignment: WrapAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                final curr = context
+                                    .read<CurriculumCubit>()
+                                    .state
+                                    .curriculum;
+                                if (curr != null) {
+                                  context.read<PracticeCubit>().loadQuestions(
+                                    boardId: curr.boardId,
+                                    gradeId: curr.gradeId,
+                                  );
+                                }
+                              },
+                              child: Text(AppStrings.retry),
+                            ),
+                            OutlinedButton(
+                              onPressed: () => StatefulNavigationShell.of(
+                                context,
+                              ).goBranch(1),
+                              child: const Text(AppStrings.browseChapters),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -321,7 +412,8 @@ class PracticePage extends StatelessWidget {
           final showCorrectState = state.showResult && isSelected && isCorrect;
           final showWrongState = state.showResult && isSelected && !isCorrect;
           // Also highlight the actual correct answer when wrong was selected.
-          final showCorrectHint = state.showResult && !state.isCorrect && isCorrect;
+          final showCorrectHint =
+              state.showResult && !state.isCorrect && isCorrect;
 
           return GestureDetector(
             onTap: () => context.read<PracticeCubit>().selectOption(option.id),
@@ -334,17 +426,17 @@ class PracticePage extends StatelessWidget {
                         alpha: AppDimensions.opacitySubtle,
                       )
                     : showWrongState
-                        ? AppColors.error.withValues(
-                            alpha: AppDimensions.opacityFaint,
-                          )
-                        : AppColors.surfaceContainerLowest,
+                    ? AppColors.error.withValues(
+                        alpha: AppDimensions.opacityFaint,
+                      )
+                    : AppColors.surfaceContainerLowest,
                 borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                 border: Border.all(
                   color: showCorrectState || showCorrectHint
                       ? AppColors.secondary
                       : showWrongState
-                          ? AppColors.error
-                          : AppColors.transparent,
+                      ? AppColors.error
+                      : AppColors.transparent,
                   width: AppDimensions.borderWidth,
                 ),
                 boxShadow: const [AppShadows.ghost],
@@ -360,15 +452,18 @@ class PracticePage extends StatelessWidget {
                       color: showCorrectState || showCorrectHint
                           ? AppColors.secondary
                           : showWrongState
-                              ? AppColors.error
-                              : AppColors.surfaceContainerHigh,
+                          ? AppColors.error
+                          : AppColors.surfaceContainerHigh,
                     ),
                     alignment: Alignment.center,
                     child: Text(
                       option.id,
                       style: AppTextStyles.titleMedium.copyWith(
                         fontWeight: FontWeight.w700,
-                        color: showCorrectState || showCorrectHint || showWrongState
+                        color:
+                            showCorrectState ||
+                                showCorrectHint ||
+                                showWrongState
                             ? AppColors.onSecondary
                             : AppColors.outline,
                       ),
@@ -379,14 +474,17 @@ class PracticePage extends StatelessWidget {
                     child: Text(
                       option.text,
                       style: AppTextStyles.titleMedium.copyWith(
-                        fontWeight: showCorrectState || showWrongState || showCorrectHint
+                        fontWeight:
+                            showCorrectState ||
+                                showWrongState ||
+                                showCorrectHint
                             ? FontWeight.w700
                             : FontWeight.w500,
                         color: showCorrectState || showCorrectHint
                             ? AppColors.onSecondaryContainer
                             : showWrongState
-                                ? AppColors.error
-                                : null,
+                            ? AppColors.error
+                            : null,
                       ),
                     ),
                   ),
@@ -600,7 +698,6 @@ class PracticePage extends StatelessWidget {
     PracticeState state,
     AuthState authState,
   ) {
-    final photoUrl = authState.user?.photoUrl ?? '';
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -664,8 +761,7 @@ class PracticePage extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: FilledButton.icon(
-                    onPressed: () =>
-                        context.read<PracticeCubit>().resetQuiz(),
+                    onPressed: () => context.read<PracticeCubit>().resetQuiz(),
                     icon: const Icon(LucideIcons.refreshCw),
                     label: Text(
                       AppStrings.playAgain,

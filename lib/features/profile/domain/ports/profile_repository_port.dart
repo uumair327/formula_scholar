@@ -16,6 +16,12 @@ abstract interface class ProfileRepositoryPort {
   /// Fetches settings/menu items.
   Future<Result<List<SettingsItem>>> getSettingsItems();
 
+  /// Updates the user's profile details.
+  Future<Result<void>> updateProfile({
+    required String name,
+    required String avatarUrl,
+  });
+
   /// Updates the user's study goal in their profile.
   Future<Result<void>> updateStudyGoal(String studyGoalId);
 }

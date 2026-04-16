@@ -115,6 +115,8 @@ import '../../features/profile/domain/usecases/get_settings_items_use_case.dart'
     as _i657;
 import '../../features/profile/domain/usecases/get_user_profile_use_case.dart'
     as _i105;
+import '../../features/profile/domain/usecases/update_profile_use_case.dart'
+    as _i112;
 import '../../features/profile/domain/usecases/update_study_goal_use_case.dart'
     as _i401;
 import '../../features/profile/infrastructure/adapters/profile_firebase_adapter.dart'
@@ -363,6 +365,11 @@ extension GetItInjectableX on _i174.GetIt {
         repository: gh<_i50.ProfileRepositoryPort>(),
       ),
     );
+    gh.factory<_i112.UpdateProfileUseCase>(
+      () => _i112.UpdateProfileUseCase(
+        repository: gh<_i50.ProfileRepositoryPort>(),
+      ),
+    );
     gh.factory<_i401.UpdateStudyGoalUseCase>(
       () => _i401.UpdateStudyGoalUseCase(
         repository: gh<_i50.ProfileRepositoryPort>(),
@@ -442,6 +449,7 @@ extension GetItInjectableX on _i174.GetIt {
         getUserProfile: gh<_i193.GetUserProfileUseCase>(),
         getProfileStats: gh<_i193.GetProfileStatsUseCase>(),
         getSettingsItems: gh<_i193.GetSettingsItemsUseCase>(),
+        updateProfile: gh<_i193.UpdateProfileUseCase>(),
       ),
     );
     gh.factory<_i807.OnboardingCubit>(

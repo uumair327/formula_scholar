@@ -133,6 +133,71 @@ class _ChaptersPageState extends State<ChaptersPage> {
                         );
                       }
 
+                      if (state.chapters.isEmpty) {
+                        return SliverFillRemaining(
+                          hasScrollBody: false,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppDimensions.paddingXXL,
+                            ),
+                            child: Center(
+                              child: AppCard(
+                                padding: const EdgeInsets.all(
+                                  AppDimensions.paddingXXL,
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(
+                                      LucideIcons.bookOpen,
+                                      size: AppDimensions.imageLG,
+                                      color: AppColors.primary,
+                                    ),
+                                    const SizedBox(
+                                      height: AppDimensions.paddingXXL,
+                                    ),
+                                    Text(
+                                      AppStrings.chaptersNoContentTitle,
+                                      textAlign: TextAlign.center,
+                                      style: AppTextStyles.headlineSmall
+                                          .copyWith(
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                    ),
+                                    const SizedBox(
+                                      height: AppDimensions.paddingSM,
+                                    ),
+                                    Text(
+                                      AppStrings.chaptersNoContentDescription,
+                                      textAlign: TextAlign.center,
+                                      style: AppTextStyles.bodyMedium.copyWith(
+                                        color: AppColors.onSurfaceVariant,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: AppDimensions.paddingXXL,
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        context
+                                            .read<SubjectSelectionCubit>()
+                                            .clearSelection();
+                                        StatefulNavigationShell.of(
+                                          context,
+                                        ).goBranch(0);
+                                      },
+                                      child: const Text(
+                                        AppStrings.chaptersBrowseSubjects,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+
                       return SliverPadding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: AppDimensions.paddingXL,
@@ -416,8 +481,6 @@ class _ChaptersPageState extends State<ChaptersPage> {
   // ──────────────────────── Chapter Cards ───────────────────────
 
   Widget _buildChapterCards(ChaptersState state, String subjectId) {
-    if (state.chapters.isEmpty) return const SizedBox();
-
     final featured = state.featuredChapter;
     final remaining = state.remainingChapters;
 

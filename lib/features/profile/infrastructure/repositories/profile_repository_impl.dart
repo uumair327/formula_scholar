@@ -61,6 +61,19 @@ class ProfileRepositoryImpl implements ProfileRepositoryPort {
   }
 
   @override
+  Future<Result<void>> updateProfile({
+    required String name,
+    required String avatarUrl,
+  }) {
+    return safeOperation(
+      tag: AppLogTags.profileRepo,
+      operation: 'updateProfile',
+      execute: () =>
+          _dataSource.updateProfile(name: name, avatarUrl: avatarUrl),
+    );
+  }
+
+  @override
   Future<Result<void>> updateStudyGoal(String studyGoalId) {
     return safeOperation(
       tag: AppLogTags.profileRepo,

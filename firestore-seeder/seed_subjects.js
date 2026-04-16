@@ -25,6 +25,54 @@ async function seedSubjects() {
 
   const batch = db.batch();
 
+  const masteryTools = [
+    {
+      id: 'video_lessons',
+      label: 'Video Lessons',
+      iconName: 'graduationCap',
+      category: 'guided_learning',
+      isEnabled: false,
+      supportSubtitle:
+        'Video Lessons are currently being prepared. Contact support if you need access to guided tutorial content.',
+      displayOrder: 1,
+    },
+    {
+      id: 'practice_quiz',
+      label: 'Practice Quiz',
+      iconName: 'helpCircle',
+      category: 'assessment',
+      isEnabled: true,
+      displayOrder: 2,
+      routeName: 'practice',
+    },
+    {
+      id: 'cheat_sheets',
+      label: 'Cheat Sheets',
+      iconName: 'fileText',
+      category: 'quick_reference',
+      isEnabled: false,
+      supportSubtitle:
+        'Cheat Sheets provide quick formula reference guides. Contact support to request this feature for your curriculum.',
+      displayOrder: 3,
+    },
+    {
+      id: 'visualizer_3d',
+      label: 'Visualizer 3D',
+      iconName: 'box',
+      category: 'visual_learning',
+      isEnabled: false,
+      supportSubtitle:
+        '3D Visualizer helps understand geometric concepts. Contact support to request 3D visualization tools.',
+      displayOrder: 4,
+    },
+  ];
+
+  function seedMasteryTools(subjectRef) {
+    for (const tool of masteryTools) {
+      batch.set(subjectRef.collection('mastery_tools').doc(tool.id), tool);
+    }
+  }
+
   // ----- 1. Mathematics -----
   const mathRef = db.collection('subjects').doc('math_001');
   batch.set(mathRef, {
@@ -71,6 +119,8 @@ async function seedSubjects() {
     status: 'locked'
   });
 
+  seedMasteryTools(mathRef);
+
 
   // ----- 2. Physics -----
   const physicsRef = db.collection('subjects').doc('physics_001');
@@ -97,6 +147,8 @@ async function seedSubjects() {
     progressPercent: 100,
     status: 'inProgress' // Used visually in featured
   });
+
+  seedMasteryTools(physicsRef);
 
 
   // ----- 3. Biology -----
@@ -125,6 +177,8 @@ async function seedSubjects() {
     status: 'inProgress'
   });
 
+  seedMasteryTools(biologyRef);
+
 
   // ----- 4. Chemistry -----
   const chemRef = db.collection('subjects').doc('chem_001');
@@ -150,6 +204,8 @@ async function seedSubjects() {
     progressPercent: 0,
     status: 'locked'
   });
+
+  seedMasteryTools(chemRef);
 
   await batch.commit();
   console.log('Successfully seeded Subjects and Chapters! ✅');

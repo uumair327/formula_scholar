@@ -9,6 +9,7 @@ import '../cubit/profile_cubit.dart';
 import '../cubit/profile_state.dart';
 import '../../domain/domain.dart';
 import '../../../auth/auth.dart';
+import '../widgets/edit_profile_dialog.dart';
 
 /// Account Information page – displays user account details.
 ///
@@ -80,6 +81,7 @@ class AccountInformationPage extends StatelessWidget {
                       icon: LucideIcons.edit3,
                       label: AppStrings.editProfile,
                       color: AppColors.primary,
+                      onTap: () => showEditProfileDialog(context),
                     ),
                     const SizedBox(height: AppDimensions.paddingMD),
                     _buildActionTile(
@@ -87,6 +89,10 @@ class AccountInformationPage extends StatelessWidget {
                       icon: LucideIcons.lock,
                       label: AppStrings.changePassword,
                       color: AppColors.primary,
+                      onTap: () => showForgotPasswordDialog(
+                        context,
+                        profile?.email ?? '',
+                      ),
                     ),
                     const SizedBox(height: AppDimensions.paddingMD),
                     _buildActionTile(

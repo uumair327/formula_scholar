@@ -16,6 +16,7 @@ class ProfileCubit extends Cubit<ProfileState>
   final GetUserProfileUseCase _getUserProfile;
   final GetProfileStatsUseCase _getProfileStats;
   final GetSettingsItemsUseCase _getSettingsItems;
+  final UpdateProfileUseCase _updateProfile;
 
   @override
   String get logTag => AppLogTags.profileCubit;
@@ -24,9 +25,11 @@ class ProfileCubit extends Cubit<ProfileState>
     required GetUserProfileUseCase getUserProfile,
     required GetProfileStatsUseCase getProfileStats,
     required GetSettingsItemsUseCase getSettingsItems,
+    required UpdateProfileUseCase updateProfile,
   }) : _getUserProfile = getUserProfile,
        _getProfileStats = getProfileStats,
        _getSettingsItems = getSettingsItems,
+       _updateProfile = updateProfile,
        super(const ProfileState());
 
   /// Loads all profile data in parallel.
@@ -76,6 +79,31 @@ class ProfileCubit extends Cubit<ProfileState>
           errorMessage: AppStrings.failedToLoadProfile,
         ),
       );
+    }
+  }
+
+  /// Updates the user's display name and avatar URL.
+  Future<bool> updateProfile({
+    required String name,
+    required String avatarUrl,
+  }) async {
+    AppLogger.info('Updating profile data', tag: AppLogTags.profileCubit);
+    emit(state.copyWith(status: ProfileStatus.loading));
+
+    final result = await _updateProfile(name: name, avatarUrl: avatarUrl);
+    switch (result) {
+      case Success():
+        await loadProfile();
+        return true;
+      case Error(:final failure):
+        logFailure('update profile', failure);
+        emit(
+          state.copyWith(
+            status: ProfileStatus.error,
+            errorMessage: failure.message,
+          ),
+        );
+        return false;
     }
   }
 }

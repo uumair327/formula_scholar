@@ -239,6 +239,27 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
   }
 
   @override
+  Future<void> updateProfile({
+    required String name,
+    required String avatarUrl,
+  }) async {
+    final currentUser = _firebaseAuth.currentUser;
+    if (currentUser == null) {
+      throw const ServerException(message: 'User not authenticated');
+    }
+
+    await currentUser.updateDisplayName(name);
+    if (avatarUrl.isNotEmpty) {
+      await currentUser.updatePhotoURL(avatarUrl);
+    }
+
+    await _firestore.collection('users').doc(currentUser.uid).set({
+      'name': name,
+      'avatarUrl': avatarUrl,
+    }, SetOptions(merge: true));
+  }
+
+  @override
   Future<void> updateStudyGoal(String studyGoalId) async {
     final uid = _firebaseAuth.currentUser?.uid;
     if (uid == null) {
