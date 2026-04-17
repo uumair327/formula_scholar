@@ -17,8 +17,19 @@ String resolveServiceAccountPath(List<String> args) {
   );
 }
 
+String resolveTargetUserUid() {
+  final envUid = Platform.environment['TARGET_USER_UID'];
+  if (envUid != null && envUid.isNotEmpty) {
+    return envUid;
+  }
+
+  // Defaults to the provided Firebase Auth UID for local verification.
+  return '3y6cquvN0KbzhmqayddYABzLWMh2';
+}
+
 void main(List<String> args) async {
   final serviceAccountPath = resolveServiceAccountPath(args);
+  final targetUid = resolveTargetUserUid();
 
   final admin = FirebaseAdminApp.initializeApp(
     'formula-scholar',
@@ -71,6 +82,50 @@ void main(List<String> args) async {
     for (final tool in toolsSnap.docs) {
       stdout.writeln('    ${tool.id}: ${tool.data()}');
     }
+  }
+
+  final notesSnap = await firestore.collection('saved_notes').get();
+  final notes = notesSnap.docs.where((doc) {
+    final data = doc.data();
+    return data['curriculumKey'] == 'cbse_class_9';
+  }).toList();
+  stdout.writeln('SAVED NOTES:');
+  for (final doc in notes) {
+    stdout.writeln('${doc.id}: ${doc.data()}');
+  }
+
+  // --- Target User Data ---
+  stdout.writeln('\nTARGET USER DATA:');
+  stdout.writeln('uid: $targetUid');
+  final userDoc = await firestore.collection('users').doc(targetUid).get();
+  if (userDoc.exists) {
+    stdout.writeln('User Profile: ${userDoc.data()}');
+
+    // Print stats
+    final statsDoc = await firestore
+        .collection('users')
+        .doc(targetUid)
+        .collection('stats')
+        .doc('current')
+        .get();
+    if (statsDoc.exists) {
+      stdout.writeln('User Stats: ${statsDoc.data()}');
+    }
+
+    // Print recent studies
+    final recentStudiesSnapshot = await firestore
+        .collection('users')
+        .doc(targetUid)
+        .collection('recent_studies')
+        .get();
+    if (recentStudiesSnapshot.docs.isNotEmpty) {
+      stdout.writeln('Recent Studies:');
+      for (final doc in recentStudiesSnapshot.docs) {
+        stdout.writeln('  ${doc.data()}');
+      }
+    }
+  } else {
+    stdout.writeln('Target user not found.');
   }
 
   exit(0);

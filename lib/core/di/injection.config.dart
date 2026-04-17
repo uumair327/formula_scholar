@@ -111,10 +111,14 @@ import '../../features/profile/domain/ports/profile_repository_port.dart'
     as _i50;
 import '../../features/profile/domain/usecases/get_profile_stats_use_case.dart'
     as _i539;
+import '../../features/profile/domain/usecases/get_notification_preferences_use_case.dart'
+    as _i278;
 import '../../features/profile/domain/usecases/get_settings_items_use_case.dart'
     as _i657;
 import '../../features/profile/domain/usecases/get_user_profile_use_case.dart'
     as _i105;
+import '../../features/profile/domain/usecases/update_notification_preferences_use_case.dart'
+    as _i1049;
 import '../../features/profile/domain/usecases/update_profile_use_case.dart'
     as _i112;
 import '../../features/profile/domain/usecases/update_study_goal_use_case.dart'
@@ -125,6 +129,8 @@ import '../../features/profile/infrastructure/repositories/profile_hive_cache.da
     as _i700;
 import '../../features/profile/infrastructure/repositories/profile_repository_impl.dart'
     as _i244;
+import '../../features/profile/presentation/cubit/notifications_cubit.dart'
+    as _i531;
 import '../../features/profile/presentation/cubit/profile_cubit.dart' as _i36;
 import '../../features/saved/domain/domain.dart' as _i385;
 import '../../features/saved/domain/ports/saved_repository_port.dart' as _i793;
@@ -145,12 +151,22 @@ import '../../shared/cubit/theme_cubit.dart' as _i947;
 import '../../shared/domain/domain.dart' as _i525;
 import '../../shared/domain/ports/curriculum_repository_port.dart' as _i1064;
 import '../../shared/domain/usecases/load_curriculum_use_case.dart' as _i1052;
+import '../../shared/domain/usecases/load_theme_preference_use_case.dart'
+    as _i1201;
 import '../../shared/domain/usecases/save_curriculum_use_case.dart' as _i1048;
+import '../../shared/domain/usecases/save_theme_preference_use_case.dart'
+    as _i1202;
 import '../../shared/domain/usecases/watch_curriculum_use_case.dart' as _i264;
+import '../../shared/domain/usecases/watch_theme_preference_use_case.dart'
+    as _i1203;
 import '../../shared/infrastructure/adapters/curriculum_firebase_adapter.dart'
     as _i303;
+import '../../shared/infrastructure/adapters/theme_preference_firebase_adapter.dart'
+    as _i1204;
 import '../../shared/infrastructure/repositories/curriculum_repository_impl.dart'
     as _i588;
+import '../../shared/infrastructure/repositories/theme_preference_repository_impl.dart'
+    as _i1205;
 import '../../shared/shared.dart' as _i914;
 import '../network/api_client.dart' as _i557;
 import '../network/api_interceptor.dart' as _i724;
@@ -172,7 +188,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i974.FirebaseFirestore>(() => firebaseModule.firestore);
     gh.lazySingleton<_i116.GoogleSignIn>(() => firebaseModule.googleSignIn);
     gh.lazySingleton<_i895.Connectivity>(() => firebaseModule.connectivity);
-    gh.lazySingleton<_i947.ThemeCubit>(() => _i947.ThemeCubit());
     gh.lazySingleton<_i750.ChaptersCachePort>(() => _i927.ChaptersHiveCache());
     gh.lazySingleton<_i385.SavedCachePort>(() => _i827.SavedHiveCache());
     gh.lazySingleton<_i95.DashboardCachePort>(() => _i990.DashboardHiveCache());
@@ -241,6 +256,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i525.CurriculumDataSourcePort>(
       () => _i303.CurriculumFirebaseAdapter(
+        gh<_i974.FirebaseFirestore>(),
+        gh<_i59.FirebaseAuth>(),
+      ),
+    );
+    gh.lazySingleton<_i525.ThemePreferenceDataSourcePort>(
+      () => _i1204.ThemePreferenceFirebaseAdapter(
         gh<_i974.FirebaseFirestore>(),
         gh<_i59.FirebaseAuth>(),
       ),
@@ -323,6 +344,11 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i588.CurriculumRepositoryImpl(gh<_i525.CurriculumDataSourcePort>()),
     );
+    gh.lazySingleton<_i525.ThemePreferenceRepositoryPort>(
+      () => _i1205.ThemePreferenceRepositoryImpl(
+        gh<_i525.ThemePreferenceDataSourcePort>(),
+      ),
+    );
     gh.lazySingleton<_i634.OnboardingRepositoryPort>(
       () =>
           _i224.OnboardingRepositoryImpl(gh<_i634.OnboardingDataSourcePort>()),
@@ -355,6 +381,11 @@ extension GetItInjectableX on _i174.GetIt {
         repository: gh<_i50.ProfileRepositoryPort>(),
       ),
     );
+    gh.factory<_i278.GetNotificationPreferencesUseCase>(
+      () => _i278.GetNotificationPreferencesUseCase(
+        repository: gh<_i50.ProfileRepositoryPort>(),
+      ),
+    );
     gh.factory<_i657.GetSettingsItemsUseCase>(
       () => _i657.GetSettingsItemsUseCase(
         repository: gh<_i50.ProfileRepositoryPort>(),
@@ -367,6 +398,11 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i112.UpdateProfileUseCase>(
       () => _i112.UpdateProfileUseCase(
+        repository: gh<_i50.ProfileRepositoryPort>(),
+      ),
+    );
+    gh.factory<_i1049.UpdateNotificationPreferencesUseCase>(
+      () => _i1049.UpdateNotificationPreferencesUseCase(
         repository: gh<_i50.ProfileRepositoryPort>(),
       ),
     );
@@ -409,6 +445,21 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i264.WatchCurriculumUseCase>(
       () => _i264.WatchCurriculumUseCase(gh<_i1064.CurriculumRepositoryPort>()),
     );
+    gh.factory<_i1201.LoadThemePreferenceUseCase>(
+      () => _i1201.LoadThemePreferenceUseCase(
+        gh<_i525.ThemePreferenceRepositoryPort>(),
+      ),
+    );
+    gh.factory<_i1202.SaveThemePreferenceUseCase>(
+      () => _i1202.SaveThemePreferenceUseCase(
+        gh<_i525.ThemePreferenceRepositoryPort>(),
+      ),
+    );
+    gh.factory<_i1203.WatchThemePreferenceUseCase>(
+      () => _i1203.WatchThemePreferenceUseCase(
+        gh<_i525.ThemePreferenceRepositoryPort>(),
+      ),
+    );
     gh.factory<_i527.GetBookmarksUseCase>(
       () => _i527.GetBookmarksUseCase(
         repository: gh<_i793.SavedRepositoryPort>(),
@@ -416,6 +467,11 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i385.GetSavedChaptersUseCase>(
       () => _i385.GetSavedChaptersUseCase(
+        repository: gh<_i793.SavedRepositoryPort>(),
+      ),
+    );
+    gh.factory<_i385.GetSavedNotesUseCase>(
+      () => _i385.GetSavedNotesUseCase(
         repository: gh<_i793.SavedRepositoryPort>(),
       ),
     );
@@ -452,6 +508,14 @@ extension GetItInjectableX on _i174.GetIt {
         updateProfile: gh<_i193.UpdateProfileUseCase>(),
       ),
     );
+    gh.factory<_i531.NotificationsCubit>(
+      () => _i531.NotificationsCubit(
+        getNotificationPreferences:
+            gh<_i193.GetNotificationPreferencesUseCase>(),
+        updateNotificationPreferences:
+            gh<_i193.UpdateNotificationPreferencesUseCase>(),
+      ),
+    );
     gh.factory<_i807.OnboardingCubit>(
       () => _i807.OnboardingCubit(
         getCountries: gh<_i634.GetCountriesUseCase>(),
@@ -466,6 +530,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i712.SavedCubit(
         getBookmarks: gh<_i385.GetBookmarksUseCase>(),
         getSavedChapters: gh<_i385.GetSavedChaptersUseCase>(),
+        getSavedNotes: gh<_i385.GetSavedNotesUseCase>(),
         removeBookmark: gh<_i385.RemoveBookmarkUseCase>(),
         removeSavedChapter: gh<_i385.RemoveSavedChapterUseCase>(),
       ),
@@ -481,6 +546,13 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i414.SubjectSelectionCubit>(
       () => _i414.SubjectSelectionCubit(
         watchCurriculum: gh<_i525.WatchCurriculumUseCase>(),
+      ),
+    );
+    gh.lazySingleton<_i947.ThemeCubit>(
+      () => _i947.ThemeCubit(
+        loadThemePreference: gh<_i525.LoadThemePreferenceUseCase>(),
+        saveThemePreference: gh<_i525.SaveThemePreferenceUseCase>(),
+        watchThemePreference: gh<_i525.WatchThemePreferenceUseCase>(),
       ),
     );
     return this;

@@ -19,6 +19,14 @@ class SavedPage extends StatefulWidget {
 }
 
 class _SavedPageState extends State<SavedPage> {
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
@@ -28,7 +36,9 @@ class _SavedPageState extends State<SavedPage> {
           buildWhen: (prev, curr) =>
               prev.status != curr.status ||
               prev.bookmarks != curr.bookmarks ||
-              prev.chapters != curr.chapters,
+              prev.chapters != curr.chapters ||
+              prev.notes != curr.notes ||
+              prev.searchQuery != curr.searchQuery,
           builder: (context, state) {
             if (state.status == SavedStatus.loading ||
                 state.status == SavedStatus.initial) {
@@ -79,46 +89,75 @@ class _SavedPageState extends State<SavedPage> {
               );
             }
 
+            final filteredBookmarks = state.filteredBookmarks;
+            final filteredChapters = state.filteredChapters;
+            final filteredNotes = state.filteredNotes;
+            final hasSearchQuery = state.searchQuery.trim().isNotEmpty;
+
             // Show loaded bookmarks and chapters
             return Scaffold(
               appBar: _buildAppBar(context, authState.user),
               body: ListView(
                 padding: const EdgeInsets.all(AppDimensions.paddingXXL),
                 children: [
-                  if (state.chapters.isNotEmpty) ...[
-                    Text(
-                      AppStrings.savedChapters,
-                      style: AppTextStyles.titleLarge.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: AppDimensions.paddingLG),
-                    ...state.chapters.map(
-                      (chapter) => Padding(
-                        padding: const EdgeInsets.only(
-                          bottom: AppDimensions.paddingLG,
+                  _buildSearchBar(context, state),
+                  const SizedBox(height: AppDimensions.paddingXXL),
+                  if (hasSearchQuery && !state.hasFilteredResults)
+                    _buildNoResultsState(context),
+                  if (!hasSearchQuery || state.hasFilteredResults) ...[
+                    if (filteredChapters.isNotEmpty) ...[
+                      Text(
+                        AppStrings.savedChapters,
+                        style: AppTextStyles.titleLarge.copyWith(
+                          fontWeight: FontWeight.w700,
                         ),
-                        child: _SavedChapterCard(chapter: chapter),
                       ),
-                    ),
-                    const SizedBox(height: AppDimensions.paddingMD),
-                  ],
-                  if (state.bookmarks.isNotEmpty) ...[
-                    Text(
-                      AppStrings.savedFormulas,
-                      style: AppTextStyles.titleLarge.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: AppDimensions.paddingLG),
-                    ...state.bookmarks.map(
-                      (bookmark) => Padding(
-                        padding: const EdgeInsets.only(
-                          bottom: AppDimensions.paddingLG,
+                      const SizedBox(height: AppDimensions.paddingLG),
+                      ...filteredChapters.map(
+                        (chapter) => Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: AppDimensions.paddingLG,
+                          ),
+                          child: _SavedChapterCard(chapter: chapter),
                         ),
-                        child: _BookmarkCard(bookmark: bookmark),
                       ),
-                    ),
+                      const SizedBox(height: AppDimensions.paddingMD),
+                    ],
+                    if (filteredBookmarks.isNotEmpty) ...[
+                      Text(
+                        AppStrings.savedFormulas,
+                        style: AppTextStyles.titleLarge.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: AppDimensions.paddingLG),
+                      ...filteredBookmarks.map(
+                        (bookmark) => Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: AppDimensions.paddingLG,
+                          ),
+                          child: _BookmarkCard(bookmark: bookmark),
+                        ),
+                      ),
+                      const SizedBox(height: AppDimensions.paddingMD),
+                    ],
+                    if (filteredNotes.isNotEmpty) ...[
+                      Text(
+                        AppStrings.savedNotes,
+                        style: AppTextStyles.titleLarge.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: AppDimensions.paddingLG),
+                      ...filteredNotes.map(
+                        (note) => Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: AppDimensions.paddingLG,
+                          ),
+                          child: _SavedNoteCard(note: note),
+                        ),
+                      ),
+                    ],
                   ],
                 ],
               ),
@@ -126,6 +165,79 @@ class _SavedPageState extends State<SavedPage> {
           },
         );
       },
+    );
+  }
+
+  Widget _buildSearchBar(BuildContext context, SavedState state) {
+    if (state.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    if (_searchController.text != state.searchQuery) {
+      _searchController.value = _searchController.value.copyWith(
+        text: state.searchQuery,
+        selection: TextSelection.collapsed(offset: state.searchQuery.length),
+        composing: TextRange.empty,
+      );
+    }
+
+    return TextField(
+      controller: _searchController,
+      onChanged: (value) => context.read<SavedCubit>().updateSearchQuery(value),
+      decoration: InputDecoration(
+        hintText: AppStrings.searchBookmarks,
+        prefixIcon: const Icon(LucideIcons.search),
+        suffixIcon: state.searchQuery.isEmpty
+            ? null
+            : IconButton(
+                onPressed: () {
+                  _searchController.clear();
+                  context.read<SavedCubit>().updateSearchQuery('');
+                },
+                icon: const Icon(LucideIcons.x),
+              ),
+      ),
+    );
+  }
+
+  Widget _buildNoResultsState(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppDimensions.paddingXL),
+      child: AppCard(
+        padding: const EdgeInsets.all(AppDimensions.paddingXL),
+        child: Column(
+          children: [
+            const Icon(
+              LucideIcons.searchX,
+              size: AppDimensions.iconXL,
+              color: AppColors.outline,
+            ),
+            const SizedBox(height: AppDimensions.paddingLG),
+            Text(
+              AppStrings.noBookmarksFoundTitle,
+              style: AppTextStyles.titleLarge.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: AppDimensions.paddingSM),
+            Text(
+              AppStrings.noBookmarksFoundDesc,
+              textAlign: TextAlign.center,
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: AppDimensions.paddingLG),
+            OutlinedButton(
+              onPressed: () {
+                _searchController.clear();
+                context.read<SavedCubit>().updateSearchQuery('');
+              },
+              child: const Text(AppStrings.clearSearch),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -488,6 +600,74 @@ class _SavedChapterCard extends StatelessWidget {
             ],
           ],
         ),
+      ),
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.day}/${date.month}/${date.year}';
+  }
+}
+
+class _SavedNoteCard extends StatelessWidget {
+  final SavedNote note;
+
+  const _SavedNoteCard({required this.note});
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              AppIconCircle(
+                icon: LucideIcons.stickyNote,
+                backgroundColor: AppColors.secondaryContainer.withValues(
+                  alpha: AppDimensions.opacityFaint,
+                ),
+                iconColor: AppColors.secondary,
+              ),
+              const SizedBox(width: AppDimensions.paddingLG),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      note.subject,
+                      style: AppTextStyles.overline.copyWith(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Text(
+                      'SAVED ${_formatDate(note.savedAt)}',
+                      style: AppTextStyles.overline.copyWith(
+                        color: AppColors.outline,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppDimensions.paddingMD),
+          Text(
+            note.title,
+            style: AppTextStyles.titleLarge.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: AppDimensions.paddingSM),
+          Text(
+            note.content,
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: AppColors.onSurfaceVariant,
+              height: AppDimensions.lineHeightDefault,
+            ),
+          ),
+        ],
       ),
     );
   }

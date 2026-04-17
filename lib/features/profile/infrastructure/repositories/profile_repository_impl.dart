@@ -61,6 +61,20 @@ class ProfileRepositoryImpl implements ProfileRepositoryPort {
   }
 
   @override
+  Future<Result<NotificationPreferences>> getNotificationPreferences() {
+    return safeOperation(
+      tag: AppLogTags.profileRepo,
+      operation: 'getNotificationPreferences',
+      execute: () async {
+        final result = await _dataSource.getNotificationPreferences();
+        await _cache.cacheNotificationPreferences(result);
+        return result;
+      },
+      fallback: () => _cache.getNotificationPreferences(),
+    );
+  }
+
+  @override
   Future<Result<void>> updateProfile({
     required String name,
     required String avatarUrl,
@@ -70,6 +84,20 @@ class ProfileRepositoryImpl implements ProfileRepositoryPort {
       operation: 'updateProfile',
       execute: () =>
           _dataSource.updateProfile(name: name, avatarUrl: avatarUrl),
+    );
+  }
+
+  @override
+  Future<Result<void>> updateNotificationPreferences(
+    NotificationPreferences preferences,
+  ) {
+    return safeOperation(
+      tag: AppLogTags.profileRepo,
+      operation: 'updateNotificationPreferences',
+      execute: () async {
+        await _dataSource.updateNotificationPreferences(preferences);
+        await _cache.cacheNotificationPreferences(preferences);
+      },
     );
   }
 

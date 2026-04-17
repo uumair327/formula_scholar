@@ -175,6 +175,34 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
   }
 
   @override
+  Future<List<SavedNote>> getSavedNotes({required String curriculumKey}) async {
+    AppLogger.trace(
+      'getSavedNotes() fetching from Firestore for curriculum=$curriculumKey',
+      tag: AppLogTags.savedDataSource,
+    );
+
+    final snapshot = await _firestore
+        .collection('saved_notes')
+        .where('curriculumKey', isEqualTo: curriculumKey)
+        .get();
+
+    final notes = snapshot.docs.map((doc) {
+      final data = doc.data();
+      return SavedNote(
+        id: data['id'] ?? doc.id,
+        title: data['title'] ?? '',
+        subject: data['subject'] ?? '',
+        content: data['content'] ?? '',
+        curriculumKey: data['curriculumKey'] ?? curriculumKey,
+        savedAt: (data['savedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      );
+    }).toList();
+
+    notes.sort((a, b) => b.savedAt.compareTo(a.savedAt));
+    return notes;
+  }
+
+  @override
   Future<void> removeBookmark(String formulaId) async {
     final uid = _firebaseAuth.currentUser?.uid;
     if (uid == null) {

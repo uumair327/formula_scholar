@@ -9,6 +9,7 @@ class ProfileHiveCache implements ProfileCachePort {
   static const String _boxName = 'profile_cache';
   static const String _profileKey = 'user_profile';
   static const String _statsKey = 'profile_stats';
+  static const String _notificationPrefsKey = 'notification_preferences';
 
   Future<Box<dynamic>> _box() => Hive.openBox<dynamic>(_boxName);
 
@@ -81,5 +82,45 @@ class ProfileHiveCache implements ProfileCachePort {
           ),
         )
         .toList();
+  }
+
+  @override
+  Future<void> cacheNotificationPreferences(
+    NotificationPreferences value,
+  ) async {
+    final box = await _box();
+    await box.put(_notificationPrefsKey, {
+      'studyReminders': value.studyReminders,
+      'streakAlerts': value.streakAlerts,
+      'newContent': value.newContent,
+      'achievements': value.achievements,
+      'weeklyReport': value.weeklyReport,
+      'pushNotifications': value.pushNotifications,
+      'emailNotifications': value.emailNotifications,
+    });
+  }
+
+  @override
+  Future<NotificationPreferences?> getNotificationPreferences() async {
+    final box = await _box();
+    final data = box.get(_notificationPrefsKey) as Map<dynamic, dynamic>?;
+    if (data == null) {
+      return null;
+    }
+
+    bool readBool(String key, bool fallback) {
+      final value = data[key];
+      return value is bool ? value : fallback;
+    }
+
+    return NotificationPreferences(
+      studyReminders: readBool('studyReminders', true),
+      streakAlerts: readBool('streakAlerts', true),
+      newContent: readBool('newContent', false),
+      achievements: readBool('achievements', true),
+      weeklyReport: readBool('weeklyReport', false),
+      pushNotifications: readBool('pushNotifications', true),
+      emailNotifications: readBool('emailNotifications', false),
+    );
   }
 }

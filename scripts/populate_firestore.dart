@@ -17,8 +17,30 @@ String resolveServiceAccountPath(List<String> args) {
   );
 }
 
+String resolveTargetUserUid() {
+  final envUid = Platform.environment['TARGET_USER_UID'];
+  if (envUid != null && envUid.isNotEmpty) {
+    return envUid;
+  }
+
+  // Defaults to the provided Firebase Auth UID for local seeding.
+  return '3y6cquvN0KbzhmqayddYABzLWMh2';
+}
+
+String resolveTargetUserEmail() {
+  final envEmail = Platform.environment['TARGET_USER_EMAIL'];
+  if (envEmail != null && envEmail.isNotEmpty) {
+    return envEmail;
+  }
+
+  // Defaults to the provided Firebase Auth email for local seeding.
+  return 'uumair327@gmail.com';
+}
+
 void main(List<String> args) async {
   final serviceAccountPath = resolveServiceAccountPath(args);
+  final targetUid = resolveTargetUserUid();
+  final targetEmail = resolveTargetUserEmail();
 
   final admin = FirebaseAdminApp.initializeApp(
     'formula-scholar',
@@ -539,6 +561,105 @@ void main(List<String> args) async {
   for (var qMap in questionsData) {
     stdout.writeln('  Adding practice question: ${qMap['id']}');
     await practiceRef.doc(qMap['id'] as String).set(qMap);
+  }
+
+  // --- Saved Notes ---
+  stdout.writeln('Populating Saved Notes...');
+  final savedNotesRef = firestore.collection('saved_notes');
+  final savedNotesData = [
+    {
+      'id': 'note_1',
+      'curriculumKey': 'cbse_class_9',
+      'title': 'Polynomial Identity Cheatsheet',
+      'subject': 'Mathematics',
+      'content':
+          'Remember the three core identities: square of sum, square of difference, and difference of squares. Use them to factor quickly in revision problems.',
+      'savedAt': Timestamp.fromDate(DateTime.utc(2026, 4, 17)),
+    },
+    {
+      'id': 'note_2',
+      'curriculumKey': 'cbse_class_9',
+      'title': 'Triangle Theorems Summary',
+      'subject': 'Mathematics',
+      'content':
+          'SAS, ASA, and SSS congruence rules are the backbone of most proof questions. Practice naming the rule before writing the proof.',
+      'savedAt': Timestamp.fromDate(DateTime.utc(2026, 4, 16)),
+    },
+  ];
+
+  for (final note in savedNotesData) {
+    stdout.writeln('  Adding saved note: ${note['id']}');
+    await savedNotesRef.doc(note['id'] as String).set(note);
+  }
+
+  // --- Target User Data (for testing Profile and Dashboard) ---
+  stdout.writeln('Populating Target User Data...');
+  final usersRef = firestore.collection('users');
+
+  // Seed target user profile
+  await usersRef.doc(targetUid).set({
+    'uid': targetUid,
+    'email': targetEmail,
+    'displayName': 'Uumair',
+    'photoUrl': 'https://via.placeholder.com/150',
+    'boardId': 'cbse',
+    'gradeId': 'class_9',
+  });
+
+  // Seed target user stats
+  await usersRef.doc(targetUid).collection('stats').doc('current').set({
+    'formulas': 47,
+    'streak': 12,
+    'points': 850,
+    'lastUpdated': Timestamp.now(),
+  });
+
+  // Seed target user recent studies
+  stdout.writeln('Adding recent studies for target user...');
+  final recentStudiesRef = usersRef.doc(targetUid).collection('recent_studies');
+  final recentStudiesData = [
+    {
+      'id': 'rs1',
+      'subjectId': 'math',
+      'title': 'Polynomials',
+      'subject': 'Mathematics',
+      'lastViewed': 'Today at 3:45 PM',
+      'iconName': 'calculator',
+      'colorValue': 0xFFD4A574,
+      'backgroundColorValue': 0xFFFFEAD1,
+      'viewedAt': Timestamp.now(),
+    },
+    {
+      'id': 'rs2',
+      'subjectId': 'physics',
+      'title': 'Motion',
+      'subject': 'Physics',
+      'lastViewed': 'Yesterday at 2:30 PM',
+      'iconName': 'flashArrowRight',
+      'colorValue': 0xFF3B82F6,
+      'backgroundColorValue': 0xFFDEEAFF,
+      'viewedAt': Timestamp.fromDate(
+        DateTime.now().subtract(const Duration(days: 1)),
+      ),
+    },
+    {
+      'id': 'rs3',
+      'subjectId': 'chemistry',
+      'title': 'Atomic Structure',
+      'subject': 'Chemistry',
+      'lastViewed': '2 days ago at 11:15 AM',
+      'iconName': 'microscope',
+      'colorValue': 0xFFEA580C,
+      'backgroundColorValue': 0xFFFECDD2,
+      'viewedAt': Timestamp.fromDate(
+        DateTime.now().subtract(const Duration(days: 2)),
+      ),
+    },
+  ];
+
+  for (final study in recentStudiesData) {
+    stdout.writeln('  Adding recent study: ${study['id']}');
+    await recentStudiesRef.doc(study['id'] as String).set(study);
   }
 
   stdout.writeln('Done populating Firestore!');

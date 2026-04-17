@@ -9,6 +9,7 @@ import '../cubit/profile_cubit.dart';
 import '../cubit/profile_state.dart';
 import '../../domain/domain.dart';
 import '../../../auth/auth.dart';
+import '../widgets/support_contact_sheet.dart';
 import '../widgets/edit_profile_dialog.dart';
 
 /// Account Information page – displays user account details.
@@ -256,7 +257,15 @@ class AccountInformationPage extends StatelessWidget {
     return Material(
       color: AppColors.transparent,
       child: InkWell(
-        onTap: onTap ?? () => ComingSoonSheet.show(context, featureName: label),
+        onTap:
+            onTap ??
+            () => SupportContactSheet.show(
+              context,
+              title: label,
+              subtitle:
+                  'This account action is being expanded. Contact support and we will help you right away.',
+              email: 'support@formulascholar.app',
+            ),
         borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
         child: AppCard(
           boxShadow: const [AppShadows.subtle],

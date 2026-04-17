@@ -43,6 +43,63 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
     return fallback;
   }
 
+  NotificationPreferences _notificationDefaults() {
+    return const NotificationPreferences();
+  }
+
+  NotificationPreferences _notificationPreferencesFromMap(
+    Map<String, dynamic> map,
+  ) {
+    final defaults = _notificationDefaults();
+    return NotificationPreferences(
+      studyReminders: _readBool(
+        map,
+        'studyReminders',
+        fallback: defaults.studyReminders,
+      ),
+      streakAlerts: _readBool(
+        map,
+        'streakAlerts',
+        fallback: defaults.streakAlerts,
+      ),
+      newContent: _readBool(map, 'newContent', fallback: defaults.newContent),
+      achievements: _readBool(
+        map,
+        'achievements',
+        fallback: defaults.achievements,
+      ),
+      weeklyReport: _readBool(
+        map,
+        'weeklyReport',
+        fallback: defaults.weeklyReport,
+      ),
+      pushNotifications: _readBool(
+        map,
+        'pushNotifications',
+        fallback: defaults.pushNotifications,
+      ),
+      emailNotifications: _readBool(
+        map,
+        'emailNotifications',
+        fallback: defaults.emailNotifications,
+      ),
+    );
+  }
+
+  Map<String, dynamic> _notificationPreferencesToMap(
+    NotificationPreferences value,
+  ) {
+    return {
+      'studyReminders': value.studyReminders,
+      'streakAlerts': value.streakAlerts,
+      'newContent': value.newContent,
+      'achievements': value.achievements,
+      'weeklyReport': value.weeklyReport,
+      'pushNotifications': value.pushNotifications,
+      'emailNotifications': value.emailNotifications,
+    };
+  }
+
   @override
   Future<UserProfile> getUserProfile() async {
     AppLogger.trace(
@@ -256,6 +313,43 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
     await _firestore.collection('users').doc(currentUser.uid).set({
       'name': name,
       'avatarUrl': avatarUrl,
+    }, SetOptions(merge: true));
+  }
+
+  @override
+  Future<NotificationPreferences> getNotificationPreferences() async {
+    final uid = _firebaseAuth.currentUser?.uid;
+    if (uid == null) {
+      return _notificationDefaults();
+    }
+
+    final docSnapshot = await _firestore.collection('users').doc(uid).get();
+    if (!docSnapshot.exists) {
+      return _notificationDefaults();
+    }
+
+    final data = docSnapshot.data()!;
+    final prefsData = data['notificationPreferences'];
+    if (prefsData is! Map) {
+      return _notificationDefaults();
+    }
+
+    return _notificationPreferencesFromMap(
+      Map<String, dynamic>.from(prefsData),
+    );
+  }
+
+  @override
+  Future<void> updateNotificationPreferences(
+    NotificationPreferences preferences,
+  ) async {
+    final uid = _firebaseAuth.currentUser?.uid;
+    if (uid == null) {
+      throw const ServerException(message: 'User not authenticated');
+    }
+
+    await _firestore.collection('users').doc(uid).set({
+      'notificationPreferences': _notificationPreferencesToMap(preferences),
     }, SetOptions(merge: true));
   }
 

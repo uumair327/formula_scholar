@@ -72,7 +72,14 @@ abstract final class RouteBuilders {
         pageBuilder: (context, state) {
           return AppPageTransitions.fadeTransition(
             state: state,
-            child: const NotificationsPage(),
+            child: BlocProvider(
+              create: (_) {
+                final cubit = getIt<NotificationsCubit>();
+                Future.microtask(cubit.loadPreferences);
+                return cubit;
+              },
+              child: const NotificationsPage(),
+            ),
           );
         },
       ),

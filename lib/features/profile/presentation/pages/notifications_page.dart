@@ -1,126 +1,181 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
+import '../cubit/notifications_cubit.dart';
+import '../cubit/notifications_state.dart';
 
 /// Notifications settings page – manage notification preferences.
 ///
 /// Accessible from profile settings. Shows toggle options for
 /// different notification categories with premium styling.
-class NotificationsPage extends StatefulWidget {
+class NotificationsPage extends StatelessWidget {
   const NotificationsPage({super.key});
 
   @override
-  State<NotificationsPage> createState() => _NotificationsPageState();
-}
-
-class _NotificationsPageState extends State<NotificationsPage> {
-  // Local state for notification toggles.
-  bool _studyReminders = true;
-  bool _streakAlerts = true;
-  bool _newContent = false;
-  bool _achievements = true;
-  bool _weeklyReport = false;
-  bool _pushNotifications = true;
-  bool _emailNotifications = false;
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          _buildAppBar(context),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppDimensions.paddingXL,
-            ),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate([
-                const SizedBox(height: AppDimensions.paddingXXL),
-                // Notification status card
-                _buildStatusCard(),
-                const SizedBox(height: AppDimensions.paddingXXL),
-                // Study notifications
-                const AppSectionTitle(title: AppStrings.studyNotifications),
-                const SizedBox(height: AppDimensions.paddingLG),
-                _buildToggleTile(
-                  icon: LucideIcons.clock,
-                  title: AppStrings.studyReminders,
-                  subtitle: AppStrings.studyRemindersDesc,
-                  value: _studyReminders,
-                  onChanged: (v) => setState(() => _studyReminders = v),
-                  color: AppColors.primary,
+    return BlocConsumer<NotificationsCubit, NotificationsState>(
+      listener: (context, state) {
+        if (state.status == NotificationsStatus.error &&
+            state.errorMessage != null &&
+            state.errorMessage!.isNotEmpty) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+        }
+      },
+      builder: (context, state) {
+        if (state.status == NotificationsStatus.loading ||
+            state.status == NotificationsStatus.initial) {
+          return const Scaffold(body: AppLoadingState());
+        }
+
+        final prefs = state.preferences;
+        final isBusy = state.status == NotificationsStatus.saving;
+
+        return Scaffold(
+          body: Stack(
+            children: [
+              CustomScrollView(
+                slivers: [
+                  _buildAppBar(context),
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimensions.paddingXL,
+                    ),
+                    sliver: SliverList(
+                      delegate: SliverChildListDelegate([
+                        const SizedBox(height: AppDimensions.paddingXXL),
+                        _buildStatusCard(),
+                        const SizedBox(height: AppDimensions.paddingXXL),
+                        const AppSectionTitle(
+                          title: AppStrings.studyNotifications,
+                        ),
+                        const SizedBox(height: AppDimensions.paddingLG),
+                        _buildToggleTile(
+                          icon: LucideIcons.clock,
+                          title: AppStrings.studyReminders,
+                          subtitle: AppStrings.studyRemindersDesc,
+                          value: prefs.studyReminders,
+                          onChanged: (v) => context
+                              .read<NotificationsCubit>()
+                              .updatePreferences(
+                                prefs.copyWith(studyReminders: v),
+                              ),
+                          color: AppColors.primary,
+                        ),
+                        const SizedBox(height: AppDimensions.paddingMD),
+                        _buildToggleTile(
+                          icon: LucideIcons.flame,
+                          title: AppStrings.streakAlerts,
+                          subtitle: AppStrings.streakAlertsDesc,
+                          value: prefs.streakAlerts,
+                          onChanged: (v) => context
+                              .read<NotificationsCubit>()
+                              .updatePreferences(
+                                prefs.copyWith(streakAlerts: v),
+                              ),
+                          color: AppColors.orange500,
+                        ),
+                        const SizedBox(height: AppDimensions.paddingMD),
+                        _buildToggleTile(
+                          icon: LucideIcons.sparkles,
+                          title: AppStrings.newContent,
+                          subtitle: AppStrings.newContentDesc,
+                          value: prefs.newContent,
+                          onChanged: (v) => context
+                              .read<NotificationsCubit>()
+                              .updatePreferences(prefs.copyWith(newContent: v)),
+                          color: AppColors.secondary,
+                        ),
+                        const SizedBox(height: AppDimensions.paddingXXL),
+                        const AppSectionTitle(
+                          title: AppStrings.achievementNotifications,
+                        ),
+                        const SizedBox(height: AppDimensions.paddingLG),
+                        _buildToggleTile(
+                          icon: LucideIcons.trophy,
+                          title: AppStrings.achievements,
+                          subtitle: AppStrings.achievementsDesc,
+                          value: prefs.achievements,
+                          onChanged: (v) => context
+                              .read<NotificationsCubit>()
+                              .updatePreferences(
+                                prefs.copyWith(achievements: v),
+                              ),
+                          color: AppColors.orange500,
+                        ),
+                        const SizedBox(height: AppDimensions.paddingMD),
+                        _buildToggleTile(
+                          icon: LucideIcons.barChart2,
+                          title: AppStrings.weeklyReport,
+                          subtitle: AppStrings.weeklyReportDesc,
+                          value: prefs.weeklyReport,
+                          onChanged: (v) => context
+                              .read<NotificationsCubit>()
+                              .updatePreferences(
+                                prefs.copyWith(weeklyReport: v),
+                              ),
+                          color: AppColors.tertiary,
+                        ),
+                        const SizedBox(height: AppDimensions.paddingXXL),
+                        const AppSectionTitle(
+                          title: AppStrings.deliveryChannels,
+                        ),
+                        const SizedBox(height: AppDimensions.paddingLG),
+                        _buildToggleTile(
+                          icon: LucideIcons.bell,
+                          title: AppStrings.pushNotificationsLabel,
+                          subtitle: AppStrings.pushNotificationsDesc,
+                          value: prefs.pushNotifications,
+                          onChanged: (v) => context
+                              .read<NotificationsCubit>()
+                              .updatePreferences(
+                                prefs.copyWith(pushNotifications: v),
+                              ),
+                          color: AppColors.primary,
+                        ),
+                        const SizedBox(height: AppDimensions.paddingMD),
+                        _buildToggleTile(
+                          icon: LucideIcons.mail,
+                          title: AppStrings.emailNotificationsLabel,
+                          subtitle: AppStrings.emailNotificationsDesc,
+                          value: prefs.emailNotifications,
+                          onChanged: (v) => context
+                              .read<NotificationsCubit>()
+                              .updatePreferences(
+                                prefs.copyWith(emailNotifications: v),
+                              ),
+                          color: AppColors.slate500,
+                        ),
+                        const SizedBox(height: AppDimensions.bottomNavPadding),
+                      ]),
+                    ),
+                  ),
+                ],
+              ),
+              if (isBusy)
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: Container(
+                      color: AppColors.surface.withValues(
+                        alpha: AppDimensions.opacitySubtle,
+                      ),
+                      alignment: Alignment.topCenter,
+                      child: const Padding(
+                        padding: EdgeInsets.only(top: AppDimensions.paddingXXL),
+                        child: LinearProgressIndicator(),
+                      ),
+                    ),
+                  ),
                 ),
-                const SizedBox(height: AppDimensions.paddingMD),
-                _buildToggleTile(
-                  icon: LucideIcons.flame,
-                  title: AppStrings.streakAlerts,
-                  subtitle: AppStrings.streakAlertsDesc,
-                  value: _streakAlerts,
-                  onChanged: (v) => setState(() => _streakAlerts = v),
-                  color: AppColors.orange500,
-                ),
-                const SizedBox(height: AppDimensions.paddingMD),
-                _buildToggleTile(
-                  icon: LucideIcons.sparkles,
-                  title: AppStrings.newContent,
-                  subtitle: AppStrings.newContentDesc,
-                  value: _newContent,
-                  onChanged: (v) => setState(() => _newContent = v),
-                  color: AppColors.secondary,
-                ),
-                const SizedBox(height: AppDimensions.paddingXXL),
-                // Achievement notifications
-                const AppSectionTitle(
-                  title: AppStrings.achievementNotifications,
-                ),
-                const SizedBox(height: AppDimensions.paddingLG),
-                _buildToggleTile(
-                  icon: LucideIcons.trophy,
-                  title: AppStrings.achievements,
-                  subtitle: AppStrings.achievementsDesc,
-                  value: _achievements,
-                  onChanged: (v) => setState(() => _achievements = v),
-                  color: AppColors.orange500,
-                ),
-                const SizedBox(height: AppDimensions.paddingMD),
-                _buildToggleTile(
-                  icon: LucideIcons.barChart2,
-                  title: AppStrings.weeklyReport,
-                  subtitle: AppStrings.weeklyReportDesc,
-                  value: _weeklyReport,
-                  onChanged: (v) => setState(() => _weeklyReport = v),
-                  color: AppColors.tertiary,
-                ),
-                const SizedBox(height: AppDimensions.paddingXXL),
-                // Delivery channels
-                const AppSectionTitle(title: AppStrings.deliveryChannels),
-                const SizedBox(height: AppDimensions.paddingLG),
-                _buildToggleTile(
-                  icon: LucideIcons.bell,
-                  title: AppStrings.pushNotificationsLabel,
-                  subtitle: AppStrings.pushNotificationsDesc,
-                  value: _pushNotifications,
-                  onChanged: (v) => setState(() => _pushNotifications = v),
-                  color: AppColors.primary,
-                ),
-                const SizedBox(height: AppDimensions.paddingMD),
-                _buildToggleTile(
-                  icon: LucideIcons.mail,
-                  title: AppStrings.emailNotificationsLabel,
-                  subtitle: AppStrings.emailNotificationsDesc,
-                  value: _emailNotifications,
-                  onChanged: (v) => setState(() => _emailNotifications = v),
-                  color: AppColors.slate500,
-                ),
-                const SizedBox(height: AppDimensions.bottomNavPadding),
-              ]),
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 

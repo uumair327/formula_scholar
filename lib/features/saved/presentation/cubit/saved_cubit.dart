@@ -12,6 +12,7 @@ import 'saved_state.dart';
 class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
   final GetBookmarksUseCase _getBookmarks;
   final GetSavedChaptersUseCase _getSavedChapters;
+  final GetSavedNotesUseCase _getSavedNotes;
   final RemoveBookmarkUseCase _removeBookmark;
   final RemoveSavedChapterUseCase _removeSavedChapter;
 
@@ -23,10 +24,12 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
   SavedCubit({
     required GetBookmarksUseCase getBookmarks,
     required GetSavedChaptersUseCase getSavedChapters,
+    required GetSavedNotesUseCase getSavedNotes,
     required RemoveBookmarkUseCase removeBookmark,
     required RemoveSavedChapterUseCase removeSavedChapter,
   }) : _getBookmarks = getBookmarks,
        _getSavedChapters = getSavedChapters,
+       _getSavedNotes = getSavedNotes,
        _removeBookmark = removeBookmark,
        _removeSavedChapter = removeSavedChapter,
        super(const SavedState());
@@ -41,6 +44,7 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
     final chaptersResult = await _getSavedChapters(
       curriculumKey: curriculumKey,
     );
+    final notesResult = await _getSavedNotes(curriculumKey: curriculumKey);
 
     if (formulasResult is Error<List<BookmarkedFormula>>) {
       logFailure('bookmarks', formulasResult.failure);
@@ -64,11 +68,23 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
       return;
     }
 
+    if (notesResult is Error<List<SavedNote>>) {
+      logFailure('saved notes', notesResult.failure);
+      emit(
+        state.copyWith(
+          status: SavedStatus.error,
+          errorMessage: notesResult.failure.message,
+        ),
+      );
+      return;
+    }
+
     final formulas = (formulasResult as Success<List<BookmarkedFormula>>).data;
     final chapters = (chaptersResult as Success<List<BookmarkedChapter>>).data;
+    final notes = (notesResult as Success<List<SavedNote>>).data;
 
     AppLogger.info(
-      'Loaded ${formulas.length} bookmarks and ${chapters.length} saved chapters',
+      'Loaded ${formulas.length} bookmarks, ${chapters.length} saved chapters and ${notes.length} saved notes',
       tag: AppLogTags.savedCubit,
     );
     emit(
@@ -76,8 +92,14 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
         status: SavedStatus.loaded,
         bookmarks: formulas,
         chapters: chapters,
+        notes: notes,
+        searchQuery: state.searchQuery,
       ),
     );
+  }
+
+  void updateSearchQuery(String query) {
+    emit(state.copyWith(searchQuery: query));
   }
 
   /// Removes a bookmark and reloads.

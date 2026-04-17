@@ -1,0 +1,22 @@
+import 'package:injectable/injectable.dart';
+
+import '../../../../core/core.dart';
+import '../entities/saved_note.dart';
+import '../ports/saved_repository_port.dart';
+
+/// Fetches saved study notes for a curriculum.
+@injectable
+class GetSavedNotesUseCase {
+  final SavedRepositoryPort _repository;
+
+  const GetSavedNotesUseCase({required SavedRepositoryPort repository})
+    : _repository = repository;
+
+  Future<Result<List<SavedNote>>> call({required String curriculumKey}) {
+    AppLogger.trace(
+      'GetSavedNotesUseCase called',
+      tag: AppLogTags.savedUseCase,
+    );
+    return _repository.getSavedNotes(curriculumKey: curriculumKey);
+  }
+}

@@ -465,6 +465,10 @@ abstract final class AppStrings {
   static const String savedNotes = 'Saved Notes';
   static const String recentBookmarks = 'Recent Bookmarks';
   static const String searchBookmarks = 'Search Bookmarks';
+  static const String noBookmarksFoundTitle = 'No bookmarks found';
+  static const String noBookmarksFoundDesc =
+      'Try a different search term or clear the filter to see all saved formulas and chapters.';
+  static const String clearSearch = 'Clear Search';
 
   // ──────────────────────── Notifications ────────────────────
   static const String studyNotifications = 'Study Notifications';

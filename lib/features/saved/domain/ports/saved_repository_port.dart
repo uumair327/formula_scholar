@@ -1,6 +1,7 @@
 import '../../../../core/error/result.dart';
 import '../entities/bookmarked_chapter.dart';
 import '../entities/bookmarked_formula.dart';
+import '../entities/saved_note.dart';
 
 /// Port: Defines the contract for saved/bookmarked formula access.
 abstract interface class SavedRepositoryPort {
@@ -8,6 +9,9 @@ abstract interface class SavedRepositoryPort {
     required String curriculumKey,
   });
   Future<Result<List<BookmarkedChapter>>> getSavedChapters({
+    required String curriculumKey,
+  });
+  Future<Result<List<SavedNote>>> getSavedNotes({
     required String curriculumKey,
   });
   Future<Result<void>> removeBookmark(String formulaId);

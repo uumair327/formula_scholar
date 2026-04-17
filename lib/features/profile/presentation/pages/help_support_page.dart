@@ -426,7 +426,13 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
       return;
     }
 
-    ComingSoonSheet.show(context, featureName: title);
+    SupportContactSheet.show(
+      context,
+      title: title,
+      subtitle:
+          'This resource is being expanded. Contact support for immediate guidance and access help.',
+      email: 'support@formulascholar.app',
+    );
   }
 
   void _scrollToFaq() {

@@ -1,3 +1,4 @@
+import '../entities/notification_preferences.dart';
 import '../entities/profile_stat.dart';
 import '../entities/settings_item.dart';
 import '../entities/user_profile.dart';
@@ -16,7 +17,14 @@ abstract interface class ProfileDataSourcePort {
   /// Fetches settings/menu items.
   Future<List<SettingsItem>> getSettingsItems();
 
+  /// Fetches notification preference flags for the current user.
+  Future<NotificationPreferences> getNotificationPreferences();
+
   Future<void> updateProfile({required String name, required String avatarUrl});
+
+  Future<void> updateNotificationPreferences(
+    NotificationPreferences preferences,
+  );
 
   Future<void> updateStudyGoal(String studyGoalId);
 }

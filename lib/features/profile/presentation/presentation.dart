@@ -3,6 +3,8 @@ library;
 
 export 'cubit/profile_cubit.dart';
 export 'cubit/profile_state.dart';
+export 'cubit/notifications_cubit.dart';
+export 'cubit/notifications_state.dart';
 export 'pages/account_information_page.dart';
 export 'pages/help_support_page.dart';
 export 'pages/notifications_page.dart';

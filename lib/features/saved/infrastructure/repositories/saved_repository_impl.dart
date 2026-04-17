@@ -67,6 +67,30 @@ class SavedRepositoryImpl implements SavedRepositoryPort {
   }
 
   @override
+  Future<Result<List<SavedNote>>> getSavedNotes({
+    required String curriculumKey,
+  }) {
+    return safeOperation(
+      tag: AppLogTags.savedRepo,
+      operation: 'getSavedNotes(curriculumKey=$curriculumKey)',
+      execute: () async {
+        final result = await _dataSource.getSavedNotes(
+          curriculumKey: curriculumKey,
+        );
+        await _cache.cacheSavedNotes(result);
+        return result;
+      },
+      fallback: () async {
+        final cached = await _cache.getSavedNotes();
+        final filtered = cached
+            .where((note) => note.curriculumKey == curriculumKey)
+            .toList();
+        return filtered.isNotEmpty ? filtered : null;
+      },
+    );
+  }
+
+  @override
   Future<Result<void>> removeBookmark(String formulaId) {
     return safeOperation(
       tag: AppLogTags.savedRepo,
