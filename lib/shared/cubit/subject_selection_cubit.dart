@@ -13,7 +13,6 @@ import 'subject_selection_state.dart';
 /// state cannot leak across board/grade changes or user sessions.
 @lazySingleton
 class SubjectSelectionCubit extends HydratedCubit<SubjectSelectionState> {
-
   SubjectSelectionCubit({required WatchCurriculumUseCase watchCurriculum})
     : _watchCurriculum = watchCurriculum,
       super(const SubjectSelectionState()) {
@@ -54,16 +53,23 @@ class SubjectSelectionCubit extends HydratedCubit<SubjectSelectionState> {
       tag: AppLogTags.subjectSelection,
     );
 
+    final selectedSubject = state.subject;
+    final hasSelectedSubject = selectedSubject != null;
+    final selectedStillExists =
+        !hasSelectedSubject ||
+        subjects.any((subject) => subject.id == selectedSubject.id);
+    final nextSubject = !hasSelectedSubject && subjects.isNotEmpty
+        ? subjects.first
+        : selectedStillExists
+        ? selectedSubject
+        : null;
+
     final nextState = state.copyWith(
       availableSubjects: subjects,
+      subject: nextSubject,
       curriculumKey: _activeCurriculumKey,
     );
-    final selectedSubject = state.subject;
-    final selectedStillExists =
-        selectedSubject == null ||
-        subjects.any((subject) => subject.id == selectedSubject.id);
-
-    emit(selectedStillExists ? nextState : nextState.copyWith(subject: null));
+    emit(nextState);
   }
 
   void clearSelection() {

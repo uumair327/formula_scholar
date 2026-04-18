@@ -205,12 +205,23 @@ abstract final class RouteBuilders {
           pageBuilder: (context, state) {
             return AppPageTransitions.fadeTransition(
               state: state,
-              child: BlocProvider(
-                create: (_) {
-                  final cubit = getIt<DashboardCubit>();
-                  Future.microtask(cubit.loadDashboard);
-                  return cubit;
-                },
+              child: MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create: (_) {
+                      final cubit = getIt<DashboardCubit>();
+                      Future.microtask(cubit.loadDashboard);
+                      return cubit;
+                    },
+                  ),
+                  BlocProvider(
+                    create: (_) => CurriculumOptionsCubit(
+                      getBoards: getIt<GetBoardsUseCase>(),
+                      getGrades: getIt<GetGradesUseCase>(),
+                      curriculumCubit: getIt<CurriculumCubit>(),
+                    ),
+                  ),
+                ],
                 child: const DashboardPage(),
               ),
             );

@@ -3,8 +3,7 @@ import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
-import 'package:formula_scholar/shared/cubit/subject_selection_cubit.dart';
-import 'package:formula_scholar/shared/domain/domain.dart';
+import 'package:formula_scholar/shared/shared.dart';
 
 void main() {
   group('SubjectSelectionCubit', () {
@@ -93,6 +92,38 @@ void main() {
 
       expect(cubit.state.subject?.id, 'phy');
       expect(cubit.state.curriculumKey, 'cbse::class_9');
+    });
+
+    test('selects the first available subject when none is selected', () async {
+      repository.emit(
+        const SelectedCurriculum(
+          boardId: 'cbse',
+          boardName: 'CBSE',
+          gradeId: 'class_9',
+          gradeLabel: '9th',
+          gradeNumber: 9,
+        ),
+      );
+      await Future<void>.delayed(Duration.zero);
+
+      cubit.updateAvailableSubjects([
+        const SelectedSubject(
+          id: 'math',
+          name: 'Mathematics',
+          category: 'science',
+          description: 'Core mathematics',
+          subtitle: 'Numbers and equations',
+        ),
+        const SelectedSubject(
+          id: 'science',
+          name: 'Science',
+          category: 'science',
+          description: 'Core science',
+        ),
+      ]);
+
+      expect(cubit.state.availableSubjects, hasLength(2));
+      expect(cubit.state.subject?.id, 'math');
     });
   });
 }

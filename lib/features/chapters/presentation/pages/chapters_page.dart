@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
+import '../../../dashboard/dashboard.dart';
 import '../../../../shared/shared.dart';
 import '../../../auth/auth.dart';
 import '../../../profile/domain/domain.dart';
@@ -28,20 +29,22 @@ class ChaptersPage extends StatefulWidget {
 }
 
 class _ChaptersPageState extends State<ChaptersPage> {
+  bool _isLoadingAvailableSubjects = false;
+
   @override
   void initState() {
     super.initState();
     // Trigger initial load if a subject is already selected (e.g. hydrated).
     // BlocListener only fires on *changes*, not on existing state.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _ensureChaptersLoaded();
+      unawaited(_ensureChaptersLoaded());
     });
   }
 
   /// If a subject is already selected, load its chapters.
   /// If no subject is selected but available subjects exist, auto-select
   /// the first one so the user always sees content on the Chapters tab.
-  void _ensureChaptersLoaded() {
+  Future<void> _ensureChaptersLoaded() async {
     final selectionCubit = context.read<SubjectSelectionCubit>();
     final subjectState = selectionCubit.state;
     final curriculumKey =
@@ -49,9 +52,11 @@ class _ChaptersPageState extends State<ChaptersPage> {
         AppStrings.unknownCurriculum;
 
     if (subjectState.hasSelection) {
-      context.read<ChaptersCubit>().loadChapters(
-        subjectState.subject!.id,
-        curriculumKey: curriculumKey,
+      unawaited(
+        context.read<ChaptersCubit>().loadChapters(
+          subjectState.subject!.id,
+          curriculumKey: curriculumKey,
+        ),
       );
     } else if (subjectState.availableSubjects.isNotEmpty) {
       final first = subjectState.availableSubjects.first;
@@ -62,6 +67,63 @@ class _ChaptersPageState extends State<ChaptersPage> {
         description: first.description,
         subtitle: first.subtitle,
       );
+    } else {
+      await _loadAvailableSubjects();
+    }
+  }
+
+  Future<void> _loadAvailableSubjects() async {
+    if (_isLoadingAvailableSubjects) {
+      return;
+    }
+
+    final curriculum = context.read<CurriculumCubit>().state.curriculum;
+    if (curriculum == null) {
+      return;
+    }
+
+    final curriculumKey = curriculum.curriculumKey;
+    setState(() {
+      _isLoadingAvailableSubjects = true;
+    });
+
+    try {
+      final result = await getIt<GetSubjectsUseCase>().call(
+        curriculum.boardId,
+        curriculum.gradeId,
+      );
+
+      if (!mounted) {
+        return;
+      }
+
+      if (context.read<CurriculumCubit>().state.curriculum?.curriculumKey !=
+          curriculumKey) {
+        return;
+      }
+
+      if (result case Success<List<Subject>>(:final data)) {
+        final selectedSubjects = data
+            .map(
+              (subject) => SelectedSubject(
+                id: subject.id,
+                name: subject.name,
+                category: subject.category,
+                description: subject.description,
+                subtitle: subject.subtitle ?? '',
+              ),
+            )
+            .toList();
+        context.read<SubjectSelectionCubit>().updateAvailableSubjects(
+          selectedSubjects,
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingAvailableSubjects = false;
+        });
+      }
     }
   }
 
@@ -73,9 +135,11 @@ class _ChaptersPageState extends State<ChaptersPage> {
           final curriculumKey =
               context.read<CurriculumCubit>().state.curriculum?.curriculumKey ??
               AppStrings.unknownCurriculum;
-          context.read<ChaptersCubit>().loadChapters(
-            subjectState.subject!.id,
-            curriculumKey: curriculumKey,
+          unawaited(
+            context.read<ChaptersCubit>().loadChapters(
+              subjectState.subject!.id,
+              curriculumKey: curriculumKey,
+            ),
           );
         }
       },
@@ -88,7 +152,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
           if (!subjectState.hasSelection &&
               subjectState.availableSubjects.isNotEmpty) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              _ensureChaptersLoaded();
+              unawaited(_ensureChaptersLoaded());
             });
           }
 
@@ -97,7 +161,14 @@ class _ChaptersPageState extends State<ChaptersPage> {
               slivers: [
                 _buildAppBar(context, subjectState),
                 _buildSubjectChips(context, subjectState),
-                if (!subjectState.hasSelection)
+                if (!subjectState.hasSelection &&
+                    subjectState.availableSubjects.isEmpty &&
+                    _isLoadingAvailableSubjects)
+                  const SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: AppLoadingState(),
+                  )
+                else if (!subjectState.hasSelection)
                   const SliverFillRemaining(
                     hasScrollBody: false,
                     child: NoSubjectSelectedState(),
@@ -301,11 +372,14 @@ class _ChaptersPageState extends State<ChaptersPage> {
               return;
             }
 
-            unawaited(showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (_) => const Center(child: CircularProgressIndicator()),
-            ));
+            unawaited(
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) =>
+                    const Center(child: CircularProgressIndicator()),
+              ),
+            );
 
             // Fetch current stats to get the dynamic streak
             final statsResult = await getIt<GetProfileStatsUseCase>().call();

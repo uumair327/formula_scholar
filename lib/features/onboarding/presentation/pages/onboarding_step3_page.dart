@@ -109,7 +109,6 @@ class OnboardingStep3Page extends StatelessWidget {
 }
 
 class _GradeCard extends StatelessWidget {
-
   const _GradeCard({
     required this.grade,
     required this.isSelected,
@@ -166,7 +165,7 @@ class _GradeCard extends StatelessWidget {
                 ),
                 const SizedBox(height: AppDimensions.paddingXL),
                 Text(
-                  grade.label,
+                  grade.displayLabel,
                   style: AppTextStyles.headlineSmall.copyWith(
                     fontWeight: FontWeight.w700,
                   ),

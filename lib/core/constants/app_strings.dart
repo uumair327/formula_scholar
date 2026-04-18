@@ -189,6 +189,17 @@ abstract final class AppStrings {
   static const String dashboardSanctuary = 'Formula Sanctuary';
   static const String dashboardActiveCurriculum = 'ACTIVE CURRICULUM';
   static const String dashboardSwitchBoardGrade = 'Switch Board/Grade';
+  static const String dashboardAvailableBoards = 'Boards for your region';
+  static const String dashboardAvailableClasses = 'Classes for selected board';
+  static const String dashboardNoBoardsAvailable =
+      'No boards available for your region.';
+  static const String dashboardNoClassesAvailable =
+      'No classes available for this board.';
+  static const String dashboardCurriculumOptionsLoadFailed =
+      'Unable to load boards and classes right now.';
+  static const String dashboardRetryCurriculumOptions =
+      'Retry board/class options';
+  static const String defaultCountryId = 'IN';
   static const String dashboardHeroBadge = 'CBSE Syllabus • Grade 9';
   static const String dashboardHeroTitle = 'Mastering Motion &\nLaws of Forces';
   static const String dashboardHeroDescription =

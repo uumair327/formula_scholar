@@ -47,6 +47,8 @@ abstract final class AppLogTags {
   // Presentation
   static const String dashboardPage = 'DashboardPage';
   static const String dashboardCubit = 'DashboardCubit';
+  static const String dashboardCurriculumOptionsCubit =
+      'DashboardCurriculumOptionsCubit';
   // Data
   static const String dashboardRepo = 'DashboardRepo';
   static const String dashboardDataSource = 'DashboardDataSource';

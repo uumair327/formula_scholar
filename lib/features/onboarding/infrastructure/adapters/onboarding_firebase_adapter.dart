@@ -158,21 +158,117 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
               .limit(limit)
               .get();
 
-    final data = snapshot.docs.map((doc) {
+    final parsedGrades = snapshot.docs.map((doc) {
       final map = doc.data();
+      final rawLabel = (map['label'] ?? '').toString();
+      final classNumber = _resolveClassNumber(
+        rawClassNumber: map['classNumber'],
+        gradeId: doc.id,
+        gradeLabel: rawLabel,
+      );
+
       return Grade(
         id: doc.id,
-        label: map['label'] ?? '',
-        classNumber: map['classNumber'] ?? 0,
-        subtitle: map['subtitle'],
-        isPopular: map['isPopular'] ?? false,
+        label: _canonicalGradeLabel(classNumber, rawLabel),
+        classNumber: classNumber,
+        subtitle: map['subtitle']?.toString(),
+        isPopular: map['isPopular'] == true,
       );
     }).toList();
+
+    final data = _deduplicateAndSortGrades(parsedGrades);
 
     return PaginatedResponse(
       data: data,
       hasMore: data.length == limit,
       lastCursorId: data.isNotEmpty ? data.last.id : null,
     );
+  }
+
+  List<Grade> _deduplicateAndSortGrades(List<Grade> grades) {
+    final deduped = <String, Grade>{};
+
+    for (final grade in grades) {
+      final key = grade.classNumber > 0
+          ? 'class_${grade.classNumber}'
+          : 'label_${grade.label.toLowerCase()}';
+      final existing = deduped[key];
+      if (existing == null ||
+          _isPreferredGrade(candidate: grade, current: existing)) {
+        deduped[key] = grade;
+      }
+    }
+
+    final sorted = deduped.values.toList()
+      ..sort((a, b) {
+        if (a.classNumber != b.classNumber) {
+          if (a.classNumber == 0) {
+            return 1;
+          }
+          if (b.classNumber == 0) {
+            return -1;
+          }
+          return a.classNumber.compareTo(b.classNumber);
+        }
+
+        return a.label.toLowerCase().compareTo(b.label.toLowerCase());
+      });
+
+    return sorted;
+  }
+
+  bool _isPreferredGrade({required Grade candidate, required Grade current}) {
+    final candidateHasCanonicalId = candidate.id.startsWith('class_');
+    final currentHasCanonicalId = current.id.startsWith('class_');
+    if (candidateHasCanonicalId != currentHasCanonicalId) {
+      return candidateHasCanonicalId;
+    }
+
+    if (candidate.isPopular != current.isPopular) {
+      return candidate.isPopular;
+    }
+
+    return candidate.label.length < current.label.length;
+  }
+
+  String _canonicalGradeLabel(int classNumber, String rawLabel) {
+    if (classNumber > 0) {
+      return 'Class $classNumber';
+    }
+
+    final cleaned = rawLabel.trim();
+    return cleaned.isEmpty ? AppStrings.unknownGrade : cleaned;
+  }
+
+  int _resolveClassNumber({
+    required Object? rawClassNumber,
+    required String gradeId,
+    required String gradeLabel,
+  }) {
+    final direct = int.tryParse(rawClassNumber?.toString() ?? '');
+    if (direct != null && direct > 0) {
+      return direct;
+    }
+
+    final fromId = _extractFirstNumber(gradeId);
+    if (fromId != null) {
+      return fromId;
+    }
+
+    final fromLabel = _extractFirstNumber(gradeLabel);
+    if (fromLabel != null) {
+      return fromLabel;
+    }
+
+    return 0;
+  }
+
+  int? _extractFirstNumber(String input) {
+    final match = RegExp(r'(\d{1,2})').firstMatch(input);
+    if (match == null) {
+      return null;
+    }
+
+    return int.tryParse(match.group(1)!);
   }
 }

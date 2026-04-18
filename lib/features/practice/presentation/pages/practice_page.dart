@@ -248,7 +248,7 @@ class PracticePage extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            onPressed: () => Navigator.of(context).maybePop(),
+            onPressed: () => StatefulNavigationShell.of(context).goBranch(1),
             icon: const Icon(LucideIcons.x, size: AppDimensions.iconLG),
           ),
           const SizedBox(width: AppDimensions.paddingMD),
@@ -788,7 +788,6 @@ class PracticePage extends StatelessWidget {
 
 /// Small stat display used in the completion screen.
 class _ScoreStat extends StatelessWidget {
-
   const _ScoreStat({
     required this.icon,
     required this.value,

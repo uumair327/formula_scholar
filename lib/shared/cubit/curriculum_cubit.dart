@@ -13,7 +13,6 @@ import 'curriculum_state.dart';
 /// truth and never falls back to fake board/grade defaults.
 @lazySingleton
 class CurriculumCubit extends Cubit<CurriculumState> {
-
   CurriculumCubit({
     required LoadCurriculumUseCase loadCurriculum,
     required SaveCurriculumUseCase saveCurriculum,
@@ -69,6 +68,10 @@ class CurriculumCubit extends Cubit<CurriculumState> {
     required String gradeId,
     required String gradeLabel,
     required int gradeNumber,
+    String? countryId,
+    String? stateId,
+    String? countryName,
+    String? stateName,
   }) async {
     AppLogger.info(
       'Setting curriculum: board=$boardName ($boardId), grade=$gradeLabel ($gradeId)',
@@ -82,6 +85,10 @@ class CurriculumCubit extends Cubit<CurriculumState> {
       gradeId: gradeId,
       gradeLabel: gradeLabel,
       gradeNumber: gradeNumber,
+      countryId: countryId,
+      stateId: stateId,
+      countryName: countryName,
+      stateName: stateName,
     );
 
     emit(

@@ -162,7 +162,7 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
       ),
       surfaceTintColor: AppColors.transparent,
       leading: IconButton(
-        onPressed: () => context.pop(),
+        onPressed: () => context.go(AppRoutes.profilePath),
         icon: const Icon(LucideIcons.arrowLeft, color: AppColors.onSurface),
       ),
       title: Text(

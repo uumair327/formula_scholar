@@ -9,7 +9,6 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: CurriculumDataSourcePort)
 class CurriculumFirebaseAdapter implements CurriculumDataSourcePort {
-
   const CurriculumFirebaseAdapter(this._firestore, this._firebaseAuth);
   final FirebaseFirestore _firestore;
   final FirebaseAuth _firebaseAuth;
@@ -36,8 +35,15 @@ class CurriculumFirebaseAdapter implements CurriculumDataSourcePort {
       'boardId': curriculum.boardId,
       'boardName': curriculum.boardName,
       'gradeId': curriculum.gradeId,
-      'gradeLabel': curriculum.gradeLabel,
+      'gradeLabel': _canonicalGradeLabel(
+        curriculum.gradeLabel,
+        curriculum.gradeNumber,
+      ),
       'gradeNumber': curriculum.gradeNumber,
+      'countryId': curriculum.countryId,
+      'stateId': curriculum.stateId,
+      'countryName': curriculum.countryName,
+      'stateName': curriculum.stateName,
     }, SetOptions(merge: true));
   }
 
@@ -94,6 +100,10 @@ class CurriculumFirebaseAdapter implements CurriculumDataSourcePort {
     final gradeId = data['gradeId']?.toString();
     final gradeLabel = data['gradeLabel']?.toString();
     final gradeNumber = int.tryParse(data['gradeNumber']?.toString() ?? '');
+    final countryId = data['countryId']?.toString();
+    final stateId = data['stateId']?.toString();
+    final countryName = data['countryName']?.toString();
+    final stateName = data['stateName']?.toString();
 
     if (boardId == null ||
         boardName == null ||
@@ -107,8 +117,21 @@ class CurriculumFirebaseAdapter implements CurriculumDataSourcePort {
       boardId: boardId,
       boardName: boardName,
       gradeId: gradeId,
-      gradeLabel: gradeLabel,
+      gradeLabel: _canonicalGradeLabel(gradeLabel, gradeNumber),
       gradeNumber: gradeNumber,
+      countryId: countryId,
+      stateId: stateId,
+      countryName: countryName,
+      stateName: stateName,
     );
+  }
+
+  String _canonicalGradeLabel(String? gradeLabel, int gradeNumber) {
+    if (gradeNumber > 0) {
+      return 'Class $gradeNumber';
+    }
+
+    final cleaned = gradeLabel?.trim() ?? '';
+    return cleaned.isEmpty ? AppStrings.unknownGrade : cleaned;
   }
 }

@@ -10,7 +10,6 @@ import 'onboarding_state.dart';
 /// Cubit managing the universal onboarding flow (location -> state -> board -> grade).
 @injectable
 class OnboardingCubit extends Cubit<OnboardingState> {
-
   OnboardingCubit({
     required GetCountriesUseCase getCountries,
     required GetStatesUseCase getStates,
@@ -196,12 +195,16 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       boardId: board.id,
       boardName: board.name,
       gradeId: grade.id,
-      gradeLabel: grade.label,
+      gradeLabel: grade.displayLabel,
       gradeNumber: grade.classNumber,
+      countryId: state.selectedCountry?.id,
+      stateId: state.selectedState?.id,
+      countryName: state.selectedCountry?.name,
+      stateName: state.selectedState?.name,
     );
 
     AppLogger.info(
-      'Completing onboarding for board=${board.name}, grade=${grade.label}, goal=$studyGoalId',
+      'Completing onboarding for board=${board.name}, grade=${grade.displayLabel}, goal=$studyGoalId',
       tag: AppLogTags.onboardingCubit,
     );
 
