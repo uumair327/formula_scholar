@@ -8,6 +8,14 @@ import '../../core/core.dart';
 /// Used in dashboard subject cards (e.g. "Enter Lab ›", "Explore Elements ›")
 /// and geometry topic cards (e.g. "View Topics ›").
 class AppActionRow extends StatelessWidget {
+
+  const AppActionRow({
+    super.key,
+    required this.label,
+    this.color = AppColors.primary,
+    this.onTap,
+    this.trailingIcon = LucideIcons.chevronRight,
+  });
   /// Action label text.
   final String label;
 
@@ -19,14 +27,6 @@ class AppActionRow extends StatelessWidget {
 
   /// Trailing icon. Defaults to [LucideIcons.chevronRight].
   final IconData trailingIcon;
-
-  const AppActionRow({
-    super.key,
-    required this.label,
-    this.color = AppColors.primary,
-    this.onTap,
-    this.trailingIcon = LucideIcons.chevronRight,
-  });
 
   @override
   Widget build(BuildContext context) {

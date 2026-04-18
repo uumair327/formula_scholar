@@ -4,9 +4,9 @@ import '../domain.dart';
 
 @lazySingleton
 class GetGradesUseCase {
-  final OnboardingRepositoryPort _repository;
 
   GetGradesUseCase(this._repository);
+  final OnboardingRepositoryPort _repository;
 
   Future<Result<PaginatedResponse<Grade>>> call(
     String boardId, {

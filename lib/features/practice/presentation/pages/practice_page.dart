@@ -217,7 +217,7 @@ class PracticePage extends StatelessWidget {
                                   );
                                 }
                               },
-                              child: Text(AppStrings.retry),
+                              child: const Text(AppStrings.retry),
                             ),
                             OutlinedButton(
                               onPressed: () => StatefulNavigationShell.of(
@@ -788,10 +788,6 @@ class PracticePage extends StatelessWidget {
 
 /// Small stat display used in the completion screen.
 class _ScoreStat extends StatelessWidget {
-  final IconData icon;
-  final String value;
-  final String label;
-  final Color color;
 
   const _ScoreStat({
     required this.icon,
@@ -799,6 +795,10 @@ class _ScoreStat extends StatelessWidget {
     required this.label,
     required this.color,
   });
+  final IconData icon;
+  final String value;
+  final String label;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {

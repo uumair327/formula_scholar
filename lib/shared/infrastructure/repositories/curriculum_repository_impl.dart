@@ -5,9 +5,9 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: CurriculumRepositoryPort)
 class CurriculumRepositoryImpl implements CurriculumRepositoryPort {
-  final CurriculumDataSourcePort _dataSource;
 
   const CurriculumRepositoryImpl(this._dataSource);
+  final CurriculumDataSourcePort _dataSource;
 
   @override
   Future<SelectedCurriculum?> loadCurriculum() async {

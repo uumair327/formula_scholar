@@ -4,12 +4,6 @@ enum BoardType { national, state, private, examination }
 
 /// Academic board entity (CBSE, ICSE, State Board, etc.).
 class Board extends Equatable {
-  final String id;
-  final String countryId;
-  final String? stateId;
-  final BoardType type;
-  final String name;
-  final String description;
 
   const Board({
     required this.id,
@@ -19,6 +13,12 @@ class Board extends Equatable {
     required this.description,
     this.stateId,
   });
+  final String id;
+  final String countryId;
+  final String? stateId;
+  final BoardType type;
+  final String name;
+  final String description;
 
   @override
   List<Object?> get props => [id, countryId, stateId, type, name];

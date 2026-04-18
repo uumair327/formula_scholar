@@ -8,11 +8,6 @@ import 'notifications_state.dart';
 @injectable
 class NotificationsCubit extends Cubit<NotificationsState>
     with CubitFailureLogger<NotificationsState> {
-  final GetNotificationPreferencesUseCase _getNotificationPreferences;
-  final UpdateNotificationPreferencesUseCase _updateNotificationPreferences;
-
-  @override
-  String get logTag => AppLogTags.profileCubit;
 
   NotificationsCubit({
     required GetNotificationPreferencesUseCase getNotificationPreferences,
@@ -20,6 +15,11 @@ class NotificationsCubit extends Cubit<NotificationsState>
   }) : _getNotificationPreferences = getNotificationPreferences,
        _updateNotificationPreferences = updateNotificationPreferences,
        super(const NotificationsState());
+  final GetNotificationPreferencesUseCase _getNotificationPreferences;
+  final UpdateNotificationPreferencesUseCase _updateNotificationPreferences;
+
+  @override
+  String get logTag => AppLogTags.profileCubit;
 
   Future<void> loadPreferences() async {
     emit(

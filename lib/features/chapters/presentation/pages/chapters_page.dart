@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -6,6 +8,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
 import '../../../auth/auth.dart';
+import '../../../profile/domain/domain.dart';
 import '../cubit/chapters_cubit.dart';
 import '../cubit/chapters_state.dart';
 import '../widgets/chapter_cards.dart';
@@ -290,13 +293,33 @@ class _ChaptersPageState extends State<ChaptersPage> {
       ),
       actions: [
         IconButton(
-          onPressed: () {
+          onPressed: () async {
             if (subject == null) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text(AppStrings.selectSubjectFirst)),
               );
               return;
             }
+
+            unawaited(showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (_) => const Center(child: CircularProgressIndicator()),
+            ));
+
+            // Fetch current stats to get the dynamic streak
+            final statsResult = await getIt<GetProfileStatsUseCase>().call();
+            var currentStreak = 0;
+            if (statsResult is Success<List<ProfileStat>>) {
+              final streakStat = statsResult.data
+                  .where((s) => s.id == 'streak')
+                  .firstOrNull;
+              currentStreak = int.tryParse(streakStat?.value ?? '0') ?? 0;
+            }
+
+            if (!context.mounted) return;
+            Navigator.of(context).pop(); // Dismiss loading
+
             final chapterState = context.read<ChaptersCubit>().state;
 
             // Calculate totals
@@ -316,6 +339,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
               progressPercent: progress,
               completedFormulas: completed,
               totalFormulas: total,
+              currentStreak: currentStreak,
               grade:
                   context.read<CurriculumCubit>().state.gradeLabel ??
                   AppStrings.unknownGrade,

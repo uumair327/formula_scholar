@@ -7,9 +7,6 @@ import '../../domain/domain.dart';
 
 /// Bottom sheet that explains available boards and lets the user pick one.
 class OnboardingBoardGuideSheet extends StatelessWidget {
-  final List<Board> boards;
-  final String? selectedBoardId;
-  final ValueChanged<Board> onSelectBoard;
 
   const OnboardingBoardGuideSheet({
     super.key,
@@ -17,6 +14,9 @@ class OnboardingBoardGuideSheet extends StatelessWidget {
     required this.selectedBoardId,
     required this.onSelectBoard,
   });
+  final List<Board> boards;
+  final String? selectedBoardId;
+  final ValueChanged<Board> onSelectBoard;
 
   static void show(
     BuildContext context, {
@@ -72,7 +72,7 @@ class OnboardingBoardGuideSheet extends StatelessWidget {
               const SizedBox(height: AppDimensions.paddingXXL),
               Row(
                 children: [
-                  AppIconCircle(
+                  const AppIconCircle(
                     icon: LucideIcons.info,
                     size: AppDimensions.avatarHero,
                     backgroundColor: AppColors.primaryFixed,
@@ -151,15 +151,15 @@ class OnboardingBoardGuideSheet extends StatelessWidget {
 }
 
 class _BoardGuideCard extends StatelessWidget {
-  final Board board;
-  final bool isSelected;
-  final VoidCallback onTap;
 
   const _BoardGuideCard({
     required this.board,
     required this.isSelected,
     required this.onTap,
   });
+  final Board board;
+  final bool isSelected;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {

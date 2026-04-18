@@ -9,9 +9,9 @@ import '../../domain/domain.dart';
 ///
 /// Matches the React `ProfileHero` component.
 class ProfileHeroWidget extends StatelessWidget {
-  final UserProfile profile;
 
   const ProfileHeroWidget({super.key, required this.profile});
+  final UserProfile profile;
 
   @override
   Widget build(BuildContext context) {

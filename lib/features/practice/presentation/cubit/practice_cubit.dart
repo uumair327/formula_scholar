@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 import 'practice_state.dart';
 
@@ -11,14 +12,21 @@ import 'practice_state.dart';
 @injectable
 class PracticeCubit extends Cubit<PracticeState>
     with CubitFailureLogger<PracticeState> {
+
+  PracticeCubit({
+    required GetQuestionsUseCase getQuestions,
+    required RecordQuizCompletionUseCase recordQuizCompletion,
+    required ActivityRefreshCubit activityRefreshCubit,
+  }) : _getQuestions = getQuestions,
+       _recordQuizCompletion = recordQuizCompletion,
+       _activityRefreshCubit = activityRefreshCubit,
+       super(const PracticeState());
   final GetQuestionsUseCase _getQuestions;
+  final RecordQuizCompletionUseCase _recordQuizCompletion;
+  final ActivityRefreshCubit _activityRefreshCubit;
 
   @override
   String get logTag => AppLogTags.practiceCubit;
-
-  PracticeCubit({required GetQuestionsUseCase getQuestions})
-    : _getQuestions = getQuestions,
-      super(const PracticeState());
 
   /// Loads quiz questions.
   Future<void> loadQuestions({
@@ -26,11 +34,13 @@ class PracticeCubit extends Cubit<PracticeState>
     required String gradeId,
   }) async {
     AppLogger.info('Loading practice questions', tag: AppLogTags.practiceCubit);
-    emit(state.copyWith(
-      status: PracticeStatus.loading,
-      boardId: boardId,
-      gradeId: gradeId,
-    ));
+    emit(
+      state.copyWith(
+        status: PracticeStatus.loading,
+        boardId: boardId,
+        gradeId: gradeId,
+      ),
+    );
 
     final result = await _getQuestions(boardId: boardId, gradeId: gradeId);
 
@@ -76,7 +86,7 @@ class PracticeCubit extends Cubit<PracticeState>
   }
 
   /// Moves to the next question, or completes the quiz if on the last one.
-  void nextQuestion() {
+  Future<void> nextQuestion() async {
     if (state.currentIndex < state.totalQuestions - 1) {
       emit(
         state.copyWith(
@@ -87,12 +97,39 @@ class PracticeCubit extends Cubit<PracticeState>
       );
     } else {
       // All questions answered — mark quiz as completed.
+      await _persistQuizCompletion();
       AppLogger.info(
         'Quiz completed — ${state.totalPoints} total points',
         tag: AppLogTags.practiceCubit,
       );
       emit(state.copyWith(status: PracticeStatus.completed, showResult: false));
     }
+  }
+
+  Future<void> _persistQuizCompletion() async {
+    final boardId = state.boardId;
+    final gradeId = state.gradeId;
+    if (boardId == null || gradeId == null) {
+      AppLogger.warning(
+        'Skipping quiz completion persistence due to missing board/grade context',
+        tag: AppLogTags.practiceCubit,
+      );
+      return;
+    }
+
+    final result = await _recordQuizCompletion(
+      boardId: boardId,
+      gradeId: gradeId,
+      earnedPoints: state.totalPoints,
+      answeredQuestions: state.totalQuestions,
+    );
+
+    if (result is Error<void>) {
+      logFailure('recordQuizCompletion', result.failure);
+      return;
+    }
+
+    _activityRefreshCubit.notifyProgressUpdated();
   }
 
   /// Resets the quiz for a replay.

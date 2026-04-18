@@ -8,14 +8,14 @@ import '../../domain/domain.dart';
 
 /// Bottom sheet that surfaces backend-fed profile stats and next actions.
 class ProfileInsightsSheet extends StatelessWidget {
-  final String displayName;
-  final List<ProfileStat> stats;
 
   const ProfileInsightsSheet({
     super.key,
     required this.displayName,
     required this.stats,
   });
+  final String displayName;
+  final List<ProfileStat> stats;
 
   static void show(
     BuildContext context, {
@@ -67,7 +67,7 @@ class ProfileInsightsSheet extends StatelessWidget {
               const SizedBox(height: AppDimensions.paddingXXL),
               Row(
                 children: [
-                  AppIconCircle(
+                  const AppIconCircle(
                     icon: LucideIcons.barChart3,
                     size: AppDimensions.avatarHero,
                     backgroundColor: AppColors.primaryFixed,

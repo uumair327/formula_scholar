@@ -11,31 +11,37 @@ import 'dashboard_state.dart';
 @injectable
 class DashboardCubit extends Cubit<DashboardState>
     with CubitFailureLogger<DashboardState> {
-  final GetStudyProgressUseCase _getStudyProgress;
-  final GetSubjectsUseCase _getSubjects;
-  final GetRecentStudiesUseCase _getRecentStudies;
-  final CurriculumCubit _curriculumCubit;
-  late final StreamSubscription<CurriculumState> _curriculumSubscription;
-
-  @override
-  String get logTag => AppLogTags.dashboardCubit;
 
   DashboardCubit({
     required GetStudyProgressUseCase getStudyProgress,
     required GetSubjectsUseCase getSubjects,
     required GetRecentStudiesUseCase getRecentStudies,
     required CurriculumCubit curriculumCubit,
+    required ActivityRefreshCubit activityRefreshCubit,
   }) : _getStudyProgress = getStudyProgress,
        _getSubjects = getSubjects,
        _getRecentStudies = getRecentStudies,
        _curriculumCubit = curriculumCubit,
+       _activityRefreshCubit = activityRefreshCubit,
        super(const DashboardState()) {
     _watchCurriculumChanges();
+    _watchActivityRefreshSignals();
   }
+  final GetStudyProgressUseCase _getStudyProgress;
+  final GetSubjectsUseCase _getSubjects;
+  final GetRecentStudiesUseCase _getRecentStudies;
+  final CurriculumCubit _curriculumCubit;
+  final ActivityRefreshCubit _activityRefreshCubit;
+  late final StreamSubscription<CurriculumState> _curriculumSubscription;
+  late final StreamSubscription<int> _activityRefreshSubscription;
+
+  @override
+  String get logTag => AppLogTags.dashboardCubit;
 
   @override
   Future<void> close() {
     _curriculumSubscription.cancel();
+    _activityRefreshSubscription.cancel();
     return super.close();
   }
 
@@ -46,6 +52,16 @@ class DashboardCubit extends Cubit<DashboardState>
       if (!curriculumState.isLoading) {
         Future.microtask(loadDashboard);
       }
+    });
+  }
+
+  void _watchActivityRefreshSignals() {
+    _activityRefreshSubscription = _activityRefreshCubit.stream.listen((_) {
+      if (state.status == DashboardStatus.loading) {
+        return;
+      }
+
+      Future.microtask(loadDashboard);
     });
   }
 

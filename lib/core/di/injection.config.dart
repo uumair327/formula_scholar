@@ -100,6 +100,8 @@ import '../../features/practice/domain/ports/practice_repository_port.dart'
     as _i1061;
 import '../../features/practice/domain/usecases/get_questions_use_case.dart'
     as _i525;
+import '../../features/practice/domain/usecases/record_quiz_completion_use_case.dart'
+    as _i1210;
 import '../../features/practice/infrastructure/adapters/practice_firebase_adapter.dart'
     as _i660;
 import '../../features/practice/infrastructure/repositories/practice_repository_impl.dart'
@@ -252,7 +254,10 @@ extension GetItInjectableX on _i174.GetIt {
       ),
     );
     gh.lazySingleton<_i899.PracticeDataSourcePort>(
-      () => _i660.PracticeFirebaseAdapter(gh<_i974.FirebaseFirestore>()),
+      () => _i660.PracticeFirebaseAdapter(
+        gh<_i974.FirebaseFirestore>(),
+        gh<_i59.FirebaseAuth>(),
+      ),
     );
     gh.lazySingleton<_i525.CurriculumDataSourcePort>(
       () => _i303.CurriculumFirebaseAdapter(
@@ -430,8 +435,17 @@ extension GetItInjectableX on _i174.GetIt {
         repository: gh<_i1061.PracticeRepositoryPort>(),
       ),
     );
+    gh.factory<_i1210.RecordQuizCompletionUseCase>(
+      () => _i1210.RecordQuizCompletionUseCase(
+        repository: gh<_i1061.PracticeRepositoryPort>(),
+      ),
+    );
     gh.factory<_i411.PracticeCubit>(
-      () => _i411.PracticeCubit(getQuestions: gh<_i899.GetQuestionsUseCase>()),
+      () => _i411.PracticeCubit(
+        getQuestions: gh<_i899.GetQuestionsUseCase>(),
+        recordQuizCompletion: gh<_i899.RecordQuizCompletionUseCase>(),
+        activityRefreshCubit: gh<_i914.ActivityRefreshCubit>(),
+      ),
     );
     gh.factory<_i221.RemoveBookmarkUseCase>(
       () => _i221.RemoveBookmarkUseCase(gh<_i385.SavedRepositoryPort>()),
@@ -485,6 +499,9 @@ extension GetItInjectableX on _i174.GetIt {
         watchCurriculum: gh<_i525.WatchCurriculumUseCase>(),
       ),
     );
+    gh.lazySingleton<_i914.ActivityRefreshCubit>(
+      () => _i914.ActivityRefreshCubit(),
+    );
     gh.factory<_i834.GetRecentStudiesUseCase>(
       () => _i834.GetRecentStudiesUseCase(
         repository: gh<_i190.DashboardRepositoryPort>(),
@@ -506,6 +523,7 @@ extension GetItInjectableX on _i174.GetIt {
         getProfileStats: gh<_i193.GetProfileStatsUseCase>(),
         getSettingsItems: gh<_i193.GetSettingsItemsUseCase>(),
         updateProfile: gh<_i193.UpdateProfileUseCase>(),
+        activityRefreshCubit: gh<_i914.ActivityRefreshCubit>(),
       ),
     );
     gh.factory<_i531.NotificationsCubit>(
@@ -541,6 +559,7 @@ extension GetItInjectableX on _i174.GetIt {
         getSubjects: gh<_i95.GetSubjectsUseCase>(),
         getRecentStudies: gh<_i95.GetRecentStudiesUseCase>(),
         curriculumCubit: gh<_i914.CurriculumCubit>(),
+        activityRefreshCubit: gh<_i914.ActivityRefreshCubit>(),
       ),
     );
     gh.lazySingleton<_i414.SubjectSelectionCubit>(

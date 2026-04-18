@@ -2,11 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// Represents the user's selected curriculum (board + grade).
 class SelectedCurriculum extends Equatable {
-  final String boardId;
-  final String boardName;
-  final String gradeId;
-  final String gradeLabel;
-  final int gradeNumber;
 
   const SelectedCurriculum({
     required this.boardId,
@@ -15,6 +10,11 @@ class SelectedCurriculum extends Equatable {
     required this.gradeLabel,
     required this.gradeNumber,
   });
+  final String boardId;
+  final String boardName;
+  final String gradeId;
+  final String gradeLabel;
+  final int gradeNumber;
 
   String get displayBadge => '$boardName Syllabus • Grade $gradeLabel';
 

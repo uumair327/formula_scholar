@@ -7,10 +7,10 @@ import '../ports/saved_repository_port.dart';
 /// Fetches saved chapters for the active curriculum.
 @injectable
 class GetSavedChaptersUseCase {
-  final SavedRepositoryPort _repository;
 
   const GetSavedChaptersUseCase({required SavedRepositoryPort repository})
     : _repository = repository;
+  final SavedRepositoryPort _repository;
 
   Future<Result<List<BookmarkedChapter>>> call({
     required String curriculumKey,

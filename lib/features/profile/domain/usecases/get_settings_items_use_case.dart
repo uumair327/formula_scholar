@@ -9,10 +9,10 @@ import '../ports/profile_repository_port.dart';
 /// Single-responsibility use case following SOLID principles.
 @injectable
 class GetSettingsItemsUseCase {
-  final ProfileRepositoryPort _repository;
 
   const GetSettingsItemsUseCase({required ProfileRepositoryPort repository})
     : _repository = repository;
+  final ProfileRepositoryPort _repository;
 
   /// Executes the use case.
   Future<Result<List<SettingsItem>>> call() {

@@ -5,6 +5,17 @@ import 'package:equatable/equatable.dart';
 /// Contains visual metadata so the UI renders any subject's
 /// recent study items without hardcoded icon/color lookups.
 class RecentStudy extends Equatable {
+
+  const RecentStudy({
+    required this.id,
+    this.subjectId = '',
+    required this.title,
+    required this.subject,
+    required this.lastViewed,
+    this.iconName = 'book-open',
+    this.colorValue = 0xFF00639A,
+    this.backgroundColorValue = 0xFFCEE5FF,
+  });
   final String id;
   final String subjectId;
   final String title;
@@ -20,17 +31,6 @@ class RecentStudy extends Equatable {
 
   /// Background color value for the icon circle.
   final int backgroundColorValue;
-
-  const RecentStudy({
-    required this.id,
-    this.subjectId = '',
-    required this.title,
-    required this.subject,
-    required this.lastViewed,
-    this.iconName = 'book-open',
-    this.colorValue = 0xFF00639A,
-    this.backgroundColorValue = 0xFFCEE5FF,
-  });
 
   @override
   List<Object?> get props => [id, subjectId, title, subject];

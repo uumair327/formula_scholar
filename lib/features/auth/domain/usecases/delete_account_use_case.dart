@@ -8,9 +8,9 @@ import '../ports/auth_repository_port.dart';
 /// Satisfies Golden Rule 2 & 11 (SOLID & Testable).
 @injectable
 class DeleteAccountUseCase {
-  final AuthRepositoryPort _repository;
 
   DeleteAccountUseCase(this._repository);
+  final AuthRepositoryPort _repository;
 
   Future<Result<void>> call() {
     return _repository.deleteAccount();

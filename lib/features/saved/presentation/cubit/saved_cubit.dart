@@ -10,16 +10,6 @@ import 'saved_state.dart';
 /// Uses [CubitFailureLogger] mixin to eliminate error logging boilerplate.
 @injectable
 class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
-  final GetBookmarksUseCase _getBookmarks;
-  final GetSavedChaptersUseCase _getSavedChapters;
-  final GetSavedNotesUseCase _getSavedNotes;
-  final RemoveBookmarkUseCase _removeBookmark;
-  final RemoveSavedChapterUseCase _removeSavedChapter;
-
-  String? _activeCurriculumKey;
-
-  @override
-  String get logTag => AppLogTags.savedCubit;
 
   SavedCubit({
     required GetBookmarksUseCase getBookmarks,
@@ -33,6 +23,16 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
        _removeBookmark = removeBookmark,
        _removeSavedChapter = removeSavedChapter,
        super(const SavedState());
+  final GetBookmarksUseCase _getBookmarks;
+  final GetSavedChaptersUseCase _getSavedChapters;
+  final GetSavedNotesUseCase _getSavedNotes;
+  final RemoveBookmarkUseCase _removeBookmark;
+  final RemoveSavedChapterUseCase _removeSavedChapter;
+
+  String? _activeCurriculumKey;
+
+  @override
+  String get logTag => AppLogTags.savedCubit;
 
   /// Loads saved bookmarks.
   Future<void> loadBookmarks({required String curriculumKey}) async {

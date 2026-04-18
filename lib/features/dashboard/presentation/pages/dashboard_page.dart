@@ -535,7 +535,7 @@ class DashboardPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              AppIconCircle(
+              const AppIconCircle(
                 icon: LucideIcons.helpCircle,
                 size: AppDimensions.avatarMD,
                 backgroundColor: AppColors.primaryFixed,
@@ -915,11 +915,6 @@ class DashboardPage extends StatelessWidget {
 
 /// A compact pill-shaped badge showing the active curriculum value.
 class _CurriculumBadge extends StatelessWidget {
-  final IconData icon;
-  final Color iconColor;
-  final String label;
-  final bool isActive;
-  final Color activeColor;
 
   const _CurriculumBadge({
     required this.icon,
@@ -928,6 +923,11 @@ class _CurriculumBadge extends StatelessWidget {
     required this.isActive,
     required this.activeColor,
   });
+  final IconData icon;
+  final Color iconColor;
+  final String label;
+  final bool isActive;
+  final Color activeColor;
 
   @override
   Widget build(BuildContext context) {

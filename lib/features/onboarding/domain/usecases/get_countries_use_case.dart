@@ -4,9 +4,9 @@ import '../domain.dart';
 
 @lazySingleton
 class GetCountriesUseCase {
-  final OnboardingRepositoryPort _repository;
 
   GetCountriesUseCase(this._repository);
+  final OnboardingRepositoryPort _repository;
 
   Future<Result<PaginatedResponse<Country>>> call({
     int limit = 20,

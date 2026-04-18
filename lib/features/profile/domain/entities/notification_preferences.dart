@@ -2,13 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// User notification preference flags.
 class NotificationPreferences extends Equatable {
-  final bool studyReminders;
-  final bool streakAlerts;
-  final bool newContent;
-  final bool achievements;
-  final bool weeklyReport;
-  final bool pushNotifications;
-  final bool emailNotifications;
 
   const NotificationPreferences({
     this.studyReminders = true,
@@ -19,6 +12,13 @@ class NotificationPreferences extends Equatable {
     this.pushNotifications = true,
     this.emailNotifications = false,
   });
+  final bool studyReminders;
+  final bool streakAlerts;
+  final bool newContent;
+  final bool achievements;
+  final bool weeklyReport;
+  final bool pushNotifications;
+  final bool emailNotifications;
 
   NotificationPreferences copyWith({
     bool? studyReminders,

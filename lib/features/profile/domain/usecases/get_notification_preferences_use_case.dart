@@ -7,11 +7,11 @@ import '../ports/profile_repository_port.dart';
 /// Fetches the current user's notification preferences.
 @injectable
 class GetNotificationPreferencesUseCase {
-  final ProfileRepositoryPort _repository;
 
   const GetNotificationPreferencesUseCase({
     required ProfileRepositoryPort repository,
   }) : _repository = repository;
+  final ProfileRepositoryPort _repository;
 
   Future<Result<NotificationPreferences>> call() {
     AppLogger.trace(

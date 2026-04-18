@@ -11,8 +11,8 @@ void main() {
         email: 'scholar@example.com',
         displayName: 'Scholar',
       );
-      final repository = _FakeAuthRepository(currentUser: user);
-      final useCase = GetCurrentAuthUserUseCase(repository);
+      const repository = _FakeAuthRepository(currentUser: user);
+      const useCase = GetCurrentAuthUserUseCase(repository);
 
       expect(useCase(), user);
     });
@@ -20,10 +20,10 @@ void main() {
 }
 
 class _FakeAuthRepository implements AuthRepositoryPort {
-  final AuthUser? _currentUser;
 
   const _FakeAuthRepository({AuthUser? currentUser})
     : _currentUser = currentUser;
+  final AuthUser? _currentUser;
 
   @override
   AuthUser? get currentUser => _currentUser;

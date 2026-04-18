@@ -7,10 +7,10 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: DashboardDataSourcePort)
 class DashboardFirebaseAdapter implements DashboardDataSourcePort {
-  final FirebaseFirestore _firestore;
-  final FirebaseAuth _firebaseAuth;
 
   DashboardFirebaseAdapter(this._firestore, this._firebaseAuth);
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _firebaseAuth;
 
   @override
   Future<StudyProgress> getStudyProgress() async {

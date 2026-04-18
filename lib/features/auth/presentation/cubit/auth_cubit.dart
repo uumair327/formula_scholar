@@ -12,15 +12,15 @@ import '../../domain/domain.dart';
 enum AuthStatus { initial, loading, authenticated, unauthenticated, error }
 
 class AuthState extends Equatable {
-  final AuthStatus status;
-  final AuthUser? user;
-  final String? errorMessage;
 
   const AuthState({
     this.status = AuthStatus.initial,
     this.user,
     this.errorMessage,
   });
+  final AuthStatus status;
+  final AuthUser? user;
+  final String? errorMessage;
 
   AuthState copyWith({
     AuthStatus? status,
@@ -52,14 +52,6 @@ class AuthState extends Equatable {
 /// ProfileCubit) instead of raw try/catch.
 @injectable
 class AuthCubit extends Cubit<AuthState> {
-  final SignInUseCase _signIn;
-  final SignUpUseCase _signUp;
-  final SignOutUseCase _signOut;
-  final GoogleSignInUseCase _googleSignIn;
-  final WatchAuthStateUseCase _watchAuthState;
-  final DeleteAccountUseCase _deleteAccount;
-  final ForgotPasswordUseCase _forgotPassword;
-  StreamSubscription<AuthUser?>? _authStateSubscription;
 
   AuthCubit({
     required SignInUseCase signIn,
@@ -92,6 +84,14 @@ class AuthCubit extends Cubit<AuthState> {
       );
     });
   }
+  final SignInUseCase _signIn;
+  final SignUpUseCase _signUp;
+  final SignOutUseCase _signOut;
+  final GoogleSignInUseCase _googleSignIn;
+  final WatchAuthStateUseCase _watchAuthState;
+  final DeleteAccountUseCase _deleteAccount;
+  final ForgotPasswordUseCase _forgotPassword;
+  StreamSubscription<AuthUser?>? _authStateSubscription;
 
   /// Signs in the user via [SignInUseCase].
   ///

@@ -8,6 +8,17 @@ import '../../core/core.dart';
 /// ghost shadow, rounded corners, and optional padding. Replaces
 /// inline Container + ghostShadowDecoration usage.
 class AppCard extends StatelessWidget {
+
+  const AppCard({
+    super.key,
+    required this.child,
+    this.color = AppColors.surfaceContainerLowest,
+    this.borderRadius = AppDimensions.radiusLG,
+    this.padding = const EdgeInsets.all(AppDimensions.paddingXL),
+    this.boxShadow = const [AppShadows.ghost],
+    this.border,
+    this.clipBehavior = Clip.none,
+  });
   /// Child widget rendered inside the card.
   final Widget child;
 
@@ -28,17 +39,6 @@ class AppCard extends StatelessWidget {
 
   /// Clip behaviour for content that overflows the rounded corners.
   final Clip clipBehavior;
-
-  const AppCard({
-    super.key,
-    required this.child,
-    this.color = AppColors.surfaceContainerLowest,
-    this.borderRadius = AppDimensions.radiusLG,
-    this.padding = const EdgeInsets.all(AppDimensions.paddingXL),
-    this.boxShadow = const [AppShadows.ghost],
-    this.border,
-    this.clipBehavior = Clip.none,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +61,15 @@ class AppCard extends StatelessWidget {
 /// Identical to [SectionHeader] but with a more flexible API: supports
 /// custom title style and leading icon.
 class AppSectionTitle extends StatelessWidget {
+
+  const AppSectionTitle({
+    super.key,
+    required this.title,
+    this.actionLabel,
+    this.onAction,
+    this.leadingIcon,
+    this.leadingIconColor = AppColors.primary,
+  });
   /// Section title text.
   final String title;
 
@@ -75,15 +84,6 @@ class AppSectionTitle extends StatelessWidget {
 
   /// Colour of the leading icon.
   final Color leadingIconColor;
-
-  const AppSectionTitle({
-    super.key,
-    required this.title,
-    this.actionLabel,
-    this.onAction,
-    this.leadingIcon,
-    this.leadingIconColor = AppColors.primary,
-  });
 
   @override
   Widget build(BuildContext context) {

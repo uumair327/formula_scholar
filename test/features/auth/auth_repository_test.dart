@@ -66,7 +66,7 @@ void main() {
   late FakeAuthDataSource fakeDataSource;
   late AuthRepositoryPort repository;
 
-  final testUser = const AuthUser(
+  const testUser = AuthUser(
     uid: 'test-uid',
     email: 'test@example.com',
     displayName: 'Test User',

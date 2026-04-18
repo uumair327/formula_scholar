@@ -59,7 +59,7 @@ class _OnboardingStep1PageState extends State<OnboardingStep1Page> {
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              OnboardingStepHeading(
+              const OnboardingStepHeading(
                 tag: AppStrings.step1Tag,
                 title: AppStrings.step1Title,
                 subtitle: AppStrings.step1Subtitle,
@@ -122,14 +122,6 @@ class _OnboardingStep1PageState extends State<OnboardingStep1Page> {
 // ── Location form card ─────────────────────────────────────────────
 
 class _LocationFormCard extends StatelessWidget {
-  final List<String> countries;
-  final String selectedCountry;
-  final TextEditingController stateController;
-  final List<String> popularStates;
-  final String? selectedState;
-  final ValueChanged<String?> onCountryChanged;
-  final ValueChanged<String> onStateSelected;
-  final ValueChanged<String> onStateChanged;
 
   const _LocationFormCard({
     required this.countries,
@@ -141,6 +133,14 @@ class _LocationFormCard extends StatelessWidget {
     required this.onStateSelected,
     required this.onStateChanged,
   });
+  final List<String> countries;
+  final String selectedCountry;
+  final TextEditingController stateController;
+  final List<String> popularStates;
+  final String? selectedState;
+  final ValueChanged<String?> onCountryChanged;
+  final ValueChanged<String> onStateSelected;
+  final ValueChanged<String> onStateChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +149,7 @@ class _LocationFormCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-        boxShadow: [AppShadows.ghost],
+        boxShadow: const [AppShadows.ghost],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,8 +173,8 @@ class _LocationFormCard extends StatelessWidget {
                 color: AppColors.primary,
                 fontWeight: FontWeight.w700,
               ),
-              prefixIcon: Padding(
-                padding: const EdgeInsets.only(left: AppDimensions.paddingMD),
+              prefixIcon: const Padding(
+                padding: EdgeInsets.only(left: AppDimensions.paddingMD),
                 child: Icon(
                   LucideIcons.globe,
                   size: AppDimensions.iconDefault,
@@ -218,7 +218,7 @@ class _LocationFormCard extends StatelessWidget {
             label: AppStrings.step1StateLabel,
             hintText: AppStrings.step1StateHint,
             prefixIcon: LucideIcons.mapPin,
-            suffixIcon: Icon(
+            suffixIcon: const Icon(
               LucideIcons.search,
               size: AppDimensions.iconDefault,
               color: AppColors.onSurfaceVariant,
@@ -289,12 +289,12 @@ class _LocationInfoCards extends StatelessWidget {
               Container(
                 width: AppDimensions.avatarMD,
                 height: AppDimensions.avatarMD,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   color: AppColors.white,
-                  boxShadow: const [AppShadows.subtle],
+                  boxShadow: [AppShadows.subtle],
                 ),
-                child: Icon(
+                child: const Icon(
                   LucideIcons.sparkles,
                   size: AppDimensions.iconDefault,
                   color: AppColors.primary,
@@ -330,7 +330,7 @@ class _LocationInfoCards extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Icon(
+              const Icon(
                 LucideIcons.shieldCheck,
                 color: AppColors.secondary,
                 size: AppDimensions.iconLG,

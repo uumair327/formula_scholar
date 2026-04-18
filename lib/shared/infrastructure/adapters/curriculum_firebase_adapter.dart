@@ -9,10 +9,10 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: CurriculumDataSourcePort)
 class CurriculumFirebaseAdapter implements CurriculumDataSourcePort {
-  final FirebaseFirestore _firestore;
-  final FirebaseAuth _firebaseAuth;
 
   const CurriculumFirebaseAdapter(this._firestore, this._firebaseAuth);
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _firebaseAuth;
 
   @override
   Future<SelectedCurriculum?> loadCurriculum() async {

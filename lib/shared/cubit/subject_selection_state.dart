@@ -7,11 +7,6 @@ const Object _unset = Object();
 /// Decoupled from feature-specific subject entities to avoid direct
 /// cross-feature dependencies in shared state.
 class SelectedSubject extends Equatable {
-  final String id;
-  final String name;
-  final String category;
-  final String description;
-  final String subtitle;
 
   const SelectedSubject({
     required this.id,
@@ -20,6 +15,11 @@ class SelectedSubject extends Equatable {
     required this.description,
     this.subtitle = '',
   });
+  final String id;
+  final String name;
+  final String category;
+  final String description;
+  final String subtitle;
 
   @override
   List<Object?> get props => [id, name, category, description, subtitle];
@@ -27,15 +27,15 @@ class SelectedSubject extends Equatable {
 
 /// State for subject selection, consumed by Chapters, Saved, Practice.
 class SubjectSelectionState extends Equatable {
-  final SelectedSubject? subject;
-  final List<SelectedSubject> availableSubjects;
-  final String? curriculumKey;
 
   const SubjectSelectionState({
     this.subject,
     this.availableSubjects = const [],
     this.curriculumKey,
   });
+  final SelectedSubject? subject;
+  final List<SelectedSubject> availableSubjects;
+  final String? curriculumKey;
 
   bool get hasSelection => subject != null;
 

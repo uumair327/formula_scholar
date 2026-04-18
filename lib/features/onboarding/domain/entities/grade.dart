@@ -2,11 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// Academic grade/class entity.
 class Grade extends Equatable {
-  final String id;
-  final String label;
-  final int classNumber;
-  final String? subtitle;
-  final bool isPopular;
 
   const Grade({
     required this.id,
@@ -15,6 +10,11 @@ class Grade extends Equatable {
     this.subtitle,
     this.isPopular = false,
   });
+  final String id;
+  final String label;
+  final int classNumber;
+  final String? subtitle;
+  final bool isPopular;
 
   @override
   List<Object?> get props => [id, classNumber, isPopular];

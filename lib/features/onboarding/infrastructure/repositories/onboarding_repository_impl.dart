@@ -4,9 +4,9 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: OnboardingRepositoryPort)
 class OnboardingRepositoryImpl implements OnboardingRepositoryPort {
-  final OnboardingDataSourcePort _dataSource;
 
   OnboardingRepositoryImpl(this._dataSource);
+  final OnboardingDataSourcePort _dataSource;
 
   @override
   Future<Result<PaginatedResponse<Country>>> getCountries({

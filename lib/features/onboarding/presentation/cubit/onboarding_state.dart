@@ -15,6 +15,20 @@ enum OnboardingStatus { initial, loading, loaded, error }
 
 /// State for the onboarding flow.
 class OnboardingState extends Equatable {
+
+  const OnboardingState({
+    this.step = OnboardingStep.locationSelection,
+    this.status = OnboardingStatus.initial,
+    this.countries = const [],
+    this.states = const [],
+    this.boards = const [],
+    this.grades = const [],
+    this.selectedCountry,
+    this.selectedState,
+    this.selectedBoard,
+    this.selectedGrade,
+    this.errorMessage,
+  });
   final OnboardingStep step;
   final OnboardingStatus status;
 
@@ -31,20 +45,6 @@ class OnboardingState extends Equatable {
   final Grade? selectedGrade;
 
   final String? errorMessage;
-
-  const OnboardingState({
-    this.step = OnboardingStep.locationSelection,
-    this.status = OnboardingStatus.initial,
-    this.countries = const [],
-    this.states = const [],
-    this.boards = const [],
-    this.grades = const [],
-    this.selectedCountry,
-    this.selectedState,
-    this.selectedBoard,
-    this.selectedGrade,
-    this.errorMessage,
-  });
 
   bool get isComplete =>
       selectedCountry != null && selectedBoard != null && selectedGrade != null;

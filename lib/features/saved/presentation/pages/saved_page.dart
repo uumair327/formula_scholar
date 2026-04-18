@@ -273,10 +273,10 @@ class _SavedPageState extends State<SavedPage> {
                 child: Container(
                   width: AppDimensions.imageMD,
                   height: AppDimensions.imageMD,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: AppColors.surfaceContainerLowest,
                     shape: BoxShape.circle,
-                    boxShadow: const [AppShadows.ghost],
+                    boxShadow: [AppShadows.ghost],
                   ),
                   child: const Icon(
                     LucideIcons.plus,
@@ -441,9 +441,9 @@ class _SavedPageState extends State<SavedPage> {
 }
 
 class _BookmarkCard extends StatelessWidget {
-  final BookmarkedFormula bookmark;
 
   const _BookmarkCard({required this.bookmark});
+  final BookmarkedFormula bookmark;
 
   @override
   Widget build(BuildContext context) {
@@ -522,9 +522,9 @@ class _BookmarkCard extends StatelessWidget {
 }
 
 class _SavedChapterCard extends StatelessWidget {
-  final BookmarkedChapter chapter;
 
   const _SavedChapterCard({required this.chapter});
+  final BookmarkedChapter chapter;
 
   @override
   Widget build(BuildContext context) {
@@ -610,9 +610,9 @@ class _SavedChapterCard extends StatelessWidget {
 }
 
 class _SavedNoteCard extends StatelessWidget {
-  final SavedNote note;
 
   const _SavedNoteCard({required this.note});
+  final SavedNote note;
 
   @override
   Widget build(BuildContext context) {

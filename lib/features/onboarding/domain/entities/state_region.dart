@@ -2,10 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// Represents a State or Region within a Country for state-board selection.
 class StateRegion extends Equatable {
-  final String id;
-  final String countryId;
-  final String name;
-  final String stateCode;
 
   const StateRegion({
     required this.id,
@@ -13,6 +9,10 @@ class StateRegion extends Equatable {
     required this.name,
     required this.stateCode,
   });
+  final String id;
+  final String countryId;
+  final String name;
+  final String stateCode;
 
   @override
   List<Object?> get props => [id, countryId, name, stateCode];

@@ -8,13 +8,6 @@ enum FormulasStatus { initial, loading, loaded, error }
 
 /// State for the Formulas detail screen.
 class FormulasState extends Equatable {
-  final FormulasStatus status;
-  final String? subjectId;
-  final String? chapterId;
-  final String? chapterName;
-  final List<Formula> formulas;
-  final bool isChapterSaved;
-  final String? errorMessage;
 
   const FormulasState({
     this.status = FormulasStatus.initial,
@@ -25,6 +18,13 @@ class FormulasState extends Equatable {
     this.isChapterSaved = false,
     this.errorMessage,
   });
+  final FormulasStatus status;
+  final String? subjectId;
+  final String? chapterId;
+  final String? chapterName;
+  final List<Formula> formulas;
+  final bool isChapterSaved;
+  final String? errorMessage;
 
   int get masteredCount => formulas.where((f) => f.isMastered).toList().length;
   int get totalCount => formulas.length;

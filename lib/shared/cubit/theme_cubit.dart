@@ -9,10 +9,6 @@ import 'theme_state.dart';
 
 @lazySingleton
 class ThemeCubit extends HydratedCubit<ThemeState> {
-  final LoadThemePreferenceUseCase _loadThemePreference;
-  final SaveThemePreferenceUseCase _saveThemePreference;
-  final WatchThemePreferenceUseCase _watchThemePreference;
-  late final StreamSubscription<ThemePreference?> _themeSubscription;
 
   ThemeCubit({
     required LoadThemePreferenceUseCase loadThemePreference,
@@ -36,6 +32,10 @@ class ThemeCubit extends HydratedCubit<ThemeState> {
 
     Future.microtask(refresh);
   }
+  final LoadThemePreferenceUseCase _loadThemePreference;
+  final SaveThemePreferenceUseCase _saveThemePreference;
+  final WatchThemePreferenceUseCase _watchThemePreference;
+  late final StreamSubscription<ThemePreference?> _themeSubscription;
 
   Future<void> refresh() async {
     AppLogger.info(

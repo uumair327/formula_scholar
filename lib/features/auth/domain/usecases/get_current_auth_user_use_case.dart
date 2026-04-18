@@ -6,9 +6,9 @@ import '../ports/auth_repository_port.dart';
 
 @injectable
 class GetCurrentAuthUserUseCase {
-  final AuthRepositoryPort _repository;
 
   const GetCurrentAuthUserUseCase(this._repository);
+  final AuthRepositoryPort _repository;
 
   AuthUser? call() {
     AppLogger.trace(

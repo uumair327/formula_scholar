@@ -7,6 +7,23 @@ import 'package:equatable/equatable.dart';
 /// the Open/Closed Principle — new subjects from the backend
 /// render correctly without modifying the UI code.
 class Subject extends Equatable {
+
+  const Subject({
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.category,
+    required this.imageUrl,
+    required this.unitCount,
+    required this.formulaCount,
+    this.iconName = 'book-open',
+    this.colorValue = 0xFF00639A,
+    this.badgeText,
+    this.subtitle,
+    this.masteryPercentage,
+    this.lastViewed,
+    this.isFeatured = false,
+  });
   final String id;
   final String name;
   final String description;
@@ -38,23 +55,6 @@ class Subject extends Equatable {
 
   /// Whether this subject is the "featured" / primary card.
   final bool isFeatured;
-
-  const Subject({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.category,
-    required this.imageUrl,
-    required this.unitCount,
-    required this.formulaCount,
-    this.iconName = 'book-open',
-    this.colorValue = 0xFF00639A,
-    this.badgeText,
-    this.subtitle,
-    this.masteryPercentage,
-    this.lastViewed,
-    this.isFeatured = false,
-  });
 
   @override
   List<Object?> get props => [id, name, category];

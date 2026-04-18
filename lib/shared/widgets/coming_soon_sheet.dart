@@ -39,15 +39,15 @@ class ComingSoonSheet {
 }
 
 class _ComingSoonContent extends StatelessWidget {
-  final String featureName;
-  final String? description;
-  final IconData icon;
 
   const _ComingSoonContent({
     required this.featureName,
     this.description,
     required this.icon,
   });
+  final String featureName;
+  final String? description;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {

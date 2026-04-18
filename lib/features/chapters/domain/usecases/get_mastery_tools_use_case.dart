@@ -6,9 +6,9 @@ import '../ports/chapters_repository_port.dart';
 
 @injectable
 class GetMasteryToolsUseCase {
-  final ChaptersRepositoryPort _repository;
 
   const GetMasteryToolsUseCase(this._repository);
+  final ChaptersRepositoryPort _repository;
 
   Future<Result<List<MasteryTool>>> call(String subjectId) {
     return _repository.getMasteryTools(subjectId);

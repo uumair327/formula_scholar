@@ -20,6 +20,7 @@ mixin CubitFailureLogger<T> on Cubit<T> {
 
   /// Logs a failure and returns `null` — designed for use with
   /// `Result` pattern matching where `null` signals "failed".
+  // ignore: prefer_void_to_null
   Null logFailure(String operation, Failure failure) {
     AppLogger.error(
       'Failed to load $operation: ${failure.message}',

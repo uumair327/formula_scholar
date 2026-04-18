@@ -9,14 +9,14 @@ import '../../domain/domain.dart';
 ///
 /// Matches the React `ProgressStats` component.
 class ProgressStatsWidget extends StatelessWidget {
-  final List<ProfileStat> stats;
-  final String displayName;
 
   const ProgressStatsWidget({
     super.key,
     required this.stats,
     this.displayName = AppStrings.welcomeScholar,
   });
+  final List<ProfileStat> stats;
+  final String displayName;
 
   @override
   Widget build(BuildContext context) {

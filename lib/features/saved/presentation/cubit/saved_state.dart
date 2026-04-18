@@ -8,12 +8,6 @@ enum SavedStatus { initial, loading, loaded, error }
 
 /// State for the Saved/Bookmarks feature.
 class SavedState extends Equatable {
-  final SavedStatus status;
-  final List<BookmarkedFormula> bookmarks;
-  final List<BookmarkedChapter> chapters;
-  final List<SavedNote> notes;
-  final String searchQuery;
-  final String? errorMessage;
 
   const SavedState({
     this.status = SavedStatus.initial,
@@ -23,6 +17,12 @@ class SavedState extends Equatable {
     this.searchQuery = '',
     this.errorMessage,
   });
+  final SavedStatus status;
+  final List<BookmarkedFormula> bookmarks;
+  final List<BookmarkedChapter> chapters;
+  final List<SavedNote> notes;
+  final String searchQuery;
+  final String? errorMessage;
 
   bool get isEmpty => bookmarks.isEmpty && chapters.isEmpty && notes.isEmpty;
 

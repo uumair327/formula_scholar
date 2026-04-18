@@ -17,16 +17,16 @@ import '../utils/app_logger.dart';
 /// Non-retryable errors (4xx, business logic errors) are passed through.
 @injectable
 class RetryInterceptor extends Interceptor {
-  /// Maximum number of retry attempts.
-  final int maxRetries;
-
-  /// Base delay before first retry (doubles each attempt).
-  final Duration baseDelay;
 
   RetryInterceptor({
     this.maxRetries = 3,
     this.baseDelay = const Duration(milliseconds: 500),
   });
+  /// Maximum number of retry attempts.
+  final int maxRetries;
+
+  /// Base delay before first retry (doubles each attempt).
+  final Duration baseDelay;
 
   @override
   Future<void> onError(

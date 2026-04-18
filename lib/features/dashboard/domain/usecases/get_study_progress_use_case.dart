@@ -10,10 +10,10 @@ import '../entities/study_progress.dart';
 /// Cubits call this instead of the repository directly.
 @injectable
 class GetStudyProgressUseCase {
-  final DashboardRepositoryPort _repository;
 
   const GetStudyProgressUseCase({required DashboardRepositoryPort repository})
     : _repository = repository;
+  final DashboardRepositoryPort _repository;
 
   /// Executes the use case.
   Future<Result<StudyProgress>> call() {

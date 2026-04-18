@@ -8,9 +8,9 @@ import '../../core/core.dart';
 ///
 /// Matches the React app's `<BottomNav>` component — 5 tabs.
 class MainShellPage extends StatelessWidget {
-  final StatefulNavigationShell navigationShell;
 
   const MainShellPage({super.key, required this.navigationShell});
+  final StatefulNavigationShell navigationShell;
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +34,10 @@ class MainShellPage extends StatelessWidget {
 }
 
 class _BottomNavBar extends StatelessWidget {
-  final int currentIndex;
-  final ValueChanged<int> onTap;
 
   const _BottomNavBar({required this.currentIndex, required this.onTap});
+  final int currentIndex;
+  final ValueChanged<int> onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -99,10 +99,6 @@ class _BottomNavBar extends StatelessWidget {
 }
 
 class _NavItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
 
   const _NavItem({
     required this.icon,
@@ -110,6 +106,10 @@ class _NavItem extends StatelessWidget {
     required this.isSelected,
     required this.onTap,
   });
+  final IconData icon;
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {

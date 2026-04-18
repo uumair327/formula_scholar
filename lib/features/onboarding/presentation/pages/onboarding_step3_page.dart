@@ -46,7 +46,7 @@ class OnboardingStep3Page extends StatelessWidget {
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              OnboardingStepHeading(
+              const OnboardingStepHeading(
                 tag: 'GRADE',
                 title: 'Select Your Class',
                 subtitle: 'Choose your academic year',
@@ -109,15 +109,15 @@ class OnboardingStep3Page extends StatelessWidget {
 }
 
 class _GradeCard extends StatelessWidget {
-  final Grade grade;
-  final bool isSelected;
-  final VoidCallback onTap;
 
   const _GradeCard({
     required this.grade,
     required this.isSelected,
     required this.onTap,
   });
+  final Grade grade;
+  final bool isSelected;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -187,11 +187,11 @@ class _GradeCard extends StatelessWidget {
                 child: Container(
                   width: AppDimensions.iconMD,
                   height: AppDimensions.iconMD,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppColors.primary,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     LucideIcons.check,
                     size: AppDimensions.iconSM,
                     color: AppColors.onPrimary,

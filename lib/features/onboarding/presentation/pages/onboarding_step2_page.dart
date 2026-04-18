@@ -65,7 +65,7 @@ class OnboardingStep2Page extends StatelessWidget {
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              OnboardingStepHeading(
+              const OnboardingStepHeading(
                 tag: AppStrings.step2Tag,
                 title: AppStrings.step2Title,
               ),
@@ -163,11 +163,11 @@ class OnboardingStep2Page extends StatelessWidget {
                         onSelectBoard: (board) =>
                             context.read<OnboardingCubit>().selectBoard(board),
                       ),
-                      icon: Icon(
+                      icon: const Icon(
                         LucideIcons.arrowRight,
                         size: AppDimensions.iconSM,
                       ),
-                      label: Text(AppStrings.step2LearnMore),
+                      label: const Text(AppStrings.step2LearnMore),
                       style: TextButton.styleFrom(
                         foregroundColor: AppColors.primary,
                         textStyle: AppTextStyles.labelMedium.copyWith(
@@ -187,11 +187,6 @@ class OnboardingStep2Page extends StatelessWidget {
 }
 
 class _CurriculumCard extends StatelessWidget {
-  final Board board;
-  final bool isSelected;
-  final VoidCallback onTap;
-  final IconData icon;
-  final Color color;
 
   const _CurriculumCard({
     required this.board,
@@ -200,6 +195,11 @@ class _CurriculumCard extends StatelessWidget {
     required this.icon,
     required this.color,
   });
+  final Board board;
+  final bool isSelected;
+  final VoidCallback onTap;
+  final IconData icon;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -267,11 +267,11 @@ class _CurriculumCard extends StatelessWidget {
                 child: Container(
                   width: AppDimensions.iconMD,
                   height: AppDimensions.iconMD,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppColors.primary,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     LucideIcons.checkCircle2,
                     size: AppDimensions.iconDefault,
                     color: AppColors.onPrimary,

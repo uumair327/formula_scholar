@@ -2,14 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// A chapter bookmarked by the user for quick revisit.
 class BookmarkedChapter extends Equatable {
-  final String id;
-  final String chapterId;
-  final String chapterName;
-  final String chapterSubtitle;
-  final String subjectId;
-  final String subjectName;
-  final String curriculumKey;
-  final DateTime savedAt;
 
   const BookmarkedChapter({
     required this.id,
@@ -21,6 +13,14 @@ class BookmarkedChapter extends Equatable {
     required this.curriculumKey,
     required this.savedAt,
   });
+  final String id;
+  final String chapterId;
+  final String chapterName;
+  final String chapterSubtitle;
+  final String subjectId;
+  final String subjectName;
+  final String curriculumKey;
+  final DateTime savedAt;
 
   @override
   List<Object?> get props => [

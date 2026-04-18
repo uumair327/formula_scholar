@@ -6,11 +6,6 @@ import '../../../../shared/shared.dart';
 
 /// A premium, polished bottom sheet presenting subject-specific analytics.
 class SubjectAnalyticsSheet extends StatelessWidget {
-  final String subjectName;
-  final int progressPercent;
-  final int completedFormulas;
-  final int totalFormulas;
-  final String grade;
 
   const SubjectAnalyticsSheet({
     super.key,
@@ -19,7 +14,14 @@ class SubjectAnalyticsSheet extends StatelessWidget {
     required this.completedFormulas,
     required this.totalFormulas,
     required this.grade,
+    required this.currentStreak,
   });
+  final String subjectName;
+  final int progressPercent;
+  final int completedFormulas;
+  final int totalFormulas;
+  final String grade;
+  final int currentStreak;
 
   /// Displays the analytics sheet.
   static void show(
@@ -29,6 +31,7 @@ class SubjectAnalyticsSheet extends StatelessWidget {
     required int completedFormulas,
     required int totalFormulas,
     required String grade,
+    required int currentStreak,
   }) {
     showModalBottomSheet<void>(
       context: context,
@@ -40,6 +43,7 @@ class SubjectAnalyticsSheet extends StatelessWidget {
         completedFormulas: completedFormulas,
         totalFormulas: totalFormulas,
         grade: grade,
+        currentStreak: currentStreak,
       ),
     );
   }
@@ -47,9 +51,9 @@ class SubjectAnalyticsSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.surfaceContainerLowest,
-        borderRadius: const BorderRadius.only(
+        borderRadius: BorderRadius.only(
           topLeft: Radius.circular(AppDimensions.radiusXXL),
           topRight: Radius.circular(AppDimensions.radiusXXL),
         ),
@@ -76,7 +80,7 @@ class SubjectAnalyticsSheet extends StatelessWidget {
             const SizedBox(height: AppDimensions.paddingXXL),
             Row(
               children: [
-                AppIconCircle(
+                const AppIconCircle(
                   icon: LucideIcons.barChart3,
                   size: AppDimensions.avatarHero,
                   backgroundColor: AppColors.primaryFixed,
@@ -135,7 +139,7 @@ class SubjectAnalyticsSheet extends StatelessWidget {
                 Expanded(
                   child: _buildStatCard(
                     title: 'Current Streak',
-                    value: '3 Days',
+                    value: '$currentStreak Days',
                     icon: LucideIcons.flame,
                     color: AppColors.orange500,
                   ),
@@ -178,10 +182,10 @@ class SubjectAnalyticsSheet extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingLG),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerHighest.withOpacity(0.4),
+        color: AppColors.surfaceContainerHighest.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
         border: Border.all(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
         ),
       ),
       child: Column(

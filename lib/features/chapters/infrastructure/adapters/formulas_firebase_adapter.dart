@@ -175,6 +175,14 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
       'startedAt': data['startedAt'] ?? FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
     }, SetOptions(merge: true));
+
+    await _upsertRecentStudy(
+      uid: uid,
+      subjectId: subjectId,
+      chapterId: chapterId,
+      chapterName: chapterName,
+      progressPercent: progressPercent,
+    );
   }
 
   @override
@@ -193,9 +201,13 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
 
     final chapterProgressRef = _chapterProgressRef(uid, subjectId, chapterId);
     final formulaRef = chapterProgressRef.collection('formulas').doc(formulaId);
+    final previousFormulaSnapshot = await formulaRef.get();
+    final previousIsMastered =
+        previousFormulaSnapshot.data()?['isMastered'] as bool? ?? false;
 
     await formulaRef.set({
       'id': formulaId,
+      'uid': uid,
       'isMastered': isMastered,
       'updatedAt': FieldValue.serverTimestamp(),
     }, SetOptions(merge: true));
@@ -219,6 +231,123 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
       'progressPercent': progressPercent,
       'updatedAt': FieldValue.serverTimestamp(),
     }, SetOptions(merge: true));
+
+    await _upsertRecentStudy(
+      uid: uid,
+      subjectId: subjectId,
+      chapterId: chapterId,
+      chapterName: chapterName,
+      progressPercent: progressPercent,
+    );
+
+    final masteryDelta = _masteryDelta(
+      previousIsMastered: previousIsMastered,
+      nextIsMastered: isMastered,
+    );
+    if (masteryDelta != 0) {
+      await _incrementMasteredFormulaStat(uid, masteryDelta);
+    }
+  }
+
+  int _masteryDelta({
+    required bool previousIsMastered,
+    required bool nextIsMastered,
+  }) {
+    if (!previousIsMastered && nextIsMastered) {
+      return 1;
+    }
+    if (previousIsMastered && !nextIsMastered) {
+      return -1;
+    }
+    return 0;
+  }
+
+  Future<void> _incrementMasteredFormulaStat(String uid, int delta) async {
+    final statsRef = _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('stats')
+        .doc('current');
+
+    await _firestore.runTransaction((tx) async {
+      final snapshot = await tx.get(statsRef);
+      final data = snapshot.data() ?? const <String, dynamic>{};
+      final current = (data['formulas'] as num?)?.toInt() ?? 0;
+      final updated = (current + delta).clamp(0, 1000000);
+
+      tx.set(statsRef, {
+        'formulas': updated,
+        'lastUpdated': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+    });
+  }
+
+  Future<void> _upsertRecentStudy({
+    required String uid,
+    required String subjectId,
+    required String chapterId,
+    required String chapterName,
+    required double progressPercent,
+  }) async {
+    final metadata = _recentStudyMetadata(subjectId);
+    final docId = '${subjectId}_$chapterId';
+
+    await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('recent_studies')
+        .doc(docId)
+        .set({
+          'id': docId,
+          'subjectId': subjectId,
+          'title': chapterName,
+          'subject': metadata.subject,
+          'lastViewed': 'Just now',
+          'iconName': metadata.iconName,
+          'colorValue': metadata.colorValue,
+          'backgroundColorValue': metadata.backgroundColorValue,
+          'progressPercent': progressPercent,
+          'viewedAt': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
+  }
+
+  _StudyMetadata _recentStudyMetadata(String subjectId) {
+    if (subjectId.contains('math')) {
+        return const _StudyMetadata(
+          subject: 'Mathematics',
+          iconName: 'calculator',
+          colorValue: 0xFFD4A574,
+          backgroundColorValue: 0xFFFFEAD1,
+        );
+    } else if (subjectId.contains('physics')) {
+        return const _StudyMetadata(
+          subject: 'Physics',
+          iconName: 'rocket',
+          colorValue: 0xFF3B82F6,
+          backgroundColorValue: 0xFFDEEAFF,
+        );
+    } else if (subjectId.contains('chem')) {
+        return const _StudyMetadata(
+          subject: 'Chemistry',
+          iconName: 'flask-conical',
+          colorValue: 0xFFEA580C,
+          backgroundColorValue: 0xFFFECDD2,
+        );
+    } else if (subjectId.contains('bio')) {
+        return const _StudyMetadata(
+          subject: 'Biology',
+          iconName: 'microscope',
+          colorValue: 0xFF16A34A,
+          backgroundColorValue: 0xFFDCFCE7,
+        );
+    } else {
+        return const _StudyMetadata(
+          subject: 'General',
+          iconName: 'book-open',
+          colorValue: 0xFF00639A,
+          backgroundColorValue: 0xFFCEE5FF,
+        );
+    }
   }
 
   DocumentReference<Map<String, dynamic>> _chapterProgressRef(
@@ -286,4 +415,18 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
     }
     await batch.commit();
   }
+}
+
+class _StudyMetadata {
+  const _StudyMetadata({
+    required this.subject,
+    required this.iconName,
+    required this.colorValue,
+    required this.backgroundColorValue,
+  });
+
+  final String subject;
+  final String iconName;
+  final int colorValue;
+  final int backgroundColorValue;
 }

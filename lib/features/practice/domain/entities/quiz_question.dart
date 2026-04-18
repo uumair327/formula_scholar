@@ -2,10 +2,10 @@ import 'package:equatable/equatable.dart';
 
 /// Represents a single quiz option (A, B, C, D).
 class QuizOption extends Equatable {
-  final String id;
-  final String text;
 
   const QuizOption({required this.id, required this.text});
+  final String id;
+  final String text;
 
   @override
   List<Object?> get props => [id, text];
@@ -13,14 +13,6 @@ class QuizOption extends Equatable {
 
 /// Represents a single quiz question with multiple-choice options.
 class QuizQuestion extends Equatable {
-  final String id;
-  final String category;
-  final String topic;
-  final String questionText;
-  final String imageUrl;
-  final List<QuizOption> options;
-  final String correctOptionId;
-  final int points;
 
   const QuizQuestion({
     required this.id,
@@ -32,6 +24,14 @@ class QuizQuestion extends Equatable {
     required this.correctOptionId,
     this.points = 10,
   });
+  final String id;
+  final String category;
+  final String topic;
+  final String questionText;
+  final String imageUrl;
+  final List<QuizOption> options;
+  final String correctOptionId;
+  final int points;
 
   @override
   List<Object?> get props => [

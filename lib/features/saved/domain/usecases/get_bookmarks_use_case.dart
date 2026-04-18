@@ -7,10 +7,10 @@ import '../ports/saved_repository_port.dart';
 /// Fetches saved/bookmarked formulas.
 @injectable
 class GetBookmarksUseCase {
-  final SavedRepositoryPort _repository;
 
   const GetBookmarksUseCase({required SavedRepositoryPort repository})
     : _repository = repository;
+  final SavedRepositoryPort _repository;
 
   Future<Result<List<BookmarkedFormula>>> call({required String curriculumKey}) {
     AppLogger.trace('GetBookmarksUseCase called', tag: AppLogTags.savedUseCase);

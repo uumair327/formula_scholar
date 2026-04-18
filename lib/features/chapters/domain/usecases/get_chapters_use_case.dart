@@ -11,10 +11,10 @@ import '../ports/chapters_repository_port.dart';
 /// the same use case serves Geometry, Algebra, Physics, etc.
 @injectable
 class GetChaptersUseCase {
-  final ChaptersRepositoryPort _repository;
 
   const GetChaptersUseCase({required ChaptersRepositoryPort repository})
     : _repository = repository;
+  final ChaptersRepositoryPort _repository;
 
   /// Executes the use case for the given [subjectId].
   Future<Result<List<Chapter>>> call(

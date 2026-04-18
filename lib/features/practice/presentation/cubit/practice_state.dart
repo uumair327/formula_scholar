@@ -8,15 +8,6 @@ enum PracticeStatus { initial, loading, loaded, completed, error }
 
 /// State for the Practice quiz feature.
 class PracticeState extends Equatable {
-  final PracticeStatus status;
-  final List<QuizQuestion> questions;
-  final int currentIndex;
-  final String? selectedOptionId;
-  final bool showResult;
-  final int totalPoints;
-  final String? errorMessage;
-  final String? boardId;
-  final String? gradeId;
 
   const PracticeState({
     this.status = PracticeStatus.initial,
@@ -29,6 +20,15 @@ class PracticeState extends Equatable {
     this.boardId,
     this.gradeId,
   });
+  final PracticeStatus status;
+  final List<QuizQuestion> questions;
+  final int currentIndex;
+  final String? selectedOptionId;
+  final bool showResult;
+  final int totalPoints;
+  final String? errorMessage;
+  final String? boardId;
+  final String? gradeId;
 
   /// The current question being displayed.
   QuizQuestion? get currentQuestion =>

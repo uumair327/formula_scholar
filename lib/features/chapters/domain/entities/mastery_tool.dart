@@ -2,14 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// Backend-driven mastery tool configuration for a subject.
 class MasteryTool extends Equatable {
-  final String id;
-  final String label;
-  final String iconName;
-  final String category;
-  final bool isEnabled;
-  final String? supportSubtitle;
-  final int displayOrder;
-  final String? routeName;
 
   const MasteryTool({
     required this.id,
@@ -21,6 +13,14 @@ class MasteryTool extends Equatable {
     required this.displayOrder,
     this.routeName,
   });
+  final String id;
+  final String label;
+  final String iconName;
+  final String category;
+  final bool isEnabled;
+  final String? supportSubtitle;
+  final int displayOrder;
+  final String? routeName;
 
   @override
   List<Object?> get props => [

@@ -7,6 +7,13 @@ import '../../core/core.dart';
 /// Replaces the duplicated error Scaffold(Column(Icon + Text + ElevatedButton))
 /// pattern found in DashboardPage and ProfilePage.
 class AppErrorState extends StatelessWidget {
+
+  const AppErrorState({
+    super.key,
+    this.message,
+    required this.onRetry,
+    this.retryLabel = AppStrings.retry,
+  });
   /// The error message to display. Falls back to [AppStrings.somethingWentWrong].
   final String? message;
 
@@ -15,13 +22,6 @@ class AppErrorState extends StatelessWidget {
 
   /// Optional retry button label. Defaults to [AppStrings.retry].
   final String retryLabel;
-
-  const AppErrorState({
-    super.key,
-    this.message,
-    required this.onRetry,
-    this.retryLabel = AppStrings.retry,
-  });
 
   @override
   Widget build(BuildContext context) {

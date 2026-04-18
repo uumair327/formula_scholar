@@ -14,10 +14,10 @@ import '../../domain/domain.dart';
 /// provided by the backend renders correctly without modifying
 /// this widget (Open/Closed Principle).
 class SubjectCard extends StatelessWidget {
-  final Subject subject;
-  final VoidCallback? onTap;
 
   const SubjectCard({super.key, required this.subject, this.onTap});
+  final Subject subject;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {

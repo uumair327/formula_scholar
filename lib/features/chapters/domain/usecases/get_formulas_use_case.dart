@@ -9,10 +9,10 @@ import '../ports/formulas_repository_port.dart';
 /// Single-responsibility use case following SOLID principles.
 @injectable
 class GetFormulasUseCase {
-  final FormulasRepositoryPort _repository;
 
   const GetFormulasUseCase({required FormulasRepositoryPort repository})
     : _repository = repository;
+  final FormulasRepositoryPort _repository;
 
   /// Executes the use case.
   Future<Result<List<Formula>>> call(String subjectId, String chapterId) {

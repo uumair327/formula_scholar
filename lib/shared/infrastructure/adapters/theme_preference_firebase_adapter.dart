@@ -9,10 +9,10 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: ThemePreferenceDataSourcePort)
 class ThemePreferenceFirebaseAdapter implements ThemePreferenceDataSourcePort {
-  final FirebaseFirestore _firestore;
-  final FirebaseAuth _firebaseAuth;
 
   const ThemePreferenceFirebaseAdapter(this._firestore, this._firebaseAuth);
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _firebaseAuth;
 
   @override
   Future<ThemePreference?> loadThemePreference() async {

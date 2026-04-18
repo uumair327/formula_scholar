@@ -8,11 +8,6 @@ enum ProfileStatus { initial, loading, loaded, error }
 
 /// State for the Profile feature.
 class ProfileState extends Equatable {
-  final ProfileStatus status;
-  final UserProfile? profile;
-  final List<ProfileStat> stats;
-  final List<SettingsItem> settingsItems;
-  final String? errorMessage;
 
   const ProfileState({
     this.status = ProfileStatus.initial,
@@ -21,6 +16,11 @@ class ProfileState extends Equatable {
     this.settingsItems = const [],
     this.errorMessage,
   });
+  final ProfileStatus status;
+  final UserProfile? profile;
+  final List<ProfileStat> stats;
+  final List<SettingsItem> settingsItems;
+  final String? errorMessage;
 
   ProfileState copyWith({
     ProfileStatus? status,

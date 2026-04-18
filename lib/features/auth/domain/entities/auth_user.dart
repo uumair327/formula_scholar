@@ -6,6 +6,14 @@ import 'package:equatable/equatable.dart';
 /// This is the canonical user representation that flows through
 /// ports, use cases, and cubits.
 class AuthUser extends Equatable {
+
+  const AuthUser({
+    required this.uid,
+    this.email,
+    this.displayName,
+    this.photoUrl,
+    this.emailVerified = false,
+  });
   /// Unique identifier assigned by the auth provider.
   final String uid;
 
@@ -20,14 +28,6 @@ class AuthUser extends Equatable {
 
   /// Whether the email has been verified.
   final bool emailVerified;
-
-  const AuthUser({
-    required this.uid,
-    this.email,
-    this.displayName,
-    this.photoUrl,
-    this.emailVerified = false,
-  });
 
   /// Sentinel value representing "no user signed in".
   static const AuthUser empty = AuthUser(uid: '');

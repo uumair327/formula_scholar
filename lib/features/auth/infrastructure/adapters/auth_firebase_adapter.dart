@@ -16,9 +16,9 @@ import '../../domain/domain.dart';
 /// — **zero changes** to domain, use cases, or presentation.
 @LazySingleton(as: AuthDataSourcePort)
 class AuthFirebaseAdapter implements AuthDataSourcePort {
+  AuthFirebaseAdapter(this._firebaseAuth, this._googleSignIn);
   final fb.FirebaseAuth _firebaseAuth;
   final gsi.GoogleSignIn _googleSignIn;
-  AuthFirebaseAdapter(this._firebaseAuth, this._googleSignIn);
 
   @override
   Future<AuthUser> signIn({
@@ -176,7 +176,7 @@ class AuthFirebaseAdapter implements AuthDataSourcePort {
         tag: AppLogTags.authDataSource,
         error: e,
       );
-      throw ServerException(
+      throw const ServerException(
         message: 'Google sign-in failed. Please try again.',
       );
     }

@@ -9,6 +9,17 @@ import '../../core/core.dart';
 /// Replaces the repeated ClipOval + CachedNetworkImage + placeholder/error
 /// pattern found in every app bar and profile hero across the project.
 class AppAvatar extends StatelessWidget {
+
+  const AppAvatar({
+    super.key,
+    required this.imageUrl,
+    this.size = AppDimensions.avatarMD,
+    this.placeholderColor = AppColors.primaryFixed,
+    this.border,
+    this.fallbackIcon = Icons.person,
+    this.fallbackIconSize = AppDimensions.iconMD,
+    this.fallbackIconColor = AppColors.onSurfaceVariant,
+  });
   /// The network image URL to display.
   final String imageUrl;
 
@@ -29,17 +40,6 @@ class AppAvatar extends StatelessWidget {
 
   /// Colour of the fallback icon.
   final Color fallbackIconColor;
-
-  const AppAvatar({
-    super.key,
-    required this.imageUrl,
-    this.size = AppDimensions.avatarMD,
-    this.placeholderColor = AppColors.primaryFixed,
-    this.border,
-    this.fallbackIcon = Icons.person,
-    this.fallbackIconSize = AppDimensions.iconMD,
-    this.fallbackIconColor = AppColors.onSurfaceVariant,
-  });
 
   @override
   Widget build(BuildContext context) {

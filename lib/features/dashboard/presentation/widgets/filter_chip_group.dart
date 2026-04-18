@@ -8,12 +8,6 @@ import '../../../../core/core.dart';
 /// to the parent (DashboardCubit), following the lift-state-up pattern
 /// for predictable state management.
 class FilterChipGroup extends StatelessWidget {
-  final IconData icon;
-  final Color iconColor;
-  final List<String> chips;
-  final int activeIndex;
-  final Color activeColor;
-  final ValueChanged<int>? onChanged;
 
   const FilterChipGroup({
     super.key,
@@ -24,6 +18,12 @@ class FilterChipGroup extends StatelessWidget {
     required this.activeColor,
     this.onChanged,
   });
+  final IconData icon;
+  final Color iconColor;
+  final List<String> chips;
+  final int activeIndex;
+  final Color activeColor;
+  final ValueChanged<int>? onChanged;
 
   @override
   Widget build(BuildContext context) {

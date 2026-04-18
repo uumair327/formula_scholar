@@ -10,12 +10,6 @@ import 'onboarding_state.dart';
 /// Cubit managing the universal onboarding flow (location -> state -> board -> grade).
 @injectable
 class OnboardingCubit extends Cubit<OnboardingState> {
-  final GetCountriesUseCase _getCountries;
-  final GetStatesUseCase _getStates;
-  final GetBoardsUseCase _getBoards;
-  final GetGradesUseCase _getGrades;
-  final SaveCurriculumUseCase _saveCurriculum;
-  final UpdateStudyGoalUseCase _updateStudyGoal;
 
   OnboardingCubit({
     required GetCountriesUseCase getCountries,
@@ -31,6 +25,12 @@ class OnboardingCubit extends Cubit<OnboardingState> {
        _saveCurriculum = saveCurriculum,
        _updateStudyGoal = updateStudyGoal,
        super(const OnboardingState());
+  final GetCountriesUseCase _getCountries;
+  final GetStatesUseCase _getStates;
+  final GetBoardsUseCase _getBoards;
+  final GetGradesUseCase _getGrades;
+  final SaveCurriculumUseCase _saveCurriculum;
+  final UpdateStudyGoalUseCase _updateStudyGoal;
 
   /// Loads available countries for Step 1.
   Future<void> loadCountries() async {

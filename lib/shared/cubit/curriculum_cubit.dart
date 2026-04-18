@@ -13,10 +13,6 @@ import 'curriculum_state.dart';
 /// truth and never falls back to fake board/grade defaults.
 @lazySingleton
 class CurriculumCubit extends Cubit<CurriculumState> {
-  final LoadCurriculumUseCase _loadCurriculum;
-  final SaveCurriculumUseCase _saveCurriculum;
-  final WatchCurriculumUseCase _watchCurriculum;
-  late final StreamSubscription<SelectedCurriculum?> _curriculumSubscription;
 
   CurriculumCubit({
     required LoadCurriculumUseCase loadCurriculum,
@@ -41,6 +37,10 @@ class CurriculumCubit extends Cubit<CurriculumState> {
 
     Future.microtask(refresh);
   }
+  final LoadCurriculumUseCase _loadCurriculum;
+  final SaveCurriculumUseCase _saveCurriculum;
+  final WatchCurriculumUseCase _watchCurriculum;
+  late final StreamSubscription<SelectedCurriculum?> _curriculumSubscription;
 
   Future<void> refresh() async {
     AppLogger.info(

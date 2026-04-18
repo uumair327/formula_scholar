@@ -9,14 +9,14 @@ import '../../domain/domain.dart';
 /// for offline-first bookmark access.
 @LazySingleton(as: SavedRepositoryPort)
 class SavedRepositoryImpl implements SavedRepositoryPort {
-  final SavedDataSourcePort _dataSource;
-  final SavedCachePort _cache;
 
   const SavedRepositoryImpl({
     required SavedDataSourcePort dataSource,
     required SavedCachePort cache,
   }) : _dataSource = dataSource,
        _cache = cache;
+  final SavedDataSourcePort _dataSource;
+  final SavedCachePort _cache;
 
   @override
   Future<Result<List<BookmarkedFormula>>> getBookmarks({

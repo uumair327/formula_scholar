@@ -8,12 +8,6 @@ enum ChaptersStatus { initial, loading, loaded, error }
 
 /// State for the generic Chapters feature.
 class ChaptersState extends Equatable {
-  final ChaptersStatus status;
-  final String? subjectId;
-  final String? curriculumKey;
-  final List<Chapter> chapters;
-  final List<MasteryTool> masteryTools;
-  final String? errorMessage;
 
   const ChaptersState({
     this.status = ChaptersStatus.initial,
@@ -23,6 +17,12 @@ class ChaptersState extends Equatable {
     this.masteryTools = const [],
     this.errorMessage,
   });
+  final ChaptersStatus status;
+  final String? subjectId;
+  final String? curriculumKey;
+  final List<Chapter> chapters;
+  final List<MasteryTool> masteryTools;
+  final String? errorMessage;
 
   /// The first chapter with [ChapterStatus.inProgress] (featured card).
   Chapter? get featuredChapter => chapters

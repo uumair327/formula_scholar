@@ -6,9 +6,9 @@ import '../ports/curriculum_repository_port.dart';
 
 @injectable
 class LoadCurriculumUseCase {
-  final CurriculumRepositoryPort _repository;
 
   const LoadCurriculumUseCase(this._repository);
+  final CurriculumRepositoryPort _repository;
 
   Future<SelectedCurriculum?> call() {
     AppLogger.trace(

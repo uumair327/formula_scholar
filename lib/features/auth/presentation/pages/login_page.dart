@@ -171,12 +171,6 @@ class _BackgroundDecor extends StatelessWidget {
 // ── Wide (two-column) layout ───────────────────────────────────────
 
 class _WideLayout extends StatelessWidget {
-  final GlobalKey<FormState> formKey;
-  final TextEditingController identityController;
-  final TextEditingController passwordController;
-  final bool obscurePassword;
-  final VoidCallback onToggleObscure;
-  final VoidCallback onSignIn;
 
   const _WideLayout({
     required this.formKey,
@@ -186,6 +180,12 @@ class _WideLayout extends StatelessWidget {
     required this.onToggleObscure,
     required this.onSignIn,
   });
+  final GlobalKey<FormState> formKey;
+  final TextEditingController identityController;
+  final TextEditingController passwordController;
+  final bool obscurePassword;
+  final VoidCallback onToggleObscure;
+  final VoidCallback onSignIn;
 
   @override
   Widget build(BuildContext context) {
@@ -194,7 +194,7 @@ class _WideLayout extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-        boxShadow: [AppShadows.ghost],
+        boxShadow: const [AppShadows.ghost],
       ),
       clipBehavior: Clip.antiAlias,
       child: Row(
@@ -220,12 +220,6 @@ class _WideLayout extends StatelessWidget {
 // ── Narrow (single-column) layout ─────────────────────────────────
 
 class _NarrowLayout extends StatelessWidget {
-  final GlobalKey<FormState> formKey;
-  final TextEditingController identityController;
-  final TextEditingController passwordController;
-  final bool obscurePassword;
-  final VoidCallback onToggleObscure;
-  final VoidCallback onSignIn;
 
   const _NarrowLayout({
     required this.formKey,
@@ -235,6 +229,12 @@ class _NarrowLayout extends StatelessWidget {
     required this.onToggleObscure,
     required this.onSignIn,
   });
+  final GlobalKey<FormState> formKey;
+  final TextEditingController identityController;
+  final TextEditingController passwordController;
+  final bool obscurePassword;
+  final VoidCallback onToggleObscure;
+  final VoidCallback onSignIn;
 
   @override
   Widget build(BuildContext context) {
@@ -276,7 +276,7 @@ class _BrandColumn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingHero),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -329,10 +329,10 @@ class _BrandColumn extends StatelessWidget {
           ),
           const SizedBox(height: AppDimensions.paddingHero),
           // Formula cards
-          _FormulaCard(formula: 'e = mc²', rotation: -0.035),
+          const _FormulaCard(formula: 'e = mc²', rotation: -0.035),
           const SizedBox(height: AppDimensions.paddingMD),
-          Padding(
-            padding: const EdgeInsets.only(left: AppDimensions.paddingHero),
+          const Padding(
+            padding: EdgeInsets.only(left: AppDimensions.paddingHero),
             child: _FormulaCard(formula: 'a² + b² = c²', rotation: 0.052),
           ),
         ],
@@ -342,10 +342,10 @@ class _BrandColumn extends StatelessWidget {
 }
 
 class _FormulaCard extends StatelessWidget {
-  final String formula;
-  final double rotation;
 
   const _FormulaCard({required this.formula, required this.rotation});
+  final String formula;
+  final double rotation;
 
   @override
   Widget build(BuildContext context) {
@@ -373,12 +373,6 @@ class _FormulaCard extends StatelessWidget {
 // ── Form column (right, also reused in narrow layout) ────────────
 
 class _FormColumn extends StatelessWidget {
-  final GlobalKey<FormState> formKey;
-  final TextEditingController identityController;
-  final TextEditingController passwordController;
-  final bool obscurePassword;
-  final VoidCallback onToggleObscure;
-  final VoidCallback onSignIn;
 
   const _FormColumn({
     required this.formKey,
@@ -388,6 +382,12 @@ class _FormColumn extends StatelessWidget {
     required this.onToggleObscure,
     required this.onSignIn,
   });
+  final GlobalKey<FormState> formKey;
+  final TextEditingController identityController;
+  final TextEditingController passwordController;
+  final bool obscurePassword;
+  final VoidCallback onToggleObscure;
+  final VoidCallback onSignIn;
 
   @override
   Widget build(BuildContext context) {
@@ -409,12 +409,6 @@ class _FormColumn extends StatelessWidget {
 }
 
 class _FormContent extends StatelessWidget {
-  final GlobalKey<FormState> formKey;
-  final TextEditingController identityController;
-  final TextEditingController passwordController;
-  final bool obscurePassword;
-  final VoidCallback onToggleObscure;
-  final VoidCallback onSignIn;
 
   const _FormContent({
     required this.formKey,
@@ -424,6 +418,12 @@ class _FormContent extends StatelessWidget {
     required this.onToggleObscure,
     required this.onSignIn,
   });
+  final GlobalKey<FormState> formKey;
+  final TextEditingController identityController;
+  final TextEditingController passwordController;
+  final bool obscurePassword;
+  final VoidCallback onToggleObscure;
+  final VoidCallback onSignIn;
 
   @override
   Widget build(BuildContext context) {
@@ -503,7 +503,7 @@ class _FormContent extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                       vertical: AppDimensions.paddingLG,
                     ),
-                    shape: StadiumBorder(),
+                    shape: const StadiumBorder(),
                     elevation: AppDimensions.elevationMD,
                   ),
                   child: isLoading
@@ -530,7 +530,7 @@ class _FormContent extends StatelessWidget {
           // ── Divider ──
           Row(
             children: [
-              Expanded(child: Divider(color: AppColors.outlineVariant)),
+              const Expanded(child: Divider(color: AppColors.outlineVariant)),
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppDimensions.paddingMD,
@@ -544,7 +544,7 @@ class _FormContent extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(child: Divider(color: AppColors.outlineVariant)),
+              const Expanded(child: Divider(color: AppColors.outlineVariant)),
             ],
           ),
           const SizedBox(height: AppDimensions.paddingLG),
@@ -614,15 +614,15 @@ class _FormContent extends StatelessWidget {
 // ── Shared auth sub-widgets ───────────────────────────────────────
 
 class _SocialButton extends StatelessWidget {
-  final String label;
-  final IconData icon;
-  final VoidCallback onTap;
 
   const _SocialButton({
     required this.label,
     required this.icon,
     required this.onTap,
   });
+  final String label;
+  final IconData icon;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -632,7 +632,7 @@ class _SocialButton extends StatelessWidget {
       label: Text(label),
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: AppDimensions.paddingMD),
-        shape: StadiumBorder(),
+        shape: const StadiumBorder(),
         side: BorderSide(
           color: AppColors.outlineVariant.withValues(
             alpha: AppDimensions.opacitySubtle,

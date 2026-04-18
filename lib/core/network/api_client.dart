@@ -13,7 +13,6 @@ import 'retry_interceptor.dart';
 /// Retries resolve before the logger sees the final outcome.
 @lazySingleton
 class ApiClient {
-  late final Dio _dio;
 
   ApiClient(ApiInterceptor interceptor, RetryInterceptor retryInterceptor) {
     _dio = Dio(
@@ -29,6 +28,7 @@ class ApiClient {
     // Retry interceptor runs first, then logging interceptor.
     _dio.interceptors.addAll([retryInterceptor, interceptor]);
   }
+  late final Dio _dio;
 
   /// Exposes standard GET
   Future<Response> get(

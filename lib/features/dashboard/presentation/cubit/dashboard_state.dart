@@ -7,14 +7,6 @@ enum DashboardStatus { initial, loading, loaded, error }
 
 /// State for the Dashboard feature.
 class DashboardState extends Equatable {
-  final DashboardStatus status;
-  final StudyProgress? progress;
-  final List<Subject> subjects;
-  final List<RecentStudy> recentStudies;
-  final List<FormulaVaultItem> vaultItems;
-  final String? errorMessage;
-  final String selectedBoardName;
-  final String selectedGradeName;
 
   const DashboardState({
     this.status = DashboardStatus.initial,
@@ -26,6 +18,14 @@ class DashboardState extends Equatable {
     this.selectedBoardName = '',
     this.selectedGradeName = '',
   });
+  final DashboardStatus status;
+  final StudyProgress? progress;
+  final List<Subject> subjects;
+  final List<RecentStudy> recentStudies;
+  final List<FormulaVaultItem> vaultItems;
+  final String? errorMessage;
+  final String selectedBoardName;
+  final String selectedGradeName;
 
   String get heroBadge {
     if (selectedBoardName.isEmpty || selectedGradeName.isEmpty) {

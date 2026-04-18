@@ -2,12 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// A saved study note fetched from backend content.
 class SavedNote extends Equatable {
-  final String id;
-  final String title;
-  final String subject;
-  final String content;
-  final String curriculumKey;
-  final DateTime savedAt;
 
   const SavedNote({
     required this.id,
@@ -17,6 +11,12 @@ class SavedNote extends Equatable {
     required this.curriculumKey,
     required this.savedAt,
   });
+  final String id;
+  final String title;
+  final String subject;
+  final String content;
+  final String curriculumKey;
+  final DateTime savedAt;
 
   @override
   List<Object?> get props => [

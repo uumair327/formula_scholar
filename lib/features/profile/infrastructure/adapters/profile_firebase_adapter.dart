@@ -7,10 +7,10 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: ProfileDataSourcePort)
 class ProfileFirebaseAdapter implements ProfileDataSourcePort {
-  final FirebaseFirestore _firestore;
-  final FirebaseAuth _firebaseAuth;
 
   ProfileFirebaseAdapter(this._firestore, this._firebaseAuth);
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _firebaseAuth;
 
   String _readString(
     Map<String, dynamic> data,

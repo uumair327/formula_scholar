@@ -2,12 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// User profile entity.
 class UserProfile extends Equatable {
-  final String name;
-  final String email;
-  final String grade;
-  final String board;
-  final String avatarUrl;
-  final bool isPro;
 
   const UserProfile({
     required this.name,
@@ -17,6 +11,12 @@ class UserProfile extends Equatable {
     required this.avatarUrl,
     this.isPro = false,
   });
+  final String name;
+  final String email;
+  final String grade;
+  final String board;
+  final String avatarUrl;
+  final bool isPro;
 
   /// Display label combining board and grade, e.g. "CBSE • Class 9".
   String get curriculumLabel {

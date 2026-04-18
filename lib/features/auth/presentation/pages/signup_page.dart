@@ -198,18 +198,6 @@ class _SignupBackgroundDecor extends StatelessWidget {
 // ── Wide layout ────────────────────────────────────────────────────
 
 class _SignupWideLayout extends StatelessWidget {
-  final GlobalKey<FormState> formKey;
-  final TextEditingController nameController;
-  final TextEditingController emailController;
-  final TextEditingController passwordController;
-  final TextEditingController confirmController;
-  final bool obscurePassword;
-  final bool obscureConfirm;
-  final bool agreedToTerms;
-  final VoidCallback onTogglePassword;
-  final VoidCallback onToggleConfirm;
-  final ValueChanged<bool?> onTermsChanged;
-  final VoidCallback onCreateAccount;
 
   const _SignupWideLayout({
     required this.formKey,
@@ -225,6 +213,18 @@ class _SignupWideLayout extends StatelessWidget {
     required this.onTermsChanged,
     required this.onCreateAccount,
   });
+  final GlobalKey<FormState> formKey;
+  final TextEditingController nameController;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final TextEditingController confirmController;
+  final bool obscurePassword;
+  final bool obscureConfirm;
+  final bool agreedToTerms;
+  final VoidCallback onTogglePassword;
+  final VoidCallback onToggleConfirm;
+  final ValueChanged<bool?> onTermsChanged;
+  final VoidCallback onCreateAccount;
 
   @override
   Widget build(BuildContext context) {
@@ -233,7 +233,7 @@ class _SignupWideLayout extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-        boxShadow: [AppShadows.ghost],
+        boxShadow: const [AppShadows.ghost],
       ),
       clipBehavior: Clip.antiAlias,
       child: Row(
@@ -269,7 +269,7 @@ class _SignupBrandColumn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingHero),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -334,7 +334,7 @@ class _SignupBrandColumn extends StatelessWidget {
                     Container(
                       width: AppDimensions.avatarMD,
                       height: AppDimensions.avatarMD,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         color: AppColors.primaryFixed,
                       ),
@@ -393,18 +393,6 @@ class _SignupBrandColumn extends StatelessWidget {
 // ── Form scroll wrapper ─────────────────────────────────────────────
 
 class _SignupFormScroll extends StatelessWidget {
-  final GlobalKey<FormState> formKey;
-  final TextEditingController nameController;
-  final TextEditingController emailController;
-  final TextEditingController passwordController;
-  final TextEditingController confirmController;
-  final bool obscurePassword;
-  final bool obscureConfirm;
-  final bool agreedToTerms;
-  final VoidCallback onTogglePassword;
-  final VoidCallback onToggleConfirm;
-  final ValueChanged<bool?> onTermsChanged;
-  final VoidCallback onCreateAccount;
 
   const _SignupFormScroll({
     required this.formKey,
@@ -420,6 +408,18 @@ class _SignupFormScroll extends StatelessWidget {
     required this.onTermsChanged,
     required this.onCreateAccount,
   });
+  final GlobalKey<FormState> formKey;
+  final TextEditingController nameController;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final TextEditingController confirmController;
+  final bool obscurePassword;
+  final bool obscureConfirm;
+  final bool agreedToTerms;
+  final VoidCallback onTogglePassword;
+  final VoidCallback onToggleConfirm;
+  final ValueChanged<bool?> onTermsChanged;
+  final VoidCallback onCreateAccount;
 
   @override
   Widget build(BuildContext context) {
@@ -575,7 +575,7 @@ class _SignupFormScroll extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                         vertical: AppDimensions.paddingLG,
                       ),
-                      shape: StadiumBorder(),
+                      shape: const StadiumBorder(),
                       elevation: AppDimensions.elevationMD,
                     ),
                     child: isLoading
@@ -602,7 +602,7 @@ class _SignupFormScroll extends StatelessWidget {
             // ── Or join with divider ──
             Row(
               children: [
-                Expanded(child: Divider(color: AppColors.surfaceVariant)),
+                const Expanded(child: Divider(color: AppColors.surfaceVariant)),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppDimensions.paddingMD,
@@ -614,7 +614,7 @@ class _SignupFormScroll extends StatelessWidget {
                     ),
                   ),
                 ),
-                Expanded(child: Divider(color: AppColors.surfaceVariant)),
+                const Expanded(child: Divider(color: AppColors.surfaceVariant)),
               ],
             ),
             const SizedBox(height: AppDimensions.paddingLG),
@@ -626,16 +626,16 @@ class _SignupFormScroll extends StatelessWidget {
                   child: OutlinedButton.icon(
                     onPressed: () =>
                         context.read<AuthCubit>().signInWithGoogle(),
-                    icon: Icon(
+                    icon: const Icon(
                       LucideIcons.globe,
                       size: AppDimensions.iconDefault,
                     ),
-                    label: Text(AppStrings.loginGoogle),
+                    label: const Text(AppStrings.loginGoogle),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                         vertical: AppDimensions.paddingMD,
                       ),
-                      shape: StadiumBorder(),
+                      shape: const StadiumBorder(),
                       backgroundColor: AppColors.surfaceContainerHigh,
                       foregroundColor: AppColors.onSurface,
                     ),
@@ -652,16 +652,16 @@ class _SignupFormScroll extends StatelessWidget {
                           'Contact support if your school needs a different access path.',
                       email: 'support@formulascholar.app',
                     ),
-                    icon: Icon(
+                    icon: const Icon(
                       LucideIcons.facebook,
                       size: AppDimensions.iconDefault,
                     ),
-                    label: Text(AppStrings.signupFacebook),
+                    label: const Text(AppStrings.signupFacebook),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                         vertical: AppDimensions.paddingMD,
                       ),
-                      shape: StadiumBorder(),
+                      shape: const StadiumBorder(),
                       backgroundColor: AppColors.surfaceContainerHigh,
                       foregroundColor: AppColors.onSurface,
                     ),

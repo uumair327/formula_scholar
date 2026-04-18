@@ -13,14 +13,14 @@ import '../../domain/domain.dart';
 /// fallback for offline-first behaviour.
 @LazySingleton(as: DashboardRepositoryPort)
 class DashboardRepositoryImpl implements DashboardRepositoryPort {
-  final DashboardDataSourcePort _dataSource;
-  final DashboardCachePort _cache;
 
   const DashboardRepositoryImpl({
     required DashboardDataSourcePort dataSource,
     required DashboardCachePort cache,
   }) : _dataSource = dataSource,
        _cache = cache;
+  final DashboardDataSourcePort _dataSource;
+  final DashboardCachePort _cache;
 
   @override
   Future<Result<StudyProgress>> getStudyProgress() {

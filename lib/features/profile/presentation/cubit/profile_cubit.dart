@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 import 'profile_state.dart';
 
@@ -13,24 +16,41 @@ import 'profile_state.dart';
 @injectable
 class ProfileCubit extends Cubit<ProfileState>
     with CubitFailureLogger<ProfileState> {
-  final GetUserProfileUseCase _getUserProfile;
-  final GetProfileStatsUseCase _getProfileStats;
-  final GetSettingsItemsUseCase _getSettingsItems;
-  final UpdateProfileUseCase _updateProfile;
-
-  @override
-  String get logTag => AppLogTags.profileCubit;
 
   ProfileCubit({
     required GetUserProfileUseCase getUserProfile,
     required GetProfileStatsUseCase getProfileStats,
     required GetSettingsItemsUseCase getSettingsItems,
     required UpdateProfileUseCase updateProfile,
+    required ActivityRefreshCubit activityRefreshCubit,
   }) : _getUserProfile = getUserProfile,
        _getProfileStats = getProfileStats,
        _getSettingsItems = getSettingsItems,
        _updateProfile = updateProfile,
-       super(const ProfileState());
+       _activityRefreshCubit = activityRefreshCubit,
+       super(const ProfileState()) {
+    _activityRefreshSubscription = _activityRefreshCubit.stream.listen((_) {
+      if (state.status == ProfileStatus.loading) {
+        return;
+      }
+      Future.microtask(loadProfile);
+    });
+  }
+  final GetUserProfileUseCase _getUserProfile;
+  final GetProfileStatsUseCase _getProfileStats;
+  final GetSettingsItemsUseCase _getSettingsItems;
+  final UpdateProfileUseCase _updateProfile;
+  final ActivityRefreshCubit _activityRefreshCubit;
+  late final StreamSubscription<int> _activityRefreshSubscription;
+
+  @override
+  String get logTag => AppLogTags.profileCubit;
+
+  @override
+  Future<void> close() {
+    _activityRefreshSubscription.cancel();
+    return super.close();
+  }
 
   /// Loads all profile data in parallel.
   Future<void> loadProfile() async {

@@ -20,12 +20,12 @@ sealed class Result<T> {
 
 /// Represents a successful operation with the resulting [data].
 class Success<T> extends Result<T> {
-  final T data;
   const Success(this.data);
+  final T data;
 }
 
 /// Represents a failed operation with a typed [failure].
 class Error<T> extends Result<T> {
-  final Failure failure;
   const Error(this.failure);
+  final Failure failure;
 }

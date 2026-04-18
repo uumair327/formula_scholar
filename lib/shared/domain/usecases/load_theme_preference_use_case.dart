@@ -6,9 +6,9 @@ import '../ports/theme_preference_repository_port.dart';
 
 @injectable
 class LoadThemePreferenceUseCase {
-  final ThemePreferenceRepositoryPort _repository;
 
   const LoadThemePreferenceUseCase(this._repository);
+  final ThemePreferenceRepositoryPort _repository;
 
   Future<ThemePreference?> call() {
     AppLogger.trace(

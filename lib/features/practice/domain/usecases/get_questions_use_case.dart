@@ -8,10 +8,10 @@ import '../ports/practice_repository_port.dart';
 /// scoped to the user's selected curriculum (board + grade).
 @injectable
 class GetQuestionsUseCase {
-  final PracticeRepositoryPort _repository;
 
   const GetQuestionsUseCase({required PracticeRepositoryPort repository})
     : _repository = repository;
+  final PracticeRepositoryPort _repository;
 
   Future<Result<List<QuizQuestion>>> call({
     required String boardId,

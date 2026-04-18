@@ -13,10 +13,6 @@ import 'app_router_observer.dart';
 import 'route_builders.dart';
 
 class _AuthRouterNotifier extends ChangeNotifier {
-  final GetCurrentAuthUserUseCase _getCurrentAuthUser;
-  final WatchAuthStateUseCase _watchAuthState;
-  late final StreamSubscription<AuthUser?> _subscription;
-  AuthUser? _currentUser;
 
   _AuthRouterNotifier(this._getCurrentAuthUser, this._watchAuthState) {
     _currentUser = _getCurrentAuthUser();
@@ -25,6 +21,10 @@ class _AuthRouterNotifier extends ChangeNotifier {
       notifyListeners();
     });
   }
+  final GetCurrentAuthUserUseCase _getCurrentAuthUser;
+  final WatchAuthStateUseCase _watchAuthState;
+  late final StreamSubscription<AuthUser?> _subscription;
+  AuthUser? _currentUser;
 
   bool get isLoggedIn => _currentUser != null;
 

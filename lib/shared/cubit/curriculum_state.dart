@@ -6,15 +6,15 @@ const Object _unset = Object();
 
 /// State for the global curriculum selection.
 class CurriculumState extends Equatable {
-  final SelectedCurriculum? curriculum;
-  final bool isLoading;
-  final bool isInitialized;
 
   const CurriculumState({
     this.curriculum,
     this.isLoading = true,
     this.isInitialized = false,
   });
+  final SelectedCurriculum? curriculum;
+  final bool isLoading;
+  final bool isInitialized;
 
   bool get hasSelection => curriculum != null;
 

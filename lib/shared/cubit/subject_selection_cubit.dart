@@ -13,15 +13,15 @@ import 'subject_selection_state.dart';
 /// state cannot leak across board/grade changes or user sessions.
 @lazySingleton
 class SubjectSelectionCubit extends HydratedCubit<SubjectSelectionState> {
-  final WatchCurriculumUseCase _watchCurriculum;
-  late final StreamSubscription<SelectedCurriculum?> _curriculumSubscription;
-  String? _activeCurriculumKey;
 
   SubjectSelectionCubit({required WatchCurriculumUseCase watchCurriculum})
     : _watchCurriculum = watchCurriculum,
       super(const SubjectSelectionState()) {
     _curriculumSubscription = _watchCurriculum().listen(_handleCurriculumSync);
   }
+  final WatchCurriculumUseCase _watchCurriculum;
+  late final StreamSubscription<SelectedCurriculum?> _curriculumSubscription;
+  String? _activeCurriculumKey;
 
   void selectSubject({
     required String id,

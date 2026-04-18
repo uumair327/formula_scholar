@@ -18,14 +18,6 @@ enum ChapterStatus {
 /// a geometry topic, an algebra section, a physics chapter, etc.
 /// The backend determines the content; the UI renders generically.
 class Chapter extends Equatable {
-  final String id;
-  final String name;
-  final String subtitle;
-  final int completedFormulas;
-  final int totalFormulas;
-  final double progressPercent;
-  final ChapterStatus status;
-  final bool isSaved;
 
   const Chapter({
     required this.id,
@@ -37,6 +29,14 @@ class Chapter extends Equatable {
     this.status = ChapterStatus.notStarted,
     this.isSaved = false,
   });
+  final String id;
+  final String name;
+  final String subtitle;
+  final int completedFormulas;
+  final int totalFormulas;
+  final double progressPercent;
+  final ChapterStatus status;
+  final bool isSaved;
 
   bool get isInProgress => status == ChapterStatus.inProgress;
   bool get isLocked => status == ChapterStatus.locked;

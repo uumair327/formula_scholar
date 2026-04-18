@@ -8,6 +8,16 @@ import '../../core/core.dart';
 /// (e.g. "8 Units", "124 Formulas"), geometry progress badges,
 /// and algebra section tags.
 class AppInfoChip extends StatelessWidget {
+
+  const AppInfoChip({
+    super.key,
+    required this.label,
+    this.backgroundColor = AppColors.surfaceContainerHigh,
+    this.textColor = AppColors.onSurface,
+    this.textStyle,
+    this.horizontalPadding = AppDimensions.paddingMD,
+    this.verticalPadding = AppDimensions.paddingXS,
+  });
   /// Text displayed inside the chip.
   final String label;
 
@@ -25,16 +35,6 @@ class AppInfoChip extends StatelessWidget {
 
   /// Vertical padding.
   final double verticalPadding;
-
-  const AppInfoChip({
-    super.key,
-    required this.label,
-    this.backgroundColor = AppColors.surfaceContainerHigh,
-    this.textColor = AppColors.onSurface,
-    this.textStyle,
-    this.horizontalPadding = AppDimensions.paddingMD,
-    this.verticalPadding = AppDimensions.paddingXS,
-  });
 
   @override
   Widget build(BuildContext context) {

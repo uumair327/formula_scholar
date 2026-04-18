@@ -7,9 +7,6 @@ import '../../../../shared/shared.dart';
 
 /// Bottom sheet for support contact actions.
 class SupportContactSheet extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final String email;
 
   const SupportContactSheet({
     super.key,
@@ -17,6 +14,9 @@ class SupportContactSheet extends StatelessWidget {
     required this.subtitle,
     required this.email,
   });
+  final String title;
+  final String subtitle;
+  final String email;
 
   static void show(
     BuildContext context, {
@@ -66,7 +66,7 @@ class SupportContactSheet extends StatelessWidget {
             const SizedBox(height: AppDimensions.paddingXXL),
             Row(
               children: [
-                AppIconCircle(
+                const AppIconCircle(
                   icon: LucideIcons.messageCircle,
                   size: AppDimensions.avatarHero,
                   backgroundColor: AppColors.primaryFixed,

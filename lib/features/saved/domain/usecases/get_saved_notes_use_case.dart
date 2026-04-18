@@ -7,10 +7,10 @@ import '../ports/saved_repository_port.dart';
 /// Fetches saved study notes for a curriculum.
 @injectable
 class GetSavedNotesUseCase {
-  final SavedRepositoryPort _repository;
 
   const GetSavedNotesUseCase({required SavedRepositoryPort repository})
     : _repository = repository;
+  final SavedRepositoryPort _repository;
 
   Future<Result<List<SavedNote>>> call({required String curriculumKey}) {
     AppLogger.trace(

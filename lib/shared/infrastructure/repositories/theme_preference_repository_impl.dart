@@ -5,9 +5,9 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: ThemePreferenceRepositoryPort)
 class ThemePreferenceRepositoryImpl implements ThemePreferenceRepositoryPort {
-  final ThemePreferenceDataSourcePort _dataSource;
 
   const ThemePreferenceRepositoryImpl(this._dataSource);
+  final ThemePreferenceDataSourcePort _dataSource;
 
   @override
   Future<ThemePreference?> loadThemePreference() async {

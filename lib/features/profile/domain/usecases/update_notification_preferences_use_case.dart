@@ -7,11 +7,11 @@ import '../ports/profile_repository_port.dart';
 /// Persists the current user's notification preferences.
 @injectable
 class UpdateNotificationPreferencesUseCase {
-  final ProfileRepositoryPort _repository;
 
   const UpdateNotificationPreferencesUseCase({
     required ProfileRepositoryPort repository,
   }) : _repository = repository;
+  final ProfileRepositoryPort _repository;
 
   Future<Result<void>> call(NotificationPreferences preferences) {
     AppLogger.trace(

@@ -18,6 +18,7 @@ abstract final class AppLogTags {
   static const String curriculumRepo = 'CurriculumRepo';
   static const String curriculumDataSource = 'CurriculumDataSource';
   static const String curriculumUseCase = 'CurriculumUseCase';
+  static const String activityRefreshCubit = 'ActivityRefreshCubit';
   static const String themePreferenceCubit = 'ThemePreferenceCubit';
   static const String themePreferenceRepo = 'ThemePreferenceRepo';
   static const String themePreferenceDataSource = 'ThemePreferenceDataSource';

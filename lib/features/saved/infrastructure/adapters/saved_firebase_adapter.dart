@@ -7,12 +7,12 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: SavedDataSourcePort)
 class SavedFirebaseAdapter implements SavedDataSourcePort {
+
+  SavedFirebaseAdapter(this._firestore, this._firebaseAuth);
   static const int _documentIdQueryChunkSize = 30;
 
   final FirebaseFirestore _firestore;
   final FirebaseAuth _firebaseAuth;
-
-  SavedFirebaseAdapter(this._firestore, this._firebaseAuth);
 
   @override
   Future<List<BookmarkedFormula>> getBookmarks({

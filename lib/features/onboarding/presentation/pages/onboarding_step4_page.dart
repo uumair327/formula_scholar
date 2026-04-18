@@ -75,7 +75,7 @@ class _OnboardingStep4PageState extends State<OnboardingStep4Page> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          OnboardingStepHeading(
+          const OnboardingStepHeading(
             tag: AppStrings.step4Tag,
             title: AppStrings.step4Title,
             subtitle: AppStrings.step4Subtitle,
@@ -100,15 +100,15 @@ class _OnboardingStep4PageState extends State<OnboardingStep4Page> {
 }
 
 class _GoalCard extends StatelessWidget {
-  final _GoalOption goal;
-  final bool isSelected;
-  final VoidCallback onTap;
 
   const _GoalCard({
     required this.goal,
     required this.isSelected,
     required this.onTap,
   });
+  final _GoalOption goal;
+  final bool isSelected;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -177,7 +177,7 @@ class _GoalCard extends StatelessWidget {
                   shape: BoxShape.circle,
                   color: goal.color,
                 ),
-                child: Icon(
+                child: const Icon(
                   LucideIcons.check,
                   size: AppDimensions.iconSM,
                   color: AppColors.onPrimary,
@@ -191,11 +191,6 @@ class _GoalCard extends StatelessWidget {
 }
 
 class _GoalOption {
-  final String id;
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final Color color;
 
   const _GoalOption({
     required this.id,
@@ -204,4 +199,9 @@ class _GoalOption {
     required this.subtitle,
     required this.color,
   });
+  final String id;
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color color;
 }

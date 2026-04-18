@@ -10,13 +10,6 @@ import '../../../../core/core.dart';
 /// Each step page only needs to supply [body], [currentStep],
 /// [onBack], and [onContinue] — keeping step files small.
 class OnboardingShell extends StatelessWidget {
-  final int currentStep;
-  final int totalSteps;
-  final Widget body;
-  final VoidCallback? onBack;
-  final String continueLabel;
-  final VoidCallback? onContinue;
-  final bool isLoading;
 
   const OnboardingShell({
     super.key,
@@ -28,6 +21,13 @@ class OnboardingShell extends StatelessWidget {
     this.onBack,
     this.isLoading = false,
   });
+  final int currentStep;
+  final int totalSteps;
+  final Widget body;
+  final VoidCallback? onBack;
+  final String continueLabel;
+  final VoidCallback? onContinue;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -67,13 +67,13 @@ class OnboardingShell extends StatelessWidget {
 // ── App bar ──────────────────────────────────────────────────────────
 
 class _OnboardingAppBar extends StatelessWidget {
-  final int currentStep;
-  final int totalSteps;
 
   const _OnboardingAppBar({
     required this.currentStep,
     required this.totalSteps,
   });
+  final int currentStep;
+  final int totalSteps;
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +88,7 @@ class _OnboardingAppBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             ShaderMask(
-              shaderCallback: (bounds) => LinearGradient(
+              shaderCallback: (bounds) => const LinearGradient(
                 colors: [AppColors.primary, AppColors.primaryContainer],
               ).createShader(bounds),
               child: Text(
@@ -116,9 +116,9 @@ class _OnboardingAppBar extends StatelessWidget {
 // ── Progress bar ──────────────────────────────────────────────────────
 
 class _OnboardingProgressBar extends StatelessWidget {
-  final double progress;
 
   const _OnboardingProgressBar({required this.progress});
+  final double progress;
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +130,7 @@ class _OnboardingProgressBar extends StatelessWidget {
           value: progress,
           minHeight: AppDimensions.progressBarSM,
           backgroundColor: AppColors.surfaceContainer,
-          valueColor: AlwaysStoppedAnimation(AppColors.primary),
+          valueColor: const AlwaysStoppedAnimation(AppColors.primary),
         ),
       ),
     );
@@ -140,10 +140,6 @@ class _OnboardingProgressBar extends StatelessWidget {
 // ── Bottom nav ────────────────────────────────────────────────────────
 
 class _OnboardingBottomNav extends StatelessWidget {
-  final VoidCallback? onBack;
-  final String continueLabel;
-  final VoidCallback? onContinue;
-  final bool isLoading;
 
   const _OnboardingBottomNav({
     required this.onBack,
@@ -151,6 +147,10 @@ class _OnboardingBottomNav extends StatelessWidget {
     this.onContinue,
     required this.isLoading,
   });
+  final VoidCallback? onBack;
+  final String continueLabel;
+  final VoidCallback? onContinue;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +170,7 @@ class _OnboardingBottomNav extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                       vertical: AppDimensions.paddingLG,
                     ),
-                    shape: StadiumBorder(),
+                    shape: const StadiumBorder(),
                     foregroundColor: AppColors.onSurface,
                     backgroundColor: AppColors.surfaceContainer,
                     side: BorderSide.none,
@@ -190,7 +190,7 @@ class _OnboardingBottomNav extends StatelessWidget {
               child: FilledButton.icon(
                 onPressed: isLoading ? null : onContinue,
                 icon: isLoading
-                    ? SizedBox(
+                    ? const SizedBox(
                         width: AppDimensions.iconSM,
                         height: AppDimensions.iconSM,
                         child: CircularProgressIndicator(
@@ -204,7 +204,7 @@ class _OnboardingBottomNav extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                     vertical: AppDimensions.paddingLG,
                   ),
-                  shape: StadiumBorder(),
+                  shape: const StadiumBorder(),
                   textStyle: AppTextStyles.labelLarge.copyWith(
                     fontWeight: FontWeight.w900,
                   ),
@@ -223,9 +223,6 @@ class _OnboardingBottomNav extends StatelessWidget {
 
 /// Displays tag, title, and optional subtitle for each onboarding step.
 class OnboardingStepHeading extends StatelessWidget {
-  final String tag;
-  final String title;
-  final String? subtitle;
 
   const OnboardingStepHeading({
     super.key,
@@ -233,6 +230,9 @@ class OnboardingStepHeading extends StatelessWidget {
     required this.title,
     this.subtitle,
   });
+  final String tag;
+  final String title;
+  final String? subtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -272,11 +272,6 @@ class OnboardingStepHeading extends StatelessWidget {
 
 /// A selectable card used in onboarding step 2, 3, 4.
 class OnboardingSelectCard extends StatelessWidget {
-  final Widget icon;
-  final String title;
-  final String subtitle;
-  final bool isSelected;
-  final VoidCallback onTap;
 
   const OnboardingSelectCard({
     super.key,
@@ -286,6 +281,11 @@ class OnboardingSelectCard extends StatelessWidget {
     required this.isSelected,
     required this.onTap,
   });
+  final Widget icon;
+  final String title;
+  final String subtitle;
+  final bool isSelected;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -338,11 +338,11 @@ class OnboardingSelectCard extends StatelessWidget {
                 child: Container(
                   width: AppDimensions.iconMD,
                   height: AppDimensions.iconMD,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppColors.primary,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     LucideIcons.check,
                     size: AppDimensions.iconSM,
                     color: AppColors.onPrimary,

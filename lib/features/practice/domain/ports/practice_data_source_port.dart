@@ -9,4 +9,12 @@ abstract interface class PracticeDataSourcePort {
     required String boardId,
     required String gradeId,
   });
+
+  /// Persists quiz completion analytics for the active user.
+  Future<void> recordQuizCompletion({
+    required String boardId,
+    required String gradeId,
+    required int earnedPoints,
+    required int answeredQuestions,
+  });
 }

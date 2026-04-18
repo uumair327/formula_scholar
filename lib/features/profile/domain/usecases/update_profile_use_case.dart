@@ -5,10 +5,10 @@ import '../ports/profile_repository_port.dart';
 
 @injectable
 class UpdateProfileUseCase {
-  final ProfileRepositoryPort _repository;
 
   const UpdateProfileUseCase({required ProfileRepositoryPort repository})
     : _repository = repository;
+  final ProfileRepositoryPort _repository;
 
   Future<Result<void>> call({required String name, required String avatarUrl}) {
     AppLogger.trace(

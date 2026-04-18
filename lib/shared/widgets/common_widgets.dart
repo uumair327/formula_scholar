@@ -31,10 +31,6 @@ BoxDecoration ghostShadowDecoration({
 
 /// Progress bar widget used across the app.
 class ProgressBar extends StatelessWidget {
-  final double percentage;
-  final Color barColor;
-  final Color backgroundColor;
-  final double height;
 
   const ProgressBar({
     super.key,
@@ -43,6 +39,10 @@ class ProgressBar extends StatelessWidget {
     this.backgroundColor = AppColors.secondaryFixedDim,
     this.height = AppDimensions.progressBarDefault,
   });
+  final double percentage;
+  final Color barColor;
+  final Color backgroundColor;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -68,9 +68,6 @@ class ProgressBar extends StatelessWidget {
 
 /// Category chip/tag widget.
 class CategoryChip extends StatelessWidget {
-  final String label;
-  final Color backgroundColor;
-  final Color textColor;
 
   const CategoryChip({
     super.key,
@@ -78,6 +75,9 @@ class CategoryChip extends StatelessWidget {
     this.backgroundColor = AppColors.primaryFixed,
     this.textColor = AppColors.onPrimaryFixed,
   });
+  final String label;
+  final Color backgroundColor;
+  final Color textColor;
 
   @override
   Widget build(BuildContext context) {
@@ -100,9 +100,6 @@ class CategoryChip extends StatelessWidget {
 
 /// Section header with optional action.
 class SectionHeader extends StatelessWidget {
-  final String title;
-  final String? actionLabel;
-  final VoidCallback? onAction;
 
   const SectionHeader({
     super.key,
@@ -110,6 +107,9 @@ class SectionHeader extends StatelessWidget {
     this.actionLabel,
     this.onAction,
   });
+  final String title;
+  final String? actionLabel;
+  final VoidCallback? onAction;
 
   @override
   Widget build(BuildContext context) {

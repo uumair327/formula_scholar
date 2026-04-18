@@ -10,10 +10,6 @@ import '../../domain/domain.dart';
 /// Maps domain `iconName` strings to Flutter `IconData` in the presentation layer,
 /// keeping the domain layer free of framework dependencies.
 class SettingsListWidget extends StatelessWidget {
-  final List<SettingsItem> items;
-  final bool isDarkMode;
-  final VoidCallback onDarkModeToggle;
-  final ValueChanged<String> onItemTapped;
 
   const SettingsListWidget({
     super.key,
@@ -22,6 +18,10 @@ class SettingsListWidget extends StatelessWidget {
     required this.onDarkModeToggle,
     required this.onItemTapped,
   });
+  final List<SettingsItem> items;
+  final bool isDarkMode;
+  final VoidCallback onDarkModeToggle;
+  final ValueChanged<String> onItemTapped;
 
   /// Maps domain icon name strings to Flutter `IconData`.
   static IconData _resolveIcon(String iconName) {

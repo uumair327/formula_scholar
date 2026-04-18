@@ -12,9 +12,9 @@ import '../../domain/domain.dart';
 /// wrapped in [Result], consistent with all other repository implementations.
 @LazySingleton(as: AuthRepositoryPort)
 class AuthRepositoryImpl implements AuthRepositoryPort {
-  final AuthDataSourcePort _remoteAdapter;
 
   AuthRepositoryImpl(this._remoteAdapter);
+  final AuthDataSourcePort _remoteAdapter;
 
   @override
   Future<Result<AuthUser>> signIn({
