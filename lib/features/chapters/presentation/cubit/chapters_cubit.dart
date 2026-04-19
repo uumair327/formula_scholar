@@ -34,12 +34,15 @@ class ChaptersCubit extends Cubit<ChaptersState>
     required String curriculumKey,
     bool forceReload = false,
   }) async {
-    if (!forceReload &&
-        state.subjectId == subjectId &&
-        state.curriculumKey == curriculumKey &&
-        state.status == ChaptersStatus.loaded) {
+    final sameRequest =
+        state.subjectId == subjectId && state.curriculumKey == curriculumKey;
+    final alreadyInFlightOrReady =
+        state.status == ChaptersStatus.loading ||
+        state.status == ChaptersStatus.loaded;
+
+    if (!forceReload && sameRequest && alreadyInFlightOrReady) {
       AppLogger.debug(
-        'Chapters already loaded for $subjectId, curriculum=$curriculumKey — skipping',
+        'Chapters request already in progress/loaded for $subjectId, curriculum=$curriculumKey — skipping',
         tag: AppLogTags.chaptersCubit,
       );
       return;

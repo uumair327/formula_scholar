@@ -8,7 +8,6 @@ import '../../domain/domain.dart';
 
 /// Bottom sheet that surfaces backend-fed profile stats and next actions.
 class ProfileInsightsSheet extends StatelessWidget {
-
   const ProfileInsightsSheet({
     super.key,
     required this.displayName,
@@ -33,10 +32,12 @@ class ProfileInsightsSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerLowest,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(AppDimensions.radiusXXL),
           topRight: Radius.circular(AppDimensions.radiusXXL),
         ),
@@ -57,7 +58,7 @@ class ProfileInsightsSheet extends StatelessWidget {
                   width: AppDimensions.avatarMD,
                   height: AppDimensions.borderWidthThick,
                   decoration: BoxDecoration(
-                    color: AppColors.surfaceContainerHigh,
+                    color: colorScheme.surfaceContainerHigh,
                     borderRadius: BorderRadius.circular(
                       AppDimensions.radiusXXL,
                     ),
@@ -67,11 +68,11 @@ class ProfileInsightsSheet extends StatelessWidget {
               const SizedBox(height: AppDimensions.paddingXXL),
               Row(
                 children: [
-                  const AppIconCircle(
+                  AppIconCircle(
                     icon: LucideIcons.barChart3,
                     size: AppDimensions.avatarHero,
-                    backgroundColor: AppColors.primaryFixed,
-                    iconColor: AppColors.primary,
+                    backgroundColor: colorScheme.primaryContainer,
+                    iconColor: colorScheme.primary,
                     iconSize: AppDimensions.iconXL,
                   ),
                   const SizedBox(width: AppDimensions.paddingLG),
@@ -82,7 +83,7 @@ class ProfileInsightsSheet extends StatelessWidget {
                         Text(
                           AppStrings.profileInsightsTitle,
                           style: AppTextStyles.headlineSmall.copyWith(
-                            color: AppColors.onSurface,
+                            color: colorScheme.onSurface,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
@@ -90,7 +91,7 @@ class ProfileInsightsSheet extends StatelessWidget {
                         Text(
                           '${AppStrings.profileInsightsSubtitle} for $displayName',
                           style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.onSurfaceVariant,
+                            color: colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -110,13 +111,13 @@ class ProfileInsightsSheet extends StatelessWidget {
               const SizedBox(height: AppDimensions.paddingXXL),
               if (stats.isEmpty)
                 AppCard(
-                  color: AppColors.surfaceContainerHighest.withValues(
+                  color: colorScheme.surfaceContainerHighest.withValues(
                     alpha: AppDimensions.opacityLight,
                   ),
                   child: Text(
                     'Your profile stats will appear here once your backend sync completes.',
                     style: AppTextStyles.bodyMedium.copyWith(
-                      color: AppColors.onSurfaceVariant,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ),
                 )
@@ -138,7 +139,7 @@ class ProfileInsightsSheet extends StatelessWidget {
                       ),
                       itemCount: stats.length,
                       itemBuilder: (context, index) {
-                        return _buildStatCard(stats[index]);
+                        return _buildStatCard(context, stats[index]);
                       },
                     );
                   },
@@ -185,17 +186,19 @@ class ProfileInsightsSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(ProfileStat stat) {
+  Widget _buildStatCard(BuildContext context, ProfileStat stat) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return AppCard(
-      color: AppColors.surfaceContainerHighest.withValues(
+      color: colorScheme.surfaceContainerHighest.withValues(
         alpha: AppDimensions.opacityLight,
       ),
-      border: Border.all(color: AppColors.surfaceContainerHigh),
+      border: Border.all(color: colorScheme.surfaceContainerHigh),
       child: Row(
         children: [
           AppIconCircle(
             icon: _resolveIcon(stat.iconName),
-            backgroundColor: AppColors.surfaceContainerHigh,
+            backgroundColor: colorScheme.surfaceContainerHigh,
             iconColor: AppColors.primary,
           ),
           const SizedBox(width: AppDimensions.paddingLG),
@@ -214,7 +217,7 @@ class ProfileInsightsSheet extends StatelessWidget {
                 Text(
                   stat.label,
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.onSurfaceVariant,
+                    color: colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

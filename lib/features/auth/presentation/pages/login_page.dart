@@ -76,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.surface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         body: Stack(
           children: [
             _BackgroundDecor(),
@@ -171,7 +171,6 @@ class _BackgroundDecor extends StatelessWidget {
 // ── Wide (two-column) layout ───────────────────────────────────────
 
 class _WideLayout extends StatelessWidget {
-
   const _WideLayout({
     required this.formKey,
     required this.identityController,
@@ -189,10 +188,12 @@ class _WideLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       margin: const EdgeInsets.all(AppDimensions.paddingXL),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
         boxShadow: const [AppShadows.ghost],
       ),
@@ -220,7 +221,6 @@ class _WideLayout extends StatelessWidget {
 // ── Narrow (single-column) layout ─────────────────────────────────
 
 class _NarrowLayout extends StatelessWidget {
-
   const _NarrowLayout({
     required this.formKey,
     required this.identityController,
@@ -293,7 +293,7 @@ class _BrandColumn extends StatelessWidget {
               vertical: AppDimensions.paddingXS,
             ),
             decoration: BoxDecoration(
-              color: AppColors.white.withValues(
+              color: AppColors.onPrimary.withValues(
                 alpha: AppDimensions.opacitySubtle,
               ),
               borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
@@ -342,7 +342,6 @@ class _BrandColumn extends StatelessWidget {
 }
 
 class _FormulaCard extends StatelessWidget {
-
   const _FormulaCard({required this.formula, required this.rotation});
   final String formula;
   final double rotation;
@@ -354,7 +353,9 @@ class _FormulaCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(AppDimensions.paddingLG),
         decoration: BoxDecoration(
-          color: AppColors.white.withValues(alpha: AppDimensions.opacitySubtle),
+          color: AppColors.onPrimary.withValues(
+            alpha: AppDimensions.opacitySubtle,
+          ),
           borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
         ),
         child: Text(
@@ -373,7 +374,6 @@ class _FormulaCard extends StatelessWidget {
 // ── Form column (right, also reused in narrow layout) ────────────
 
 class _FormColumn extends StatelessWidget {
-
   const _FormColumn({
     required this.formKey,
     required this.identityController,
@@ -409,7 +409,6 @@ class _FormColumn extends StatelessWidget {
 }
 
 class _FormContent extends StatelessWidget {
-
   const _FormContent({
     required this.formKey,
     required this.identityController,
@@ -427,6 +426,8 @@ class _FormContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Form(
       key: formKey,
       child: Column(
@@ -443,7 +444,7 @@ class _FormContent extends StatelessWidget {
           Text(
             AppStrings.loginSubtitle,
             style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.onSurfaceVariant,
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: AppDimensions.paddingXXL),
@@ -467,7 +468,7 @@ class _FormContent extends StatelessWidget {
               child: Text(
                 AppStrings.loginForgotPassword,
                 style: AppTextStyles.labelMedium.copyWith(
-                  color: AppColors.primary,
+                  color: colorScheme.primary,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -485,7 +486,7 @@ class _FormContent extends StatelessWidget {
               icon: Icon(
                 obscurePassword ? LucideIcons.eye : LucideIcons.eyeOff,
                 size: AppDimensions.iconDefault,
-                color: AppColors.outline,
+                color: colorScheme.outline,
               ),
             ),
           ),
@@ -530,7 +531,7 @@ class _FormContent extends StatelessWidget {
           // ── Divider ──
           Row(
             children: [
-              const Expanded(child: Divider(color: AppColors.outlineVariant)),
+              Expanded(child: Divider(color: colorScheme.outlineVariant)),
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppDimensions.paddingMD,
@@ -538,13 +539,13 @@ class _FormContent extends StatelessWidget {
                 child: Text(
                   AppStrings.loginOr,
                   style: AppTextStyles.labelSmall.copyWith(
-                    color: AppColors.outline,
+                    color: colorScheme.outline,
                     fontWeight: FontWeight.w700,
                     letterSpacing: AppDimensions.letterSpacingWide,
                   ),
                 ),
               ),
-              const Expanded(child: Divider(color: AppColors.outlineVariant)),
+              Expanded(child: Divider(color: colorScheme.outlineVariant)),
             ],
           ),
           const SizedBox(height: AppDimensions.paddingLG),
@@ -588,7 +589,7 @@ class _FormContent extends StatelessWidget {
                 Text(
                   AppStrings.loginNoAccount,
                   style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.onSurfaceVariant,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
                 const SizedBox(width: AppDimensions.paddingXXS),
@@ -597,7 +598,7 @@ class _FormContent extends StatelessWidget {
                   child: Text(
                     AppStrings.loginSignUp,
                     style: AppTextStyles.bodyMedium.copyWith(
-                      color: AppColors.primary,
+                      color: colorScheme.primary,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -614,7 +615,6 @@ class _FormContent extends StatelessWidget {
 // ── Shared auth sub-widgets ───────────────────────────────────────
 
 class _SocialButton extends StatelessWidget {
-
   const _SocialButton({
     required this.label,
     required this.icon,
@@ -626,6 +626,8 @@ class _SocialButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return OutlinedButton.icon(
       onPressed: onTap,
       icon: Icon(icon, size: AppDimensions.iconDefault),
@@ -634,12 +636,12 @@ class _SocialButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: AppDimensions.paddingMD),
         shape: const StadiumBorder(),
         side: BorderSide(
-          color: AppColors.outlineVariant.withValues(
+          color: colorScheme.outlineVariant.withValues(
             alpha: AppDimensions.opacitySubtle,
           ),
         ),
-        backgroundColor: AppColors.surfaceContainerLow,
-        foregroundColor: AppColors.onSurface,
+        backgroundColor: colorScheme.surfaceContainerLow,
+        foregroundColor: colorScheme.onSurface,
         textStyle: AppTextStyles.labelMedium.copyWith(
           fontWeight: FontWeight.w600,
         ),

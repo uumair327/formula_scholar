@@ -6,7 +6,6 @@ import '../../../../shared/shared.dart';
 
 /// A premium, polished bottom sheet presenting subject-specific analytics.
 class SubjectAnalyticsSheet extends StatelessWidget {
-
   const SubjectAnalyticsSheet({
     super.key,
     required this.subjectName,
@@ -50,10 +49,12 @@ class SubjectAnalyticsSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerLowest,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(AppDimensions.radiusXXL),
           topRight: Radius.circular(AppDimensions.radiusXXL),
         ),
@@ -72,7 +73,7 @@ class SubjectAnalyticsSheet extends StatelessWidget {
                 width: AppDimensions.avatarMD,
                 height: AppDimensions.borderWidthThick,
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceContainerHigh,
+                  color: colorScheme.surfaceContainerHigh,
                   borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
                 ),
               ),
@@ -80,11 +81,11 @@ class SubjectAnalyticsSheet extends StatelessWidget {
             const SizedBox(height: AppDimensions.paddingXXL),
             Row(
               children: [
-                const AppIconCircle(
+                AppIconCircle(
                   icon: LucideIcons.barChart3,
                   size: AppDimensions.avatarHero,
-                  backgroundColor: AppColors.primaryFixed,
-                  iconColor: AppColors.primary,
+                  backgroundColor: colorScheme.primaryContainer,
+                  iconColor: colorScheme.primary,
                   iconSize: AppDimensions.iconXL,
                 ),
                 const SizedBox(width: AppDimensions.paddingLG),
@@ -95,7 +96,7 @@ class SubjectAnalyticsSheet extends StatelessWidget {
                       Text(
                         '$subjectName Analytics',
                         style: AppTextStyles.headlineSmall.copyWith(
-                          color: AppColors.onSurface,
+                          color: colorScheme.onSurface,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -103,7 +104,7 @@ class SubjectAnalyticsSheet extends StatelessWidget {
                       Text(
                         'Your mastery metrics for $grade',
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.onSurfaceVariant,
+                          color: colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],
@@ -113,6 +114,7 @@ class SubjectAnalyticsSheet extends StatelessWidget {
             ),
             const SizedBox(height: AppDimensions.paddingXXL),
             _buildStatCard(
+              context: context,
               title: 'Mastery Progress',
               value: '$progressPercent%',
               icon: LucideIcons.target,
@@ -120,7 +122,7 @@ class SubjectAnalyticsSheet extends StatelessWidget {
               child: ProgressBar(
                 percentage: progressPercent.toDouble(),
                 barColor: AppColors.primary,
-                backgroundColor: AppColors.surfaceContainerHighest,
+                backgroundColor: colorScheme.surfaceContainerHighest,
                 height: AppDimensions.progressBarMD,
               ),
             ),
@@ -129,6 +131,7 @@ class SubjectAnalyticsSheet extends StatelessWidget {
               children: [
                 Expanded(
                   child: _buildStatCard(
+                    context: context,
                     title: 'Formulas Mastered',
                     value: '$completedFormulas / $totalFormulas',
                     icon: LucideIcons.checkCircle2,
@@ -138,6 +141,7 @@ class SubjectAnalyticsSheet extends StatelessWidget {
                 const SizedBox(width: AppDimensions.paddingLG),
                 Expanded(
                   child: _buildStatCard(
+                    context: context,
                     title: 'Current Streak',
                     value: '$currentStreak Days',
                     icon: LucideIcons.flame,
@@ -153,8 +157,8 @@ class SubjectAnalyticsSheet extends StatelessWidget {
                 icon: const Icon(LucideIcons.check, size: AppDimensions.iconSM),
                 label: const Text('Close Details'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.surfaceContainerHigh,
-                  foregroundColor: AppColors.onSurface,
+                  backgroundColor: colorScheme.surfaceContainerHigh,
+                  foregroundColor: colorScheme.onSurface,
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppDimensions.paddingXXL,
                     vertical: AppDimensions.paddingMD,
@@ -173,20 +177,21 @@ class SubjectAnalyticsSheet extends StatelessWidget {
   }
 
   Widget _buildStatCard({
+    required BuildContext context,
     required String title,
     required String value,
     required IconData icon,
     required Color color,
     Widget? child,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingLG),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerHighest.withValues(alpha: 0.4),
+        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
-        border: Border.all(
-          color: color.withValues(alpha: 0.1),
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -198,7 +203,7 @@ class SubjectAnalyticsSheet extends StatelessWidget {
               Text(
                 title,
                 style: AppTextStyles.labelMedium.copyWith(
-                  color: AppColors.onSurfaceVariant,
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
             ],
@@ -207,7 +212,7 @@ class SubjectAnalyticsSheet extends StatelessWidget {
           Text(
             value,
             style: AppTextStyles.headlineSmall.copyWith(
-              color: AppColors.onSurface,
+              color: colorScheme.onSurface,
               fontWeight: FontWeight.w800,
             ),
           ),

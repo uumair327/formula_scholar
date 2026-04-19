@@ -21,6 +21,7 @@ class FeaturedChapterCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final ctaText = chapter.progressPercent > 0
         ? AppStrings.continueLearning
         : AppStrings.startNow;
@@ -32,11 +33,11 @@ class FeaturedChapterCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const AppIconCircle(
+              AppIconCircle(
                 icon: LucideIcons.triangle,
                 size: AppDimensions.avatarXL,
-                backgroundColor: AppColors.primaryFixed,
-                iconColor: AppColors.primary,
+                backgroundColor: colorScheme.primaryContainer,
+                iconColor: colorScheme.primary,
                 iconSize: AppDimensions.iconXL,
                 borderRadius: AppDimensions.radiusLG,
               ),
@@ -55,10 +56,10 @@ class FeaturedChapterCard extends StatelessWidget {
                     label: AppStrings.percentDone(
                       chapter.progressPercent.toInt(),
                     ),
-                    backgroundColor: AppColors.secondaryContainer,
-                    textColor: AppColors.onSecondaryContainer,
+                    backgroundColor: colorScheme.secondaryContainer,
+                    textColor: colorScheme.onSecondaryContainer,
                     textStyle: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.onSecondaryContainer,
+                      color: colorScheme.onSecondaryContainer,
                       fontWeight: FontWeight.w700,
                     ),
                     horizontalPadding: AppDimensions.progressBarLG,
@@ -74,7 +75,7 @@ class FeaturedChapterCard extends StatelessWidget {
           Text(
             chapter.subtitle,
             style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.onSurfaceVariant,
+              color: colorScheme.onSurfaceVariant,
               height: AppDimensions.lineHeightDefault,
             ),
           ),
@@ -88,7 +89,7 @@ class FeaturedChapterCard extends StatelessWidget {
                   chapter.totalFormulas,
                 ),
                 style: AppTextStyles.bodySmall.copyWith(
-                  color: AppColors.outline,
+                  color: colorScheme.outline,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -99,7 +100,7 @@ class FeaturedChapterCard extends StatelessWidget {
                     ? AppStrings.keepGoing
                     : AppStrings.justStarted,
                 style: AppTextStyles.bodySmall.copyWith(
-                  color: AppColors.primary,
+                  color: colorScheme.primary,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -109,7 +110,7 @@ class FeaturedChapterCard extends StatelessWidget {
           ProgressBar(
             percentage: chapter.progressPercent,
             height: AppDimensions.progressBarMD,
-            backgroundColor: AppColors.secondaryFixedDim.withValues(
+            backgroundColor: colorScheme.secondaryContainer.withValues(
               alpha: AppDimensions.opacityLight,
             ),
           ),
@@ -119,13 +120,11 @@ class FeaturedChapterCard extends StatelessWidget {
             child: ElevatedButton.icon(
               onPressed: () {
                 final chaptersCubit = context.read<ChaptersCubit>();
-                final curriculumKey =
-                    context
-                        .read<CurriculumCubit>()
-                        .state
-                        .curriculum
-                        ?.curriculumKey ??
-                    AppStrings.unknownCurriculum;
+                final curriculumKey = context
+                    .read<CurriculumCubit>()
+                    .state
+                    .curriculum
+                    ?.curriculumKey;
 
                 context
                     .pushNamed(
@@ -137,6 +136,10 @@ class FeaturedChapterCard extends StatelessWidget {
                       queryParameters: {'name': chapter.name},
                     )
                     .then((_) {
+                      if (curriculumKey == null || curriculumKey.isEmpty) {
+                        return;
+                      }
+
                       chaptersCubit.loadChapters(
                         subjectId,
                         curriculumKey: curriculumKey,
@@ -150,8 +153,8 @@ class FeaturedChapterCard extends StatelessWidget {
                 size: AppDimensions.iconMD,
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.white,
+                backgroundColor: colorScheme.primary,
+                foregroundColor: colorScheme.onPrimary,
                 padding: const EdgeInsets.symmetric(
                   vertical: AppDimensions.paddingLG,
                 ),
@@ -181,6 +184,7 @@ class CompactChapterCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final ctaText = chapter.progressPercent > 0
         ? AppStrings.continueLearning
         : AppStrings.startNow;
@@ -193,11 +197,11 @@ class CompactChapterCard extends StatelessWidget {
                 icon: LucideIcons.bookOpen,
                 size: AppDimensions.avatarLG,
                 backgroundColor: chapter.isInProgress
-                    ? AppColors.tertiaryFixed
-                    : AppColors.surfaceContainerHighest,
+                    ? colorScheme.tertiaryContainer
+                    : colorScheme.surfaceContainerHighest,
                 iconColor: chapter.isInProgress
-                    ? AppColors.tertiary
-                    : AppColors.onSurfaceVariant,
+                    ? colorScheme.tertiary
+                    : colorScheme.onSurfaceVariant,
                 iconSize: AppDimensions.iconLG,
                 borderRadius: AppDimensions.radiusMD,
               ),
@@ -232,7 +236,7 @@ class CompactChapterCard extends StatelessWidget {
                     Text(
                       chapter.subtitle,
                       style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.onSurfaceVariant,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -245,8 +249,8 @@ class CompactChapterCard extends StatelessWidget {
           const SizedBox(height: AppDimensions.paddingLG),
           ProgressBar(
             percentage: chapter.progressPercent,
-            barColor: AppColors.primary,
-            backgroundColor: AppColors.surfaceContainerHighest,
+            barColor: colorScheme.primary,
+            backgroundColor: colorScheme.surfaceContainerHighest,
             height: AppDimensions.progressBarSM,
           ),
           const SizedBox(height: AppDimensions.paddingSM),
@@ -256,19 +260,17 @@ class CompactChapterCard extends StatelessWidget {
               Text(
                 '${chapter.completedFormulas}/${chapter.totalFormulas} ${AppStrings.formulasLabel}',
                 style: AppTextStyles.overline.copyWith(
-                  color: AppColors.outline,
+                  color: colorScheme.outline,
                 ),
               ),
               GestureDetector(
                 onTap: () {
                   final chaptersCubit = context.read<ChaptersCubit>();
-                  final curriculumKey =
-                      context
-                          .read<CurriculumCubit>()
-                          .state
-                          .curriculum
-                          ?.curriculumKey ??
-                      AppStrings.unknownCurriculum;
+                  final curriculumKey = context
+                      .read<CurriculumCubit>()
+                      .state
+                      .curriculum
+                      ?.curriculumKey;
 
                   context
                       .pushNamed(
@@ -280,6 +282,10 @@ class CompactChapterCard extends StatelessWidget {
                         queryParameters: {'name': chapter.name},
                       )
                       .then((_) {
+                        if (curriculumKey == null || curriculumKey.isEmpty) {
+                          return;
+                        }
+
                         chaptersCubit.loadChapters(
                           subjectId,
                           curriculumKey: curriculumKey,
@@ -290,7 +296,7 @@ class CompactChapterCard extends StatelessWidget {
                 child: Text(
                   ctaText.toUpperCase(),
                   style: AppTextStyles.overline.copyWith(
-                    color: AppColors.primary,
+                    color: colorScheme.primary,
                   ),
                 ),
               ),
@@ -310,15 +316,17 @@ class LockedChapterCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingXL),
       decoration: BoxDecoration(
-        color: AppColors.tertiaryContainer.withValues(
+        color: colorScheme.tertiaryContainer.withValues(
           alpha: AppDimensions.opacitySubtle,
         ),
         borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
         border: Border.all(
-          color: AppColors.tertiaryFixedDim.withValues(
+          color: colorScheme.tertiaryContainer.withValues(
             alpha: AppDimensions.opacityLight,
           ),
         ),
@@ -328,13 +336,15 @@ class LockedChapterCard extends StatelessWidget {
         children: [
           Text(
             chapter.name,
-            style: AppTextStyles.labelLarge.copyWith(color: AppColors.tertiary),
+            style: AppTextStyles.labelLarge.copyWith(
+              color: colorScheme.tertiary,
+            ),
           ),
           const SizedBox(height: AppDimensions.paddingXS),
           Text(
             chapter.subtitle,
             style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.onTertiaryContainer.withValues(
+              color: colorScheme.onTertiaryContainer.withValues(
                 alpha: AppDimensions.opacityHigh,
               ),
             ),
@@ -344,19 +354,19 @@ class LockedChapterCard extends StatelessWidget {
             children: [
               AppInfoChip(
                 label: AppStrings.locked,
-                backgroundColor: AppColors.white.withValues(
+                backgroundColor: colorScheme.surface.withValues(
                   alpha: AppDimensions.opacityMediumLight,
                 ),
-                textColor: AppColors.tertiary,
+                textColor: colorScheme.tertiary,
                 textStyle: AppTextStyles.overline.copyWith(
-                  color: AppColors.tertiary,
+                  color: colorScheme.tertiary,
                 ),
               ),
               const SizedBox(width: AppDimensions.paddingSM),
-              const Icon(
+              Icon(
                 LucideIcons.lock,
                 size: AppDimensions.iconSM,
-                color: AppColors.tertiary,
+                color: colorScheme.tertiary,
               ),
             ],
           ),

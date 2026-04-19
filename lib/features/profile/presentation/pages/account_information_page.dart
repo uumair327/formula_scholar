@@ -23,6 +23,7 @@ class AccountInformationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileCubit, ProfileState>(
       builder: (context, state) {
+        final colorScheme = Theme.of(context).colorScheme;
         final profile = state.profile;
 
         return Scaffold(
@@ -37,18 +38,20 @@ class AccountInformationPage extends StatelessWidget {
                   delegate: SliverChildListDelegate([
                     const SizedBox(height: AppDimensions.paddingXXL),
                     // Profile card
-                    _buildProfileCard(profile),
+                    _buildProfileCard(context, profile),
                     const SizedBox(height: AppDimensions.paddingXXL),
                     // Personal Info section
                     const AppSectionTitle(title: AppStrings.personalInfo),
                     const SizedBox(height: AppDimensions.paddingLG),
                     _buildInfoTile(
+                      context: context,
                       icon: LucideIcons.user,
                       label: AppStrings.fullName,
                       value: profile?.name ?? AppStrings.welcomeScholar,
                     ),
                     const SizedBox(height: AppDimensions.paddingMD),
                     _buildInfoTile(
+                      context: context,
                       icon: LucideIcons.mail,
                       label: AppStrings.emailAddress,
                       value: profile?.email ?? '—',
@@ -58,12 +61,14 @@ class AccountInformationPage extends StatelessWidget {
                     const AppSectionTitle(title: AppStrings.academicInfo),
                     const SizedBox(height: AppDimensions.paddingLG),
                     _buildInfoTile(
+                      context: context,
                       icon: LucideIcons.graduationCap,
                       label: AppStrings.currentGrade,
                       value: profile?.grade ?? '—',
                     ),
                     const SizedBox(height: AppDimensions.paddingMD),
                     _buildInfoTile(
+                      context: context,
                       icon: LucideIcons.award,
                       label: AppStrings.accountType,
                       value: profile?.isPro == true
@@ -71,7 +76,7 @@ class AccountInformationPage extends StatelessWidget {
                           : AppStrings.freeAccount,
                       valueColor: profile?.isPro == true
                           ? AppColors.secondary
-                          : AppColors.outline,
+                          : colorScheme.outline,
                     ),
                     const SizedBox(height: AppDimensions.paddingXXL),
                     // Account Actions
@@ -115,26 +120,30 @@ class AccountInformationPage extends StatelessWidget {
   }
 
   SliverAppBar _buildAppBar(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return SliverAppBar(
       floating: true,
       snap: true,
-      backgroundColor: AppColors.surfaceContainerLowest.withValues(
+      backgroundColor: colorScheme.surfaceContainerLowest.withValues(
         alpha: AppDimensions.opacityAppBar,
       ),
       surfaceTintColor: AppColors.transparent,
       leading: IconButton(
         onPressed: () => context.go(AppRoutes.profilePath),
-        icon: const Icon(LucideIcons.arrowLeft, color: AppColors.onSurface),
+        icon: Icon(LucideIcons.arrowLeft, color: colorScheme.onSurface),
       ),
       title: Text(
         AppStrings.accountInformation,
-        style: AppTextStyles.titleLarge.copyWith(color: AppColors.onSurface),
+        style: AppTextStyles.titleLarge.copyWith(color: colorScheme.onSurface),
       ),
       centerTitle: true,
     );
   }
 
-  Widget _buildProfileCard(UserProfile? profile) {
+  Widget _buildProfileCard(BuildContext context, UserProfile? profile) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return AppCard(
       padding: const EdgeInsets.all(AppDimensions.paddingXXL),
       child: Row(
@@ -143,7 +152,7 @@ class AccountInformationPage extends StatelessWidget {
             imageUrl: profile?.avatarUrl ?? AppAssets.profileAvatarUrl,
             size: AppDimensions.avatarHero,
             border: Border.all(
-              color: AppColors.primaryContainer,
+              color: colorScheme.primaryContainer,
               width: AppDimensions.borderWidth,
             ),
           ),
@@ -155,14 +164,14 @@ class AccountInformationPage extends StatelessWidget {
                 Text(
                   profile?.name ?? AppStrings.welcomeScholar,
                   style: AppTextStyles.titleLarge.copyWith(
-                    color: AppColors.onSurface,
+                    color: colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: AppDimensions.paddingXXS),
                 Text(
                   profile?.email ?? '—',
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.onSurfaceVariant,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
                 const SizedBox(height: AppDimensions.paddingSM),
@@ -172,22 +181,22 @@ class AccountInformationPage extends StatelessWidget {
                     vertical: AppDimensions.chipPaddingVertical,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.secondaryFixed,
+                    color: colorScheme.secondaryContainer,
                     borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
+                      Icon(
                         LucideIcons.checkCircle,
                         size: AppDimensions.iconXS,
-                        color: AppColors.secondary,
+                        color: colorScheme.secondary,
                       ),
                       const SizedBox(width: AppDimensions.paddingXS),
                       Text(
                         AppStrings.verifiedAccount,
                         style: AppTextStyles.labelSmall.copyWith(
-                          color: AppColors.onSecondaryContainer,
+                          color: colorScheme.onSecondaryContainer,
                           letterSpacing: AppDimensions.letterSpacingNarrow,
                         ),
                       ),
@@ -203,11 +212,14 @@ class AccountInformationPage extends StatelessWidget {
   }
 
   Widget _buildInfoTile({
+    required BuildContext context,
     required IconData icon,
     required String label,
     required String value,
     Color? valueColor,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return AppCard(
       padding: const EdgeInsets.symmetric(
         horizontal: AppDimensions.paddingXL,
@@ -217,8 +229,8 @@ class AccountInformationPage extends StatelessWidget {
         children: [
           AppIconCircle(
             icon: icon,
-            backgroundColor: AppColors.surfaceContainerHigh,
-            iconColor: AppColors.outline,
+            backgroundColor: colorScheme.surfaceContainerHigh,
+            iconColor: colorScheme.outline,
           ),
           const SizedBox(width: AppDimensions.paddingLG),
           Expanded(
@@ -228,7 +240,7 @@ class AccountInformationPage extends StatelessWidget {
                 Text(
                   label,
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.outline,
+                    color: colorScheme.outline,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -236,7 +248,7 @@ class AccountInformationPage extends StatelessWidget {
                 Text(
                   value,
                   style: AppTextStyles.labelLarge.copyWith(
-                    color: valueColor ?? AppColors.onSurface,
+                    color: valueColor ?? colorScheme.onSurface,
                   ),
                 ),
               ],
@@ -305,6 +317,8 @@ class AccountInformationPage extends StatelessWidget {
     showDialog<void>(
       context: context,
       builder: (dialogContext) {
+        final colorScheme = Theme.of(dialogContext).colorScheme;
+
         return BlocListener<AuthCubit, AuthState>(
           listener: (context, state) {
             if (state.status == AuthStatus.unauthenticated) {
@@ -323,7 +337,7 @@ class AccountInformationPage extends StatelessWidget {
             }
           },
           child: AlertDialog(
-            backgroundColor: AppColors.surfaceContainerLowest,
+            backgroundColor: colorScheme.surfaceContainerLowest,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
             ),
@@ -342,7 +356,7 @@ class AccountInformationPage extends StatelessWidget {
             content: Text(
               AppStrings.deleteAccountConfirmation,
               style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.onSurfaceVariant,
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
             actions: [
@@ -351,7 +365,7 @@ class AccountInformationPage extends StatelessWidget {
                 child: Text(
                   AppStrings.cancelLabel,
                   style: AppTextStyles.labelLarge.copyWith(
-                    color: AppColors.outline,
+                    color: colorScheme.outline,
                   ),
                 ),
               ),
@@ -381,7 +395,7 @@ class AccountInformationPage extends StatelessWidget {
                             height: AppDimensions.iconSM,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              color: AppColors.white,
+                              color: AppColors.onError,
                             ),
                           )
                         : const Text(AppStrings.deleteAccountButton),

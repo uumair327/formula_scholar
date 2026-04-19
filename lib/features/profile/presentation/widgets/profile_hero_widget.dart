@@ -9,12 +9,13 @@ import '../../domain/domain.dart';
 ///
 /// Matches the React `ProfileHero` component.
 class ProfileHeroWidget extends StatelessWidget {
-
   const ProfileHeroWidget({super.key, required this.profile});
   final UserProfile profile;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppDimensions.paddingHero,
@@ -34,7 +35,7 @@ class ProfileHeroWidget extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: AppColors.white.withValues(
+                    color: colorScheme.onPrimary.withValues(
                       alpha: AppDimensions.opacitySubtle,
                     ),
                     width: AppDimensions.borderWidthThick,
@@ -48,10 +49,10 @@ class ProfileHeroWidget extends StatelessWidget {
                         Container(color: AppColors.primaryFixed),
                     errorWidget: (context, url, error) => Container(
                       color: AppColors.primaryFixed,
-                      child: const Icon(
+                      child: Icon(
                         Icons.person,
                         size: AppDimensions.avatarMD,
-                        color: AppColors.white,
+                        color: colorScheme.onPrimary,
                       ),
                     ),
                   ),
@@ -94,7 +95,7 @@ class ProfileHeroWidget extends StatelessWidget {
                 Text(
                   AppStrings.currentGrade,
                   style: AppTextStyles.labelMedium.copyWith(
-                    color: AppColors.white.withValues(
+                    color: colorScheme.onPrimary.withValues(
                       alpha: AppDimensions.opacityHigh,
                     ),
                     letterSpacing: AppDimensions.letterSpacingNormal,
@@ -104,7 +105,7 @@ class ProfileHeroWidget extends StatelessWidget {
                 Text(
                   profile.name,
                   style: AppTextStyles.headlineLarge.copyWith(
-                    color: AppColors.white,
+                    color: colorScheme.onPrimary,
                   ),
                 ),
                 if (profile.email.isNotEmpty) ...[
@@ -112,7 +113,7 @@ class ProfileHeroWidget extends StatelessWidget {
                   Text(
                     profile.email,
                     style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.white.withValues(
+                      color: colorScheme.onPrimary.withValues(
                         alpha: AppDimensions.opacityHigh,
                       ),
                     ),
@@ -126,12 +127,12 @@ class ProfileHeroWidget extends StatelessWidget {
                     vertical: AppDimensions.chipPaddingVertical,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.white.withValues(
+                    color: colorScheme.onPrimary.withValues(
                       alpha: AppDimensions.opacityFaint,
                     ),
                     borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
                     border: Border.all(
-                      color: AppColors.white.withValues(
+                      color: colorScheme.onPrimary.withValues(
                         alpha: AppDimensions.opacityFaint,
                       ),
                     ),
@@ -142,7 +143,7 @@ class ProfileHeroWidget extends StatelessWidget {
                       Icon(
                         Icons.school_outlined,
                         size: AppDimensions.iconSM,
-                        color: AppColors.white.withValues(
+                        color: colorScheme.onPrimary.withValues(
                           alpha: AppDimensions.opacityNearOpaque,
                         ),
                       ),
@@ -150,7 +151,7 @@ class ProfileHeroWidget extends StatelessWidget {
                       Text(
                         profile.curriculumLabel,
                         style: AppTextStyles.labelLarge.copyWith(
-                          color: AppColors.white,
+                          color: colorScheme.onPrimary,
                         ),
                       ),
                     ],

@@ -46,7 +46,10 @@ class CurriculumCubit extends Cubit<CurriculumState> {
       'Refreshing curriculum from repository',
       tag: AppLogTags.curriculumCubit,
     );
-    emit(state.copyWith(isLoading: true));
+    final loadingState = state.copyWith(isLoading: true);
+    if (loadingState != state) {
+      emit(loadingState);
+    }
 
     try {
       final curriculum = await _loadCurriculum();
@@ -130,18 +133,22 @@ class CurriculumCubit extends Cubit<CurriculumState> {
       'Applying curriculum locally: ${curriculum.boardId}/${curriculum.gradeId}',
       tag: AppLogTags.curriculumCubit,
     );
-    emit(
-      state.copyWith(
-        curriculum: curriculum,
-        isLoading: false,
-        isInitialized: true,
-      ),
+    final nextState = state.copyWith(
+      curriculum: curriculum,
+      isLoading: false,
+      isInitialized: true,
     );
+    if (nextState != state) {
+      emit(nextState);
+    }
   }
 
   void clear() {
     AppLogger.debug('Curriculum cleared', tag: AppLogTags.curriculumCubit);
-    emit(const CurriculumState(isLoading: false, isInitialized: true));
+    const clearedState = CurriculumState(isLoading: false, isInitialized: true);
+    if (state != clearedState) {
+      emit(clearedState);
+    }
   }
 
   void _syncCurriculumFromStream(SelectedCurriculum? curriculum) {
@@ -149,13 +156,21 @@ class CurriculumCubit extends Cubit<CurriculumState> {
       'Curriculum sync event: ${curriculum?.boardName ?? 'none'}',
       tag: AppLogTags.curriculumCubit,
     );
-    emit(
-      state.copyWith(
-        curriculum: curriculum,
-        isLoading: false,
-        isInitialized: true,
-      ),
+    final nextState = state.copyWith(
+      curriculum: curriculum,
+      isLoading: false,
+      isInitialized: true,
     );
+
+    if (nextState == state) {
+      AppLogger.debug(
+        'Curriculum sync received duplicate state; skipping emit',
+        tag: AppLogTags.curriculumCubit,
+      );
+      return;
+    }
+
+    emit(nextState);
   }
 
   @override

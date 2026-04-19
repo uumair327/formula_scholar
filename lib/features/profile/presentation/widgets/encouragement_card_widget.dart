@@ -35,7 +35,7 @@ class EncouragementCardWidget extends StatelessWidget {
             child: const Icon(
               Icons.psychology_outlined,
               size: AppDimensions.iconLG,
-              color: AppColors.white,
+              color: AppColors.onTertiaryContainer,
             ),
           ),
           const SizedBox(width: AppDimensions.paddingLG),

@@ -30,6 +30,7 @@ class ChaptersPage extends StatefulWidget {
 
 class _ChaptersPageState extends State<ChaptersPage> {
   bool _isLoadingAvailableSubjects = false;
+  bool _isAutoSelectScheduled = false;
 
   @override
   void initState() {
@@ -37,27 +38,38 @@ class _ChaptersPageState extends State<ChaptersPage> {
     // Trigger initial load if a subject is already selected (e.g. hydrated).
     // BlocListener only fires on *changes*, not on existing state.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      unawaited(_ensureChaptersLoaded());
+      unawaited(_ensureChaptersLoaded(allowLoadForExistingSelection: true));
     });
   }
 
   /// If a subject is already selected, load its chapters.
   /// If no subject is selected but available subjects exist, auto-select
   /// the first one so the user always sees content on the Chapters tab.
-  Future<void> _ensureChaptersLoaded() async {
+  Future<void> _ensureChaptersLoaded({
+    required bool allowLoadForExistingSelection,
+  }) async {
     final selectionCubit = context.read<SubjectSelectionCubit>();
     final subjectState = selectionCubit.state;
-    final curriculumKey =
-        context.read<CurriculumCubit>().state.curriculum?.curriculumKey ??
-        AppStrings.unknownCurriculum;
+    final curriculumKey = context
+        .read<CurriculumCubit>()
+        .state
+        .curriculum
+        ?.curriculumKey;
 
-    if (subjectState.hasSelection) {
+    if (curriculumKey == null || curriculumKey.isEmpty) {
+      return;
+    }
+
+    if (subjectState.hasSelection && allowLoadForExistingSelection) {
       unawaited(
         context.read<ChaptersCubit>().loadChapters(
           subjectState.subject!.id,
           curriculumKey: curriculumKey,
         ),
       );
+    } else if (subjectState.hasSelection) {
+      // Selection already exists and listener-driven loading will handle it.
+      return;
     } else if (subjectState.availableSubjects.isNotEmpty) {
       final first = subjectState.availableSubjects.first;
       selectionCubit.selectSubject(
@@ -130,11 +142,21 @@ class _ChaptersPageState extends State<ChaptersPage> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<SubjectSelectionCubit, SubjectSelectionState>(
+      listenWhen: (prev, curr) {
+        final prevId = prev.subject?.id;
+        final currId = curr.subject?.id;
+        return prevId != currId && currId != null;
+      },
       listener: (context, subjectState) {
         if (subjectState.hasSelection) {
-          final curriculumKey =
-              context.read<CurriculumCubit>().state.curriculum?.curriculumKey ??
-              AppStrings.unknownCurriculum;
+          final curriculumKey = context
+              .read<CurriculumCubit>()
+              .state
+              .curriculum
+              ?.curriculumKey;
+          if (curriculumKey == null || curriculumKey.isEmpty) {
+            return;
+          }
           unawaited(
             context.read<ChaptersCubit>().loadChapters(
               subjectState.subject!.id,
@@ -150,9 +172,14 @@ class _ChaptersPageState extends State<ChaptersPage> {
           // If no subject selected yet but subjects are available,
           // auto-select after they arrive (e.g. from dashboard loading).
           if (!subjectState.hasSelection &&
-              subjectState.availableSubjects.isNotEmpty) {
+              subjectState.availableSubjects.isNotEmpty &&
+              !_isAutoSelectScheduled) {
+            _isAutoSelectScheduled = true;
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              unawaited(_ensureChaptersLoaded());
+              _isAutoSelectScheduled = false;
+              unawaited(
+                _ensureChaptersLoaded(allowLoadForExistingSelection: false),
+              );
             });
           }
 
@@ -192,22 +219,14 @@ class _ChaptersPageState extends State<ChaptersPage> {
                           child: AppErrorState(
                             message: state.errorMessage,
                             onRetry: () =>
-                                context.read<ChaptersCubit>().loadChapters(
-                                  subject!.id,
-                                  curriculumKey:
-                                      context
-                                          .read<CurriculumCubit>()
-                                          .state
-                                          .curriculum
-                                          ?.curriculumKey ??
-                                      AppStrings.unknownCurriculum,
-                                  forceReload: true,
-                                ),
+                                _retryLoadChapters(context, subject!.id),
                           ),
                         );
                       }
 
                       if (state.chapters.isEmpty) {
+                        final colorScheme = Theme.of(context).colorScheme;
+
                         return SliverFillRemaining(
                           hasScrollBody: false,
                           child: Padding(
@@ -245,7 +264,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                       AppStrings.chaptersNoContentDescription,
                                       textAlign: TextAlign.center,
                                       style: AppTextStyles.bodyMedium.copyWith(
-                                        color: AppColors.onSurfaceVariant,
+                                        color: colorScheme.onSurfaceVariant,
                                       ),
                                     ),
                                     const SizedBox(
@@ -279,7 +298,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                         sliver: SliverList(
                           delegate: SliverChildListDelegate([
                             const SizedBox(height: AppDimensions.paddingLG),
-                            _buildHeroSection(subjectState.subject!),
+                            _buildHeroSection(context, subjectState.subject!),
                             const SizedBox(height: AppDimensions.paddingXXL),
                             _buildChapterCards(state, subjectState.subject!.id),
                             const SizedBox(
@@ -304,7 +323,10 @@ class _ChaptersPageState extends State<ChaptersPage> {
                       shell.goBranch(2);
                     },
                     backgroundColor: AppColors.primary,
-                    child: const Icon(LucideIcons.play, color: AppColors.white),
+                    child: Icon(
+                      LucideIcons.play,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
                   )
                 : null,
           );
@@ -319,11 +341,13 @@ class _ChaptersPageState extends State<ChaptersPage> {
     BuildContext context,
     SubjectSelectionState subjectState,
   ) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     final subject = subjectState.subject;
     return SliverAppBar(
       floating: true,
       snap: true,
-      backgroundColor: AppColors.surfaceContainerLowest.withValues(
+      backgroundColor: colorScheme.surfaceContainerLowest.withValues(
         alpha: AppDimensions.opacityAppBar,
       ),
       surfaceTintColor: AppColors.transparent,
@@ -342,14 +366,14 @@ class _ChaptersPageState extends State<ChaptersPage> {
                 Text(
                   AppStrings.breadcrumbHome,
                   style: AppTextStyles.overline.copyWith(
-                    color: AppColors.outline,
+                    color: colorScheme.outline,
                     fontSize: AppDimensions.fontSizeXS,
                   ),
                 ),
-                const Icon(
+                Icon(
                   LucideIcons.chevronRight,
                   size: AppDimensions.iconXS,
-                  color: AppColors.slate400,
+                  color: colorScheme.outlineVariant,
                 ),
                 Text(
                   subject.name.toUpperCase(),
@@ -439,7 +463,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
               onTap: () => context.push(AppRoutes.profilePath),
               child: AppAvatar(
                 imageUrl: photoUrl,
-                placeholderColor: AppColors.surfaceContainerHighest,
+                placeholderColor: colorScheme.surfaceContainerHighest,
               ),
             );
           },
@@ -452,6 +476,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
   // ──────────────────────── Subject Chips ────────────────────────
 
   Widget _buildSubjectChips(BuildContext context, SubjectSelectionState state) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     if (state.availableSubjects.isEmpty) {
       return const SliverToBoxAdapter(child: SizedBox.shrink());
     }
@@ -490,12 +516,12 @@ class _ChaptersPageState extends State<ChaptersPage> {
                 decoration: BoxDecoration(
                   color: isSelected
                       ? AppColors.primary
-                      : AppColors.surfaceContainerLow,
+                      : colorScheme.surfaceContainerLow,
                   borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
                   border: Border.all(
                     color: isSelected
                         ? AppColors.primary
-                        : AppColors.surfaceContainerHigh,
+                        : colorScheme.surfaceContainerHigh,
                   ),
                   boxShadow: isSelected ? const [AppShadows.subtle] : null,
                 ),
@@ -503,8 +529,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
                   subject.name,
                   style: AppTextStyles.labelLarge.copyWith(
                     color: isSelected
-                        ? AppColors.white
-                        : AppColors.onSurfaceVariant,
+                        ? colorScheme.onPrimary
+                        : colorScheme.onSurfaceVariant,
                     fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                   ),
                 ),
@@ -518,7 +544,9 @@ class _ChaptersPageState extends State<ChaptersPage> {
 
   // ──────────────────────── Hero Section ────────────────────────
 
-  Widget _buildHeroSection(SelectedSubject subject) {
+  Widget _buildHeroSection(BuildContext context, SelectedSubject subject) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingHero),
       decoration: const SignatureGlowDecoration(),
@@ -529,19 +557,19 @@ class _ChaptersPageState extends State<ChaptersPage> {
             children: [
               AppInfoChip(
                 label: subject.name.toUpperCase(),
-                backgroundColor: AppColors.white.withValues(
+                backgroundColor: colorScheme.onPrimary.withValues(
                   alpha: AppDimensions.opacitySubtle,
                 ),
-                textColor: AppColors.white,
+                textColor: colorScheme.onPrimary,
                 textStyle: AppTextStyles.overline.copyWith(
-                  color: AppColors.white,
+                  color: colorScheme.onPrimary,
                 ),
               ),
               const SizedBox(height: AppDimensions.paddingLG),
               Text(
                 subject.name,
                 style: AppTextStyles.displayLarge.copyWith(
-                  color: AppColors.white,
+                  color: colorScheme.onPrimary,
                 ),
               ),
               const SizedBox(height: AppDimensions.paddingSM),
@@ -550,7 +578,9 @@ class _ChaptersPageState extends State<ChaptersPage> {
                     ? '${subject.subtitle}. ${subject.description}'
                     : subject.description,
                 style: AppTextStyles.bodySmall.copyWith(
-                  color: AppColors.blue50,
+                  color: colorScheme.onPrimary.withValues(
+                    alpha: AppDimensions.opacityHigh,
+                  ),
                   height: AppDimensions.lineHeightRelaxed,
                 ),
               ),
@@ -563,10 +593,10 @@ class _ChaptersPageState extends State<ChaptersPage> {
               opacity: AppDimensions.opacityFaint,
               child: Transform.rotate(
                 angle: AppDimensions.rotationSubtle,
-                child: const Icon(
+                child: Icon(
                   LucideIcons.compass,
                   size: AppDimensions.iconDecorative,
-                  color: AppColors.white,
+                  color: colorScheme.onPrimary,
                 ),
               ),
             ),
@@ -601,6 +631,25 @@ class _ChaptersPageState extends State<ChaptersPage> {
           );
         }),
       ],
+    );
+  }
+
+  void _retryLoadChapters(BuildContext context, String subjectId) {
+    final curriculumKey = context
+        .read<CurriculumCubit>()
+        .state
+        .curriculum
+        ?.curriculumKey;
+    if (curriculumKey == null || curriculumKey.isEmpty) {
+      return;
+    }
+
+    unawaited(
+      context.read<ChaptersCubit>().loadChapters(
+        subjectId,
+        curriculumKey: curriculumKey,
+        forceReload: true,
+      ),
     );
   }
 }

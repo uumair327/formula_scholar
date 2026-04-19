@@ -8,7 +8,6 @@ import '../../../../core/core.dart';
 /// to the parent (DashboardCubit), following the lift-state-up pattern
 /// for predictable state management.
 class FilterChipGroup extends StatelessWidget {
-
   const FilterChipGroup({
     super.key,
     required this.icon,
@@ -27,15 +26,17 @@ class FilterChipGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppDimensions.paddingMD,
         vertical: AppDimensions.paddingXXS,
       ),
       decoration: BoxDecoration(
-        color: AppColors.white.withValues(alpha: AppDimensions.opacityMedium),
+        color: colorScheme.surface.withValues(alpha: AppDimensions.opacityHigh),
         borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
-        border: Border.all(color: AppColors.surfaceContainerHigh),
+        border: Border.all(color: colorScheme.surfaceContainerHigh),
         boxShadow: const [AppShadows.subtle],
       ),
       child: Row(
@@ -72,8 +73,8 @@ class FilterChipGroup extends StatelessWidget {
                     chips[index],
                     style: AppTextStyles.bodySmall.copyWith(
                       color: isActive
-                          ? AppColors.white
-                          : AppColors.onSurfaceVariant,
+                          ? colorScheme.onPrimary
+                          : colorScheme.onSurfaceVariant,
                       fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
                     ),
                   ),

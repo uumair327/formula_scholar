@@ -8,22 +8,22 @@ import '../../core/core.dart';
 /// ghost shadow, rounded corners, and optional padding. Replaces
 /// inline Container + ghostShadowDecoration usage.
 class AppCard extends StatelessWidget {
-
   const AppCard({
     super.key,
     required this.child,
-    this.color = AppColors.surfaceContainerLowest,
+    this.color,
     this.borderRadius = AppDimensions.radiusLG,
     this.padding = const EdgeInsets.all(AppDimensions.paddingXL),
     this.boxShadow = const [AppShadows.ghost],
     this.border,
     this.clipBehavior = Clip.none,
   });
+
   /// Child widget rendered inside the card.
   final Widget child;
 
   /// Card background colour.
-  final Color color;
+  final Color? color;
 
   /// Corner radius.
   final double borderRadius;
@@ -42,11 +42,14 @@ class AppCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cardColor =
+        color ?? Theme.of(context).cardTheme.color ?? AppColors.surface;
+
     return Container(
       padding: padding,
       clipBehavior: clipBehavior,
       decoration: BoxDecoration(
-        color: color,
+        color: cardColor,
         borderRadius: BorderRadius.circular(borderRadius),
         border: border,
         boxShadow: boxShadow,
@@ -61,7 +64,6 @@ class AppCard extends StatelessWidget {
 /// Identical to [SectionHeader] but with a more flexible API: supports
 /// custom title style and leading icon.
 class AppSectionTitle extends StatelessWidget {
-
   const AppSectionTitle({
     super.key,
     required this.title,
@@ -70,6 +72,7 @@ class AppSectionTitle extends StatelessWidget {
     this.leadingIcon,
     this.leadingIconColor = AppColors.primary,
   });
+
   /// Section title text.
   final String title;
 
@@ -87,6 +90,8 @@ class AppSectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingXS),
       child: Row(
@@ -116,7 +121,7 @@ class AppSectionTitle extends StatelessWidget {
               child: Text(
                 actionLabel!,
                 style: AppTextStyles.labelLarge.copyWith(
-                  color: AppColors.primary,
+                  color: colorScheme.primary,
                 ),
               ),
             ),

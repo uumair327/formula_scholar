@@ -8,7 +8,6 @@ import '../../core/core.dart';
 ///
 /// Matches the React app's `<BottomNav>` component — 5 tabs.
 class MainShellPage extends StatelessWidget {
-
   const MainShellPage({super.key, required this.navigationShell});
   final StatefulNavigationShell navigationShell;
 
@@ -34,16 +33,17 @@ class MainShellPage extends StatelessWidget {
 }
 
 class _BottomNavBar extends StatelessWidget {
-
   const _BottomNavBar({required this.currentIndex, required this.onTap});
   final int currentIndex;
   final ValueChanged<int> onTap;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surface.withValues(
+        color: colorScheme.surface.withValues(
           alpha: AppDimensions.opacityNearOpaque,
         ),
         borderRadius: const BorderRadius.vertical(
@@ -99,7 +99,6 @@ class _BottomNavBar extends StatelessWidget {
 }
 
 class _NavItem extends StatelessWidget {
-
   const _NavItem({
     required this.icon,
     required this.label,
@@ -113,6 +112,8 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -126,7 +127,9 @@ class _NavItem extends StatelessWidget {
           vertical: AppDimensions.paddingSM,
         ),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryFixed : AppColors.transparent,
+          color: isSelected
+              ? colorScheme.primaryContainer
+              : AppColors.transparent,
           borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
         ),
         child: Column(
@@ -136,16 +139,16 @@ class _NavItem extends StatelessWidget {
               icon,
               size: AppDimensions.iconDefault,
               color: isSelected
-                  ? AppColors.onPrimaryFixedVariant
-                  : AppColors.outline,
+                  ? colorScheme.onPrimaryContainer
+                  : colorScheme.outline,
             ),
             const SizedBox(height: AppDimensions.paddingXXS),
             Text(
               label,
               style: AppTextStyles.labelSmall.copyWith(
                 color: isSelected
-                    ? AppColors.onPrimaryFixedVariant
-                    : AppColors.outline,
+                    ? colorScheme.onPrimaryContainer
+                    : colorScheme.outline,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 fontSize: AppDimensions.fontSizeXS,
                 letterSpacing: AppDimensions.letterSpacingNarrow,

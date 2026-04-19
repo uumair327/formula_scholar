@@ -7,7 +7,6 @@ import '../../domain/domain.dart';
 
 /// Bottom sheet that explains available boards and lets the user pick one.
 class OnboardingBoardGuideSheet extends StatelessWidget {
-
   const OnboardingBoardGuideSheet({
     super.key,
     required this.boards,
@@ -38,10 +37,12 @@ class OnboardingBoardGuideSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerLowest,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(AppDimensions.radiusXXL),
           topRight: Radius.circular(AppDimensions.radiusXXL),
         ),
@@ -62,7 +63,7 @@ class OnboardingBoardGuideSheet extends StatelessWidget {
                   width: AppDimensions.avatarMD,
                   height: AppDimensions.borderWidthThick,
                   decoration: BoxDecoration(
-                    color: AppColors.surfaceContainerHigh,
+                    color: colorScheme.surfaceContainerHigh,
                     borderRadius: BorderRadius.circular(
                       AppDimensions.radiusXXL,
                     ),
@@ -72,11 +73,11 @@ class OnboardingBoardGuideSheet extends StatelessWidget {
               const SizedBox(height: AppDimensions.paddingXXL),
               Row(
                 children: [
-                  const AppIconCircle(
+                  AppIconCircle(
                     icon: LucideIcons.info,
                     size: AppDimensions.avatarHero,
-                    backgroundColor: AppColors.primaryFixed,
-                    iconColor: AppColors.primary,
+                    backgroundColor: colorScheme.primaryContainer,
+                    iconColor: colorScheme.primary,
                     iconSize: AppDimensions.iconXL,
                   ),
                   const SizedBox(width: AppDimensions.paddingLG),
@@ -87,7 +88,7 @@ class OnboardingBoardGuideSheet extends StatelessWidget {
                         Text(
                           AppStrings.step2LearnMore,
                           style: AppTextStyles.headlineSmall.copyWith(
-                            color: AppColors.onSurface,
+                            color: colorScheme.onSurface,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
@@ -96,7 +97,7 @@ class OnboardingBoardGuideSheet extends StatelessWidget {
                           'Choose the board that matches your school curriculum. '
                           'You can change this later from onboarding.',
                           style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.onSurfaceVariant,
+                            color: colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -110,7 +111,7 @@ class OnboardingBoardGuideSheet extends StatelessWidget {
                   child: Text(
                     'No boards are available for the selected region yet.',
                     style: AppTextStyles.bodyMedium.copyWith(
-                      color: AppColors.onSurfaceVariant,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ),
                 )
@@ -138,7 +139,7 @@ class OnboardingBoardGuideSheet extends StatelessWidget {
               Text(
                 'Tip: national boards are ideal when your school follows a country-wide syllabus, while state boards are best when your school uses a regional curriculum.',
                 style: AppTextStyles.bodySmall.copyWith(
-                  color: AppColors.onSurfaceVariant,
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: AppDimensions.paddingMD),
@@ -151,7 +152,6 @@ class OnboardingBoardGuideSheet extends StatelessWidget {
 }
 
 class _BoardGuideCard extends StatelessWidget {
-
   const _BoardGuideCard({
     required this.board,
     required this.isSelected,
@@ -163,6 +163,7 @@ class _BoardGuideCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final accent = _accentColor(board.type);
     return Material(
       color: AppColors.transparent,
@@ -172,9 +173,9 @@ class _BoardGuideCard extends StatelessWidget {
         child: AppCard(
           color: isSelected
               ? accent.withValues(alpha: AppDimensions.opacityLight)
-              : AppColors.surfaceContainerLowest,
+              : colorScheme.surfaceContainerLowest,
           border: Border.all(
-            color: isSelected ? accent : AppColors.surfaceContainerHigh,
+            color: isSelected ? accent : colorScheme.surfaceContainerHigh,
           ),
           child: Row(
             children: [
@@ -200,7 +201,7 @@ class _BoardGuideCard extends StatelessWidget {
                     Text(
                       board.description,
                       style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.onSurfaceVariant,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                     const SizedBox(height: AppDimensions.paddingXS),
@@ -219,7 +220,7 @@ class _BoardGuideCard extends StatelessWidget {
                 isSelected
                     ? LucideIcons.checkCircle2
                     : LucideIcons.chevronRight,
-                color: isSelected ? accent : AppColors.outlineVariant,
+                color: isSelected ? accent : colorScheme.outlineVariant,
                 size: AppDimensions.iconMD,
               ),
             ],

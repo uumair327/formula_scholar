@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../constants/app_dimensions.dart';
-import 'app_colors.dart';
 
 /// Typography system using Plus Jakarta Sans,
 /// matching the original React app's font styles.
 abstract final class AppTextStyles {
-  static TextStyle get _baseStyle =>
-      GoogleFonts.plusJakartaSans(color: AppColors.onSurface);
+  static TextStyle get _baseStyle => GoogleFonts.plusJakartaSans();
 
   // Display
   static TextStyle get displayLarge => _baseStyle.copyWith(

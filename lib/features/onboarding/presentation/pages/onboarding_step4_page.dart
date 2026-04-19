@@ -100,7 +100,6 @@ class _OnboardingStep4PageState extends State<OnboardingStep4Page> {
 }
 
 class _GoalCard extends StatelessWidget {
-
   const _GoalCard({
     required this.goal,
     required this.isSelected,
@@ -112,13 +111,15 @@ class _GoalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: AppDurations.animationFast,
         padding: const EdgeInsets.all(AppDimensions.paddingLG),
         decoration: BoxDecoration(
-          color: AppColors.surfaceContainerLowest,
+          color: colorScheme.surfaceContainerLowest,
           borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
           border: Border.all(
             color: isSelected
@@ -163,7 +164,7 @@ class _GoalCard extends StatelessWidget {
                   Text(
                     goal.subtitle,
                     style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -191,7 +192,6 @@ class _GoalCard extends StatelessWidget {
 }
 
 class _GoalOption {
-
   const _GoalOption({
     required this.id,
     required this.icon,

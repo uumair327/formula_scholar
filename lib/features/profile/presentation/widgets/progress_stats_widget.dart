@@ -9,7 +9,6 @@ import '../../domain/domain.dart';
 ///
 /// Matches the React `ProgressStats` component.
 class ProgressStatsWidget extends StatelessWidget {
-
   const ProgressStatsWidget({
     super.key,
     required this.stats,
@@ -53,7 +52,7 @@ class ProgressStatsWidget extends StatelessWidget {
                       padding: EdgeInsets.only(
                         left: entry.key > 0 ? AppDimensions.paddingMD : 0,
                       ),
-                      child: _buildStatCard(entry.value, entry.key),
+                      child: _buildStatCard(context, entry.value, entry.key),
                     ),
                   );
                 }).toList(),
@@ -64,14 +63,14 @@ class ProgressStatsWidget extends StatelessWidget {
                 Row(
                   children: [
                     if (stats.isNotEmpty)
-                      Expanded(child: _buildStatCard(stats[0], 0)),
+                      Expanded(child: _buildStatCard(context, stats[0], 0)),
                     const SizedBox(width: AppDimensions.paddingMD),
                     if (stats.length > 1)
-                      Expanded(child: _buildStatCard(stats[1], 1)),
+                      Expanded(child: _buildStatCard(context, stats[1], 1)),
                   ],
                 ),
                 const SizedBox(height: AppDimensions.paddingMD),
-                if (stats.length > 2) _buildStatCard(stats[2], 2),
+                if (stats.length > 2) _buildStatCard(context, stats[2], 2),
               ],
             );
           },
@@ -80,7 +79,8 @@ class ProgressStatsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(ProfileStat stat, int index) {
+  Widget _buildStatCard(BuildContext context, ProfileStat stat, int index) {
+    final colorScheme = Theme.of(context).colorScheme;
     final iconData = _getStatIcon(stat.iconName);
     final iconBgColor = _getIconBgColor(index);
     final iconColor = _getIconColor(index);
@@ -89,7 +89,7 @@ class ProgressStatsWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingXL),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
         border: hasBorder
             ? const Border(
@@ -122,7 +122,7 @@ class ProgressStatsWidget extends StatelessWidget {
           Text(
             stat.label,
             style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.outline,
+              color: colorScheme.outline,
               fontWeight: FontWeight.w600,
             ),
           ),

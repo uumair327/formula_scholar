@@ -25,6 +25,8 @@ class FormulasPage extends StatelessWidget {
           prev.formulas != curr.formulas ||
           prev.isChapterSaved != curr.isChapterSaved,
       builder: (context, state) {
+        final colorScheme = Theme.of(context).colorScheme;
+
         if (state.status == FormulasStatus.loading ||
             state.status == FormulasStatus.initial) {
           return const Scaffold(body: AppLoadingState());
@@ -54,7 +56,7 @@ class FormulasPage extends StatelessWidget {
         }
 
         return Scaffold(
-          backgroundColor: AppColors.surfaceContainerLowest,
+          backgroundColor: colorScheme.surfaceContainerLowest,
           body: CustomScrollView(
             slivers: [
               _buildAppBar(context, state),
@@ -65,7 +67,7 @@ class FormulasPage extends StatelessWidget {
                 sliver: SliverList(
                   delegate: SliverChildListDelegate([
                     const SizedBox(height: AppDimensions.paddingLG),
-                    _buildProgressHeader(state),
+                    _buildProgressHeader(context, state),
                     const SizedBox(height: AppDimensions.paddingXXL),
                     ...state.formulas.asMap().entries.map(
                       (entry) => Padding(
@@ -92,16 +94,18 @@ class FormulasPage extends StatelessWidget {
   // ──────────────────────── App Bar ─────────────────────────────
 
   SliverAppBar _buildAppBar(BuildContext context, FormulasState state) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return SliverAppBar(
       floating: true,
       snap: true,
-      backgroundColor: AppColors.surfaceContainerLowest.withValues(
+      backgroundColor: colorScheme.surfaceContainerLowest.withValues(
         alpha: AppDimensions.opacityAppBar,
       ),
       surfaceTintColor: AppColors.transparent,
       leading: IconButton(
         onPressed: () => context.pop(),
-        icon: const Icon(LucideIcons.arrowLeft, color: AppColors.onSurface),
+        icon: Icon(LucideIcons.arrowLeft, color: colorScheme.onSurface),
       ),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,14 +121,14 @@ class FormulasPage extends StatelessWidget {
               Text(
                 AppStrings.chapterBreadcrumb,
                 style: AppTextStyles.overline.copyWith(
-                  color: AppColors.outline,
+                  color: colorScheme.outline,
                   fontSize: AppDimensions.fontSizeXS,
                 ),
               ),
-              const Icon(
+              Icon(
                 LucideIcons.chevronRight,
                 size: AppDimensions.iconXS,
-                color: AppColors.slate400,
+                color: colorScheme.outlineVariant,
               ),
               Text(
                 AppStrings.formulasBreadcrumb,
@@ -146,13 +150,15 @@ class FormulasPage extends StatelessWidget {
                 final subjectName =
                     context.read<SubjectSelectionCubit>().state.subject?.name ??
                     AppStrings.unknownSubject;
-                final curriculumKey =
-                    context
-                        .read<CurriculumCubit>()
-                        .state
-                        .curriculum
-                        ?.curriculumKey ??
-                    AppStrings.unknownCurriculum;
+                final curriculumKey = context
+                    .read<CurriculumCubit>()
+                    .state
+                    .curriculum
+                    ?.curriculumKey;
+
+                if (curriculumKey == null || curriculumKey.isEmpty) {
+                  return;
+                }
 
                 context.read<FormulasCubit>().toggleChapterBookmark(
                   state.chapterName ?? AppStrings.chapterLabel,
@@ -182,7 +188,9 @@ class FormulasPage extends StatelessWidget {
 
   // ──────────────────────── Progress Header ─────────────────────
 
-  Widget _buildProgressHeader(FormulasState state) {
+  Widget _buildProgressHeader(BuildContext context, FormulasState state) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingXXL),
       decoration: const SignatureGlowDecoration(),
@@ -198,7 +206,7 @@ class FormulasPage extends StatelessWidget {
                   Text(
                     state.chapterName ?? AppStrings.chapterLabel,
                     style: AppTextStyles.headlineMedium.copyWith(
-                      color: AppColors.white,
+                      color: colorScheme.onPrimary,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
@@ -209,7 +217,9 @@ class FormulasPage extends StatelessWidget {
                       state.totalCount,
                     ),
                     style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.blue50,
+                      color: colorScheme.onPrimary.withValues(
+                        alpha: AppDimensions.opacityHigh,
+                      ),
                     ),
                   ),
                 ],
@@ -220,7 +230,7 @@ class FormulasPage extends StatelessWidget {
                   vertical: AppDimensions.paddingSM,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.white.withValues(
+                  color: colorScheme.onPrimary.withValues(
                     alpha: AppDimensions.opacitySubtle,
                   ),
                   borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
@@ -228,7 +238,7 @@ class FormulasPage extends StatelessWidget {
                 child: Text(
                   '${state.progressPercent.toInt()}%',
                   style: AppTextStyles.titleLarge.copyWith(
-                    color: AppColors.white,
+                    color: colorScheme.onPrimary,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -238,8 +248,8 @@ class FormulasPage extends StatelessWidget {
           const SizedBox(height: AppDimensions.paddingLG),
           ProgressBar(
             percentage: state.progressPercent,
-            barColor: AppColors.white,
-            backgroundColor: AppColors.white.withValues(
+            barColor: colorScheme.onPrimary,
+            backgroundColor: colorScheme.onPrimary.withValues(
               alpha: AppDimensions.opacitySubtle,
             ),
             height: AppDimensions.progressBarSM,
@@ -263,6 +273,8 @@ class _FormulaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -280,10 +292,10 @@ class _FormulaCard extends StatelessWidget {
                   size: AppDimensions.avatarLG,
                   backgroundColor: formula.isMastered
                       ? AppColors.secondaryFixed
-                      : AppColors.surfaceContainerHighest,
+                      : colorScheme.surfaceContainerHighest,
                   iconColor: formula.isMastered
                       ? AppColors.secondary
-                      : AppColors.onSurfaceVariant,
+                      : colorScheme.onSurfaceVariant,
                   iconSize: AppDimensions.iconLG,
                   borderRadius: AppDimensions.radiusMD,
                 ),
@@ -319,13 +331,15 @@ class _FormulaCard extends StatelessWidget {
                           .subject
                           ?.name ??
                       AppStrings.unknownSubject;
-                  final curriculumKey =
-                      context
-                          .read<CurriculumCubit>()
-                          .state
-                          .curriculum
-                          ?.curriculumKey ??
-                      AppStrings.unknownCurriculum;
+                  final curriculumKey = context
+                      .read<CurriculumCubit>()
+                      .state
+                      .curriculum
+                      ?.curriculumKey;
+
+                  if (curriculumKey == null || curriculumKey.isEmpty) {
+                    return;
+                  }
 
                   context.read<FormulasCubit>().toggleBookmark(
                     formula,
@@ -338,7 +352,7 @@ class _FormulaCard extends StatelessWidget {
                   size: AppDimensions.iconMD,
                   color: formula.isBookmarked
                       ? AppColors.primary
-                      : AppColors.outline,
+                      : colorScheme.outline,
                 ),
               ),
             ],
@@ -349,10 +363,10 @@ class _FormulaCard extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(AppDimensions.paddingXL),
             decoration: BoxDecoration(
-              color: AppColors.surfaceContainerLow,
+              color: colorScheme.surfaceContainerLow,
               borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
               border: Border.all(
-                color: AppColors.surfaceContainerHigh,
+                color: colorScheme.surfaceContainerHigh,
                 width: AppDimensions.borderWidth,
               ),
             ),
@@ -360,7 +374,7 @@ class _FormulaCard extends StatelessWidget {
               child: Math.tex(
                 formula.latex,
                 textStyle: AppTextStyles.headlineSmall.copyWith(
-                  color: AppColors.onSurface,
+                  color: colorScheme.onSurface,
                 ),
               ),
             ),
@@ -369,7 +383,7 @@ class _FormulaCard extends StatelessWidget {
           Text(
             formula.description,
             style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.onSurfaceVariant,
+              color: colorScheme.onSurfaceVariant,
               height: AppDimensions.lineHeightRelaxed,
             ),
           ),

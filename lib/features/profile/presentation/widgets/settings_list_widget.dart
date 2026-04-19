@@ -10,7 +10,6 @@ import '../../domain/domain.dart';
 /// Maps domain `iconName` strings to Flutter `IconData` in the presentation layer,
 /// keeping the domain layer free of framework dependencies.
 class SettingsListWidget extends StatelessWidget {
-
   const SettingsListWidget({
     super.key,
     required this.items,
@@ -38,6 +37,8 @@ class SettingsListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -45,7 +46,7 @@ class SettingsListWidget extends StatelessWidget {
         const SizedBox(height: AppDimensions.paddingLG),
         Container(
           decoration: BoxDecoration(
-            color: AppColors.surfaceContainerLowest,
+            color: colorScheme.surfaceContainerLowest,
             borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
             boxShadow: const [AppShadows.ghost],
           ),
@@ -59,11 +60,11 @@ class SettingsListWidget extends StatelessWidget {
               return Column(
                 children: [
                   if (showTopDivider)
-                    const Divider(
+                    Divider(
                       height: AppDimensions.dividerHeight,
-                      color: AppColors.surfaceContainer,
+                      color: colorScheme.surfaceContainer,
                     ),
-                  _buildSettingsItem(item),
+                  _buildSettingsItem(context, item),
                 ],
               );
             }).toList(),
@@ -80,17 +81,18 @@ class SettingsListWidget extends StatelessWidget {
     return item.id == 'appearance' || item.id == 'logout';
   }
 
-  Widget _buildSettingsItem(SettingsItem item) {
+  Widget _buildSettingsItem(BuildContext context, SettingsItem item) {
     if (item.isToggle) {
-      return _buildToggleItem(item);
+      return _buildToggleItem(context, item);
     }
     if (item.isDestructive) {
       return _buildDestructiveItem(item);
     }
-    return _buildNavigationItem(item);
+    return _buildNavigationItem(context, item);
   }
 
-  Widget _buildNavigationItem(SettingsItem item) {
+  Widget _buildNavigationItem(BuildContext context, SettingsItem item) {
+    final colorScheme = Theme.of(context).colorScheme;
     final icon = _resolveIcon(item.iconName);
     return Material(
       color: AppColors.transparent,
@@ -111,14 +113,14 @@ class SettingsListWidget extends StatelessWidget {
             children: [
               AppIconCircle(
                 icon: icon,
-                backgroundColor: AppColors.surfaceContainerHigh,
-                iconColor: AppColors.outline,
+                backgroundColor: colorScheme.surfaceContainerHigh,
+                iconColor: colorScheme.outline,
               ),
               const SizedBox(width: AppDimensions.paddingLG),
               Expanded(
                 child: Text(item.label, style: AppTextStyles.labelLarge),
               ),
-              const Icon(Icons.chevron_right, color: AppColors.outlineVariant),
+              Icon(Icons.chevron_right, color: colorScheme.outlineVariant),
             ],
           ),
         ),
@@ -126,7 +128,8 @@ class SettingsListWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildToggleItem(SettingsItem item) {
+  Widget _buildToggleItem(BuildContext context, SettingsItem item) {
+    final colorScheme = Theme.of(context).colorScheme;
     final icon = _resolveIcon(item.iconName);
     return Material(
       color: AppColors.transparent,
@@ -141,8 +144,8 @@ class SettingsListWidget extends StatelessWidget {
             children: [
               AppIconCircle(
                 icon: icon,
-                backgroundColor: AppColors.surfaceContainerHigh,
-                iconColor: AppColors.outline,
+                backgroundColor: colorScheme.surfaceContainerHigh,
+                iconColor: colorScheme.outline,
               ),
               const SizedBox(width: AppDimensions.paddingLG),
               Expanded(
@@ -154,14 +157,23 @@ class SettingsListWidget extends StatelessWidget {
                       Text(
                         item.subtitle!,
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.outline,
+                          color: colorScheme.outline,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                   ],
                 ),
               ),
-              _buildCustomSwitch(isDarkMode),
+              Semantics(
+                label: AppStrings.toggleDarkMode,
+                toggled: isDarkMode,
+                child: Switch.adaptive(
+                  value: isDarkMode,
+                  onChanged: (_) => onDarkModeToggle(),
+                  activeThumbColor: AppColors.primary,
+                  activeTrackColor: AppColors.primaryContainer,
+                ),
+              ),
             ],
           ),
         ),
@@ -206,33 +218,6 @@ class SettingsListWidget extends StatelessWidget {
                 ),
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCustomSwitch(bool value) {
-    return AnimatedContainer(
-      duration: AppDurations.animationFast,
-      width: AppDimensions.switchWidth,
-      height: AppDimensions.switchHeight,
-      padding: const EdgeInsets.all(AppDimensions.switchPadding),
-      decoration: BoxDecoration(
-        color: value ? AppColors.primary : AppColors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(AppDimensions.paddingMD),
-      ),
-      child: AnimatedAlign(
-        duration: AppDurations.animationFast,
-        curve: AppDurations.curveDefault,
-        alignment: value ? Alignment.centerRight : Alignment.centerLeft,
-        child: Container(
-          width: AppDimensions.switchThumbSize,
-          height: AppDimensions.switchThumbSize,
-          decoration: const BoxDecoration(
-            color: AppColors.white,
-            shape: BoxShape.circle,
-            boxShadow: [AppShadows.switchThumb],
           ),
         ),
       ),

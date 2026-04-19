@@ -9,7 +9,6 @@ import 'theme_state.dart';
 
 @lazySingleton
 class ThemeCubit extends HydratedCubit<ThemeState> {
-
   ThemeCubit({
     required LoadThemePreferenceUseCase loadThemePreference,
     required SaveThemePreferenceUseCase saveThemePreference,
@@ -36,6 +35,7 @@ class ThemeCubit extends HydratedCubit<ThemeState> {
   final SaveThemePreferenceUseCase _saveThemePreference;
   final WatchThemePreferenceUseCase _watchThemePreference;
   late final StreamSubscription<ThemePreference?> _themeSubscription;
+  bool _isPersistingLocalToggle = false;
 
   Future<void> refresh() async {
     AppLogger.info(
@@ -58,12 +58,16 @@ class ThemeCubit extends HydratedCubit<ThemeState> {
 
   Future<void> toggleTheme() async {
     final newValue = !state.isDarkMode;
-    final previous = state;
 
+    _isPersistingLocalToggle = true;
     emit(state.copyWith(isDarkMode: newValue));
 
     try {
       await _saveThemePreference(ThemePreference(isDarkMode: newValue));
+      AppLogger.info(
+        'Theme preference persisted: $newValue',
+        tag: AppLogTags.themePreferenceCubit,
+      );
     } catch (error, stackTrace) {
       AppLogger.error(
         'Failed to persist theme preference',
@@ -71,12 +75,21 @@ class ThemeCubit extends HydratedCubit<ThemeState> {
         error: error,
         stackTrace: stackTrace,
       );
-      emit(previous);
+    } finally {
+      _isPersistingLocalToggle = false;
     }
   }
 
   void _syncThemeFromStream(ThemePreference? preference) {
     if (preference == null) {
+      return;
+    }
+
+    if (_isPersistingLocalToggle) {
+      AppLogger.trace(
+        'Ignoring stream theme update during local toggle persistence',
+        tag: AppLogTags.themePreferenceCubit,
+      );
       return;
     }
 

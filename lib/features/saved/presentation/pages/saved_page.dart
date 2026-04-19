@@ -81,7 +81,7 @@ class _SavedPageState extends State<SavedPage> {
                         const SizedBox(height: AppDimensions.paddingSection),
                         _buildEmptyState(context),
                         const SizedBox(height: AppDimensions.paddingSection),
-                        _buildProTipBanner(),
+                        _buildProTipBanner(context),
                       ],
                     ),
                   ),
@@ -201,16 +201,18 @@ class _SavedPageState extends State<SavedPage> {
   }
 
   Widget _buildNoResultsState(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppDimensions.paddingXL),
       child: AppCard(
         padding: const EdgeInsets.all(AppDimensions.paddingXL),
         child: Column(
           children: [
-            const Icon(
+            Icon(
               LucideIcons.searchX,
               size: AppDimensions.iconXL,
-              color: AppColors.outline,
+              color: colorScheme.outline,
             ),
             const SizedBox(height: AppDimensions.paddingLG),
             Text(
@@ -224,7 +226,7 @@ class _SavedPageState extends State<SavedPage> {
               AppStrings.noBookmarksFoundDesc,
               textAlign: TextAlign.center,
               style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.onSurfaceVariant,
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: AppDimensions.paddingLG),
@@ -242,10 +244,12 @@ class _SavedPageState extends State<SavedPage> {
   }
 
   Widget _buildEmptyState(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingSectionLG),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLow,
+        color: colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
       ),
       child: Column(
@@ -257,14 +261,14 @@ class _SavedPageState extends State<SavedPage> {
               Container(
                 width: AppDimensions.imageXL,
                 height: AppDimensions.imageXL,
-                decoration: const BoxDecoration(
-                  color: AppColors.tertiaryFixed,
+                decoration: BoxDecoration(
+                  color: colorScheme.tertiaryContainer,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   LucideIcons.bookmark,
                   size: AppDimensions.imageLG,
-                  color: AppColors.onTertiaryContainer,
+                  color: colorScheme.onTertiaryContainer,
                 ),
               ),
               Positioned(
@@ -273,15 +277,15 @@ class _SavedPageState extends State<SavedPage> {
                 child: Container(
                   width: AppDimensions.imageMD,
                   height: AppDimensions.imageMD,
-                  decoration: const BoxDecoration(
-                    color: AppColors.surfaceContainerLowest,
+                  decoration: BoxDecoration(
+                    color: colorScheme.surfaceContainerLowest,
                     shape: BoxShape.circle,
-                    boxShadow: [AppShadows.ghost],
+                    boxShadow: const [AppShadows.ghost],
                   ),
-                  child: const Icon(
+                  child: Icon(
                     LucideIcons.plus,
                     size: AppDimensions.iconLG,
-                    color: AppColors.primary,
+                    color: colorScheme.primary,
                   ),
                 ),
               ),
@@ -299,7 +303,7 @@ class _SavedPageState extends State<SavedPage> {
             AppStrings.emptyBookmarksDesc,
             textAlign: TextAlign.center,
             style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.onSurfaceVariant,
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: AppDimensions.paddingXXL),
@@ -312,8 +316,8 @@ class _SavedPageState extends State<SavedPage> {
             icon: const Icon(LucideIcons.compass),
             label: const Text(AppStrings.browseLessons),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.secondaryContainer,
-              foregroundColor: AppColors.onSecondaryContainer,
+              backgroundColor: colorScheme.secondaryContainer,
+              foregroundColor: colorScheme.onSecondaryContainer,
               padding: const EdgeInsets.symmetric(
                 horizontal: AppDimensions.paddingXXL,
                 vertical: AppDimensions.paddingMD,
@@ -329,15 +333,17 @@ class _SavedPageState extends State<SavedPage> {
     );
   }
 
-  Widget _buildProTipBanner() {
+  Widget _buildProTipBanner(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingXXL),
       decoration: BoxDecoration(
-        color: AppColors.tertiaryContainer.withValues(
+        color: colorScheme.tertiaryContainer.withValues(
           alpha: AppDimensions.opacitySubtle,
         ),
         border: Border.all(
-          color: AppColors.tertiaryContainer.withValues(
+          color: colorScheme.tertiaryContainer.withValues(
             alpha: AppDimensions.opacityLight,
           ),
         ),
@@ -346,10 +352,10 @@ class _SavedPageState extends State<SavedPage> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
+          Icon(
             LucideIcons.lightbulb,
             size: AppDimensions.iconLG,
-            color: AppColors.onTertiaryContainer,
+            color: colorScheme.onTertiaryContainer,
           ),
           const SizedBox(width: AppDimensions.paddingLG),
           Expanded(
@@ -360,14 +366,14 @@ class _SavedPageState extends State<SavedPage> {
                   AppStrings.proTip,
                   style: AppTextStyles.labelLarge.copyWith(
                     fontWeight: FontWeight.w700,
-                    color: AppColors.onTertiaryContainer,
+                    color: colorScheme.onTertiaryContainer,
                   ),
                 ),
                 const SizedBox(height: AppDimensions.paddingXS),
                 Text(
                   AppStrings.proTipContent,
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.onTertiaryContainer,
+                    color: colorScheme.onTertiaryContainer,
                     height: AppDimensions.lineHeightDefault,
                   ),
                 ),
@@ -380,10 +386,11 @@ class _SavedPageState extends State<SavedPage> {
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context, AuthUser? user) {
+    final colorScheme = Theme.of(context).colorScheme;
     final photoUrl = user?.photoUrl ?? '';
 
     return AppBar(
-      backgroundColor: AppColors.surfaceContainerLowest.withValues(
+      backgroundColor: colorScheme.surfaceContainerLowest.withValues(
         alpha: AppDimensions.opacityAppBar,
       ),
       surfaceTintColor: AppColors.transparent,
@@ -397,18 +404,18 @@ class _SavedPageState extends State<SavedPage> {
                     imageUrl: photoUrl,
                     size: AppDimensions.avatarMD,
                     fallbackIcon: LucideIcons.bookmark,
-                    fallbackIconColor: AppColors.primary,
+                    fallbackIconColor: colorScheme.primary,
                   )
                 : Container(
                     width: AppDimensions.avatarMD,
                     height: AppDimensions.avatarMD,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: AppColors.primaryFixed,
+                      color: colorScheme.primaryContainer,
                     ),
-                    child: const Icon(
+                    child: Icon(
                       LucideIcons.bookmark,
-                      color: AppColors.primary,
+                      color: colorScheme.primary,
                     ),
                   ),
           ),
@@ -416,7 +423,7 @@ class _SavedPageState extends State<SavedPage> {
           Text(
             AppStrings.navSaved,
             style: AppTextStyles.headlineSmall.copyWith(
-              color: AppColors.onSurface,
+              color: colorScheme.onSurface,
             ),
           ),
         ],
@@ -432,7 +439,7 @@ class _SavedPageState extends State<SavedPage> {
               );
             }
           },
-          icon: const Icon(LucideIcons.refreshCw, color: AppColors.outline),
+          icon: Icon(LucideIcons.refreshCw, color: colorScheme.outline),
         ),
         const SizedBox(width: AppDimensions.paddingSM),
       ],
@@ -441,12 +448,13 @@ class _SavedPageState extends State<SavedPage> {
 }
 
 class _BookmarkCard extends StatelessWidget {
-
   const _BookmarkCard({required this.bookmark});
   final BookmarkedFormula bookmark;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -460,14 +468,14 @@ class _BookmarkCard extends StatelessWidget {
                   Text(
                     bookmark.subject,
                     style: AppTextStyles.overline.copyWith(
-                      color: AppColors.primary,
+                      color: colorScheme.primary,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                   Text(
                     'SAVED ${_formatDate(bookmark.savedAt)}',
                     style: AppTextStyles.overline.copyWith(
-                      color: AppColors.outline,
+                      color: colorScheme.outline,
                     ),
                   ),
                 ],
@@ -495,9 +503,9 @@ class _BookmarkCard extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(AppDimensions.paddingLG),
             decoration: BoxDecoration(
-              color: AppColors.surfaceContainerLow,
+              color: colorScheme.surfaceContainerLow,
               borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-              border: Border.all(color: AppColors.surfaceContainerHigh),
+              border: Border.all(color: colorScheme.surfaceContainerHigh),
             ),
             child: Center(
               child: FittedBox(
@@ -505,7 +513,7 @@ class _BookmarkCard extends StatelessWidget {
                 child: Math.tex(
                   bookmark.formula,
                   textStyle: AppTextStyles.headlineSmall.copyWith(
-                    color: AppColors.onSurface,
+                    color: colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -522,12 +530,13 @@ class _BookmarkCard extends StatelessWidget {
 }
 
 class _SavedChapterCard extends StatelessWidget {
-
   const _SavedChapterCard({required this.chapter});
   final BookmarkedChapter chapter;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return AppCard(
       child: InkWell(
         borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
@@ -554,14 +563,14 @@ class _SavedChapterCard extends StatelessWidget {
                       Text(
                         chapter.subjectName,
                         style: AppTextStyles.overline.copyWith(
-                          color: AppColors.primary,
+                          color: colorScheme.primary,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
                       Text(
                         'SAVED ${_formatDate(chapter.savedAt)}',
                         style: AppTextStyles.overline.copyWith(
-                          color: AppColors.outline,
+                          color: colorScheme.outline,
                         ),
                       ),
                     ],
@@ -594,7 +603,7 @@ class _SavedChapterCard extends StatelessWidget {
               Text(
                 chapter.chapterSubtitle,
                 style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.onSurfaceVariant,
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
             ],
@@ -610,12 +619,13 @@ class _SavedChapterCard extends StatelessWidget {
 }
 
 class _SavedNoteCard extends StatelessWidget {
-
   const _SavedNoteCard({required this.note});
   final SavedNote note;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -624,10 +634,10 @@ class _SavedNoteCard extends StatelessWidget {
             children: [
               AppIconCircle(
                 icon: LucideIcons.stickyNote,
-                backgroundColor: AppColors.secondaryContainer.withValues(
+                backgroundColor: colorScheme.secondaryContainer.withValues(
                   alpha: AppDimensions.opacityFaint,
                 ),
-                iconColor: AppColors.secondary,
+                iconColor: colorScheme.secondary,
               ),
               const SizedBox(width: AppDimensions.paddingLG),
               Expanded(
@@ -637,14 +647,14 @@ class _SavedNoteCard extends StatelessWidget {
                     Text(
                       note.subject,
                       style: AppTextStyles.overline.copyWith(
-                        color: AppColors.primary,
+                        color: colorScheme.primary,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     Text(
                       'SAVED ${_formatDate(note.savedAt)}',
                       style: AppTextStyles.overline.copyWith(
-                        color: AppColors.outline,
+                        color: colorScheme.outline,
                       ),
                     ),
                   ],
@@ -663,7 +673,7 @@ class _SavedNoteCard extends StatelessWidget {
           Text(
             note.content,
             style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.onSurfaceVariant,
+              color: colorScheme.onSurfaceVariant,
               height: AppDimensions.lineHeightDefault,
             ),
           ),

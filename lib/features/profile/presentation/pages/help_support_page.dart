@@ -42,7 +42,7 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
               delegate: SliverChildListDelegate([
                 const SizedBox(height: AppDimensions.paddingXXL),
                 // Hero card
-                _buildHeroCard(),
+                _buildHeroCard(context),
                 const SizedBox(height: AppDimensions.paddingXXL),
                 // Quick actions
                 const AppSectionTitle(title: AppStrings.quickActions),
@@ -90,21 +90,25 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
                 ),
                 const SizedBox(height: AppDimensions.paddingLG),
                 _buildFaqCard(
+                  context,
                   question: AppStrings.faq1Question,
                   answer: AppStrings.faq1Answer,
                 ),
                 const SizedBox(height: AppDimensions.paddingMD),
                 _buildFaqCard(
+                  context,
                   question: AppStrings.faq2Question,
                   answer: AppStrings.faq2Answer,
                 ),
                 const SizedBox(height: AppDimensions.paddingMD),
                 _buildFaqCard(
+                  context,
                   question: AppStrings.faq3Question,
                   answer: AppStrings.faq3Answer,
                 ),
                 const SizedBox(height: AppDimensions.paddingMD),
                 _buildFaqCard(
+                  context,
                   question: AppStrings.faq4Question,
                   answer: AppStrings.faq4Answer,
                 ),
@@ -143,7 +147,7 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
                 ),
                 const SizedBox(height: AppDimensions.paddingXXL),
                 // App version info
-                _buildVersionCard(),
+                _buildVersionCard(context),
                 const SizedBox(height: AppDimensions.bottomNavPadding),
               ]),
             ),
@@ -154,26 +158,30 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
   }
 
   SliverAppBar _buildAppBar(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return SliverAppBar(
       floating: true,
       snap: true,
-      backgroundColor: AppColors.surfaceContainerLowest.withValues(
+      backgroundColor: colorScheme.surfaceContainerLowest.withValues(
         alpha: AppDimensions.opacityAppBar,
       ),
       surfaceTintColor: AppColors.transparent,
       leading: IconButton(
         onPressed: () => context.go(AppRoutes.profilePath),
-        icon: const Icon(LucideIcons.arrowLeft, color: AppColors.onSurface),
+        icon: Icon(LucideIcons.arrowLeft, color: colorScheme.onSurface),
       ),
       title: Text(
         AppStrings.helpAndSupport,
-        style: AppTextStyles.titleLarge.copyWith(color: AppColors.onSurface),
+        style: AppTextStyles.titleLarge.copyWith(color: colorScheme.onSurface),
       ),
       centerTitle: true,
     );
   }
 
-  Widget _buildHeroCard() {
+  Widget _buildHeroCard(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingXXL),
       decoration: const SignatureGlowDecoration(),
@@ -183,28 +191,30 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
             width: AppDimensions.avatarHero,
             height: AppDimensions.avatarHero,
             decoration: BoxDecoration(
-              color: AppColors.white.withValues(
+              color: colorScheme.surface.withValues(
                 alpha: AppDimensions.opacitySubtle,
               ),
               shape: BoxShape.circle,
             ),
-            child: const Icon(
+            child: Icon(
               LucideIcons.helpCircle,
               size: AppDimensions.iconXXL,
-              color: AppColors.white,
+              color: colorScheme.onPrimary,
             ),
           ),
           const SizedBox(height: AppDimensions.paddingLG),
           Text(
             AppStrings.helpHeroTitle,
-            style: AppTextStyles.headlineSmall.copyWith(color: AppColors.white),
+            style: AppTextStyles.headlineSmall.copyWith(
+              color: colorScheme.onPrimary,
+            ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppDimensions.paddingSM),
           Text(
             AppStrings.helpHeroSubtitle,
             style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.white.withValues(
+              color: colorScheme.onPrimary.withValues(
                 alpha: AppDimensions.opacityHigh,
               ),
             ),
@@ -222,6 +232,8 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
     required Color color,
     required Color bgColor,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Material(
       color: AppColors.transparent,
       child: InkWell(
@@ -247,7 +259,7 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
               Text(
                 label,
                 style: AppTextStyles.labelMedium.copyWith(
-                  color: AppColors.onSurface,
+                  color: colorScheme.onSurface,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -258,7 +270,13 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
     );
   }
 
-  Widget _buildFaqCard({required String question, required String answer}) {
+  Widget _buildFaqCard(
+    BuildContext context, {
+    required String question,
+    required String answer,
+  }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return AppCard(
       padding: EdgeInsets.zero,
       child: Theme(
@@ -277,27 +295,27 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
           leading: Container(
             width: AppDimensions.avatarSM,
             height: AppDimensions.avatarSM,
-            decoration: const BoxDecoration(
-              color: AppColors.primaryFixed,
+            decoration: BoxDecoration(
+              color: colorScheme.primaryContainer,
               shape: BoxShape.circle,
             ),
-            child: const Icon(
+            child: Icon(
               LucideIcons.helpCircle,
               size: AppDimensions.iconSM,
-              color: AppColors.primary,
+              color: colorScheme.primary,
             ),
           ),
           title: Text(
             question,
             style: AppTextStyles.labelLarge.copyWith(
-              color: AppColors.onSurface,
+              color: colorScheme.onSurface,
             ),
           ),
           children: [
             Text(
               answer,
               style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.onSurfaceVariant,
+                color: colorScheme.onSurfaceVariant,
                 height: AppDimensions.lineHeightRelaxed,
               ),
             ),
@@ -314,6 +332,8 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
     required String subtitle,
     VoidCallback? onTap,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Material(
       color: AppColors.transparent,
       child: InkWell(
@@ -328,8 +348,8 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
             children: [
               AppIconCircle(
                 icon: icon,
-                backgroundColor: AppColors.surfaceContainerHigh,
-                iconColor: AppColors.outline,
+                backgroundColor: colorScheme.surfaceContainerHigh,
+                iconColor: colorScheme.outline,
               ),
               const SizedBox(width: AppDimensions.paddingLG),
               Expanded(
@@ -341,16 +361,16 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
                     Text(
                       subtitle,
                       style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.outline,
+                        color: colorScheme.outline,
                       ),
                     ),
                   ],
                 ),
               ),
-              const Icon(
+              Icon(
                 LucideIcons.chevronRight,
                 size: AppDimensions.iconMD,
-                color: AppColors.outlineVariant,
+                color: colorScheme.outlineVariant,
               ),
             ],
           ),
@@ -359,36 +379,38 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
     );
   }
 
-  Widget _buildVersionCard() {
+  Widget _buildVersionCard(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingXL),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainer,
+        color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
       ),
       child: Column(
         children: [
-          const Icon(
+          Icon(
             LucideIcons.sparkles,
             size: AppDimensions.iconLG,
-            color: AppColors.primary,
+            color: colorScheme.primary,
           ),
           const SizedBox(height: AppDimensions.paddingSM),
           Text(
             AppStrings.appName,
             style: AppTextStyles.labelLarge.copyWith(
-              color: AppColors.onSurface,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: AppDimensions.paddingXXS),
           Text(
             AppStrings.appVersion,
-            style: AppTextStyles.bodySmall.copyWith(color: AppColors.outline),
+            style: AppTextStyles.bodySmall.copyWith(color: colorScheme.outline),
           ),
           const SizedBox(height: AppDimensions.paddingXXS),
           Text(
             AppStrings.madeWithLove,
-            style: AppTextStyles.bodySmall.copyWith(color: AppColors.outline),
+            style: AppTextStyles.bodySmall.copyWith(color: colorScheme.outline),
           ),
         ],
       ),

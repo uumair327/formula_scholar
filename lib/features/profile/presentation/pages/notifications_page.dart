@@ -33,6 +33,7 @@ class NotificationsPage extends StatelessWidget {
           return const Scaffold(body: AppLoadingState());
         }
 
+        final colorScheme = Theme.of(context).colorScheme;
         final prefs = state.preferences;
         final isBusy = state.status == NotificationsStatus.saving;
 
@@ -49,13 +50,14 @@ class NotificationsPage extends StatelessWidget {
                     sliver: SliverList(
                       delegate: SliverChildListDelegate([
                         const SizedBox(height: AppDimensions.paddingXXL),
-                        _buildStatusCard(),
+                        _buildStatusCard(context),
                         const SizedBox(height: AppDimensions.paddingXXL),
                         const AppSectionTitle(
                           title: AppStrings.studyNotifications,
                         ),
                         const SizedBox(height: AppDimensions.paddingLG),
                         _buildToggleTile(
+                          context: context,
                           icon: LucideIcons.clock,
                           title: AppStrings.studyReminders,
                           subtitle: AppStrings.studyRemindersDesc,
@@ -69,6 +71,7 @@ class NotificationsPage extends StatelessWidget {
                         ),
                         const SizedBox(height: AppDimensions.paddingMD),
                         _buildToggleTile(
+                          context: context,
                           icon: LucideIcons.flame,
                           title: AppStrings.streakAlerts,
                           subtitle: AppStrings.streakAlertsDesc,
@@ -82,6 +85,7 @@ class NotificationsPage extends StatelessWidget {
                         ),
                         const SizedBox(height: AppDimensions.paddingMD),
                         _buildToggleTile(
+                          context: context,
                           icon: LucideIcons.sparkles,
                           title: AppStrings.newContent,
                           subtitle: AppStrings.newContentDesc,
@@ -97,6 +101,7 @@ class NotificationsPage extends StatelessWidget {
                         ),
                         const SizedBox(height: AppDimensions.paddingLG),
                         _buildToggleTile(
+                          context: context,
                           icon: LucideIcons.trophy,
                           title: AppStrings.achievements,
                           subtitle: AppStrings.achievementsDesc,
@@ -110,6 +115,7 @@ class NotificationsPage extends StatelessWidget {
                         ),
                         const SizedBox(height: AppDimensions.paddingMD),
                         _buildToggleTile(
+                          context: context,
                           icon: LucideIcons.barChart2,
                           title: AppStrings.weeklyReport,
                           subtitle: AppStrings.weeklyReportDesc,
@@ -127,6 +133,7 @@ class NotificationsPage extends StatelessWidget {
                         ),
                         const SizedBox(height: AppDimensions.paddingLG),
                         _buildToggleTile(
+                          context: context,
                           icon: LucideIcons.bell,
                           title: AppStrings.pushNotificationsLabel,
                           subtitle: AppStrings.pushNotificationsDesc,
@@ -140,6 +147,7 @@ class NotificationsPage extends StatelessWidget {
                         ),
                         const SizedBox(height: AppDimensions.paddingMD),
                         _buildToggleTile(
+                          context: context,
                           icon: LucideIcons.mail,
                           title: AppStrings.emailNotificationsLabel,
                           subtitle: AppStrings.emailNotificationsDesc,
@@ -149,7 +157,7 @@ class NotificationsPage extends StatelessWidget {
                               .updatePreferences(
                                 prefs.copyWith(emailNotifications: v),
                               ),
-                          color: AppColors.slate500,
+                          color: colorScheme.outline,
                         ),
                         const SizedBox(height: AppDimensions.bottomNavPadding),
                       ]),
@@ -161,7 +169,7 @@ class NotificationsPage extends StatelessWidget {
                 Positioned.fill(
                   child: IgnorePointer(
                     child: Container(
-                      color: AppColors.surface.withValues(
+                      color: Theme.of(context).colorScheme.surface.withValues(
                         alpha: AppDimensions.opacitySubtle,
                       ),
                       alignment: Alignment.topCenter,
@@ -180,26 +188,30 @@ class NotificationsPage extends StatelessWidget {
   }
 
   SliverAppBar _buildAppBar(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return SliverAppBar(
       floating: true,
       snap: true,
-      backgroundColor: AppColors.surfaceContainerLowest.withValues(
+      backgroundColor: colorScheme.surfaceContainerLowest.withValues(
         alpha: AppDimensions.opacityAppBar,
       ),
       surfaceTintColor: AppColors.transparent,
       leading: IconButton(
         onPressed: () => context.go(AppRoutes.profilePath),
-        icon: const Icon(LucideIcons.arrowLeft, color: AppColors.onSurface),
+        icon: Icon(LucideIcons.arrowLeft, color: colorScheme.onSurface),
       ),
       title: Text(
         AppStrings.notifications,
-        style: AppTextStyles.titleLarge.copyWith(color: AppColors.onSurface),
+        style: AppTextStyles.titleLarge.copyWith(color: colorScheme.onSurface),
       ),
       centerTitle: true,
     );
   }
 
-  Widget _buildStatusCard() {
+  Widget _buildStatusCard(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingXL),
       decoration: const SignatureGlowDecoration(),
@@ -209,15 +221,15 @@ class NotificationsPage extends StatelessWidget {
             width: AppDimensions.avatarLG,
             height: AppDimensions.avatarLG,
             decoration: BoxDecoration(
-              color: AppColors.white.withValues(
+              color: colorScheme.surface.withValues(
                 alpha: AppDimensions.opacitySubtle,
               ),
               shape: BoxShape.circle,
             ),
-            child: const Icon(
+            child: Icon(
               LucideIcons.bellRing,
               size: AppDimensions.iconLG,
-              color: AppColors.white,
+              color: colorScheme.onPrimary,
             ),
           ),
           const SizedBox(width: AppDimensions.paddingLG),
@@ -228,14 +240,14 @@ class NotificationsPage extends StatelessWidget {
                 Text(
                   AppStrings.notificationsEnabled,
                   style: AppTextStyles.labelLarge.copyWith(
-                    color: AppColors.white,
+                    color: colorScheme.onPrimary,
                   ),
                 ),
                 const SizedBox(height: AppDimensions.paddingXXS),
                 Text(
                   AppStrings.notificationsEnabledDesc,
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.white.withValues(
+                    color: colorScheme.onPrimary.withValues(
                       alpha: AppDimensions.opacityHigh,
                     ),
                   ),
@@ -249,6 +261,7 @@ class NotificationsPage extends StatelessWidget {
   }
 
   Widget _buildToggleTile({
+    required BuildContext context,
     required IconData icon,
     required String title,
     required String subtitle,
@@ -256,6 +269,8 @@ class NotificationsPage extends StatelessWidget {
     required ValueChanged<bool> onChanged,
     required Color color,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return AppCard(
       padding: const EdgeInsets.symmetric(
         horizontal: AppDimensions.paddingXL,
@@ -280,45 +295,34 @@ class NotificationsPage extends StatelessWidget {
                 Text(
                   subtitle,
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.outline,
+                    color: colorScheme.outline,
                   ),
                 ),
               ],
             ),
           ),
           const SizedBox(width: AppDimensions.paddingSM),
-          _buildCustomSwitch(value, onChanged),
+          _buildCustomSwitch(context, value, onChanged),
         ],
       ),
     );
   }
 
-  Widget _buildCustomSwitch(bool value, ValueChanged<bool> onChanged) {
-    return GestureDetector(
-      onTap: () => onChanged(!value),
-      child: AnimatedContainer(
-        duration: AppDurations.animationFast,
-        width: AppDimensions.switchWidth,
-        height: AppDimensions.switchHeight,
-        padding: const EdgeInsets.all(AppDimensions.switchPadding),
-        decoration: BoxDecoration(
-          color: value ? AppColors.primary : AppColors.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(AppDimensions.paddingMD),
-        ),
-        child: AnimatedAlign(
-          duration: AppDurations.animationFast,
-          curve: AppDurations.curveDefault,
-          alignment: value ? Alignment.centerRight : Alignment.centerLeft,
-          child: Container(
-            width: AppDimensions.switchThumbSize,
-            height: AppDimensions.switchThumbSize,
-            decoration: const BoxDecoration(
-              color: AppColors.white,
-              shape: BoxShape.circle,
-              boxShadow: [AppShadows.switchThumb],
-            ),
-          ),
-        ),
+  Widget _buildCustomSwitch(
+    BuildContext context,
+    bool value,
+    ValueChanged<bool> onChanged,
+  ) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Semantics(
+      label: AppStrings.notifications,
+      toggled: value,
+      child: Switch.adaptive(
+        value: value,
+        onChanged: onChanged,
+        activeThumbColor: colorScheme.primary,
+        activeTrackColor: colorScheme.primaryContainer,
       ),
     );
   }

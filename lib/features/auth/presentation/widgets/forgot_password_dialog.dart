@@ -13,6 +13,8 @@ void showForgotPasswordDialog(BuildContext context, String prefillEmail) {
   showDialog<void>(
     context: context,
     builder: (dialogContext) {
+      final colorScheme = Theme.of(dialogContext).colorScheme;
+
       return AlertDialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
@@ -25,7 +27,7 @@ void showForgotPasswordDialog(BuildContext context, String prefillEmail) {
             Text(
               AppStrings.forgotPasswordDesc,
               style: AppTextStyles.bodySmall.copyWith(
-                color: AppColors.onSurfaceVariant,
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: AppDimensions.paddingLG),

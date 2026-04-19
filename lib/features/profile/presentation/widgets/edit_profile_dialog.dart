@@ -15,6 +15,8 @@ Future<void> showEditProfileDialog(BuildContext context) async {
   await showDialog<void>(
     context: context,
     builder: (dialogContext) {
+      final colorScheme = Theme.of(dialogContext).colorScheme;
+
       return AlertDialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
@@ -28,7 +30,7 @@ Future<void> showEditProfileDialog(BuildContext context) async {
               Text(
                 AppStrings.editProfileSubtitle,
                 style: AppTextStyles.bodySmall.copyWith(
-                  color: AppColors.onSurfaceVariant,
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: AppDimensions.paddingLG),

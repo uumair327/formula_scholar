@@ -39,6 +39,8 @@ class OnboardingStep2Page extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return BlocBuilder<OnboardingCubit, OnboardingState>(
       buildWhen: (prev, curr) =>
           prev.status != curr.status ||
@@ -129,7 +131,7 @@ class OnboardingStep2Page extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(AppDimensions.paddingXL),
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceContainer,
+                  color: colorScheme.surfaceContainer,
                   borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                 ),
                 child: Row(
@@ -148,7 +150,7 @@ class OnboardingStep2Page extends StatelessWidget {
                           Text(
                             AppStrings.step2NotSureDesc,
                             style: AppTextStyles.bodySmall.copyWith(
-                              color: AppColors.onSurfaceVariant,
+                              color: colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -187,7 +189,6 @@ class OnboardingStep2Page extends StatelessWidget {
 }
 
 class _CurriculumCard extends StatelessWidget {
-
   const _CurriculumCard({
     required this.board,
     required this.isSelected,
@@ -203,13 +204,15 @@ class _CurriculumCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: AppDurations.animationFast,
         padding: const EdgeInsets.all(AppDimensions.paddingXXL),
         decoration: BoxDecoration(
-          color: AppColors.surfaceContainerLowest,
+          color: colorScheme.surfaceContainerLowest,
           borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
           border: Border.all(
             color: isSelected
@@ -255,7 +258,7 @@ class _CurriculumCard extends StatelessWidget {
                 Text(
                   board.description,
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.onSurfaceVariant,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],

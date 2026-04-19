@@ -88,12 +88,13 @@ class ProfilePage extends StatelessWidget {
     ProfileState state,
     String displayName,
   ) {
+    final colorScheme = Theme.of(context).colorScheme;
     final avatarUrl = state.profile?.avatarUrl ?? AppAssets.profileAvatarUrl;
 
     return SliverAppBar(
       floating: true,
       snap: true,
-      backgroundColor: AppColors.surfaceContainerLowest.withValues(
+      backgroundColor: colorScheme.surfaceContainerLowest.withValues(
         alpha: AppDimensions.opacityAppBar,
       ),
       surfaceTintColor: AppColors.transparent,
@@ -114,7 +115,7 @@ class ProfilePage extends StatelessWidget {
                 Text(
                   displayName,
                   style: AppTextStyles.headlineSmall.copyWith(
-                    color: AppColors.blue900,
+                    color: colorScheme.onSurface,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -122,7 +123,7 @@ class ProfilePage extends StatelessWidget {
                   Text(
                     state.profile!.email,
                     style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -138,7 +139,7 @@ class ProfilePage extends StatelessWidget {
             displayName: state.profile?.name ?? AppStrings.welcomeScholar,
             stats: state.stats,
           ),
-          icon: const Icon(LucideIcons.barChart2, color: AppColors.blue600),
+          icon: Icon(LucideIcons.barChart2, color: colorScheme.primary),
         ),
         const SizedBox(width: AppDimensions.paddingSM),
       ],

@@ -122,7 +122,6 @@ class _OnboardingStep1PageState extends State<OnboardingStep1Page> {
 // ── Location form card ─────────────────────────────────────────────
 
 class _LocationFormCard extends StatelessWidget {
-
   const _LocationFormCard({
     required this.countries,
     required this.selectedCountry,
@@ -144,10 +143,12 @@ class _LocationFormCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingXXL),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
         boxShadow: const [AppShadows.ghost],
       ),
@@ -164,7 +165,7 @@ class _LocationFormCard extends StatelessWidget {
             decoration: InputDecoration(
               labelText: AppStrings.step1CountryLabel,
               labelStyle: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.onSurfaceVariant.withValues(
+                color: colorScheme.onSurfaceVariant.withValues(
                   alpha: AppDimensions.opacityMedium,
                 ),
                 fontWeight: FontWeight.w600,
@@ -173,19 +174,19 @@ class _LocationFormCard extends StatelessWidget {
                 color: AppColors.primary,
                 fontWeight: FontWeight.w700,
               ),
-              prefixIcon: const Padding(
-                padding: EdgeInsets.only(left: AppDimensions.paddingMD),
+              prefixIcon: Padding(
+                padding: const EdgeInsets.only(left: AppDimensions.paddingMD),
                 child: Icon(
                   LucideIcons.globe,
                   size: AppDimensions.iconDefault,
-                  color: AppColors.outline,
+                  color: colorScheme.outline,
                 ),
               ),
               prefixIconConstraints: const BoxConstraints(
                 minWidth: AppDimensions.avatarMD,
               ),
               filled: true,
-              fillColor: AppColors.surfaceContainerHighest,
+              fillColor: colorScheme.surfaceContainerHighest,
               border: OutlineInputBorder(
                 borderSide: BorderSide.none,
                 borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
@@ -205,7 +206,7 @@ class _LocationFormCard extends StatelessWidget {
               ),
             ),
             style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.onSurface,
+              color: colorScheme.onSurface,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -218,10 +219,10 @@ class _LocationFormCard extends StatelessWidget {
             label: AppStrings.step1StateLabel,
             hintText: AppStrings.step1StateHint,
             prefixIcon: LucideIcons.mapPin,
-            suffixIcon: const Icon(
+            suffixIcon: Icon(
               LucideIcons.search,
               size: AppDimensions.iconDefault,
-              color: AppColors.onSurfaceVariant,
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: AppDimensions.paddingSM),
@@ -243,7 +244,7 @@ class _LocationFormCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: isActive
                         ? AppColors.secondaryContainer
-                        : AppColors.surfaceContainer,
+                        : colorScheme.surfaceContainer,
                     borderRadius: BorderRadius.circular(
                       AppDimensions.radiusXXL,
                     ),
@@ -253,7 +254,7 @@ class _LocationFormCard extends StatelessWidget {
                     style: AppTextStyles.labelMedium.copyWith(
                       color: isActive
                           ? AppColors.onSecondaryContainer
-                          : AppColors.onSurfaceVariant,
+                          : colorScheme.onSurfaceVariant,
                       fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
                     ),
                   ),
@@ -272,6 +273,8 @@ class _LocationFormCard extends StatelessWidget {
 class _LocationInfoCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       children: [
         // Localized content card
@@ -289,10 +292,10 @@ class _LocationInfoCards extends StatelessWidget {
               Container(
                 width: AppDimensions.avatarMD,
                 height: AppDimensions.avatarMD,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppColors.white,
-                  boxShadow: [AppShadows.subtle],
+                  color: colorScheme.surface,
+                  boxShadow: const [AppShadows.subtle],
                 ),
                 child: const Icon(
                   LucideIcons.sparkles,
@@ -325,7 +328,7 @@ class _LocationInfoCards extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(AppDimensions.paddingLG),
           decoration: BoxDecoration(
-            color: AppColors.surfaceContainerHigh,
+            color: colorScheme.surfaceContainerHigh,
             borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
           ),
           child: Row(
@@ -350,7 +353,7 @@ class _LocationInfoCards extends StatelessWidget {
                     Text(
                       AppStrings.step1PrivacyDesc,
                       style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.onSurfaceVariant,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ],

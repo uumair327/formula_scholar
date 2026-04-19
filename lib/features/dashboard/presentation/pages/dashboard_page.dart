@@ -102,6 +102,8 @@ class DashboardPage extends StatelessWidget {
   // ──────────────────────── App Bar ─────────────────────────────
 
   Widget _buildAppBar(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return BlocBuilder<AuthCubit, AuthState>(
       buildWhen: (prev, curr) => prev.user != curr.user,
       builder: (context, authState) {
@@ -112,7 +114,7 @@ class DashboardPage extends StatelessWidget {
         return SliverAppBar(
           floating: true,
           snap: true,
-          backgroundColor: AppColors.surface.withValues(
+          backgroundColor: colorScheme.surface.withValues(
             alpha: AppDimensions.opacityHigh,
           ),
           surfaceTintColor: AppColors.transparent,
@@ -124,9 +126,9 @@ class DashboardPage extends StatelessWidget {
                 Container(
                   width: AppDimensions.avatarMD,
                   height: AppDimensions.avatarMD,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppColors.primaryFixed,
+                    color: colorScheme.primaryContainer,
                   ),
                   clipBehavior: Clip.antiAlias,
                   child: CachedNetworkImage(
@@ -134,14 +136,14 @@ class DashboardPage extends StatelessWidget {
                     fit: BoxFit.cover,
                     placeholder: (context, url) => const SizedBox(),
                     errorWidget: (context, url, error) =>
-                        const Icon(LucideIcons.user, color: AppColors.primary),
+                        Icon(LucideIcons.user, color: colorScheme.primary),
                   ),
                 ),
                 const SizedBox(width: AppDimensions.paddingMD),
                 Text(
                   userName,
                   style: AppTextStyles.headlineSmall.copyWith(
-                    color: AppColors.onSurface,
+                    color: colorScheme.onSurface,
                   ),
                 ),
               ],
@@ -154,7 +156,7 @@ class DashboardPage extends StatelessWidget {
                 final shell = StatefulNavigationShell.of(context);
                 shell.goBranch(1);
               },
-              icon: const Icon(LucideIcons.search, color: AppColors.outline),
+              icon: Icon(LucideIcons.search, color: colorScheme.outline),
             ),
             const SizedBox(width: AppDimensions.paddingSM),
           ],
@@ -164,6 +166,8 @@ class DashboardPage extends StatelessWidget {
   }
 
   Widget _buildCurriculumFilterBar(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return BlocBuilder<CurriculumCubit, CurriculumState>(
       buildWhen: (prev, curr) =>
           prev.curriculum != curr.curriculum ||
@@ -183,16 +187,16 @@ class DashboardPage extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        const Icon(
+                        Icon(
                           LucideIcons.slidersHorizontal,
                           size: AppDimensions.iconSM,
-                          color: AppColors.onSurfaceVariant,
+                          color: colorScheme.onSurfaceVariant,
                         ),
                         const SizedBox(width: AppDimensions.paddingXS),
                         Text(
                           AppStrings.dashboardActiveCurriculum,
                           style: AppTextStyles.labelSmall.copyWith(
-                            color: AppColors.onSurfaceVariant.withValues(
+                            color: colorScheme.onSurfaceVariant.withValues(
                               alpha: AppDimensions.opacityMedium,
                             ),
                             fontWeight: FontWeight.w700,
@@ -208,7 +212,7 @@ class DashboardPage extends StatelessWidget {
                           vertical: AppDimensions.paddingXXS,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.primaryContainer.withValues(
+                          color: colorScheme.primaryContainer.withValues(
                             alpha: AppDimensions.opacityFaint,
                           ),
                           borderRadius: BorderRadius.circular(
@@ -217,16 +221,16 @@ class DashboardPage extends StatelessWidget {
                         ),
                         child: Row(
                           children: [
-                            const Icon(
+                            Icon(
                               LucideIcons.arrowLeftRight,
                               size: AppDimensions.iconSM,
-                              color: AppColors.primary,
+                              color: colorScheme.primary,
                             ),
                             const SizedBox(width: AppDimensions.paddingXXS),
                             Text(
                               AppStrings.dashboardSwitchBoardGrade,
                               style: AppTextStyles.labelSmall.copyWith(
-                                color: AppColors.primary,
+                                color: colorScheme.primary,
                                 fontWeight: FontWeight.w700,
                                 fontSize: AppDimensions.fontSizeXSPlus,
                               ),
@@ -245,28 +249,28 @@ class DashboardPage extends StatelessWidget {
                     children: [
                       _CurriculumBadge(
                         icon: LucideIcons.layoutGrid,
-                        iconColor: AppColors.primary,
+                        iconColor: colorScheme.primary,
                         label:
                             selection?.boardName ??
                             AppStrings.dashboardCurriculumPending,
                         isActive: true,
-                        activeColor: AppColors.primary,
+                        activeColor: colorScheme.primary,
                       ),
                       const SizedBox(width: AppDimensions.paddingSM),
                       Container(
                         width: AppDimensions.borderWidth,
                         height: AppDimensions.paddingXXL,
-                        color: AppColors.surfaceContainerHighest,
+                        color: colorScheme.surfaceContainerHighest,
                       ),
                       const SizedBox(width: AppDimensions.paddingSM),
                       _CurriculumBadge(
                         icon: LucideIcons.graduationCap,
-                        iconColor: AppColors.secondary,
+                        iconColor: colorScheme.secondary,
                         label:
                             selection?.gradeLabel ??
                             AppStrings.dashboardCurriculumPending,
                         isActive: true,
-                        activeColor: AppColors.secondary,
+                        activeColor: colorScheme.secondary,
                       ),
                     ],
                   ),
@@ -278,6 +282,7 @@ class DashboardPage extends StatelessWidget {
                   )
                 else ...[
                   _buildCurriculumChipRow<Board>(
+                    context: context,
                     label: AppStrings.dashboardAvailableBoards,
                     items: options.boards,
                     selectedId: selection?.boardId,
@@ -291,6 +296,7 @@ class DashboardPage extends StatelessWidget {
                   ),
                   const SizedBox(height: AppDimensions.paddingSM),
                   _buildCurriculumChipRow<Grade>(
+                    context: context,
                     label: AppStrings.dashboardAvailableClasses,
                     items: options.grades,
                     selectedId: selection?.gradeId,
@@ -315,7 +321,7 @@ class DashboardPage extends StatelessWidget {
                             options.errorMessage ??
                                 AppStrings.dashboardCurriculumOptionsLoadFailed,
                             style: AppTextStyles.labelSmall.copyWith(
-                              color: AppColors.error,
+                              color: colorScheme.error,
                             ),
                           ),
                         ),
@@ -339,6 +345,7 @@ class DashboardPage extends StatelessWidget {
   }
 
   Widget _buildCurriculumChipRow<T>({
+    required BuildContext context,
     required String label,
     required List<T> items,
     required String? selectedId,
@@ -348,13 +355,15 @@ class DashboardPage extends StatelessWidget {
     required bool isBusy,
     required Future<void> Function(T item) onSelected,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
           style: AppTextStyles.labelSmall.copyWith(
-            color: AppColors.onSurfaceVariant,
+            color: colorScheme.onSurfaceVariant,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -363,7 +372,7 @@ class DashboardPage extends StatelessWidget {
           Text(
             emptyMessage,
             style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.onSurfaceVariant,
+              color: colorScheme.onSurfaceVariant,
             ),
           )
         else
@@ -386,18 +395,18 @@ class DashboardPage extends StatelessWidget {
                       : (_) {
                           unawaited(onSelected(item));
                         },
-                  selectedColor: AppColors.primary,
-                  backgroundColor: AppColors.surfaceContainerLow,
+                  selectedColor: colorScheme.primary,
+                  backgroundColor: colorScheme.surfaceContainerLow,
                   labelStyle: AppTextStyles.labelMedium.copyWith(
                     color: selected
-                        ? AppColors.white
-                        : AppColors.onSurfaceVariant,
+                        ? colorScheme.onPrimary
+                        : colorScheme.onSurfaceVariant,
                     fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
                   ),
                   side: BorderSide(
                     color: selected
-                        ? AppColors.primary
-                        : AppColors.surfaceContainerHigh,
+                        ? colorScheme.primary
+                        : colorScheme.surfaceContainerHigh,
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
@@ -416,6 +425,8 @@ class DashboardPage extends StatelessWidget {
   // ──────────────────────── Hero Status Card ────────────────────
 
   Widget _buildHeroStatusCard(BuildContext context, DashboardState state) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingHero),
       decoration: const SignatureGlowDecoration(),
@@ -431,7 +442,7 @@ class DashboardPage extends StatelessWidget {
                   vertical: AppDimensions.badgePaddingVertical,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.white.withValues(
+                  color: colorScheme.surface.withValues(
                     alpha: AppDimensions.opacitySubtle,
                   ),
                   borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
@@ -442,16 +453,16 @@ class DashboardPage extends StatelessWidget {
                     Container(
                       width: AppDimensions.dotIndicatorSize,
                       height: AppDimensions.dotIndicatorSize,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AppColors.secondaryFixed,
+                        color: colorScheme.tertiary,
                       ),
                     ),
                     const SizedBox(width: AppDimensions.paddingSM),
                     Text(
                       state.heroBadge,
                       style: AppTextStyles.labelSmall.copyWith(
-                        color: AppColors.onPrimary,
+                        color: colorScheme.onPrimary,
                         fontWeight: FontWeight.w700,
                         fontSize: AppDimensions.fontSizeXS,
                       ),
@@ -464,7 +475,7 @@ class DashboardPage extends StatelessWidget {
               Text(
                 state.heroTitle,
                 style: AppTextStyles.headlineLarge.copyWith(
-                  color: AppColors.onPrimary,
+                  color: colorScheme.onPrimary,
                   fontWeight: FontWeight.w800,
                   height: AppDimensions.lineHeightCompact,
                 ),
@@ -474,7 +485,7 @@ class DashboardPage extends StatelessWidget {
               Text(
                 state.heroDescription,
                 style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.primaryFixed.withValues(
+                  color: colorScheme.onPrimary.withValues(
                     alpha: AppDimensions.opacityNearOpaque,
                   ),
                 ),
@@ -486,8 +497,8 @@ class DashboardPage extends StatelessWidget {
                   _resumeLearning(context, state);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.white,
-                  foregroundColor: AppColors.primary,
+                  backgroundColor: colorScheme.onPrimary,
+                  foregroundColor: colorScheme.primary,
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppDimensions.paddingHero,
                     vertical: AppDimensions.progressBarLG,
@@ -513,7 +524,7 @@ class DashboardPage extends StatelessWidget {
               height: AppDimensions.glowCircleSizeSM,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.white.withValues(
+                color: colorScheme.surface.withValues(
                   alpha: AppDimensions.opacityFaint,
                 ),
               ),
@@ -666,6 +677,8 @@ class DashboardPage extends StatelessWidget {
   // ──────────── Quiz Card ────────────
 
   Widget _buildQuizCard(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return AppCard(
       color: AppColors.primary.withValues(alpha: AppDimensions.opacityOverlay),
       padding: const EdgeInsets.all(AppDimensions.paddingXXL),
@@ -698,7 +711,7 @@ class DashboardPage extends StatelessWidget {
                 child: Text(
                   AppStrings.dashboardLive,
                   style: AppTextStyles.labelSmall.copyWith(
-                    color: AppColors.white,
+                    color: colorScheme.onError,
                     fontSize: AppDimensions.fontSizeXXSPlus,
                     fontWeight: FontWeight.w800,
                   ),
@@ -715,7 +728,7 @@ class DashboardPage extends StatelessWidget {
           Text(
             AppStrings.dashboardQuizDesc,
             style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.onSurfaceVariant,
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: AppDimensions.paddingLG),
@@ -749,9 +762,11 @@ class DashboardPage extends StatelessWidget {
   // ──────────────────────── Formula Vault ───────────────────────
 
   Widget _buildFormulaVault(BuildContext context, DashboardState state) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return AppCard(
       padding: const EdgeInsets.all(AppDimensions.paddingXXL),
-      border: Border.all(color: AppColors.surfaceContainerHigh),
+      border: Border.all(color: colorScheme.surfaceContainerHigh),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -760,7 +775,7 @@ class DashboardPage extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(AppDimensions.paddingMD),
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceContainerLow,
+                  color: colorScheme.surfaceContainerLow,
                   borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
                   boxShadow: const [AppShadows.subtle],
                 ),
@@ -783,7 +798,7 @@ class DashboardPage extends StatelessWidget {
                     Text(
                       state.vaultDescription,
                       style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.onSurfaceVariant,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ],
@@ -802,6 +817,7 @@ class DashboardPage extends StatelessWidget {
   Widget _buildVaultGrid(BuildContext context, DashboardState state) {
     return LayoutBuilder(
       builder: (context, constraints) {
+        final colorScheme = Theme.of(context).colorScheme;
         final isWide = constraints.maxWidth > AppDimensions.breakpointMedium;
         final crossAxisCount = isWide ? 4 : 2;
         // Items from state + an "add" slot
@@ -832,21 +848,21 @@ class DashboardPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: AppColors.surfaceContainerLowest,
+                      color: colorScheme.surfaceContainerLowest,
                       borderRadius: BorderRadius.circular(
                         AppDimensions.radiusXL,
                       ),
                       border: Border.all(
-                        color: AppColors.surfaceContainerHighest,
+                        color: colorScheme.surfaceContainerHighest,
                         width: AppDimensions.borderWidth,
                       ),
                       boxShadow: const [AppShadows.subtle],
                     ),
-                    child: const Center(
+                    child: Center(
                       child: Icon(
                         LucideIcons.plus,
                         size: AppDimensions.iconLG,
-                        color: AppColors.surfaceDim,
+                        color: colorScheme.outline,
                       ),
                     ),
                   ),
@@ -864,9 +880,9 @@ class DashboardPage extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(AppDimensions.paddingLG),
                   decoration: BoxDecoration(
-                    color: AppColors.surfaceContainerLowest,
+                    color: colorScheme.surfaceContainerLowest,
                     borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-                    border: Border.all(color: AppColors.surfaceContainerHigh),
+                    border: Border.all(color: colorScheme.surfaceContainerHigh),
                     boxShadow: const [AppShadows.subtle],
                   ),
                   child: Column(
@@ -876,7 +892,7 @@ class DashboardPage extends StatelessWidget {
                       Text(
                         item.label,
                         style: AppTextStyles.labelSmall.copyWith(
-                          color: AppColors.slate400,
+                          color: colorScheme.onSurfaceVariant,
                           fontSize: AppDimensions.fontSizeXS,
                         ),
                       ),
@@ -923,6 +939,8 @@ class DashboardPage extends StatelessWidget {
   /// Data-driven recent studies list — uses [RecentStudy.iconName]
   /// and [RecentStudy.colorValue] instead of hardcoded `isMath` checks.
   Widget _buildContinueStudying(BuildContext context, DashboardState state) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     if (state.recentStudies.isEmpty) {
       return AppCard(
         padding: const EdgeInsets.all(AppDimensions.paddingXXL),
@@ -944,7 +962,7 @@ class DashboardPage extends StatelessWidget {
             Text(
               AppStrings.dashboardNoRecentDescription,
               style: AppTextStyles.bodySmall.copyWith(
-                color: AppColors.onSurfaceVariant,
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: AppDimensions.paddingLG),
@@ -1006,17 +1024,17 @@ class DashboardPage extends StatelessWidget {
                             Text(
                               '${study.subject} • ${study.lastViewed}',
                               style: AppTextStyles.bodySmall.copyWith(
-                                color: AppColors.onSurfaceVariant,
+                                color: colorScheme.onSurfaceVariant,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),
                       ),
-                      const Icon(
+                      Icon(
                         LucideIcons.chevronRight,
                         size: AppDimensions.iconMD,
-                        color: AppColors.outline,
+                        color: colorScheme.outline,
                       ),
                     ],
                   ),

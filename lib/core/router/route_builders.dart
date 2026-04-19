@@ -241,22 +241,7 @@ abstract final class RouteBuilders {
             return AppPageTransitions.fadeTransition(
               state: state,
               child: BlocProvider(
-                create: (_) {
-                  final cubit = getIt<ChaptersCubit>();
-                  final selection = getIt<SubjectSelectionCubit>().state;
-                  final curriculum = getIt<CurriculumCubit>().state;
-                  if (selection.hasSelection) {
-                    Future.microtask(
-                      () => cubit.loadChapters(
-                        selection.subject!.id,
-                        curriculumKey:
-                            curriculum.curriculum?.curriculumKey ??
-                            AppStrings.unknownCurriculum,
-                      ),
-                    );
-                  }
-                  return cubit;
-                },
+                create: (_) => getIt<ChaptersCubit>(),
                 child: const ChaptersPage(),
               ),
             );

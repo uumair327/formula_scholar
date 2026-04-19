@@ -113,11 +113,11 @@ class PracticePage extends StatelessWidget {
                             child: Column(
                               children: [
                                 const SizedBox(height: AppDimensions.paddingLG),
-                                _buildProgressSection(state),
+                                _buildProgressSection(context, state),
                                 const SizedBox(
                                   height: AppDimensions.paddingXXL,
                                 ),
-                                _buildQuestionCard(question),
+                                _buildQuestionCard(context, question),
                                 const SizedBox(
                                   height: AppDimensions.paddingXXL,
                                 ),
@@ -153,6 +153,7 @@ class PracticePage extends StatelessWidget {
   }
 
   Widget _buildEmptyState(BuildContext context, AuthState authState) {
+    final colorScheme = Theme.of(context).colorScheme;
     final photoUrl = authState.user?.photoUrl ?? '';
 
     return Scaffold(
@@ -172,14 +173,14 @@ class PracticePage extends StatelessWidget {
                         Container(
                           width: AppDimensions.imageXL,
                           height: AppDimensions.imageXL,
-                          decoration: const BoxDecoration(
-                            color: AppColors.primaryFixed,
+                          decoration: BoxDecoration(
+                            color: colorScheme.primaryContainer,
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(
+                          child: Icon(
                             LucideIcons.bookOpen,
                             size: AppDimensions.imageLG,
-                            color: AppColors.primary,
+                            color: colorScheme.primary,
                           ),
                         ),
                         const SizedBox(height: AppDimensions.paddingXXL),
@@ -195,7 +196,7 @@ class PracticePage extends StatelessWidget {
                           AppStrings.practiceNoQuestionsDesc,
                           textAlign: TextAlign.center,
                           style: AppTextStyles.bodyMedium.copyWith(
-                            color: AppColors.onSurfaceVariant,
+                            color: colorScheme.onSurfaceVariant,
                           ),
                         ),
                         const SizedBox(height: AppDimensions.paddingXXL),
@@ -282,7 +283,9 @@ class PracticePage extends StatelessWidget {
     );
   }
 
-  Widget _buildProgressSection(PracticeState state) {
+  Widget _buildProgressSection(BuildContext context, PracticeState state) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -296,7 +299,7 @@ class PracticePage extends StatelessWidget {
                 Text(
                   '${AppStrings.practiceQuestionLabel} ${state.currentIndex + 1} ${AppStrings.ofLabel} ${state.totalQuestions}',
                   style: AppTextStyles.labelMedium.copyWith(
-                    color: AppColors.primary,
+                    color: colorScheme.primary,
                     fontWeight: FontWeight.w700,
                     letterSpacing: AppDimensions.letterSpacingWide,
                   ),
@@ -312,16 +315,16 @@ class PracticePage extends StatelessWidget {
             ),
             Row(
               children: [
-                const Icon(
+                Icon(
                   LucideIcons.star,
                   size: AppDimensions.iconSM,
-                  color: AppColors.secondary,
+                  color: colorScheme.secondary,
                 ),
                 const SizedBox(width: AppDimensions.paddingXS),
                 Text(
                   '${state.totalPoints} ${AppStrings.ptsLabel}',
                   style: AppTextStyles.labelLarge.copyWith(
-                    color: AppColors.secondary,
+                    color: colorScheme.secondary,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -338,7 +341,9 @@ class PracticePage extends StatelessWidget {
     );
   }
 
-  Widget _buildQuestionCard(QuizQuestion question) {
+  Widget _buildQuestionCard(BuildContext context, QuizQuestion question) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return AppCard(
       padding: const EdgeInsets.all(AppDimensions.paddingHero),
       clipBehavior: Clip.hardEdge,
@@ -370,13 +375,13 @@ class PracticePage extends StatelessWidget {
                   vertical: AppDimensions.badgePaddingVertical,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryFixed,
+                  color: colorScheme.primaryContainer,
                   borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
                 ),
                 child: Text(
                   question.category,
                   style: AppTextStyles.labelSmall.copyWith(
-                    color: AppColors.onPrimaryFixedVariant,
+                    color: colorScheme.onPrimaryContainer,
                     fontWeight: FontWeight.w800,
                     letterSpacing: AppDimensions.letterSpacingWide,
                     fontSize: AppDimensions.fontSizeXS,
@@ -403,6 +408,8 @@ class PracticePage extends StatelessWidget {
     PracticeState state,
     QuizQuestion question,
   ) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final isWide = constraints.maxWidth > AppDimensions.breakpointMedium;
@@ -429,7 +436,7 @@ class PracticePage extends StatelessWidget {
                     ? AppColors.error.withValues(
                         alpha: AppDimensions.opacityFaint,
                       )
-                    : AppColors.surfaceContainerLowest,
+                    : colorScheme.surfaceContainerLowest,
                 borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                 border: Border.all(
                   color: showCorrectState || showCorrectHint
@@ -453,19 +460,18 @@ class PracticePage extends StatelessWidget {
                           ? AppColors.secondary
                           : showWrongState
                           ? AppColors.error
-                          : AppColors.surfaceContainerHigh,
+                          : colorScheme.surfaceContainerHigh,
                     ),
                     alignment: Alignment.center,
                     child: Text(
                       option.id,
                       style: AppTextStyles.titleMedium.copyWith(
                         fontWeight: FontWeight.w700,
-                        color:
-                            showCorrectState ||
-                                showCorrectHint ||
-                                showWrongState
+                        color: showCorrectState || showCorrectHint
                             ? AppColors.onSecondary
-                            : AppColors.outline,
+                            : showWrongState
+                            ? AppColors.onError
+                            : colorScheme.outline,
                       ),
                     ),
                   ),
@@ -698,6 +704,8 @@ class PracticePage extends StatelessWidget {
     PracticeState state,
     AuthState authState,
   ) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -709,14 +717,14 @@ class PracticePage extends StatelessWidget {
                 Container(
                   width: AppDimensions.imageXL,
                   height: AppDimensions.imageXL,
-                  decoration: const BoxDecoration(
-                    color: AppColors.secondaryFixed,
+                  decoration: BoxDecoration(
+                    color: colorScheme.secondaryContainer,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     LucideIcons.trophy,
                     size: AppDimensions.imageLG,
-                    color: AppColors.secondary,
+                    color: colorScheme.secondary,
                   ),
                 ),
                 const SizedBox(height: AppDimensions.paddingHero),
@@ -724,7 +732,7 @@ class PracticePage extends StatelessWidget {
                   AppStrings.quizCompleteTitle,
                   style: AppTextStyles.headlineLarge.copyWith(
                     fontWeight: FontWeight.w900,
-                    color: AppColors.onSurface,
+                    color: colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: AppDimensions.paddingSM),
@@ -732,7 +740,7 @@ class PracticePage extends StatelessWidget {
                   AppStrings.quizCompleteDesc,
                   textAlign: TextAlign.center,
                   style: AppTextStyles.bodyLarge.copyWith(
-                    color: AppColors.onSurfaceVariant,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
                 const SizedBox(height: AppDimensions.paddingHero),
@@ -801,6 +809,8 @@ class _ScoreStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       children: [
         Icon(icon, size: AppDimensions.iconLG, color: color),
@@ -815,7 +825,7 @@ class _ScoreStat extends StatelessWidget {
         Text(
           label,
           style: AppTextStyles.labelSmall.copyWith(
-            color: AppColors.outline,
+            color: colorScheme.outline,
             fontWeight: FontWeight.w600,
           ),
         ),

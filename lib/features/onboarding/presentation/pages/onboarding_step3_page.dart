@@ -20,6 +20,8 @@ class OnboardingStep3Page extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return BlocBuilder<OnboardingCubit, OnboardingState>(
       buildWhen: (prev, curr) =>
           prev.status != curr.status ||
@@ -75,6 +77,7 @@ class OnboardingStep3Page extends StatelessWidget {
                               child: _GradeCard(
                                 grade: g,
                                 isSelected: state.selectedGrade?.id == g.id,
+                                colorScheme: colorScheme,
                                 onTap: () => context
                                     .read<OnboardingCubit>()
                                     .selectGrade(g),
@@ -91,6 +94,7 @@ class OnboardingStep3Page extends StatelessWidget {
                               child: _GradeCard(
                                 grade: g,
                                 isSelected: state.selectedGrade?.id == g.id,
+                                colorScheme: colorScheme,
                                 onTap: () => context
                                     .read<OnboardingCubit>()
                                     .selectGrade(g),
@@ -112,10 +116,12 @@ class _GradeCard extends StatelessWidget {
   const _GradeCard({
     required this.grade,
     required this.isSelected,
+    required this.colorScheme,
     required this.onTap,
   });
   final Grade grade;
   final bool isSelected;
+  final ColorScheme colorScheme;
   final VoidCallback onTap;
 
   @override
@@ -126,7 +132,7 @@ class _GradeCard extends StatelessWidget {
         duration: AppDurations.animationFast,
         padding: const EdgeInsets.all(AppDimensions.paddingXXL),
         decoration: BoxDecoration(
-          color: AppColors.surfaceContainerLowest,
+          color: colorScheme.surfaceContainerLowest,
           borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
           border: Border.all(
             color: isSelected
@@ -174,7 +180,7 @@ class _GradeCard extends StatelessWidget {
                 Text(
                   'Grade ${grade.classNumber}',
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.onSurfaceVariant,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],

@@ -14,6 +14,8 @@ class MasteryToolsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -24,13 +26,12 @@ class MasteryToolsSection extends StatelessWidget {
         const SizedBox(height: AppDimensions.paddingLG),
         if (tools.isEmpty)
           AppCard(
-            color: AppColors.white,
             boxShadow: const [AppShadows.subtle],
             child: Row(
               children: [
-                const Icon(
+                Icon(
                   LucideIcons.info,
-                  color: AppColors.primary,
+                  color: colorScheme.primary,
                   size: AppDimensions.iconLG,
                 ),
                 const SizedBox(width: AppDimensions.paddingMD),
@@ -38,7 +39,7 @@ class MasteryToolsSection extends StatelessWidget {
                   child: Text(
                     AppStrings.masteryToolsSyncing,
                     style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ),
@@ -79,7 +80,6 @@ class MasteryToolsSection extends StatelessWidget {
                   }
                 },
                 child: AppCard(
-                  color: AppColors.white,
                   boxShadow: const [AppShadows.subtle],
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

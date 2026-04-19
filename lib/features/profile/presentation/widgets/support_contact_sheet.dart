@@ -7,7 +7,6 @@ import '../../../../shared/shared.dart';
 
 /// Bottom sheet for support contact actions.
 class SupportContactSheet extends StatelessWidget {
-
   const SupportContactSheet({
     super.key,
     required this.title,
@@ -35,10 +34,12 @@ class SupportContactSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerLowest,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(AppDimensions.radiusXXL),
           topRight: Radius.circular(AppDimensions.radiusXXL),
         ),
@@ -58,7 +59,7 @@ class SupportContactSheet extends StatelessWidget {
                 width: AppDimensions.avatarMD,
                 height: AppDimensions.borderWidthThick,
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceContainerHigh,
+                  color: colorScheme.surfaceContainerHigh,
                   borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
                 ),
               ),
@@ -66,11 +67,11 @@ class SupportContactSheet extends StatelessWidget {
             const SizedBox(height: AppDimensions.paddingXXL),
             Row(
               children: [
-                const AppIconCircle(
+                AppIconCircle(
                   icon: LucideIcons.messageCircle,
                   size: AppDimensions.avatarHero,
-                  backgroundColor: AppColors.primaryFixed,
-                  iconColor: AppColors.primary,
+                  backgroundColor: colorScheme.primaryContainer,
+                  iconColor: colorScheme.primary,
                   iconSize: AppDimensions.iconXL,
                 ),
                 const SizedBox(width: AppDimensions.paddingLG),
@@ -81,7 +82,7 @@ class SupportContactSheet extends StatelessWidget {
                       Text(
                         title,
                         style: AppTextStyles.headlineSmall.copyWith(
-                          color: AppColors.onSurface,
+                          color: colorScheme.onSurface,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -89,7 +90,7 @@ class SupportContactSheet extends StatelessWidget {
                       Text(
                         subtitle,
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.onSurfaceVariant,
+                          color: colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],
@@ -99,12 +100,12 @@ class SupportContactSheet extends StatelessWidget {
             ),
             const SizedBox(height: AppDimensions.paddingXXL),
             AppCard(
-              border: Border.all(color: AppColors.surfaceContainerHigh),
+              border: Border.all(color: colorScheme.surfaceContainerHigh),
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     LucideIcons.mail,
-                    color: AppColors.primary,
+                    color: colorScheme.primary,
                     size: AppDimensions.iconMD,
                   ),
                   const SizedBox(width: AppDimensions.paddingMD),
@@ -138,7 +139,7 @@ class SupportContactSheet extends StatelessWidget {
               child: Text(
                 'If you are blocked anywhere in the app, use the FAQ section first and then contact support with the exact screen name.',
                 style: AppTextStyles.bodySmall.copyWith(
-                  color: AppColors.onSurfaceVariant,
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
             ),

@@ -85,7 +85,7 @@ class _SignupPageState extends State<SignupPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.surface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         body: Stack(
           children: [
             _SignupBackgroundDecor(),
@@ -198,7 +198,6 @@ class _SignupBackgroundDecor extends StatelessWidget {
 // ── Wide layout ────────────────────────────────────────────────────
 
 class _SignupWideLayout extends StatelessWidget {
-
   const _SignupWideLayout({
     required this.formKey,
     required this.nameController,
@@ -228,10 +227,12 @@ class _SignupWideLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       margin: const EdgeInsets.all(AppDimensions.paddingXL),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
         boxShadow: const [AppShadows.ghost],
       ),
@@ -316,12 +317,12 @@ class _SignupBrandColumn extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(AppDimensions.paddingLG),
             decoration: BoxDecoration(
-              color: AppColors.white.withValues(
+              color: AppColors.onPrimary.withValues(
                 alpha: AppDimensions.opacitySubtle,
               ),
               borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
               border: Border.all(
-                color: AppColors.white.withValues(
+                color: AppColors.onPrimary.withValues(
                   alpha: AppDimensions.opacityFaint,
                 ),
               ),
@@ -393,7 +394,6 @@ class _SignupBrandColumn extends StatelessWidget {
 // ── Form scroll wrapper ─────────────────────────────────────────────
 
 class _SignupFormScroll extends StatelessWidget {
-
   const _SignupFormScroll({
     required this.formKey,
     required this.nameController,
@@ -423,6 +423,8 @@ class _SignupFormScroll extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(
         horizontal: AppDimensions.paddingHero,
@@ -444,7 +446,7 @@ class _SignupFormScroll extends StatelessWidget {
             Text(
               AppStrings.signupSubtitle,
               style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.onSurfaceVariant,
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: AppDimensions.paddingXXL),
@@ -485,7 +487,7 @@ class _SignupFormScroll extends StatelessWidget {
                 onPressed: onTogglePassword,
                 icon: Icon(
                   obscurePassword ? LucideIcons.eye : LucideIcons.eyeOff,
-                  color: AppColors.onSurfaceVariant,
+                  color: colorScheme.onSurfaceVariant,
                   size: AppDimensions.iconDefault,
                 ),
               ),
@@ -503,7 +505,7 @@ class _SignupFormScroll extends StatelessWidget {
                 onPressed: onToggleConfirm,
                 icon: Icon(
                   obscureConfirm ? LucideIcons.eyeOff : LucideIcons.eye,
-                  color: AppColors.onSurfaceVariant,
+                  color: colorScheme.onSurfaceVariant,
                   size: AppDimensions.iconDefault,
                 ),
               ),
@@ -525,7 +527,7 @@ class _SignupFormScroll extends StatelessWidget {
                       Text(
                         AppStrings.signupTerms,
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.onSurfaceVariant,
+                          color: colorScheme.onSurfaceVariant,
                         ),
                       ),
                       GestureDetector(
@@ -542,7 +544,7 @@ class _SignupFormScroll extends StatelessWidget {
                       Text(
                         AppStrings.signupAnd,
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.onSurfaceVariant,
+                          color: colorScheme.onSurfaceVariant,
                         ),
                       ),
                       GestureDetector(
@@ -602,7 +604,9 @@ class _SignupFormScroll extends StatelessWidget {
             // ── Or join with divider ──
             Row(
               children: [
-                const Expanded(child: Divider(color: AppColors.surfaceVariant)),
+                Expanded(
+                  child: Divider(color: colorScheme.surfaceContainerHighest),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppDimensions.paddingMD,
@@ -610,11 +614,13 @@ class _SignupFormScroll extends StatelessWidget {
                   child: Text(
                     AppStrings.signupOrJoin,
                     style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ),
-                const Expanded(child: Divider(color: AppColors.surfaceVariant)),
+                Expanded(
+                  child: Divider(color: colorScheme.surfaceContainerHighest),
+                ),
               ],
             ),
             const SizedBox(height: AppDimensions.paddingLG),
@@ -636,8 +642,8 @@ class _SignupFormScroll extends StatelessWidget {
                         vertical: AppDimensions.paddingMD,
                       ),
                       shape: const StadiumBorder(),
-                      backgroundColor: AppColors.surfaceContainerHigh,
-                      foregroundColor: AppColors.onSurface,
+                      backgroundColor: colorScheme.surfaceContainerHigh,
+                      foregroundColor: colorScheme.onSurface,
                     ),
                   ),
                 ),
@@ -662,8 +668,8 @@ class _SignupFormScroll extends StatelessWidget {
                         vertical: AppDimensions.paddingMD,
                       ),
                       shape: const StadiumBorder(),
-                      backgroundColor: AppColors.surfaceContainerHigh,
-                      foregroundColor: AppColors.onSurface,
+                      backgroundColor: colorScheme.surfaceContainerHigh,
+                      foregroundColor: colorScheme.onSurface,
                     ),
                   ),
                 ),
@@ -679,7 +685,7 @@ class _SignupFormScroll extends StatelessWidget {
                   Text(
                     AppStrings.signupHasAccount,
                     style: AppTextStyles.bodyMedium.copyWith(
-                      color: AppColors.onSurfaceVariant,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ),
                   const SizedBox(width: AppDimensions.paddingXXS),

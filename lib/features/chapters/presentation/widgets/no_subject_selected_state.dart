@@ -9,6 +9,8 @@ class NoSubjectSelectedState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppDimensions.paddingSection),
@@ -18,7 +20,7 @@ class NoSubjectSelectedState extends StatelessWidget {
             Icon(
               LucideIcons.bookOpen,
               size: AppDimensions.iconHero,
-              color: AppColors.outline.withValues(
+              color: colorScheme.outline.withValues(
                 alpha: AppDimensions.opacityMedium,
               ),
             ),
@@ -34,7 +36,7 @@ class NoSubjectSelectedState extends StatelessWidget {
               AppStrings.selectSubjectDesc,
               textAlign: TextAlign.center,
               style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.onSurfaceVariant,
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
           ],

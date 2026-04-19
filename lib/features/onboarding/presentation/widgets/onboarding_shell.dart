@@ -10,7 +10,6 @@ import '../../../../core/core.dart';
 /// Each step page only needs to supply [body], [currentStep],
 /// [onBack], and [onContinue] — keeping step files small.
 class OnboardingShell extends StatelessWidget {
-
   const OnboardingShell({
     super.key,
     required this.currentStep,
@@ -31,8 +30,10 @@ class OnboardingShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: AppColors.surface,
+      backgroundColor: colorScheme.surface,
       body: Column(
         children: [
           // ── Frosted-glass app bar ──
@@ -67,7 +68,6 @@ class OnboardingShell extends StatelessWidget {
 // ── App bar ──────────────────────────────────────────────────────────
 
 class _OnboardingAppBar extends StatelessWidget {
-
   const _OnboardingAppBar({
     required this.currentStep,
     required this.totalSteps,
@@ -77,6 +77,8 @@ class _OnboardingAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return SafeArea(
       bottom: false,
       child: Padding(
@@ -95,14 +97,14 @@ class _OnboardingAppBar extends StatelessWidget {
                 AppStrings.onboardingAppBrand,
                 style: AppTextStyles.headlineSmall.copyWith(
                   fontWeight: FontWeight.w900,
-                  color: AppColors.white,
+                  color: colorScheme.onPrimary,
                 ),
               ),
             ),
             Text(
               AppStrings.onboardingStepOf(currentStep, totalSteps),
               style: AppTextStyles.labelMedium.copyWith(
-                color: AppColors.onSurfaceVariant,
+                color: colorScheme.onSurfaceVariant,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -116,12 +118,13 @@ class _OnboardingAppBar extends StatelessWidget {
 // ── Progress bar ──────────────────────────────────────────────────────
 
 class _OnboardingProgressBar extends StatelessWidget {
-
   const _OnboardingProgressBar({required this.progress});
   final double progress;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingXL),
       child: ClipRRect(
@@ -129,7 +132,7 @@ class _OnboardingProgressBar extends StatelessWidget {
         child: LinearProgressIndicator(
           value: progress,
           minHeight: AppDimensions.progressBarSM,
-          backgroundColor: AppColors.surfaceContainer,
+          backgroundColor: colorScheme.surfaceContainer,
           valueColor: const AlwaysStoppedAnimation(AppColors.primary),
         ),
       ),
@@ -140,7 +143,6 @@ class _OnboardingProgressBar extends StatelessWidget {
 // ── Bottom nav ────────────────────────────────────────────────────────
 
 class _OnboardingBottomNav extends StatelessWidget {
-
   const _OnboardingBottomNav({
     required this.onBack,
     required this.continueLabel,
@@ -154,6 +156,8 @@ class _OnboardingBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -171,8 +175,8 @@ class _OnboardingBottomNav extends StatelessWidget {
                       vertical: AppDimensions.paddingLG,
                     ),
                     shape: const StadiumBorder(),
-                    foregroundColor: AppColors.onSurface,
-                    backgroundColor: AppColors.surfaceContainer,
+                    foregroundColor: colorScheme.onSurface,
+                    backgroundColor: colorScheme.surfaceContainer,
                     side: BorderSide.none,
                   ),
                   child: Text(
@@ -223,7 +227,6 @@ class _OnboardingBottomNav extends StatelessWidget {
 
 /// Displays tag, title, and optional subtitle for each onboarding step.
 class OnboardingStepHeading extends StatelessWidget {
-
   const OnboardingStepHeading({
     super.key,
     required this.tag,
@@ -236,6 +239,8 @@ class OnboardingStepHeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -261,7 +266,7 @@ class OnboardingStepHeading extends StatelessWidget {
           Text(
             subtitle!,
             style: AppTextStyles.bodyLarge.copyWith(
-              color: AppColors.onSurfaceVariant,
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
         ],
@@ -272,7 +277,6 @@ class OnboardingStepHeading extends StatelessWidget {
 
 /// A selectable card used in onboarding step 2, 3, 4.
 class OnboardingSelectCard extends StatelessWidget {
-
   const OnboardingSelectCard({
     super.key,
     required this.icon,
@@ -289,13 +293,15 @@ class OnboardingSelectCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: AppDurations.animationFast,
         padding: const EdgeInsets.all(AppDimensions.paddingXXL),
         decoration: BoxDecoration(
-          color: AppColors.surfaceContainerLowest,
+          color: colorScheme.surfaceContainerLowest,
           borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
           border: Border.all(
             color: isSelected
@@ -326,7 +332,7 @@ class OnboardingSelectCard extends StatelessWidget {
                 Text(
                   subtitle,
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.onSurfaceVariant,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],

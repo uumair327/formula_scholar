@@ -14,7 +14,6 @@ import '../../domain/domain.dart';
 /// provided by the backend renders correctly without modifying
 /// this widget (Open/Closed Principle).
 class SubjectCard extends StatelessWidget {
-
   const SubjectCard({super.key, required this.subject, this.onTap});
   final Subject subject;
   final VoidCallback? onTap;
@@ -31,18 +30,27 @@ class SubjectCard extends StatelessWidget {
     final iconData = AppIconMapper.resolve(subject.iconName);
 
     if (subject.isFeatured) {
-      return _buildFeaturedCard(accentColor, lightColor, iconData);
+      return _buildFeaturedCard(context, accentColor, lightColor, iconData);
     }
-    return _buildCompactCard(accentColor, lightColor, faintColor, iconData);
+    return _buildCompactCard(
+      context,
+      accentColor,
+      lightColor,
+      faintColor,
+      iconData,
+    );
   }
 
   // ── Featured (large) card ──
 
   Widget _buildFeaturedCard(
+    BuildContext context,
     Color accentColor,
     Color lightColor,
     IconData iconData,
   ) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onTap: onTap,
       child: AppCard(
@@ -76,9 +84,9 @@ class SubjectCard extends StatelessWidget {
                           vertical: AppDimensions.badgePaddingVertical,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.surfaceContainerLowest,
+                          color: colorScheme.surfaceContainerLowest,
                           border: Border.all(
-                            color: AppColors.outlineVariant.withValues(
+                            color: colorScheme.outlineVariant.withValues(
                               alpha: AppDimensions.opacityLight,
                             ),
                           ),
@@ -89,7 +97,7 @@ class SubjectCard extends StatelessWidget {
                         child: Text(
                           subject.badgeText!,
                           style: AppTextStyles.labelSmall.copyWith(
-                            color: AppColors.onSurfaceVariant,
+                            color: colorScheme.onSurfaceVariant,
                             fontSize: AppDimensions.fontSizeXS,
                           ),
                         ),
@@ -110,7 +118,7 @@ class SubjectCard extends StatelessWidget {
                 Text(
                   subject.description,
                   style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.onSurfaceVariant,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
                 const SizedBox(height: AppDimensions.paddingXL),
@@ -151,6 +159,7 @@ class SubjectCard extends StatelessWidget {
   // ── Compact (standard) card ──
 
   Widget _buildCompactCard(
+    BuildContext context,
     Color accentColor,
     Color lightColor,
     Color faintColor,

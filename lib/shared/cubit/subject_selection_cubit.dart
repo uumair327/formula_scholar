@@ -33,18 +33,20 @@ class SubjectSelectionCubit extends HydratedCubit<SubjectSelectionState> {
       'Subject selected: $name (id=$id)',
       tag: AppLogTags.subjectSelection,
     );
-    emit(
-      state.copyWith(
-        subject: SelectedSubject(
-          id: id,
-          name: name,
-          category: category,
-          description: description,
-          subtitle: subtitle,
-        ),
-        curriculumKey: _activeCurriculumKey,
+    final nextState = state.copyWith(
+      subject: SelectedSubject(
+        id: id,
+        name: name,
+        category: category,
+        description: description,
+        subtitle: subtitle,
       ),
+      curriculumKey: _activeCurriculumKey,
     );
+
+    if (nextState != state) {
+      emit(nextState);
+    }
   }
 
   void updateAvailableSubjects(List<SelectedSubject> subjects) {
@@ -69,7 +71,10 @@ class SubjectSelectionCubit extends HydratedCubit<SubjectSelectionState> {
       subject: nextSubject,
       curriculumKey: _activeCurriculumKey,
     );
-    emit(nextState);
+
+    if (nextState != state) {
+      emit(nextState);
+    }
   }
 
   void clearSelection() {
@@ -77,7 +82,10 @@ class SubjectSelectionCubit extends HydratedCubit<SubjectSelectionState> {
       'Subject selection cleared',
       tag: AppLogTags.subjectSelection,
     );
-    emit(state.copyWith(subject: null));
+    final nextState = state.copyWith(subject: null);
+    if (nextState != state) {
+      emit(nextState);
+    }
   }
 
   void _handleCurriculumSync(SelectedCurriculum? curriculum) {
@@ -91,7 +99,10 @@ class SubjectSelectionCubit extends HydratedCubit<SubjectSelectionState> {
 
     final selectionMatchesCurriculum = state.curriculumKey == nextCurriculumKey;
     if (selectionMatchesCurriculum) {
-      emit(state.copyWith(curriculumKey: nextCurriculumKey));
+      final nextState = state.copyWith(curriculumKey: nextCurriculumKey);
+      if (nextState != state) {
+        emit(nextState);
+      }
       return;
     }
 
@@ -99,13 +110,14 @@ class SubjectSelectionCubit extends HydratedCubit<SubjectSelectionState> {
       'Curriculum changed; clearing stale subject selection',
       tag: AppLogTags.subjectSelection,
     );
-    emit(
-      state.copyWith(
-        subject: null,
-        availableSubjects: const [],
-        curriculumKey: nextCurriculumKey,
-      ),
+    final nextState = state.copyWith(
+      subject: null,
+      availableSubjects: const [],
+      curriculumKey: nextCurriculumKey,
     );
+    if (nextState != state) {
+      emit(nextState);
+    }
   }
 
   String? _buildCurriculumKey(SelectedCurriculum? curriculum) {
