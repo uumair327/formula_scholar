@@ -50,7 +50,7 @@ class FormulasCubit extends Cubit<FormulasState>
       ),
     );
 
-    final result = await _getFormulas(subjectId, chapterId);
+    final result = await _getFormulas(subjectId, chapterId, curriculumKey: curriculumKey);
 
     switch (result) {
       case Success(:final data):
@@ -120,6 +120,8 @@ class FormulasCubit extends Cubit<FormulasState>
           description: f.description,
           isMastered: newMasteredState,
           isBookmarked: f.isBookmarked,
+          audiences: f.audiences,
+          isGeneralContent: f.isGeneralContent,
         );
       }
       return f;
@@ -146,6 +148,8 @@ class FormulasCubit extends Cubit<FormulasState>
             description: f.description,
             isMastered: !newMasteredState,
             isBookmarked: f.isBookmarked,
+            audiences: f.audiences,
+            isGeneralContent: f.isGeneralContent,
           );
         }
         return f;
@@ -175,6 +179,8 @@ class FormulasCubit extends Cubit<FormulasState>
           description: f.description,
           isMastered: f.isMastered,
           isBookmarked: newBookmarkState,
+          audiences: f.audiences,
+          isGeneralContent: f.isGeneralContent,
         );
       }
       return f;
@@ -199,6 +205,8 @@ class FormulasCubit extends Cubit<FormulasState>
             description: f.description,
             isMastered: f.isMastered,
             isBookmarked: !newBookmarkState,
+            audiences: f.audiences,
+            isGeneralContent: f.isGeneralContent,
           );
         }
         return f;

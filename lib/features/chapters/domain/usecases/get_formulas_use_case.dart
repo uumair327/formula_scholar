@@ -15,11 +15,11 @@ class GetFormulasUseCase {
   final FormulasRepositoryPort _repository;
 
   /// Executes the use case.
-  Future<Result<List<Formula>>> call(String subjectId, String chapterId) {
+  Future<Result<List<Formula>>> call(String subjectId, String chapterId, {String? curriculumKey}) {
     AppLogger.trace(
       'GetFormulasUseCase called for subject=$subjectId, chapter=$chapterId',
       tag: AppLogTags.formulasUseCase,
     );
-    return _repository.getFormulas(subjectId, chapterId);
+    return _repository.getFormulas(subjectId, chapterId, curriculumKey: curriculumKey);
   }
 }

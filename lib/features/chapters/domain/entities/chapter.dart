@@ -28,6 +28,8 @@ class Chapter extends Equatable {
     required this.progressPercent,
     this.status = ChapterStatus.notStarted,
     this.isSaved = false,
+    this.audiences = const [],
+    this.isGeneralContent = false,
   });
   final String id;
   final String name;
@@ -37,6 +39,8 @@ class Chapter extends Equatable {
   final double progressPercent;
   final ChapterStatus status;
   final bool isSaved;
+  final List<String> audiences;
+  final bool isGeneralContent;
 
   bool get isInProgress => status == ChapterStatus.inProgress;
   bool get isLocked => status == ChapterStatus.locked;

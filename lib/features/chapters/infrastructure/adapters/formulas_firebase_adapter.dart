@@ -18,19 +18,40 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
   final FirebaseAuth _firebaseAuth;
 
   @override
-  Future<List<Formula>> getFormulas(String subjectId, String chapterId) async {
+  Future<List<Formula>> getFormulas(
+    String subjectId,
+    String chapterId, {
+    String? curriculumKey,
+  }) async {
     AppLogger.trace(
       'getFormulas($subjectId, $chapterId) fetching from Firestore',
       tag: AppLogTags.formulasDataSource,
     );
 
-    final snapshot = await _firestore
+    var snapshot = await _firestore
         .collection('subjects')
         .doc(subjectId)
         .collection('chapters')
         .doc(chapterId)
         .collection('formulas')
+        .where(
+          Filter.or(
+            Filter('isGeneralContent', isEqualTo: true),
+            Filter('audiences', arrayContains: curriculumKey),
+          )
+        )
         .get();
+
+    // Legacy fallback or fully universal fallback
+    if (snapshot.docs.isEmpty) {
+      snapshot = await _firestore
+          .collection('subjects')
+          .doc(subjectId)
+          .collection('chapters')
+          .doc(chapterId)
+          .collection('formulas')
+          .get();
+    }
 
     Set<String> bookmarkedIds = {};
     final masteryMap = <String, bool>{};
@@ -102,6 +123,11 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
       description: data['description'] ?? '',
       isMastered: masteryOverride ?? (data['isMastered'] ?? false),
       isBookmarked: isBookmarked,
+      isGeneralContent: data['isGeneralContent'] ?? false,
+      audiences: (data['audiences'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          const [],
     );
   }
 

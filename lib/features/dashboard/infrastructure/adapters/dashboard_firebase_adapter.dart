@@ -128,6 +128,11 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
             : null,
         lastViewed: data['lastViewed'],
         isFeatured: data['isFeatured'] ?? false,
+        isGeneralContent: data['isGeneralContent'] ?? false,
+        audiences: (data['audiences'] as List<dynamic>?)
+                ?.map((e) => e.toString())
+                .toList() ??
+            const [],
       );
     }).toList();
   }
@@ -215,25 +220,25 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
     String boardId,
     String gradeId,
   ) async {
-    final primary = await _firestore
-        .collection('subjects')
-        .where('boardId', isEqualTo: boardId)
-        .where('gradeId', isEqualTo: gradeId)
-        .get();
-    if (primary.docs.isNotEmpty) {
-      return primary;
-    }
+    final token = '${boardId}_$gradeId';
+    final tokenAlt = '${boardId}_${_alternateGradeId(gradeId)}';
+    
+    // Using Firestore Filter.or to pull universal content OR strictly assigned targeted content
+    // Also falling back to old 'boardId' check to support legacy seeded data
+    final snapshot = await _firestore.collection('subjects').where(
+      Filter.or(
+        Filter('isGeneralContent', isEqualTo: true),
+        Filter('audiences', arrayContainsAny: [token, tokenAlt, boardId]),
+        Filter('boardId', isEqualTo: boardId), 
+      )
+    ).get();
 
-    final alternateGradeId = _alternateGradeId(gradeId);
-    if (alternateGradeId == null || alternateGradeId == gradeId) {
-      return primary;
+    // Final fallback to load EVERYTHING if database lacks assignment but needs to render
+    if (snapshot.docs.isEmpty) {
+      return _firestore.collection('subjects').get();
     }
-
-    return _firestore
-        .collection('subjects')
-        .where('boardId', isEqualTo: boardId)
-        .where('gradeId', isEqualTo: alternateGradeId)
-        .get();
+    
+    return snapshot;
   }
 
   String? _alternateGradeId(String gradeId) {

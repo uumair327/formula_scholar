@@ -25,6 +25,9 @@ const scripts = [
   'seed_subjects.js',     // Subjects, Chapters, Mastery Tools
   'seed_formulas.js',     // Formulas per chapter
   'seed_practice.js',     // Practice quiz questions
+  'seed_curriculum_registry.js', // Curriculum control metadata for dashboard
+  'seed_content_registry.js', // Content control metadata for dashboard
+  'seed_status.js',       // Dashboard seed/sync metadata
 ];
 
 for (const script of scripts) {

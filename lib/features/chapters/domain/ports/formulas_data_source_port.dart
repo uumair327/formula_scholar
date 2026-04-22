@@ -7,7 +7,11 @@ import '../entities/formula.dart';
 /// chapter-specific within a subject.
 abstract interface class FormulasDataSourcePort {
   /// Fetches all formulas for the given [chapterId] within [subjectId].
-  Future<List<Formula>> getFormulas(String subjectId, String chapterId);
+  Future<List<Formula>> getFormulas(
+    String subjectId,
+    String chapterId, {
+    String? curriculumKey,
+  });
 
   /// Toggles the bookmark status of a formula for the current user.
   Future<void> toggleBookmark(

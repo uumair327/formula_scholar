@@ -22,12 +22,27 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
       tag: AppLogTags.chaptersDataSource,
     );
 
-    // 1. Fetch static chapters
-    final snapshot = await _firestore
+    // 1. Fetch targeted static chapters (Universal Schema Architecture)
+    var snapshot = await _firestore
         .collection('subjects')
         .doc(subjectId)
         .collection('chapters')
+        .where(
+          Filter.or(
+            Filter('isGeneralContent', isEqualTo: true),
+            Filter('audiences', arrayContains: curriculumKey),
+          )
+        )
         .get();
+
+    // Legacy fallback: if strictly tagged chapters don't exist, load all
+    if (snapshot.docs.isEmpty) {
+      snapshot = await _firestore
+          .collection('subjects')
+          .doc(subjectId)
+          .collection('chapters')
+          .get();
+    }
 
     final uid = _firebaseAuth.currentUser?.uid;
 
@@ -152,6 +167,11 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
         progressPercent: progressPercent,
         status: status,
         isSaved: savedChapterIds.contains((data['id'] ?? doc.id) as String),
+        isGeneralContent: data['isGeneralContent'] ?? false,
+        audiences: (data['audiences'] as List<dynamic>?)
+                ?.map((e) => e.toString())
+                .toList() ??
+            const [],
       );
     }).toList();
   }

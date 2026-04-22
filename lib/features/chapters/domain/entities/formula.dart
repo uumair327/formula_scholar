@@ -14,6 +14,8 @@ class Formula extends Equatable {
     required this.description,
     this.isMastered = false,
     this.isBookmarked = false,
+    this.audiences = const [],
+    this.isGeneralContent = false,
   });
   final String id;
   final String title;
@@ -21,6 +23,8 @@ class Formula extends Equatable {
   final String description;
   final bool isMastered;
   final bool isBookmarked;
+  final List<String> audiences;
+  final bool isGeneralContent;
 
   @override
   List<Object?> get props => [id, title, latex, isMastered, isBookmarked];

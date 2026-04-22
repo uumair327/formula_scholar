@@ -4,6 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "seed:base": "node seed.js",
+    "seed:subjects": "node seed_subjects.js",
+    "seed:formulas": "node seed_formulas.js",
+    "seed:practice": "node seed_practice.js",
+    "seed:curriculum-registry": "node seed_curriculum_registry.js",
+    "seed:content-registry": "node seed_content_registry.js",
+    "seed:status": "node seed_status.js",
+    "seed:all": "node seed_all.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

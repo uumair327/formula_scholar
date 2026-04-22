@@ -141,6 +141,7 @@ cp .env.example .env
 - `lib/firebase_options.dart` and `android/app/google-services.json` are generated per Firebase project.
 - Do not commit Firebase Admin SDK service-account JSON files.
 - Set `FIREBASE_SERVICE_ACCOUNT_PATH` locally when running the maintenance scripts, or pass the JSON path as the first CLI argument.
+- For full seed order and dashboard/app Firestore contract, see `docs/FIRESTORE_SEEDING_AND_SYNC.md`.
 
 ---
 

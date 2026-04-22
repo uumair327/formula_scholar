@@ -23,6 +23,8 @@ class Subject extends Equatable {
     this.masteryPercentage,
     this.lastViewed,
     this.isFeatured = false,
+    this.audiences = const [],
+    this.isGeneralContent = false,
   });
   final String id;
   final String name;
@@ -55,6 +57,12 @@ class Subject extends Equatable {
 
   /// Whether this subject is the "featured" / primary card.
   final bool isFeatured;
+
+  /// The regional/curriculum tokens this subject belongs to.
+  final List<String> audiences;
+
+  /// True if this subject applies universally regardless of audience token.
+  final bool isGeneralContent;
 
   @override
   List<Object?> get props => [id, name, category];

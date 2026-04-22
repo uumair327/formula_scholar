@@ -16,14 +16,15 @@ class FormulasRepositoryImpl implements FormulasRepositoryPort {
   @override
   Future<Result<List<Formula>>> getFormulas(
     String subjectId,
-    String chapterId,
-  ) async {
+    String chapterId, {
+    String? curriculumKey,
+  }) async {
     AppLogger.trace(
       'getFormulas($subjectId, $chapterId) called',
       tag: AppLogTags.formulasRepo,
     );
     try {
-      final result = await _dataSource.getFormulas(subjectId, chapterId);
+      final result = await _dataSource.getFormulas(subjectId, chapterId, curriculumKey: curriculumKey);
       AppLogger.info(
         'getFormulas($subjectId, $chapterId) succeeded: ${result.length} formulas',
         tag: AppLogTags.formulasRepo,
