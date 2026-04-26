@@ -2,13 +2,9 @@
 ///
 /// Provides safe access to dashboard-controlled curriculum metadata like
 /// whether a collection is locked, write-enabled, or has been recently synced.
+library;
 
 class CurriculumRegistry {
-  final String generatedAt;
-  final String datasetVersion;
-  final String status; // 'healthy', 'stale', 'degraded'
-  final int nodeCount;
-  final List<CurriculumNode> nodes;
 
   const CurriculumRegistry({
     required this.generatedAt,
@@ -25,16 +21,6 @@ class CurriculumRegistry {
       nodeCount = 0,
       nodes = const [];
 
-  bool get isEmpty => nodeCount == 0;
-
-  CurriculumNode? findNode(String key) {
-    try {
-      return nodes.firstWhere((node) => node.key == key);
-    } catch (e) {
-      return null;
-    }
-  }
-
   factory CurriculumRegistry.fromMap(Map<String, dynamic> map) {
     final rawNodes =
         (map['nodes'] as List?)?.cast<Map<String, dynamic>>() ?? [];
@@ -50,6 +36,21 @@ class CurriculumRegistry {
       nodes: nodes,
     );
   }
+  final String generatedAt;
+  final String datasetVersion;
+  final String status; // 'healthy', 'stale', 'degraded'
+  final int nodeCount;
+  final List<CurriculumNode> nodes;
+
+  bool get isEmpty => nodeCount == 0;
+
+  CurriculumNode? findNode(String key) {
+    try {
+      return nodes.firstWhere((node) => node.key == key);
+    } catch (e) {
+      return null;
+    }
+  }
 
   Map<String, dynamic> toMap() => {
     'generatedAt': generatedAt,
@@ -62,13 +63,6 @@ class CurriculumRegistry {
 
 /// A single curriculum node (e.g., 'countries', 'subjects', 'chapters')
 class CurriculumNode {
-  final String key;
-  final String label;
-  final String collectionPath;
-  final int nodeCount;
-  final String status; // 'active', 'read-only', 'locked'
-  final bool writeEnabled;
-  final String lastSyncedAt;
 
   const CurriculumNode({
     required this.key,
@@ -80,10 +74,6 @@ class CurriculumNode {
     required this.lastSyncedAt,
   });
 
-  bool get isActive => status == 'active';
-  bool get isReadOnly => status == 'read-only';
-  bool get isLocked => status == 'locked';
-
   factory CurriculumNode.fromMap(Map<String, dynamic> map) => CurriculumNode(
     key: map['key'] as String? ?? '',
     label: map['label'] as String? ?? '',
@@ -93,6 +83,17 @@ class CurriculumNode {
     writeEnabled: map['writeEnabled'] as bool? ?? true,
     lastSyncedAt: map['lastSyncedAt'] as String? ?? 'n/a',
   );
+  final String key;
+  final String label;
+  final String collectionPath;
+  final int nodeCount;
+  final String status; // 'active', 'read-only', 'locked'
+  final bool writeEnabled;
+  final String lastSyncedAt;
+
+  bool get isActive => status == 'active';
+  bool get isReadOnly => status == 'read-only';
+  bool get isLocked => status == 'locked';
 
   Map<String, dynamic> toMap() => {
     'key': key,

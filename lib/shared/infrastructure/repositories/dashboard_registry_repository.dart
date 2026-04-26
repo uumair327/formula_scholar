@@ -5,6 +5,7 @@
 /// 2. Caches in Hive for offline support
 /// 3. Falls back to empty registries on network errors
 /// 4. Streams real-time updates for reactive UI
+library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -13,13 +14,13 @@ import '../../domain/models/curriculum_registry.dart';
 import '../adapters/dashboard_registry_adapter.dart';
 
 class DashboardRegistryRepository {
-  final DashboardRegistryAdapter _adapter;
 
   DashboardRegistryRepository(this._adapter);
 
   factory DashboardRegistryRepository.create(FirebaseFirestore firestore) {
     return DashboardRegistryRepository(DashboardRegistryAdapter(firestore));
   }
+  final DashboardRegistryAdapter _adapter;
 
   /// Fetch the curriculum registry once
   ///

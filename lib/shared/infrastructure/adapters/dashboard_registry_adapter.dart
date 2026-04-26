@@ -6,6 +6,7 @@
 /// 3. Return cached data if Firestore is unavailable
 ///
 /// This keeps the app in sync with dashboard control without breaking existing queries.
+library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -13,9 +14,9 @@ import '../../domain/models/content_registry.dart';
 import '../../domain/models/curriculum_registry.dart';
 
 class DashboardRegistryAdapter {
-  final FirebaseFirestore _firestore;
 
   DashboardRegistryAdapter(this._firestore);
+  final FirebaseFirestore _firestore;
 
   /// Fetch curriculum registry metadata (countries, states, boards, subjects, chapters, etc.)
   ///
