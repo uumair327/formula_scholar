@@ -37,7 +37,8 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
         .where(
           Filter.or(
             Filter('isGeneralContent', isEqualTo: true),
-            Filter('audiences', arrayContains: curriculumKey),
+            Filter('canonicalScopeTags', arrayContains: curriculumKey),
+            Filter('audiences', arrayContains: curriculumKey), // Legacy fallback
           )
         )
         .get();
@@ -128,6 +129,7 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
               ?.map((e) => e.toString())
               .toList() ??
           const [],
+      canonicalFormulaId: data['canonicalFormulaId'] as String?,
     );
   }
 

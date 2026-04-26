@@ -305,11 +305,29 @@ class _FormulaCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      formula.title,
-                      style: AppTextStyles.titleLarge.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            formula.title,
+                            style: AppTextStyles.titleLarge.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        if (formula.canonicalFormulaId != null && formula.canonicalFormulaId!.isNotEmpty) ...[
+                          const SizedBox(width: AppDimensions.paddingSM),
+                          Tooltip(
+                            message: 'Canonical Formula: Linked to global library',
+                            child: Icon(
+                              LucideIcons.link,
+                              size: AppDimensions.iconXS,
+                              color: colorScheme.tertiary,
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                     if (formula.isMastered)
                       Text(

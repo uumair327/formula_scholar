@@ -265,9 +265,22 @@ class AuthFirebaseAdapter implements AuthDataSourcePort {
       uid: user.uid,
       email: user.email,
       displayName: user.displayName,
-      photoUrl: user.photoURL,
+      photoUrl: _upgradeGooglePhotoUrl(user.photoURL),
       emailVerified: user.emailVerified,
     );
+  }
+
+  /// Upgrades Google profile photo URLs from the default 96px thumbnail
+  /// to a 400px version for crisp rendering on high-density displays.
+  String? _upgradeGooglePhotoUrl(String? url) {
+    if (url == null || url.isEmpty) return url;
+    // Google user photos: replace =s96-c (or similar) with =s400-c
+    final upgraded = url.replaceAll(RegExp(r'=s\d+-c'), '=s400-c');
+    // If no size param was present, append one
+    if (upgraded == url && url.contains('googleusercontent.com')) {
+      return '$url=s400-c';
+    }
+    return upgraded;
   }
 
   /// Maps Firebase error codes to human-readable messages.

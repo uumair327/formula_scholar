@@ -100,6 +100,19 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
     };
   }
 
+  /// Upgrades Google profile photo URLs from the default 96px thumbnail
+  /// to a 400px version for crisp rendering on high-density displays.
+  String _upgradeGooglePhotoUrl(String url) {
+    if (url.isEmpty) return url;
+    // Google user photos: replace =s96-c (or similar) with =s400-c
+    final upgraded = url.replaceAll(RegExp(r'=s\d+-c'), '=s400-c');
+    // If no size param was present, append one
+    if (upgraded == url && url.contains('googleusercontent.com')) {
+      return '$url=s400-c';
+    }
+    return upgraded;
+  }
+
   @override
   Future<UserProfile> getUserProfile() async {
     AppLogger.trace(
@@ -119,16 +132,19 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
       );
     }
 
-    // Start with Firebase Auth as the source of truth for identity.
+    // Firebase Auth is the source of truth for identity fields.
     final authName = currentUser.displayName ?? '';
     final authEmail = currentUser.email ?? '';
-    final authPhoto = currentUser.photoURL ?? '';
+    final authPhoto = _upgradeGooglePhotoUrl(currentUser.photoURL ?? '');
+
+    AppLogger.trace(
+      'Auth photo URL: $authPhoto',
+      tag: AppLogTags.profileDataSource,
+    );
 
     // Merge with Firestore user doc for app-specific fields (grade, board, isPro).
-    final docSnapshot = await _firestore
-        .collection('users')
-        .doc(currentUser.uid)
-        .get();
+    final docRef = _firestore.collection('users').doc(currentUser.uid);
+    final docSnapshot = await docRef.get();
 
     if (!docSnapshot.exists) {
       // Seed a baseline user doc for first-time users.
@@ -139,7 +155,7 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
         'grade': AppStrings.profileGrade,
         'isPro': false,
       };
-      await _firestore.collection('users').doc(currentUser.uid).set(seedData);
+      await docRef.set(seedData);
 
       return UserProfile(
         name: authName.isNotEmpty ? authName : 'Scholar',
@@ -162,21 +178,36 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
       fallback: _readString(data, 'grade', fallback: AppStrings.profileGrade),
     );
     final fsBoard = _readString(data, 'boardName');
-    final fsAvatarUrl = _readString(
-      data,
-      'avatarUrl',
-      fallback: authPhoto.isNotEmpty
-          ? authPhoto
-          : AppAssets.profileHeroAvatarUrl,
-    );
+    final fsAvatarUrl = _readString(data, 'avatarUrl');
     final fsIsPro = _readBool(data, 'isPro', fallback: false);
 
+    // Always prefer the live Firebase Auth photo over a stale/empty
+    // Firestore value. This ensures Google profile changes propagate.
+    final resolvedAvatar = authPhoto.isNotEmpty
+        ? authPhoto
+        : (fsAvatarUrl.isNotEmpty
+            ? fsAvatarUrl
+            : AppAssets.profileHeroAvatarUrl);
+
+    // Sync Firestore with the latest auth identity so it stays current.
+    if (authPhoto.isNotEmpty && authPhoto != fsAvatarUrl) {
+      await docRef.set({'avatarUrl': authPhoto}, SetOptions(merge: true));
+    }
+    if (authName.isNotEmpty && authName != fsName) {
+      await docRef.set({'name': authName}, SetOptions(merge: true));
+    }
+    if (authEmail.isNotEmpty && authEmail != fsEmail) {
+      await docRef.set({'email': authEmail}, SetOptions(merge: true));
+    }
+
     return UserProfile(
-      name: fsName.isNotEmpty ? fsName : 'Scholar',
-      email: fsEmail,
+      name: (fsName.isNotEmpty ? fsName : authName).isNotEmpty
+          ? (fsName.isNotEmpty ? fsName : authName)
+          : 'Scholar',
+      email: fsEmail.isNotEmpty ? fsEmail : authEmail,
       grade: fsGrade,
       board: fsBoard,
-      avatarUrl: fsAvatarUrl,
+      avatarUrl: resolvedAvatar,
       isPro: fsIsPro,
     );
   }

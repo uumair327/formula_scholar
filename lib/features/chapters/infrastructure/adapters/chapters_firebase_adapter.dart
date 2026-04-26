@@ -30,7 +30,8 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
         .where(
           Filter.or(
             Filter('isGeneralContent', isEqualTo: true),
-            Filter('audiences', arrayContains: curriculumKey),
+            Filter('canonicalScopeTags', arrayContains: curriculumKey),
+            Filter('audiences', arrayContains: curriculumKey), // Legacy fallback
           )
         )
         .get();

@@ -20,6 +20,11 @@ jobs:
           channel: stable
           cache: true
 
+      # firebase_options.dart is gitignored. Generate a stub for CI
+      # analysis/tests (values don't matter — only structure does).
+      - name: Generate firebase_options.dart stub
+        run: cp lib/firebase_options.dart.example lib/firebase_options.dart
+
       - name: Install dependencies
         run: flutter pub get
 
