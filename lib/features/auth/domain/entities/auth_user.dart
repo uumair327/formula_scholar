@@ -6,7 +6,6 @@ import 'package:equatable/equatable.dart';
 /// This is the canonical user representation that flows through
 /// ports, use cases, and cubits.
 class AuthUser extends Equatable {
-
   const AuthUser({
     required this.uid,
     this.email,
@@ -14,6 +13,7 @@ class AuthUser extends Equatable {
     this.photoUrl,
     this.emailVerified = false,
   });
+
   /// Unique identifier assigned by the auth provider.
   final String uid;
 

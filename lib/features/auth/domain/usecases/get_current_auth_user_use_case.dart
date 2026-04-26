@@ -6,7 +6,6 @@ import '../ports/auth_repository_port.dart';
 
 @injectable
 class GetCurrentAuthUserUseCase {
-
   const GetCurrentAuthUserUseCase(this._repository);
   final AuthRepositoryPort _repository;
 

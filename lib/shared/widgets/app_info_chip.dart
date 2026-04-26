@@ -8,7 +8,6 @@ import '../../core/core.dart';
 /// (e.g. "8 Units", "124 Formulas"), geometry progress badges,
 /// and algebra section tags.
 class AppInfoChip extends StatelessWidget {
-
   const AppInfoChip({
     super.key,
     required this.label,
@@ -18,6 +17,7 @@ class AppInfoChip extends StatelessWidget {
     this.horizontalPadding = AppDimensions.paddingMD,
     this.verticalPadding = AppDimensions.paddingXS,
   });
+
   /// Text displayed inside the chip.
   final String label;
 

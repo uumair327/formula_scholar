@@ -4,7 +4,6 @@ import '../domain.dart';
 
 @lazySingleton
 class GetGradesUseCase {
-
   GetGradesUseCase(this._repository);
   final OnboardingRepositoryPort _repository;
 

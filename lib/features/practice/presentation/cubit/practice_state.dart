@@ -8,7 +8,6 @@ enum PracticeStatus { initial, loading, loaded, completed, error }
 
 /// State for the Practice quiz feature.
 class PracticeState extends Equatable {
-
   const PracticeState({
     this.status = PracticeStatus.initial,
     this.questions = const [],

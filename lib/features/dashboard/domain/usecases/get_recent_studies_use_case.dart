@@ -9,7 +9,6 @@ import '../ports/dashboard_repository_port.dart';
 /// Single-responsibility use case following SOLID principles.
 @injectable
 class GetRecentStudiesUseCase {
-
   const GetRecentStudiesUseCase({required DashboardRepositoryPort repository})
     : _repository = repository;
   final DashboardRepositoryPort _repository;

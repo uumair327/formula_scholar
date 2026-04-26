@@ -16,7 +16,6 @@ import 'profile_state.dart';
 @injectable
 class ProfileCubit extends Cubit<ProfileState>
     with CubitFailureLogger<ProfileState> {
-
   ProfileCubit({
     required GetUserProfileUseCase getUserProfile,
     required GetProfileStatsUseCase getProfileStats,

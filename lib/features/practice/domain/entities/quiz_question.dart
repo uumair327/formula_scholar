@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// Represents a single quiz option (A, B, C, D).
 class QuizOption extends Equatable {
-
   const QuizOption({required this.id, required this.text});
   final String id;
   final String text;
@@ -13,7 +12,6 @@ class QuizOption extends Equatable {
 
 /// Represents a single quiz question with multiple-choice options.
 class QuizQuestion extends Equatable {
-
   const QuizQuestion({
     required this.id,
     required this.category,

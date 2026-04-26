@@ -7,7 +7,6 @@ const Object _unset = Object();
 /// Decoupled from feature-specific subject entities to avoid direct
 /// cross-feature dependencies in shared state.
 class SelectedSubject extends Equatable {
-
   const SelectedSubject({
     required this.id,
     required this.name,
@@ -27,7 +26,6 @@ class SelectedSubject extends Equatable {
 
 /// State for subject selection, consumed by Chapters, Saved, Practice.
 class SubjectSelectionState extends Equatable {
-
   const SubjectSelectionState({
     this.subject,
     this.availableSubjects = const [],

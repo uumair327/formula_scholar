@@ -7,7 +7,6 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: ProfileDataSourcePort)
 class ProfileFirebaseAdapter implements ProfileDataSourcePort {
-
   ProfileFirebaseAdapter(this._firestore, this._firebaseAuth);
   final FirebaseFirestore _firestore;
   final FirebaseAuth _firebaseAuth;
@@ -186,8 +185,8 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
     final resolvedAvatar = authPhoto.isNotEmpty
         ? authPhoto
         : (fsAvatarUrl.isNotEmpty
-            ? fsAvatarUrl
-            : AppAssets.profileHeroAvatarUrl);
+              ? fsAvatarUrl
+              : AppAssets.profileHeroAvatarUrl);
 
     // Sync Firestore with the latest auth identity so it stays current.
     if (authPhoto.isNotEmpty && authPhoto != fsAvatarUrl) {

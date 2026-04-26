@@ -11,7 +11,6 @@ import 'dashboard_state.dart';
 @injectable
 class DashboardCubit extends Cubit<DashboardState>
     with CubitFailureLogger<DashboardState> {
-
   DashboardCubit({
     required GetStudyProgressUseCase getStudyProgress,
     required GetSubjectsUseCase getSubjects,

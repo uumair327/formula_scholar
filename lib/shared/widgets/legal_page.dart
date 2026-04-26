@@ -8,7 +8,6 @@ import '../../core/core.dart';
 /// Displays formatted legal content in a scrollable page with the app's
 /// standard design system. Required for Google Play Store compliance.
 class LegalPage extends StatelessWidget {
-
   const LegalPage({super.key, required this.title, required this.sections});
   final String title;
   final List<LegalSection> sections;
@@ -195,14 +194,12 @@ class LegalPage extends StatelessWidget {
 
 /// A section within a legal document.
 class LegalSection {
-
   const LegalSection({required this.title, required this.content});
   final String title;
   final String content;
 }
 
 class _LegalSectionCard extends StatelessWidget {
-
   const _LegalSectionCard({required this.index, required this.section});
   final int index;
   final LegalSection section;

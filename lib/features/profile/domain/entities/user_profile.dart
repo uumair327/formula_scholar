@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// User profile entity.
 class UserProfile extends Equatable {
-
   const UserProfile({
     required this.name,
     this.email = '',

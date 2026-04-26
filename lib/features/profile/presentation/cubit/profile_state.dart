@@ -8,7 +8,6 @@ enum ProfileStatus { initial, loading, loaded, error }
 
 /// State for the Profile feature.
 class ProfileState extends Equatable {
-
   const ProfileState({
     this.status = ProfileStatus.initial,
     this.profile,

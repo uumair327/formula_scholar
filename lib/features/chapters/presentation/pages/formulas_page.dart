@@ -316,10 +316,12 @@ class _FormulaCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        if (formula.canonicalFormulaId != null && formula.canonicalFormulaId!.isNotEmpty) ...[
+                        if (formula.canonicalFormulaId != null &&
+                            formula.canonicalFormulaId!.isNotEmpty) ...[
                           const SizedBox(width: AppDimensions.paddingSM),
                           Tooltip(
-                            message: 'Canonical Formula: Linked to global library',
+                            message:
+                                'Canonical Formula: Linked to global library',
                             child: Icon(
                               LucideIcons.link,
                               size: AppDimensions.iconXS,

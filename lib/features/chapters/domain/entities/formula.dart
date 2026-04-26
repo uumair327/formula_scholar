@@ -6,7 +6,6 @@ import 'package:equatable/equatable.dart';
 /// any formula across any subject or chapter. The backend determines
 /// the content; the UI renders generically.
 class Formula extends Equatable {
-
   const Formula({
     required this.id,
     required this.title,
@@ -29,5 +28,12 @@ class Formula extends Equatable {
   final String? canonicalFormulaId;
 
   @override
-  List<Object?> get props => [id, title, latex, isMastered, isBookmarked, canonicalFormulaId];
+  List<Object?> get props => [
+    id,
+    title,
+    latex,
+    isMastered,
+    isBookmarked,
+    canonicalFormulaId,
+  ];
 }

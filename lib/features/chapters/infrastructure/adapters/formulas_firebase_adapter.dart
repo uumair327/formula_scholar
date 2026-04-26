@@ -38,8 +38,11 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
           Filter.or(
             Filter('isGeneralContent', isEqualTo: true),
             Filter('canonicalScopeTags', arrayContains: curriculumKey),
-            Filter('audiences', arrayContains: curriculumKey), // Legacy fallback
-          )
+            Filter(
+              'audiences',
+              arrayContains: curriculumKey,
+            ), // Legacy fallback
+          ),
         )
         .get();
 
@@ -125,7 +128,8 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
       isMastered: masteryOverride ?? (data['isMastered'] ?? false),
       isBookmarked: isBookmarked,
       isGeneralContent: data['isGeneralContent'] ?? false,
-      audiences: (data['audiences'] as List<dynamic>?)
+      audiences:
+          (data['audiences'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           const [],
@@ -341,40 +345,40 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
 
   _StudyMetadata _recentStudyMetadata(String subjectId) {
     if (subjectId.contains('math')) {
-        return const _StudyMetadata(
-          subject: 'Mathematics',
-          iconName: 'calculator',
-          colorValue: 0xFFD4A574,
-          backgroundColorValue: 0xFFFFEAD1,
-        );
+      return const _StudyMetadata(
+        subject: 'Mathematics',
+        iconName: 'calculator',
+        colorValue: 0xFFD4A574,
+        backgroundColorValue: 0xFFFFEAD1,
+      );
     } else if (subjectId.contains('physics')) {
-        return const _StudyMetadata(
-          subject: 'Physics',
-          iconName: 'rocket',
-          colorValue: 0xFF3B82F6,
-          backgroundColorValue: 0xFFDEEAFF,
-        );
+      return const _StudyMetadata(
+        subject: 'Physics',
+        iconName: 'rocket',
+        colorValue: 0xFF3B82F6,
+        backgroundColorValue: 0xFFDEEAFF,
+      );
     } else if (subjectId.contains('chem')) {
-        return const _StudyMetadata(
-          subject: 'Chemistry',
-          iconName: 'flask-conical',
-          colorValue: 0xFFEA580C,
-          backgroundColorValue: 0xFFFECDD2,
-        );
+      return const _StudyMetadata(
+        subject: 'Chemistry',
+        iconName: 'flask-conical',
+        colorValue: 0xFFEA580C,
+        backgroundColorValue: 0xFFFECDD2,
+      );
     } else if (subjectId.contains('bio')) {
-        return const _StudyMetadata(
-          subject: 'Biology',
-          iconName: 'microscope',
-          colorValue: 0xFF16A34A,
-          backgroundColorValue: 0xFFDCFCE7,
-        );
+      return const _StudyMetadata(
+        subject: 'Biology',
+        iconName: 'microscope',
+        colorValue: 0xFF16A34A,
+        backgroundColorValue: 0xFFDCFCE7,
+      );
     } else {
-        return const _StudyMetadata(
-          subject: 'General',
-          iconName: 'book-open',
-          colorValue: 0xFF00639A,
-          backgroundColorValue: 0xFFCEE5FF,
-        );
+      return const _StudyMetadata(
+        subject: 'General',
+        iconName: 'book-open',
+        colorValue: 0xFF00639A,
+        backgroundColorValue: 0xFFCEE5FF,
+      );
     }
   }
 

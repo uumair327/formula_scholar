@@ -39,7 +39,6 @@ class ComingSoonSheet {
 }
 
 class _ComingSoonContent extends StatelessWidget {
-
   const _ComingSoonContent({
     required this.featureName,
     this.description,

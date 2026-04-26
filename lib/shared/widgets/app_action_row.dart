@@ -8,7 +8,6 @@ import '../../core/core.dart';
 /// Used in dashboard subject cards (e.g. "Enter Lab ›", "Explore Elements ›")
 /// and geometry topic cards (e.g. "View Topics ›").
 class AppActionRow extends StatelessWidget {
-
   const AppActionRow({
     super.key,
     required this.label,
@@ -16,6 +15,7 @@ class AppActionRow extends StatelessWidget {
     this.onTap,
     this.trailingIcon = LucideIcons.chevronRight,
   });
+
   /// Action label text.
   final String label;
 

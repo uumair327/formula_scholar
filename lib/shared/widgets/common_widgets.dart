@@ -31,7 +31,6 @@ BoxDecoration ghostShadowDecoration({
 
 /// Progress bar widget used across the app.
 class ProgressBar extends StatelessWidget {
-
   const ProgressBar({
     super.key,
     required this.percentage,
@@ -68,7 +67,6 @@ class ProgressBar extends StatelessWidget {
 
 /// Category chip/tag widget.
 class CategoryChip extends StatelessWidget {
-
   const CategoryChip({
     super.key,
     required this.label,
@@ -100,7 +98,6 @@ class CategoryChip extends StatelessWidget {
 
 /// Section header with optional action.
 class SectionHeader extends StatelessWidget {
-
   const SectionHeader({
     super.key,
     required this.title,

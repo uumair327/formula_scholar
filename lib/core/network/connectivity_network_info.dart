@@ -13,15 +13,12 @@ import 'network_info_port.dart';
 /// [RetryInterceptor] which handles transient failures automatically.
 @LazySingleton(as: NetworkInfoPort)
 class ConnectivityNetworkInfo implements NetworkInfoPort {
-
   const ConnectivityNetworkInfo(this._connectivity);
   final Connectivity _connectivity;
 
   @override
   Future<bool> get isConnected async {
     final results = await _connectivity.checkConnectivity();
-    return results.any(
-      (result) => result != ConnectivityResult.none,
-    );
+    return results.any((result) => result != ConnectivityResult.none);
   }
 }

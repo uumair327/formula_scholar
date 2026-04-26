@@ -5,7 +5,6 @@ import 'package:equatable/equatable.dart';
 /// Uses [iconName] (a String) instead of `IconData` to keep the domain
 /// layer free of Flutter framework dependencies (Clean Architecture).
 class SettingsItem extends Equatable {
-
   const SettingsItem({
     required this.id,
     required this.label,

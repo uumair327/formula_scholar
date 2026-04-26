@@ -8,7 +8,6 @@ import '../ports/practice_repository_port.dart';
 /// scoped to the user's selected curriculum (board + grade).
 @injectable
 class GetQuestionsUseCase {
-
   const GetQuestionsUseCase({required PracticeRepositoryPort repository})
     : _repository = repository;
   final PracticeRepositoryPort _repository;

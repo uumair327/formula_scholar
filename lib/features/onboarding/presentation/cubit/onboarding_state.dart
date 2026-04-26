@@ -15,7 +15,6 @@ enum OnboardingStatus { initial, loading, loaded, error }
 
 /// State for the onboarding flow.
 class OnboardingState extends Equatable {
-
   const OnboardingState({
     this.step = OnboardingStep.locationSelection,
     this.status = OnboardingStatus.initial,

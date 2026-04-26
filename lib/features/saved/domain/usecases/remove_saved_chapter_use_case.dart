@@ -6,7 +6,6 @@ import '../ports/saved_repository_port.dart';
 /// Removes a chapter bookmark for a subject in a curriculum scope.
 @injectable
 class RemoveSavedChapterUseCase {
-
   const RemoveSavedChapterUseCase(this._repository);
   final SavedRepositoryPort _repository;
 

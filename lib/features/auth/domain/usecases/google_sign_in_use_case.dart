@@ -10,7 +10,6 @@ import '../ports/auth_repository_port.dart';
 /// Each use case = one job (Single Responsibility).
 @injectable
 class GoogleSignInUseCase {
-
   GoogleSignInUseCase(this._repository);
   final AuthRepositoryPort _repository;
 

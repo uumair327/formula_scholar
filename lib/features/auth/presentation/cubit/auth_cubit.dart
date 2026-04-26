@@ -12,7 +12,6 @@ import '../../domain/domain.dart';
 enum AuthStatus { initial, loading, authenticated, unauthenticated, error }
 
 class AuthState extends Equatable {
-
   const AuthState({
     this.status = AuthStatus.initial,
     this.user,
@@ -52,7 +51,6 @@ class AuthState extends Equatable {
 /// ProfileCubit) instead of raw try/catch.
 @injectable
 class AuthCubit extends Cubit<AuthState> {
-
   AuthCubit({
     required SignInUseCase signIn,
     required SignUpUseCase signUp,
@@ -267,9 +265,7 @@ class AuthCubit extends Cubit<AuthState> {
           tag: AppLogTags.authCubit,
           error: failure.originalError,
         );
-        emit(
-          state.copyWith(errorMessage: failure.message),
-        );
+        emit(state.copyWith(errorMessage: failure.message));
         return false;
     }
   }

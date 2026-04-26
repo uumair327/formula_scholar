@@ -12,7 +12,6 @@ import '../../domain/domain.dart';
 /// wrapped in [Result], consistent with all other repository implementations.
 @LazySingleton(as: AuthRepositoryPort)
 class AuthRepositoryImpl implements AuthRepositoryPort {
-
   AuthRepositoryImpl(this._remoteAdapter);
   final AuthDataSourcePort _remoteAdapter;
 

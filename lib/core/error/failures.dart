@@ -12,8 +12,8 @@ import 'package:equatable/equatable.dart';
 /// }
 /// ```
 sealed class Failure extends Equatable {
-
   const Failure({required this.message, this.originalError, this.stackTrace});
+
   /// Human-readable description of what went wrong.
   final String message;
 

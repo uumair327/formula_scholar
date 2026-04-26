@@ -56,7 +56,8 @@ Future<Result<T>> safeOperation<T>({
       stackTrace: stackTrace,
     );
 
-    final failure = onError?.call(e, stackTrace) ??
+    final failure =
+        onError?.call(e, stackTrace) ??
         ServerFailure(
           message: 'Failed to $operation',
           originalError: e,

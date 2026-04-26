@@ -13,7 +13,6 @@ import '../../domain/domain.dart';
 /// fallback for offline-first behaviour.
 @LazySingleton(as: DashboardRepositoryPort)
 class DashboardRepositoryImpl implements DashboardRepositoryPort {
-
   const DashboardRepositoryImpl({
     required DashboardDataSourcePort dataSource,
     required DashboardCachePort cache,
@@ -37,10 +36,7 @@ class DashboardRepositoryImpl implements DashboardRepositoryPort {
   }
 
   @override
-  Future<Result<List<Subject>>> getSubjects(
-    String boardId,
-    String gradeId,
-  ) {
+  Future<Result<List<Subject>>> getSubjects(String boardId, String gradeId) {
     return safeOperation(
       tag: AppLogTags.dashboardRepo,
       operation: 'getSubjects',

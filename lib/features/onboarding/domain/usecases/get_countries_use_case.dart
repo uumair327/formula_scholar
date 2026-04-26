@@ -4,7 +4,6 @@ import '../domain.dart';
 
 @lazySingleton
 class GetCountriesUseCase {
-
   GetCountriesUseCase(this._repository);
   final OnboardingRepositoryPort _repository;
 

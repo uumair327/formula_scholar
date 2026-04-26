@@ -6,7 +6,6 @@ import '../ports/theme_preference_repository_port.dart';
 
 @injectable
 class LoadThemePreferenceUseCase {
-
   const LoadThemePreferenceUseCase(this._repository);
   final ThemePreferenceRepositoryPort _repository;
 

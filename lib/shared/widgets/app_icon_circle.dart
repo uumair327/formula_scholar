@@ -8,7 +8,6 @@ import '../../core/core.dart';
 /// + Icon pattern found in settings list, progress stats, dashboard subject
 /// cards, and profile widgets — over 10 instances.
 class AppIconCircle extends StatelessWidget {
-
   const AppIconCircle({
     super.key,
     required this.icon,
@@ -19,6 +18,7 @@ class AppIconCircle extends StatelessWidget {
     this.borderRadius,
     this.boxShadow,
   });
+
   /// The icon to display.
   final IconData icon;
 

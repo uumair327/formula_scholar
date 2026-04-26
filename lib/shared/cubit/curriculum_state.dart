@@ -6,7 +6,6 @@ const Object _unset = Object();
 
 /// State for the global curriculum selection.
 class CurriculumState extends Equatable {
-
   const CurriculumState({
     this.curriculum,
     this.isLoading = true,

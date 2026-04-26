@@ -9,17 +9,24 @@ import '../ports/formulas_repository_port.dart';
 /// Single-responsibility use case following SOLID principles.
 @injectable
 class GetFormulasUseCase {
-
   const GetFormulasUseCase({required FormulasRepositoryPort repository})
     : _repository = repository;
   final FormulasRepositoryPort _repository;
 
   /// Executes the use case.
-  Future<Result<List<Formula>>> call(String subjectId, String chapterId, {String? curriculumKey}) {
+  Future<Result<List<Formula>>> call(
+    String subjectId,
+    String chapterId, {
+    String? curriculumKey,
+  }) {
     AppLogger.trace(
       'GetFormulasUseCase called for subject=$subjectId, chapter=$chapterId',
       tag: AppLogTags.formulasUseCase,
     );
-    return _repository.getFormulas(subjectId, chapterId, curriculumKey: curriculumKey);
+    return _repository.getFormulas(
+      subjectId,
+      chapterId,
+      curriculumKey: curriculumKey,
+    );
   }
 }

@@ -8,7 +8,6 @@ enum FormulasStatus { initial, loading, loaded, error }
 
 /// State for the Formulas detail screen.
 class FormulasState extends Equatable {
-
   const FormulasState({
     this.status = FormulasStatus.initial,
     this.subjectId,

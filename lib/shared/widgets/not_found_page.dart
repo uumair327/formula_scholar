@@ -9,8 +9,8 @@ import '../../core/core.dart';
 /// Registered via [GoRouter.errorBuilder]. Provides a clear message
 /// and a button to navigate back to the dashboard.
 class NotFoundPage extends StatelessWidget {
-
   const NotFoundPage({super.key, required this.state});
+
   /// The [GoRouterState] containing the unmatched URI.
   final GoRouterState state;
 

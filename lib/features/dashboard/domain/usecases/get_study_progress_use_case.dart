@@ -10,7 +10,6 @@ import '../entities/study_progress.dart';
 /// Cubits call this instead of the repository directly.
 @injectable
 class GetStudyProgressUseCase {
-
   const GetStudyProgressUseCase({required DashboardRepositoryPort repository})
     : _repository = repository;
   final DashboardRepositoryPort _repository;

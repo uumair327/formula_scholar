@@ -7,7 +7,6 @@ import '../ports/auth_repository_port.dart';
 /// Exposes auth state as a reactive stream for the UI and router.
 @injectable
 class WatchAuthStateUseCase {
-
   WatchAuthStateUseCase(this._repository);
   final AuthRepositoryPort _repository;
 

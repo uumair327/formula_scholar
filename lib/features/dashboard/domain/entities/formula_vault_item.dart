@@ -5,7 +5,6 @@ import 'package:equatable/equatable.dart';
 /// Data-driven — the backend provides vault items and the UI
 /// renders them without knowing specific subjects.
 class FormulaVaultItem extends Equatable {
-
   const FormulaVaultItem({
     required this.id,
     required this.label,

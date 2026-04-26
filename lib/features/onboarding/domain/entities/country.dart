@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// Represents a Country for localized curriculum selection.
 class Country extends Equatable {
-
   const Country({
     required this.id,
     required this.name,

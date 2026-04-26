@@ -6,13 +6,15 @@ import '../ports/profile_repository_port.dart';
 /// Use case for updating the user's study goal.
 @injectable
 class UpdateStudyGoalUseCase {
-
   const UpdateStudyGoalUseCase({required ProfileRepositoryPort repository})
     : _repository = repository;
   final ProfileRepositoryPort _repository;
 
   Future<Result<void>> call(String studyGoalId) {
-    AppLogger.trace('UpdateStudyGoalUseCase called', tag: AppLogTags.profileUseCase);
+    AppLogger.trace(
+      'UpdateStudyGoalUseCase called',
+      tag: AppLogTags.profileUseCase,
+    );
     return _repository.updateStudyGoal(studyGoalId);
   }
 }

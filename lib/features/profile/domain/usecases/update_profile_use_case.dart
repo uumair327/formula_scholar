@@ -5,7 +5,6 @@ import '../ports/profile_repository_port.dart';
 
 @injectable
 class UpdateProfileUseCase {
-
   const UpdateProfileUseCase({required ProfileRepositoryPort repository})
     : _repository = repository;
   final ProfileRepositoryPort _repository;

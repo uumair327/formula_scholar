@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// User notification preference flags.
 class NotificationPreferences extends Equatable {
-
   const NotificationPreferences({
     this.studyReminders = true,
     this.streakAlerts = true,

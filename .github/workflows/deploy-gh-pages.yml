@@ -36,7 +36,7 @@ permissions:
   id-token: write
 
 env:
-  FLUTTER_CHANNEL: stable
+  FLUTTER_VERSION: '3.22.0'
   BASE_HREF: /formula_scholar/
 
 jobs:
@@ -51,11 +51,17 @@ jobs:
         uses: actions/checkout@v4
 
       # ── Flutter SDK ───────────────────────────────────────────────
-      - name: Set up Flutter (${{ env.FLUTTER_CHANNEL }})
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: ${{ env.FLUTTER_CHANNEL }}
+          flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
+
+      - name: Verify Flutter installation
+        run: flutter doctor -v
+
+      - name: Enable Flutter Web
+        run: flutter config --enable-web
 
       # ── Generate firebase_options.dart from secrets ────────────────
       # This file is gitignored. CI must regenerate it at build time.
@@ -120,7 +126,7 @@ jobs:
 
       # ── Build ─────────────────────────────────────────────────────
       - name: Build Flutter Web (release, with base-href)
-        run: flutter build web --release --web-renderer html --base-href "${{ env.BASE_HREF }}"
+        run: flutter build web --release --base-href "${{ env.BASE_HREF }}"
 
       # ── 404 → SPA fallback ────────────────────────────────────────
       # GitHub Pages returns 404.html for unknown paths.

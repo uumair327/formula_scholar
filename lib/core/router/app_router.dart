@@ -13,7 +13,6 @@ import 'app_router_observer.dart';
 import 'route_builders.dart';
 
 class _AuthRouterNotifier extends ChangeNotifier {
-
   _AuthRouterNotifier(this._getCurrentAuthUser, this._watchAuthState) {
     _currentUser = _getCurrentAuthUser();
     _subscription = _watchAuthState().listen((user) {
@@ -83,9 +82,7 @@ abstract final class AppRouter {
 
       final isLoggedIn = _authNotifier.isLoggedIn;
       final isAuthPage = _authPaths.contains(state.matchedLocation);
-      final isOnboardingPage = _onboardingPaths.contains(
-        state.matchedLocation,
-      );
+      final isOnboardingPage = _onboardingPaths.contains(state.matchedLocation);
 
       // If not logged in and NOT on auth page → redirect to login.
       if (!isLoggedIn && !isAuthPage) {

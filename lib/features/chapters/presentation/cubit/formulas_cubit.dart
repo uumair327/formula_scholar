@@ -50,7 +50,11 @@ class FormulasCubit extends Cubit<FormulasState>
       ),
     );
 
-    final result = await _getFormulas(subjectId, chapterId, curriculumKey: curriculumKey);
+    final result = await _getFormulas(
+      subjectId,
+      chapterId,
+      curriculumKey: curriculumKey,
+    );
 
     switch (result) {
       case Success(:final data):

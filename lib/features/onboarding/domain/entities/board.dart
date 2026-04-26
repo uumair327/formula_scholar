@@ -4,7 +4,6 @@ enum BoardType { national, state, private, examination }
 
 /// Academic board entity (CBSE, ICSE, State Board, etc.).
 class Board extends Equatable {
-
   const Board({
     required this.id,
     required this.countryId,

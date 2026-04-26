@@ -10,7 +10,6 @@ import '../../domain/domain.dart';
 /// Settings items are static client data and don't need caching.
 @LazySingleton(as: ProfileRepositoryPort)
 class ProfileRepositoryImpl implements ProfileRepositoryPort {
-
   const ProfileRepositoryImpl({
     required ProfileDataSourcePort dataSource,
     required ProfileCachePort cache,

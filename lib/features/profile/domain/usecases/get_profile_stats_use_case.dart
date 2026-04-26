@@ -9,7 +9,6 @@ import '../ports/profile_repository_port.dart';
 /// Single-responsibility use case following SOLID principles.
 @injectable
 class GetProfileStatsUseCase {
-
   const GetProfileStatsUseCase({required ProfileRepositoryPort repository})
     : _repository = repository;
   final ProfileRepositoryPort _repository;

@@ -9,7 +9,6 @@ import '../ports/auth_repository_port.dart';
 /// Satisfies Golden Rule 2 & 11 (SOLID & Testable).
 @injectable
 class SignInUseCase {
-
   SignInUseCase(this._repository);
   final AuthRepositoryPort _repository;
 

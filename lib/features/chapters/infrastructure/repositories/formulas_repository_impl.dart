@@ -24,7 +24,11 @@ class FormulasRepositoryImpl implements FormulasRepositoryPort {
       tag: AppLogTags.formulasRepo,
     );
     try {
-      final result = await _dataSource.getFormulas(subjectId, chapterId, curriculumKey: curriculumKey);
+      final result = await _dataSource.getFormulas(
+        subjectId,
+        chapterId,
+        curriculumKey: curriculumKey,
+      );
       AppLogger.info(
         'getFormulas($subjectId, $chapterId) succeeded: ${result.length} formulas',
         tag: AppLogTags.formulasRepo,

@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// A single progress stat (e.g. Formulas Mastered, Days Streak).
 class ProfileStat extends Equatable {
-
   const ProfileStat({
     required this.id,
     required this.label,

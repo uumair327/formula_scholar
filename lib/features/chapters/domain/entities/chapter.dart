@@ -18,7 +18,6 @@ enum ChapterStatus {
 /// a geometry topic, an algebra section, a physics chapter, etc.
 /// The backend determines the content; the UI renders generically.
 class Chapter extends Equatable {
-
   const Chapter({
     required this.id,
     required this.name,

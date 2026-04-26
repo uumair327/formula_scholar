@@ -12,7 +12,6 @@ import 'practice_state.dart';
 @injectable
 class PracticeCubit extends Cubit<PracticeState>
     with CubitFailureLogger<PracticeState> {
-
   PracticeCubit({
     required GetQuestionsUseCase getQuestions,
     required RecordQuizCompletionUseCase recordQuizCompletion,

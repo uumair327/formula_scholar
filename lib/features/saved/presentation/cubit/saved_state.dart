@@ -8,7 +8,6 @@ enum SavedStatus { initial, loading, loaded, error }
 
 /// State for the Saved/Bookmarks feature.
 class SavedState extends Equatable {
-
   const SavedState({
     this.status = SavedStatus.initial,
     this.bookmarks = const [],

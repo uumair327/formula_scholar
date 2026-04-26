@@ -7,7 +7,6 @@ import '../../core/core.dart';
 /// Follows Material Design floating label behaviors by default. When a user
 /// taps on the field, the [label] animates upward to a floating position.
 class AppTextField extends StatelessWidget {
-
   const AppTextField({
     super.key,
     required this.label,

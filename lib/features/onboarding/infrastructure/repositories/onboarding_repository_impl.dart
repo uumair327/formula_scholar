@@ -4,7 +4,6 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: OnboardingRepositoryPort)
 class OnboardingRepositoryImpl implements OnboardingRepositoryPort {
-
   OnboardingRepositoryImpl(this._dataSource);
   final OnboardingDataSourcePort _dataSource;
 

@@ -6,7 +6,6 @@ import '../ports/chapters_repository_port.dart';
 
 @injectable
 class GetMasteryToolsUseCase {
-
   const GetMasteryToolsUseCase(this._repository);
   final ChaptersRepositoryPort _repository;
 

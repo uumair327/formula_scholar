@@ -7,7 +7,6 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: DashboardDataSourcePort)
 class DashboardFirebaseAdapter implements DashboardDataSourcePort {
-
   DashboardFirebaseAdapter(this._firestore, this._firebaseAuth);
   final FirebaseFirestore _firestore;
   final FirebaseAuth _firebaseAuth;
@@ -129,7 +128,8 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
         lastViewed: data['lastViewed'],
         isFeatured: data['isFeatured'] ?? false,
         isGeneralContent: data['isGeneralContent'] ?? false,
-        audiences: (data['audiences'] as List<dynamic>?)
+        audiences:
+            (data['audiences'] as List<dynamic>?)
                 ?.map((e) => e.toString())
                 .toList() ??
             const [],
@@ -222,22 +222,25 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
   ) async {
     final token = '${boardId}_$gradeId';
     final tokenAlt = '${boardId}_${_alternateGradeId(gradeId)}';
-    
+
     // Using Firestore Filter.or to pull universal content OR strictly assigned targeted content
     // Also falling back to old 'boardId' check to support legacy seeded data
-    final snapshot = await _firestore.collection('subjects').where(
-      Filter.or(
-        Filter('isGeneralContent', isEqualTo: true),
-        Filter('audiences', arrayContainsAny: [token, tokenAlt, boardId]),
-        Filter('boardId', isEqualTo: boardId), 
-      )
-    ).get();
+    final snapshot = await _firestore
+        .collection('subjects')
+        .where(
+          Filter.or(
+            Filter('isGeneralContent', isEqualTo: true),
+            Filter('audiences', arrayContainsAny: [token, tokenAlt, boardId]),
+            Filter('boardId', isEqualTo: boardId),
+          ),
+        )
+        .get();
 
     // Final fallback to load EVERYTHING if database lacks assignment but needs to render
     if (snapshot.docs.isEmpty) {
       return _firestore.collection('subjects').get();
     }
-    
+
     return snapshot;
   }
 

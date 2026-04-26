@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// A chapter bookmarked by the user for quick revisit.
 class BookmarkedChapter extends Equatable {
-
   const BookmarkedChapter({
     required this.id,
     required this.chapterId,

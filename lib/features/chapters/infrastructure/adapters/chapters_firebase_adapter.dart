@@ -31,8 +31,11 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
           Filter.or(
             Filter('isGeneralContent', isEqualTo: true),
             Filter('canonicalScopeTags', arrayContains: curriculumKey),
-            Filter('audiences', arrayContains: curriculumKey), // Legacy fallback
-          )
+            Filter(
+              'audiences',
+              arrayContains: curriculumKey,
+            ), // Legacy fallback
+          ),
         )
         .get();
 
@@ -169,7 +172,8 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
         status: status,
         isSaved: savedChapterIds.contains((data['id'] ?? doc.id) as String),
         isGeneralContent: data['isGeneralContent'] ?? false,
-        audiences: (data['audiences'] as List<dynamic>?)
+        audiences:
+            (data['audiences'] as List<dynamic>?)
                 ?.map((e) => e.toString())
                 .toList() ??
             const [],

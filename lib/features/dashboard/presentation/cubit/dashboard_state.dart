@@ -7,7 +7,6 @@ enum DashboardStatus { initial, loading, loaded, error }
 
 /// State for the Dashboard feature.
 class DashboardState extends Equatable {
-
   const DashboardState({
     this.status = DashboardStatus.initial,
     this.progress,

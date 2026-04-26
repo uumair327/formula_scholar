@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// Backend-driven mastery tool configuration for a subject.
 class MasteryTool extends Equatable {
-
   const MasteryTool({
     required this.id,
     required this.label,

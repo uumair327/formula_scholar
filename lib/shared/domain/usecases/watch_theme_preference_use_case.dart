@@ -6,7 +6,6 @@ import '../ports/theme_preference_repository_port.dart';
 
 @injectable
 class WatchThemePreferenceUseCase {
-
   const WatchThemePreferenceUseCase(this._repository);
   final ThemePreferenceRepositoryPort _repository;
 

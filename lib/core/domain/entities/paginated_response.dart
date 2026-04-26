@@ -6,7 +6,6 @@ import 'package:equatable/equatable.dart';
 /// the list of items [data], a boolean [hasMore] flag for infinite
 /// scrolling, and a [lastCursorId] string to pass to the next query.
 class PaginatedResponse<T> extends Equatable {
-
   const PaginatedResponse({
     required this.data,
     required this.hasMore,

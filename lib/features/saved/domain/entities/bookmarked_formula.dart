@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// A bookmarked formula entity.
 class BookmarkedFormula extends Equatable {
-
   const BookmarkedFormula({
     required this.id,
     required this.title,
@@ -19,6 +18,12 @@ class BookmarkedFormula extends Equatable {
   final String curriculumKey;
 
   @override
-  List<Object?> get props => [id, title, subject, formula, savedAt, curriculumKey];
+  List<Object?> get props => [
+    id,
+    title,
+    subject,
+    formula,
+    savedAt,
+    curriculumKey,
+  ];
 }
-

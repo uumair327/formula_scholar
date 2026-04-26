@@ -7,7 +7,6 @@ const Object _unset = Object();
 enum NotificationsStatus { initial, loading, loaded, saving, error }
 
 class NotificationsState extends Equatable {
-
   const NotificationsState({
     this.status = NotificationsStatus.initial,
     this.preferences = const NotificationPreferences(),

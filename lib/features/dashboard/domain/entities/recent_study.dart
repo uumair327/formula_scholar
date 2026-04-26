@@ -5,7 +5,6 @@ import 'package:equatable/equatable.dart';
 /// Contains visual metadata so the UI renders any subject's
 /// recent study items without hardcoded icon/color lookups.
 class RecentStudy extends Equatable {
-
   const RecentStudy({
     required this.id,
     this.subjectId = '',

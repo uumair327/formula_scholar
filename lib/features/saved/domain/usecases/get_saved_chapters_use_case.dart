@@ -7,7 +7,6 @@ import '../ports/saved_repository_port.dart';
 /// Fetches saved chapters for the active curriculum.
 @injectable
 class GetSavedChaptersUseCase {
-
   const GetSavedChaptersUseCase({required SavedRepositoryPort repository})
     : _repository = repository;
   final SavedRepositoryPort _repository;

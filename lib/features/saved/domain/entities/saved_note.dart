@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// A saved study note fetched from backend content.
 class SavedNote extends Equatable {
-
   const SavedNote({
     required this.id,
     required this.title,

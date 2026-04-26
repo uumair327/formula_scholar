@@ -10,7 +10,6 @@ import '../../domain/domain.dart';
 /// from a cache port in the future for offline quiz access.
 @LazySingleton(as: PracticeRepositoryPort)
 class PracticeRepositoryImpl implements PracticeRepositoryPort {
-
   const PracticeRepositoryImpl({required PracticeDataSourcePort dataSource})
     : _dataSource = dataSource;
   final PracticeDataSourcePort _dataSource;

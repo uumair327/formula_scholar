@@ -20,7 +20,6 @@ void main() {
 }
 
 class _FakeAuthRepository implements AuthRepositoryPort {
-
   const _FakeAuthRepository({AuthUser? currentUser})
     : _currentUser = currentUser;
   final AuthUser? _currentUser;

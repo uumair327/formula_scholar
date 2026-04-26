@@ -8,7 +8,6 @@ import '../ports/auth_repository_port.dart';
 /// Satisfies Golden Rule 2 & 15 (SOLID & Testable).
 @injectable
 class ForgotPasswordUseCase {
-
   ForgotPasswordUseCase(this._repository);
   final AuthRepositoryPort _repository;
 

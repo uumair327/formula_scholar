@@ -7,7 +7,6 @@ import 'package:equatable/equatable.dart';
 /// the Open/Closed Principle — new subjects from the backend
 /// render correctly without modifying the UI code.
 class Subject extends Equatable {
-
   const Subject({
     required this.id,
     required this.name,

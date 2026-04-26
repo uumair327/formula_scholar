@@ -8,7 +8,6 @@ enum ChaptersStatus { initial, loading, loaded, error }
 
 /// State for the generic Chapters feature.
 class ChaptersState extends Equatable {
-
   const ChaptersState({
     this.status = ChaptersStatus.initial,
     this.subjectId,

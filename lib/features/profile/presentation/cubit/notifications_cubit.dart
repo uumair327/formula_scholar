@@ -8,7 +8,6 @@ import 'notifications_state.dart';
 @injectable
 class NotificationsCubit extends Cubit<NotificationsState>
     with CubitFailureLogger<NotificationsState> {
-
   NotificationsCubit({
     required GetNotificationPreferencesUseCase getNotificationPreferences,
     required UpdateNotificationPreferencesUseCase updateNotificationPreferences,

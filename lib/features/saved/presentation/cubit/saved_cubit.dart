@@ -10,7 +10,6 @@ import 'saved_state.dart';
 /// Uses [CubitFailureLogger] mixin to eliminate error logging boilerplate.
 @injectable
 class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
-
   SavedCubit({
     required GetBookmarksUseCase getBookmarks,
     required GetSavedChaptersUseCase getSavedChapters,

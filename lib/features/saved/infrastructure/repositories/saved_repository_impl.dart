@@ -9,7 +9,6 @@ import '../../domain/domain.dart';
 /// for offline-first bookmark access.
 @LazySingleton(as: SavedRepositoryPort)
 class SavedRepositoryImpl implements SavedRepositoryPort {
-
   const SavedRepositoryImpl({
     required SavedDataSourcePort dataSource,
     required SavedCachePort cache,

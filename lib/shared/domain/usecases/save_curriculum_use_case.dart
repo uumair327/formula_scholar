@@ -6,7 +6,6 @@ import '../ports/curriculum_repository_port.dart';
 
 @injectable
 class SaveCurriculumUseCase {
-
   const SaveCurriculumUseCase(this._repository);
   final CurriculumRepositoryPort _repository;
 

@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// Tracks study progress for the student.
 class StudyProgress extends Equatable {
-
   const StudyProgress({
     required this.masteryPercentage,
     required this.completedChapters,
