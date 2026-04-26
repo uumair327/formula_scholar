@@ -36,7 +36,7 @@ permissions:
   id-token: write
 
 env:
-  FLUTTER_VERSION: '3.22.0'
+  FLUTTER_VERSION: '3.38.6'
   BASE_HREF: /formula_scholar/
 
 jobs:
