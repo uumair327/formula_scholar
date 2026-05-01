@@ -31,6 +31,7 @@ class PracticeCubit extends Cubit<PracticeState>
   Future<void> loadQuestions({
     required String boardId,
     required String gradeId,
+    String? subjectId,
   }) async {
     AppLogger.info('Loading practice questions', tag: AppLogTags.practiceCubit);
     emit(
@@ -38,10 +39,15 @@ class PracticeCubit extends Cubit<PracticeState>
         status: PracticeStatus.loading,
         boardId: boardId,
         gradeId: gradeId,
+        subjectId: subjectId,
       ),
     );
 
-    final result = await _getQuestions(boardId: boardId, gradeId: gradeId);
+    final result = await _getQuestions(
+      boardId: boardId, 
+      gradeId: gradeId,
+      subjectId: subjectId,
+    );
 
     switch (result) {
       case Success(:final data):
@@ -136,15 +142,21 @@ class PracticeCubit extends Cubit<PracticeState>
     AppLogger.info('Quiz reset requested', tag: AppLogTags.practiceCubit);
     final boardId = state.boardId;
     final gradeId = state.gradeId;
+    final subjectId = state.subjectId;
     emit(
       PracticeState(
         status: PracticeStatus.initial,
         boardId: boardId,
         gradeId: gradeId,
+        subjectId: subjectId,
       ),
     );
     if (boardId != null && gradeId != null) {
-      loadQuestions(boardId: boardId, gradeId: gradeId);
+      loadQuestions(
+        boardId: boardId, 
+        gradeId: gradeId,
+        subjectId: subjectId,
+      );
     }
   }
 }

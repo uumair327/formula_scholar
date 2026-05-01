@@ -10,6 +10,7 @@ import '../../../dashboard/dashboard.dart';
 import '../../../../shared/shared.dart';
 import '../../../auth/auth.dart';
 import '../../../profile/domain/domain.dart';
+import '../../domain/domain.dart';
 import '../cubit/chapters_cubit.dart';
 import '../cubit/chapters_state.dart';
 import '../widgets/chapter_cards.dart';
@@ -31,6 +32,7 @@ class ChaptersPage extends StatefulWidget {
 class _ChaptersPageState extends State<ChaptersPage> {
   bool _isLoadingAvailableSubjects = false;
   bool _isAutoSelectScheduled = false;
+  String _searchQuery = '';
 
   @override
   void initState() {
@@ -184,7 +186,17 @@ class _ChaptersPageState extends State<ChaptersPage> {
           }
 
           return Scaffold(
-            body: CustomScrollView(
+            body: RefreshIndicator(
+              onRefresh: () async {
+                if (subjectState.hasSelection) {
+                  final selectedSubject = subjectState.subject!;
+                  await context.read<ChaptersCubit>().loadChapters(
+                    selectedSubject.id,
+                    curriculumKey: context.read<CurriculumCubit>().state.curriculum?.curriculumKey ?? '',
+                  );
+                }
+              },
+              child: CustomScrollView(
               slivers: [
                 _buildAppBar(context, subjectState),
                 _buildSubjectChips(context, subjectState),
@@ -193,7 +205,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                     _isLoadingAvailableSubjects)
                   const SliverFillRemaining(
                     hasScrollBody: false,
-                    child: AppLoadingState(),
+                    child: ChaptersShimmer(),
                   )
                 else if (!subjectState.hasSelection)
                   const SliverFillRemaining(
@@ -210,7 +222,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                       if (state.status == ChaptersStatus.loading ||
                           state.status == ChaptersStatus.initial) {
                         return const SliverFillRemaining(
-                          child: AppLoadingState(),
+                          child: ChaptersShimmer(),
                         );
                       }
 
@@ -300,6 +312,28 @@ class _ChaptersPageState extends State<ChaptersPage> {
                             const SizedBox(height: AppDimensions.paddingLG),
                             _buildHeroSection(context, subjectState.subject!),
                             const SizedBox(height: AppDimensions.paddingXXL),
+                            // Search Bar
+                            AppCard(
+                              padding: EdgeInsets.zero,
+                              child: TextField(
+                                onChanged: (value) {
+                                  setState(() {
+                                    _searchQuery = value;
+                                  });
+                                },
+                                decoration: InputDecoration(
+                                  hintText: AppStrings.searchChaptersHint,
+                                  prefixIcon: const Icon(LucideIcons.search),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  filled: true,
+                                  fillColor: Theme.of(context).colorScheme.surface,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: AppDimensions.paddingLG),
                             _buildChapterCards(state, subjectState.subject!.id),
                             const SizedBox(
                               height: AppDimensions.paddingSection,
@@ -314,6 +348,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                     },
                   ),
               ],
+            ),
             ),
             floatingActionButton: subjectState.hasSelection
                 ? FloatingActionButton(
@@ -609,8 +644,22 @@ class _ChaptersPageState extends State<ChaptersPage> {
   // ──────────────────────── Chapter Cards ───────────────────────
 
   Widget _buildChapterCards(ChaptersState state, String subjectId) {
-    final featured = state.featuredChapter;
-    final remaining = state.remainingChapters;
+    final query = _searchQuery.toLowerCase();
+    final filteredChapters = query.isEmpty 
+        ? state.chapters 
+        : state.chapters.where((c) => c.name.toLowerCase().contains(query)).toList();
+
+    final featured = filteredChapters
+        .where((c) => c.isInProgress)
+        .fold<Chapter?>(
+          null,
+          (best, c) =>
+              best == null || c.progressPercent > best.progressPercent ? c : best,
+        );
+
+    final remaining = featured == null 
+        ? filteredChapters 
+        : filteredChapters.where((c) => c.id != featured.id).toList();
 
     return Column(
       children: [

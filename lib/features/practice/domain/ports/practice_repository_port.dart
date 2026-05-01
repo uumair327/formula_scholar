@@ -9,6 +9,7 @@ abstract interface class PracticeRepositoryPort {
   Future<Result<List<QuizQuestion>>> getQuestions({
     required String boardId,
     required String gradeId,
+    String? subjectId,
   });
 
   Future<Result<void>> recordQuizCompletion({

@@ -169,6 +169,7 @@ abstract final class AppStrings {
   static const String dashboard = 'DASHBOARD';
   static const String hiSarahReady = 'Hi Sarah! Ready to revise?';
   static const String searchHint = "Search formulas (e.g. Newton's Second Law)";
+  static const String searchChaptersHint = 'Search chapters...';
   static const String overallMastery = 'Overall Mastery';
   static const String masteryDescription =
       "You've covered more than half of the 9th-standard syllabus. Keep it up!";

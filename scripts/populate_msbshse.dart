@@ -29,12 +29,30 @@ void main(List<String> args) async {
 
   stdout.writeln('Starting populating MSBSHSE Firestore data...');
 
+  // --- Country: India ---
+  await firestore.collection('countries').doc('IN').set({
+    'name': 'India',
+    'isoCode': 'IND',
+    'flagUrl': 'https://flagcdn.com/w80/in.png',
+  });
+
+  // --- State: Maharashtra ---
+  // Doc ID 'maharashtra' — this is what the Flutter adapter reads as stateId.
+  await firestore
+      .collection('countries')
+      .doc('IN')
+      .collection('states')
+      .doc('maharashtra')
+      .set({'name': 'Maharashtra', 'stateCode': 'MH', 'countryId': 'IN'});
+
   // --- MSBSHSE Board ---
+  // stateId MUST match the state document ID ('maharashtra') so the
+  // Flutter onboarding adapter can filter boards by state correctly.
   final boardsRef = firestore.collection('boards');
   await boardsRef.doc('msbshse').set({
     'id': 'msbshse',
     'countryId': 'IN',
-    'stateId': 'MH',
+    'stateId': 'maharashtra',
     'type': 'state',
     'name': 'MSBSHSE',
     'description':
@@ -393,7 +411,7 @@ void main(List<String> args) async {
         'completedFormulas': 0,
         'totalFormulas': formulas.length,
         'progressPercent': 0.0,
-        'status': 'locked', // We handle unlocking via feature flag in UI
+        'status': 'notStarted',
       };
       await chapRef.doc(chMap['id'] as String).set(chapDoc);
 

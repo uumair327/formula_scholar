@@ -26,7 +26,7 @@ class ProfilePage extends StatelessWidget {
 
         if (state.status == ProfileStatus.loading ||
             state.status == ProfileStatus.initial) {
-          return const Scaffold(body: AppLoadingState());
+          return const Scaffold(body: ProfileShimmer());
         }
 
         if (state.status == ProfileStatus.error) {
@@ -39,7 +39,10 @@ class ProfilePage extends StatelessWidget {
         }
 
         return Scaffold(
-          body: CustomScrollView(
+          body: RefreshIndicator(
+            onRefresh: () =>
+                context.read<ProfileCubit>().loadProfile(),
+            child: CustomScrollView(
             slivers: [
               _buildAppBar(context, state, displayName),
               SliverPadding(
@@ -78,6 +81,7 @@ class ProfilePage extends StatelessWidget {
               ),
             ],
           ),
+            ),
         );
       },
     );

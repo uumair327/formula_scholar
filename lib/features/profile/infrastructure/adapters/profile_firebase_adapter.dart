@@ -214,7 +214,7 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
   @override
   Future<List<ProfileStat>> getProfileStats() async {
     AppLogger.trace(
-      'getProfileStats() fetching from Firestore',
+      'getProfileStats() computing from Firestore',
       tag: AppLogTags.profileDataSource,
     );
 
@@ -223,39 +223,54 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
       return _zeroStats();
     }
 
-    final docSnapshot = await _firestore
+    // Read the stats accumulator doc.
+    final statsSnapshot = await _firestore
         .collection('users')
         .doc(uid)
         .collection('stats')
         .doc('current')
         .get();
 
-    if (!docSnapshot.exists) {
-      // New user — return zero-state, do NOT seed fake data.
-      return _zeroStats();
-    }
+    final statsData = statsSnapshot.data() ?? const <String, dynamic>{};
 
-    final data = docSnapshot.data()!;
+    // Formulas count comes from the stats accumulator (updated on mastery toggle).
+    final formulasCount = (statsData['formulas'] as num?)?.toInt() ?? 0;
+
+    // Streak and points also come from the accumulator.
+    final streak = (statsData['streak'] as num?)?.toInt() ?? 0;
+    final points = (statsData['points'] as num?)?.toInt() ?? 0;
+
     return [
       ProfileStat(
         id: 'formulas',
         label: AppStrings.formulasMastered,
-        value: data['formulas']?.toString() ?? '0',
+        value: _formatStatValue(formulasCount),
         iconName: 'functions',
       ),
       ProfileStat(
         id: 'streak',
         label: AppStrings.daysStreak,
-        value: data['streak']?.toString() ?? '0',
+        value: _formatStatValue(streak),
         iconName: 'fire',
       ),
       ProfileStat(
         id: 'points',
         label: AppStrings.totalPoints,
-        value: data['points']?.toString() ?? '0',
+        value: _formatStatValue(points),
         iconName: 'stars',
       ),
     ];
+  }
+
+  /// Formats large numbers for display (e.g. 1500 → "1.5K").
+  String _formatStatValue(int value) {
+    if (value >= 1000) {
+      final k = value / 1000;
+      return k == k.truncateToDouble()
+          ? '${k.toInt()}K'
+          : '${k.toStringAsFixed(1)}K';
+    }
+    return value.toString();
   }
 
   /// Returns zero-state stats for unauthenticated or brand-new users.

@@ -8,6 +8,7 @@ abstract interface class PracticeDataSourcePort {
   Future<List<QuizQuestion>> getQuestions({
     required String boardId,
     required String gradeId,
+    String? subjectId,
   });
 
   /// Persists quiz completion analytics for the active user.

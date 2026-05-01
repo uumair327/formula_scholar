@@ -42,7 +42,7 @@ class _SavedPageState extends State<SavedPage> {
           builder: (context, state) {
             if (state.status == SavedStatus.loading ||
                 state.status == SavedStatus.initial) {
-              return const Scaffold(body: AppLoadingState());
+              return const Scaffold(body: SavedShimmer());
             }
 
             if (state.status == SavedStatus.error) {
@@ -97,7 +97,20 @@ class _SavedPageState extends State<SavedPage> {
             // Show loaded bookmarks and chapters
             return Scaffold(
               appBar: _buildAppBar(context, authState.user),
-              body: ListView(
+              body: RefreshIndicator(
+                onRefresh: () {
+                  final curr = context
+                      .read<CurriculumCubit>()
+                      .state
+                      .curriculum;
+                  if (curr != null) {
+                    return context.read<SavedCubit>().loadBookmarks(
+                      curriculumKey: curr.curriculumKey,
+                    );
+                  }
+                  return Future<void>.value();
+                },
+                child: ListView(
                 padding: const EdgeInsets.all(AppDimensions.paddingXXL),
                 children: [
                   _buildSearchBar(context, state),
@@ -161,6 +174,7 @@ class _SavedPageState extends State<SavedPage> {
                   ],
                 ],
               ),
+                ),
             );
           },
         );

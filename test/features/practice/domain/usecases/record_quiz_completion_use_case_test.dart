@@ -57,6 +57,7 @@ class _FakePracticeRepository implements PracticeRepositoryPort {
   Future<Result<List<QuizQuestion>>> getQuestions({
     required String boardId,
     required String gradeId,
+    String? subjectId,
   }) async {
     return const Success<List<QuizQuestion>>(<QuizQuestion>[]);
   }

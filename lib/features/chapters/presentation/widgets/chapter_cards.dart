@@ -43,15 +43,43 @@ class FeaturedChapterCard extends StatelessWidget {
               ),
               Row(
                 children: [
-                  if (chapter.isSaved)
-                    const Padding(
-                      padding: EdgeInsets.only(right: AppDimensions.paddingSM),
-                      child: Icon(
-                        LucideIcons.bookmark,
+                  Padding(
+                    padding: const EdgeInsets.only(right: AppDimensions.paddingSM),
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      onPressed: () {
+                        final subjectName = context
+                                .read<SubjectSelectionCubit>()
+                                .state
+                                .subject
+                                ?.name ??
+                            AppStrings.unknownSubject;
+                        final curriculumKey = context
+                            .read<CurriculumCubit>()
+                            .state
+                            .curriculum
+                            ?.curriculumKey;
+
+                        if (curriculumKey == null || curriculumKey.isEmpty) {
+                          return;
+                        }
+
+                        context.read<ChaptersCubit>().toggleChapterBookmark(
+                          chapter,
+                          subjectName,
+                          curriculumKey: curriculumKey,
+                        );
+                      },
+                      icon: Icon(
+                        chapter.isSaved ? Icons.bookmark : LucideIcons.bookmark,
                         size: AppDimensions.iconMD,
-                        color: AppColors.primary,
+                        color: chapter.isSaved
+                            ? AppColors.primary
+                            : colorScheme.outline,
                       ),
                     ),
+                  ),
                   AppInfoChip(
                     label: AppStrings.percentDone(
                       chapter.progressPercent.toInt(),
@@ -220,17 +248,46 @@ class CompactChapterCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        if (chapter.isSaved)
-                          const Padding(
-                            padding: EdgeInsets.only(
-                              left: AppDimensions.paddingXS,
-                            ),
-                            child: Icon(
-                              LucideIcons.bookmark,
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: AppDimensions.paddingXS,
+                          ),
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
+                            onPressed: () {
+                              final subjectName = context
+                                      .read<SubjectSelectionCubit>()
+                                      .state
+                                      .subject
+                                      ?.name ??
+                                  AppStrings.unknownSubject;
+                              final curriculumKey = context
+                                  .read<CurriculumCubit>()
+                                  .state
+                                  .curriculum
+                                  ?.curriculumKey;
+
+                              if (curriculumKey == null ||
+                                  curriculumKey.isEmpty) {
+                                return;
+                              }
+
+                              context.read<ChaptersCubit>().toggleChapterBookmark(
+                                chapter,
+                                subjectName,
+                                curriculumKey: curriculumKey,
+                              );
+                            },
+                            icon: Icon(
+                              chapter.isSaved ? Icons.bookmark : LucideIcons.bookmark,
                               size: AppDimensions.iconSM,
-                              color: AppColors.primary,
+                              color: chapter.isSaved
+                                  ? AppColors.primary
+                                  : colorScheme.outline,
                             ),
                           ),
+                        ),
                       ],
                     ),
                     Text(

@@ -3,19 +3,22 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/infrastructure/user_stats_accumulator.dart';
 import '../../domain/domain.dart';
 
 /// Firebase adapter for formula data retrieval.
 ///
 /// Reads formulas from `subjects/{subjectId}/chapters/{chapterId}/formulas`.
-/// Falls back to seeding mock formulas if the subcollection is empty,
-/// guaranteeing the UI always has data to display.
+/// Returns an empty list if the collection is empty — the caller/UI is
+/// responsible for showing an appropriate empty state.
 @LazySingleton(as: FormulasDataSourcePort)
 class FormulasFirebaseAdapter implements FormulasDataSourcePort {
-  FormulasFirebaseAdapter(this._firestore, this._firebaseAuth);
+  FormulasFirebaseAdapter(this._firestore, this._firebaseAuth)
+      : _statsAccumulator = UserStatsAccumulator(_firestore);
 
   final FirebaseFirestore _firestore;
   final FirebaseAuth _firebaseAuth;
+  final UserStatsAccumulator _statsAccumulator;
 
   @override
   Future<List<Formula>> getFormulas(
@@ -83,24 +86,13 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
     }
 
     if (snapshot.docs.isEmpty) {
-      // Seed representative formulas if the subcollection doesn't exist yet
-      await _seedFormulas(subjectId, chapterId);
-      final reFetch = await _firestore
-          .collection('subjects')
-          .doc(subjectId)
-          .collection('chapters')
-          .doc(chapterId)
-          .collection('formulas')
-          .get();
-      return reFetch.docs
-          .map(
-            (doc) => _docToFormula(
-              doc,
-              bookmarkedIds.contains(doc.id),
-              masteryOverride: masteryMap[doc.id],
-            ),
-          )
-          .toList();
+      // No formulas found — return empty list so the UI can show an
+      // appropriate empty state. Content should be added via the Dashboard.
+      AppLogger.info(
+        'No formulas found for $subjectId/$chapterId',
+        tag: AppLogTags.formulasDataSource,
+      );
+      return [];
     }
 
     return snapshot.docs
@@ -215,6 +207,9 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
       chapterName: chapterName,
       progressPercent: progressPercent,
     );
+
+    // Bump daily streak whenever the user studies a chapter.
+    await _statsAccumulator.touchDailyStreak(uid);
   }
 
   @override
@@ -277,7 +272,7 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
       nextIsMastered: isMastered,
     );
     if (masteryDelta != 0) {
-      await _incrementMasteredFormulaStat(uid, masteryDelta);
+      await _statsAccumulator.incrementMasteredFormulas(uid, masteryDelta);
     }
   }
 
@@ -285,33 +280,9 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
     required bool previousIsMastered,
     required bool nextIsMastered,
   }) {
-    if (!previousIsMastered && nextIsMastered) {
-      return 1;
-    }
-    if (previousIsMastered && !nextIsMastered) {
-      return -1;
-    }
+    if (!previousIsMastered && nextIsMastered) return 1;
+    if (previousIsMastered && !nextIsMastered) return -1;
     return 0;
-  }
-
-  Future<void> _incrementMasteredFormulaStat(String uid, int delta) async {
-    final statsRef = _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('stats')
-        .doc('current');
-
-    await _firestore.runTransaction((tx) async {
-      final snapshot = await tx.get(statsRef);
-      final data = snapshot.data() ?? const <String, dynamic>{};
-      final current = (data['formulas'] as num?)?.toInt() ?? 0;
-      final updated = (current + delta).clamp(0, 1000000);
-
-      tx.set(statsRef, {
-        'formulas': updated,
-        'lastUpdated': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
-    });
   }
 
   Future<void> _upsertRecentStudy({
@@ -396,58 +367,8 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
         .doc(chapterId);
   }
 
-  Future<void> _seedFormulas(String subjectId, String chapterId) async {
-    AppLogger.info(
-      'Seeding formulas for $subjectId/$chapterId',
-      tag: AppLogTags.formulasDataSource,
-    );
-
-    final batch = _firestore.batch();
-    final ref = _firestore
-        .collection('subjects')
-        .doc(subjectId)
-        .collection('chapters')
-        .doc(chapterId)
-        .collection('formulas');
-
-    final seedData = [
-      {
-        'id': 'f1',
-        'title': 'Core Identity I',
-        'latex': r'(a + b)^2 = a^2 + 2ab + b^2',
-        'description':
-            'Square of a binomial sum — the most fundamental algebraic expansion.',
-        'isMastered': true,
-      },
-      {
-        'id': 'f2',
-        'title': 'Core Identity II',
-        'latex': r'(a - b)^2 = a^2 - 2ab + b^2',
-        'description': 'Square of a binomial difference.',
-        'isMastered': true,
-      },
-      {
-        'id': 'f3',
-        'title': 'Difference of Squares',
-        'latex': r'a^2 - b^2 = (a+b)(a-b)',
-        'description': 'Factoring a difference of two perfect squares.',
-        'isMastered': false,
-      },
-      {
-        'id': 'f4',
-        'title': 'Cubic Sum',
-        'latex': r'(a+b)^3 = a^3 + 3a^2b + 3ab^2 + b^3',
-        'description': 'Expansion of the cube of a binomial sum.',
-        'isMastered': false,
-      },
-    ];
-
-    for (final f in seedData) {
-      batch.set(ref.doc(f['id'] as String), f);
-    }
-    await batch.commit();
-  }
 }
+
 
 class _StudyMetadata {
   const _StudyMetadata({

@@ -13,4 +13,5 @@ export 'cubit/subject_selection_state.dart';
 export 'cubit/theme_cubit.dart';
 export 'cubit/theme_state.dart';
 export 'domain/domain.dart';
+export 'infrastructure/user_stats_accumulator.dart';
 export 'widgets/widgets.dart';

@@ -11,6 +11,7 @@ export 'app_avatar.dart';
 export 'app_card.dart';
 export 'app_icon_circle.dart';
 export 'app_info_chip.dart';
+export 'app_shimmer.dart';
 export 'app_state_widgets.dart';
 export 'app_text_field.dart';
 export 'coming_soon_sheet.dart';

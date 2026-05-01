@@ -15,6 +15,10 @@ import 'features/auth/auth.dart';
 import 'firebase_options.dart';
 import 'shared/shared.dart';
 
+const String _googleSignInServerClientId = String.fromEnvironment(
+  'GOOGLE_SIGN_IN_SERVER_CLIENT_ID',
+);
+
 void main() {
   // Capture synchronous errors during widget binding.
   runZonedGuarded(
@@ -42,11 +46,17 @@ void main() {
       // Initialize Google Sign-In with the Web OAuth client ID (type 3).
       // Required by google_sign_in v7+ on Android to obtain ID tokens.
       if (!kIsWeb) {
-        await GoogleSignIn.instance.initialize(
-          serverClientId:
-              '908985900149-7mfugc05cg73de4342l7koc2dommh694.apps.googleusercontent.com',
-        );
-        AppLogger.info('GoogleSignIn initialized', tag: AppLogTags.main);
+        if (_googleSignInServerClientId.isNotEmpty) {
+          await GoogleSignIn.instance.initialize(
+            serverClientId: _googleSignInServerClientId,
+          );
+          AppLogger.info('GoogleSignIn initialized', tag: AppLogTags.main);
+        } else {
+          AppLogger.warning(
+            'GoogleSignIn server client ID not provided; Google auth disabled',
+            tag: AppLogTags.main,
+          );
+        }
       }
 
       // Initialize dependency injection (get_it + injectable).

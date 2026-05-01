@@ -54,7 +54,7 @@ class DashboardPage extends StatelessWidget {
         builder: (context, state) {
           if (state.status == DashboardStatus.loading ||
               state.status == DashboardStatus.initial) {
-            return const Scaffold(body: AppLoadingState());
+            return const Scaffold(body: DashboardShimmer());
           }
 
           if (state.status == DashboardStatus.error) {
@@ -68,30 +68,36 @@ class DashboardPage extends StatelessWidget {
           }
 
           return Scaffold(
-            body: CustomScrollView(
-              slivers: [
-                _buildAppBar(context),
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppDimensions.paddingXL,
+            body: RefreshIndicator(
+              onRefresh: () =>
+                  context.read<DashboardCubit>().loadDashboard(),
+              child: CustomScrollView(
+                slivers: [
+                  _buildAppBar(context),
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimensions.paddingXL,
+                    ),
+                    sliver: SliverList(
+                      delegate: SliverChildListDelegate([
+                        const SizedBox(height: AppDimensions.paddingLG),
+                        _buildCurriculumFilterBar(context),
+                        const SizedBox(height: AppDimensions.paddingXL),
+                        _buildHeroStatusCard(context, state),
+                        const SizedBox(height: AppDimensions.paddingSection),
+                        _buildAcademicPath(context, state),
+                        const SizedBox(height: AppDimensions.paddingSection),
+                        _buildFormulaVault(context, state),
+                        const SizedBox(height: AppDimensions.paddingLG),
+                        _buildContinueStudying(context, state),
+                        const SizedBox(
+                          height: AppDimensions.bottomNavPadding,
+                        ),
+                      ]),
+                    ),
                   ),
-                  sliver: SliverList(
-                    delegate: SliverChildListDelegate([
-                      const SizedBox(height: AppDimensions.paddingLG),
-                      _buildCurriculumFilterBar(context),
-                      const SizedBox(height: AppDimensions.paddingXL),
-                      _buildHeroStatusCard(context, state),
-                      const SizedBox(height: AppDimensions.paddingSection),
-                      _buildAcademicPath(context, state),
-                      const SizedBox(height: AppDimensions.paddingSection),
-                      _buildFormulaVault(context, state),
-                      const SizedBox(height: AppDimensions.paddingLG),
-                      _buildContinueStudying(context, state),
-                      const SizedBox(height: AppDimensions.bottomNavPadding),
-                    ]),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },
@@ -1052,13 +1058,49 @@ class DashboardPage extends StatelessWidget {
     DashboardState state,
     RecentStudy study,
   ) {
+    if (study.id == 'practice') {
+      StatefulNavigationShell.of(context).goBranch(2);
+      return;
+    }
+
     if (study.subjectId.isNotEmpty) {
+      // Recent study ID for chapters is formatted as: subjectId_chapterId
+      final chapterId = study.id.replaceFirst('${study.subjectId}_', '');
+      
       final byId = state.subjects
           .where((s) => s.id == study.subjectId)
           .toList();
+          
       if (byId.isNotEmpty) {
-        _onSubjectTap(context, byId.first);
-        return;
+        final subject = byId.first;
+        
+        // Select the subject in the cubit so the Chapters tab works properly
+        context.read<SubjectSelectionCubit>().selectSubject(
+          id: subject.id,
+          name: subject.name,
+          category: subject.category,
+          description: subject.description,
+          subtitle: subject.subtitle ?? '',
+        );
+
+        if (chapterId.isNotEmpty && chapterId != study.id) {
+          // Navigate directly to the chapter
+          context.goNamed(
+            AppRoutes.formulaDetailName,
+            pathParameters: {
+              'subjectId': subject.id,
+              'chapterId': chapterId,
+            },
+            queryParameters: {
+              'name': study.title,
+            },
+          );
+          return;
+        } else {
+          // Fallback to just the subject page if chapterId parsing fails
+          _onSubjectTap(context, subject);
+          return;
+        }
       }
     }
 

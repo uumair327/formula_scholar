@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 
 @LazySingleton(as: PracticeDataSourcePort)
@@ -16,16 +17,23 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
   Future<List<QuizQuestion>> getQuestions({
     required String boardId,
     required String gradeId,
+    String? subjectId,
   }) async {
     AppLogger.trace(
-      'getQuestions() fetching from Firestore for board=$boardId, grade=$gradeId',
+      'getQuestions() fetching from Firestore for board=$boardId, grade=$gradeId, subject=$subjectId',
       tag: AppLogTags.practiceDataSource,
     );
-    var snapshot = await _firestore
+    
+    var query = _firestore
         .collection('practice_questions')
         .where('boardId', isEqualTo: boardId)
-        .where('gradeId', isEqualTo: gradeId)
-        .get();
+        .where('gradeId', isEqualTo: gradeId);
+        
+    if (subjectId != null && subjectId.isNotEmpty) {
+      query = query.where('category', isEqualTo: subjectId);
+    }
+        
+    var snapshot = await query.get();
 
     // Backward compatibility for older datasets that don't yet store
     // boardId/gradeId on each question document.
@@ -78,32 +86,8 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
     }
 
     final userRef = _firestore.collection('users').doc(uid);
-    final statsRef = userRef.collection('stats').doc('current');
-    final nowUtc = DateTime.now().toUtc();
-    final todayKey = _dateKey(nowUtc);
 
-    await _firestore.runTransaction((tx) async {
-      final snapshot = await tx.get(statsRef);
-      final data = snapshot.data() ?? const <String, dynamic>{};
-
-      final currentPoints = (data['points'] as num?)?.toInt() ?? 0;
-      final currentStreak = (data['streak'] as num?)?.toInt() ?? 0;
-      final lastStudyDate = (data['lastStudyDate'] as String?) ?? '';
-
-      final nextStreak = _calculateNextStreak(
-        lastStudyDate,
-        todayKey,
-        fallbackCurrentStreak: currentStreak,
-      );
-
-      tx.set(statsRef, {
-        'points': currentPoints + earnedPoints,
-        'streak': nextStreak,
-        'lastStudyDate': todayKey,
-        'lastQuizAt': FieldValue.serverTimestamp(),
-        'lastUpdated': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
-    });
+    await UserStatsAccumulator(_firestore).addPoints(uid, earnedPoints);
 
     final recentStudyRef = userRef.collection('recent_studies').doc('practice');
     await recentStudyRef.set({
@@ -126,38 +110,5 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
       'Persisted quiz completion for uid=$uid (points=$earnedPoints, questions=$answeredQuestions)',
       tag: AppLogTags.practiceDataSource,
     );
-  }
-
-  int _calculateNextStreak(
-    String lastStudyDate,
-    String todayKey, {
-    required int fallbackCurrentStreak,
-  }) {
-    if (lastStudyDate.isEmpty) {
-      return 1;
-    }
-
-    if (lastStudyDate == todayKey) {
-      return fallbackCurrentStreak > 0 ? fallbackCurrentStreak : 1;
-    }
-
-    final parsedLast = DateTime.tryParse(lastStudyDate);
-    final parsedToday = DateTime.tryParse(todayKey);
-    if (parsedLast == null || parsedToday == null) {
-      return 1;
-    }
-
-    final dayDelta = parsedToday.difference(parsedLast).inDays;
-    if (dayDelta == 1) {
-      return fallbackCurrentStreak + 1;
-    }
-
-    return 1;
-  }
-
-  String _dateKey(DateTime utcDate) {
-    final month = utcDate.month.toString().padLeft(2, '0');
-    final day = utcDate.day.toString().padLeft(2, '0');
-    return '${utcDate.year}-$month-$day';
   }
 }

@@ -18,6 +18,7 @@ class PracticeState extends Equatable {
     this.errorMessage,
     this.boardId,
     this.gradeId,
+    this.subjectId,
   });
   final PracticeStatus status;
   final List<QuizQuestion> questions;
@@ -28,6 +29,7 @@ class PracticeState extends Equatable {
   final String? errorMessage;
   final String? boardId;
   final String? gradeId;
+  final String? subjectId;
 
   /// The current question being displayed.
   QuizQuestion? get currentQuestion =>
@@ -60,6 +62,7 @@ class PracticeState extends Equatable {
     Object? errorMessage = _unset,
     String? boardId,
     String? gradeId,
+    String? subjectId,
   }) {
     return PracticeState(
       status: status ?? this.status,
@@ -75,6 +78,7 @@ class PracticeState extends Equatable {
           : errorMessage as String?,
       boardId: boardId ?? this.boardId,
       gradeId: gradeId ?? this.gradeId,
+      subjectId: subjectId ?? this.subjectId,
     );
   }
 
@@ -89,5 +93,6 @@ class PracticeState extends Equatable {
     errorMessage,
     boardId,
     gradeId,
+    subjectId,
   ];
 }

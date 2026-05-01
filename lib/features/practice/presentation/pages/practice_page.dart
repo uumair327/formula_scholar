@@ -27,9 +27,12 @@ class PracticePage extends StatelessWidget {
               prev.selectedOptionId != curr.selectedOptionId ||
               prev.showResult != curr.showResult,
           builder: (context, state) {
-            if (state.status == PracticeStatus.loading ||
-                state.status == PracticeStatus.initial) {
-              return const Scaffold(body: AppLoadingState());
+            if (state.status == PracticeStatus.initial) {
+              return _buildPreFilterScreen(context, authState);
+            }
+
+            if (state.status == PracticeStatus.loading) {
+              return const Scaffold(body: PracticeShimmer());
             }
 
             if (state.status == PracticeStatus.error) {
@@ -106,26 +109,41 @@ class PracticePage extends StatelessWidget {
                         _buildHeader(context, photoUrl),
                         // Scrollable content.
                         Expanded(
-                          child: SingleChildScrollView(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppDimensions.paddingXXL,
-                            ),
-                            child: Column(
-                              children: [
-                                const SizedBox(height: AppDimensions.paddingLG),
-                                _buildProgressSection(context, state),
-                                const SizedBox(
-                                  height: AppDimensions.paddingXXL,
-                                ),
-                                _buildQuestionCard(context, question),
-                                const SizedBox(
-                                  height: AppDimensions.paddingXXL,
-                                ),
-                                _buildOptions(context, state, question),
-                                const SizedBox(
-                                  height: AppDimensions.bottomNavPadding,
-                                ),
-                              ],
+                          child: RefreshIndicator(
+                            onRefresh: () async {
+                              final curr = context
+                                  .read<CurriculumCubit>()
+                                  .state
+                                  .curriculum;
+                              if (curr != null) {
+                                await context.read<PracticeCubit>().loadQuestions(
+                                  boardId: curr.boardId,
+                                  gradeId: curr.gradeId,
+                                  subjectId: state.subjectId,
+                                );
+                              }
+                            },
+                            child: SingleChildScrollView(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppDimensions.paddingXXL,
+                              ),
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: AppDimensions.paddingLG),
+                                  _buildProgressSection(context, state),
+                                  const SizedBox(
+                                    height: AppDimensions.paddingXXL,
+                                  ),
+                                  _buildQuestionCard(context, question),
+                                  const SizedBox(
+                                    height: AppDimensions.paddingXXL,
+                                  ),
+                                  _buildOptions(context, state, question),
+                                  const SizedBox(
+                                    height: AppDimensions.bottomNavPadding,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -149,6 +167,96 @@ class PracticePage extends StatelessWidget {
           },
         );
       },
+    );
+  }
+
+  Widget _buildPreFilterScreen(BuildContext context, AuthState authState) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final photoUrl = authState.user?.photoUrl ?? '';
+    final subjectState = context.watch<SubjectSelectionCubit>().state;
+    final curriculumState = context.watch<CurriculumCubit>().state;
+
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildHeader(context, photoUrl),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(AppDimensions.paddingXXL),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'Ready to Practice?',
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.headlineSmall.copyWith(
+                        color: colorScheme.onSurface,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: AppDimensions.paddingLG),
+                    Text(
+                      'Select a subject to focus your quiz, or test your overall knowledge.',
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.bodyLarge.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: AppDimensions.paddingXXL),
+                    AppCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            'Choose Subject',
+                            style: AppTextStyles.titleMedium,
+                          ),
+                          const SizedBox(height: AppDimensions.paddingMD),
+                          Wrap(
+                            spacing: AppDimensions.paddingSM,
+                            runSpacing: AppDimensions.paddingSM,
+                            children: [
+                              ChoiceChip(
+                                label: const Text('All Subjects'),
+                                selected: true, // simplified for now, we just act as buttons
+                                onSelected: (_) {
+                                  if (curriculumState.hasSelection) {
+                                    context.read<PracticeCubit>().loadQuestions(
+                                      boardId: curriculumState.boardId!,
+                                      gradeId: curriculumState.gradeId!,
+                                    );
+                                  }
+                                },
+                              ),
+                              ...subjectState.availableSubjects.map((subject) {
+                                return ChoiceChip(
+                                  label: Text(subject.name),
+                                  selected: false,
+                                  onSelected: (_) {
+                                    if (curriculumState.hasSelection) {
+                                      context.read<PracticeCubit>().loadQuestions(
+                                        boardId: curriculumState.boardId!,
+                                        gradeId: curriculumState.gradeId!,
+                                        subjectId: subject.category,
+                                      );
+                                    }
+                                  },
+                                );
+                              }),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

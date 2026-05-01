@@ -16,12 +16,15 @@ class ChaptersCubit extends Cubit<ChaptersState>
   ChaptersCubit({
     required GetChaptersUseCase getChapters,
     required GetMasteryToolsUseCase getMasteryTools,
+    required ChaptersRepositoryPort chaptersRepository,
   }) : _getChapters = getChapters,
        _getMasteryTools = getMasteryTools,
+       _chaptersRepository = chaptersRepository,
        super(const ChaptersState());
 
   final GetChaptersUseCase _getChapters;
   final GetMasteryToolsUseCase _getMasteryTools;
+  final ChaptersRepositoryPort _chaptersRepository;
 
   @override
   String get logTag => AppLogTags.chaptersCubit;
@@ -92,6 +95,73 @@ class ChaptersCubit extends Cubit<ChaptersState>
             errorMessage: failure.message,
           ),
         );
+    }
+  }
+
+  Future<void> toggleChapterBookmark(
+    Chapter chapter,
+    String subjectName, {
+    required String curriculumKey,
+  }) async {
+    final subjectId = state.subjectId;
+    if (subjectId == null) return;
+
+    final newBookmarkState = !chapter.isSaved;
+
+    // Optimistic update
+    final updatedList = state.chapters.map((c) {
+      if (c.id == chapter.id) {
+        return Chapter(
+          id: c.id,
+          name: c.name,
+          subtitle: c.subtitle,
+          completedFormulas: c.completedFormulas,
+          totalFormulas: c.totalFormulas,
+          progressPercent: c.progressPercent,
+          status: c.status,
+          isSaved: newBookmarkState,
+          isGeneralContent: c.isGeneralContent,
+          audiences: c.audiences,
+        );
+      }
+      return c;
+    }).toList();
+
+    emit(state.copyWith(chapters: updatedList));
+
+    final result = await _chaptersRepository.toggleChapterBookmark(
+      chapter,
+      subjectName,
+      subjectId: subjectId,
+      curriculumKey: curriculumKey,
+    );
+
+    if (result is Error<void>) {
+      logFailure('toggleChapterBookmark', result.failure);
+      // Revert on failure
+      final revertedList = state.chapters.map((c) {
+        if (c.id == chapter.id) {
+          return Chapter(
+            id: c.id,
+            name: c.name,
+            subtitle: c.subtitle,
+            completedFormulas: c.completedFormulas,
+            totalFormulas: c.totalFormulas,
+            progressPercent: c.progressPercent,
+            status: c.status,
+            isSaved: !newBookmarkState,
+            isGeneralContent: c.isGeneralContent,
+            audiences: c.audiences,
+          );
+        }
+        return c;
+      }).toList();
+      emit(
+        state.copyWith(
+          chapters: revertedList,
+          errorMessage: 'Failed to bookmark chapter',
+        ),
+      );
     }
   }
 }

@@ -101,7 +101,7 @@ import '../../features/practice/domain/ports/practice_repository_port.dart'
 import '../../features/practice/domain/usecases/get_questions_use_case.dart'
     as _i525;
 import '../../features/practice/domain/usecases/record_quiz_completion_use_case.dart'
-    as _i1210;
+    as _i813;
 import '../../features/practice/infrastructure/adapters/practice_firebase_adapter.dart'
     as _i660;
 import '../../features/practice/infrastructure/repositories/practice_repository_impl.dart'
@@ -111,18 +111,18 @@ import '../../features/practice/presentation/cubit/practice_cubit.dart'
 import '../../features/profile/domain/domain.dart' as _i193;
 import '../../features/profile/domain/ports/profile_repository_port.dart'
     as _i50;
+import '../../features/profile/domain/usecases/get_notification_preferences_use_case.dart'
+    as _i627;
 import '../../features/profile/domain/usecases/get_profile_stats_use_case.dart'
     as _i539;
-import '../../features/profile/domain/usecases/get_notification_preferences_use_case.dart'
-    as _i278;
 import '../../features/profile/domain/usecases/get_settings_items_use_case.dart'
     as _i657;
 import '../../features/profile/domain/usecases/get_user_profile_use_case.dart'
     as _i105;
 import '../../features/profile/domain/usecases/update_notification_preferences_use_case.dart'
-    as _i1049;
+    as _i1012;
 import '../../features/profile/domain/usecases/update_profile_use_case.dart'
-    as _i112;
+    as _i540;
 import '../../features/profile/domain/usecases/update_study_goal_use_case.dart'
     as _i401;
 import '../../features/profile/infrastructure/adapters/profile_firebase_adapter.dart'
@@ -132,14 +132,20 @@ import '../../features/profile/infrastructure/repositories/profile_hive_cache.da
 import '../../features/profile/infrastructure/repositories/profile_repository_impl.dart'
     as _i244;
 import '../../features/profile/presentation/cubit/notifications_cubit.dart'
-    as _i531;
+    as _i153;
 import '../../features/profile/presentation/cubit/profile_cubit.dart' as _i36;
 import '../../features/saved/domain/domain.dart' as _i385;
 import '../../features/saved/domain/ports/saved_repository_port.dart' as _i793;
 import '../../features/saved/domain/usecases/get_bookmarks_use_case.dart'
     as _i527;
+import '../../features/saved/domain/usecases/get_saved_chapters_use_case.dart'
+    as _i87;
+import '../../features/saved/domain/usecases/get_saved_notes_use_case.dart'
+    as _i873;
 import '../../features/saved/domain/usecases/remove_bookmark_use_case.dart'
     as _i221;
+import '../../features/saved/domain/usecases/remove_saved_chapter_use_case.dart'
+    as _i174;
 import '../../features/saved/infrastructure/adapters/saved_firebase_adapter.dart'
     as _i1050;
 import '../../features/saved/infrastructure/repositories/saved_hive_cache.dart'
@@ -147,28 +153,31 @@ import '../../features/saved/infrastructure/repositories/saved_hive_cache.dart'
 import '../../features/saved/infrastructure/repositories/saved_repository_impl.dart'
     as _i79;
 import '../../features/saved/presentation/cubit/saved_cubit.dart' as _i712;
+import '../../shared/cubit/activity_refresh_cubit.dart' as _i64;
 import '../../shared/cubit/curriculum_cubit.dart' as _i427;
 import '../../shared/cubit/subject_selection_cubit.dart' as _i414;
 import '../../shared/cubit/theme_cubit.dart' as _i947;
 import '../../shared/domain/domain.dart' as _i525;
 import '../../shared/domain/ports/curriculum_repository_port.dart' as _i1064;
+import '../../shared/domain/ports/theme_preference_repository_port.dart'
+    as _i327;
 import '../../shared/domain/usecases/load_curriculum_use_case.dart' as _i1052;
 import '../../shared/domain/usecases/load_theme_preference_use_case.dart'
-    as _i1201;
+    as _i847;
 import '../../shared/domain/usecases/save_curriculum_use_case.dart' as _i1048;
 import '../../shared/domain/usecases/save_theme_preference_use_case.dart'
-    as _i1202;
+    as _i317;
 import '../../shared/domain/usecases/watch_curriculum_use_case.dart' as _i264;
 import '../../shared/domain/usecases/watch_theme_preference_use_case.dart'
-    as _i1203;
+    as _i287;
 import '../../shared/infrastructure/adapters/curriculum_firebase_adapter.dart'
     as _i303;
 import '../../shared/infrastructure/adapters/theme_preference_firebase_adapter.dart'
-    as _i1204;
+    as _i230;
 import '../../shared/infrastructure/repositories/curriculum_repository_impl.dart'
     as _i588;
 import '../../shared/infrastructure/repositories/theme_preference_repository_impl.dart'
-    as _i1205;
+    as _i436;
 import '../../shared/shared.dart' as _i914;
 import '../network/api_client.dart' as _i557;
 import '../network/api_interceptor.dart' as _i724;
@@ -190,6 +199,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i974.FirebaseFirestore>(() => firebaseModule.firestore);
     gh.lazySingleton<_i116.GoogleSignIn>(() => firebaseModule.googleSignIn);
     gh.lazySingleton<_i895.Connectivity>(() => firebaseModule.connectivity);
+    gh.lazySingleton<_i64.ActivityRefreshCubit>(
+      () => _i64.ActivityRefreshCubit(),
+    );
     gh.lazySingleton<_i750.ChaptersCachePort>(() => _i927.ChaptersHiveCache());
     gh.lazySingleton<_i385.SavedCachePort>(() => _i827.SavedHiveCache());
     gh.lazySingleton<_i95.DashboardCachePort>(() => _i990.DashboardHiveCache());
@@ -235,6 +247,12 @@ extension GetItInjectableX on _i174.GetIt {
         dataSource: gh<_i750.FormulasDataSourcePort>(),
       ),
     );
+    gh.lazySingleton<_i525.ThemePreferenceDataSourcePort>(
+      () => _i230.ThemePreferenceFirebaseAdapter(
+        gh<_i974.FirebaseFirestore>(),
+        gh<_i59.FirebaseAuth>(),
+      ),
+    );
     gh.lazySingleton<_i159.NetworkInfoPort>(
       () => _i105.ConnectivityNetworkInfo(gh<_i895.Connectivity>()),
     );
@@ -247,26 +265,19 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i634.OnboardingDataSourcePort>(
       () => _i985.OnboardingFirebaseAdapter(gh<_i974.FirebaseFirestore>()),
     );
+    gh.lazySingleton<_i525.ThemePreferenceRepositoryPort>(
+      () => _i436.ThemePreferenceRepositoryImpl(
+        gh<_i525.ThemePreferenceDataSourcePort>(),
+      ),
+    );
     gh.lazySingleton<_i95.DashboardDataSourcePort>(
       () => _i72.DashboardFirebaseAdapter(
         gh<_i974.FirebaseFirestore>(),
         gh<_i59.FirebaseAuth>(),
       ),
     );
-    gh.lazySingleton<_i899.PracticeDataSourcePort>(
-      () => _i660.PracticeFirebaseAdapter(
-        gh<_i974.FirebaseFirestore>(),
-        gh<_i59.FirebaseAuth>(),
-      ),
-    );
     gh.lazySingleton<_i525.CurriculumDataSourcePort>(
       () => _i303.CurriculumFirebaseAdapter(
-        gh<_i974.FirebaseFirestore>(),
-        gh<_i59.FirebaseAuth>(),
-      ),
-    );
-    gh.lazySingleton<_i525.ThemePreferenceDataSourcePort>(
-      () => _i1204.ThemePreferenceFirebaseAdapter(
         gh<_i974.FirebaseFirestore>(),
         gh<_i59.FirebaseAuth>(),
       ),
@@ -290,6 +301,12 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i117.AuthFirebaseAdapter(
         gh<_i59.FirebaseAuth>(),
         gh<_i116.GoogleSignIn>(),
+      ),
+    );
+    gh.lazySingleton<_i899.PracticeDataSourcePort>(
+      () => _i660.PracticeFirebaseAdapter(
+        gh<_i974.FirebaseFirestore>(),
+        gh<_i59.FirebaseAuth>(),
       ),
     );
     gh.factory<_i953.GetMasteryToolsUseCase>(
@@ -322,6 +339,21 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i873.WatchAuthStateUseCase>(
       () => _i873.WatchAuthStateUseCase(gh<_i320.AuthRepositoryPort>()),
     );
+    gh.factory<_i883.FormulasCubit>(
+      () => _i883.FormulasCubit(
+        getFormulas: gh<_i750.GetFormulasUseCase>(),
+        toggleBookmark: gh<_i750.ToggleBookmarkUseCase>(),
+        formulasRepository: gh<_i750.FormulasRepositoryPort>(),
+        chaptersRepository: gh<_i750.ChaptersRepositoryPort>(),
+      ),
+    );
+    gh.factory<_i919.ChaptersCubit>(
+      () => _i919.ChaptersCubit(
+        getChapters: gh<_i750.GetChaptersUseCase>(),
+        getMasteryTools: gh<_i750.GetMasteryToolsUseCase>(),
+        chaptersRepository: gh<_i750.ChaptersRepositoryPort>(),
+      ),
+    );
     gh.lazySingleton<_i385.SavedRepositoryPort>(
       () => _i79.SavedRepositoryImpl(
         dataSource: gh<_i385.SavedDataSourcePort>(),
@@ -340,6 +372,21 @@ extension GetItInjectableX on _i174.GetIt {
         cache: gh<_i95.DashboardCachePort>(),
       ),
     );
+    gh.factory<_i847.LoadThemePreferenceUseCase>(
+      () => _i847.LoadThemePreferenceUseCase(
+        gh<_i327.ThemePreferenceRepositoryPort>(),
+      ),
+    );
+    gh.factory<_i317.SaveThemePreferenceUseCase>(
+      () => _i317.SaveThemePreferenceUseCase(
+        gh<_i327.ThemePreferenceRepositoryPort>(),
+      ),
+    );
+    gh.factory<_i287.WatchThemePreferenceUseCase>(
+      () => _i287.WatchThemePreferenceUseCase(
+        gh<_i327.ThemePreferenceRepositoryPort>(),
+      ),
+    );
     gh.lazySingleton<_i899.PracticeRepositoryPort>(
       () => _i426.PracticeRepositoryImpl(
         dataSource: gh<_i899.PracticeDataSourcePort>(),
@@ -348,11 +395,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i525.CurriculumRepositoryPort>(
       () =>
           _i588.CurriculumRepositoryImpl(gh<_i525.CurriculumDataSourcePort>()),
-    );
-    gh.lazySingleton<_i525.ThemePreferenceRepositoryPort>(
-      () => _i1205.ThemePreferenceRepositoryImpl(
-        gh<_i525.ThemePreferenceDataSourcePort>(),
-      ),
     );
     gh.lazySingleton<_i634.OnboardingRepositoryPort>(
       () =>
@@ -381,13 +423,13 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i509.GetStatesUseCase>(
       () => _i509.GetStatesUseCase(gh<_i634.OnboardingRepositoryPort>()),
     );
-    gh.factory<_i539.GetProfileStatsUseCase>(
-      () => _i539.GetProfileStatsUseCase(
+    gh.factory<_i627.GetNotificationPreferencesUseCase>(
+      () => _i627.GetNotificationPreferencesUseCase(
         repository: gh<_i50.ProfileRepositoryPort>(),
       ),
     );
-    gh.factory<_i278.GetNotificationPreferencesUseCase>(
-      () => _i278.GetNotificationPreferencesUseCase(
+    gh.factory<_i539.GetProfileStatsUseCase>(
+      () => _i539.GetProfileStatsUseCase(
         repository: gh<_i50.ProfileRepositoryPort>(),
       ),
     );
@@ -401,13 +443,13 @@ extension GetItInjectableX on _i174.GetIt {
         repository: gh<_i50.ProfileRepositoryPort>(),
       ),
     );
-    gh.factory<_i112.UpdateProfileUseCase>(
-      () => _i112.UpdateProfileUseCase(
+    gh.factory<_i1012.UpdateNotificationPreferencesUseCase>(
+      () => _i1012.UpdateNotificationPreferencesUseCase(
         repository: gh<_i50.ProfileRepositoryPort>(),
       ),
     );
-    gh.factory<_i1049.UpdateNotificationPreferencesUseCase>(
-      () => _i1049.UpdateNotificationPreferencesUseCase(
+    gh.factory<_i540.UpdateProfileUseCase>(
+      () => _i540.UpdateProfileUseCase(
         repository: gh<_i50.ProfileRepositoryPort>(),
       ),
     );
@@ -416,18 +458,11 @@ extension GetItInjectableX on _i174.GetIt {
         repository: gh<_i50.ProfileRepositoryPort>(),
       ),
     );
-    gh.factory<_i919.ChaptersCubit>(
-      () => _i919.ChaptersCubit(
-        getChapters: gh<_i750.GetChaptersUseCase>(),
-        getMasteryTools: gh<_i750.GetMasteryToolsUseCase>(),
-      ),
-    );
-    gh.factory<_i883.FormulasCubit>(
-      () => _i883.FormulasCubit(
-        getFormulas: gh<_i750.GetFormulasUseCase>(),
-        toggleBookmark: gh<_i750.ToggleBookmarkUseCase>(),
-        formulasRepository: gh<_i750.FormulasRepositoryPort>(),
-        chaptersRepository: gh<_i750.ChaptersRepositoryPort>(),
+    gh.lazySingleton<_i947.ThemeCubit>(
+      () => _i947.ThemeCubit(
+        loadThemePreference: gh<_i525.LoadThemePreferenceUseCase>(),
+        saveThemePreference: gh<_i525.SaveThemePreferenceUseCase>(),
+        watchThemePreference: gh<_i525.WatchThemePreferenceUseCase>(),
       ),
     );
     gh.factory<_i525.GetQuestionsUseCase>(
@@ -435,20 +470,25 @@ extension GetItInjectableX on _i174.GetIt {
         repository: gh<_i1061.PracticeRepositoryPort>(),
       ),
     );
-    gh.factory<_i1210.RecordQuizCompletionUseCase>(
-      () => _i1210.RecordQuizCompletionUseCase(
+    gh.factory<_i813.RecordQuizCompletionUseCase>(
+      () => _i813.RecordQuizCompletionUseCase(
         repository: gh<_i1061.PracticeRepositoryPort>(),
       ),
     );
-    gh.factory<_i411.PracticeCubit>(
-      () => _i411.PracticeCubit(
-        getQuestions: gh<_i899.GetQuestionsUseCase>(),
-        recordQuizCompletion: gh<_i899.RecordQuizCompletionUseCase>(),
+    gh.factory<_i36.ProfileCubit>(
+      () => _i36.ProfileCubit(
+        getUserProfile: gh<_i193.GetUserProfileUseCase>(),
+        getProfileStats: gh<_i193.GetProfileStatsUseCase>(),
+        getSettingsItems: gh<_i193.GetSettingsItemsUseCase>(),
+        updateProfile: gh<_i193.UpdateProfileUseCase>(),
         activityRefreshCubit: gh<_i914.ActivityRefreshCubit>(),
       ),
     );
     gh.factory<_i221.RemoveBookmarkUseCase>(
       () => _i221.RemoveBookmarkUseCase(gh<_i385.SavedRepositoryPort>()),
+    );
+    gh.factory<_i174.RemoveSavedChapterUseCase>(
+      () => _i174.RemoveSavedChapterUseCase(gh<_i793.SavedRepositoryPort>()),
     );
     gh.factory<_i1052.LoadCurriculumUseCase>(
       () => _i1052.LoadCurriculumUseCase(gh<_i1064.CurriculumRepositoryPort>()),
@@ -459,38 +499,20 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i264.WatchCurriculumUseCase>(
       () => _i264.WatchCurriculumUseCase(gh<_i1064.CurriculumRepositoryPort>()),
     );
-    gh.factory<_i1201.LoadThemePreferenceUseCase>(
-      () => _i1201.LoadThemePreferenceUseCase(
-        gh<_i525.ThemePreferenceRepositoryPort>(),
-      ),
-    );
-    gh.factory<_i1202.SaveThemePreferenceUseCase>(
-      () => _i1202.SaveThemePreferenceUseCase(
-        gh<_i525.ThemePreferenceRepositoryPort>(),
-      ),
-    );
-    gh.factory<_i1203.WatchThemePreferenceUseCase>(
-      () => _i1203.WatchThemePreferenceUseCase(
-        gh<_i525.ThemePreferenceRepositoryPort>(),
-      ),
-    );
     gh.factory<_i527.GetBookmarksUseCase>(
       () => _i527.GetBookmarksUseCase(
         repository: gh<_i793.SavedRepositoryPort>(),
       ),
     );
-    gh.factory<_i385.GetSavedChaptersUseCase>(
-      () => _i385.GetSavedChaptersUseCase(
+    gh.factory<_i87.GetSavedChaptersUseCase>(
+      () => _i87.GetSavedChaptersUseCase(
         repository: gh<_i793.SavedRepositoryPort>(),
       ),
     );
-    gh.factory<_i385.GetSavedNotesUseCase>(
-      () => _i385.GetSavedNotesUseCase(
+    gh.factory<_i873.GetSavedNotesUseCase>(
+      () => _i873.GetSavedNotesUseCase(
         repository: gh<_i793.SavedRepositoryPort>(),
       ),
-    );
-    gh.factory<_i385.RemoveSavedChapterUseCase>(
-      () => _i385.RemoveSavedChapterUseCase(gh<_i793.SavedRepositoryPort>()),
     );
     gh.lazySingleton<_i427.CurriculumCubit>(
       () => _i427.CurriculumCubit(
@@ -498,9 +520,6 @@ extension GetItInjectableX on _i174.GetIt {
         saveCurriculum: gh<_i525.SaveCurriculumUseCase>(),
         watchCurriculum: gh<_i525.WatchCurriculumUseCase>(),
       ),
-    );
-    gh.lazySingleton<_i914.ActivityRefreshCubit>(
-      () => _i914.ActivityRefreshCubit(),
     );
     gh.factory<_i834.GetRecentStudiesUseCase>(
       () => _i834.GetRecentStudiesUseCase(
@@ -517,17 +536,24 @@ extension GetItInjectableX on _i174.GetIt {
         repository: gh<_i190.DashboardRepositoryPort>(),
       ),
     );
-    gh.factory<_i36.ProfileCubit>(
-      () => _i36.ProfileCubit(
-        getUserProfile: gh<_i193.GetUserProfileUseCase>(),
-        getProfileStats: gh<_i193.GetProfileStatsUseCase>(),
-        getSettingsItems: gh<_i193.GetSettingsItemsUseCase>(),
-        updateProfile: gh<_i193.UpdateProfileUseCase>(),
+    gh.factory<_i411.PracticeCubit>(
+      () => _i411.PracticeCubit(
+        getQuestions: gh<_i899.GetQuestionsUseCase>(),
+        recordQuizCompletion: gh<_i899.RecordQuizCompletionUseCase>(),
         activityRefreshCubit: gh<_i914.ActivityRefreshCubit>(),
       ),
     );
-    gh.factory<_i531.NotificationsCubit>(
-      () => _i531.NotificationsCubit(
+    gh.factory<_i24.DashboardCubit>(
+      () => _i24.DashboardCubit(
+        getStudyProgress: gh<_i95.GetStudyProgressUseCase>(),
+        getSubjects: gh<_i95.GetSubjectsUseCase>(),
+        getRecentStudies: gh<_i95.GetRecentStudiesUseCase>(),
+        curriculumCubit: gh<_i914.CurriculumCubit>(),
+        activityRefreshCubit: gh<_i914.ActivityRefreshCubit>(),
+      ),
+    );
+    gh.factory<_i153.NotificationsCubit>(
+      () => _i153.NotificationsCubit(
         getNotificationPreferences:
             gh<_i193.GetNotificationPreferencesUseCase>(),
         updateNotificationPreferences:
@@ -553,25 +579,9 @@ extension GetItInjectableX on _i174.GetIt {
         removeSavedChapter: gh<_i385.RemoveSavedChapterUseCase>(),
       ),
     );
-    gh.factory<_i24.DashboardCubit>(
-      () => _i24.DashboardCubit(
-        getStudyProgress: gh<_i95.GetStudyProgressUseCase>(),
-        getSubjects: gh<_i95.GetSubjectsUseCase>(),
-        getRecentStudies: gh<_i95.GetRecentStudiesUseCase>(),
-        curriculumCubit: gh<_i914.CurriculumCubit>(),
-        activityRefreshCubit: gh<_i914.ActivityRefreshCubit>(),
-      ),
-    );
     gh.lazySingleton<_i414.SubjectSelectionCubit>(
       () => _i414.SubjectSelectionCubit(
         watchCurriculum: gh<_i525.WatchCurriculumUseCase>(),
-      ),
-    );
-    gh.lazySingleton<_i947.ThemeCubit>(
-      () => _i947.ThemeCubit(
-        loadThemePreference: gh<_i525.LoadThemePreferenceUseCase>(),
-        saveThemePreference: gh<_i525.SaveThemePreferenceUseCase>(),
-        watchThemePreference: gh<_i525.WatchThemePreferenceUseCase>(),
       ),
     );
     return this;

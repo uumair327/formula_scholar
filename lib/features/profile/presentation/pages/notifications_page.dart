@@ -30,7 +30,7 @@ class NotificationsPage extends StatelessWidget {
       builder: (context, state) {
         if (state.status == NotificationsStatus.loading ||
             state.status == NotificationsStatus.initial) {
-          return const Scaffold(body: AppLoadingState());
+          return const Scaffold(body: NotificationsShimmer());
         }
 
         final colorScheme = Theme.of(context).colorScheme;
@@ -40,8 +40,10 @@ class NotificationsPage extends StatelessWidget {
         return Scaffold(
           body: Stack(
             children: [
-              CustomScrollView(
-                slivers: [
+              RefreshIndicator(
+                onRefresh: () => context.read<NotificationsCubit>().loadPreferences(),
+                child: CustomScrollView(
+                  slivers: [
                   _buildAppBar(context),
                   SliverPadding(
                     padding: const EdgeInsets.symmetric(
@@ -164,6 +166,7 @@ class NotificationsPage extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
               ),
               if (isBusy)
                 Positioned.fill(

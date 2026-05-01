@@ -29,7 +29,7 @@ class FormulasPage extends StatelessWidget {
 
         if (state.status == FormulasStatus.loading ||
             state.status == FormulasStatus.initial) {
-          return const Scaffold(body: AppLoadingState());
+          return const Scaffold(body: FormulasShimmer());
         }
 
         if (state.status == FormulasStatus.error) {
@@ -57,37 +57,96 @@ class FormulasPage extends StatelessWidget {
 
         return Scaffold(
           backgroundColor: colorScheme.surfaceContainerLowest,
-          body: CustomScrollView(
-            slivers: [
-              _buildAppBar(context, state),
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppDimensions.paddingXL,
-                ),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate([
-                    const SizedBox(height: AppDimensions.paddingLG),
-                    _buildProgressHeader(context, state),
-                    const SizedBox(height: AppDimensions.paddingXXL),
-                    ...state.formulas.asMap().entries.map(
-                      (entry) => Padding(
-                        padding: const EdgeInsets.only(
-                          bottom: AppDimensions.paddingLG,
+          body: RefreshIndicator(
+            onRefresh: () async {
+              if (state.subjectId != null && state.chapterId != null) {
+                final curriculumKey = context
+                    .read<CurriculumCubit>()
+                    .state
+                    .curriculum
+                    ?.curriculumKey;
+                await context.read<FormulasCubit>().loadFormulas(
+                  subjectId: state.subjectId!,
+                  chapterId: state.chapterId!,
+                  chapterName: state.chapterName,
+                  curriculumKey: curriculumKey,
+                );
+              }
+            },
+            child: CustomScrollView(
+              slivers: [
+                _buildAppBar(context, state),
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppDimensions.paddingXL,
+                  ),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate([
+                      const SizedBox(height: AppDimensions.paddingLG),
+                      _buildProgressHeader(context, state),
+                      const SizedBox(height: AppDimensions.paddingXXL),
+                      if (state.formulas.isEmpty)
+                        _buildEmptyFormulasState(context)
+                      else
+                        ...state.formulas.asMap().entries.map(
+                          (entry) => Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: AppDimensions.paddingLG,
+                            ),
+                            child: _FormulaCard(
+                              formula: entry.value,
+                              index: entry.key,
+                            ),
+                          ),
                         ),
-                        child: _FormulaCard(
-                          formula: entry.value,
-                          index: entry.key,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: AppDimensions.bottomNavPadding),
-                  ]),
+                      const SizedBox(height: AppDimensions.bottomNavPadding),
+                    ]),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildEmptyFormulasState(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppDimensions.paddingXXL),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(AppDimensions.paddingLG),
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerHighest,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                LucideIcons.fileQuestion,
+                size: AppDimensions.iconXL,
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: AppDimensions.paddingLG),
+            Text(
+              'No formulas available yet',
+              style: AppTextStyles.titleMedium,
+            ),
+            const SizedBox(height: AppDimensions.paddingSM),
+            Text(
+              'Content for this chapter is being prepared. Check back later!',
+              textAlign: TextAlign.center,
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

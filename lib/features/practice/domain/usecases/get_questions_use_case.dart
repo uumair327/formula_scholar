@@ -15,11 +15,16 @@ class GetQuestionsUseCase {
   Future<Result<List<QuizQuestion>>> call({
     required String boardId,
     required String gradeId,
+    String? subjectId,
   }) {
     AppLogger.trace(
-      'GetQuestionsUseCase called (board=$boardId, grade=$gradeId)',
+      'GetQuestionsUseCase called (board=$boardId, grade=$gradeId, subject=$subjectId)',
       tag: AppLogTags.practiceUseCase,
     );
-    return _repository.getQuestions(boardId: boardId, gradeId: gradeId);
+    return _repository.getQuestions(
+      boardId: boardId,
+      gradeId: gradeId,
+      subjectId: subjectId,
+    );
   }
 }

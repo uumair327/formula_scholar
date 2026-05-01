@@ -43,6 +43,7 @@ class _FakePracticeDataSource implements PracticeDataSourcePort {
   Future<List<QuizQuestion>> getQuestions({
     required String boardId,
     required String gradeId,
+    String? subjectId,
   }) async {
     return const <QuizQuestion>[];
   }

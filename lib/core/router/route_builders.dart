@@ -290,15 +290,8 @@ abstract final class RouteBuilders {
               child: BlocProvider(
                 create: (_) {
                   final cubit = getIt<PracticeCubit>();
-                  final curriculum = getIt<CurriculumCubit>().state;
-                  if (curriculum.hasSelection) {
-                    Future.microtask(
-                      () => cubit.loadQuestions(
-                        boardId: curriculum.boardId!,
-                        gradeId: curriculum.gradeId!,
-                      ),
-                    );
-                  }
+                  // We do not load questions automatically anymore.
+                  // The user must select a subject filter first.
                   return cubit;
                 },
                 child: const PracticePage(),
