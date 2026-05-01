@@ -14,9 +14,15 @@ import '../../domain/domain.dart';
 /// provided by the backend renders correctly without modifying
 /// this widget (Open/Closed Principle).
 class SubjectCard extends StatelessWidget {
-  const SubjectCard({super.key, required this.subject, this.onTap});
+  const SubjectCard({
+    super.key,
+    required this.subject,
+    this.onTap,
+    this.onLongPress,
+  });
   final Subject subject;
   final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
 
   @override
   Widget build(BuildContext context) {
@@ -28,16 +34,21 @@ class SubjectCard extends StatelessWidget {
       alpha: AppDimensions.opacityFaint,
     );
     final iconData = AppIconMapper.resolve(subject.iconName);
+    final card = subject.isFeatured
+        ? _buildFeaturedCard(context, accentColor, lightColor, iconData)
+        : _buildCompactCard(
+            context,
+            accentColor,
+            lightColor,
+            faintColor,
+            iconData,
+          );
 
-    if (subject.isFeatured) {
-      return _buildFeaturedCard(context, accentColor, lightColor, iconData);
-    }
-    return _buildCompactCard(
-      context,
-      accentColor,
-      lightColor,
-      faintColor,
-      iconData,
+    return GestureDetector(
+      onTap: onTap,
+      onLongPress: onLongPress,
+      behavior: HitTestBehavior.opaque,
+      child: card,
     );
   }
 
@@ -51,105 +62,102 @@ class SubjectCard extends StatelessWidget {
   ) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return GestureDetector(
-      onTap: onTap,
-      child: AppCard(
-        padding: EdgeInsets.zero,
-        clipBehavior: Clip.antiAlias,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            minHeight: AppDimensions.cardMinHeightLG,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(AppDimensions.paddingHero),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Icon + badge row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    AppIconCircle(
-                      icon: iconData,
-                      size: AppDimensions.avatarLG,
-                      backgroundColor: lightColor,
-                      iconColor: accentColor,
-                      iconSize: AppDimensions.iconXL,
-                      borderRadius: AppDimensions.radiusLG,
-                    ),
-                    if (subject.badgeText != null)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppDimensions.chipPaddingHorizontal,
-                          vertical: AppDimensions.badgePaddingVertical,
-                        ),
-                        decoration: BoxDecoration(
-                          color: colorScheme.surfaceContainerLowest,
-                          border: Border.all(
-                            color: colorScheme.outlineVariant.withValues(
-                              alpha: AppDimensions.opacityLight,
-                            ),
-                          ),
-                          borderRadius: BorderRadius.circular(
-                            AppDimensions.radiusXXL,
-                          ),
-                        ),
-                        child: Text(
-                          subject.badgeText!,
-                          style: AppTextStyles.labelSmall.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                            fontSize: AppDimensions.fontSizeXS,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: AppDimensions.paddingLG),
-                // Category label
-                Text(
-                  subject.category.toUpperCase(),
-                  style: AppTextStyles.overline.copyWith(color: accentColor),
-                ),
-                const SizedBox(height: AppDimensions.paddingXS),
-                // Title
-                Text(subject.name, style: AppTextStyles.headlineMedium),
-                const SizedBox(height: AppDimensions.paddingSM),
-                // Description
-                Text(
-                  subject.description,
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: colorScheme.onSurfaceVariant,
+    return AppCard(
+      padding: EdgeInsets.zero,
+      clipBehavior: Clip.antiAlias,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          minHeight: AppDimensions.cardMinHeightLG,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(AppDimensions.paddingHero),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Icon + badge row
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  AppIconCircle(
+                    icon: iconData,
+                    size: AppDimensions.avatarLG,
+                    backgroundColor: lightColor,
+                    iconColor: accentColor,
+                    iconSize: AppDimensions.iconXL,
+                    borderRadius: AppDimensions.radiusLG,
                   ),
-                ),
-                const SizedBox(height: AppDimensions.paddingXL),
-                // Formula count chip
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
+                  if (subject.badgeText != null)
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: AppDimensions.chipPaddingHorizontalLG,
-                        vertical: AppDimensions.chipPaddingVerticalLG,
+                        horizontal: AppDimensions.chipPaddingHorizontal,
+                        vertical: AppDimensions.badgePaddingVertical,
                       ),
                       decoration: BoxDecoration(
-                        color: accentColor.withValues(
-                          alpha: AppDimensions.opacitySubtle,
+                        color: colorScheme.surfaceContainerLowest,
+                        border: Border.all(
+                          color: colorScheme.outlineVariant.withValues(
+                            alpha: AppDimensions.opacityLight,
+                          ),
                         ),
                         borderRadius: BorderRadius.circular(
-                          AppDimensions.radiusXL,
+                          AppDimensions.radiusXXL,
                         ),
                       ),
                       child: Text(
-                        '${subject.formulaCount} Formulas',
-                        style: AppTextStyles.labelLarge.copyWith(
-                          color: accentColor,
+                        subject.badgeText!,
+                        style: AppTextStyles.labelSmall.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                          fontSize: AppDimensions.fontSizeXS,
                         ),
                       ),
                     ),
-                  ],
+                ],
+              ),
+              const SizedBox(height: AppDimensions.paddingLG),
+              // Category label
+              Text(
+                subject.category.toUpperCase(),
+                style: AppTextStyles.overline.copyWith(color: accentColor),
+              ),
+              const SizedBox(height: AppDimensions.paddingXS),
+              // Title
+              Text(subject.name, style: AppTextStyles.headlineMedium),
+              const SizedBox(height: AppDimensions.paddingSM),
+              // Description
+              Text(
+                subject.description,
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: colorScheme.onSurfaceVariant,
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(height: AppDimensions.paddingXL),
+              // Formula count chip
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimensions.chipPaddingHorizontalLG,
+                      vertical: AppDimensions.chipPaddingVerticalLG,
+                    ),
+                    decoration: BoxDecoration(
+                      color: accentColor.withValues(
+                        alpha: AppDimensions.opacitySubtle,
+                      ),
+                      borderRadius: BorderRadius.circular(
+                        AppDimensions.radiusXL,
+                      ),
+                    ),
+                    child: Text(
+                      '${subject.formulaCount} Formulas',
+                      style: AppTextStyles.labelLarge.copyWith(
+                        color: accentColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),

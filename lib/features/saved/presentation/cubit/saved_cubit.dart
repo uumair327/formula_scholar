@@ -101,6 +101,10 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
     emit(state.copyWith(searchQuery: query));
   }
 
+  void updateSortOrder(SavedSortOrder sortOrder) {
+    emit(state.copyWith(sortOrder: sortOrder));
+  }
+
   /// Removes a bookmark and reloads.
   Future<void> removeBookmark(String formulaId) async {
     // Optimistic update

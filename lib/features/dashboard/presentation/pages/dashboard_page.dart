@@ -8,6 +8,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
+import '../../../chapters/presentation/widgets/subject_analytics_sheet.dart';
 import '../../../auth/auth.dart';
 import '../../../onboarding/domain/domain.dart';
 import '../../domain/domain.dart';
@@ -69,8 +70,7 @@ class DashboardPage extends StatelessWidget {
 
           return Scaffold(
             body: RefreshIndicator(
-              onRefresh: () =>
-                  context.read<DashboardCubit>().loadDashboard(),
+              onRefresh: () => context.read<DashboardCubit>().loadDashboard(),
               child: CustomScrollView(
                 slivers: [
                   _buildAppBar(context),
@@ -90,9 +90,7 @@ class DashboardPage extends StatelessWidget {
                         _buildFormulaVault(context, state),
                         const SizedBox(height: AppDimensions.paddingLG),
                         _buildContinueStudying(context, state),
-                        const SizedBox(
-                          height: AppDimensions.bottomNavPadding,
-                        ),
+                        const SizedBox(height: AppDimensions.bottomNavPadding),
                       ]),
                     ),
                   ),
@@ -594,6 +592,11 @@ class DashboardPage extends StatelessWidget {
                                 subject: featured.first,
                                 onTap: () =>
                                     _onSubjectTap(context, featured.first),
+                                onLongPress: () => _showSubjectAnalytics(
+                                  context,
+                                  state,
+                                  featured.first,
+                                ),
                               ),
                             ),
                           if (featured.isNotEmpty && others.isNotEmpty)
@@ -604,6 +607,11 @@ class DashboardPage extends StatelessWidget {
                                 subject: others.first,
                                 onTap: () =>
                                     _onSubjectTap(context, others.first),
+                                onLongPress: () => _showSubjectAnalytics(
+                                  context,
+                                  state,
+                                  others.first,
+                                ),
                               ),
                             ),
                         ],
@@ -628,6 +636,11 @@ class DashboardPage extends StatelessWidget {
                             child: SubjectCard(
                               subject: subject,
                               onTap: () => _onSubjectTap(context, subject),
+                              onLongPress: () => _showSubjectAnalytics(
+                                context,
+                                state,
+                                subject,
+                              ),
                             ),
                           );
                         }),
@@ -654,6 +667,8 @@ class DashboardPage extends StatelessWidget {
                     child: SubjectCard(
                       subject: subject,
                       onTap: () => _onSubjectTap(context, subject),
+                      onLongPress: () =>
+                          _showSubjectAnalytics(context, state, subject),
                     ),
                   ),
                 ),
@@ -678,6 +693,34 @@ class DashboardPage extends StatelessWidget {
     );
     final shell = StatefulNavigationShell.of(context);
     shell.goBranch(1);
+  }
+
+  void _showSubjectAnalytics(
+    BuildContext context,
+    DashboardState state,
+    Subject subject,
+  ) {
+    final mastery = subject.masteryPercentage ?? 0;
+    final progressPercent = mastery.round().clamp(0, 100);
+    final completedFormulas = subject.formulaCount == 0
+        ? 0
+        : ((subject.formulaCount * progressPercent) / 100).round().clamp(
+            0,
+            subject.formulaCount,
+          );
+
+    final grade = state.selectedGradeName.isNotEmpty
+        ? 'Grade ${state.selectedGradeName}'
+        : AppStrings.dashboardCurriculumPending;
+
+    SubjectAnalyticsSheet.show(
+      context,
+      subjectName: subject.name,
+      progressPercent: progressPercent,
+      completedFormulas: completedFormulas,
+      totalFormulas: subject.formulaCount,
+      grade: grade,
+    );
   }
 
   // ──────────── Quiz Card ────────────
@@ -1066,14 +1109,14 @@ class DashboardPage extends StatelessWidget {
     if (study.subjectId.isNotEmpty) {
       // Recent study ID for chapters is formatted as: subjectId_chapterId
       final chapterId = study.id.replaceFirst('${study.subjectId}_', '');
-      
+
       final byId = state.subjects
           .where((s) => s.id == study.subjectId)
           .toList();
-          
+
       if (byId.isNotEmpty) {
         final subject = byId.first;
-        
+
         // Select the subject in the cubit so the Chapters tab works properly
         context.read<SubjectSelectionCubit>().selectSubject(
           id: subject.id,
@@ -1087,13 +1130,8 @@ class DashboardPage extends StatelessWidget {
           // Navigate directly to the chapter
           context.goNamed(
             AppRoutes.formulaDetailName,
-            pathParameters: {
-              'subjectId': subject.id,
-              'chapterId': chapterId,
-            },
-            queryParameters: {
-              'name': study.title,
-            },
+            pathParameters: {'subjectId': subject.id, 'chapterId': chapterId},
+            queryParameters: {'name': study.title},
           );
           return;
         } else {

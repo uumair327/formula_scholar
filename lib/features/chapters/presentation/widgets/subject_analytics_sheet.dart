@@ -13,14 +13,14 @@ class SubjectAnalyticsSheet extends StatelessWidget {
     required this.completedFormulas,
     required this.totalFormulas,
     required this.grade,
-    required this.currentStreak,
+    this.currentStreak,
   });
   final String subjectName;
   final int progressPercent;
   final int completedFormulas;
   final int totalFormulas;
   final String grade;
-  final int currentStreak;
+  final int? currentStreak;
 
   /// Displays the analytics sheet.
   static void show(
@@ -30,7 +30,7 @@ class SubjectAnalyticsSheet extends StatelessWidget {
     required int completedFormulas,
     required int totalFormulas,
     required String grade,
-    required int currentStreak,
+    int? currentStreak,
   }) {
     showModalBottomSheet<void>(
       context: context,
@@ -143,7 +143,9 @@ class SubjectAnalyticsSheet extends StatelessWidget {
                   child: _buildStatCard(
                     context: context,
                     title: 'Current Streak',
-                    value: '$currentStreak Days',
+                    value: currentStreak == null
+                        ? 'Not available'
+                        : '$currentStreak Days',
                     icon: LucideIcons.flame,
                     color: AppColors.orange500,
                   ),

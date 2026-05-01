@@ -38,7 +38,8 @@ class _SavedPageState extends State<SavedPage> {
               prev.bookmarks != curr.bookmarks ||
               prev.chapters != curr.chapters ||
               prev.notes != curr.notes ||
-              prev.searchQuery != curr.searchQuery,
+              prev.searchQuery != curr.searchQuery ||
+              prev.sortOrder != curr.sortOrder,
           builder: (context, state) {
             if (state.status == SavedStatus.loading ||
                 state.status == SavedStatus.initial) {
@@ -99,10 +100,7 @@ class _SavedPageState extends State<SavedPage> {
               appBar: _buildAppBar(context, authState.user),
               body: RefreshIndicator(
                 onRefresh: () {
-                  final curr = context
-                      .read<CurriculumCubit>()
-                      .state
-                      .curriculum;
+                  final curr = context.read<CurriculumCubit>().state.curriculum;
                   if (curr != null) {
                     return context.read<SavedCubit>().loadBookmarks(
                       curriculumKey: curr.curriculumKey,
@@ -111,70 +109,72 @@ class _SavedPageState extends State<SavedPage> {
                   return Future<void>.value();
                 },
                 child: ListView(
-                padding: const EdgeInsets.all(AppDimensions.paddingXXL),
-                children: [
-                  _buildSearchBar(context, state),
-                  const SizedBox(height: AppDimensions.paddingXXL),
-                  if (hasSearchQuery && !state.hasFilteredResults)
-                    _buildNoResultsState(context),
-                  if (!hasSearchQuery || state.hasFilteredResults) ...[
-                    if (filteredChapters.isNotEmpty) ...[
-                      Text(
-                        AppStrings.savedChapters,
-                        style: AppTextStyles.titleLarge.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: AppDimensions.paddingLG),
-                      ...filteredChapters.map(
-                        (chapter) => Padding(
-                          padding: const EdgeInsets.only(
-                            bottom: AppDimensions.paddingLG,
+                  padding: const EdgeInsets.all(AppDimensions.paddingXXL),
+                  children: [
+                    _buildSearchBar(context, state),
+                    const SizedBox(height: AppDimensions.paddingLG),
+                    _buildSortControls(context, state),
+                    const SizedBox(height: AppDimensions.paddingXXL),
+                    if (hasSearchQuery && !state.hasFilteredResults)
+                      _buildNoResultsState(context),
+                    if (!hasSearchQuery || state.hasFilteredResults) ...[
+                      if (filteredChapters.isNotEmpty) ...[
+                        Text(
+                          AppStrings.savedChapters,
+                          style: AppTextStyles.titleLarge.copyWith(
+                            fontWeight: FontWeight.w700,
                           ),
-                          child: _SavedChapterCard(chapter: chapter),
                         ),
-                      ),
-                      const SizedBox(height: AppDimensions.paddingMD),
-                    ],
-                    if (filteredBookmarks.isNotEmpty) ...[
-                      Text(
-                        AppStrings.savedFormulas,
-                        style: AppTextStyles.titleLarge.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: AppDimensions.paddingLG),
-                      ...filteredBookmarks.map(
-                        (bookmark) => Padding(
-                          padding: const EdgeInsets.only(
-                            bottom: AppDimensions.paddingLG,
+                        const SizedBox(height: AppDimensions.paddingLG),
+                        ...filteredChapters.map(
+                          (chapter) => Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: AppDimensions.paddingLG,
+                            ),
+                            child: _SavedChapterCard(chapter: chapter),
                           ),
-                          child: _BookmarkCard(bookmark: bookmark),
                         ),
-                      ),
-                      const SizedBox(height: AppDimensions.paddingMD),
-                    ],
-                    if (filteredNotes.isNotEmpty) ...[
-                      Text(
-                        AppStrings.savedNotes,
-                        style: AppTextStyles.titleLarge.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: AppDimensions.paddingLG),
-                      ...filteredNotes.map(
-                        (note) => Padding(
-                          padding: const EdgeInsets.only(
-                            bottom: AppDimensions.paddingLG,
+                        const SizedBox(height: AppDimensions.paddingMD),
+                      ],
+                      if (filteredBookmarks.isNotEmpty) ...[
+                        Text(
+                          AppStrings.savedFormulas,
+                          style: AppTextStyles.titleLarge.copyWith(
+                            fontWeight: FontWeight.w700,
                           ),
-                          child: _SavedNoteCard(note: note),
                         ),
-                      ),
+                        const SizedBox(height: AppDimensions.paddingLG),
+                        ...filteredBookmarks.map(
+                          (bookmark) => Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: AppDimensions.paddingLG,
+                            ),
+                            child: _BookmarkCard(bookmark: bookmark),
+                          ),
+                        ),
+                        const SizedBox(height: AppDimensions.paddingMD),
+                      ],
+                      if (filteredNotes.isNotEmpty) ...[
+                        Text(
+                          AppStrings.savedNotes,
+                          style: AppTextStyles.titleLarge.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: AppDimensions.paddingLG),
+                        ...filteredNotes.map(
+                          (note) => Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: AppDimensions.paddingLG,
+                            ),
+                            child: _SavedNoteCard(note: note),
+                          ),
+                        ),
+                      ],
                     ],
                   ],
-                ],
-              ),
                 ),
+              ),
             );
           },
         );
@@ -211,6 +211,42 @@ class _SavedPageState extends State<SavedPage> {
                 icon: const Icon(LucideIcons.x),
               ),
       ),
+    );
+  }
+
+  Widget _buildSortControls(BuildContext context, SavedState state) {
+    if (state.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Wrap(
+      spacing: AppDimensions.paddingSM,
+      runSpacing: AppDimensions.paddingSM,
+      children: [
+        ChoiceChip(
+          label: const Text('Newest'),
+          selected: state.sortOrder == SavedSortOrder.recent,
+          onSelected: (_) =>
+              context.read<SavedCubit>().updateSortOrder(SavedSortOrder.recent),
+          selectedColor: colorScheme.primaryContainer,
+        ),
+        ChoiceChip(
+          label: const Text('Oldest'),
+          selected: state.sortOrder == SavedSortOrder.oldest,
+          onSelected: (_) =>
+              context.read<SavedCubit>().updateSortOrder(SavedSortOrder.oldest),
+          selectedColor: colorScheme.primaryContainer,
+        ),
+        ChoiceChip(
+          label: const Text('Title A-Z'),
+          selected: state.sortOrder == SavedSortOrder.title,
+          onSelected: (_) =>
+              context.read<SavedCubit>().updateSortOrder(SavedSortOrder.title),
+          selectedColor: colorScheme.primaryContainer,
+        ),
+      ],
     );
   }
 
