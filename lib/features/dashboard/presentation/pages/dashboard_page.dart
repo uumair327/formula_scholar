@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
@@ -85,6 +87,8 @@ class DashboardPage extends StatelessWidget {
                         const SizedBox(height: AppDimensions.paddingXL),
                         _buildHeroStatusCard(context, state),
                         const SizedBox(height: AppDimensions.paddingSection),
+                        _buildCarouselBanners(context),
+                        const SizedBox(height: AppDimensions.paddingSection),
                         _buildAcademicPath(context, state),
                         const SizedBox(height: AppDimensions.paddingSection),
                         _buildFormulaVault(context, state),
@@ -100,6 +104,68 @@ class DashboardPage extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  Widget _buildCarouselBanners(BuildContext context) {
+    // Inspired by cifdashboard Carousel Items
+    final dummyBanners = [
+      {
+        'image': 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1000',
+        'link': 'https://formula-scholar.com/announcements/1'
+      },
+      {
+        'image': 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=1000',
+        'link': 'https://formula-scholar.com/announcements/2'
+      }
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SectionHeader(
+          title: 'Featured Announcements',
+          actionLabel: '',
+          onAction: () {},
+        ),
+        const SizedBox(height: AppDimensions.paddingLG),
+        CarouselSlider(
+          options: CarouselOptions(
+            height: 160.0,
+            autoPlay: true,
+            enlargeCenterPage: true,
+            viewportFraction: 0.9,
+            aspectRatio: 16/9,
+            initialPage: 0,
+          ),
+          items: dummyBanners.map((banner) {
+            return Builder(
+              builder: (BuildContext context) {
+                return GestureDetector(
+                  onTap: () async {
+                    final uri = Uri.parse(banner['link']!);
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri);
+                    }
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+                      image: DecorationImage(
+                        image: CachedNetworkImageProvider(banner['image']!),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          }).toList(),
+        ),
+      ],
     );
   }
 
