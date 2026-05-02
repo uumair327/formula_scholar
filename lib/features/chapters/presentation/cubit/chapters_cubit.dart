@@ -32,13 +32,22 @@ class ChaptersCubit extends Cubit<ChaptersState>
   /// Loads chapters for the given [subjectId].
   ///
   /// Skips reload if already loaded for the same subject.
+  /// [sortBy] specifies Firestore field to sort by (default: 'name').
+  /// [sortDesc] specifies sort direction (default: false = ascending).
   Future<void> loadChapters(
     String subjectId, {
     required String curriculumKey,
+    String searchQuery = '',
+    String sortBy = 'name',
+    bool sortDesc = false,
     bool forceReload = false,
   }) async {
     final sameRequest =
-        state.subjectId == subjectId && state.curriculumKey == curriculumKey;
+        state.subjectId == subjectId &&
+        state.curriculumKey == curriculumKey &&
+        state.searchQuery == searchQuery &&
+        state.sortBy == sortBy &&
+        state.sortDesc == sortDesc;
     final alreadyInFlightOrReady =
         state.status == ChaptersStatus.loading ||
         state.status == ChaptersStatus.loaded;
@@ -52,7 +61,7 @@ class ChaptersCubit extends Cubit<ChaptersState>
     }
 
     AppLogger.info(
-      'Loading chapters for subject=$subjectId, curriculum=$curriculumKey',
+      'Loading chapters for subject=$subjectId, curriculum=$curriculumKey, sortBy=$sortBy, sortDesc=$sortDesc',
       tag: AppLogTags.chaptersCubit,
     );
     emit(
@@ -60,10 +69,20 @@ class ChaptersCubit extends Cubit<ChaptersState>
         status: ChaptersStatus.loading,
         subjectId: subjectId,
         curriculumKey: curriculumKey,
+        searchQuery: searchQuery,
+        sortBy: sortBy,
+        sortDesc: sortDesc,
       ),
     );
 
-    final result = await _getChapters(subjectId, curriculumKey: curriculumKey);
+    // Pass sort parameters to use case (server-side authority).
+    final result = await _getChapters(
+      subjectId,
+      curriculumKey: curriculumKey,
+      searchQuery: searchQuery,
+      sortBy: sortBy,
+      sortDesc: sortDesc,
+    );
 
     switch (result) {
       case Success(:final data):

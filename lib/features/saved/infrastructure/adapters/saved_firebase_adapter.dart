@@ -16,9 +16,11 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
   @override
   Future<List<BookmarkedFormula>> getBookmarks({
     required String curriculumKey,
+    SavedQuery query = const SavedQuery(),
   }) async {
     AppLogger.trace(
-      'getBookmarks() fetching from Firestore for curriculum=$curriculumKey',
+      'getBookmarks() fetching from Firestore for curriculum=$curriculumKey, '
+      'sortBy=${query.sortByField}, order=${query.sortDirection.name}',
       tag: AppLogTags.savedDataSource,
     );
 
@@ -27,14 +29,17 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
       return [];
     }
 
+    // Build Firestore query with server-side sorting (golden rule: query authority).
     final snapshot = await _firestore
         .collection('users')
         .doc(uid)
         .collection('bookmarks')
         .where('curriculumKey', isEqualTo: curriculumKey)
+        .orderBy(query.sortByField, descending: query.isDescending)
+        .limit(200)
         .get();
 
-    return snapshot.docs.map((doc) {
+    final bookmarks = snapshot.docs.map((doc) {
       final data = doc.data();
       return BookmarkedFormula(
         id: data['id'] ?? doc.id,
@@ -45,11 +50,14 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
         savedAt: (data['savedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       );
     }).toList();
+
+    return _applyQuery(bookmarks, query: query);
   }
 
   @override
   Future<List<BookmarkedChapter>> getSavedChapters({
     required String curriculumKey,
+    SavedQuery query = const SavedQuery(),
   }) async {
     final uid = _firebaseAuth.currentUser?.uid;
     if (uid == null) {
@@ -169,20 +177,26 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
       }
     }
 
-    chapters.sort((a, b) => b.savedAt.compareTo(a.savedAt));
-    return chapters;
+    return _applyQuery(chapters, query: query);
   }
 
   @override
-  Future<List<SavedNote>> getSavedNotes({required String curriculumKey}) async {
+  Future<List<SavedNote>> getSavedNotes({
+    required String curriculumKey,
+    SavedQuery query = const SavedQuery(),
+  }) async {
     AppLogger.trace(
-      'getSavedNotes() fetching from Firestore for curriculum=$curriculumKey',
+      'getSavedNotes() fetching from Firestore for curriculum=$curriculumKey, '
+      'sortBy=${query.sortByField}, order=${query.sortDirection.name}',
       tag: AppLogTags.savedDataSource,
     );
 
+    // Build Firestore query with server-side sorting (golden rule: query authority).
     final snapshot = await _firestore
         .collection('saved_notes')
         .where('curriculumKey', isEqualTo: curriculumKey)
+        .orderBy(query.sortByField, descending: query.isDescending)
+        .limit(200)
         .get();
 
     final notes = snapshot.docs.map((doc) {
@@ -197,8 +211,7 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
       );
     }).toList();
 
-    notes.sort((a, b) => b.savedAt.compareTo(a.savedAt));
-    return notes;
+    return _applyQuery(notes, query: query);
   }
 
   @override
@@ -303,5 +316,38 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
             .where((id) => id.isNotEmpty)
             .toList() ??
         const <String>[];
+  }
+
+  List<T> _applyQuery<T>(List<T> items, {required SavedQuery query}) {
+    final search = query.searchQuery.trim().toLowerCase();
+    if (search.isEmpty) {
+      return items;
+    }
+
+    return items.where((item) {
+      return _matchesSavedSearch(item, search);
+    }).toList();
+  }
+
+  bool _matchesSavedSearch(Object? item, String search) {
+    if (item is BookmarkedFormula) {
+      return item.title.toLowerCase().contains(search) ||
+          item.subject.toLowerCase().contains(search) ||
+          item.formula.toLowerCase().contains(search);
+    }
+
+    if (item is BookmarkedChapter) {
+      return item.chapterName.toLowerCase().contains(search) ||
+          item.chapterSubtitle.toLowerCase().contains(search) ||
+          item.subjectName.toLowerCase().contains(search);
+    }
+
+    if (item is SavedNote) {
+      return item.title.toLowerCase().contains(search) ||
+          item.subject.toLowerCase().contains(search) ||
+          item.content.toLowerCase().contains(search);
+    }
+
+    return false;
   }
 }

@@ -39,7 +39,8 @@ class _SavedPageState extends State<SavedPage> {
               prev.chapters != curr.chapters ||
               prev.notes != curr.notes ||
               prev.searchQuery != curr.searchQuery ||
-              prev.sortOrder != curr.sortOrder,
+              prev.sortByField != curr.sortByField ||
+              prev.sortDirection != curr.sortDirection,
           builder: (context, state) {
             if (state.status == SavedStatus.loading ||
                 state.status == SavedStatus.initial) {
@@ -220,31 +221,75 @@ class _SavedPageState extends State<SavedPage> {
     }
 
     final colorScheme = Theme.of(context).colorScheme;
+    final directionIcon = state.sortDirection == SortDirection.asc
+        ? LucideIcons.arrowUp
+        : LucideIcons.arrowDown;
 
-    return Wrap(
-      spacing: AppDimensions.paddingSM,
-      runSpacing: AppDimensions.paddingSM,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ChoiceChip(
-          label: const Text('Newest'),
-          selected: state.sortOrder == SavedSortOrder.recent,
-          onSelected: (_) =>
-              context.read<SavedCubit>().updateSortOrder(SavedSortOrder.recent),
-          selectedColor: colorScheme.primaryContainer,
+        // Sort by field selection
+        Wrap(
+          spacing: AppDimensions.paddingSM,
+          runSpacing: AppDimensions.paddingSM,
+          children: [
+            ChoiceChip(
+              label: const Text('Newest'),
+              selected:
+                  state.sortByField == 'savedAt' &&
+                  state.sortDirection == SortDirection.desc,
+              onSelected: (_) => context.read<SavedCubit>().updateSort(
+                sortByField: 'savedAt',
+                sortDirection: SortDirection.desc,
+              ),
+              selectedColor: colorScheme.primaryContainer,
+            ),
+            ChoiceChip(
+              label: const Text('Oldest'),
+              selected:
+                  state.sortByField == 'savedAt' &&
+                  state.sortDirection == SortDirection.asc,
+              onSelected: (_) => context.read<SavedCubit>().updateSort(
+                sortByField: 'savedAt',
+                sortDirection: SortDirection.asc,
+              ),
+              selectedColor: colorScheme.primaryContainer,
+            ),
+            ChoiceChip(
+              label: const Text('Title A-Z'),
+              selected:
+                  state.sortByField == 'title' &&
+                  state.sortDirection == SortDirection.asc,
+              onSelected: (_) => context.read<SavedCubit>().updateSort(
+                sortByField: 'title',
+                sortDirection: SortDirection.asc,
+              ),
+              selectedColor: colorScheme.primaryContainer,
+            ),
+            ChoiceChip(
+              label: const Text('Title Z-A'),
+              selected:
+                  state.sortByField == 'title' &&
+                  state.sortDirection == SortDirection.desc,
+              onSelected: (_) => context.read<SavedCubit>().updateSort(
+                sortByField: 'title',
+                sortDirection: SortDirection.desc,
+              ),
+              selectedColor: colorScheme.primaryContainer,
+            ),
+          ],
         ),
-        ChoiceChip(
-          label: const Text('Oldest'),
-          selected: state.sortOrder == SavedSortOrder.oldest,
-          onSelected: (_) =>
-              context.read<SavedCubit>().updateSortOrder(SavedSortOrder.oldest),
-          selectedColor: colorScheme.primaryContainer,
-        ),
-        ChoiceChip(
-          label: const Text('Title A-Z'),
-          selected: state.sortOrder == SavedSortOrder.title,
-          onSelected: (_) =>
-              context.read<SavedCubit>().updateSortOrder(SavedSortOrder.title),
-          selectedColor: colorScheme.primaryContainer,
+        const SizedBox(height: AppDimensions.paddingSM),
+        // Sort direction toggle
+        Tooltip(
+          message: 'Toggle sort direction',
+          child: IconButton.filled(
+            onPressed: () => context.read<SavedCubit>().toggleSortDirection(),
+            icon: Icon(directionIcon, size: 20),
+            tooltip: state.sortDirection == SortDirection.asc
+                ? 'Ascending'
+                : 'Descending',
+          ),
         ),
       ],
     );

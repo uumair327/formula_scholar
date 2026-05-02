@@ -67,6 +67,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
         context.read<ChaptersCubit>().loadChapters(
           subjectState.subject!.id,
           curriculumKey: curriculumKey,
+          searchQuery: _searchQuery,
         ),
       );
     } else if (subjectState.hasSelection) {
@@ -192,163 +193,199 @@ class _ChaptersPageState extends State<ChaptersPage> {
                   final selectedSubject = subjectState.subject!;
                   await context.read<ChaptersCubit>().loadChapters(
                     selectedSubject.id,
-                    curriculumKey: context.read<CurriculumCubit>().state.curriculum?.curriculumKey ?? '',
+                    curriculumKey:
+                        context
+                            .read<CurriculumCubit>()
+                            .state
+                            .curriculum
+                            ?.curriculumKey ??
+                        '',
+                    searchQuery: _searchQuery,
                   );
                 }
               },
               child: CustomScrollView(
-              slivers: [
-                _buildAppBar(context, subjectState),
-                _buildSubjectChips(context, subjectState),
-                if (!subjectState.hasSelection &&
-                    subjectState.availableSubjects.isEmpty &&
-                    _isLoadingAvailableSubjects)
-                  const SliverFillRemaining(
-                    hasScrollBody: false,
-                    child: ChaptersShimmer(),
-                  )
-                else if (!subjectState.hasSelection)
-                  const SliverFillRemaining(
-                    hasScrollBody: false,
-                    child: NoSubjectSelectedState(),
-                  )
-                else
-                  BlocBuilder<ChaptersCubit, ChaptersState>(
-                    buildWhen: (prev, curr) =>
-                        prev.status != curr.status ||
-                        prev.chapters != curr.chapters ||
-                        prev.masteryTools != curr.masteryTools,
-                    builder: (context, state) {
-                      if (state.status == ChaptersStatus.loading ||
-                          state.status == ChaptersStatus.initial) {
-                        return const SliverFillRemaining(
-                          child: ChaptersShimmer(),
-                        );
-                      }
+                slivers: [
+                  _buildAppBar(context, subjectState),
+                  _buildSubjectChips(context, subjectState),
+                  if (!subjectState.hasSelection &&
+                      subjectState.availableSubjects.isEmpty &&
+                      _isLoadingAvailableSubjects)
+                    const SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: ChaptersShimmer(),
+                    )
+                  else if (!subjectState.hasSelection)
+                    const SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: NoSubjectSelectedState(),
+                    )
+                  else
+                    BlocBuilder<ChaptersCubit, ChaptersState>(
+                      buildWhen: (prev, curr) =>
+                          prev.status != curr.status ||
+                          prev.chapters != curr.chapters ||
+                          prev.masteryTools != curr.masteryTools,
+                      builder: (context, state) {
+                        if (state.status == ChaptersStatus.loading ||
+                            state.status == ChaptersStatus.initial) {
+                          return const SliverFillRemaining(
+                            child: ChaptersShimmer(),
+                          );
+                        }
 
-                      if (state.status == ChaptersStatus.error) {
-                        return SliverFillRemaining(
-                          child: AppErrorState(
-                            message: state.errorMessage,
-                            onRetry: () =>
-                                _retryLoadChapters(context, subject!.id),
-                          ),
-                        );
-                      }
-
-                      if (state.chapters.isEmpty) {
-                        final colorScheme = Theme.of(context).colorScheme;
-
-                        return SliverFillRemaining(
-                          hasScrollBody: false,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppDimensions.paddingXXL,
+                        if (state.status == ChaptersStatus.error) {
+                          return SliverFillRemaining(
+                            child: AppErrorState(
+                              message: state.errorMessage,
+                              onRetry: () =>
+                                  _retryLoadChapters(context, subject!.id),
                             ),
-                            child: Center(
-                              child: AppCard(
-                                padding: const EdgeInsets.all(
-                                  AppDimensions.paddingXXL,
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(
-                                      LucideIcons.bookOpen,
-                                      size: AppDimensions.imageLG,
-                                      color: AppColors.primary,
-                                    ),
-                                    const SizedBox(
-                                      height: AppDimensions.paddingXXL,
-                                    ),
-                                    Text(
-                                      AppStrings.chaptersNoContentTitle,
-                                      textAlign: TextAlign.center,
-                                      style: AppTextStyles.headlineSmall
-                                          .copyWith(
-                                            fontWeight: FontWeight.w800,
-                                          ),
-                                    ),
-                                    const SizedBox(
-                                      height: AppDimensions.paddingSM,
-                                    ),
-                                    Text(
-                                      AppStrings.chaptersNoContentDescription,
-                                      textAlign: TextAlign.center,
-                                      style: AppTextStyles.bodyMedium.copyWith(
-                                        color: colorScheme.onSurfaceVariant,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: AppDimensions.paddingXXL,
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        context
-                                            .read<SubjectSelectionCubit>()
-                                            .clearSelection();
-                                        StatefulNavigationShell.of(
-                                          context,
-                                        ).goBranch(0);
-                                      },
-                                      child: const Text(
-                                        AppStrings.chaptersBrowseSubjects,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                          );
+                        }
+
+                        if (state.chapters.isEmpty) {
+                          final colorScheme = Theme.of(context).colorScheme;
+
+                          return SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppDimensions.paddingXXL,
                               ),
-                            ),
-                          ),
-                        );
-                      }
-
-                      return SliverPadding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppDimensions.paddingXL,
-                        ),
-                        sliver: SliverList(
-                          delegate: SliverChildListDelegate([
-                            const SizedBox(height: AppDimensions.paddingLG),
-                            _buildHeroSection(context, subjectState.subject!),
-                            const SizedBox(height: AppDimensions.paddingXXL),
-                            // Search Bar
-                            AppCard(
-                              padding: EdgeInsets.zero,
-                              child: TextField(
-                                onChanged: (value) {
-                                  setState(() {
-                                    _searchQuery = value;
-                                  });
-                                },
-                                decoration: InputDecoration(
-                                  hintText: AppStrings.searchChaptersHint,
-                                  prefixIcon: const Icon(LucideIcons.search),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
-                                    borderSide: BorderSide.none,
+                              child: Center(
+                                child: AppCard(
+                                  padding: const EdgeInsets.all(
+                                    AppDimensions.paddingXXL,
                                   ),
-                                  filled: true,
-                                  fillColor: Theme.of(context).colorScheme.surface,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(
+                                        LucideIcons.bookOpen,
+                                        size: AppDimensions.imageLG,
+                                        color: AppColors.primary,
+                                      ),
+                                      const SizedBox(
+                                        height: AppDimensions.paddingXXL,
+                                      ),
+                                      Text(
+                                        AppStrings.chaptersNoContentTitle,
+                                        textAlign: TextAlign.center,
+                                        style: AppTextStyles.headlineSmall
+                                            .copyWith(
+                                              fontWeight: FontWeight.w800,
+                                            ),
+                                      ),
+                                      const SizedBox(
+                                        height: AppDimensions.paddingSM,
+                                      ),
+                                      Text(
+                                        AppStrings.chaptersNoContentDescription,
+                                        textAlign: TextAlign.center,
+                                        style: AppTextStyles.bodyMedium
+                                            .copyWith(
+                                              color:
+                                                  colorScheme.onSurfaceVariant,
+                                            ),
+                                      ),
+                                      const SizedBox(
+                                        height: AppDimensions.paddingXXL,
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          context
+                                              .read<SubjectSelectionCubit>()
+                                              .clearSelection();
+                                          StatefulNavigationShell.of(
+                                            context,
+                                          ).goBranch(0);
+                                        },
+                                        child: const Text(
+                                          AppStrings.chaptersBrowseSubjects,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                            const SizedBox(height: AppDimensions.paddingLG),
-                            _buildChapterCards(state, subjectState.subject!.id),
-                            const SizedBox(
-                              height: AppDimensions.paddingSection,
-                            ),
-                            MasteryToolsSection(tools: state.masteryTools),
-                            const SizedBox(
-                              height: AppDimensions.bottomNavPadding,
-                            ),
-                          ]),
-                        ),
-                      );
-                    },
-                  ),
-              ],
-            ),
+                          );
+                        }
+
+                        return SliverPadding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppDimensions.paddingXL,
+                          ),
+                          sliver: SliverList(
+                            delegate: SliverChildListDelegate([
+                              const SizedBox(height: AppDimensions.paddingLG),
+                              _buildHeroSection(context, subjectState.subject!),
+                              const SizedBox(height: AppDimensions.paddingXXL),
+                              // Search Bar
+                              AppCard(
+                                padding: EdgeInsets.zero,
+                                child: TextField(
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _searchQuery = value;
+                                    });
+                                    final curriculumKey = context
+                                        .read<CurriculumCubit>()
+                                        .state
+                                        .curriculum
+                                        ?.curriculumKey;
+                                    final subjectId = subjectState.subject?.id;
+                                    if (subjectId == null ||
+                                        curriculumKey == null ||
+                                        curriculumKey.isEmpty) {
+                                      return;
+                                    }
+                                    unawaited(
+                                      context
+                                          .read<ChaptersCubit>()
+                                          .loadChapters(
+                                            subjectId,
+                                            curriculumKey: curriculumKey,
+                                            searchQuery: value,
+                                          ),
+                                    );
+                                  },
+                                  decoration: InputDecoration(
+                                    hintText: AppStrings.searchChaptersHint,
+                                    prefixIcon: const Icon(LucideIcons.search),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        AppDimensions.radiusLG,
+                                      ),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    filled: true,
+                                    fillColor: Theme.of(
+                                      context,
+                                    ).colorScheme.surface,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: AppDimensions.paddingLG),
+                              _buildChapterCards(
+                                state,
+                                subjectState.subject!.id,
+                              ),
+                              const SizedBox(
+                                height: AppDimensions.paddingSection,
+                              ),
+                              MasteryToolsSection(tools: state.masteryTools),
+                              const SizedBox(
+                                height: AppDimensions.bottomNavPadding,
+                              ),
+                            ]),
+                          ),
+                        );
+                      },
+                    ),
+                ],
+              ),
             ),
             floatingActionButton: subjectState.hasSelection
                 ? FloatingActionButton(
@@ -644,22 +681,18 @@ class _ChaptersPageState extends State<ChaptersPage> {
   // ──────────────────────── Chapter Cards ───────────────────────
 
   Widget _buildChapterCards(ChaptersState state, String subjectId) {
-    final query = _searchQuery.toLowerCase();
-    final filteredChapters = query.isEmpty 
-        ? state.chapters 
-        : state.chapters.where((c) => c.name.toLowerCase().contains(query)).toList();
-
-    final featured = filteredChapters
+    final featured = state.chapters
         .where((c) => c.isInProgress)
         .fold<Chapter?>(
           null,
-          (best, c) =>
-              best == null || c.progressPercent > best.progressPercent ? c : best,
+          (best, c) => best == null || c.progressPercent > best.progressPercent
+              ? c
+              : best,
         );
 
-    final remaining = featured == null 
-        ? filteredChapters 
-        : filteredChapters.where((c) => c.id != featured.id).toList();
+    final remaining = featured == null
+        ? state.chapters
+        : state.chapters.where((c) => c.id != featured.id).toList();
 
     return Column(
       children: [
@@ -697,6 +730,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
       context.read<ChaptersCubit>().loadChapters(
         subjectId,
         curriculumKey: curriculumKey,
+        searchQuery: _searchQuery,
         forceReload: true,
       ),
     );

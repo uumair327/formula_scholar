@@ -20,11 +20,12 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
       tag: AppLogTags.onboardingDataSource,
     );
 
-    // Simulate pagination for brevity or implement real firestore doc snapshots
-    final snapshot = await _firestore
-        .collection('countries')
-        .limit(limit)
-        .get();
+    final snapshot = await _runCollectionQuery(
+      _firestore.collection('countries'),
+      orderByField: 'name',
+      limit: limit,
+      startAfterId: startAfterId,
+    );
 
     final data = snapshot.docs.map((doc) {
       final map = doc.data();
@@ -38,7 +39,7 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
 
     return PaginatedResponse(
       data: data,
-      hasMore: data.length == limit,
+      hasMore: snapshot.docs.length > limit,
       lastCursorId: data.isNotEmpty ? data.last.id : null,
     );
   }
@@ -53,12 +54,12 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
       'getStates($countryId) fetching from Firestore',
       tag: AppLogTags.onboardingDataSource,
     );
-    final snapshot = await _firestore
-        .collection('countries')
-        .doc(countryId)
-        .collection('states')
-        .limit(limit)
-        .get();
+    final snapshot = await _runCollectionQuery(
+      _firestore.collection('countries').doc(countryId).collection('states'),
+      orderByField: 'name',
+      limit: limit,
+      startAfterId: startAfterId,
+    );
 
     final data = snapshot.docs.map((doc) {
       final map = doc.data();
@@ -72,7 +73,7 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
 
     return PaginatedResponse(
       data: data,
-      hasMore: data.length == limit,
+      hasMore: snapshot.docs.length > limit,
       lastCursorId: data.isNotEmpty ? data.last.id : null,
     );
   }
@@ -89,11 +90,14 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
       tag: AppLogTags.onboardingDataSource,
     );
 
-    final query = _firestore
-        .collection('boards')
-        .where('countryId', isEqualTo: countryId);
-
-    final snapshot = await query.limit(limit).get();
+    final collectionRef = _firestore.collection('boards');
+    final snapshot = await _runCollectionQuery(
+      collectionRef,
+      orderByField: 'name',
+      limit: limit,
+      startAfterId: startAfterId,
+      baseQuery: collectionRef.where('countryId', isEqualTo: countryId),
+    );
     var data = snapshot.docs.map((doc) {
       final map = doc.data();
 
@@ -123,7 +127,7 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
 
     return PaginatedResponse(
       data: data,
-      hasMore: data.length == limit,
+      hasMore: snapshot.docs.length > limit,
       lastCursorId: data.isNotEmpty ? data.last.id : null,
     );
   }
@@ -140,23 +144,21 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
     );
 
     // Prefer the normalized `classes` path, but support legacy `grades` data.
-    final classesSnapshot = await _firestore
-        .collection('boards')
-        .doc(boardId)
-        .collection('classes')
-        .orderBy('classNumber')
-        .limit(limit)
-        .get();
+    final classesSnapshot = await _runCollectionQuery(
+      _firestore.collection('boards').doc(boardId).collection('classes'),
+      orderByField: 'classNumber',
+      limit: limit,
+      startAfterId: startAfterId,
+    );
 
     final snapshot = classesSnapshot.docs.isNotEmpty
         ? classesSnapshot
-        : await _firestore
-              .collection('boards')
-              .doc(boardId)
-              .collection('grades')
-              .orderBy('classNumber')
-              .limit(limit)
-              .get();
+        : await _runCollectionQuery(
+            _firestore.collection('boards').doc(boardId).collection('grades'),
+            orderByField: 'classNumber',
+            limit: limit,
+            startAfterId: startAfterId,
+          );
 
     final parsedGrades = snapshot.docs.map((doc) {
       final map = doc.data();
@@ -180,9 +182,34 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
 
     return PaginatedResponse(
       data: data,
-      hasMore: data.length == limit,
+      hasMore: snapshot.docs.length > limit,
       lastCursorId: data.isNotEmpty ? data.last.id : null,
     );
+  }
+
+  Future<QuerySnapshot<Map<String, dynamic>>> _runCollectionQuery(
+    CollectionReference<Map<String, dynamic>> collectionRef, {
+    required String orderByField,
+    required int limit,
+    String? startAfterId,
+    Query<Map<String, dynamic>>? baseQuery,
+  }) async {
+    final effectiveLimit = limit > 0 ? limit : 20;
+    Query<Map<String, dynamic>> query = baseQuery ?? collectionRef;
+    query = query.orderBy(orderByField);
+
+    try {
+      if (startAfterId != null && startAfterId.isNotEmpty) {
+        final cursorSnapshot = await collectionRef.doc(startAfterId).get();
+        if (cursorSnapshot.exists) {
+          query = query.startAfterDocument(cursorSnapshot);
+        }
+      }
+    } catch (_) {
+      // If the cursor doc cannot be resolved, fall back to the first page.
+    }
+
+    return query.limit(effectiveLimit + 1).get();
   }
 
   List<Grade> _deduplicateAndSortGrades(List<Grade> grades) {

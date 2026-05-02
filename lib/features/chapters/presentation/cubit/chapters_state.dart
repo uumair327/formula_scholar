@@ -7,11 +7,17 @@ const Object _unset = Object();
 enum ChaptersStatus { initial, loading, loaded, error }
 
 /// State for the generic Chapters feature.
+///
+/// Tracks sort-by-field and sort direction following golden rule:
+/// Sorting authority is server-side (Firestore query).
 class ChaptersState extends Equatable {
   const ChaptersState({
     this.status = ChaptersStatus.initial,
     this.subjectId,
     this.curriculumKey,
+    this.searchQuery = '',
+    this.sortBy = 'name',
+    this.sortDesc = false,
     this.chapters = const [],
     this.masteryTools = const [],
     this.errorMessage,
@@ -19,6 +25,9 @@ class ChaptersState extends Equatable {
   final ChaptersStatus status;
   final String? subjectId;
   final String? curriculumKey;
+  final String searchQuery;
+  final String sortBy;
+  final bool sortDesc;
   final List<Chapter> chapters;
   final List<MasteryTool> masteryTools;
   final String? errorMessage;
@@ -43,6 +52,9 @@ class ChaptersState extends Equatable {
     ChaptersStatus? status,
     String? subjectId,
     String? curriculumKey,
+    String? searchQuery,
+    String? sortBy,
+    bool? sortDesc,
     List<Chapter>? chapters,
     List<MasteryTool>? masteryTools,
     Object? errorMessage = _unset,
@@ -51,6 +63,9 @@ class ChaptersState extends Equatable {
       status: status ?? this.status,
       subjectId: subjectId ?? this.subjectId,
       curriculumKey: curriculumKey ?? this.curriculumKey,
+      searchQuery: searchQuery ?? this.searchQuery,
+      sortBy: sortBy ?? this.sortBy,
+      sortDesc: sortDesc ?? this.sortDesc,
       chapters: chapters ?? this.chapters,
       masteryTools: masteryTools ?? this.masteryTools,
       errorMessage: identical(errorMessage, _unset)
@@ -64,6 +79,9 @@ class ChaptersState extends Equatable {
     status,
     subjectId,
     curriculumKey,
+    searchQuery,
+    sortBy,
+    sortDesc,
     chapters,
     masteryTools,
     errorMessage,

@@ -15,10 +15,12 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
   @override
   Future<List<Chapter>> getChapters(
     String subjectId,
-    String curriculumKey,
-  ) async {
+    String curriculumKey, {
+    String sortBy = 'name',
+    bool sortDesc = false,
+  }) async {
     AppLogger.trace(
-      'getChapters($subjectId, curriculum=$curriculumKey) fetching from Firestore',
+      'getChapters($subjectId, curriculum=$curriculumKey, sortBy=$sortBy, sortDesc=$sortDesc) fetching from Firestore',
       tag: AppLogTags.chaptersDataSource,
     );
 
@@ -37,6 +39,7 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
             ), // Legacy fallback
           ),
         )
+        .orderBy(sortBy, descending: sortDesc)
         .get();
 
     // Legacy fallback: if strictly tagged chapters don't exist, load all
@@ -45,6 +48,7 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
           .collection('subjects')
           .doc(subjectId)
           .collection('chapters')
+          .orderBy(sortBy, descending: sortDesc)
           .get();
     }
 

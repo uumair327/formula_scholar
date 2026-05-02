@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
@@ -39,11 +41,25 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
     AppLogger.info('Loading bookmarks', tag: AppLogTags.savedCubit);
     emit(state.copyWith(status: SavedStatus.loading));
 
-    final formulasResult = await _getBookmarks(curriculumKey: curriculumKey);
+    // Build query with server-side sort authority (golden rule).
+    final query = SavedQuery(
+      searchQuery: state.searchQuery,
+      sortByField: state.sortByField,
+      sortDirection: state.sortDirection,
+    );
+
+    final formulasResult = await _getBookmarks(
+      curriculumKey: curriculumKey,
+      query: query,
+    );
     final chaptersResult = await _getSavedChapters(
       curriculumKey: curriculumKey,
+      query: query,
     );
-    final notesResult = await _getSavedNotes(curriculumKey: curriculumKey);
+    final notesResult = await _getSavedNotes(
+      curriculumKey: curriculumKey,
+      query: query,
+    );
 
     if (formulasResult is Error<List<BookmarkedFormula>>) {
       logFailure('bookmarks', formulasResult.failure);
@@ -99,10 +115,35 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
 
   void updateSearchQuery(String query) {
     emit(state.copyWith(searchQuery: query));
+    final curriculumKey = _activeCurriculumKey;
+    if (curriculumKey != null) {
+      unawaited(loadBookmarks(curriculumKey: curriculumKey));
+    }
   }
 
-  void updateSortOrder(SavedSortOrder sortOrder) {
-    emit(state.copyWith(sortOrder: sortOrder));
+  /// Updates the sort-by-field and reloads bookmarks.
+  ///
+  /// Example: updateSort('title') sorts by title in current direction,
+  /// updateSort('title', SortDirection.asc) sorts by title ascending.
+  void updateSort({required String sortByField, SortDirection? sortDirection}) {
+    final direction = sortDirection ?? state.sortDirection;
+    emit(state.copyWith(sortByField: sortByField, sortDirection: direction));
+    final curriculumKey = _activeCurriculumKey;
+    if (curriculumKey != null) {
+      unawaited(loadBookmarks(curriculumKey: curriculumKey));
+    }
+  }
+
+  /// Toggles sort direction (asc <-> desc) for current field.
+  void toggleSortDirection() {
+    final newDirection = state.sortDirection == SortDirection.asc
+        ? SortDirection.desc
+        : SortDirection.asc;
+    emit(state.copyWith(sortDirection: newDirection));
+    final curriculumKey = _activeCurriculumKey;
+    if (curriculumKey != null) {
+      unawaited(loadBookmarks(curriculumKey: curriculumKey));
+    }
   }
 
   /// Removes a bookmark and reloads.

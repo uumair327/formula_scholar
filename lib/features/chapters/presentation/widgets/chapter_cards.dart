@@ -44,12 +44,15 @@ class FeaturedChapterCard extends StatelessWidget {
               Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(right: AppDimensions.paddingSM),
+                    padding: const EdgeInsets.only(
+                      right: AppDimensions.paddingSM,
+                    ),
                     child: IconButton(
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                       onPressed: () {
-                        final subjectName = context
+                        final subjectName =
+                            context
                                 .read<SubjectSelectionCubit>()
                                 .state
                                 .subject
@@ -171,6 +174,7 @@ class FeaturedChapterCard extends StatelessWidget {
                       chaptersCubit.loadChapters(
                         subjectId,
                         curriculumKey: curriculumKey,
+                        searchQuery: chaptersCubit.state.searchQuery,
                         forceReload: true,
                       );
                     });
@@ -256,7 +260,8 @@ class CompactChapterCard extends StatelessWidget {
                             padding: EdgeInsets.zero,
                             constraints: const BoxConstraints(),
                             onPressed: () {
-                              final subjectName = context
+                              final subjectName =
+                                  context
                                       .read<SubjectSelectionCubit>()
                                       .state
                                       .subject
@@ -273,14 +278,18 @@ class CompactChapterCard extends StatelessWidget {
                                 return;
                               }
 
-                              context.read<ChaptersCubit>().toggleChapterBookmark(
-                                chapter,
-                                subjectName,
-                                curriculumKey: curriculumKey,
-                              );
+                              context
+                                  .read<ChaptersCubit>()
+                                  .toggleChapterBookmark(
+                                    chapter,
+                                    subjectName,
+                                    curriculumKey: curriculumKey,
+                                  );
                             },
                             icon: Icon(
-                              chapter.isSaved ? Icons.bookmark : LucideIcons.bookmark,
+                              chapter.isSaved
+                                  ? Icons.bookmark
+                                  : LucideIcons.bookmark,
                               size: AppDimensions.iconSM,
                               color: chapter.isSaved
                                   ? AppColors.primary
@@ -346,6 +355,7 @@ class CompactChapterCard extends StatelessWidget {
                         chaptersCubit.loadChapters(
                           subjectId,
                           curriculumKey: curriculumKey,
+                          searchQuery: chaptersCubit.state.searchQuery,
                           forceReload: true,
                         );
                       });

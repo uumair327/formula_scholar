@@ -5,9 +5,18 @@ import '../entities/mastery_tool.dart';
 ///
 /// Any backend adapter (local, API, Firebase) must implement this.
 /// The [subjectId] parameter makes data retrieval subject-aware.
+/// Sorting is server-side authoritative per golden rules.
 abstract interface class ChaptersDataSourcePort {
   /// Fetches chapters/topics for the given [subjectId].
-  Future<List<Chapter>> getChapters(String subjectId, String curriculumKey);
+  ///
+  /// [sortBy] specifies the Firestore field to sort by (default: 'name').
+  /// [sortDesc] specifies sort direction (default: false = ascending).
+  Future<List<Chapter>> getChapters(
+    String subjectId,
+    String curriculumKey, {
+    String sortBy = 'name',
+    bool sortDesc = false,
+  });
 
   /// Fetches backend-configured mastery tools for [subjectId].
   Future<List<MasteryTool>> getMasteryTools(String subjectId);

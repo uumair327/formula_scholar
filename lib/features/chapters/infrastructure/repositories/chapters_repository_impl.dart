@@ -22,23 +22,38 @@ class ChaptersRepositoryImpl implements ChaptersRepositoryPort {
   Future<Result<List<Chapter>>> getChapters(
     String subjectId, {
     required String curriculumKey,
+    String searchQuery = '',
+    String sortBy = 'name',
+    bool sortDesc = false,
   }) async {
     AppLogger.trace(
-      'getChapters($subjectId, curriculum=$curriculumKey) called',
+      'getChapters($subjectId, curriculum=$curriculumKey, sortBy=$sortBy, sortDesc=$sortDesc) called',
       tag: AppLogTags.chaptersRepo,
     );
 
     return safeOperation(
       tag: AppLogTags.chaptersRepo,
-      operation: 'getChapters($subjectId, curriculum=$curriculumKey)',
+      operation:
+          'getChapters($subjectId, curriculum=$curriculumKey, search=$searchQuery, sortBy=$sortBy)',
       execute: () async {
-        final result = await _dataSource.getChapters(subjectId, curriculumKey);
+        // Pass sort parameters to data source (server-side authority).
+        final result = await _dataSource.getChapters(
+          subjectId,
+          curriculumKey,
+          sortBy: sortBy,
+          sortDesc: sortDesc,
+        );
+        final filtered = _applySearchQuery(result, searchQuery);
         await _cache.cacheChapters(subjectId, curriculumKey, result);
-        return result;
+        return filtered;
       },
       fallback: () async {
         final cached = await _cache.getChapters(subjectId, curriculumKey);
-        return cached.isNotEmpty ? cached : null;
+        if (cached.isEmpty) {
+          return null;
+        }
+        final filtered = _applySearchQuery(cached, searchQuery);
+        return filtered.isNotEmpty ? filtered : cached;
       },
     );
   }
@@ -125,5 +140,16 @@ class ChaptersRepositoryImpl implements ChaptersRepositoryPort {
         ),
       );
     }
+  }
+
+  List<Chapter> _applySearchQuery(List<Chapter> chapters, String searchQuery) {
+    final search = searchQuery.trim().toLowerCase();
+    if (search.isEmpty) {
+      return chapters;
+    }
+
+    return chapters
+        .where((chapter) => chapter.name.toLowerCase().contains(search))
+        .toList();
   }
 }
