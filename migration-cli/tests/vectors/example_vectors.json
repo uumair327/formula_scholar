@@ -1,0 +1,14 @@
+[
+  {
+    "id": "vec-1",
+    "input": "a + b",
+    "expected_normalized": "a + b",
+    "notes": "simple addition duplicate test"
+  },
+  {
+    "id": "vec-2",
+    "input": "(x+1)^2",
+    "expected_normalized": "x^2 + 2x + 1",
+    "notes": "polynomial expansion"
+  }
+]

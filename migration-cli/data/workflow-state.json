@@ -1,0 +1,922 @@
+{
+  "approvalPolicies": [
+    {
+      "id": "policy_001",
+      "regionId": null,
+      "minimumApprovals": 1,
+      "requiresSequentialSignoff": false,
+      "enabled": true,
+      "createdAt": "2026-05-03T07:19:09.355Z",
+      "updatedAt": "2026-05-03T07:19:09.356Z"
+    },
+    {
+      "id": "policy_multi",
+      "regionId": null,
+      "minimumApprovals": 1,
+      "requiresSequentialSignoff": false,
+      "enabled": true,
+      "createdAt": "2026-05-03T07:19:09.375Z",
+      "updatedAt": "2026-05-03T07:19:09.375Z"
+    },
+    {
+      "id": "policy_reject",
+      "regionId": null,
+      "minimumApprovals": 1,
+      "requiresSequentialSignoff": false,
+      "enabled": true,
+      "createdAt": "2026-05-03T07:19:09.380Z",
+      "updatedAt": "2026-05-03T07:19:09.380Z"
+    },
+    {
+      "id": "policy_pg_001",
+      "regionId": null,
+      "minimumApprovals": 1,
+      "requiresSequentialSignoff": false,
+      "enabled": true,
+      "createdAt": "2026-05-03T07:19:09.386Z",
+      "updatedAt": "2026-05-03T07:19:09.386Z"
+    },
+    {
+      "id": "policy_audit",
+      "regionId": null,
+      "minimumApprovals": 1,
+      "requiresSequentialSignoff": false,
+      "enabled": true,
+      "createdAt": "2026-05-03T07:19:09.402Z",
+      "updatedAt": "2026-05-03T07:19:09.402Z"
+    },
+    {
+      "id": "policy_perf",
+      "regionId": null,
+      "minimumApprovals": 1,
+      "requiresSequentialSignoff": false,
+      "enabled": true,
+      "createdAt": "2026-05-03T07:28:04.363Z",
+      "updatedAt": "2026-05-03T07:28:04.363Z"
+    }
+  ],
+  "approvals": [
+    {
+      "id": "approval_multi",
+      "requestedBy": "admin",
+      "policyId": null,
+      "state": "approved",
+      "priority": 0,
+      "dueAt": null,
+      "createdAt": "2026-05-03T07:16:49.431Z",
+      "decisions": [
+        {
+          "id": "decision_1777792609432_3f925f8228e0c",
+          "actor": "reviewer_1",
+          "action": "approve",
+          "comment": "",
+          "createdAt": "2026-05-03T07:16:49.432Z"
+        },
+        {
+          "id": "decision_1777792749377_3ead73f8e285b",
+          "actor": "reviewer_1",
+          "action": "approve",
+          "comment": "",
+          "createdAt": "2026-05-03T07:19:09.377Z"
+        }
+      ]
+    },
+    {
+      "id": "approval_reject",
+      "requestedBy": "admin",
+      "policyId": null,
+      "state": "rejected",
+      "priority": 0,
+      "dueAt": null,
+      "createdAt": "2026-05-03T07:16:49.436Z",
+      "decisions": [
+        {
+          "id": "decision_1777792609437_95ac11edeb68a",
+          "actor": "reviewer",
+          "action": "reject",
+          "comment": "Not ready for production",
+          "createdAt": "2026-05-03T07:16:49.437Z"
+        },
+        {
+          "id": "decision_1777792609438_441b172ae62b4",
+          "actor": "reviewer",
+          "action": "reject",
+          "comment": "Final rejection",
+          "createdAt": "2026-05-03T07:16:49.438Z"
+        },
+        {
+          "id": "decision_1777792749382_e23f9404240e7",
+          "actor": "reviewer",
+          "action": "reject",
+          "comment": "Not ready for production",
+          "createdAt": "2026-05-03T07:19:09.382Z"
+        },
+        {
+          "id": "decision_1777792749383_664c4757afcae",
+          "actor": "reviewer",
+          "action": "reject",
+          "comment": "Final rejection",
+          "createdAt": "2026-05-03T07:19:09.383Z"
+        }
+      ]
+    },
+    {
+      "id": "approval_no_policy",
+      "requestedBy": "admin",
+      "policyId": null,
+      "state": "pending",
+      "priority": 0,
+      "dueAt": null,
+      "createdAt": "2026-05-03T07:16:49.449Z",
+      "decisions": []
+    },
+    {
+      "id": "approval_audit",
+      "requestedBy": "admin",
+      "policyId": null,
+      "state": "approved",
+      "priority": 0,
+      "dueAt": null,
+      "createdAt": "2026-05-03T07:16:49.455Z",
+      "decisions": [
+        {
+          "id": "decision_1777792609455_1064d12c72012",
+          "actor": "reviewer",
+          "action": "approve",
+          "comment": "",
+          "createdAt": "2026-05-03T07:16:49.455Z"
+        },
+        {
+          "id": "decision_1777792749404_92c1e37450767",
+          "actor": "reviewer",
+          "action": "approve",
+          "comment": "",
+          "createdAt": "2026-05-03T07:19:09.404Z"
+        }
+      ]
+    },
+    {
+      "id": "new_approval",
+      "requestedBy": "admin",
+      "policyId": null,
+      "state": "pending",
+      "priority": 0,
+      "dueAt": null,
+      "createdAt": "2026-05-03T07:16:49.469Z",
+      "decisions": []
+    },
+    {
+      "id": "approval_perf",
+      "requestedBy": "admin",
+      "policyId": null,
+      "state": "approved",
+      "priority": 0,
+      "dueAt": null,
+      "createdAt": "2026-05-03T07:16:49.473Z",
+      "decisions": [
+        {
+          "id": "decision_1777792609474_a82a4ddc21308",
+          "actor": "reviewer",
+          "action": "approve",
+          "comment": "",
+          "createdAt": "2026-05-03T07:16:49.474Z"
+        },
+        {
+          "id": "decision_1777792749425_c8ad90271745d",
+          "actor": "reviewer",
+          "action": "approve",
+          "comment": "",
+          "createdAt": "2026-05-03T07:19:09.425Z"
+        },
+        {
+          "id": "decision_1777793284365_d4abdb727df5c",
+          "actor": "reviewer",
+          "action": "approve",
+          "comment": "",
+          "createdAt": "2026-05-03T07:28:04.365Z"
+        }
+      ]
+    },
+    {
+      "id": "approval_multi",
+      "requestedBy": "admin",
+      "policyId": null,
+      "state": "pending",
+      "priority": 0,
+      "dueAt": null,
+      "createdAt": "2026-05-03T07:19:09.376Z",
+      "decisions": []
+    },
+    {
+      "id": "approval_reject",
+      "requestedBy": "admin",
+      "policyId": null,
+      "state": "pending",
+      "priority": 0,
+      "dueAt": null,
+      "createdAt": "2026-05-03T07:19:09.382Z",
+      "decisions": []
+    },
+    {
+      "id": "approval_no_policy",
+      "requestedBy": "admin",
+      "policyId": null,
+      "state": "pending",
+      "priority": 0,
+      "dueAt": null,
+      "createdAt": "2026-05-03T07:19:09.397Z",
+      "decisions": []
+    },
+    {
+      "id": "approval_audit",
+      "requestedBy": "admin",
+      "policyId": null,
+      "state": "pending",
+      "priority": 0,
+      "dueAt": null,
+      "createdAt": "2026-05-03T07:19:09.403Z",
+      "decisions": []
+    },
+    {
+      "id": "new_approval",
+      "requestedBy": "admin",
+      "policyId": null,
+      "state": "pending",
+      "priority": 0,
+      "dueAt": null,
+      "createdAt": "2026-05-03T07:19:09.419Z",
+      "decisions": []
+    },
+    {
+      "id": "approval_perf",
+      "requestedBy": "admin",
+      "policyId": null,
+      "state": "pending",
+      "priority": 0,
+      "dueAt": null,
+      "createdAt": "2026-05-03T07:19:09.424Z",
+      "decisions": []
+    },
+    {
+      "id": "new_approval",
+      "requestedBy": "admin",
+      "policyId": null,
+      "state": "pending",
+      "priority": 0,
+      "dueAt": null,
+      "createdAt": "2026-05-03T07:28:04.358Z",
+      "decisions": []
+    },
+    {
+      "id": "approval_perf",
+      "requestedBy": "admin",
+      "policyId": null,
+      "state": "pending",
+      "priority": 0,
+      "dueAt": null,
+      "createdAt": "2026-05-03T07:28:04.364Z",
+      "decisions": []
+    }
+  ],
+  "publishJobs": [],
+  "auditLog": [
+    {
+      "id": "audit_1777792609415_1eb5363d3214",
+      "action": "approval_policy_upserted",
+      "entityType": "approval_policy",
+      "entityId": "policy_001",
+      "performedBy": "admin_001",
+      "delta": {
+        "id": "policy_001",
+        "regionId": null,
+        "minimumApprovals": 1,
+        "requiresSequentialSignoff": false,
+        "enabled": true,
+        "createdAt": "2026-05-03T07:16:49.415Z",
+        "updatedAt": "2026-05-03T07:16:49.415Z"
+      },
+      "createdAt": "2026-05-03T07:16:49.415Z"
+    },
+    {
+      "id": "audit_1777792609430_682144862f35a",
+      "action": "approval_policy_upserted",
+      "entityType": "approval_policy",
+      "entityId": "policy_multi",
+      "performedBy": "admin",
+      "delta": {
+        "id": "policy_multi",
+        "regionId": null,
+        "minimumApprovals": 1,
+        "requiresSequentialSignoff": false,
+        "enabled": true,
+        "createdAt": "2026-05-03T07:16:49.430Z",
+        "updatedAt": "2026-05-03T07:16:49.430Z"
+      },
+      "createdAt": "2026-05-03T07:16:49.430Z"
+    },
+    {
+      "id": "audit_1777792609431_96a7140286616",
+      "action": "approval_requested",
+      "entityType": "approval",
+      "entityId": "approval_multi",
+      "performedBy": "admin",
+      "delta": {
+        "id": "approval_multi",
+        "requestedBy": "admin",
+        "policyId": null,
+        "state": "pending",
+        "priority": 0,
+        "dueAt": null,
+        "createdAt": "2026-05-03T07:16:49.431Z",
+        "decisions": []
+      },
+      "createdAt": "2026-05-03T07:16:49.431Z"
+    },
+    {
+      "id": "audit_1777792609432_08581142da1ca",
+      "action": "approval_decision_recorded",
+      "entityType": "approval",
+      "entityId": "approval_multi",
+      "performedBy": "reviewer_1",
+      "delta": {
+        "id": "decision_1777792609432_3f925f8228e0c",
+        "actor": "reviewer_1",
+        "action": "approve",
+        "comment": "",
+        "createdAt": "2026-05-03T07:16:49.432Z"
+      },
+      "createdAt": "2026-05-03T07:16:49.432Z"
+    },
+    {
+      "id": "audit_1777792609436_525da0cb2febd",
+      "action": "approval_policy_upserted",
+      "entityType": "approval_policy",
+      "entityId": "policy_reject",
+      "performedBy": "admin",
+      "delta": {
+        "id": "policy_reject",
+        "regionId": null,
+        "minimumApprovals": 1,
+        "requiresSequentialSignoff": false,
+        "enabled": true,
+        "createdAt": "2026-05-03T07:16:49.436Z",
+        "updatedAt": "2026-05-03T07:16:49.436Z"
+      },
+      "createdAt": "2026-05-03T07:16:49.436Z"
+    },
+    {
+      "id": "audit_1777792609436_310434d603509",
+      "action": "approval_requested",
+      "entityType": "approval",
+      "entityId": "approval_reject",
+      "performedBy": "admin",
+      "delta": {
+        "id": "approval_reject",
+        "requestedBy": "admin",
+        "policyId": null,
+        "state": "pending",
+        "priority": 0,
+        "dueAt": null,
+        "createdAt": "2026-05-03T07:16:49.436Z",
+        "decisions": []
+      },
+      "createdAt": "2026-05-03T07:16:49.436Z"
+    },
+    {
+      "id": "audit_1777792609437_44c47bc0d8191",
+      "action": "approval_decision_recorded",
+      "entityType": "approval",
+      "entityId": "approval_reject",
+      "performedBy": "reviewer",
+      "delta": {
+        "id": "decision_1777792609437_95ac11edeb68a",
+        "actor": "reviewer",
+        "action": "reject",
+        "comment": "Not ready for production",
+        "createdAt": "2026-05-03T07:16:49.437Z"
+      },
+      "createdAt": "2026-05-03T07:16:49.437Z"
+    },
+    {
+      "id": "audit_1777792609438_3da3327af8bdd",
+      "action": "approval_decision_recorded",
+      "entityType": "approval",
+      "entityId": "approval_reject",
+      "performedBy": "reviewer",
+      "delta": {
+        "id": "decision_1777792609438_441b172ae62b4",
+        "actor": "reviewer",
+        "action": "reject",
+        "comment": "Final rejection",
+        "createdAt": "2026-05-03T07:16:49.438Z"
+      },
+      "createdAt": "2026-05-03T07:16:49.438Z"
+    },
+    {
+      "id": "audit_1777792609440_56b0145e101bb",
+      "action": "approval_policy_upserted",
+      "entityType": "approval_policy",
+      "entityId": "policy_pg_001",
+      "performedBy": "admin",
+      "delta": {
+        "id": "policy_pg_001",
+        "regionId": null,
+        "minimumApprovals": 1,
+        "requiresSequentialSignoff": false,
+        "enabled": true,
+        "createdAt": "2026-05-03T07:16:49.440Z",
+        "updatedAt": "2026-05-03T07:16:49.440Z"
+      },
+      "createdAt": "2026-05-03T07:16:49.440Z"
+    },
+    {
+      "id": "audit_1777792609449_72b52c334c7f1",
+      "action": "approval_requested",
+      "entityType": "approval",
+      "entityId": "approval_no_policy",
+      "performedBy": "admin",
+      "delta": {
+        "id": "approval_no_policy",
+        "requestedBy": "admin",
+        "policyId": null,
+        "state": "pending",
+        "priority": 0,
+        "dueAt": null,
+        "createdAt": "2026-05-03T07:16:49.449Z",
+        "decisions": []
+      },
+      "createdAt": "2026-05-03T07:16:49.449Z"
+    },
+    {
+      "id": "audit_1777792609454_9974e17ae3961",
+      "action": "approval_policy_upserted",
+      "entityType": "approval_policy",
+      "entityId": "policy_audit",
+      "performedBy": "admin",
+      "delta": {
+        "id": "policy_audit",
+        "regionId": null,
+        "minimumApprovals": 1,
+        "requiresSequentialSignoff": false,
+        "enabled": true,
+        "createdAt": "2026-05-03T07:16:49.454Z",
+        "updatedAt": "2026-05-03T07:16:49.454Z"
+      },
+      "createdAt": "2026-05-03T07:16:49.454Z"
+    },
+    {
+      "id": "audit_1777792609455_1f2973e9d196c",
+      "action": "approval_requested",
+      "entityType": "approval",
+      "entityId": "approval_audit",
+      "performedBy": "admin",
+      "delta": {
+        "id": "approval_audit",
+        "requestedBy": "admin",
+        "policyId": null,
+        "state": "pending",
+        "priority": 0,
+        "dueAt": null,
+        "createdAt": "2026-05-03T07:16:49.455Z",
+        "decisions": []
+      },
+      "createdAt": "2026-05-03T07:16:49.455Z"
+    },
+    {
+      "id": "audit_1777792609455_bb726d687f901",
+      "action": "approval_decision_recorded",
+      "entityType": "approval",
+      "entityId": "approval_audit",
+      "performedBy": "reviewer",
+      "delta": {
+        "id": "decision_1777792609455_1064d12c72012",
+        "actor": "reviewer",
+        "action": "approve",
+        "comment": "",
+        "createdAt": "2026-05-03T07:16:49.455Z"
+      },
+      "createdAt": "2026-05-03T07:16:49.455Z"
+    },
+    {
+      "id": "audit_1777792609469_f54614bca1fab",
+      "action": "approval_requested",
+      "entityType": "approval",
+      "entityId": "new_approval",
+      "performedBy": "admin",
+      "delta": {
+        "id": "new_approval",
+        "requestedBy": "admin",
+        "policyId": null,
+        "state": "pending",
+        "priority": 0,
+        "dueAt": null,
+        "createdAt": "2026-05-03T07:16:49.469Z",
+        "decisions": []
+      },
+      "createdAt": "2026-05-03T07:16:49.469Z"
+    },
+    {
+      "id": "audit_1777792609473_a13515de02965",
+      "action": "approval_policy_upserted",
+      "entityType": "approval_policy",
+      "entityId": "policy_perf",
+      "performedBy": "admin",
+      "delta": {
+        "id": "policy_perf",
+        "regionId": null,
+        "minimumApprovals": 1,
+        "requiresSequentialSignoff": false,
+        "enabled": true,
+        "createdAt": "2026-05-03T07:16:49.473Z",
+        "updatedAt": "2026-05-03T07:16:49.473Z"
+      },
+      "createdAt": "2026-05-03T07:16:49.473Z"
+    },
+    {
+      "id": "audit_1777792609473_e70fe366f9902",
+      "action": "approval_requested",
+      "entityType": "approval",
+      "entityId": "approval_perf",
+      "performedBy": "admin",
+      "delta": {
+        "id": "approval_perf",
+        "requestedBy": "admin",
+        "policyId": null,
+        "state": "pending",
+        "priority": 0,
+        "dueAt": null,
+        "createdAt": "2026-05-03T07:16:49.473Z",
+        "decisions": []
+      },
+      "createdAt": "2026-05-03T07:16:49.473Z"
+    },
+    {
+      "id": "audit_1777792609474_7bc21069cf32d",
+      "action": "approval_decision_recorded",
+      "entityType": "approval",
+      "entityId": "approval_perf",
+      "performedBy": "reviewer",
+      "delta": {
+        "id": "decision_1777792609474_a82a4ddc21308",
+        "actor": "reviewer",
+        "action": "approve",
+        "comment": "",
+        "createdAt": "2026-05-03T07:16:49.474Z"
+      },
+      "createdAt": "2026-05-03T07:16:49.474Z"
+    },
+    {
+      "id": "audit_1777792749356_28c370455b11f",
+      "action": "approval_policy_upserted",
+      "entityType": "approval_policy",
+      "entityId": "policy_001",
+      "performedBy": "admin_001",
+      "delta": {
+        "id": "policy_001",
+        "regionId": null,
+        "minimumApprovals": 1,
+        "requiresSequentialSignoff": false,
+        "enabled": true,
+        "createdAt": "2026-05-03T07:19:09.355Z",
+        "updatedAt": "2026-05-03T07:19:09.356Z"
+      },
+      "createdAt": "2026-05-03T07:19:09.356Z"
+    },
+    {
+      "id": "audit_1777792749375_e6046b56352ba",
+      "action": "approval_policy_upserted",
+      "entityType": "approval_policy",
+      "entityId": "policy_multi",
+      "performedBy": "admin",
+      "delta": {
+        "id": "policy_multi",
+        "regionId": null,
+        "minimumApprovals": 1,
+        "requiresSequentialSignoff": false,
+        "enabled": true,
+        "createdAt": "2026-05-03T07:19:09.375Z",
+        "updatedAt": "2026-05-03T07:19:09.375Z"
+      },
+      "createdAt": "2026-05-03T07:19:09.375Z"
+    },
+    {
+      "id": "audit_1777792749376_24d83b1580329",
+      "action": "approval_requested",
+      "entityType": "approval",
+      "entityId": "approval_multi",
+      "performedBy": "admin",
+      "delta": {
+        "id": "approval_multi",
+        "requestedBy": "admin",
+        "policyId": null,
+        "state": "pending",
+        "priority": 0,
+        "dueAt": null,
+        "createdAt": "2026-05-03T07:19:09.376Z",
+        "decisions": []
+      },
+      "createdAt": "2026-05-03T07:19:09.376Z"
+    },
+    {
+      "id": "audit_1777792749377_0d6e462e3607e",
+      "action": "approval_decision_recorded",
+      "entityType": "approval",
+      "entityId": "approval_multi",
+      "performedBy": "reviewer_1",
+      "delta": {
+        "id": "decision_1777792749377_3ead73f8e285b",
+        "actor": "reviewer_1",
+        "action": "approve",
+        "comment": "",
+        "createdAt": "2026-05-03T07:19:09.377Z"
+      },
+      "createdAt": "2026-05-03T07:19:09.377Z"
+    },
+    {
+      "id": "audit_1777792749380_5d1fe8ddb989d",
+      "action": "approval_policy_upserted",
+      "entityType": "approval_policy",
+      "entityId": "policy_reject",
+      "performedBy": "admin",
+      "delta": {
+        "id": "policy_reject",
+        "regionId": null,
+        "minimumApprovals": 1,
+        "requiresSequentialSignoff": false,
+        "enabled": true,
+        "createdAt": "2026-05-03T07:19:09.380Z",
+        "updatedAt": "2026-05-03T07:19:09.380Z"
+      },
+      "createdAt": "2026-05-03T07:19:09.380Z"
+    },
+    {
+      "id": "audit_1777792749382_bd320bda871a",
+      "action": "approval_requested",
+      "entityType": "approval",
+      "entityId": "approval_reject",
+      "performedBy": "admin",
+      "delta": {
+        "id": "approval_reject",
+        "requestedBy": "admin",
+        "policyId": null,
+        "state": "pending",
+        "priority": 0,
+        "dueAt": null,
+        "createdAt": "2026-05-03T07:19:09.382Z",
+        "decisions": []
+      },
+      "createdAt": "2026-05-03T07:19:09.382Z"
+    },
+    {
+      "id": "audit_1777792749382_2fa450e153c1",
+      "action": "approval_decision_recorded",
+      "entityType": "approval",
+      "entityId": "approval_reject",
+      "performedBy": "reviewer",
+      "delta": {
+        "id": "decision_1777792749382_e23f9404240e7",
+        "actor": "reviewer",
+        "action": "reject",
+        "comment": "Not ready for production",
+        "createdAt": "2026-05-03T07:19:09.382Z"
+      },
+      "createdAt": "2026-05-03T07:19:09.382Z"
+    },
+    {
+      "id": "audit_1777792749383_055ce89969b78",
+      "action": "approval_decision_recorded",
+      "entityType": "approval",
+      "entityId": "approval_reject",
+      "performedBy": "reviewer",
+      "delta": {
+        "id": "decision_1777792749383_664c4757afcae",
+        "actor": "reviewer",
+        "action": "reject",
+        "comment": "Final rejection",
+        "createdAt": "2026-05-03T07:19:09.383Z"
+      },
+      "createdAt": "2026-05-03T07:19:09.383Z"
+    },
+    {
+      "id": "audit_1777792749386_69da2c159564a",
+      "action": "approval_policy_upserted",
+      "entityType": "approval_policy",
+      "entityId": "policy_pg_001",
+      "performedBy": "admin",
+      "delta": {
+        "id": "policy_pg_001",
+        "regionId": null,
+        "minimumApprovals": 1,
+        "requiresSequentialSignoff": false,
+        "enabled": true,
+        "createdAt": "2026-05-03T07:19:09.386Z",
+        "updatedAt": "2026-05-03T07:19:09.386Z"
+      },
+      "createdAt": "2026-05-03T07:19:09.386Z"
+    },
+    {
+      "id": "audit_1777792749397_b16a6bbbd932d",
+      "action": "approval_requested",
+      "entityType": "approval",
+      "entityId": "approval_no_policy",
+      "performedBy": "admin",
+      "delta": {
+        "id": "approval_no_policy",
+        "requestedBy": "admin",
+        "policyId": null,
+        "state": "pending",
+        "priority": 0,
+        "dueAt": null,
+        "createdAt": "2026-05-03T07:19:09.397Z",
+        "decisions": []
+      },
+      "createdAt": "2026-05-03T07:19:09.397Z"
+    },
+    {
+      "id": "audit_1777792749402_5058bb11d1219",
+      "action": "approval_policy_upserted",
+      "entityType": "approval_policy",
+      "entityId": "policy_audit",
+      "performedBy": "admin",
+      "delta": {
+        "id": "policy_audit",
+        "regionId": null,
+        "minimumApprovals": 1,
+        "requiresSequentialSignoff": false,
+        "enabled": true,
+        "createdAt": "2026-05-03T07:19:09.402Z",
+        "updatedAt": "2026-05-03T07:19:09.402Z"
+      },
+      "createdAt": "2026-05-03T07:19:09.402Z"
+    },
+    {
+      "id": "audit_1777792749403_78b1773307ae2",
+      "action": "approval_requested",
+      "entityType": "approval",
+      "entityId": "approval_audit",
+      "performedBy": "admin",
+      "delta": {
+        "id": "approval_audit",
+        "requestedBy": "admin",
+        "policyId": null,
+        "state": "pending",
+        "priority": 0,
+        "dueAt": null,
+        "createdAt": "2026-05-03T07:19:09.403Z",
+        "decisions": []
+      },
+      "createdAt": "2026-05-03T07:19:09.403Z"
+    },
+    {
+      "id": "audit_1777792749404_161867f8d10d4",
+      "action": "approval_decision_recorded",
+      "entityType": "approval",
+      "entityId": "approval_audit",
+      "performedBy": "reviewer",
+      "delta": {
+        "id": "decision_1777792749404_92c1e37450767",
+        "actor": "reviewer",
+        "action": "approve",
+        "comment": "",
+        "createdAt": "2026-05-03T07:19:09.404Z"
+      },
+      "createdAt": "2026-05-03T07:19:09.404Z"
+    },
+    {
+      "id": "audit_1777792749419_faa48efcfa903",
+      "action": "approval_requested",
+      "entityType": "approval",
+      "entityId": "new_approval",
+      "performedBy": "admin",
+      "delta": {
+        "id": "new_approval",
+        "requestedBy": "admin",
+        "policyId": null,
+        "state": "pending",
+        "priority": 0,
+        "dueAt": null,
+        "createdAt": "2026-05-03T07:19:09.419Z",
+        "decisions": []
+      },
+      "createdAt": "2026-05-03T07:19:09.419Z"
+    },
+    {
+      "id": "audit_1777792749423_75985932498ca",
+      "action": "approval_policy_upserted",
+      "entityType": "approval_policy",
+      "entityId": "policy_perf",
+      "performedBy": "admin",
+      "delta": {
+        "id": "policy_perf",
+        "regionId": null,
+        "minimumApprovals": 1,
+        "requiresSequentialSignoff": false,
+        "enabled": true,
+        "createdAt": "2026-05-03T07:19:09.423Z",
+        "updatedAt": "2026-05-03T07:19:09.423Z"
+      },
+      "createdAt": "2026-05-03T07:19:09.423Z"
+    },
+    {
+      "id": "audit_1777792749424_aebe0643052c1",
+      "action": "approval_requested",
+      "entityType": "approval",
+      "entityId": "approval_perf",
+      "performedBy": "admin",
+      "delta": {
+        "id": "approval_perf",
+        "requestedBy": "admin",
+        "policyId": null,
+        "state": "pending",
+        "priority": 0,
+        "dueAt": null,
+        "createdAt": "2026-05-03T07:19:09.424Z",
+        "decisions": []
+      },
+      "createdAt": "2026-05-03T07:19:09.424Z"
+    },
+    {
+      "id": "audit_1777792749425_46d9f44194a23",
+      "action": "approval_decision_recorded",
+      "entityType": "approval",
+      "entityId": "approval_perf",
+      "performedBy": "reviewer",
+      "delta": {
+        "id": "decision_1777792749425_c8ad90271745d",
+        "actor": "reviewer",
+        "action": "approve",
+        "comment": "",
+        "createdAt": "2026-05-03T07:19:09.425Z"
+      },
+      "createdAt": "2026-05-03T07:19:09.425Z"
+    },
+    {
+      "id": "audit_1777793284358_32270bdacabcb",
+      "action": "approval_requested",
+      "entityType": "approval",
+      "entityId": "new_approval",
+      "performedBy": "admin",
+      "delta": {
+        "id": "new_approval",
+        "requestedBy": "admin",
+        "policyId": null,
+        "state": "pending",
+        "priority": 0,
+        "dueAt": null,
+        "createdAt": "2026-05-03T07:28:04.358Z",
+        "decisions": []
+      },
+      "createdAt": "2026-05-03T07:28:04.358Z"
+    },
+    {
+      "id": "audit_1777793284363_4f7d2deb07f42",
+      "action": "approval_policy_upserted",
+      "entityType": "approval_policy",
+      "entityId": "policy_perf",
+      "performedBy": "admin",
+      "delta": {
+        "id": "policy_perf",
+        "regionId": null,
+        "minimumApprovals": 1,
+        "requiresSequentialSignoff": false,
+        "enabled": true,
+        "createdAt": "2026-05-03T07:28:04.363Z",
+        "updatedAt": "2026-05-03T07:28:04.363Z"
+      },
+      "createdAt": "2026-05-03T07:28:04.363Z"
+    },
+    {
+      "id": "audit_1777793284364_22e83abf64446",
+      "action": "approval_requested",
+      "entityType": "approval",
+      "entityId": "approval_perf",
+      "performedBy": "admin",
+      "delta": {
+        "id": "approval_perf",
+        "requestedBy": "admin",
+        "policyId": null,
+        "state": "pending",
+        "priority": 0,
+        "dueAt": null,
+        "createdAt": "2026-05-03T07:28:04.364Z",
+        "decisions": []
+      },
+      "createdAt": "2026-05-03T07:28:04.364Z"
+    },
+    {
+      "id": "audit_1777793284365_78794f1c75ab8",
+      "action": "approval_decision_recorded",
+      "entityType": "approval",
+      "entityId": "approval_perf",
+      "performedBy": "reviewer",
+      "delta": {
+        "id": "decision_1777793284365_d4abdb727df5c",
+        "actor": "reviewer",
+        "action": "approve",
+        "comment": "",
+        "createdAt": "2026-05-03T07:28:04.365Z"
+      },
+      "createdAt": "2026-05-03T07:28:04.365Z"
+    }
+  ]
+}
