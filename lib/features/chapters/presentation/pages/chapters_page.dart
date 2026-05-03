@@ -63,11 +63,14 @@ class _ChaptersPageState extends State<ChaptersPage> {
     }
 
     if (subjectState.hasSelection && allowLoadForExistingSelection) {
+      final cubitState = context.read<ChaptersCubit>().state;
       unawaited(
         context.read<ChaptersCubit>().loadChapters(
           subjectState.subject!.id,
           curriculumKey: curriculumKey,
           searchQuery: _searchQuery,
+          sortBy: cubitState.sortBy,
+          sortDesc: cubitState.sortDesc,
         ),
       );
     } else if (subjectState.hasSelection) {
@@ -160,10 +163,13 @@ class _ChaptersPageState extends State<ChaptersPage> {
           if (curriculumKey == null || curriculumKey.isEmpty) {
             return;
           }
+          final cubitState = context.read<ChaptersCubit>().state;
           unawaited(
             context.read<ChaptersCubit>().loadChapters(
               subjectState.subject!.id,
               curriculumKey: curriculumKey,
+              sortBy: cubitState.sortBy,
+              sortDesc: cubitState.sortDesc,
             ),
           );
         }
@@ -191,6 +197,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
               onRefresh: () async {
                 if (subjectState.hasSelection) {
                   final selectedSubject = subjectState.subject!;
+                  final cubitState = context.read<ChaptersCubit>().state;
                   await context.read<ChaptersCubit>().loadChapters(
                     selectedSubject.id,
                     curriculumKey:
@@ -201,6 +208,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
                             ?.curriculumKey ??
                         '',
                     searchQuery: _searchQuery,
+                    sortBy: cubitState.sortBy,
+                    sortDesc: cubitState.sortDesc,
                   );
                 }
               },
@@ -225,7 +234,9 @@ class _ChaptersPageState extends State<ChaptersPage> {
                       buildWhen: (prev, curr) =>
                           prev.status != curr.status ||
                           prev.chapters != curr.chapters ||
-                          prev.masteryTools != curr.masteryTools,
+                          prev.masteryTools != curr.masteryTools ||
+                          prev.sortBy != curr.sortBy ||
+                          prev.sortDesc != curr.sortDesc,
                       builder: (context, state) {
                         if (state.status == ChaptersStatus.loading ||
                             state.status == ChaptersStatus.initial) {
@@ -341,6 +352,9 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                         curriculumKey.isEmpty) {
                                       return;
                                     }
+                                    final cubitState = context
+                                        .read<ChaptersCubit>()
+                                        .state;
                                     unawaited(
                                       context
                                           .read<ChaptersCubit>()
@@ -348,6 +362,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                             subjectId,
                                             curriculumKey: curriculumKey,
                                             searchQuery: value,
+                                            sortBy: cubitState.sortBy,
+                                            sortDesc: cubitState.sortDesc,
                                           ),
                                     );
                                   },
@@ -366,6 +382,12 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                     ).colorScheme.surface,
                                   ),
                                 ),
+                              ),
+                              const SizedBox(height: AppDimensions.paddingLG),
+                              _buildSortControls(
+                                context,
+                                state,
+                                subjectState.subject!.id,
                               ),
                               const SizedBox(height: AppDimensions.paddingLG),
                               _buildChapterCards(
@@ -716,6 +738,99 @@ class _ChaptersPageState extends State<ChaptersPage> {
     );
   }
 
+  Widget _buildSortControls(
+    BuildContext context,
+    ChaptersState state,
+    String subjectId,
+  ) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final directionIcon = state.sortDesc
+        ? LucideIcons.arrowDown
+        : LucideIcons.arrowUp;
+
+    void applySort(String sortBy, bool sortDesc) {
+      final curriculumKey = context
+          .read<CurriculumCubit>()
+          .state
+          .curriculum
+          ?.curriculumKey;
+      if (curriculumKey == null || curriculumKey.isEmpty) return;
+      unawaited(
+        context.read<ChaptersCubit>().loadChapters(
+          subjectId,
+          curriculumKey: curriculumKey,
+          searchQuery: state.searchQuery,
+          sortBy: sortBy,
+          sortDesc: sortDesc,
+        ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Wrap(
+          spacing: AppDimensions.paddingSM,
+          runSpacing: AppDimensions.paddingSM,
+          children: [
+            ChoiceChip(
+              label: const Text('Name A-Z'),
+              selected: state.sortBy == 'name' && state.sortDesc == false,
+              onSelected: (_) => applySort('name', false),
+              selectedColor: colorScheme.primaryContainer,
+            ),
+            ChoiceChip(
+              label: const Text('Name Z-A'),
+              selected: state.sortBy == 'name' && state.sortDesc == true,
+              onSelected: (_) => applySort('name', true),
+              selectedColor: colorScheme.primaryContainer,
+            ),
+            ChoiceChip(
+              label: const Text('Progress High'),
+              selected:
+                  state.sortBy == 'progressPercent' && state.sortDesc == true,
+              onSelected: (_) => applySort('progressPercent', true),
+              selectedColor: colorScheme.primaryContainer,
+            ),
+            ChoiceChip(
+              label: const Text('Progress Low'),
+              selected:
+                  state.sortBy == 'progressPercent' && state.sortDesc == false,
+              onSelected: (_) => applySort('progressPercent', false),
+              selectedColor: colorScheme.primaryContainer,
+            ),
+            ChoiceChip(
+              label: const Text('Most Formulas'),
+              selected:
+                  state.sortBy == 'totalFormulas' && state.sortDesc == true,
+              onSelected: (_) => applySort('totalFormulas', true),
+              selectedColor: colorScheme.primaryContainer,
+            ),
+            ChoiceChip(
+              label: const Text('Fewest Formulas'),
+              selected:
+                  state.sortBy == 'totalFormulas' && state.sortDesc == false,
+              onSelected: (_) => applySort('totalFormulas', false),
+              selectedColor: colorScheme.primaryContainer,
+            ),
+          ],
+        ),
+        const SizedBox(height: AppDimensions.paddingSM),
+        Tooltip(
+          message: 'Toggle sort direction',
+          child: IconButton.filled(
+            onPressed: () {
+              final newDesc = !state.sortDesc;
+              applySort(state.sortBy, newDesc);
+            },
+            icon: Icon(directionIcon, size: 20),
+            tooltip: state.sortDesc ? 'Descending' : 'Ascending',
+          ),
+        ),
+      ],
+    );
+  }
+
   void _retryLoadChapters(BuildContext context, String subjectId) {
     final curriculumKey = context
         .read<CurriculumCubit>()
@@ -731,6 +846,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
         subjectId,
         curriculumKey: curriculumKey,
         searchQuery: _searchQuery,
+        sortBy: context.read<ChaptersCubit>().state.sortBy,
+        sortDesc: context.read<ChaptersCubit>().state.sortDesc,
         forceReload: true,
       ),
     );

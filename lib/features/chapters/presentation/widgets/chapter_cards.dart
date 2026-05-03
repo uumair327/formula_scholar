@@ -175,6 +175,8 @@ class FeaturedChapterCard extends StatelessWidget {
                         subjectId,
                         curriculumKey: curriculumKey,
                         searchQuery: chaptersCubit.state.searchQuery,
+                        sortBy: chaptersCubit.state.sortBy,
+                        sortDesc: chaptersCubit.state.sortDesc,
                         forceReload: true,
                       );
                     });
@@ -356,6 +358,8 @@ class CompactChapterCard extends StatelessWidget {
                           subjectId,
                           curriculumKey: curriculumKey,
                           searchQuery: chaptersCubit.state.searchQuery,
+                          sortBy: chaptersCubit.state.sortBy,
+                          sortDesc: chaptersCubit.state.sortDesc,
                           forceReload: true,
                         );
                       });
