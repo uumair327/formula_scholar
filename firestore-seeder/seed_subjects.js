@@ -83,23 +83,22 @@ async function seedSubjects() {
     category: 'Mathematics',
     iconName: 'calculator',
     colorValue: 0xFF3B82F6,
-    badgeText: 'CBSE 9 CURATED',
-    subtitle: 'Detailed CBSE compliant formula sheets for algebraic identities...',
-    unitCount: 12,
-    formulaCount: 144,
-    masteryPercentage: 12.0,
+    badgeText: 'CBSE CURATED',
+    subtitle: 'Algebra, Geometry, Trigonometry & more.',
+    unitCount: 7,
+    formulaCount: 14,
     isFeatured: true
   });
 
   // Chapters
   const mathChapters = [
-    { id: 'chap_01', name: 'Polynomials', subtitle: 'Algebraic Equations', completed: 8, total: 12, progress: 65, status: 'inProgress' },
-    { id: 'chap_02', name: 'Triangles', subtitle: 'Geometry & Theorems', completed: 2, total: 20, progress: 10, status: 'notStarted' },
-    { id: 'chap_03', name: 'Circles', subtitle: 'Theorems & Proofs', completed: 0, total: 15, progress: 0, status: 'locked' },
-    { id: 'chap_04', name: 'Quadratic Equations', subtitle: 'Roots & Discriminant', completed: 0, total: 10, progress: 0, status: 'notStarted' },
-    { id: 'chap_05', name: 'Coordinate Geometry', subtitle: 'Distance & Section Formula', completed: 0, total: 8, progress: 0, status: 'locked' },
-    { id: 'chap_06', name: 'Statistics', subtitle: 'Mean, Median & Mode', completed: 0, total: 6, progress: 0, status: 'locked' },
-    { id: 'chap_07', name: 'Probability', subtitle: 'Random Experiments & Events', completed: 0, total: 5, progress: 0, status: 'locked' },
+    { id: 'chap_01', name: 'Polynomials & Algebra', subtitle: 'Algebraic Identities & Factoring' },
+    { id: 'chap_02', name: 'Trigonometry', subtitle: 'Ratios, Identities & Equations' },
+    { id: 'chap_03', name: 'Triangles', subtitle: 'Geometry & Theorems' },
+    { id: 'chap_04', name: 'Quadratic Equations', subtitle: 'Roots & Discriminant' },
+    { id: 'chap_05', name: 'Coordinate Geometry', subtitle: 'Distance & Section Formula' },
+    { id: 'chap_06', name: 'Statistics', subtitle: 'Mean, Median & Mode' },
+    { id: 'chap_07', name: 'Probability', subtitle: 'Random Experiments & Events' },
   ];
 
   for (const ch of mathChapters) {
@@ -107,10 +106,6 @@ async function seedSubjects() {
     batch.set(ref, {
       name: ch.name,
       subtitle: ch.subtitle,
-      completedFormulas: ch.completed,
-      totalFormulas: ch.total,
-      progressPercent: ch.progress,
-      status: ch.status,
     });
   }
 
@@ -127,20 +122,18 @@ async function seedSubjects() {
     category: 'Science',
     iconName: 'rocket',
     colorValue: 0xFF059669,
-    badgeText: 'NEW ADDITION',
     subtitle: 'Mechanics, properties of matter, and the fundamental laws of motion.',
-    unitCount: 8,
-    formulaCount: 96,
-    masteryPercentage: 45.0,
+    unitCount: 5,
+    formulaCount: 11,
     isFeatured: false
   });
 
   const physicsChapters = [
-    { id: 'chap_01', name: 'Kinematics 1D', subtitle: 'Motion in a Straight Line', completed: 15, total: 15, progress: 100, status: 'inProgress' },
-    { id: 'chap_02', name: 'Laws of Motion', subtitle: "Newton's Three Laws", completed: 5, total: 12, progress: 42, status: 'inProgress' },
-    { id: 'chap_03', name: 'Gravitation', subtitle: 'Universal Law & Free Fall', completed: 0, total: 10, progress: 0, status: 'notStarted' },
-    { id: 'chap_04', name: 'Work, Energy & Power', subtitle: 'Conservation Laws', completed: 0, total: 14, progress: 0, status: 'locked' },
-    { id: 'chap_05', name: 'Sound', subtitle: 'Waves, Frequency & Resonance', completed: 0, total: 8, progress: 0, status: 'locked' },
+    { id: 'chap_01', name: 'Motion & Kinematics', subtitle: 'Equations of Motion' },
+    { id: 'chap_02', name: "Forces & Newton's Laws", subtitle: 'Dynamics & Momentum' },
+    { id: 'chap_03', name: 'Gravitation', subtitle: 'Universal Law & Free Fall' },
+    { id: 'chap_04', name: 'Work, Energy & Power', subtitle: 'Conservation Laws' },
+    { id: 'chap_05', name: 'Sound', subtitle: 'Waves, Frequency & Resonance' },
   ];
 
   for (const ch of physicsChapters) {
@@ -148,10 +141,6 @@ async function seedSubjects() {
     batch.set(ref, {
       name: ch.name,
       subtitle: ch.subtitle,
-      completedFormulas: ch.completed,
-      totalFormulas: ch.total,
-      progressPercent: ch.progress,
-      status: ch.status,
     });
   }
 
@@ -161,26 +150,24 @@ async function seedSubjects() {
   // ═══════════════════════════════════════════════════════════════
   // ──── 3. Biology ──────────────────────────────────────────────
   // ═══════════════════════════════════════════════════════════════
-  const biologyRef = db.collection('subjects').doc('bio_001');
+  const biologyRef = db.collection('subjects').doc('biology_001');
   batch.set(biologyRef, {
     name: 'Biology',
     description: 'Cell: The Fundamental Unit',
     category: 'Science',
     iconName: 'microscope',
     colorValue: 0xFF9333EA,
-    badgeText: 'RECOMMENDED',
-    subtitle: 'Recommended for Boards • Explore cell structures and functions.',
-    unitCount: 5,
-    formulaCount: 42,
-    masteryPercentage: 80.0,
+    subtitle: 'Explore cell structures, genetics, and life processes.',
+    unitCount: 4,
+    formulaCount: 5,
     isFeatured: false
   });
 
   const bioChapters = [
-    { id: 'chap_01', name: 'Cell Division', subtitle: 'Mitosis & Meiosis', completed: 3, total: 5, progress: 60, status: 'inProgress' },
-    { id: 'chap_02', name: 'Tissues', subtitle: 'Plant & Animal Tissues', completed: 0, total: 8, progress: 0, status: 'notStarted' },
-    { id: 'chap_03', name: 'Life Processes', subtitle: 'Nutrition, Respiration & Transport', completed: 0, total: 12, progress: 0, status: 'notStarted' },
-    { id: 'chap_04', name: 'Heredity & Evolution', subtitle: 'Genetics & Natural Selection', completed: 0, total: 10, progress: 0, status: 'locked' },
+    { id: 'chap_01', name: 'Cell Biology & Genetics', subtitle: 'Cell Division & Heredity' },
+    { id: 'chap_02', name: 'Tissues', subtitle: 'Plant & Animal Tissues' },
+    { id: 'chap_03', name: 'Life Processes', subtitle: 'Nutrition, Respiration & Transport' },
+    { id: 'chap_04', name: 'Heredity & Evolution', subtitle: 'Genetics & Natural Selection' },
   ];
 
   for (const ch of bioChapters) {
@@ -188,10 +175,6 @@ async function seedSubjects() {
     batch.set(ref, {
       name: ch.name,
       subtitle: ch.subtitle,
-      completedFormulas: ch.completed,
-      totalFormulas: ch.total,
-      progressPercent: ch.progress,
-      status: ch.status,
     });
   }
 
@@ -201,7 +184,7 @@ async function seedSubjects() {
   // ═══════════════════════════════════════════════════════════════
   // ──── 4. Chemistry ────────────────────────────────────────────
   // ═══════════════════════════════════════════════════════════════
-  const chemRef = db.collection('subjects').doc('chem_001');
+  const chemRef = db.collection('subjects').doc('chemistry_001');
   batch.set(chemRef, {
     name: 'Chemistry',
     description: 'Structure of Atom',
@@ -209,18 +192,17 @@ async function seedSubjects() {
     iconName: 'flask-conical',
     colorValue: 0xFFEA580C,
     subtitle: 'Atomic models, valency, and isotopes combined.',
-    unitCount: 14,
-    formulaCount: 200,
-    masteryPercentage: 0.0,
+    unitCount: 5,
+    formulaCount: 5,
     isFeatured: false
   });
 
   const chemChapters = [
-    { id: 'chap_01', name: 'Atomic Structure', subtitle: 'Bohr Model & Quantum', completed: 0, total: 20, progress: 0, status: 'notStarted' },
-    { id: 'chap_02', name: 'Chemical Bonding', subtitle: 'Ionic & Covalent Bonds', completed: 0, total: 15, progress: 0, status: 'locked' },
-    { id: 'chap_03', name: 'Periodic Table', subtitle: 'Groups, Periods & Trends', completed: 0, total: 12, progress: 0, status: 'locked' },
-    { id: 'chap_04', name: 'Chemical Reactions', subtitle: 'Types & Balancing Equations', completed: 0, total: 18, progress: 0, status: 'locked' },
-    { id: 'chap_05', name: 'Acids, Bases & Salts', subtitle: 'pH Scale & Neutralization', completed: 0, total: 10, progress: 0, status: 'locked' },
+    { id: 'chap_01', name: 'Atomic Structure & Quantum', subtitle: 'Bohr Model & Photon Energy' },
+    { id: 'chap_02', name: 'Chemical Bonding', subtitle: 'Ionic & Covalent Bonds' },
+    { id: 'chap_03', name: 'Periodic Table', subtitle: 'Groups, Periods & Trends' },
+    { id: 'chap_04', name: 'Chemical Reactions & Stoichiometry', subtitle: 'Moles & Equations' },
+    { id: 'chap_05', name: 'Acids, Bases & Salts', subtitle: 'pH Scale & Neutralization' },
   ];
 
   for (const ch of chemChapters) {
@@ -228,10 +210,6 @@ async function seedSubjects() {
     batch.set(ref, {
       name: ch.name,
       subtitle: ch.subtitle,
-      completedFormulas: ch.completed,
-      totalFormulas: ch.total,
-      progressPercent: ch.progress,
-      status: ch.status,
     });
   }
 

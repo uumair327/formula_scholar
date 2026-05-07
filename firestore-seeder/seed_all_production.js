@@ -42,27 +42,17 @@ const scripts = [
     },
     {
         name: 'seed_formulas_enhanced.js',
-        description: 'Production formulas with examples & tags (ENHANCED)',
+        description: 'Production formulas with examples & tags',
         stage: 'Content'
     },
     {
         name: 'seed_practice_enhanced.js',
-        description: 'Production quizzes & practice questions (ENHANCED)',
+        description: 'Production quizzes & practice questions',
         stage: 'Content'
     },
     {
         name: 'seed_registry_enhanced.js',
-        description: 'Curriculum & content registry for dashboard (ENHANCED)',
-        stage: 'Dashboard'
-    },
-    {
-        name: 'seed_curriculum_registry.js',
-        description: 'Curriculum control metadata (Original)',
-        stage: 'Dashboard'
-    },
-    {
-        name: 'seed_content_registry.js',
-        description: 'Content control metadata (Original)',
+        description: 'Curriculum & content registry for dashboard',
         stage: 'Dashboard'
     },
     {
@@ -171,15 +161,14 @@ for (const result of results) {
 console.log(`\n${'═'.repeat(50)}`);
 if (failureCount === 0) {
     console.log(`✅ ALL SEEDERS COMPLETED SUCCESSFULLY!`);
-    console.log(`\n📊 Your database is now populated with production-level data:`);
-    console.log(`   • Multiple subjects (Math, Physics, Chemistry, Biology)`);
-    console.log(`   • 4+ chapters per subject with comprehensive formulas`);
-    console.log(`   • 30+ production formulas with LaTeX rendering`);
-    console.log(`   • 6+ quizzes with 20+ practice questions`);
-    console.log(`   • Curriculum registry for CBSE/ICSE boards (Classes 8-12)`);
-    console.log(`   • Content registry with student engagement stats`);
-    console.log(`   • Dashboard-ready metadata and indexes`);
-    console.log(`\n🎉 Ready for production use!\n`);
+    console.log(`\nYour database is now populated with production-level data:`);
+    console.log(`   • 4 subjects (Math, Physics, Chemistry, Biology)`);
+    console.log(`   • 74 formulas with LaTeX rendering across all chapters`);
+    console.log(`   • 5 quizzes with practice questions`);
+    console.log(`   • Curriculum registry for CBSE/ICSE/MSBSHSE boards`);
+    console.log(`   • Content registry with learning outcomes`);
+    console.log(`   • Dashboard-ready metadata`);
+    console.log(`\nReady for production use!\n`);
 } else {
     console.log(`⚠️  Seeding completed with ${failureCount} failure(s).`);
     console.log(`\n🔧 Check the errors above and re-run failed seeders.\n`);

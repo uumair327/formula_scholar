@@ -35,15 +35,15 @@ async function seedStatus() {
     const payload = {
         status: 'healthy',
         lastSeededAt: new Date().toISOString(),
-        datasetVersion: '2026.04.19',
-        pipeline: 'seed_all -> populate_firestore -> populate_msbshse',
+        datasetVersion: '2026.05.07',
+        pipeline: 'seed.js → seed_subjects.js → seed_formulas_enhanced.js → seed_practice_enhanced.js → seed_registry_enhanced.js → seed_status.js',
         collections: [
             'countries',
             'boards',
             'subjects',
             'practice_questions',
-            'users',
-            'dashboard_governance_audit',
+            'dashboard_curriculum_registry',
+            'dashboard_content_registry',
             'dashboard_seed_status'
         ]
     };

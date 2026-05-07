@@ -137,9 +137,9 @@ async function seedFormulas() {
 
 
   // ═══════════════════════════════════════════════════════════════
-  // ──── Chemistry → Atomic Structure (chem_001 → chap_01) ──────
+  // ──── Chemistry → Atomic Structure (chemistry_001 → chap_01) ──────
   // ═══════════════════════════════════════════════════════════════
-  const chemChap1 = db.collection('subjects').doc('chem_001').collection('chapters').doc('chap_01');
+  const chemChap1 = db.collection('subjects').doc('chemistry_001').collection('chapters').doc('chap_01');
   const chemAtomic = [
     { id: 'formula_01', title: 'Planck–Einstein Relation', latex: 'E = h\\nu', description: 'Energy of a photon equals Planck constant times frequency.', isGeneralContent: true, audiences: ['IN_cbse_11'] },
     { id: 'formula_02', title: 'de Broglie Wavelength', latex: '\\lambda = \\frac{h}{mv}', description: 'Wavelength of a particle with mass m moving at velocity v.', isGeneralContent: true, audiences: ['IN_cbse_11'] },
@@ -150,8 +150,8 @@ async function seedFormulas() {
     batch2.set(chemChap1.collection('formulas').doc(f.id), f);
   }
 
-  // ──── Chemistry → Chemical Reactions (chem_001 → chap_04) ─────
-  const chemChap4 = db.collection('subjects').doc('chem_001').collection('chapters').doc('chap_04');
+  // ──── Chemistry → Chemical Reactions (chemistry_001 → chap_04) ─────
+  const chemChap4 = db.collection('subjects').doc('chemistry_001').collection('chapters').doc('chap_04');
   const chemReactions = [
     { id: 'formula_01', title: 'Molar Mass', latex: 'M = \\frac{m}{n}', description: 'Molar mass equals mass divided by number of moles.', isGeneralContent: true, audiences: ['IN_cbse_9', 'IN_cbse_10'] },
     { id: 'formula_02', title: "Avogadro's Number", latex: 'N_A = 6.022 \\times 10^{23}', description: 'Number of atoms/molecules in one mole of substance.', isGeneralContent: true, audiences: ['IN_cbse_9', 'IN_cbse_10'] },
@@ -162,8 +162,8 @@ async function seedFormulas() {
     batch2.set(chemChap4.collection('formulas').doc(f.id), f);
   }
 
-  // ──── Chemistry → Acids, Bases & Salts (chem_001 → chap_05) ──
-  const chemChap5 = db.collection('subjects').doc('chem_001').collection('chapters').doc('chap_05');
+  // ──── Chemistry → Acids, Bases & Salts (chemistry_001 → chap_05) ──
+  const chemChap5 = db.collection('subjects').doc('chemistry_001').collection('chapters').doc('chap_05');
   const chemAcids = [
     { id: 'formula_01', title: 'pH Scale', latex: 'pH = -\\log[H^+]', description: 'Negative logarithm of hydrogen ion concentration.', isGeneralContent: true, audiences: ['IN_cbse_10'] },
     { id: 'formula_02', title: 'pOH', latex: 'pOH = -\\log[OH^-]', description: 'Negative logarithm of hydroxide ion concentration.', isGeneralContent: true, audiences: ['IN_cbse_10'] },
@@ -176,9 +176,9 @@ async function seedFormulas() {
 
 
   // ═══════════════════════════════════════════════════════════════
-  // ──── Biology → Cell Division (bio_001 → chap_01) ─────────────
+  // ──── Biology → Cell Division (biology_001 → chap_01) ─────────
   // ═══════════════════════════════════════════════════════════════
-  const bioChap1 = db.collection('subjects').doc('bio_001').collection('chapters').doc('chap_01');
+  const bioChap1 = db.collection('subjects').doc('biology_001').collection('chapters').doc('chap_01');
   const bioCellDiv = [
     { id: 'formula_01', title: 'Cell Cycle Phases', latex: 'G_1 \\rightarrow S \\rightarrow G_2 \\rightarrow M', description: 'Order of cell cycle: Gap 1 → Synthesis → Gap 2 → Mitosis.', isGeneralContent: true, audiences: ['IN_cbse_9'] },
     { id: 'formula_02', title: 'Mitosis Result', latex: '2n \\rightarrow 2n', description: 'Mitosis produces two diploid daughter cells from one diploid parent.', isGeneralContent: true, audiences: ['IN_cbse_9'] },
@@ -189,8 +189,8 @@ async function seedFormulas() {
     batch2.set(bioChap1.collection('formulas').doc(f.id), f);
   }
 
-  // ──── Biology → Tissues (bio_001 → chap_02) ───────────────────
-  const bioChap2 = db.collection('subjects').doc('bio_001').collection('chapters').doc('chap_02');
+  // ──── Biology → Tissues (biology_001 → chap_02) ───────────────────
+  const bioChap2 = db.collection('subjects').doc('biology_001').collection('chapters').doc('chap_02');
   const bioTissues = [
     { id: 'formula_01', title: 'Meristematic Tissue', latex: '\\text{Apical} + \\text{Lateral} + \\text{Intercalary}', description: 'Three types of meristematic tissue responsible for plant growth.', isGeneralContent: true, audiences: ['IN_cbse_9'] },
     { id: 'formula_02', title: 'Permanent Tissue Types', latex: '\\text{Simple} + \\text{Complex}', description: 'Permanent tissues: Simple (parenchyma, collenchyma, sclerenchyma) and Complex (xylem, phloem).', isGeneralContent: true, audiences: ['IN_cbse_9'] },
@@ -200,8 +200,8 @@ async function seedFormulas() {
     batch2.set(bioChap2.collection('formulas').doc(f.id), f);
   }
 
-  // ──── Biology → Life Processes (bio_001 → chap_03) ────────────
-  const bioChap3 = db.collection('subjects').doc('bio_001').collection('chapters').doc('chap_03');
+  // ──── Biology → Life Processes (biology_001 → chap_03) ────────────
+  const bioChap3 = db.collection('subjects').doc('biology_001').collection('chapters').doc('chap_03');
   const bioLife = [
     { id: 'formula_01', title: 'Photosynthesis', latex: '6CO_2 + 6H_2O \\xrightarrow{\\text{sunlight}} C_6H_{12}O_6 + 6O_2', description: 'Plants convert carbon dioxide and water into glucose and oxygen using sunlight.', isGeneralContent: true, audiences: ['IN_cbse_10'] },
     { id: 'formula_02', title: 'Aerobic Respiration', latex: 'C_6H_{12}O_6 + 6O_2 \\rightarrow 6CO_2 + 6H_2O + \\text{Energy}', description: 'Glucose is broken down in the presence of oxygen to release energy.', isGeneralContent: true, audiences: ['IN_cbse_10'] },

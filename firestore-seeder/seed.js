@@ -26,15 +26,50 @@ async function seed() {
   const inRef = db.collection('countries').doc('IN');
   batch.set(inRef, { name: 'India', isoCode: 'IN', flagUrl: '🇮🇳' });
 
-  // 2. States for IN
-  const stateDoc1 = inRef.collection('states').doc('MH');
-  batch.set(stateDoc1, { name: 'Maharashtra', stateCode: 'MH' });
+  // 2. States and Union Territories for IN
+  const indianStates = [
+    { code: 'AP', name: 'Andhra Pradesh' },
+    { code: 'AR', name: 'Arunachal Pradesh' },
+    { code: 'AS', name: 'Assam' },
+    { code: 'BR', name: 'Bihar' },
+    { code: 'CG', name: 'Chhattisgarh' },
+    { code: 'GA', name: 'Goa' },
+    { code: 'GJ', name: 'Gujarat' },
+    { code: 'HR', name: 'Haryana' },
+    { code: 'HP', name: 'Himachal Pradesh' },
+    { code: 'JH', name: 'Jharkhand' },
+    { code: 'KA', name: 'Karnataka' },
+    { code: 'KL', name: 'Kerala' },
+    { code: 'MP', name: 'Madhya Pradesh' },
+    { code: 'MH', name: 'Maharashtra' },
+    { code: 'MN', name: 'Manipur' },
+    { code: 'ML', name: 'Meghalaya' },
+    { code: 'MZ', name: 'Mizoram' },
+    { code: 'NL', name: 'Nagaland' },
+    { code: 'OD', name: 'Odisha' },
+    { code: 'PB', name: 'Punjab' },
+    { code: 'RJ', name: 'Rajasthan' },
+    { code: 'SK', name: 'Sikkim' },
+    { code: 'TN', name: 'Tamil Nadu' },
+    { code: 'TG', name: 'Telangana' },
+    { code: 'TR', name: 'Tripura' },
+    { code: 'UP', name: 'Uttar Pradesh' },
+    { code: 'UK', name: 'Uttarakhand' },
+    { code: 'WB', name: 'West Bengal' },
+    { code: 'AN', name: 'Andaman and Nicobar Islands' },
+    { code: 'CH', name: 'Chandigarh' },
+    { code: 'DD', name: 'Dadra and Nagar Haveli and Daman and Diu' },
+    { code: 'DL', name: 'Delhi' },
+    { code: 'JK', name: 'Jammu and Kashmir' },
+    { code: 'LA', name: 'Ladakh' },
+    { code: 'LD', name: 'Lakshadweep' },
+    { code: 'PY', name: 'Puducherry' }
+  ];
 
-  const stateDoc2 = inRef.collection('states').doc('DL');
-  batch.set(stateDoc2, { name: 'Delhi', stateCode: 'DL' });
-
-  const stateDoc3 = inRef.collection('states').doc('KA');
-  batch.set(stateDoc3, { name: 'Karnataka', stateCode: 'KA' });
+  for (const st of indianStates) {
+    const stateRef = inRef.collection('states').doc(st.code);
+    batch.set(stateRef, { name: st.name, stateCode: st.code });
+  }
 
   // 3. Boards
   const boards = [
@@ -57,8 +92,48 @@ async function seed() {
       countryId: 'IN',
       stateId: 'MH',
       type: 'state',
-      name: 'State Board (MSBSHSE)',
+      name: 'MSBSHSE (Maharashtra)',
       description: 'Maharashtra State Board of Secondary and Higher Secondary Education.'
+    },
+    {
+      id: 'up_board',
+      countryId: 'IN',
+      stateId: 'UP',
+      type: 'state',
+      name: 'UPMSP (Uttar Pradesh)',
+      description: 'Uttar Pradesh Madhyamik Shiksha Parishad.'
+    },
+    {
+      id: 'tn_board',
+      countryId: 'IN',
+      stateId: 'TN',
+      type: 'state',
+      name: 'TN Board (Tamil Nadu)',
+      description: 'Tamil Nadu State Board of Secondary Education.'
+    },
+    {
+      id: 'ka_board',
+      countryId: 'IN',
+      stateId: 'KA',
+      type: 'state',
+      name: 'KSEEB (Karnataka)',
+      description: 'Karnataka Secondary Education Examination Board.'
+    },
+    {
+      id: 'gj_board',
+      countryId: 'IN',
+      stateId: 'GJ',
+      type: 'state',
+      name: 'GSEB (Gujarat)',
+      description: 'Gujarat Secondary and Higher Secondary Education Board.'
+    },
+    {
+      id: 'wb_board',
+      countryId: 'IN',
+      stateId: 'WB',
+      type: 'state',
+      name: 'WBBSE (West Bengal)',
+      description: 'West Bengal Board of Secondary Education.'
     },
     {
       id: 'private',

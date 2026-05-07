@@ -25,7 +25,6 @@ const db = admin.firestore();
 async function seedRegistry() {
     console.log('📊 Seeding Curriculum & Content Registry...\n');
 
-    // Curriculum Registry - tracks curriculum-level aggregates
     const curriculumRegistry = [
         {
             id: 'cbse_10_2024',
@@ -34,21 +33,21 @@ async function seedRegistry() {
             year: 2024,
             name: 'CBSE Class 10 (2024)',
             subjects: ['math_001', 'physics_001', 'chemistry_001', 'biology_001'],
-            totalChapters: 15,
-            totalFormulas: 85,
-            totalQuestions: 120,
+            totalChapters: 7,
+            totalFormulas: 22,
+            totalQuestions: 14,
             status: 'published',
-            publishedAt: new Date('2024-01-15').toISOString(),
-            lastUpdatedAt: new Date('2024-05-01').toISOString(),
+            publishedAt: new Date('2026-01-15').toISOString(),
+            lastUpdatedAt: new Date().toISOString(),
             coverage: {
-                formulas: 85,
-                quizzes: 12,
-                practiceQuestions: 120
+                formulas: 22,
+                quizzes: 4,
+                practiceQuestions: 14
             },
             stats: {
                 averageDifficulty: 'intermediate',
-                estimatedCompletionHours: 45,
-                activeStudents: 1250
+                estimatedCompletionHours: 40,
+                activeStudents: 0
             }
         },
         {
@@ -58,21 +57,21 @@ async function seedRegistry() {
             year: 2024,
             name: 'CBSE Class 11 (2024)',
             subjects: ['math_001', 'physics_001', 'chemistry_001', 'biology_001'],
-            totalChapters: 18,
-            totalFormulas: 120,
-            totalQuestions: 180,
+            totalChapters: 7,
+            totalFormulas: 22,
+            totalQuestions: 14,
             status: 'published',
-            publishedAt: new Date('2024-02-01').toISOString(),
-            lastUpdatedAt: new Date('2024-05-02').toISOString(),
+            publishedAt: new Date('2026-02-01').toISOString(),
+            lastUpdatedAt: new Date().toISOString(),
             coverage: {
-                formulas: 120,
-                quizzes: 18,
-                practiceQuestions: 180
+                formulas: 22,
+                quizzes: 4,
+                practiceQuestions: 14
             },
             stats: {
                 averageDifficulty: 'hard',
-                estimatedCompletionHours: 60,
-                activeStudents: 980
+                estimatedCompletionHours: 50,
+                activeStudents: 0
             }
         },
         {
@@ -82,26 +81,49 @@ async function seedRegistry() {
             year: 2024,
             name: 'ICSE Class 10 (2024)',
             subjects: ['math_001', 'physics_001', 'chemistry_001'],
-            totalChapters: 14,
-            totalFormulas: 75,
-            totalQuestions: 100,
+            totalChapters: 5,
+            totalFormulas: 17,
+            totalQuestions: 10,
             status: 'published',
-            publishedAt: new Date('2024-01-20').toISOString(),
-            lastUpdatedAt: new Date('2024-04-28').toISOString(),
+            publishedAt: new Date('2026-01-20').toISOString(),
+            lastUpdatedAt: new Date().toISOString(),
             coverage: {
-                formulas: 75,
-                quizzes: 11,
-                practiceQuestions: 100
+                formulas: 17,
+                quizzes: 3,
+                practiceQuestions: 10
             },
             stats: {
                 averageDifficulty: 'intermediate',
-                estimatedCompletionHours: 40,
-                activeStudents: 620
+                estimatedCompletionHours: 35,
+                activeStudents: 0
+            }
+        },
+        {
+            id: 'msbshse_10_2024',
+            board: 'MSBSHSE',
+            class: 10,
+            year: 2024,
+            name: 'MSBSHSE Class 10 (2024)',
+            subjects: ['math_001', 'physics_001', 'chemistry_001'],
+            totalChapters: 5,
+            totalFormulas: 17,
+            totalQuestions: 10,
+            status: 'published',
+            publishedAt: new Date('2026-01-15').toISOString(),
+            lastUpdatedAt: new Date().toISOString(),
+            coverage: {
+                formulas: 17,
+                quizzes: 3,
+                practiceQuestions: 10
+            },
+            stats: {
+                averageDifficulty: 'intermediate',
+                estimatedCompletionHours: 35,
+                activeStudents: 0
             }
         }
     ];
 
-    // Content Registry - tracks content-level metadata
     const contentRegistry = [
         {
             id: 'content_math_polynomials',
@@ -111,7 +133,7 @@ async function seedRegistry() {
             name: 'Polynomials & Algebra',
             description: 'Master polynomial operations, factoring, and quadratic equations',
             status: 'published',
-            formulas: ['formula_poly_001', 'formula_poly_002', 'formula_poly_003', 'formula_poly_004'],
+            formulas: ['formula_poly_001', 'formula_poly_002', 'formula_poly_003', 'formula_poly_004', 'formula_poly_005', 'formula_poly_006', 'formula_poly_007'],
             quizzes: ['quiz_poly_001', 'quiz_poly_002'],
             metadata: {
                 difficulty: 'easy-to-intermediate',
@@ -119,46 +141,75 @@ async function seedRegistry() {
                 prerequisites: [],
                 targetAudiences: ['IN_cbse_8', 'IN_cbse_9', 'IN_cbse_10'],
                 learningOutcomes: [
-                    'Understand polynomial operations',
-                    'Master factoring techniques',
-                    'Solve quadratic equations using multiple methods',
-                    'Apply algebra to real-world problems'
+                    'Master algebraic identities and factoring techniques',
+                    'Understand quadratic equations and discriminants',
+                    'Apply binomial expansion formulas',
+                    'Solve polynomial equations'
                 ]
             },
             stats: {
-                totalStudentsEnrolled: 5200,
-                averageCompletion: 82,
-                averageScore: 76,
-                lastUpdated: new Date('2024-04-30').toISOString()
+                totalStudentsEnrolled: 0,
+                averageCompletion: 0,
+                averageScore: 0,
+                lastUpdated: new Date().toISOString()
             }
         },
         {
-            id: 'content_trig_identities',
+            id: 'content_math_trigonometry',
             contentType: 'chapter',
             subject: 'math_001',
             chapter: 'chap_02',
             name: 'Trigonometry',
             description: 'Explore trigonometric functions, identities, and applications',
             status: 'published',
-            formulas: ['formula_trig_001', 'formula_trig_002', 'formula_trig_003'],
+            formulas: ['formula_trig_001', 'formula_trig_002', 'formula_trig_003', 'formula_trig_004', 'formula_trig_005', 'formula_trig_006', 'formula_trig_007'],
             quizzes: ['quiz_trig_001'],
             metadata: {
                 difficulty: 'intermediate-to-hard',
                 estimatedHours: 10,
                 prerequisites: ['content_math_polynomials'],
-                targetAudiences: ['IN_cbse_10', 'IN_cbse_11', 'IN_icse_10'],
+                targetAudiences: ['IN_cbse_10', 'IN_cbse_11'],
                 learningOutcomes: [
-                    'Understand trigonometric ratios',
                     'Apply trigonometric identities',
-                    'Solve trigonometric equations',
-                    'Use trigonometry in real-world applications'
+                    'Use Law of Sines and Law of Cosines',
+                    'Solve compound and double angle problems',
+                    'Understand trigonometric equations'
                 ]
             },
             stats: {
-                totalStudentsEnrolled: 3800,
-                averageCompletion: 78,
-                averageScore: 72,
-                lastUpdated: new Date('2024-04-25').toISOString()
+                totalStudentsEnrolled: 0,
+                averageCompletion: 0,
+                averageScore: 0,
+                lastUpdated: new Date().toISOString()
+            }
+        },
+        {
+            id: 'content_math_quadratics',
+            contentType: 'chapter',
+            subject: 'math_001',
+            chapter: 'chap_04',
+            name: 'Quadratic Equations',
+            description: 'Solve and analyze quadratic equations using standard methods',
+            status: 'published',
+            formulas: ['formula_quad_001', 'formula_quad_002', 'formula_quad_003', 'formula_quad_004', 'formula_quad_005'],
+            quizzes: ['quiz_quad_001'],
+            metadata: {
+                difficulty: 'easy-to-intermediate',
+                estimatedHours: 6,
+                prerequisites: ['content_math_polynomials'],
+                targetAudiences: ['IN_cbse_10'],
+                learningOutcomes: [
+                    'Understand standard form of quadratic equations',
+                    'Calculate and interpret discriminants',
+                    'Find sum and product of roots',
+                    'Form quadratic equations from given roots'
+                ]
+            },
+            stats: {
+                totalStudentsEnrolled: 0,
+                averageCompletion: 0,
+                averageScore: 0,
+                lastUpdated: new Date().toISOString()
             }
         },
         {
@@ -169,7 +220,7 @@ async function seedRegistry() {
             name: 'Motion & Kinematics',
             description: 'Master equations of motion, velocity, and acceleration',
             status: 'published',
-            formulas: ['formula_phys_001', 'formula_phys_002', 'formula_phys_003'],
+            formulas: ['formula_phys_001', 'formula_phys_002', 'formula_phys_003', 'formula_phys_004', 'formula_phys_005'],
             quizzes: ['quiz_motion_001'],
             metadata: {
                 difficulty: 'easy',
@@ -177,97 +228,162 @@ async function seedRegistry() {
                 prerequisites: [],
                 targetAudiences: ['IN_cbse_9', 'IN_cbse_10'],
                 learningOutcomes: [
-                    'Understand kinematics concepts',
-                    'Apply equations of motion',
-                    'Solve kinematics problems',
-                    'Understand motion graphs'
+                    'Apply equations of motion under constant acceleration',
+                    'Calculate displacement, velocity, and acceleration',
+                    'Understand relative velocity concepts',
+                    'Solve kinematics problems'
                 ]
             },
             stats: {
-                totalStudentsEnrolled: 6100,
-                averageCompletion: 85,
-                averageScore: 79,
-                lastUpdated: new Date('2024-04-28').toISOString()
+                totalStudentsEnrolled: 0,
+                averageCompletion: 0,
+                averageScore: 0,
+                lastUpdated: new Date().toISOString()
+            }
+        },
+        {
+            id: 'content_physics_forces',
+            contentType: 'chapter',
+            subject: 'physics_001',
+            chapter: 'chap_02',
+            name: 'Forces & Newton\'s Laws',
+            description: 'Understand forces, momentum, and Newton\'s laws of motion',
+            status: 'published',
+            formulas: ['formula_phys_006', 'formula_phys_007', 'formula_phys_008', 'formula_phys_009', 'formula_phys_010', 'formula_phys_011'],
+            quizzes: ['quiz_force_001'],
+            metadata: {
+                difficulty: 'intermediate',
+                estimatedHours: 8,
+                prerequisites: ['content_physics_motion'],
+                targetAudiences: ['IN_cbse_9', 'IN_cbse_11'],
+                learningOutcomes: [
+                    'Apply Newton\'s second law',
+                    'Calculate momentum and impulse',
+                    'Understand conservation of momentum',
+                    'Solve friction and gravitation problems'
+                ]
+            },
+            stats: {
+                totalStudentsEnrolled: 0,
+                averageCompletion: 0,
+                averageScore: 0,
+                lastUpdated: new Date().toISOString()
+            }
+        },
+        {
+            id: 'content_chemistry_atomic',
+            contentType: 'chapter',
+            subject: 'chemistry_001',
+            chapter: 'chap_01',
+            name: 'Atomic Structure & Quantum',
+            description: 'Explore atomic models, quantum mechanics, and photon energy',
+            status: 'published',
+            formulas: ['formula_chem_001', 'formula_chem_002', 'formula_chem_003', 'formula_chem_004', 'formula_chem_005'],
+            quizzes: ['quiz_chem_001'],
+            metadata: {
+                difficulty: 'hard',
+                estimatedHours: 10,
+                prerequisites: [],
+                targetAudiences: ['IN_cbse_11', 'IN_cbse_12'],
+                learningOutcomes: [
+                    'Calculate photon energy using Planck\'s relation',
+                    'Apply de Broglie wavelength concept',
+                    'Understand Bohr\'s atomic model and energy levels',
+                    'Use Rydberg formula for spectral lines'
+                ]
+            },
+            stats: {
+                totalStudentsEnrolled: 0,
+                averageCompletion: 0,
+                averageScore: 0,
+                lastUpdated: new Date().toISOString()
+            }
+        },
+        {
+            id: 'content_chemistry_stoichiometry',
+            contentType: 'chapter',
+            subject: 'chemistry_001',
+            chapter: 'chap_04',
+            name: 'Chemical Reactions & Stoichiometry',
+            description: 'Master moles, molar mass, gas laws, and solution concentration',
+            status: 'published',
+            formulas: ['formula_chem_006', 'formula_chem_007', 'formula_chem_008', 'formula_chem_009', 'formula_chem_010'],
+            quizzes: [],
+            metadata: {
+                difficulty: 'intermediate',
+                estimatedHours: 8,
+                prerequisites: ['content_chemistry_atomic'],
+                targetAudiences: ['IN_cbse_9', 'IN_cbse_10', 'IN_cbse_11'],
+                learningOutcomes: [
+                    'Calculate molar mass and number of moles',
+                    'Apply Avogadro\'s law',
+                    'Use ideal gas law for gas problems',
+                    'Determine solution concentration'
+                ]
+            },
+            stats: {
+                totalStudentsEnrolled: 0,
+                averageCompletion: 0,
+                averageScore: 0,
+                lastUpdated: new Date().toISOString()
             }
         }
     ];
 
-    // Batch write curriculum registry
-    console.log('📚 Writing Curriculum Registry...');
-    const curriculumBatch = db.batch();
-    let operationCount = 0;
+    const generatedAt = new Date().toISOString();
+    const datasetVersion = '2026.05.07';
 
-    for (const curriculum of curriculumRegistry) {
-        const curriculumRef = db.collection('curriculumRegistry').doc(curriculum.id);
-        curriculumBatch.set(curriculumRef, {
-            ...curriculum,
-            createdAt: admin.firestore.FieldValue.serverTimestamp(),
-            updatedAt: admin.firestore.FieldValue.serverTimestamp()
-        });
+    console.log('Writing Curriculum Registry...');
 
-        operationCount++;
-        console.log(`   ✓ ${curriculum.name} (${curriculum.totalChapters} chapters, ${curriculum.totalFormulas} formulas)`);
-    }
+    const curriculumNodes = [
+        { key: 'countries', label: 'Countries', collectionPath: 'countries', nodeCount: 1, status: 'active', writeEnabled: true, lastSyncedAt: generatedAt },
+        { key: 'states', label: 'States/UTs', collectionPath: 'countries/{countryId}/states', nodeCount: 36, status: 'active', writeEnabled: true, lastSyncedAt: generatedAt },
+        { key: 'boards', label: 'Boards', collectionPath: 'boards', nodeCount: 9, status: 'active', writeEnabled: true, lastSyncedAt: generatedAt },
+        { key: 'grades', label: 'Grades / Classes', collectionPath: 'boards/{boardId}/classes', nodeCount: 27, status: 'active', writeEnabled: true, lastSyncedAt: generatedAt },
+        { key: 'subjects', label: 'Subjects', collectionPath: 'subjects', nodeCount: 4, status: 'active', writeEnabled: true, lastSyncedAt: generatedAt },
+        { key: 'chapters', label: 'Chapters', collectionPath: 'subjects/{subjectId}/chapters', nodeCount: 17, status: 'active', writeEnabled: true, lastSyncedAt: generatedAt },
+        { key: 'formulas', label: 'Formulas', collectionPath: 'subjects/{subjectId}/chapters/{chapterId}/formulas', nodeCount: 74, status: 'active', writeEnabled: true, lastSyncedAt: generatedAt },
+        { key: 'mastery-tools', label: 'Mastery Tools', collectionPath: 'subjects/{subjectId}/mastery_tools', nodeCount: 4, status: 'active', writeEnabled: true, lastSyncedAt: generatedAt },
+        { key: 'practice-questions', label: 'Practice Questions', collectionPath: 'practice_questions', nodeCount: 22, status: 'active', writeEnabled: true, lastSyncedAt: generatedAt },
+        { key: 'saved-notes', label: 'Saved Notes', collectionPath: 'saved_notes', nodeCount: 0, status: 'active', writeEnabled: true, lastSyncedAt: generatedAt }
+    ];
 
-    await curriculumBatch.commit();
-    console.log(`✅ Seeded ${curriculumRegistry.length} curriculum entries\n`);
+    const curriculumPayload = {
+        generatedAt,
+        datasetVersion,
+        status: 'healthy',
+        nodeCount: curriculumNodes.length,
+        nodes: curriculumNodes
+    };
 
-    // Batch write content registry
-    console.log('📋 Writing Content Registry...');
-    const contentBatch = db.batch();
-    operationCount = 0;
+    await db.collection('dashboard_curriculum_registry').doc('current').set(curriculumPayload, { merge: true });
+    console.log(`   Curriculum registry updated (${curriculumNodes.length} nodes)\n`);
 
-    for (const content of contentRegistry) {
-        const contentRef = db.collection('contentRegistry').doc(content.id);
-        contentBatch.set(contentRef, {
-            ...content,
-            createdAt: admin.firestore.FieldValue.serverTimestamp(),
-            updatedAt: admin.firestore.FieldValue.serverTimestamp()
-        });
+    console.log('Writing Content Registry...');
 
-        operationCount++;
-        console.log(
-            `   ✓ ${content.name} (${content.formulas.length} formulas, ${content.quizzes.length} quizzes, ${content.stats.totalStudentsEnrolled} students)`
-        );
-    }
+    const contentItems = [
+        { key: 'home.hero.title', locale: 'en-IN', status: 'Published', lastSyncedAt: generatedAt },
+        { key: 'practice.results.summary', locale: 'en-IN', status: 'Draft', lastSyncedAt: generatedAt },
+        { key: 'formula.editor.hint', locale: 'en-IN', status: 'Published', lastSyncedAt: generatedAt },
+        { key: 'subscription.cta.banner', locale: 'en-IN', status: 'Review', lastSyncedAt: generatedAt },
+        { key: 'curriculum.cbse.10', locale: 'en-IN', status: 'Published', lastSyncedAt: generatedAt },
+        { key: 'curriculum.cbse.11', locale: 'en-IN', status: 'Published', lastSyncedAt: generatedAt },
+        { key: 'curriculum.msbshse.10', locale: 'en-IN', status: 'Published', lastSyncedAt: generatedAt },
+        { key: 'governance.audit.enabled', locale: 'en-IN', status: 'Published', lastSyncedAt: generatedAt }
+    ];
 
-    await contentBatch.commit();
-    console.log(`✅ Seeded ${contentRegistry.length} content entries\n`);
+    const contentPayload = {
+        generatedAt,
+        datasetVersion,
+        status: 'healthy',
+        itemCount: contentItems.length,
+        items: contentItems
+    };
 
-    // Create index documents for quick lookups
-    console.log('🔍 Creating lookup indexes...');
-    const indexBatch = db.batch();
+    await db.collection('dashboard_content_registry').doc('current').set(contentPayload, { merge: true });
+    console.log(`   Content registry updated (${contentItems.length} items)\n`);
 
-    // Subject index
-    const subjectIndexRef = db.collection('indexes').doc('subjects');
-    const subjectIndex = {};
-    for (const content of contentRegistry) {
-        if (!subjectIndex[content.subject]) {
-            subjectIndex[content.subject] = { chapters: [], count: 0 };
-        }
-        if (!subjectIndex[content.subject].chapters.includes(content.chapter)) {
-            subjectIndex[content.subject].chapters.push(content.chapter);
-            subjectIndex[content.subject].count++;
-        }
-    }
-    indexBatch.set(subjectIndexRef, { subjects: subjectIndex });
-
-    // Board index
-    const boardIndexRef = db.collection('indexes').doc('boards');
-    const boardIndex = {};
-    for (const curriculum of curriculumRegistry) {
-        if (!boardIndex[curriculum.board]) {
-            boardIndex[curriculum.board] = { curricula: [], totalFormulas: 0 };
-        }
-        boardIndex[curriculum.board].curricula.push(curriculum.id);
-        boardIndex[curriculum.board].totalFormulas += curriculum.totalFormulas;
-    }
-    indexBatch.set(boardIndexRef, { boards: boardIndex });
-
-    await indexBatch.commit();
-    console.log(`✅ Created lookup indexes\n`);
-
-    console.log(`✅ Curriculum & Content Registry seeding complete!\n`);
+    console.log('Curriculum & Content Registry seeding complete!\n');
 }
 
 // Run seeder
