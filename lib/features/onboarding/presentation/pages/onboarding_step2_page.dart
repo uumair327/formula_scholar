@@ -73,7 +73,17 @@ class OnboardingStep2Page extends StatelessWidget {
               ),
               const SizedBox(height: AppDimensions.paddingXXL),
 
-              if (state.boards.isEmpty)
+              if (state.status == OnboardingStatus.error)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: AppDimensions.paddingLG),
+                  child: Text(
+                    state.errorMessage ?? 'No boards available for this region',
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: colorScheme.error,
+                    ),
+                  ),
+                )
+              else if (state.boards.isEmpty && state.status != OnboardingStatus.loading)
                 Text(
                   'No boards available for this region',
                   style: AppTextStyles.bodyMedium,

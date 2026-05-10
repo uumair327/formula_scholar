@@ -5,6 +5,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
+import '../../domain/domain.dart';
 import '../cubit/onboarding_cubit.dart';
 import '../cubit/onboarding_state.dart';
 import '../widgets/onboarding_shell.dart';
@@ -21,11 +22,29 @@ class OnboardingStep1Page extends StatefulWidget {
 
 class _OnboardingStep1PageState extends State<OnboardingStep1Page> {
   final _stateController = TextEditingController();
+  String _stateSearchQuery = '';
 
   @override
   void dispose() {
     _stateController.dispose();
     super.dispose();
+  }
+
+  List<String> _filteredStateNames(List<StateRegion> states) {
+    final query = _stateSearchQuery.trim().toLowerCase();
+    if (query.isEmpty) {
+      return states.map((s) => s.name).toList();
+    }
+    return states
+        .where((s) => s.name.toLowerCase().contains(query))
+        .map((s) => s.name)
+        .toList();
+  }
+
+  void _onStateChanged(String value) {
+    setState(() {
+      _stateSearchQuery = value;
+    });
   }
 
   void _onContinue() {
@@ -72,10 +91,7 @@ class _OnboardingStep1PageState extends State<OnboardingStep1Page> {
                     countries: state.countries.map((c) => c.name).toList(),
                     selectedCountry: state.selectedCountry?.name ?? 'India',
                     stateController: _stateController,
-                    popularStates: state.states
-                        .map((s) => s.name)
-                        .take(10)
-                        .toList(),
+                    popularStates: _filteredStateNames(state.states),
                     selectedState: state.selectedState?.name,
                     onCountryChanged: (val) {
                       final c = state.countries.firstWhere(
@@ -88,7 +104,7 @@ class _OnboardingStep1PageState extends State<OnboardingStep1Page> {
                       context.read<OnboardingCubit>().selectStateRegion(s);
                       _stateController.text = st;
                     },
-                    onStateChanged: (_) {},
+                    onStateChanged: _onStateChanged,
                   );
                   final infoCards = _LocationInfoCards();
 

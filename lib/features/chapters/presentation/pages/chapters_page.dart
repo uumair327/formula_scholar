@@ -33,15 +33,20 @@ class _ChaptersPageState extends State<ChaptersPage> {
   bool _isLoadingAvailableSubjects = false;
   bool _isAutoSelectScheduled = false;
   String _searchQuery = '';
+  Timer? _searchDebounce;
 
   @override
   void initState() {
     super.initState();
-    // Trigger initial load if a subject is already selected (e.g. hydrated).
-    // BlocListener only fires on *changes*, not on existing state.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       unawaited(_ensureChaptersLoaded(allowLoadForExistingSelection: true));
     });
+  }
+
+  @override
+  void dispose() {
+    _searchDebounce?.cancel();
+    super.dispose();
   }
 
   /// If a subject is already selected, load its chapters.
@@ -341,30 +346,36 @@ class _ChaptersPageState extends State<ChaptersPage> {
                                     setState(() {
                                       _searchQuery = value;
                                     });
-                                    final curriculumKey = context
-                                        .read<CurriculumCubit>()
-                                        .state
-                                        .curriculum
-                                        ?.curriculumKey;
-                                    final subjectId = subjectState.subject?.id;
-                                    if (subjectId == null ||
-                                        curriculumKey == null ||
-                                        curriculumKey.isEmpty) {
-                                      return;
-                                    }
-                                    final cubitState = context
-                                        .read<ChaptersCubit>()
-                                        .state;
-                                    unawaited(
-                                      context
-                                          .read<ChaptersCubit>()
-                                          .loadChapters(
-                                            subjectId,
-                                            curriculumKey: curriculumKey,
-                                            searchQuery: value,
-                                            sortBy: cubitState.sortBy,
-                                            sortDesc: cubitState.sortDesc,
-                                          ),
+                                    _searchDebounce?.cancel();
+                                    _searchDebounce = Timer(
+                                      AppDurations.debounceDefault,
+                                      () {
+                                        final curriculumKey = context
+                                            .read<CurriculumCubit>()
+                                            .state
+                                            .curriculum
+                                            ?.curriculumKey;
+                                        final subjectId = subjectState.subject?.id;
+                                        if (subjectId == null ||
+                                            curriculumKey == null ||
+                                            curriculumKey.isEmpty) {
+                                          return;
+                                        }
+                                        final cubitState = context
+                                            .read<ChaptersCubit>()
+                                            .state;
+                                        unawaited(
+                                          context
+                                              .read<ChaptersCubit>()
+                                              .loadChapters(
+                                                subjectId,
+                                                curriculumKey: curriculumKey,
+                                                searchQuery: value,
+                                                sortBy: cubitState.sortBy,
+                                                sortDesc: cubitState.sortDesc,
+                                              ),
+                                        );
+                                      },
                                     );
                                   },
                                   decoration: InputDecoration(

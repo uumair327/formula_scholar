@@ -136,6 +136,62 @@ async function seed() {
       description: 'West Bengal Board of Secondary Education.'
     },
     {
+      id: 'rj_board',
+      countryId: 'IN',
+      stateId: 'RJ',
+      type: 'state',
+      name: 'RBSE (Rajasthan)',
+      description: 'Rajasthan Board of Secondary Education.'
+    },
+    {
+      id: 'mp_board',
+      countryId: 'IN',
+      stateId: 'MP',
+      type: 'state',
+      name: 'MPBSE (Madhya Pradesh)',
+      description: 'Madhya Pradesh Board of Secondary Education.'
+    },
+    {
+      id: 'br_board',
+      countryId: 'IN',
+      stateId: 'BR',
+      type: 'state',
+      name: 'BSEB (Bihar)',
+      description: 'Bihar School Examination Board.'
+    },
+    {
+      id: 'hr_board',
+      countryId: 'IN',
+      stateId: 'HR',
+      type: 'state',
+      name: 'BSEH (Haryana)',
+      description: 'Haryana Board of Secondary Education.'
+    },
+    {
+      id: 'pb_board',
+      countryId: 'IN',
+      stateId: 'PB',
+      type: 'state',
+      name: 'PSEB (Punjab)',
+      description: 'Punjab School Education Board.'
+    },
+    {
+      id: 'or_board',
+      countryId: 'IN',
+      stateId: 'OD',
+      type: 'state',
+      name: 'BSE (Odisha)',
+      description: 'Odisha Board of Secondary Education.'
+    },
+    {
+      id: 'ap_board',
+      countryId: 'IN',
+      stateId: 'AP',
+      type: 'state',
+      name: 'BSEAP (Andhra Pradesh)',
+      description: 'Andhra Pradesh Board of Secondary Education.'
+    },
+    {
       id: 'private',
       countryId: 'IN',
       type: 'private',

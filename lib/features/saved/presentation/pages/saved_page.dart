@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -20,9 +22,11 @@ class SavedPage extends StatefulWidget {
 
 class _SavedPageState extends State<SavedPage> {
   final TextEditingController _searchController = TextEditingController();
+  Timer? _searchDebounce;
 
   @override
   void dispose() {
+    _searchDebounce?.cancel();
     _searchController.dispose();
     super.dispose();
   }
@@ -198,7 +202,13 @@ class _SavedPageState extends State<SavedPage> {
 
     return TextField(
       controller: _searchController,
-      onChanged: (value) => context.read<SavedCubit>().updateSearchQuery(value),
+      onChanged: (value) {
+        _searchDebounce?.cancel();
+        _searchDebounce = Timer(
+          AppDurations.debounceDefault,
+          () => context.read<SavedCubit>().updateSearchQuery(value),
+        );
+      },
       decoration: InputDecoration(
         hintText: AppStrings.searchBookmarks,
         prefixIcon: const Icon(LucideIcons.search),
