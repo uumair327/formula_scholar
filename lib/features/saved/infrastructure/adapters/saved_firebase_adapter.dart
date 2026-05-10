@@ -191,8 +191,15 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
       tag: AppLogTags.savedDataSource,
     );
 
-    // Build Firestore query with server-side sorting (golden rule: query authority).
+    final uid = _firebaseAuth.currentUser?.uid;
+    if (uid == null) {
+      return [];
+    }
+
+    // Scope saved_notes under user document for data isolation (security rule requirement).
     final snapshot = await _firestore
+        .collection('users')
+        .doc(uid)
         .collection('saved_notes')
         .where('curriculumKey', isEqualTo: curriculumKey)
         .orderBy(query.sortByField, descending: query.isDescending)

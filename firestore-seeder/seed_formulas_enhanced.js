@@ -331,6 +331,237 @@ async function seedFormulas() {
                             tags: ['geometry', 'coordinate', 'slope']
                         }
                     ]
+                },
+                chap_03: {
+                    name: 'Triangles',
+                    formulas: [
+                        {
+                            id: 'formula_tri_001',
+                            title: 'Pythagorean Theorem',
+                            latex: 'c^2 = a^2 + b^2',
+                            description: 'In a right triangle, the square of the hypotenuse equals the sum of squares of the other two sides.',
+                            category: 'geometry',
+                            difficulty: 'easy',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_9', 'IN_cbse_10'],
+                            examples: ['3²+4²=5²=25', 'If a=6, b=8, then c=10'],
+                            tags: ['geometry', 'triangle', 'pythagorean']
+                        },
+                        {
+                            id: 'formula_tri_002',
+                            title: 'Area of Triangle',
+                            latex: 'A = \\frac{1}{2} \\times b \\times h',
+                            description: 'Area equals half of base times height for any triangle.',
+                            category: 'geometry',
+                            difficulty: 'easy',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_9'],
+                            examples: ['b=10cm, h=5cm: A = ½×10×5 = 25cm²'],
+                            tags: ['geometry', 'triangle', 'area']
+                        },
+                        {
+                            id: 'formula_tri_003',
+                            title: "Heron's Formula",
+                            latex: 'A = \\sqrt{s(s-a)(s-b)(s-c)}',
+                            description: 'Area of a triangle using semi-perimeter s = (a+b+c)/2 when all sides are known.',
+                            category: 'geometry',
+                            difficulty: 'intermediate',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_9', 'IN_cbse_10'],
+                            examples: ['Sides 3,4,5: s=6, A=√(6×3×2×1)=√36=6'],
+                            tags: ['geometry', 'triangle', 'heron', 'area']
+                        },
+                        {
+                            id: 'formula_tri_004',
+                            title: 'Angle Sum of Triangle',
+                            latex: '\\angle A + \\angle B + \\angle C = 180\\degree',
+                            description: 'The sum of all interior angles of any triangle is always 180 degrees.',
+                            category: 'geometry',
+                            difficulty: 'easy',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_9'],
+                            examples: ['If ∠A=50°, ∠B=60°, then ∠C=70°'],
+                            tags: ['geometry', 'triangle', 'angles']
+                        },
+                        {
+                            id: 'formula_tri_005',
+                            title: 'Triangle Congruence - SSS',
+                            latex: '\\triangle ABC \\cong \\triangle DEF \\text{ if } AB=DE, BC=EF, CA=FD',
+                            description: 'Side-Side-Side congruence: triangles are congruent if all three sides match.',
+                            category: 'geometry',
+                            difficulty: 'intermediate',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_9'],
+                            examples: ['Two triangles with sides 3,4,5 are congruent by SSS'],
+                            tags: ['geometry', 'triangle', 'congruence']
+                        },
+                        {
+                            id: 'formula_tri_006',
+                            title: 'Triangle Similarity - AA',
+                            latex: '\\triangle ABC \\sim \\triangle DEF \\text{ if } \\angle A=\\angle D, \\angle B=\\angle E',
+                            description: 'Angle-Angle similarity: triangles are similar if two angles match.',
+                            category: 'geometry',
+                            difficulty: 'intermediate',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_10'],
+                            examples: ['If two angles match, third automatically matches: AA→AAA'],
+                            tags: ['geometry', 'triangle', 'similarity']
+                        }
+                    ]
+                },
+                chap_06: {
+                    name: 'Statistics',
+                    formulas: [
+                        {
+                            id: 'formula_stat_001',
+                            title: 'Mean (Average)',
+                            latex: '\\bar{x} = \\frac{\\sum_{i=1}^{n} x_i}{n}',
+                            description: 'Arithmetic mean equals sum of all observations divided by number of observations.',
+                            category: 'statistics',
+                            difficulty: 'easy',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_9', 'IN_cbse_10'],
+                            examples: ['Data: 2,4,6,8,10 → mean = 30/5 = 6'],
+                            tags: ['statistics', 'mean', 'average']
+                        },
+                        {
+                            id: 'formula_stat_002',
+                            title: 'Median (Odd n)',
+                            latex: '\\text{Median} = x_{(n+1)/2}',
+                            description: 'For odd number of observations, median is the middle value when sorted.',
+                            category: 'statistics',
+                            difficulty: 'easy',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_9', 'IN_cbse_10'],
+                            examples: ['Data: 3,5,7,9,11 → n=5 → median = 7 (3rd value)'],
+                            tags: ['statistics', 'median']
+                        },
+                        {
+                            id: 'formula_stat_003',
+                            title: 'Median (Even n)',
+                            latex: '\\text{Median} = \\frac{x_{n/2} + x_{(n/2)+1}}{2}',
+                            description: 'For even number of observations, median is average of two middle values.',
+                            category: 'statistics',
+                            difficulty: 'easy',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_9', 'IN_cbse_10'],
+                            examples: ['Data: 2,4,6,8 → median = (4+6)/2 = 5'],
+                            tags: ['statistics', 'median']
+                        },
+                        {
+                            id: 'formula_stat_004',
+                            title: 'Mode',
+                            latex: '\\text{Mode} = \\text{value with highest frequency}',
+                            description: 'Mode is the value that appears most frequently in a data set.',
+                            category: 'statistics',
+                            difficulty: 'easy',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_9', 'IN_cbse_10'],
+                            examples: ['Data: 1,2,2,2,3,4 → mode = 2'],
+                            tags: ['statistics', 'mode']
+                        },
+                        {
+                            id: 'formula_stat_005',
+                            title: 'Range',
+                            latex: 'R = x_{max} - x_{min}',
+                            description: 'Range is the difference between the maximum and minimum values.',
+                            category: 'statistics',
+                            difficulty: 'easy',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_9', 'IN_cbse_10'],
+                            examples: ['Data: 10,20,30,40,50 → range = 50-10 = 40'],
+                            tags: ['statistics', 'range']
+                        },
+                        {
+                            id: 'formula_stat_006',
+                            title: 'Standard Deviation',
+                            latex: '\\sigma = \\sqrt{\\frac{\\sum (x_i - \\bar{x})^2}{n}}',
+                            description: 'Standard deviation measures the spread of data around the mean.',
+                            category: 'statistics',
+                            difficulty: 'hard',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_11'],
+                            examples: ['Data: 2,4,6 → mean=4, σ=√((4+0+4)/3) = √(8/3) ≈ 1.63'],
+                            tags: ['statistics', 'standard-deviation', 'spread']
+                        }
+                    ]
+                },
+                chap_07: {
+                    name: 'Probability',
+                    formulas: [
+                        {
+                            id: 'formula_prob_001',
+                            title: 'Classical Probability',
+                            latex: 'P(E) = \\frac{\\text{Number of favorable outcomes}}{\\text{Total number of outcomes}}',
+                            description: 'Probability of an event equals favorable outcomes divided by total possible outcomes.',
+                            category: 'probability',
+                            difficulty: 'easy',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_9', 'IN_cbse_10'],
+                            examples: ['Coin toss: P(heads) = 1/2', 'Die roll: P(6) = 1/6'],
+                            tags: ['probability', 'classical']
+                        },
+                        {
+                            id: 'formula_prob_002',
+                            title: 'Probability Range',
+                            latex: '0 \\leq P(E) \\leq 1',
+                            description: 'Probability of any event is always between 0 (impossible) and 1 (certain).',
+                            category: 'probability',
+                            difficulty: 'easy',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_9', 'IN_cbse_10'],
+                            examples: ['P(sun rising) = 1', 'P(rolling 7 on die) = 0'],
+                            tags: ['probability', 'axioms']
+                        },
+                        {
+                            id: 'formula_prob_003',
+                            title: 'Complement of Event',
+                            latex: 'P(\\bar{E}) = 1 - P(E)',
+                            description: 'Probability of an event NOT happening equals 1 minus probability of it happening.',
+                            category: 'probability',
+                            difficulty: 'easy',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_9', 'IN_cbse_10'],
+                            examples: ['P(not 6 on die) = 1 - 1/6 = 5/6'],
+                            tags: ['probability', 'complement']
+                        },
+                        {
+                            id: 'formula_prob_004',
+                            title: 'Addition Rule (Mutually Exclusive)',
+                            latex: 'P(A \\cup B) = P(A) + P(B)',
+                            description: 'For mutually exclusive events, probability of A or B equals sum of individual probabilities.',
+                            category: 'probability',
+                            difficulty: 'intermediate',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_10', 'IN_cbse_11'],
+                            examples: ['P(2 or 5 on die) = 1/6 + 1/6 = 1/3'],
+                            tags: ['probability', 'addition-rule']
+                        },
+                        {
+                            id: 'formula_prob_005',
+                            title: 'Addition Rule (General)',
+                            latex: 'P(A \\cup B) = P(A) + P(B) - P(A \\cap B)',
+                            description: 'For non-mutually exclusive events, subtract the overlap to avoid double counting.',
+                            category: 'probability',
+                            difficulty: 'intermediate',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_10', 'IN_cbse_11'],
+                            examples: ['P(king or heart from deck) = 4/52 + 13/52 - 1/52 = 16/52 = 4/13'],
+                            tags: ['probability', 'addition-rule', 'inclusion-exclusion']
+                        },
+                        {
+                            id: 'formula_prob_006',
+                            title: 'Multiplication Rule (Independent)',
+                            latex: 'P(A \\cap B) = P(A) \\times P(B)',
+                            description: 'For independent events, probability of both A and B equals product of their probabilities.',
+                            category: 'probability',
+                            difficulty: 'intermediate',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_10', 'IN_cbse_11'],
+                            examples: ['P(heads twice) = ½ × ½ = ¼'],
+                            tags: ['probability', 'multiplication-rule', 'independent']
+                        }
+                    ]
                 }
             }
         },
@@ -608,6 +839,83 @@ async function seedFormulas() {
                             tags: ['physics', 'energy', 'conservation']
                         }
                     ]
+                },
+                chap_05: {
+                    name: 'Sound',
+                    formulas: [
+                        {
+                            id: 'formula_sound_001',
+                            title: 'Speed of Sound',
+                            latex: 'v = f\\lambda',
+                            description: 'Speed of sound equals frequency times wavelength.',
+                            category: 'waves',
+                            difficulty: 'easy',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_9', 'IN_cbse_11'],
+                            examples: ['f=440Hz, λ=0.78m: v=440×0.78≈343 m/s'],
+                            tags: ['physics', 'sound', 'waves', 'speed']
+                        },
+                        {
+                            id: 'formula_sound_002',
+                            title: 'Frequency and Period',
+                            latex: 'f = \\frac{1}{T}',
+                            description: 'Frequency is the reciprocal of the time period of a wave.',
+                            category: 'waves',
+                            difficulty: 'easy',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_9', 'IN_cbse_11'],
+                            examples: ['T=0.02s → f=50Hz'],
+                            tags: ['physics', 'sound', 'frequency', 'period']
+                        },
+                        {
+                            id: 'formula_sound_003',
+                            title: 'Amplitude and Loudness',
+                            latex: 'L \\propto A^2',
+                            description: 'Loudness (intensity) of sound is proportional to the square of amplitude.',
+                            category: 'waves',
+                            difficulty: 'easy',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_9'],
+                            examples: ['Doubling amplitude → 4× louder'],
+                            tags: ['physics', 'sound', 'amplitude', 'loudness']
+                        },
+                        {
+                            id: 'formula_sound_004',
+                            title: 'Echo Distance',
+                            latex: 'd = \\frac{v \\times t}{2}',
+                            description: 'Distance to reflecting surface equals speed times total time divided by 2.',
+                            category: 'waves',
+                            difficulty: 'intermediate',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_9'],
+                            examples: ['v=343m/s, t=0.5s: d=343×0.5/2=85.75m'],
+                            tags: ['physics', 'sound', 'echo']
+                        },
+                        {
+                            id: 'formula_sound_005',
+                            title: 'Doppler Effect (Approaching)',
+                            latex: "f' = f\\frac{v}{v - v_s}",
+                            description: 'Observed frequency when source moves toward stationary observer. v=speed of sound, vs=source speed.',
+                            category: 'waves',
+                            difficulty: 'hard',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_11'],
+                            examples: ['f=500Hz, vs=30m/s, v=343m/s: f\' = 500×343/(343-30) ≈ 548Hz'],
+                            tags: ['physics', 'sound', 'doppler-effect']
+                        },
+                        {
+                            id: 'formula_sound_006',
+                            title: 'Doppler Effect (Receding)',
+                            latex: "f' = f\\frac{v}{v + v_s}",
+                            description: 'Observed frequency when source moves away from stationary observer.',
+                            category: 'waves',
+                            difficulty: 'hard',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_11'],
+                            examples: ['f=500Hz, vs=30m/s: f\' = 500×343/(343+30) ≈ 460Hz'],
+                            tags: ['physics', 'sound', 'doppler-effect']
+                        }
+                    ]
                 }
             }
         },
@@ -676,6 +984,136 @@ async function seedFormulas() {
                             audiences: ['IN_cbse_11'],
                             examples: ['Balmer series: n₁=2, n₂=3,4,5... gives visible lines'],
                             tags: ['chemistry', 'atomic-structure', 'spectrum']
+                        }
+                    ]
+                },
+                chap_02: {
+                    name: 'Chemical Bonding',
+                    formulas: [
+                        {
+                            id: 'formula_cb_001',
+                            title: 'Octet Rule',
+                            latex: '\\text{Atoms gain/lose/share e}^- \\text{ to achieve } 1s^2 2s^2 2p^6',
+                            description: 'Atoms tend to bond to achieve 8 valence electrons (noble gas configuration).',
+                            category: 'bonding',
+                            difficulty: 'easy',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_9', 'IN_cbse_10'],
+                            examples: ['Na (2,8,1) loses 1e⁻ → Na⁺ (2,8) octet'],
+                            tags: ['chemistry', 'bonding', 'octet-rule']
+                        },
+                        {
+                            id: 'formula_cb_002',
+                            title: 'Ionic Bond Energy',
+                            latex: 'E \\propto \\frac{q_1 q_2}{r}',
+                            description: 'Ionic bond energy is proportional to product of charges and inversely proportional to distance.',
+                            category: 'bonding',
+                            difficulty: 'intermediate',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_11'],
+                            examples: ['Na⁺Cl⁻: high lattice energy due to +1 and -1 charges'],
+                            tags: ['chemistry', 'bonding', 'ionic']
+                        },
+                        {
+                            id: 'formula_cb_003',
+                            title: 'Covalent Bond Order',
+                            latex: '\\text{Bond Order} = \\frac{\\text{ bonding e}^- - \\text{ antibonding e}^-}{2}',
+                            description: 'Bond order indicates bond strength and stability. Higher value = stronger bond.',
+                            category: 'bonding',
+                            difficulty: 'hard',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_11'],
+                            examples: ['O₂: BO = (10-6)/2 = 2 (double bond)'],
+                            tags: ['chemistry', 'bonding', 'covalent', 'bond-order']
+                        },
+                        {
+                            id: 'formula_cb_004',
+                            title: 'Electronegativity Difference',
+                            latex: '\\Delta EN = |EN_A - EN_B|',
+                            description: 'Difference in electronegativity determines bond type: >1.7 ionic, <1.7 covalent.',
+                            category: 'bonding',
+                            difficulty: 'intermediate',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_11'],
+                            examples: ['Na(0.9) - Cl(3.0): ΔEN=2.1 → ionic bond'],
+                            tags: ['chemistry', 'bonding', 'electronegativity']
+                        },
+                        {
+                            id: 'formula_cb_005',
+                            title: 'Lewis Dot Structure Rule',
+                            latex: 'V + S - C = N',
+                            description: 'Total valence electrons (V) + subtracted (S) - charge (C) = needed electrons (N) for Lewis structure.',
+                            category: 'bonding',
+                            difficulty: 'hard',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_11'],
+                            examples: ['CO₂: V=4+12=16, N=4+16=20, 16-20=-4 → 2 double bonds'],
+                            tags: ['chemistry', 'bonding', 'lewis-structures']
+                        }
+                    ]
+                },
+                chap_03: {
+                    name: 'Periodic Table',
+                    formulas: [
+                        {
+                            id: 'formula_pt_001',
+                            title: 'Periodic Trend - Atomic Radius',
+                            latex: 'r \\downarrow \\text{ across period}, r \\uparrow \\text{ down group}',
+                            description: 'Atomic radius decreases left to right (increasing nuclear charge) and increases down a group (more shells).',
+                            category: 'periodic-trends',
+                            difficulty: 'easy',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_10', 'IN_cbse_11'],
+                            examples: ['Li>Be>B>C>N>O>F (decreases across), Li<Na<K<Rb<Cs (increases down)'],
+                            tags: ['chemistry', 'periodic-table', 'atomic-radius']
+                        },
+                        {
+                            id: 'formula_pt_002',
+                            title: 'Periodic Trend - Ionization Energy',
+                            latex: 'IE \\uparrow \\text{ across period}, IE \\downarrow \\text{ down group}',
+                            description: 'Ionization energy increases across a period and decreases down a group.',
+                            category: 'periodic-trends',
+                            difficulty: 'easy',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_10', 'IN_cbse_11'],
+                            examples: ['He (2372 kJ/mol) > Ne (2080) > Ar (1520)'],
+                            tags: ['chemistry', 'periodic-table', 'ionization-energy']
+                        },
+                        {
+                            id: 'formula_pt_003',
+                            title: 'Periodic Trend - Electronegativity',
+                            latex: 'EN \\uparrow \\text{ across period}, EN \\downarrow \\text{ down group}',
+                            description: 'Electronegativity increases left to right and decreases top to bottom.',
+                            category: 'periodic-trends',
+                            difficulty: 'easy',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_10', 'IN_cbse_11'],
+                            examples: ['F(4.0) > O(3.5) > N(3.0) > C(2.5)'],
+                            tags: ['chemistry', 'periodic-table', 'electronegativity']
+                        },
+                        {
+                            id: 'formula_pt_004',
+                            title: 'Effective Nuclear Charge',
+                            latex: 'Z_{eff} = Z - S',
+                            description: 'Effective nuclear charge equals actual nuclear charge minus shielding constant.',
+                            category: 'periodic-trends',
+                            difficulty: 'hard',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_11'],
+                            examples: ['Li: Z=3, S≈1.7, Zeff≈1.3; F: Z=9, S≈4.8, Zeff≈4.2'],
+                            tags: ['chemistry', 'periodic-table', 'nuclear-charge']
+                        },
+                        {
+                            id: 'formula_pt_005',
+                            title: 'Mendeleev\'s Periodic Law',
+                            latex: '\\text{Properties} \\propto \\text{Atomic Mass (recurring pattern)}',
+                            description: 'Elements arranged by atomic mass show recurring (periodic) properties.',
+                            category: 'periodic-table',
+                            difficulty: 'easy',
+                            isGeneralContent: true,
+                            audiences: ['IN_cbse_10'],
+                            examples: ['Groups have similar properties: alkali metals, halogens, noble gases'],
+                            tags: ['chemistry', 'periodic-table', 'mendeleev']
                         }
                     ]
                 },
@@ -1007,6 +1445,7 @@ async function seedFormulas() {
     };
 
     let totalFormulas = 0;
+    const flatFormulas = [];
 
     for (const [subjectId, subjectData] of Object.entries(formulaData)) {
         console.log(`\n${subjectData.name}`);
@@ -1028,6 +1467,13 @@ async function seedFormulas() {
                     updatedAt: admin.firestore.FieldValue.serverTimestamp()
                 });
 
+                flatFormulas.push({
+                    id: formula.id,
+                    title: formula.title,
+                    topic: chapterData.name,
+                    published: true
+                });
+
                 operationCount++;
                 totalFormulas++;
 
@@ -1046,7 +1492,21 @@ async function seedFormulas() {
         }
     }
 
-    console.log(`\nSeeded ${totalFormulas} formulas successfully!\n`);
+    console.log(`\nWriting ${flatFormulas.length} formulas to flat collection...`);
+    const flatBatch = db.batch();
+    for (const entry of flatFormulas) {
+        const ref = db.collection('formulas').doc(entry.id);
+        flatBatch.set(ref, {
+            id: entry.id,
+            title: entry.title,
+            topic: entry.topic,
+            published: entry.published,
+            updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+    }
+    await flatBatch.commit();
+
+    console.log(`Seeded ${totalFormulas} formulas successfully!\n`);
 }
 
 seedFormulas().catch(err => {

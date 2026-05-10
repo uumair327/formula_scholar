@@ -1,0 +1,140 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─── Helper functions ──────────────────────────────────────
+    function isAuth() { return request.auth != null; }
+
+    function getRole() {
+      return isAuth() && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role
+      );
+    }
+
+    function isAdmin() { return getRole() in ['SUPER_ADMIN', 'admin']; }
+    function isRegistrar() { return getRole() in ['SUPER_ADMIN', 'admin', 'REGISTRAR']; }
+    function isModerator() { return getRole() in ['SUPER_ADMIN', 'admin', 'moderator']; }
+    function isEditor() { return getRole() in ['SUPER_ADMIN', 'admin', 'EDITOR']; }
+
+    // ─── Public content — anyone can read ───────────────────────
+    match /countries/{document} {
+      allow read: if true;
+      allow write: if isRegistrar();
+      match /states/{state} {
+        allow read: if true;
+        allow write: if isRegistrar();
+      }
+    }
+
+    match /boards/{document} {
+      allow read: if true;
+      allow write: if isRegistrar();
+      match /classes/{class} {
+        allow read: if true;
+        allow write: if isRegistrar();
+      }
+    }
+
+    match /subjects/{document} {
+      allow read: if true;
+      allow write: if isRegistrar();
+      match /chapters/{chapter} {
+        allow read: if true;
+        allow write: if isEditor();
+        match /formulas/{formula} {
+          allow read: if true;
+          allow write: if isEditor();
+        }
+      }
+      match /mastery_tools/{tool} {
+        allow read: if true;
+        allow write: if isEditor();
+      }
+    }
+
+    match /practice_questions/{document} {
+      allow read: if true;
+      allow write: if isEditor();
+    }
+
+    match /canonical_chapters/{document} {
+      allow read: if true;
+      allow write: if isRegistrar();
+    }
+
+    match /canonical_formulas/{document} {
+      allow read: if true;
+      allow write: if isRegistrar();
+    }
+
+    match /feature_flags/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ─── Dashboard governance — authenticated read, admin write ──
+    match /dashboard_curriculum_registry/{document} {
+      allow read: if isAuth();
+      allow write: if isRegistrar();
+    }
+
+    match /dashboard_content_registry/{document} {
+      allow read: if isAuth();
+      allow write: if isRegistrar();
+    }
+
+    match /dashboard_governance_audit/{document} {
+      allow read: if isAuth();
+      allow write: if isAuth();
+    }
+
+    match /dashboard_seed_status/{document} {
+      allow read: if isAuth();
+      allow write: if isAdmin();
+    }
+
+    // ─── Dashboard-managed app data — editor write ────────────
+    match /practice_settings/{document} {
+      allow read: if isAuth();
+      allow write: if isEditor();
+    }
+
+    match /app_banners/{document} {
+      allow read: if isAuth();
+      allow write: if isEditor();
+    }
+
+    match /forum_posts/{document} {
+      allow read: if isAuth();
+      allow write: if isEditor();
+    }
+
+    match /video_tutorials/{document} {
+      allow read: if isAuth();
+      allow write: if isEditor();
+    }
+
+    // ─── User management — role-based ─────────────────────────
+    match /users/{userId} {
+      allow read: if isAuth();
+      allow write: if isAuth() && (
+        request.auth.uid == userId ||
+        isAdmin()
+      );
+      allow create: if isAuth();
+
+      // User-scoped saved_notes — self-write, moderator-read
+      match /saved_notes/{noteId} {
+        allow read: if isAuth();
+        allow write: if request.auth.uid == userId || isAdmin();
+      }
+    }
+
+    match /moderator_applications/{document} {
+      allow read: if isModerator();
+      allow write: if isAuth();
+      allow create: if isAuth();
+    }
+  }
+}

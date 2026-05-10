@@ -33,20 +33,20 @@ async function seedRegistry() {
             year: 2024,
             name: 'CBSE Class 10 (2024)',
             subjects: ['math_001', 'physics_001', 'chemistry_001', 'biology_001'],
-            totalChapters: 7,
-            totalFormulas: 22,
-            totalQuestions: 14,
+            totalChapters: 17,
+            totalFormulas: 107,
+            totalQuestions: 18,
             status: 'published',
             publishedAt: new Date('2026-01-15').toISOString(),
             lastUpdatedAt: new Date().toISOString(),
             coverage: {
-                formulas: 22,
-                quizzes: 4,
-                practiceQuestions: 14
+                formulas: 107,
+                quizzes: 7,
+                practiceQuestions: 18
             },
             stats: {
                 averageDifficulty: 'intermediate',
-                estimatedCompletionHours: 40,
+                estimatedCompletionHours: 60,
                 activeStudents: 0
             }
         },
@@ -57,20 +57,20 @@ async function seedRegistry() {
             year: 2024,
             name: 'CBSE Class 11 (2024)',
             subjects: ['math_001', 'physics_001', 'chemistry_001', 'biology_001'],
-            totalChapters: 7,
-            totalFormulas: 22,
-            totalQuestions: 14,
+            totalChapters: 17,
+            totalFormulas: 107,
+            totalQuestions: 18,
             status: 'published',
             publishedAt: new Date('2026-02-01').toISOString(),
             lastUpdatedAt: new Date().toISOString(),
             coverage: {
-                formulas: 22,
-                quizzes: 4,
-                practiceQuestions: 14
+                formulas: 107,
+                quizzes: 7,
+                practiceQuestions: 18
             },
             stats: {
                 averageDifficulty: 'hard',
-                estimatedCompletionHours: 50,
+                estimatedCompletionHours: 75,
                 activeStudents: 0
             }
         },
@@ -81,20 +81,20 @@ async function seedRegistry() {
             year: 2024,
             name: 'ICSE Class 10 (2024)',
             subjects: ['math_001', 'physics_001', 'chemistry_001'],
-            totalChapters: 5,
-            totalFormulas: 17,
-            totalQuestions: 10,
+            totalChapters: 13,
+            totalFormulas: 92,
+            totalQuestions: 16,
             status: 'published',
             publishedAt: new Date('2026-01-20').toISOString(),
             lastUpdatedAt: new Date().toISOString(),
             coverage: {
-                formulas: 17,
-                quizzes: 3,
-                practiceQuestions: 10
+                formulas: 92,
+                quizzes: 5,
+                practiceQuestions: 16
             },
             stats: {
                 averageDifficulty: 'intermediate',
-                estimatedCompletionHours: 35,
+                estimatedCompletionHours: 55,
                 activeStudents: 0
             }
         },
@@ -105,20 +105,20 @@ async function seedRegistry() {
             year: 2024,
             name: 'MSBSHSE Class 10 (2024)',
             subjects: ['math_001', 'physics_001', 'chemistry_001'],
-            totalChapters: 5,
-            totalFormulas: 17,
-            totalQuestions: 10,
+            totalChapters: 13,
+            totalFormulas: 92,
+            totalQuestions: 16,
             status: 'published',
             publishedAt: new Date('2026-01-15').toISOString(),
             lastUpdatedAt: new Date().toISOString(),
             coverage: {
-                formulas: 17,
-                quizzes: 3,
-                practiceQuestions: 10
+                formulas: 92,
+                quizzes: 5,
+                practiceQuestions: 16
             },
             stats: {
                 averageDifficulty: 'intermediate',
-                estimatedCompletionHours: 35,
+                estimatedCompletionHours: 55,
                 activeStudents: 0
             }
         }
@@ -342,9 +342,9 @@ async function seedRegistry() {
         { key: 'grades', label: 'Grades / Classes', collectionPath: 'boards/{boardId}/classes', nodeCount: 27, status: 'active', writeEnabled: true, lastSyncedAt: generatedAt },
         { key: 'subjects', label: 'Subjects', collectionPath: 'subjects', nodeCount: 4, status: 'active', writeEnabled: true, lastSyncedAt: generatedAt },
         { key: 'chapters', label: 'Chapters', collectionPath: 'subjects/{subjectId}/chapters', nodeCount: 17, status: 'active', writeEnabled: true, lastSyncedAt: generatedAt },
-        { key: 'formulas', label: 'Formulas', collectionPath: 'subjects/{subjectId}/chapters/{chapterId}/formulas', nodeCount: 74, status: 'active', writeEnabled: true, lastSyncedAt: generatedAt },
+        { key: 'formulas', label: 'Formulas', collectionPath: 'subjects/{subjectId}/chapters/{chapterId}/formulas', nodeCount: 107, status: 'active', writeEnabled: true, lastSyncedAt: generatedAt },
         { key: 'mastery-tools', label: 'Mastery Tools', collectionPath: 'subjects/{subjectId}/mastery_tools', nodeCount: 4, status: 'active', writeEnabled: true, lastSyncedAt: generatedAt },
-        { key: 'practice-questions', label: 'Practice Questions', collectionPath: 'practice_questions', nodeCount: 22, status: 'active', writeEnabled: true, lastSyncedAt: generatedAt },
+        { key: 'practice-questions', label: 'Practice Questions', collectionPath: 'practice_questions', nodeCount: 20, status: 'active', writeEnabled: true, lastSyncedAt: generatedAt },
         { key: 'saved-notes', label: 'Saved Notes', collectionPath: 'saved_notes', nodeCount: 0, status: 'active', writeEnabled: true, lastSyncedAt: generatedAt }
     ];
 

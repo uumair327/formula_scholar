@@ -56,6 +56,11 @@ const scripts = [
         stage: 'Dashboard'
     },
     {
+        name: 'seed_extra_quizzes.js',
+        description: 'Extra quizzes for all chapters + cleanup',
+        stage: 'Content'
+    },
+    {
         name: 'seed_status.js',
         description: 'Dashboard seed/sync metadata',
         stage: 'Dashboard'
@@ -163,8 +168,10 @@ if (failureCount === 0) {
     console.log(`✅ ALL SEEDERS COMPLETED SUCCESSFULLY!`);
     console.log(`\nYour database is now populated with production-level data:`);
     console.log(`   • 4 subjects (Math, Physics, Chemistry, Biology)`);
-    console.log(`   • 74 formulas with LaTeX rendering across all chapters`);
-    console.log(`   • 5 quizzes with practice questions`);
+    console.log(`   • 141 formulas with LaTeX rendering across all 17 chapters`);
+    console.log(`   • 20 quizzes with 45 practice questions`);
+    console.log(`   • All 28 states + 8 UTs of India`);
+    console.log(`   • 9 boards (CBSE, ICSE, MSBSHSE + 5 state boards)`);
     console.log(`   • Curriculum registry for CBSE/ICSE/MSBSHSE boards`);
     console.log(`   • Content registry with learning outcomes`);
     console.log(`   • Dashboard-ready metadata`);
