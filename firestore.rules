@@ -129,12 +129,78 @@ service cloud.firestore {
         allow read: if isAuth();
         allow write: if request.auth.uid == userId || isAdmin();
       }
+
+      // User-scoped bookmarks — self-only
+      match /bookmarks/{document} {
+        allow read: if request.auth.uid == userId;
+        allow write: if request.auth.uid == userId;
+      }
+
+      // User-scoped saved_chapters with nested subjects subcollection
+      match /saved_chapters/{curriculumKey} {
+        allow read: if request.auth.uid == userId;
+        allow write: if request.auth.uid == userId;
+        match /subjects/{subjectId} {
+          allow read: if request.auth.uid == userId;
+          allow write: if request.auth.uid == userId;
+        }
+      }
+
+      // User-scoped stats
+      match /stats/{document} {
+        allow read: if request.auth.uid == userId;
+        allow write: if request.auth.uid == userId;
+      }
+
+      // User-scoped progress
+      match /progress/{document} {
+        allow read: if request.auth.uid == userId;
+        allow write: if request.auth.uid == userId;
+        match /chapters/{chapter} {
+          allow read: if request.auth.uid == userId;
+          allow write: if request.auth.uid == userId;
+        }
+        match /formulas/{formula} {
+          allow read: if request.auth.uid == userId;
+          allow write: if request.auth.uid == userId;
+        }
+      }
+
+      // User-scoped progress_summary
+      match /progress_summary/{document} {
+        allow read: if request.auth.uid == userId;
+        allow write: if request.auth.uid == userId;
+      }
+
+      // User-scoped recent_studies
+      match /recent_studies/{document} {
+        allow read: if request.auth.uid == userId;
+        allow write: if request.auth.uid == userId;
+      }
     }
 
     match /moderator_applications/{document} {
       allow read: if isModerator();
       allow write: if isAuth();
       allow create: if isAuth();
+    }
+
+    // ─── Dashboard command queue — auth write, admin read ──────
+    match /dashboard_commands/{document} {
+      allow read: if isAdmin();
+      allow write: if isAuth();
+    }
+
+    // ─── Runtime settings — editor write, auth read ────────────
+    match /runtime_settings/{document} {
+      allow read: if isAuth();
+      allow write: if isEditor();
+    }
+
+    // ─── Module registry — editor write, auth read ─────────────
+    match /module_registry/{document} {
+      allow read: if isAuth();
+      allow write: if isEditor();
     }
   }
 }

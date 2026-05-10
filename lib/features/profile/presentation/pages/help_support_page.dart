@@ -121,6 +121,7 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
                   icon: LucideIcons.book,
                   title: AppStrings.userGuide,
                   subtitle: AppStrings.userGuideDesc,
+                  onTap: () => ComingSoonSheet.show(context, featureName: AppStrings.userGuide),
                 ),
                 const SizedBox(height: AppDimensions.paddingMD),
                 _buildResourceTile(
@@ -128,6 +129,7 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
                   icon: LucideIcons.video,
                   title: AppStrings.videoTutorials,
                   subtitle: AppStrings.videoTutorialsDesc,
+                  onTap: () => ComingSoonSheet.show(context, featureName: AppStrings.videoTutorials),
                 ),
                 const SizedBox(height: AppDimensions.paddingMD),
                 _buildResourceTile(
@@ -423,9 +425,14 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
       return;
     }
 
-    final subtitle = label == AppStrings.chatWithUs
-        ? 'Get help from the support team with common account and learning issues.'
-        : 'Copy the support email so you can reach us directly from your inbox.';
+    if (label == AppStrings.chatWithUs) {
+      ComingSoonSheet.show(context, featureName: AppStrings.chatWithUs);
+      return;
+    }
+
+    final subtitle = label == AppStrings.emailUs
+        ? 'Copy the support email so you can reach us directly from your inbox.'
+        : '';
 
     SupportContactSheet.show(
       context,
@@ -436,25 +443,7 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
   }
 
   void _handleResourceTap(BuildContext context, String title) {
-    if (title == AppStrings.userGuide || title == AppStrings.videoTutorials) {
-      SupportContactSheet.show(
-        context,
-        title: title,
-        subtitle:
-            'These learning resources are curated from the live app flow. '
-            'Use the FAQ and contact sheet while the richer resource library is being expanded.',
-        email: 'support@formulascholar.app',
-      );
-      return;
-    }
-
-    SupportContactSheet.show(
-      context,
-      title: title,
-      subtitle:
-          'This resource is being expanded. Contact support for immediate guidance and access help.',
-      email: 'support@formulascholar.app',
-    );
+    ComingSoonSheet.show(context, featureName: title);
   }
 
   void _scrollToFaq() {

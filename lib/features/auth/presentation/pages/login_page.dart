@@ -7,7 +7,6 @@ import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
 import '../cubit/auth_cubit.dart';
 import '../widgets/forgot_password_dialog.dart';
-import '../../../profile/presentation/widgets/support_contact_sheet.dart';
 
 /// Login page — the entry-point of the app before onboarding / dashboard.
 ///
@@ -567,13 +566,9 @@ class _FormContent extends StatelessWidget {
                 child: _SocialButton(
                   label: AppStrings.loginSchoolId,
                   icon: LucideIcons.graduationCap,
-                  onTap: () => SupportContactSheet.show(
+                  onTap: () => ComingSoonSheet.show(
                     context,
-                    title: AppStrings.loginSchoolId,
-                    subtitle:
-                        'School-ID sign-in is managed by your institution. '
-                        'Use this support channel to request the right setup steps.',
-                    email: 'support@formulascholar.app',
+                    featureName: AppStrings.loginSchoolId,
                   ),
                 ),
               ),
