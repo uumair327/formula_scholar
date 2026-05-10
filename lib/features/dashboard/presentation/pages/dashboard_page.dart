@@ -1088,12 +1088,23 @@ class DashboardPage extends StatelessWidget {
                       ),
                       boxShadow: const [AppShadows.subtle],
                     ),
-                    child: Center(
-                      child: Icon(
-                        LucideIcons.plus,
-                        size: AppDimensions.iconLG,
-                        color: colorScheme.outline,
-                      ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          LucideIcons.plus,
+                          size: AppDimensions.iconLG,
+                          color: colorScheme.outline,
+                        ),
+                        const SizedBox(height: AppDimensions.paddingXXS),
+                        Text(
+                          'Add',
+                          style: AppTextStyles.labelSmall.copyWith(
+                            color: colorScheme.outline,
+                            fontSize: AppDimensions.fontSizeXS,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -1215,58 +1226,63 @@ class DashboardPage extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppDimensions.paddingLG),
-        ...state.recentStudies.map((study) {
+        ...state.recentStudies.asMap().entries.map((entry) {
+          final index = entry.key;
+          final study = entry.value;
           final iconData = AppIconMapper.resolve(study.iconName);
           final accentColor = Color(study.colorValue);
           final bgColor = Color(study.backgroundColorValue);
 
-          return Padding(
-            padding: const EdgeInsets.only(bottom: AppDimensions.paddingMD),
-            child: Material(
-              color: AppColors.transparent,
-              child: InkWell(
-                onTap: () {
-                  _onRecentStudyTap(context, state, study);
-                },
-                borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
-                child: AppCard(
-                  padding: const EdgeInsets.all(AppDimensions.paddingLG),
-                  child: Row(
-                    children: [
-                      AppIconCircle(
-                        icon: iconData,
-                        size: AppDimensions.avatarLG,
-                        backgroundColor: bgColor,
-                        iconColor: accentColor,
-                        iconSize: AppDimensions.iconLG,
-                      ),
-                      const SizedBox(width: AppDimensions.paddingLG),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              study.title,
-                              style: AppTextStyles.labelLarge,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: AppDimensions.paddingXXS),
-                            Text(
-                              '${study.subject} • ${study.lastViewed}',
-                              style: AppTextStyles.bodySmall.copyWith(
-                                color: colorScheme.onSurfaceVariant,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
+          return EntranceWrapper(
+            delay: Duration(milliseconds: index * 60),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: AppDimensions.paddingMD),
+              child: Material(
+                color: AppColors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    _onRecentStudyTap(context, state, study);
+                  },
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+                  child: AppCard(
+                    padding: const EdgeInsets.all(AppDimensions.paddingLG),
+                    child: Row(
+                      children: [
+                        AppIconCircle(
+                          icon: iconData,
+                          size: AppDimensions.avatarLG,
+                          backgroundColor: bgColor,
+                          iconColor: accentColor,
+                          iconSize: AppDimensions.iconLG,
                         ),
-                      ),
-                      Icon(
-                        LucideIcons.chevronRight,
-                        size: AppDimensions.iconMD,
-                        color: colorScheme.outline,
-                      ),
-                    ],
+                        const SizedBox(width: AppDimensions.paddingLG),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                study.title,
+                                style: AppTextStyles.labelLarge,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: AppDimensions.paddingXXS),
+                              Text(
+                                '${study.subject} • ${study.lastViewed}',
+                                style: AppTextStyles.bodySmall.copyWith(
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(
+                          LucideIcons.chevronRight,
+                          size: AppDimensions.iconMD,
+                          color: colorScheme.outline,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
