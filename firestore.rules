@@ -34,6 +34,10 @@ service cloud.firestore {
         allow read: if true;
         allow write: if isRegistrar();
       }
+      match /grades/{grade} {
+        allow read: if true;
+        allow write: if isRegistrar();
+      }
     }
 
     match /subjects/{document} {
@@ -43,6 +47,14 @@ service cloud.firestore {
         allow read: if true;
         allow write: if isEditor();
         match /formulas/{formula} {
+          allow read: if true;
+          allow write: if isEditor();
+        }
+      }
+      match /quizzes/{quiz} {
+        allow read: if true;
+        allow write: if isEditor();
+        match /questions/{question} {
           allow read: if true;
           allow write: if isEditor();
         }
@@ -188,6 +200,12 @@ service cloud.firestore {
     // ─── Dashboard command queue — auth write, admin read ──────
     match /dashboard_commands/{document} {
       allow read: if isAdmin();
+      allow write: if isAuth();
+    }
+
+    // ─── Audit logs — auth write, moderator read ───────────────
+    match /audit_logs/{document} {
+      allow read: if isModerator();
       allow write: if isAuth();
     }
 

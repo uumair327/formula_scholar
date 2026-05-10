@@ -36,7 +36,7 @@ async function seedStatus() {
         status: 'healthy',
         lastSeededAt: new Date().toISOString(),
         datasetVersion: '2026.05.07',
-        pipeline: 'seed.js → seed_subjects.js → seed_formulas_enhanced.js → seed_practice_enhanced.js → seed_registry_enhanced.js → seed_status.js',
+        pipeline: 'seed.js → seed_subjects.js → seed_formulas_enhanced.js → seed_practice_enhanced.js → seed_registry_enhanced.js → seed_extra_quizzes.js → seed_status.js → seed_dashboard_meta.js → seed_app_content.js',
         collections: [
             'countries',
             'boards',
@@ -44,7 +44,19 @@ async function seedStatus() {
             'practice_questions',
             'dashboard_curriculum_registry',
             'dashboard_content_registry',
-            'dashboard_seed_status'
+            'dashboard_seed_status',
+            'practice_settings',
+            'runtime_settings',
+            'module_registry',
+            'dashboard_governance_audit',
+            'dashboard_commands',
+            'app_banners',
+            'forum_posts',
+            'video_tutorials',
+            'canonical_chapters',
+            'canonical_formulas',
+            'audit_logs',
+            'formulas'
         ]
     };
 
