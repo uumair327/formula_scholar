@@ -15,11 +15,15 @@ class DashboardCubit extends Cubit<DashboardState>
     required GetStudyProgressUseCase getStudyProgress,
     required GetSubjectsUseCase getSubjects,
     required GetRecentStudiesUseCase getRecentStudies,
+    required GetBannersUseCase getBanners,
+    required GetAnnouncementsUseCase getAnnouncements,
     required CurriculumCubit curriculumCubit,
     required ActivityRefreshCubit activityRefreshCubit,
   }) : _getStudyProgress = getStudyProgress,
        _getSubjects = getSubjects,
        _getRecentStudies = getRecentStudies,
+       _getBanners = getBanners,
+       _getAnnouncements = getAnnouncements,
        _curriculumCubit = curriculumCubit,
        _activityRefreshCubit = activityRefreshCubit,
        super(const DashboardState()) {
@@ -29,6 +33,8 @@ class DashboardCubit extends Cubit<DashboardState>
   final GetStudyProgressUseCase _getStudyProgress;
   final GetSubjectsUseCase _getSubjects;
   final GetRecentStudiesUseCase _getRecentStudies;
+  final GetBannersUseCase _getBanners;
+  final GetAnnouncementsUseCase _getAnnouncements;
   final CurriculumCubit _curriculumCubit;
   final ActivityRefreshCubit _activityRefreshCubit;
   late final StreamSubscription<CurriculumState> _curriculumSubscription;
@@ -102,10 +108,12 @@ class DashboardCubit extends Cubit<DashboardState>
       tag: AppLogTags.dashboardCubit,
     );
 
-    final (progressResult, subjectsResult, studiesResult) = await (
+    final (progressResult, subjectsResult, studiesResult, bannersResult, announcementsResult) = await (
       _getStudyProgress(),
       _getSubjects(curriculum.boardId, curriculum.gradeId),
       _getRecentStudies(),
+      _getBanners(),
+      _getAnnouncements(),
     ).wait;
 
     final progress = switch (progressResult) {
@@ -121,6 +129,16 @@ class DashboardCubit extends Cubit<DashboardState>
     final recentStudies = switch (studiesResult) {
       Success(:final data) => data,
       Error(:final failure) => logFailure('recent studies', failure),
+    };
+
+    final banners = switch (bannersResult) {
+      Success(:final data) => data,
+      Error(:final failure) => logFailure('banners', failure),
+    };
+
+    final announcements = switch (announcementsResult) {
+      Success(:final data) => data,
+      Error(:final failure) => logFailure('announcements', failure),
     };
 
     if (progress != null && subjects != null && recentStudies != null) {
@@ -141,6 +159,8 @@ class DashboardCubit extends Cubit<DashboardState>
           subjects: subjects,
           recentStudies: recentStudies,
           vaultItems: vaultItems,
+          banners: banners ?? const [],
+          announcements: announcements ?? const [],
           selectedBoardName: curriculum.boardName,
           selectedGradeName: curriculum.gradeLabel,
           errorMessage: null,

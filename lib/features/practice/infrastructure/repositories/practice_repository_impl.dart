@@ -5,14 +5,18 @@ import '../../domain/domain.dart';
 
 /// Concrete implementation of [PracticeRepositoryPort].
 ///
-/// Uses [safeOperation] for DRY error handling.
-/// Practice questions are relatively static content and could benefit
-/// from a cache port in the future for offline quiz access.
+/// Uses [safeOperation] for DRY error handling with [PracticeCachePort]
+/// fallback for offline-first behaviour when the backend is unreachable.
 @LazySingleton(as: PracticeRepositoryPort)
 class PracticeRepositoryImpl implements PracticeRepositoryPort {
-  const PracticeRepositoryImpl({required PracticeDataSourcePort dataSource})
-    : _dataSource = dataSource;
+  const PracticeRepositoryImpl({
+    required PracticeDataSourcePort dataSource,
+    required PracticeCachePort cache,
+  }) : _dataSource = dataSource,
+       _cache = cache;
+
   final PracticeDataSourcePort _dataSource;
+  final PracticeCachePort _cache;
 
   @override
   Future<Result<List<QuizQuestion>>> getQuestions({
@@ -23,12 +27,19 @@ class PracticeRepositoryImpl implements PracticeRepositoryPort {
     return safeOperation(
       tag: AppLogTags.practiceRepo,
       operation: 'getQuestions(board=$boardId, grade=$gradeId, subject=$subjectId)',
-      execute: () =>
-          _dataSource.getQuestions(
-            boardId: boardId, 
-            gradeId: gradeId,
-            subjectId: subjectId,
-          ),
+      execute: () async {
+        final result = await _dataSource.getQuestions(
+          boardId: boardId,
+          gradeId: gradeId,
+          subjectId: subjectId,
+        );
+        await _cache.cacheQuestions(boardId, gradeId, subjectId, result);
+        return result;
+      },
+      fallback: () async {
+        final cached = await _cache.getQuestions(boardId, gradeId, subjectId);
+        return cached.isNotEmpty ? cached : null;
+      },
     );
   }
 
@@ -41,8 +52,7 @@ class PracticeRepositoryImpl implements PracticeRepositoryPort {
   }) {
     return safeOperation(
       tag: AppLogTags.practiceRepo,
-      operation:
-          'recordQuizCompletion(board=$boardId, grade=$gradeId, points=$earnedPoints)',
+      operation: 'recordQuizCompletion(board=$boardId, grade=$gradeId, points=$earnedPoints)',
       execute: () => _dataSource.recordQuizCompletion(
         boardId: boardId,
         gradeId: gradeId,

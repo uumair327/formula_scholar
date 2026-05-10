@@ -68,4 +68,38 @@ class DashboardRepositoryImpl implements DashboardRepositoryPort {
       },
     );
   }
+
+  @override
+  Future<Result<List<CarouselItem>>> getBanners() {
+    return safeOperation(
+      tag: AppLogTags.dashboardRepo,
+      operation: 'getBanners',
+      execute: () async {
+        final result = await _dataSource.getBanners();
+        await _cache.cacheBanners(result);
+        return result;
+      },
+      fallback: () async {
+        final cached = await _cache.getBanners();
+        return cached.isNotEmpty ? cached : null;
+      },
+    );
+  }
+
+  @override
+  Future<Result<List<AppAnnouncement>>> getActiveAnnouncements() {
+    return safeOperation(
+      tag: AppLogTags.dashboardRepo,
+      operation: 'getActiveAnnouncements',
+      execute: () async {
+        final result = await _dataSource.getActiveAnnouncements();
+        await _cache.cacheAnnouncements(result);
+        return result;
+      },
+      fallback: () async {
+        final cached = await _cache.getAnnouncements();
+        return cached.isNotEmpty ? cached : null;
+      },
+    );
+  }
 }

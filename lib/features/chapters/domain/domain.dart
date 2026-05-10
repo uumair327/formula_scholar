@@ -7,6 +7,7 @@ export 'entities/mastery_tool.dart';
 export 'ports/chapters_cache_port.dart';
 export 'ports/chapters_repository_port.dart';
 export 'ports/chapters_data_source_port.dart';
+export 'ports/formulas_cache_port.dart';
 export 'ports/formulas_data_source_port.dart';
 export 'ports/formulas_repository_port.dart';
 export 'usecases/get_chapters_use_case.dart';

@@ -11,7 +11,7 @@ void main() {
 
     setUp(() {
       dataSource = _FakePracticeDataSource();
-      repository = PracticeRepositoryImpl(dataSource: dataSource);
+      repository = PracticeRepositoryImpl(dataSource: dataSource, cache: _FakePracticeCache());
     });
 
     test('forwards quiz completion payload to data source', () async {
@@ -60,5 +60,24 @@ class _FakePracticeDataSource implements PracticeDataSourcePort {
     lastGradeId = gradeId;
     lastEarnedPoints = earnedPoints;
     lastAnsweredQuestions = answeredQuestions;
+  }
+}
+
+class _FakePracticeCache implements PracticeCachePort {
+  @override
+  Future<void> cacheQuestions(
+    String boardId,
+    String gradeId,
+    String? subjectId,
+    List<QuizQuestion> questions,
+  ) async {}
+
+  @override
+  Future<List<QuizQuestion>> getQuestions(
+    String boardId,
+    String gradeId,
+    String? subjectId,
+  ) async {
+    return const <QuizQuestion>[];
   }
 }

@@ -8,6 +8,8 @@ class DashboardHiveCache implements DashboardCachePort {
   static const String _boxName = 'dashboard_cache';
   static const String _progressKey = 'study_progress';
   static const String _recentStudiesKey = 'recent_studies';
+  static const String _bannersKey = 'banners';
+  static const String _announcementsKey = 'announcements';
 
   Future<Box<dynamic>> _box() => Hive.openBox<dynamic>(_boxName);
 
@@ -51,6 +53,27 @@ class DashboardHiveCache implements DashboardCachePort {
               'masteryPercentage': subject.masteryPercentage,
               'lastViewed': subject.lastViewed,
               'isFeatured': subject.isFeatured,
+            },
+          )
+          .toList(),
+    );
+  }
+
+  @override
+  Future<void> cacheBanners(List<CarouselItem> banners) async {
+    final box = await _box();
+    await box.put(
+      _bannersKey,
+      banners
+          .map(
+            (b) => {
+              'id': b.id,
+              'title': b.title,
+              'imageUrl': b.imageUrl,
+              'link': b.link,
+              'isActive': b.isActive,
+              'displayOrder': b.displayOrder,
+              'bgColor': b.bgColor,
             },
           )
           .toList(),
@@ -121,6 +144,77 @@ class DashboardHiveCache implements DashboardCachePort {
             masteryPercentage: (item['masteryPercentage'] as num?)?.toDouble(),
             lastViewed: item['lastViewed'] as String?,
             isFeatured: item['isFeatured'] as bool? ?? false,
+          ),
+        )
+        .toList();
+  }
+
+  @override
+  Future<List<CarouselItem>> getBanners() async {
+    final box = await _box();
+    final cached = box.get(_bannersKey) as List<dynamic>?;
+    if (cached == null) {
+      return const [];
+    }
+
+    return cached
+        .whereType<Map>()
+        .map((item) => Map<String, dynamic>.from(item))
+        .map(
+          (item) => CarouselItem(
+            id: item['id'] as String? ?? '',
+            title: item['title'] as String? ?? '',
+            imageUrl: item['imageUrl'] as String? ?? '',
+            link: item['link'] as String? ?? '',
+            isActive: item['isActive'] as bool? ?? false,
+            displayOrder: item['displayOrder'] as int?,
+            bgColor: item['bgColor'] as String?,
+          ),
+        )
+        .toList();
+  }
+
+  @override
+  Future<void> cacheAnnouncements(List<AppAnnouncement> announcements) async {
+    final box = await _box();
+    await box.put(
+      _announcementsKey,
+      announcements
+          .map(
+            (a) => {
+              'id': a.id,
+              'title': a.title,
+              'message': a.message,
+              'priority': a.priority,
+              'status': a.status,
+              'publishAt': a.publishAt,
+              'expiresAt': a.expiresAt,
+            },
+          )
+          .toList(),
+    );
+  }
+
+  @override
+  Future<List<AppAnnouncement>> getAnnouncements() async {
+    final box = await _box();
+    final cached = box.get(_announcementsKey) as List<dynamic>?;
+    if (cached == null) {
+      return const [];
+    }
+
+    return cached
+        .whereType<Map>()
+        .map((item) => Map<String, dynamic>.from(item))
+        .map(
+          (item) => AppAnnouncement(
+            id: item['id'] as String? ?? '',
+            title: item['title'] as String? ?? '',
+            message: item['message'] as String? ?? '',
+            priority: item['priority'] as String? ?? 'normal',
+            status: item['status'] as String? ?? 'draft',
+            publishAt: item['publishAt'] as String?,
+            expiresAt: item['expiresAt'] as String?,
           ),
         )
         .toList();

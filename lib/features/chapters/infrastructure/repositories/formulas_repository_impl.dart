@@ -5,13 +5,18 @@ import '../../domain/domain.dart';
 
 /// Concrete implementation of [FormulasRepositoryPort].
 ///
-/// Delegates to [FormulasDataSourcePort] and wraps results in [Result].
+/// Uses [safeOperation] for DRY error handling with [FormulasCachePort]
+/// fallback for offline-first behaviour when the backend is unreachable.
 @LazySingleton(as: FormulasRepositoryPort)
 class FormulasRepositoryImpl implements FormulasRepositoryPort {
-  const FormulasRepositoryImpl({required FormulasDataSourcePort dataSource})
-    : _dataSource = dataSource;
+  const FormulasRepositoryImpl({
+    required FormulasDataSourcePort dataSource,
+    required FormulasCachePort cache,
+  }) : _dataSource = dataSource,
+       _cache = cache;
 
   final FormulasDataSourcePort _dataSource;
+  final FormulasCachePort _cache;
 
   @override
   Future<Result<List<Formula>>> getFormulas(
@@ -19,36 +24,29 @@ class FormulasRepositoryImpl implements FormulasRepositoryPort {
     String chapterId, {
     String? curriculumKey,
   }) async {
+    final key = curriculumKey ?? '';
     AppLogger.trace(
       'getFormulas($subjectId, $chapterId) called',
       tag: AppLogTags.formulasRepo,
     );
-    try {
-      final result = await _dataSource.getFormulas(
-        subjectId,
-        chapterId,
-        curriculumKey: curriculumKey,
-      );
-      AppLogger.info(
-        'getFormulas($subjectId, $chapterId) succeeded: ${result.length} formulas',
-        tag: AppLogTags.formulasRepo,
-      );
-      return Success(result);
-    } catch (e, stackTrace) {
-      AppLogger.error(
-        'getFormulas($subjectId, $chapterId) failed',
-        tag: AppLogTags.formulasRepo,
-        error: e,
-        stackTrace: stackTrace,
-      );
-      return Error(
-        CacheFailure(
-          message: 'Failed to load formulas for $chapterId',
-          originalError: e,
-          stackTrace: stackTrace,
-        ),
-      );
-    }
+
+    return safeOperation(
+      tag: AppLogTags.formulasRepo,
+      operation: 'getFormulas($subjectId, $chapterId, curriculum=$key)',
+      execute: () async {
+        final result = await _dataSource.getFormulas(
+          subjectId,
+          chapterId,
+          curriculumKey: curriculumKey,
+        );
+        await _cache.cacheFormulas(subjectId, chapterId, key, result);
+        return result;
+      },
+      fallback: () async {
+        final cached = await _cache.getFormulas(subjectId, chapterId, key);
+        return cached.isNotEmpty ? cached : null;
+      },
+    );
   }
 
   @override

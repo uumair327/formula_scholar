@@ -32,26 +32,57 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<DashboardCubit, DashboardState>(
-      listenWhen: (prev, curr) => prev.subjects != curr.subjects,
-      listener: (context, state) {
-        if (state.subjects.isNotEmpty) {
-          final selectedSubjects = state.subjects
-              .map(
-                (s) => SelectedSubject(
-                  id: s.id,
-                  name: s.name,
-                  category: s.category,
-                  description: s.description,
-                  subtitle: s.subtitle ?? '',
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<DashboardCubit, DashboardState>(
+          listenWhen: (prev, curr) => prev.subjects != curr.subjects,
+          listener: (context, state) {
+            if (state.subjects.isNotEmpty) {
+              final selectedSubjects = state.subjects
+                  .map(
+                    (s) => SelectedSubject(
+                      id: s.id,
+                      name: s.name,
+                      category: s.category,
+                      description: s.description,
+                      subtitle: s.subtitle ?? '',
+                    ),
+                  )
+                  .toList();
+              context.read<SubjectSelectionCubit>().updateAvailableSubjects(
+                selectedSubjects,
+              );
+            }
+          },
+        ),
+        BlocListener<DashboardCubit, DashboardState>(
+          listenWhen: (prev, curr) =>
+              prev.status == DashboardStatus.loaded &&
+              curr.status == DashboardStatus.error,
+          listener: (context, state) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  state.errorMessage ?? 'Failed to refresh dashboard',
                 ),
-              )
-              .toList();
-          context.read<SubjectSelectionCubit>().updateAvailableSubjects(
-            selectedSubjects,
-          );
-        }
-      },
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          },
+        ),
+        BlocListener<CurriculumCubit, CurriculumState>(
+          listenWhen: (prev, curr) =>
+              prev.isLoading && !curr.isLoading && curr.curriculum != null,
+          listener: (context, state) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Curriculum updated'),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          },
+        ),
+      ],
       child: BlocBuilder<DashboardCubit, DashboardState>(
         buildWhen: (prev, curr) => prev.status != curr.status,
         builder: (context, state) {
@@ -85,15 +116,31 @@ class DashboardPage extends StatelessWidget {
                         const SizedBox(height: AppDimensions.paddingLG),
                         _buildCurriculumFilterBar(context),
                         const SizedBox(height: AppDimensions.paddingXL),
-                        _buildHeroStatusCard(context, state),
+                        _buildAnnouncementBanner(context, state),
                         const SizedBox(height: AppDimensions.paddingSection),
-                        _buildCarouselBanners(context),
+                        EntranceWrapper(
+                          child: _buildHeroStatusCard(context, state),
+                        ),
                         const SizedBox(height: AppDimensions.paddingSection),
-                        _buildAcademicPath(context, state),
+                        EntranceWrapper(
+                          delay: const Duration(milliseconds: 50),
+                          child: _buildCarouselBanners(context, state),
+                        ),
                         const SizedBox(height: AppDimensions.paddingSection),
-                        _buildFormulaVault(context, state),
+                        EntranceWrapper(
+                          delay: const Duration(milliseconds: 100),
+                          child: _buildAcademicPath(context, state),
+                        ),
+                        const SizedBox(height: AppDimensions.paddingSection),
+                        EntranceWrapper(
+                          delay: const Duration(milliseconds: 150),
+                          child: _buildFormulaVault(context, state),
+                        ),
                         const SizedBox(height: AppDimensions.paddingLG),
-                        _buildContinueStudying(context, state),
+                        EntranceWrapper(
+                          delay: const Duration(milliseconds: 200),
+                          child: _buildContinueStudying(context, state),
+                        ),
                         const SizedBox(height: AppDimensions.bottomNavPadding),
                       ]),
                     ),
@@ -107,18 +154,19 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  Widget _buildCarouselBanners(BuildContext context) {
-    // Inspired by cifdashboard Carousel Items
-    final dummyBanners = [
-      {
-        'image': 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1000',
-        'link': 'https://formula-scholar.com/announcements/1'
-      },
-      {
-        'image': 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=1000',
-        'link': 'https://formula-scholar.com/announcements/2'
-      }
-    ];
+  Widget _buildAnnouncementBanner(BuildContext context, DashboardState state) {
+    final allVisible = state.announcements.where((a) {
+      if (a.isUrgent) return true;
+      if (a.isHighPriority) return true;
+      return true;
+    }).toList();
+    if (allVisible.isEmpty) return const SizedBox.shrink();
+    return _AnnouncementBanner(announcements: allVisible);
+  }
+
+  Widget _buildCarouselBanners(BuildContext context, DashboardState state) {
+    final banners = state.banners.where((b) => b.isActive).toList();
+    if (banners.isEmpty) return const SizedBox.shrink();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,25 +186,53 @@ class DashboardPage extends StatelessWidget {
             aspectRatio: 16/9,
             initialPage: 0,
           ),
-          items: dummyBanners.map((banner) {
+          items: banners.map((banner) {
             return Builder(
               builder: (BuildContext context) {
+                final bgColor = banner.bgColor != null
+                    ? Color(int.parse(banner.bgColor!.replaceFirst('#', '0xFF')))
+                    : Theme.of(context).colorScheme.primaryContainer;
                 return GestureDetector(
                   onTap: () async {
-                    final uri = Uri.parse(banner['link']!);
+                    final uri = Uri.parse(banner.link);
                     if (await canLaunchUrl(uri)) {
                       await launchUrl(uri);
                     }
                   },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-                      image: DecorationImage(
-                        image: CachedNetworkImageProvider(banner['image']!),
-                        fit: BoxFit.cover,
+                  child: Semantics(
+                    button: true,
+                    label: banner.title,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                      decoration: BoxDecoration(
+                        color: bgColor,
+                        borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          CachedNetworkImage(
+                            imageUrl: banner.imageUrl,
+                            fit: BoxFit.cover,
+                            placeholder: (_, __) => Container(
+                              color: bgColor,
+                              child: const Center(
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              ),
+                            ),
+                            errorWidget: (_, __, ___) => Container(
+                              color: bgColor,
+                              child: Center(
+                                child: Icon(
+                                  LucideIcons.imageOff,
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -220,13 +296,17 @@ class DashboardPage extends StatelessWidget {
             ),
           ),
           actions: [
-            IconButton(
-              onPressed: () {
-                // Navigate to Chapters tab for browsing
-                final shell = StatefulNavigationShell.of(context);
-                shell.goBranch(1);
-              },
-              icon: Icon(LucideIcons.search, color: colorScheme.outline),
+            Semantics(
+              label: 'Search chapters',
+              button: true,
+              child: IconButton(
+                onPressed: () {
+                  // Navigate to Chapters tab for browsing
+                  final shell = StatefulNavigationShell.of(context);
+                  shell.goBranch(1);
+                },
+                icon: Icon(LucideIcons.search, color: colorScheme.outline),
+              ),
             ),
             const SizedBox(width: AppDimensions.paddingSM),
           ],
@@ -248,169 +328,226 @@ class DashboardPage extends StatelessWidget {
           builder: (context, options) {
             final isBusy = options.status == CurriculumOptionsStatus.loading;
 
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Label row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          LucideIcons.slidersHorizontal,
-                          size: AppDimensions.iconSM,
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                        const SizedBox(width: AppDimensions.paddingXS),
-                        Text(
-                          AppStrings.dashboardActiveCurriculum,
-                          style: AppTextStyles.labelSmall.copyWith(
-                            color: colorScheme.onSurfaceVariant.withValues(
-                              alpha: AppDimensions.opacityMedium,
+            return AppCard(
+              padding: const EdgeInsets.all(AppDimensions.paddingLG),
+              border: Border.all(color: colorScheme.surfaceContainerHigh),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header row
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(
+                              AppDimensions.paddingXS,
                             ),
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
-                    ),
-                    GestureDetector(
-                      onTap: () => context.go(AppRoutes.onboardingPath),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppDimensions.paddingSM,
-                          vertical: AppDimensions.paddingXXS,
-                        ),
-                        decoration: BoxDecoration(
-                          color: colorScheme.primaryContainer.withValues(
-                            alpha: AppDimensions.opacityFaint,
-                          ),
-                          borderRadius: BorderRadius.circular(
-                            AppDimensions.radiusXXL,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              LucideIcons.arrowLeftRight,
+                            decoration: BoxDecoration(
+                              color: colorScheme.primaryContainer.withValues(
+                                alpha: AppDimensions.opacityFaint,
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                AppDimensions.radiusSM,
+                              ),
+                            ),
+                            child: Icon(
+                              LucideIcons.slidersHorizontal,
                               size: AppDimensions.iconSM,
                               color: colorScheme.primary,
                             ),
-                            const SizedBox(width: AppDimensions.paddingXXS),
-                            Text(
-                              AppStrings.dashboardSwitchBoardGrade,
-                              style: AppTextStyles.labelSmall.copyWith(
-                                color: colorScheme.primary,
-                                fontWeight: FontWeight.w700,
-                                fontSize: AppDimensions.fontSizeXSPlus,
+                          ),
+                          const SizedBox(width: AppDimensions.paddingSM),
+                          Text(
+                            AppStrings.dashboardActiveCurriculum,
+                            style: AppTextStyles.labelMedium.copyWith(
+                              color: colorScheme.onSurface,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Semantics(
+                        label: 'Switch board or grade',
+                        button: true,
+                        child: GestureDetector(
+                          onTap: () => context.go(AppRoutes.onboardingPath),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppDimensions.paddingSM,
+                              vertical: AppDimensions.paddingXXS,
+                            ),
+                            decoration: BoxDecoration(
+                              color: colorScheme.primaryContainer.withValues(
+                                alpha: AppDimensions.opacityFaint,
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                AppDimensions.radiusXXL,
                               ),
                             ),
-                          ],
+                            child: Row(
+                              children: [
+                                Icon(
+                                  LucideIcons.arrowLeftRight,
+                                  size: AppDimensions.iconSM,
+                                  color: colorScheme.primary,
+                                ),
+                                const SizedBox(width: AppDimensions.paddingXXS),
+                                Text(
+                                  AppStrings.dashboardSwitchBoardGrade,
+                                  style: AppTextStyles.labelSmall.copyWith(
+                                    color: colorScheme.primary,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: AppDimensions.fontSizeXSPlus,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: AppDimensions.paddingSM),
-                // Active curriculum badge
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      _CurriculumBadge(
-                        icon: LucideIcons.layoutGrid,
-                        iconColor: colorScheme.primary,
-                        label:
-                            selection?.boardName ??
-                            AppStrings.dashboardCurriculumPending,
-                        isActive: true,
-                        activeColor: colorScheme.primary,
-                      ),
-                      const SizedBox(width: AppDimensions.paddingSM),
-                      Container(
-                        width: AppDimensions.borderWidth,
-                        height: AppDimensions.paddingXXL,
-                        color: colorScheme.surfaceContainerHighest,
-                      ),
-                      const SizedBox(width: AppDimensions.paddingSM),
-                      _CurriculumBadge(
-                        icon: LucideIcons.graduationCap,
-                        iconColor: colorScheme.secondary,
-                        label:
-                            selection?.gradeLabel ??
-                            AppStrings.dashboardCurriculumPending,
-                        isActive: true,
-                        activeColor: colorScheme.secondary,
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(height: AppDimensions.paddingSM),
-                if (isBusy && options.boards.isEmpty)
-                  const LinearProgressIndicator(
-                    minHeight: AppDimensions.borderWidth,
-                  )
-                else ...[
-                  _buildCurriculumChipRow<Board>(
-                    context: context,
-                    label: AppStrings.dashboardAvailableBoards,
-                    items: options.boards,
-                    selectedId: selection?.boardId,
-                    itemId: (board) => board.id,
-                    itemLabel: (board) => board.name,
-                    emptyMessage: AppStrings.dashboardNoBoardsAvailable,
-                    isBusy: isBusy,
-                    onSelected: (board) => context
-                        .read<CurriculumOptionsCubit>()
-                        .selectBoard(board),
-                  ),
-                  const SizedBox(height: AppDimensions.paddingSM),
-                  _buildCurriculumChipRow<Grade>(
-                    context: context,
-                    label: AppStrings.dashboardAvailableClasses,
-                    items: options.grades,
-                    selectedId: selection?.gradeId,
-                    itemId: (grade) => grade.id,
-                    itemLabel: (grade) => grade.displayLabel,
-                    emptyMessage: AppStrings.dashboardNoClassesAvailable,
-                    isBusy: isBusy,
-                    onSelected: (grade) => context
-                        .read<CurriculumOptionsCubit>()
-                        .selectGrade(grade),
-                  ),
-                ],
-                if (options.status == CurriculumOptionsStatus.error)
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: AppDimensions.paddingSM,
-                    ),
+                  const SizedBox(height: AppDimensions.paddingMD),
+                  // Active curriculum badges
+                  AnimatedSwitcher(
+                    duration: AppDurations.animationFast,
                     child: Row(
+                      key: ValueKey('badges_${selection?.boardId}_${selection?.gradeId}'),
                       children: [
-                        Expanded(
-                          child: Text(
-                            options.errorMessage ??
-                                AppStrings.dashboardCurriculumOptionsLoadFailed,
-                            style: AppTextStyles.labelSmall.copyWith(
-                              color: colorScheme.error,
-                            ),
-                          ),
+                        _CurriculumBadge(
+                          icon: LucideIcons.layoutGrid,
+                          iconColor: colorScheme.primary,
+                          label:
+                              selection?.boardName ??
+                              AppStrings.dashboardCurriculumPending,
+                          isActive: true,
+                          activeColor: colorScheme.primary,
                         ),
-                        TextButton(
-                          onPressed: () => context
-                              .read<CurriculumOptionsCubit>()
-                              .loadOptions(),
-                          child: const Text(
-                            AppStrings.dashboardRetryCurriculumOptions,
+                        if (selection != null) ...[
+                          const SizedBox(width: AppDimensions.paddingSM),
+                          Icon(
+                            LucideIcons.chevronRight,
+                            size: AppDimensions.iconSM,
+                            color: colorScheme.outline,
                           ),
+                          const SizedBox(width: AppDimensions.paddingSM),
+                        ],
+                        _CurriculumBadge(
+                          icon: LucideIcons.graduationCap,
+                          iconColor: colorScheme.secondary,
+                          label:
+                              selection?.gradeLabel ??
+                              AppStrings.dashboardCurriculumPending,
+                          isActive: true,
+                          activeColor: colorScheme.secondary,
                         ),
                       ],
                     ),
                   ),
-              ],
+                  const SizedBox(height: AppDimensions.paddingMD),
+                  // Divider
+                  Container(
+                    height: AppDimensions.dividerHeight,
+                    color: colorScheme.surfaceContainerHighest,
+                  ),
+                  const SizedBox(height: AppDimensions.paddingMD),
+                  // Boards and Grades
+                  if (isBusy && options.boards.isEmpty)
+                    _buildFilterShimmer()
+                  else ...[
+                    _buildCurriculumChipRow<Board>(
+                      context: context,
+                      label: AppStrings.dashboardAvailableBoards,
+                      items: options.boards,
+                      selectedId: selection?.boardId,
+                      itemId: (board) => board.id,
+                      itemLabel: (board) => board.name,
+                      itemSubtitle: (Board board) => board.type.name,
+                      emptyMessage: AppStrings.dashboardNoBoardsAvailable,
+                      isBusy: isBusy,
+                      onSelected: (board) => context
+                          .read<CurriculumOptionsCubit>()
+                          .selectBoard(board),
+                    ),
+                    const SizedBox(height: AppDimensions.paddingSM),
+                    _buildCurriculumChipRow<Grade>(
+                      context: context,
+                      label: AppStrings.dashboardAvailableClasses,
+                      items: options.grades,
+                      selectedId: selection?.gradeId,
+                      itemId: (grade) => grade.id,
+                      itemLabel: (grade) => grade.displayLabel,
+                      emptyMessage: AppStrings.dashboardNoClassesAvailable,
+                      isBusy: isBusy,
+                      onSelected: (grade) => context
+                          .read<CurriculumOptionsCubit>()
+                          .selectGrade(grade),
+                    ),
+                  ],
+                  if (options.status == CurriculumOptionsStatus.error)
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: AppDimensions.paddingSM,
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              options.errorMessage ??
+                                  AppStrings.dashboardCurriculumOptionsLoadFailed,
+                              style: AppTextStyles.labelSmall.copyWith(
+                                color: colorScheme.error,
+                              ),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () => context
+                                .read<CurriculumOptionsCubit>()
+                                .loadOptions(),
+                            child: const Text(
+                              AppStrings.dashboardRetryCurriculumOptions,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
             );
           },
         );
       },
+    );
+  }
+
+  Widget _buildFilterShimmer() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ShimmerBox(width: 120, height: 12),
+        const SizedBox(height: AppDimensions.paddingSM),
+        const Row(
+          children: [
+            ShimmerBox(width: 80, height: 36, borderRadius: 18),
+            SizedBox(width: 8),
+            ShimmerBox(width: 100, height: 36, borderRadius: 18),
+            SizedBox(width: 8),
+            ShimmerBox(width: 90, height: 36, borderRadius: 18),
+          ],
+        ),
+        const SizedBox(height: AppDimensions.paddingSM),
+        ShimmerBox(width: 100, height: 12),
+        const SizedBox(height: AppDimensions.paddingSM),
+        const Row(
+          children: [
+            ShimmerBox(width: 70, height: 36, borderRadius: 18),
+            SizedBox(width: 8),
+            ShimmerBox(width: 80, height: 36, borderRadius: 18),
+          ],
+        ),
+      ],
     );
   }
 
@@ -421,6 +558,7 @@ class DashboardPage extends StatelessWidget {
     required String? selectedId,
     required String Function(T item) itemId,
     required String Function(T item) itemLabel,
+    String Function(T item)? itemSubtitle,
     required String emptyMessage,
     required bool isBusy,
     required Future<void> Function(T item) onSelected,
@@ -437,12 +575,29 @@ class DashboardPage extends StatelessWidget {
             fontWeight: FontWeight.w700,
           ),
         ),
-        const SizedBox(height: AppDimensions.paddingXS),
+        const SizedBox(height: AppDimensions.paddingSM),
         if (items.isEmpty)
-          Text(
-            emptyMessage,
-            style: AppTextStyles.bodySmall.copyWith(
-              color: colorScheme.onSurfaceVariant,
+          Container(
+            padding: const EdgeInsets.symmetric(
+              vertical: AppDimensions.paddingMD,
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  LucideIcons.info,
+                  size: AppDimensions.iconSM,
+                  color: colorScheme.onSurfaceVariant.withValues(
+                    alpha: AppDimensions.opacityMedium,
+                  ),
+                ),
+                const SizedBox(width: AppDimensions.paddingSM),
+                Text(
+                  emptyMessage,
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
             ),
           )
         else
@@ -457,38 +612,15 @@ class DashboardPage extends StatelessWidget {
                 final item = items[index];
                 final selected = itemId(item) == selectedId;
 
-                return ChoiceChip(
-                  label: Text(itemLabel(item)),
+                return _CurriculumChip(
+                  label: itemLabel(item),
+                  subtitle: itemSubtitle?.call(item),
                   selected: selected,
-                  onSelected: isBusy
-                      ? null
-                      : (_) {
-                          unawaited(onSelected(item));
-                        },
-                  selectedColor: colorScheme.primary,
-                  backgroundColor: colorScheme.surfaceContainerLow,
-                  labelStyle: AppTextStyles.labelMedium.copyWith(
-                    color: selected
-                        ? colorScheme.onPrimary
-                        : colorScheme.onSurfaceVariant,
-                    fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                  ),
-                  side: BorderSide(
-                    color: selected
-                        ? colorScheme.primary
-                        : colorScheme.surfaceContainerHigh,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      AppDimensions.radiusXXL,
-                    ),
-                  ),
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  onTap: isBusy ? null : () => unawaited(onSelected(item)),
                 );
               },
             ),
           ),
-      ],
     );
   }
 
@@ -562,10 +694,13 @@ class DashboardPage extends StatelessWidget {
               ),
               const SizedBox(height: AppDimensions.paddingXL),
               // Resume button
-              ElevatedButton(
-                onPressed: () {
-                  _resumeLearning(context, state);
-                },
+              Semantics(
+                label: 'Resume learning',
+                button: true,
+                child: ElevatedButton(
+                  onPressed: () {
+                    _resumeLearning(context, state);
+                  },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: colorScheme.onPrimary,
                   foregroundColor: colorScheme.primary,
@@ -582,6 +717,7 @@ class DashboardPage extends StatelessWidget {
                   textStyle: AppTextStyles.labelLarge,
                 ),
                 child: const Text(AppStrings.dashboardResumeLesson),
+              ),
               ),
             ],
           ),
@@ -639,109 +775,119 @@ class DashboardPage extends StatelessWidget {
           },
         ),
         const SizedBox(height: AppDimensions.paddingLG),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final isWide = constraints.maxWidth > AppDimensions.breakpointWide;
-            if (isWide) {
-              return Column(
-                children: [
-                  // Row 1: featured + first other
-                  if (featured.isNotEmpty || others.isNotEmpty)
-                    IntrinsicHeight(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+        AnimatedSwitcher(
+          duration: AppDurations.animationDefault,
+          transitionBuilder: (child, animation) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+          child: LayoutBuilder(
+            key: ValueKey('subjects_${subjects.length}_${subjects.hashCode}'),
+            builder: (context, constraints) {
+              final isWide = constraints.maxWidth > AppDimensions.breakpointWide;
+              if (isWide) {
+                return Column(
+                  children: [
+                    // Row 1: featured + first other
+                    if (featured.isNotEmpty || others.isNotEmpty)
+                      IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            if (featured.isNotEmpty)
+                              Expanded(
+                                flex: 2,
+                                child: SubjectCard(
+                                  subject: featured.first,
+                                  onTap: () =>
+                                      _onSubjectTap(context, featured.first),
+                                  onLongPress: () => _showSubjectAnalytics(
+                                    context,
+                                    state,
+                                    featured.first,
+                                  ),
+                                ),
+                              ),
+                            if (featured.isNotEmpty && others.isNotEmpty)
+                              const SizedBox(width: AppDimensions.paddingLG),
+                            if (others.isNotEmpty)
+                              Expanded(
+                                child: SubjectCard(
+                                  subject: others.first,
+                                  onTap: () =>
+                                      _onSubjectTap(context, others.first),
+                                  onLongPress: () => _showSubjectAnalytics(
+                                    context,
+                                    state,
+                                    others.first,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    const SizedBox(height: AppDimensions.paddingLG),
+                    // Row 2: remaining others + quiz
+                    SizedBox(
+                      width: double.infinity,
+                      child: Wrap(
+                        spacing: AppDimensions.paddingLG,
+                        runSpacing: AppDimensions.paddingLG,
+                        alignment: WrapAlignment.start,
                         children: [
-                          if (featured.isNotEmpty)
-                            Expanded(
-                              flex: 2,
+                          ...others.skip(1).map((subject) {
+                            // Roughly 50% width minus padding for 2-column layout
+                            final itemWidth =
+                                (constraints.maxWidth - AppDimensions.paddingLG) /
+                                2.05;
+                            return SizedBox(
+                              width: itemWidth,
                               child: SubjectCard(
-                                subject: featured.first,
-                                onTap: () =>
-                                    _onSubjectTap(context, featured.first),
+                                subject: subject,
+                                onTap: () => _onSubjectTap(context, subject),
                                 onLongPress: () => _showSubjectAnalytics(
                                   context,
                                   state,
-                                  featured.first,
+                                  subject,
                                 ),
                               ),
-                            ),
-                          if (featured.isNotEmpty && others.isNotEmpty)
-                            const SizedBox(width: AppDimensions.paddingLG),
-                          if (others.isNotEmpty)
-                            Expanded(
-                              child: SubjectCard(
-                                subject: others.first,
-                                onTap: () =>
-                                    _onSubjectTap(context, others.first),
-                                onLongPress: () => _showSubjectAnalytics(
-                                  context,
-                                  state,
-                                  others.first,
-                                ),
-                              ),
-                            ),
+                            );
+                          }),
+                          SizedBox(
+                            width:
+                                (constraints.maxWidth - AppDimensions.paddingLG) /
+                                2.05,
+                            child: _buildQuizCard(context),
+                          ),
                         ],
                       ),
                     ),
-                  const SizedBox(height: AppDimensions.paddingLG),
-                  // Row 2: remaining others + quiz
-                  SizedBox(
-                    width: double.infinity,
-                    child: Wrap(
-                      spacing: AppDimensions.paddingLG,
-                      runSpacing: AppDimensions.paddingLG,
-                      alignment: WrapAlignment.start,
-                      children: [
-                        ...others.skip(1).map((subject) {
-                          // Roughly 50% width minus padding for 2-column layout
-                          final itemWidth =
-                              (constraints.maxWidth - AppDimensions.paddingLG) /
-                              2.05;
-                          return SizedBox(
-                            width: itemWidth,
-                            child: SubjectCard(
-                              subject: subject,
-                              onTap: () => _onSubjectTap(context, subject),
-                              onLongPress: () => _showSubjectAnalytics(
-                                context,
-                                state,
-                                subject,
-                              ),
-                            ),
-                          );
-                        }),
-                        SizedBox(
-                          width:
-                              (constraints.maxWidth - AppDimensions.paddingLG) /
-                              2.05,
-                          child: _buildQuizCard(context),
-                        ),
-                      ],
+                  ],
+                );
+              }
+              // Mobile: stack all subjects vertically
+              return Column(
+                children: [
+                  ...subjects.map(
+                    (subject) => Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: AppDimensions.paddingLG,
+                      ),
+                      child: SubjectCard(
+                        subject: subject,
+                        onTap: () => _onSubjectTap(context, subject),
+                        onLongPress: () =>
+                            _showSubjectAnalytics(context, state, subject),
+                      ),
                     ),
                   ),
+                  _buildQuizCard(context),
                 ],
               );
-            }
-            // Mobile: stack all subjects vertically
-            return Column(
-              children: [
-                ...subjects.map(
-                  (subject) => Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: AppDimensions.paddingLG,
-                    ),
-                    child: SubjectCard(
-                      subject: subject,
-                      onTap: () => _onSubjectTap(context, subject),
-                      onLongPress: () =>
-                          _showSubjectAnalytics(context, state, subject),
-                    ),
-                  ),
-                ),
-                _buildQuizCard(context),
-              ],
-            );
-          },
+            },
+          ),
         ),
       ],
     );
@@ -849,12 +995,15 @@ class DashboardPage extends StatelessWidget {
           const SizedBox(height: AppDimensions.paddingLG),
           SizedBox(
             width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {
-                // Navigate to Practice tab (index 2)
-                final shell = StatefulNavigationShell.of(context);
-                shell.goBranch(2);
-              },
+            child: Semantics(
+              label: 'Start quiz',
+              button: true,
+              child: ElevatedButton(
+                onPressed: () {
+                  // Navigate to Practice tab (index 2)
+                  final shell = StatefulNavigationShell.of(context);
+                  shell.goBranch(2);
+                },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: AppColors.onPrimary,
@@ -868,6 +1017,7 @@ class DashboardPage extends StatelessWidget {
               ),
               child: const Text(AppStrings.startNow),
             ),
+          ),
           ),
         ],
       ),
@@ -922,7 +1072,43 @@ class DashboardPage extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppDimensions.paddingXL),
-          _buildVaultGrid(context, state),
+          if (state.vaultItems.isEmpty)
+            _buildVaultEmptyState(context)
+          else
+            _buildVaultGrid(context, state),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVaultEmptyState(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        vertical: AppDimensions.paddingSection,
+      ),
+      child: Column(
+        children: [
+          Icon(
+            LucideIcons.folderOpen,
+            size: AppDimensions.iconDecorative,
+            color: colorScheme.surfaceContainerHighest,
+          ),
+          const SizedBox(height: AppDimensions.paddingLG),
+          Text(
+            'No formulas yet',
+            style: AppTextStyles.titleLarge.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: AppDimensions.paddingXS),
+          Text(
+            'Select a subject to start learning',
+            style: AppTextStyles.bodySmall.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
         ],
       ),
     );
@@ -1220,6 +1406,111 @@ class DashboardPage extends StatelessWidget {
   }
 }
 
+class _AnnouncementBanner extends StatefulWidget {
+  const _AnnouncementBanner({required this.announcements});
+  final List<AppAnnouncement> announcements;
+
+  @override
+  State<_AnnouncementBanner> createState() => _AnnouncementBannerState();
+}
+
+class _AnnouncementBannerState extends State<_AnnouncementBanner> {
+  final Set<String> _dismissed = {};
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final visible = widget.announcements
+        .where((a) => !_dismissed.contains(a.id))
+        .take(3)
+        .toList();
+    if (visible.isEmpty) return const SizedBox.shrink();
+
+    return Semantics(
+      label: 'Announcements',
+      child: Column(
+        children: visible.map((announcement) {
+          final isUrgent = announcement.isUrgent;
+          return Dismissible(
+            key: ValueKey(announcement.id),
+            direction: DismissDirection.horizontal,
+            onDismissed: (_) {
+              setState(() => _dismissed.add(announcement.id));
+            },
+            background: Container(
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.only(left: AppDimensions.paddingMD),
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+              ),
+              child: Icon(
+                Icons.close,
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+            child: Container(
+              width: double.infinity,
+              margin: const EdgeInsets.only(bottom: AppDimensions.paddingSM),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppDimensions.paddingMD,
+                vertical: AppDimensions.paddingSM,
+              ),
+              decoration: BoxDecoration(
+                color: isUrgent
+                    ? colorScheme.errorContainer
+                    : colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+                border: isUrgent
+                    ? Border.all(color: colorScheme.error.withValues(alpha: 0.5))
+                    : null,
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    isUrgent ? Icons.warning_rounded : Icons.campaign_rounded,
+                    size: AppDimensions.iconMD,
+                    color: isUrgent
+                        ? colorScheme.onErrorContainer
+                        : colorScheme.onPrimaryContainer,
+                  ),
+                  const SizedBox(width: AppDimensions.paddingSM),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          announcement.title,
+                          style: AppTextStyles.labelMedium.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: isUrgent
+                                ? colorScheme.onErrorContainer
+                                : colorScheme.onPrimaryContainer,
+                          ),
+                        ),
+                        Text(
+                          announcement.message,
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: isUrgent
+                                ? colorScheme.onErrorContainer
+                                : colorScheme.onPrimaryContainer,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
+
 /// A compact pill-shaped badge showing the active curriculum value.
 class _CurriculumBadge extends StatelessWidget {
   const _CurriculumBadge({
@@ -1262,6 +1553,110 @@ class _CurriculumBadge extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// A custom animated pill chip for board/grade selection.
+///
+/// Uses [AnimatedContainer] for a smooth visual transition between
+/// selected and unselected states, providing a more polished feel
+/// than the default [ChoiceChip].
+class _CurriculumChip extends StatefulWidget {
+  const _CurriculumChip({
+    required this.label,
+    this.subtitle,
+    required this.selected,
+    this.onTap,
+  });
+
+  final String label;
+  final String? subtitle;
+  final bool selected;
+  final VoidCallback? onTap;
+
+  @override
+  State<_CurriculumChip> createState() => _CurriculumChipState();
+}
+
+class _CurriculumChipState extends State<_CurriculumChip> {
+  bool _hovering = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final selected = widget.selected;
+
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: Semantics(
+        label: widget.label,
+        selected: selected,
+        button: true,
+        child: AnimatedContainer(
+          duration: AppDurations.animationFast,
+          curve: AppDurations.curveDefault,
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppDimensions.paddingLG,
+            vertical: AppDimensions.paddingSM,
+          ),
+          decoration: BoxDecoration(
+            color: selected
+                ? colorScheme.primary
+                : _hovering
+                    ? colorScheme.surfaceContainerHigh
+                    : colorScheme.surfaceContainerLow,
+            borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
+            border: Border.all(
+              color: selected
+                  ? colorScheme.primary
+                  : colorScheme.surfaceContainerHigh,
+            ),
+            boxShadow: selected ? const [AppShadows.chip] : null,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (selected)
+                Padding(
+                  padding: const EdgeInsets.only(right: AppDimensions.paddingXS),
+                  child: Icon(
+                    LucideIcons.check,
+                    size: AppDimensions.iconSM,
+                    color: colorScheme.onPrimary,
+                  ),
+                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    widget.label,
+                    style: AppTextStyles.labelMedium.copyWith(
+                      color: selected
+                          ? colorScheme.onPrimary
+                          : colorScheme.onSurface,
+                      fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                    ),
+                  ),
+                  if (widget.subtitle != null)
+                    Text(
+                      widget.subtitle!,
+                      style: AppTextStyles.labelSmall.copyWith(
+                        color: selected
+                            ? colorScheme.onPrimary.withValues(
+                                alpha: AppDimensions.opacityMedium,
+                              )
+                            : colorScheme.onSurfaceVariant,
+                        fontSize: AppDimensions.fontSizeXS,
+                      ),
+                    ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

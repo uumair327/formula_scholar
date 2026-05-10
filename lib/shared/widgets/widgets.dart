@@ -16,6 +16,7 @@ export 'app_state_widgets.dart';
 export 'app_text_field.dart';
 export 'coming_soon_sheet.dart';
 export 'common_widgets.dart';
+export 'entrance_wrapper.dart';
 export 'legal_page.dart';
 export 'main_shell_page.dart';
 export 'not_found_page.dart';

@@ -12,10 +12,10 @@ service cloud.firestore {
       );
     }
 
-    function isAdmin() { return getRole() in ['SUPER_ADMIN', 'admin']; }
-    function isRegistrar() { return getRole() in ['SUPER_ADMIN', 'admin', 'REGISTRAR']; }
-    function isModerator() { return getRole() in ['SUPER_ADMIN', 'admin', 'moderator']; }
-    function isEditor() { return getRole() in ['SUPER_ADMIN', 'admin', 'EDITOR']; }
+    function isAdmin() { return getRole() in ['SUPER_ADMIN', 'ADMIN']; }
+    function isRegistrar() { return getRole() in ['SUPER_ADMIN', 'ADMIN', 'REGISTRAR']; }
+    function isModerator() { return getRole() in ['SUPER_ADMIN', 'ADMIN', 'MODERATOR']; }
+    function isEditor() { return getRole() in ['SUPER_ADMIN', 'ADMIN', 'EDITOR']; }
 
     // ─── Public content — anyone can read ───────────────────────
     match /countries/{document} {

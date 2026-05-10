@@ -105,11 +105,11 @@ abstract final class AppStrings {
       'Check your school ID card or textbook covers for the official board affiliation.';
   static const String step2LearnMore = 'Learn more';
 
-  // ──────────────────────── Onboarding Step 3 – Subjects ──────
-  static const String step3Tag = 'Subject Focus';
-  static const String step3Title = 'What are your focus areas?';
+  // ──────────────────────── Onboarding Step 3 – Grade/Class ────
+  static const String step3Tag = 'Grade Selection';
+  static const String step3Title = 'Select Your Class';
   static const String step3Subtitle =
-      'Choose the subjects you want to master first. You can always change this later.';
+      'Choose your academic year to tailor formulas and practice sets to your curriculum.';
 
   // ──────────────────────── Onboarding Step 4 – Goal ──────────
   static const String step4Tag = 'Commitment';
@@ -666,6 +666,12 @@ abstract final class AppStrings {
       'These Terms of Service are governed by applicable law. Any disputes '
       'arising from these terms will be resolved through appropriate legal '
       'channels in the jurisdiction where the service provider is located.';
+
+  // ──────────────────────── Form Validation ──────────────────
+  static const String validationRequired = 'This field is required';
+  static const String validationInvalidEmail = 'Please enter a valid email address';
+  static const String validationPasswordMinLength = 'Password must be at least 6 characters';
+  static const String validationPasswordMismatch = 'Passwords do not match';
 
   // Legal footer
   static const String legalFooterTitle = 'Your Privacy & Security Matter to Us';

@@ -6,6 +6,8 @@ import '../../core/core.dart';
 ///
 /// Follows Material Design floating label behaviors by default. When a user
 /// taps on the field, the [label] animates upward to a floating position.
+///
+/// Supports optional [validator] for form validation (used within a [Form]).
 class AppTextField extends StatelessWidget {
   const AppTextField({
     super.key,
@@ -17,6 +19,7 @@ class AppTextField extends StatelessWidget {
     this.obscureText = false,
     this.keyboardType = TextInputType.text,
     this.onChanged,
+    this.validator,
   });
   final TextEditingController? controller;
   final String label;
@@ -26,6 +29,7 @@ class AppTextField extends StatelessWidget {
   final bool obscureText;
   final TextInputType keyboardType;
   final ValueChanged<String>? onChanged;
+  final FormFieldValidator<String>? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +38,7 @@ class AppTextField extends StatelessWidget {
       obscureText: obscureText,
       keyboardType: keyboardType,
       onChanged: onChanged,
+      validator: validator,
       style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w500),
       decoration: InputDecoration(
         labelText: label,

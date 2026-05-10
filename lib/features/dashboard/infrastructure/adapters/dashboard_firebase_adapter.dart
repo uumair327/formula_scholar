@@ -5,6 +5,9 @@ import 'package:injectable/injectable.dart';
 import '../../../../core/core.dart';
 import '../../domain/domain.dart';
 
+const _appBannersCollection = 'app_banners';
+const _announcementsCollection = 'announcements';
+
 @LazySingleton(as: DashboardDataSourcePort)
 class DashboardFirebaseAdapter implements DashboardDataSourcePort {
   DashboardFirebaseAdapter(this._firestore, this._firebaseAuth);
@@ -242,6 +245,38 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
     }
 
     return snapshot;
+  }
+
+  @override
+  Future<List<CarouselItem>> getBanners() async {
+    AppLogger.trace(
+      'getBanners() fetching from Firestore',
+      tag: AppLogTags.dashboardDataSource,
+    );
+
+    final snapshot = await _firestore
+        .collection(_appBannersCollection)
+        .where('isActive', isEqualTo: true)
+        .orderBy('displayOrder', descending: false)
+        .get();
+
+    return snapshot.docs.map((doc) => CarouselItem.fromFirestore(doc)).toList();
+  }
+
+  @override
+  Future<List<AppAnnouncement>> getActiveAnnouncements() async {
+    AppLogger.trace(
+      'getActiveAnnouncements() fetching from Firestore',
+      tag: AppLogTags.dashboardDataSource,
+    );
+
+    final snapshot = await _firestore
+        .collection(_announcementsCollection)
+        .where('status', isEqualTo: 'published')
+        .orderBy('priority')
+        .get();
+
+    return snapshot.docs.map((doc) => AppAnnouncement.fromFirestore(doc)).toList();
   }
 
   String? _alternateGradeId(String gradeId) {

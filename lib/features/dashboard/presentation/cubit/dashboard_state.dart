@@ -13,6 +13,8 @@ class DashboardState extends Equatable {
     this.subjects = const [],
     this.recentStudies = const [],
     this.vaultItems = const [],
+    this.banners = const [],
+    this.announcements = const [],
     this.errorMessage,
     this.selectedBoardName = '',
     this.selectedGradeName = '',
@@ -22,6 +24,8 @@ class DashboardState extends Equatable {
   final List<Subject> subjects;
   final List<RecentStudy> recentStudies;
   final List<FormulaVaultItem> vaultItems;
+  final List<CarouselItem> banners;
+  final List<AppAnnouncement> announcements;
   final String? errorMessage;
   final String selectedBoardName;
   final String selectedGradeName;
@@ -77,6 +81,8 @@ class DashboardState extends Equatable {
     List<Subject>? subjects,
     List<RecentStudy>? recentStudies,
     List<FormulaVaultItem>? vaultItems,
+    List<CarouselItem>? banners,
+    List<AppAnnouncement>? announcements,
     Object? errorMessage = unset,
     String? selectedBoardName,
     String? selectedGradeName,
@@ -87,6 +93,8 @@ class DashboardState extends Equatable {
       subjects: subjects ?? this.subjects,
       recentStudies: recentStudies ?? this.recentStudies,
       vaultItems: vaultItems ?? this.vaultItems,
+      banners: banners ?? this.banners,
+      announcements: announcements ?? this.announcements,
       errorMessage: identical(errorMessage, unset)
           ? this.errorMessage
           : errorMessage as String?,
@@ -102,6 +110,8 @@ class DashboardState extends Equatable {
     subjects,
     recentStudies,
     vaultItems,
+    banners,
+    announcements,
     errorMessage,
     selectedBoardName,
     selectedGradeName,

@@ -480,6 +480,12 @@ class _FormContent extends StatelessWidget {
             hintText: AppStrings.loginPasswordHint,
             prefixIcon: LucideIcons.lock,
             obscureText: obscurePassword,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return AppStrings.validationRequired;
+              }
+              return null;
+            },
             suffixIcon: IconButton(
               onPressed: onToggleObscure,
               icon: Icon(

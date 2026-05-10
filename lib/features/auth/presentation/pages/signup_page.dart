@@ -459,6 +459,12 @@ class _SignupFormScroll extends StatelessWidget {
                     hintText: AppStrings.signupFullNameHint,
                     prefixIcon: LucideIcons.user,
                     controller: nameController,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return AppStrings.validationRequired;
+                      }
+                      return null;
+                    },
                   ),
                 ),
                 const SizedBox(width: AppDimensions.paddingLG),
@@ -469,6 +475,15 @@ class _SignupFormScroll extends StatelessWidget {
                     prefixIcon: LucideIcons.mail,
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return AppStrings.validationRequired;
+                      }
+                      if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(value.trim())) {
+                        return AppStrings.validationInvalidEmail;
+                      }
+                      return null;
+                    },
                   ),
                 ),
               ],
@@ -482,6 +497,15 @@ class _SignupFormScroll extends StatelessWidget {
               controller: passwordController,
               prefixIcon: LucideIcons.lock,
               obscureText: obscurePassword,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return AppStrings.validationRequired;
+                }
+                if (value.length < 6) {
+                  return AppStrings.validationPasswordMinLength;
+                }
+                return null;
+              },
               suffixIcon: IconButton(
                 onPressed: onTogglePassword,
                 icon: Icon(
@@ -500,6 +524,15 @@ class _SignupFormScroll extends StatelessWidget {
               controller: confirmController,
               prefixIcon: LucideIcons.checkSquare,
               obscureText: obscureConfirm,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return AppStrings.validationRequired;
+                }
+                if (value != passwordController.text) {
+                  return AppStrings.validationPasswordMismatch;
+                }
+                return null;
+              },
               suffixIcon: IconButton(
                 onPressed: onToggleConfirm,
                 icon: Icon(

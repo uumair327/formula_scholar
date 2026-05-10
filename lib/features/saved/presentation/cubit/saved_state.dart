@@ -32,20 +32,42 @@ class SavedState extends Equatable {
 
   bool get isEmpty => bookmarks.isEmpty && chapters.isEmpty && notes.isEmpty;
 
+  /// Returns bookmarks filtered by [searchQuery] (matches title or subject).
   List<BookmarkedFormula> get filteredBookmarks {
-    return bookmarks;
+    if (searchQuery.isEmpty) return bookmarks;
+    final query = searchQuery.toLowerCase();
+    return bookmarks.where((b) =>
+      b.title.toLowerCase().contains(query) ||
+      b.subject.toLowerCase().contains(query) ||
+      b.formula.toLowerCase().contains(query),
+    ).toList();
   }
 
+  /// Returns chapters filtered by [searchQuery] (matches chapter name or subject).
   List<BookmarkedChapter> get filteredChapters {
-    return chapters;
+    if (searchQuery.isEmpty) return chapters;
+    final query = searchQuery.toLowerCase();
+    return chapters.where((c) =>
+      c.chapterName.toLowerCase().contains(query) ||
+      c.subjectName.toLowerCase().contains(query),
+    ).toList();
   }
 
+  /// Returns notes filtered by [searchQuery] (matches title or content).
   List<SavedNote> get filteredNotes {
-    return notes;
+    if (searchQuery.isEmpty) return notes;
+    final query = searchQuery.toLowerCase();
+    return notes.where((n) =>
+      n.title.toLowerCase().contains(query) ||
+      n.content.toLowerCase().contains(query),
+    ).toList();
   }
 
+  /// Whether any filtered results exist.
   bool get hasFilteredResults {
-    return bookmarks.isNotEmpty || chapters.isNotEmpty || notes.isNotEmpty;
+    return filteredBookmarks.isNotEmpty ||
+        filteredChapters.isNotEmpty ||
+        filteredNotes.isNotEmpty;
   }
 
   SavedState copyWith({

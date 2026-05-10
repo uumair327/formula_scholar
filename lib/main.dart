@@ -12,6 +12,8 @@ import 'package:path_provider/path_provider.dart';
 
 import 'core/core.dart';
 import 'features/auth/auth.dart';
+import 'features/dashboard/dashboard.dart';
+import 'features/profile/profile.dart';
 import 'firebase_options.dart';
 import 'shared/shared.dart';
 
@@ -101,8 +103,46 @@ void main() {
 ///
 /// Provides [SubjectSelectionCubit] and [CurriculumCubit] above
 /// the router so all tabs can read the selected subject and curriculum.
-class FormulaScholarApp extends StatelessWidget {
+///
+/// Also listens to app lifecycle events to refresh data when the
+/// app returns from background (foreground resume).
+class FormulaScholarApp extends StatefulWidget {
   const FormulaScholarApp({super.key});
+
+  @override
+  State<FormulaScholarApp> createState() => _FormulaScholarAppState();
+}
+
+class _FormulaScholarAppState extends State<FormulaScholarApp>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      AppLogger.info('App resumed from background - refreshing data', tag: AppLogTags.main);
+      // Refresh dashboard data
+      try {
+        getIt<DashboardCubit>().loadDashboard();
+      } catch (_) {}
+      // Refresh profile data
+      try {
+        getIt<ProfileCubit>().loadProfile();
+      } catch (_) {}
+      // Note: SavedCubit.loadBookmarks() requires a curriculumKey parameter,
+      // so it is refreshed from within the SavedPage when it becomes visible.
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -44,11 +44,15 @@ class SubjectCard extends StatelessWidget {
             iconData,
           );
 
-    return GestureDetector(
-      onTap: onTap,
-      onLongPress: onLongPress,
-      behavior: HitTestBehavior.opaque,
-      child: card,
+    return Semantics(
+      label: '${subject.category} ${subject.name}',
+      button: true,
+      child: GestureDetector(
+        onTap: onTap,
+        onLongPress: onLongPress,
+        behavior: HitTestBehavior.opaque,
+        child: card,
+      ),
     );
   }
 
