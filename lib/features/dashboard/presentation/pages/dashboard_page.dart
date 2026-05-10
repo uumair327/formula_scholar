@@ -167,82 +167,7 @@ class DashboardPage extends StatelessWidget {
   Widget _buildCarouselBanners(BuildContext context, DashboardState state) {
     final banners = state.banners.where((b) => b.isActive).toList();
     if (banners.isEmpty) return const SizedBox.shrink();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SectionHeader(
-          title: 'Featured Announcements',
-          actionLabel: '',
-          onAction: () {},
-        ),
-        const SizedBox(height: AppDimensions.paddingLG),
-        CarouselSlider(
-          options: CarouselOptions(
-            height: 160.0,
-            autoPlay: true,
-            enlargeCenterPage: true,
-            viewportFraction: 0.9,
-            aspectRatio: 16/9,
-            initialPage: 0,
-          ),
-          items: banners.map((banner) {
-            return Builder(
-              builder: (BuildContext context) {
-                final bgColor = banner.bgColor != null
-                    ? Color(int.parse(banner.bgColor!.replaceFirst('#', '0xFF')))
-                    : Theme.of(context).colorScheme.primaryContainer;
-                return GestureDetector(
-                  onTap: () async {
-                    final uri = Uri.parse(banner.link);
-                    if (await canLaunchUrl(uri)) {
-                      await launchUrl(uri);
-                    }
-                  },
-                  child: Semantics(
-                    button: true,
-                    label: banner.title,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                      decoration: BoxDecoration(
-                        color: bgColor,
-                        borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          CachedNetworkImage(
-                            imageUrl: banner.imageUrl,
-                            fit: BoxFit.cover,
-                            placeholder: (_, __) => Container(
-                              color: bgColor,
-                              child: const Center(
-                                child: CircularProgressIndicator(strokeWidth: 2),
-                              ),
-                            ),
-                            errorWidget: (_, __, ___) => Container(
-                              color: bgColor,
-                              child: Center(
-                                child: Icon(
-                                  LucideIcons.imageOff,
-                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
-          }).toList(),
-        ),
-      ],
-    );
+    return _CarouselBanners(banners: banners);
   }
 
   // ──────────────────────── App Bar ─────────────────────────────
@@ -414,7 +339,9 @@ class DashboardPage extends StatelessWidget {
                   AnimatedSwitcher(
                     duration: AppDurations.animationFast,
                     child: Row(
-                      key: ValueKey('badges_${selection?.boardId}_${selection?.gradeId}'),
+                      key: ValueKey(
+                        'badges_${selection?.boardId}_${selection?.gradeId}',
+                      ),
                       children: [
                         _CurriculumBadge(
                           icon: LucideIcons.layoutGrid,
@@ -496,7 +423,8 @@ class DashboardPage extends StatelessWidget {
                           Expanded(
                             child: Text(
                               options.errorMessage ??
-                                  AppStrings.dashboardCurriculumOptionsLoadFailed,
+                                  AppStrings
+                                      .dashboardCurriculumOptionsLoadFailed,
                               style: AppTextStyles.labelSmall.copyWith(
                                 color: colorScheme.error,
                               ),
@@ -621,7 +549,7 @@ class DashboardPage extends StatelessWidget {
               },
             ),
           ),
-        ],
+      ],
     );
   }
 
@@ -702,23 +630,23 @@ class DashboardPage extends StatelessWidget {
                   onPressed: () {
                     _resumeLearning(context, state);
                   },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colorScheme.onPrimary,
-                  foregroundColor: colorScheme.primary,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppDimensions.paddingHero,
-                    vertical: AppDimensions.progressBarLG,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      AppDimensions.radiusXXL,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: colorScheme.onPrimary,
+                    foregroundColor: colorScheme.primary,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimensions.paddingHero,
+                      vertical: AppDimensions.progressBarLG,
                     ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        AppDimensions.radiusXXL,
+                      ),
+                    ),
+                    elevation: AppDimensions.elevationMD,
+                    textStyle: AppTextStyles.labelLarge,
                   ),
-                  elevation: AppDimensions.elevationMD,
-                  textStyle: AppTextStyles.labelLarge,
+                  child: const Text(AppStrings.dashboardResumeLesson),
                 ),
-                child: const Text(AppStrings.dashboardResumeLesson),
-              ),
               ),
             ],
           ),
@@ -779,15 +707,13 @@ class DashboardPage extends StatelessWidget {
         AnimatedSwitcher(
           duration: AppDurations.animationDefault,
           transitionBuilder: (child, animation) {
-            return FadeTransition(
-              opacity: animation,
-              child: child,
-            );
+            return FadeTransition(opacity: animation, child: child);
           },
           child: LayoutBuilder(
             key: ValueKey('subjects_${subjects.length}_${subjects.hashCode}'),
             builder: (context, constraints) {
-              final isWide = constraints.maxWidth > AppDimensions.breakpointWide;
+              final isWide =
+                  constraints.maxWidth > AppDimensions.breakpointWide;
               if (isWide) {
                 return Column(
                   children: [
@@ -841,7 +767,8 @@ class DashboardPage extends StatelessWidget {
                           ...others.skip(1).map((subject) {
                             // Roughly 50% width minus padding for 2-column layout
                             final itemWidth =
-                                (constraints.maxWidth - AppDimensions.paddingLG) /
+                                (constraints.maxWidth -
+                                    AppDimensions.paddingLG) /
                                 2.05;
                             return SizedBox(
                               width: itemWidth,
@@ -858,7 +785,8 @@ class DashboardPage extends StatelessWidget {
                           }),
                           SizedBox(
                             width:
-                                (constraints.maxWidth - AppDimensions.paddingLG) /
+                                (constraints.maxWidth -
+                                    AppDimensions.paddingLG) /
                                 2.05,
                             child: _buildQuizCard(context),
                           ),
@@ -1005,20 +933,20 @@ class DashboardPage extends StatelessWidget {
                   final shell = StatefulNavigationShell.of(context);
                   shell.goBranch(2);
                 },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.onPrimary,
-                padding: const EdgeInsets.symmetric(
-                  vertical: AppDimensions.progressBarMD,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: AppColors.onPrimary,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: AppDimensions.progressBarMD,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+                  ),
+                  textStyle: AppTextStyles.labelLarge,
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-                ),
-                textStyle: AppTextStyles.labelLarge,
+                child: const Text(AppStrings.startNow),
               ),
-              child: const Text(AppStrings.startNow),
             ),
-          ),
           ),
         ],
       ),
@@ -1445,10 +1373,7 @@ class _AnnouncementBannerState extends State<_AnnouncementBanner> {
                 color: colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
               ),
-              child: Icon(
-                Icons.close,
-                color: colorScheme.onSurfaceVariant,
-              ),
+              child: Icon(Icons.close, color: colorScheme.onSurfaceVariant),
             ),
             child: Container(
               width: double.infinity,
@@ -1463,7 +1388,9 @@ class _AnnouncementBannerState extends State<_AnnouncementBanner> {
                     : colorScheme.primaryContainer,
                 borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
                 border: isUrgent
-                    ? Border.all(color: colorScheme.error.withValues(alpha: 0.5))
+                    ? Border.all(
+                        color: colorScheme.error.withValues(alpha: 0.5),
+                      )
                     : null,
               ),
               child: Row(
@@ -1617,7 +1544,9 @@ class _CurriculumChipState extends State<_CurriculumChip> {
             children: [
               if (selected)
                 Padding(
-                  padding: const EdgeInsets.only(right: AppDimensions.paddingXS),
+                  padding: const EdgeInsets.only(
+                    right: AppDimensions.paddingXS,
+                  ),
                   child: Icon(
                     LucideIcons.check,
                     size: AppDimensions.iconSM,
