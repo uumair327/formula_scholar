@@ -523,12 +523,12 @@ class DashboardPage extends StatelessWidget {
   }
 
   Widget _buildFilterShimmer() {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ShimmerBox(width: 120, height: 12),
-        const SizedBox(height: AppDimensions.paddingSM),
-        const Row(
+        SizedBox(height: AppDimensions.paddingSM),
+        Row(
           children: [
             ShimmerBox(width: 80, height: 36, borderRadius: 18),
             SizedBox(width: 8),
@@ -537,10 +537,10 @@ class DashboardPage extends StatelessWidget {
             ShimmerBox(width: 90, height: 36, borderRadius: 18),
           ],
         ),
-        const SizedBox(height: AppDimensions.paddingSM),
+        SizedBox(height: AppDimensions.paddingSM),
         ShimmerBox(width: 100, height: 12),
-        const SizedBox(height: AppDimensions.paddingSM),
-        const Row(
+        SizedBox(height: AppDimensions.paddingSM),
+        Row(
           children: [
             ShimmerBox(width: 70, height: 36, borderRadius: 18),
             SizedBox(width: 8),
@@ -621,6 +621,7 @@ class DashboardPage extends StatelessWidget {
               },
             ),
           ),
+        ],
     );
   }
 
@@ -1581,8 +1582,6 @@ class _CurriculumChip extends StatefulWidget {
 }
 
 class _CurriculumChipState extends State<_CurriculumChip> {
-  bool _hovering = false;
-
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -1604,9 +1603,7 @@ class _CurriculumChipState extends State<_CurriculumChip> {
           decoration: BoxDecoration(
             color: selected
                 ? colorScheme.primary
-                : _hovering
-                    ? colorScheme.surfaceContainerHigh
-                    : colorScheme.surfaceContainerLow,
+                : colorScheme.surfaceContainerLow,
             borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
             border: Border.all(
               color: selected
