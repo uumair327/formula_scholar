@@ -27,13 +27,19 @@ class AccountInformationPage extends StatelessWidget {
         final profile = state.profile;
 
         return Scaffold(
-          body: CustomScrollView(
+          body: LayoutBuilder(
+            builder: (context, constraints) {
+              final isDesktop = constraints.maxWidth >= AppDimensions.breakpointDesktop;
+              final hp = isDesktop
+                  ? ((constraints.maxWidth - AppDimensions.breakpointMaxContent) / 2).clamp(
+                      AppDimensions.paddingSectionLG, double.infinity,
+                    )
+                  : AppDimensions.paddingXL;
+              return CustomScrollView(
             slivers: [
               _buildAppBar(context),
               SliverPadding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppDimensions.paddingXL,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: hp),
                 sliver: SliverList(
                   delegate: SliverChildListDelegate([
                     const SizedBox(height: AppDimensions.paddingXXL),
@@ -113,9 +119,11 @@ class AccountInformationPage extends StatelessWidget {
                 ),
               ),
             ],
-          ),
-        );
-      },
+          );
+          },
+        ),
+      );
+    },
     );
   }
 

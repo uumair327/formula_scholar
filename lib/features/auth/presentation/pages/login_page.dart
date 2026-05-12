@@ -82,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
             SafeArea(
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  final isWide = constraints.maxWidth > 900;
+                  final isWide = constraints.maxWidth > AppDimensions.breakpointTablet;
                   return Center(
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 1200),

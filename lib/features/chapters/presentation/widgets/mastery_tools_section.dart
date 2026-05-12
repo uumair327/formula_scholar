@@ -5,7 +5,7 @@ import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
 import 'package:go_router/go_router.dart';
 import '../../domain/domain.dart';
-import '../../../profile/presentation/widgets/support_contact_sheet.dart';
+import '../../../profile/profile.dart';
 
 class MasteryToolsSection extends StatelessWidget {
   const MasteryToolsSection({super.key, required this.tools});

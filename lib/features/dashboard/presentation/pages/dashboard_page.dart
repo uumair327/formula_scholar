@@ -10,9 +10,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
-import '../../../chapters/presentation/widgets/subject_analytics_sheet.dart';
+import '../../../chapters/chapters.dart';
 import '../../../auth/auth.dart';
-import '../../../onboarding/domain/domain.dart';
+import '../../../onboarding/onboarding.dart';
 import '../../domain/domain.dart';
 import '../cubit/curriculum_options_cubit.dart';
 import '../cubit/curriculum_options_state.dart';
@@ -104,48 +104,56 @@ class DashboardPage extends StatelessWidget {
           return Scaffold(
             body: RefreshIndicator(
               onRefresh: () => context.read<DashboardCubit>().loadDashboard(),
-              child: CustomScrollView(
-                slivers: [
-                  _buildAppBar(context),
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppDimensions.paddingXL,
-                    ),
-                    sliver: SliverList(
-                      delegate: SliverChildListDelegate([
-                        const SizedBox(height: AppDimensions.paddingLG),
-                        _buildCurriculumFilterBar(context),
-                        const SizedBox(height: AppDimensions.paddingXL),
-                        _buildAnnouncementBanner(context, state),
-                        const SizedBox(height: AppDimensions.paddingSection),
-                        EntranceWrapper(
-                          child: _buildHeroStatusCard(context, state),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final isDesktop = constraints.maxWidth >= AppDimensions.breakpointDesktop;
+                  final hp = isDesktop
+                      ? ((constraints.maxWidth - AppDimensions.breakpointMaxContent) / 2).clamp(
+                          AppDimensions.paddingSectionLG, double.infinity,
+                        )
+                      : AppDimensions.paddingXL;
+                  return CustomScrollView(
+                    slivers: [
+                      _buildAppBar(context),
+                      SliverPadding(
+                        padding: EdgeInsets.symmetric(horizontal: hp),
+                        sliver: SliverList(
+                          delegate: SliverChildListDelegate([
+                            const SizedBox(height: AppDimensions.paddingLG),
+                            _buildCurriculumFilterBar(context),
+                            const SizedBox(height: AppDimensions.paddingXL),
+                            _buildAnnouncementBanner(context, state),
+                            const SizedBox(height: AppDimensions.paddingSection),
+                            EntranceWrapper(
+                              child: _buildHeroStatusCard(context, state),
+                            ),
+                            const SizedBox(height: AppDimensions.paddingSection),
+                            EntranceWrapper(
+                              delay: const Duration(milliseconds: 50),
+                              child: _buildCarouselBanners(context, state),
+                            ),
+                            const SizedBox(height: AppDimensions.paddingSection),
+                            EntranceWrapper(
+                              delay: const Duration(milliseconds: 100),
+                              child: _buildAcademicPath(context, state),
+                            ),
+                            const SizedBox(height: AppDimensions.paddingSection),
+                            EntranceWrapper(
+                              delay: const Duration(milliseconds: 150),
+                              child: _buildFormulaVault(context, state),
+                            ),
+                            const SizedBox(height: AppDimensions.paddingLG),
+                            EntranceWrapper(
+                              delay: const Duration(milliseconds: 200),
+                              child: _buildContinueStudying(context, state),
+                            ),
+                            const SizedBox(height: AppDimensions.bottomNavPadding),
+                          ]),
                         ),
-                        const SizedBox(height: AppDimensions.paddingSection),
-                        EntranceWrapper(
-                          delay: const Duration(milliseconds: 50),
-                          child: _buildCarouselBanners(context, state),
-                        ),
-                        const SizedBox(height: AppDimensions.paddingSection),
-                        EntranceWrapper(
-                          delay: const Duration(milliseconds: 100),
-                          child: _buildAcademicPath(context, state),
-                        ),
-                        const SizedBox(height: AppDimensions.paddingSection),
-                        EntranceWrapper(
-                          delay: const Duration(milliseconds: 150),
-                          child: _buildFormulaVault(context, state),
-                        ),
-                        const SizedBox(height: AppDimensions.paddingLG),
-                        EntranceWrapper(
-                          delay: const Duration(milliseconds: 200),
-                          child: _buildContinueStudying(context, state),
-                        ),
-                        const SizedBox(height: AppDimensions.bottomNavPadding),
-                      ]),
-                    ),
-                  ),
-                ],
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           );
@@ -1048,8 +1056,14 @@ class DashboardPage extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final colorScheme = Theme.of(context).colorScheme;
-        final isWide = constraints.maxWidth > AppDimensions.breakpointMedium;
-        final crossAxisCount = isWide ? 4 : 2;
+        final width = constraints.maxWidth;
+        final crossAxisCount = Responsive.gridColumns(
+          width,
+          mobile: 2,
+          tablet: 3,
+          desktop: 4,
+          wideDesktop: 6,
+        );
         // Items from state + an "add" slot
         final vaultItems = state.vaultItems;
         final totalCount = vaultItems.length + 1; // +1 for "add new" card

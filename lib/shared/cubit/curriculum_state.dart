@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../domain/entities/selected_curriculum.dart';
+import '../domain/domain.dart';
 
 const Object _unset = Object();
 

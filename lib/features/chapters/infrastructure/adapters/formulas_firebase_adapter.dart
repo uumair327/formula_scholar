@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/infrastructure/user_stats_accumulator.dart';
+import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 
 /// Firebase adapter for formula data retrieval.

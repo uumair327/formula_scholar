@@ -72,6 +72,17 @@ abstract final class AppTheme {
         type: BottomNavigationBarType.fixed,
         elevation: AppDimensions.elevationNone,
       ),
+      scrollbarTheme: ScrollbarThemeData(
+        thickness: WidgetStateProperty.all(8.0),
+        radius: const Radius.circular(AppDimensions.radiusSM),
+        thumbColor: WidgetStateProperty.resolveWith((states) =>
+            states.contains(WidgetState.hovered)
+                ? AppColors.outline
+                : AppColors.outline.withValues(alpha: AppDimensions.opacityMedium)),
+        trackColor: WidgetStateProperty.all(
+          AppColors.surfaceVariant.withValues(alpha: AppDimensions.opacitySubtle),
+        ),
+      ),
     );
   }
 
@@ -164,6 +175,17 @@ abstract final class AppTheme {
         unselectedItemColor: AppColors.outlineVariant,
         type: BottomNavigationBarType.fixed,
         elevation: AppDimensions.elevationNone,
+      ),
+      scrollbarTheme: ScrollbarThemeData(
+        thickness: WidgetStateProperty.all(8.0),
+        radius: const Radius.circular(AppDimensions.radiusSM),
+        thumbColor: WidgetStateProperty.resolveWith((states) =>
+            states.contains(WidgetState.hovered)
+                ? AppColors.outlineVariant
+                : AppColors.outlineVariant.withValues(alpha: AppDimensions.opacityMedium)),
+        trackColor: WidgetStateProperty.all(
+          AppColors.surfaceVariant.withValues(alpha: AppDimensions.opacitySubtle),
+        ),
       ),
     );
   }

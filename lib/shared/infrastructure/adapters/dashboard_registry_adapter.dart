@@ -10,8 +10,7 @@ library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../domain/models/content_registry.dart';
-import '../../domain/models/curriculum_registry.dart';
+import '../../domain/domain.dart';
 
 class DashboardRegistryAdapter {
 

@@ -4,11 +4,114 @@ import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../core/core.dart';
 
-/// Shell page wrapping routes with a persistent bottom navigation bar.
-///
-/// Matches the React app's `<BottomNav>` component — 5 tabs.
+/// Shell page wrapping routes with a responsive navigation:
+/// - **Desktop** (≥1024px): Persistent side [NavigationRail]
+/// - **Mobile/Tablet** (<1024px): Bottom navigation bar (existing pattern)
 class MainShellPage extends StatelessWidget {
   const MainShellPage({super.key, required this.navigationShell});
+  final StatefulNavigationShell navigationShell;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth >= AppDimensions.breakpointDesktop) {
+          return _DesktopShell(navigationShell: navigationShell);
+        }
+        return _MobileShell(navigationShell: navigationShell);
+      },
+    );
+  }
+}
+
+/// Desktop shell with side navigation rail.
+class _DesktopShell extends StatelessWidget {
+  const _DesktopShell({required this.navigationShell});
+  final StatefulNavigationShell navigationShell;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final currentIndex = navigationShell.currentIndex;
+
+    return Scaffold(
+      body: Row(
+        children: [
+          NavigationRail(
+            selectedIndex: currentIndex,
+            onDestinationSelected: (index) {
+              AppLogger.debug(
+                'Side nav tapped: index=$index',
+                tag: AppLogTags.mainShellPage,
+              );
+              navigationShell.goBranch(
+                index,
+                initialLocation: index == currentIndex,
+              );
+            },
+            labelType: NavigationRailLabelType.all,
+            minWidth: AppDimensions.sideNavWidth,
+            groupAlignment: 0.0,
+            backgroundColor: colorScheme.surface,
+            indicatorColor: colorScheme.primaryContainer,
+            leading: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: AppDimensions.paddingLG,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    LucideIcons.sigma,
+                    size: AppDimensions.iconXL,
+                    color: colorScheme.primary,
+                  ),
+                  const SizedBox(height: AppDimensions.paddingXXS),
+                  Text(
+                    'Formula\nScholar',
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.labelSmall.copyWith(
+                      color: colorScheme.primary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            destinations: const [
+              NavigationRailDestination(
+                icon: Icon(LucideIcons.home),
+                label: Text(AppStrings.navHome),
+              ),
+              NavigationRailDestination(
+                icon: Icon(LucideIcons.bookOpen),
+                label: Text(AppStrings.navChapters),
+              ),
+              NavigationRailDestination(
+                icon: Icon(LucideIcons.gamepad2),
+                label: Text(AppStrings.navPractice),
+              ),
+              NavigationRailDestination(
+                icon: Icon(LucideIcons.bookmark),
+                label: Text(AppStrings.navSaved),
+              ),
+              NavigationRailDestination(
+                icon: Icon(LucideIcons.user),
+                label: Text(AppStrings.navProfile),
+              ),
+            ],
+          ),
+          const VerticalDivider(width: 1, thickness: 1),
+          Expanded(child: navigationShell),
+        ],
+      ),
+    );
+  }
+}
+
+/// Mobile/tablet shell with bottom navigation bar (original pattern).
+class _MobileShell extends StatelessWidget {
+  const _MobileShell({required this.navigationShell});
   final StatefulNavigationShell navigationShell;
 
   @override
@@ -114,51 +217,55 @@ class _NavItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: AnimatedContainer(
-        duration: AppDurations.animationDefault,
-        curve: AppDurations.curveEaseOutBack,
-        padding: EdgeInsets.symmetric(
-          horizontal: isSelected
-              ? AppDimensions.paddingLG
-              : AppDimensions.paddingMD,
-          vertical: AppDimensions.paddingSM,
-        ),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? colorScheme.primaryContainer
-              : AppColors.transparent,
-          borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              size: AppDimensions.iconDefault,
-              color: isSelected
-                  ? colorScheme.onPrimaryContainer
-                  : colorScheme.outline,
-            ),
-            const SizedBox(height: AppDimensions.paddingXXS),
-            Text(
-              label,
-              style: AppTextStyles.labelSmall.copyWith(
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: AnimatedContainer(
+          duration: AppDurations.animationDefault,
+          curve: AppDurations.curveEaseOutBack,
+          padding: EdgeInsets.symmetric(
+            horizontal: isSelected
+                ? AppDimensions.paddingLG
+                : AppDimensions.paddingMD,
+            vertical: AppDimensions.paddingSM,
+          ),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? colorScheme.primaryContainer
+                : AppColors.transparent,
+            borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                size: AppDimensions.iconDefault,
                 color: isSelected
                     ? colorScheme.onPrimaryContainer
                     : colorScheme.outline,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                fontSize: AppDimensions.fontSizeXS,
-                letterSpacing: AppDimensions.letterSpacingNarrow,
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
+              const SizedBox(height: AppDimensions.paddingXXS),
+              Text(
+                label,
+                style: AppTextStyles.labelSmall.copyWith(
+                  color: isSelected
+                      ? colorScheme.onPrimaryContainer
+                      : colorScheme.outline,
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                  fontSize: AppDimensions.fontSizeXS,
+                  letterSpacing: AppDimensions.letterSpacingNarrow,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
+

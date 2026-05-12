@@ -73,37 +73,48 @@ class FormulasPage extends StatelessWidget {
                 );
               }
             },
-            child: CustomScrollView(
-              slivers: [
-                _buildAppBar(context, state),
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppDimensions.paddingXL,
-                  ),
-                  sliver: SliverList(
-                    delegate: SliverChildListDelegate([
-                      const SizedBox(height: AppDimensions.paddingLG),
-                      _buildProgressHeader(context, state),
-                      const SizedBox(height: AppDimensions.paddingXXL),
-                      if (state.formulas.isEmpty)
-                        _buildEmptyFormulasState(context)
-                      else
-                        ...state.formulas.asMap().entries.map(
-                          (entry) => Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: AppDimensions.paddingLG,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final isDesktop = constraints.maxWidth >= AppDimensions.breakpointDesktop;
+                final hp = isDesktop
+                    ? ((constraints.maxWidth - AppDimensions.breakpointMaxContent) / 2).clamp(
+                        AppDimensions.paddingSectionLG, double.infinity,
+                      )
+                    : AppDimensions.paddingXL;
+                final isTwoColumns = isDesktop && state.formulas.length > 1;
+                return CustomScrollView(
+                  slivers: [
+                    _buildAppBar(context, state),
+                    SliverPadding(
+                      padding: EdgeInsets.symmetric(horizontal: hp),
+                      sliver: SliverList(
+                        delegate: SliverChildListDelegate([
+                          const SizedBox(height: AppDimensions.paddingLG),
+                          _buildProgressHeader(context, state),
+                          const SizedBox(height: AppDimensions.paddingXXL),
+                          if (state.formulas.isEmpty)
+                            _buildEmptyFormulasState(context)
+                          else if (isTwoColumns)
+                            _buildFormulaGrid(context, state)
+                          else
+                            ...state.formulas.asMap().entries.map(
+                              (entry) => Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: AppDimensions.paddingLG,
+                                ),
+                                child: _FormulaCard(
+                                  formula: entry.value,
+                                  index: entry.key,
+                                ),
+                              ),
                             ),
-                            child: _FormulaCard(
-                              formula: entry.value,
-                              index: entry.key,
-                            ),
-                          ),
-                        ),
-                      const SizedBox(height: AppDimensions.bottomNavPadding),
-                    ]),
-                  ),
-                ),
-              ],
+                          const SizedBox(height: AppDimensions.bottomNavPadding),
+                        ]),
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         );
@@ -315,6 +326,26 @@ class FormulasPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildFormulaGrid(BuildContext context, FormulasState state) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: AppDimensions.paddingLG,
+        crossAxisSpacing: AppDimensions.paddingLG,
+        childAspectRatio: 1.4,
+      ),
+      itemCount: state.formulas.length,
+      itemBuilder: (context, index) {
+        return _FormulaCard(
+          formula: state.formulas[index],
+          index: index,
+        );
+      },
     );
   }
 }

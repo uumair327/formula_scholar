@@ -35,8 +35,12 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
         slivers: [
           _buildAppBar(context),
           SliverPadding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppDimensions.paddingXL,
+            padding: EdgeInsets.symmetric(
+              horizontal: Responsive.value(
+                context: context,
+                mobile: AppDimensions.paddingXL,
+                desktop: AppDimensions.paddingSectionLG * 2 + AppDimensions.paddingXL,
+              ),
             ),
             sliver: SliverList(
               delegate: SliverChildListDelegate([

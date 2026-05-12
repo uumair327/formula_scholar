@@ -75,6 +75,14 @@ abstract final class AppDimensions {
   static const double breakpointWide = 600.0;
   static const double breakpointMedium = 500.0;
   static const double breakpointCardHorizontal = 400.0;
+  static const double breakpointTablet = 900.0;
+  static const double breakpointDesktop = 1024.0;
+  static const double breakpointMaxContent = 1200.0;
+
+  // ──────────────────────── Side Navigation ──────────────────
+  static const double sideNavWidth = 240.0;
+  static const double sideNavRailWidth = 72.0;
+  static const double sideNavCollapsedWidth = 80.0;
 
   // ──────────────────────── Card Heights / Constraints ───────
   static const double cardMinHeightLG = 280.0;

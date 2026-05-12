@@ -218,7 +218,15 @@ class _ChaptersPageState extends State<ChaptersPage> {
                   );
                 }
               },
-              child: CustomScrollView(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final isDesktop = constraints.maxWidth >= AppDimensions.breakpointDesktop;
+                  final hp = isDesktop
+                      ? ((constraints.maxWidth - AppDimensions.breakpointMaxContent) / 2).clamp(
+                          AppDimensions.paddingSectionLG, double.infinity,
+                        )
+                      : AppDimensions.paddingXL;
+                  return CustomScrollView(
                 slivers: [
                   _buildAppBar(context, subjectState),
                   _buildSubjectChips(context, subjectState),
@@ -330,9 +338,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
                         }
 
                         return SliverPadding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppDimensions.paddingXL,
-                          ),
+                          padding: EdgeInsets.symmetric(horizontal: hp),
                           sliver: SliverList(
                             delegate: SliverChildListDelegate([
                               const SizedBox(height: AppDimensions.paddingLG),
@@ -418,6 +424,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
                       },
                     ),
                 ],
+                  );
+                },
               ),
             ),
             floatingActionButton: subjectState.hasSelection

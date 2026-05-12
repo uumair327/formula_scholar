@@ -42,46 +42,54 @@ class ProfilePage extends StatelessWidget {
           body: RefreshIndicator(
             onRefresh: () =>
                 context.read<ProfileCubit>().loadProfile(),
-            child: CustomScrollView(
-            slivers: [
-              _buildAppBar(context, state, displayName),
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppDimensions.paddingXL,
-                ),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate([
-                    const SizedBox(height: AppDimensions.paddingLG),
-                    if (state.profile != null)
-                      ProfileHeroWidget(profile: state.profile!),
-                    const SizedBox(height: AppDimensions.paddingHero),
-                    ProgressStatsWidget(
-                      stats: state.stats,
-                      displayName: displayName,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final isDesktop = constraints.maxWidth >= AppDimensions.breakpointDesktop;
+                final hp = isDesktop
+                    ? ((constraints.maxWidth - AppDimensions.breakpointMaxContent) / 2).clamp(
+                        AppDimensions.paddingSectionLG, double.infinity,
+                      )
+                    : AppDimensions.paddingXL;
+                return CustomScrollView(
+                  slivers: [
+                    _buildAppBar(context, state, displayName),
+                    SliverPadding(
+                      padding: EdgeInsets.symmetric(horizontal: hp),
+                      sliver: SliverList(
+                        delegate: SliverChildListDelegate([
+                          const SizedBox(height: AppDimensions.paddingLG),
+                          if (state.profile != null)
+                            ProfileHeroWidget(profile: state.profile!),
+                          const SizedBox(height: AppDimensions.paddingHero),
+                          ProgressStatsWidget(
+                            stats: state.stats,
+                            displayName: displayName,
+                          ),
+                          const SizedBox(height: AppDimensions.paddingHero),
+                          BlocBuilder<ThemeCubit, ThemeState>(
+                            buildWhen: (prev, curr) =>
+                                prev.isDarkMode != curr.isDarkMode,
+                            builder: (context, themeState) {
+                              return SettingsListWidget(
+                                items: state.settingsItems,
+                                isDarkMode: themeState.isDarkMode,
+                                onDarkModeToggle: () {
+                                  context.read<ThemeCubit>().toggleTheme();
+                                },
+                                onItemTapped: (id) =>
+                                    _handleSettingsNavigation(context, id),
+                              );
+                            },
+                          ),
+                          const SizedBox(height: AppDimensions.bottomNavPadding),
+                        ]),
+                      ),
                     ),
-                    const SizedBox(height: AppDimensions.paddingHero),
-                    BlocBuilder<ThemeCubit, ThemeState>(
-                      buildWhen: (prev, curr) =>
-                          prev.isDarkMode != curr.isDarkMode,
-                      builder: (context, themeState) {
-                        return SettingsListWidget(
-                          items: state.settingsItems,
-                          isDarkMode: themeState.isDarkMode,
-                          onDarkModeToggle: () {
-                            context.read<ThemeCubit>().toggleTheme();
-                          },
-                          onItemTapped: (id) =>
-                              _handleSettingsNavigation(context, id),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: AppDimensions.bottomNavPadding),
-                  ]),
-                ),
-              ),
-            ],
-          ),
+                  ],
+                );
+              },
             ),
+          ),
         );
       },
     );
