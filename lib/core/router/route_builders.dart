@@ -16,6 +16,7 @@ import '../../features/flashcards/flashcards.dart';
 import '../../features/comparison/comparison.dart';
 import '../../features/achievements/achievements.dart';
 import '../../features/analytics/analytics.dart';
+import '../../features/study_planner/study_planner.dart';
 import '../../features/chapters/presentation/pages/cheat_sheet_page.dart';
 import '../../shared/shared.dart';
 import 'app_page_transitions.dart';
@@ -191,6 +192,37 @@ abstract final class RouteBuilders {
             ),
           );
         },
+      ),
+    ];
+  }
+
+  // ─── Study Planner Routes ─────────────────────────────────────
+  static List<GoRoute> studyPlannerRoutes() {
+    return [
+      GoRoute(
+        path: AppRoutes.studyPlannerPath,
+        name: AppRoutes.studyPlannerName,
+        pageBuilder: (context, state) {
+          return AppPageTransitions.fadeTransition(
+            state: state,
+            child: BlocProvider(
+              create: (_) => getIt<StudyPlannerCubit>(),
+              child: const StudyPlannerPage(),
+            ),
+          );
+        },
+        routes: [
+          GoRoute(
+            path: 'create',
+            name: AppRoutes.createPlanName,
+            pageBuilder: (context, state) {
+              return AppPageTransitions.fadeTransition(
+                state: state,
+                child: const CreatePlanPage(),
+              );
+            },
+          ),
+        ],
       ),
     ];
   }

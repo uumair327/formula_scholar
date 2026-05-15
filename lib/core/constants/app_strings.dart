@@ -549,6 +549,12 @@ abstract final class AppStrings {
   static const String searchNoResultsDesc = 'Try a different search term or browse chapters';
   static const String searchResultsFor = 'Results for';
 
+  // ──────────────────────── Study Planner ──────────────────────
+  static const String studyPlanner = 'Study Planner';
+  static const String studyPlannerSubtitle = 'Plan and track your study sessions';
+  static const String createPlan = 'Create Plan';
+  static const String sessionComplete = 'Session Complete';
+
   // ──────────────────────── Flashcards ─────────────────────────
   static const String flashcards = 'Flashcards';
   static const String flashcardStudy = 'Study Mode';

@@ -17,3 +17,4 @@ export 'flashcards/flashcards.dart';
 export 'comparison/comparison.dart';
 export 'achievements/achievements.dart';
 export 'analytics/analytics.dart';
+export 'study_planner/study_planner.dart';

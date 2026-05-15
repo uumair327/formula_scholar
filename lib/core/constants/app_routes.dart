@@ -120,6 +120,12 @@ abstract final class AppRoutes {
   static const String flashcardsPath = '/flashcards';
   static const String flashcardsName = 'flashcards';
 
+  // ──────────────────────── Study Planner ────────────────────────
+  static const String studyPlannerPath = '/study-planner';
+  static const String studyPlannerName = 'studyPlanner';
+  static const String createPlanPath = '/study-planner/create';
+  static const String createPlanName = 'createPlan';
+
   // ──────────────────────── Search ──────────────────────────────
   static const String searchPath = '/search';
   static const String searchName = 'search';

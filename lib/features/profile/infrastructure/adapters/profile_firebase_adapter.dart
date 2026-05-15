@@ -315,6 +315,12 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
         iconName: 'bookmark_outline',
       ),
       SettingsItem(
+        id: 'study_planner',
+        label: AppStrings.studyPlanner,
+        subtitle: AppStrings.studyPlannerSubtitle,
+        iconName: 'calendar_today',
+      ),
+      SettingsItem(
         id: 'achievements',
         label: AppStrings.achievementsTitle,
         subtitle: AppStrings.achievementsSubtitle,
