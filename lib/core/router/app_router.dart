@@ -123,6 +123,12 @@ abstract final class AppRouter {
     routes: [
       ...RouteBuilders.authRoutes(),
       ...RouteBuilders.profileSubRoutes(),
+      ...RouteBuilders.searchRoutes(),
+      ...RouteBuilders.analyticsRoutes(),
+      ...RouteBuilders.achievementsRoutes(),
+      ...RouteBuilders.cheatSheetRoutes(),
+      ...RouteBuilders.comparisonRoutes(),
+      ...RouteBuilders.flashcardRoutes(),
       ...RouteBuilders.legalRoutes(),
       RouteBuilders.onboardingRoutes(),
       RouteBuilders.mainShellRoute(),

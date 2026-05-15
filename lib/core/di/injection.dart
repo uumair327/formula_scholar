@@ -1,7 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
 import 'injection.config.dart';
+
+import '../../features/flashcards/presentation/cubit/flashcards_cubit.dart';
+import '../../features/search/domain/ports/search_data_source_port.dart';
+import '../../features/search/domain/ports/search_repository_port.dart';
+import '../../features/search/domain/usecases/search_formulas_use_case.dart';
+import '../../features/search/infrastructure/adapters/search_firebase_adapter.dart';
+import '../../features/search/infrastructure/repositories/search_repository_impl.dart';
+import '../../features/search/presentation/cubit/search_cubit.dart';
+import '../../features/comparison/presentation/cubit/comparison_cubit.dart';
+import '../../features/achievements/presentation/cubit/achievements_cubit.dart';
+import '../../features/saved/domain/usecases/add_note_use_case.dart';
+import '../../features/saved/domain/usecases/delete_note_use_case.dart';
+import '../../features/saved/domain/usecases/update_note_use_case.dart';
 
 /// Global [GetIt] service locator instance.
 ///
@@ -21,4 +35,43 @@ final GetIt getIt = GetIt.instance;
   preferRelativeImports: true,
   asExtension: true,
 )
-void configureDependencies() => getIt.init();
+void configureDependencies() {
+  getIt.init();
+
+  // ─── Manual registrations for new features ──────────────────
+  // TODO: Remove after running build_runner
+
+  // Search
+  getIt.registerLazySingleton<SearchDataSourcePort>(
+    () => SearchFirebaseAdapter(getIt<FirebaseFirestore>()),
+  );
+  getIt.registerLazySingleton<SearchRepositoryPort>(
+    () => SearchRepositoryImpl(dataSource: getIt<SearchDataSourcePort>()),
+  );
+  getIt.registerFactory<SearchFormulasUseCase>(
+    () => SearchFormulasUseCase(repository: getIt<SearchRepositoryPort>()),
+  );
+  getIt.registerFactory<SearchCubit>(
+    () => SearchCubit(searchFormulas: getIt<SearchFormulasUseCase>()),
+  );
+
+  // Notes
+  getIt.registerFactory<AddNoteUseCase>(
+    () => AddNoteUseCase(repository: getIt()),
+  );
+  getIt.registerFactory<UpdateNoteUseCase>(
+    () => UpdateNoteUseCase(repository: getIt()),
+  );
+  getIt.registerFactory<DeleteNoteUseCase>(
+    () => DeleteNoteUseCase(repository: getIt()),
+  );
+
+  // Flashcards
+  getIt.registerFactory<FlashcardsCubit>(() => FlashcardsCubit());
+
+  // Comparison
+  getIt.registerFactory<ComparisonCubit>(() => ComparisonCubit());
+
+  // Achievements
+  getIt.registerFactory<AchievementsCubit>(() => AchievementsCubit());
+}

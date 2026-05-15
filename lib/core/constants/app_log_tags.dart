@@ -102,4 +102,10 @@ abstract final class AppLogTags {
   static const String savedRepo = 'SavedRepo';
   static const String savedDataSource = 'SavedDataSource';
   static const String savedUseCase = 'SavedUseCase';
+
+  // ──────────────────────── Search ──────────────────────────────
+  static const String searchCubit = 'SearchCubit';
+  static const String searchRepo = 'SearchRepo';
+  static const String searchDataSource = 'SearchDataSource';
+  static const String searchUseCase = 'SearchUseCase';
 }

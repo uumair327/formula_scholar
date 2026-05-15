@@ -186,6 +186,33 @@ class SavedRepositoryImpl implements SavedRepositoryPort {
   }
 
   @override
+  Future<Result<void>> addNote(SavedNote note) {
+    return safeOperation(
+      tag: AppLogTags.savedRepo,
+      operation: 'addNote(${note.id})',
+      execute: () => _dataSource.addNote(note),
+    );
+  }
+
+  @override
+  Future<Result<void>> updateNote(SavedNote note) {
+    return safeOperation(
+      tag: AppLogTags.savedRepo,
+      operation: 'updateNote(${note.id})',
+      execute: () => _dataSource.updateNote(note),
+    );
+  }
+
+  @override
+  Future<Result<void>> deleteNote(String noteId) {
+    return safeOperation(
+      tag: AppLogTags.savedRepo,
+      operation: 'deleteNote($noteId)',
+      execute: () => _dataSource.deleteNote(noteId),
+    );
+  }
+
+  @override
   Future<Result<void>> removeSavedChapter({
     required String curriculumKey,
     required String subjectId,

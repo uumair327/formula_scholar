@@ -24,4 +24,7 @@ abstract interface class SavedRepositoryPort {
     required String subjectId,
     required String chapterId,
   });
+  Future<Result<void>> addNote(SavedNote note);
+  Future<Result<void>> updateNote(SavedNote note);
+  Future<Result<void>> deleteNote(String noteId);
 }

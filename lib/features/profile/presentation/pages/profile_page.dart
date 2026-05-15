@@ -167,6 +167,9 @@ class ProfilePage extends StatelessWidget {
       case 'bookmarks':
         StatefulNavigationShell.of(context).goBranch(3);
         return;
+      case 'achievements':
+        context.pushNamed(AppRoutes.achievementsName);
+        return;
       case 'notifications':
         context.push(AppRoutes.notificationsPath);
         return;

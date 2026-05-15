@@ -590,6 +590,9 @@ extension GetItInjectableX on _i174.GetIt {
         getSavedNotes: gh<_i385.GetSavedNotesUseCase>(),
         removeBookmark: gh<_i385.RemoveBookmarkUseCase>(),
         removeSavedChapter: gh<_i385.RemoveSavedChapterUseCase>(),
+        addNote: gh<_i385.AddNoteUseCase>(),
+        updateNote: gh<_i385.UpdateNoteUseCase>(),
+        deleteNote: gh<_i385.DeleteNoteUseCase>(),
       ),
     );
     gh.lazySingleton<_i414.SubjectSelectionCubit>(

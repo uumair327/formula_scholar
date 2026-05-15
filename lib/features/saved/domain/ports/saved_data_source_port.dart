@@ -23,4 +23,7 @@ abstract interface class SavedDataSourcePort {
     required String subjectId,
     required String chapterId,
   });
+  Future<void> addNote(SavedNote note);
+  Future<void> updateNote(SavedNote note);
+  Future<void> deleteNote(String noteId);
 }

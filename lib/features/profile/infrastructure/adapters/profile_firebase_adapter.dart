@@ -315,6 +315,12 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
         iconName: 'bookmark_outline',
       ),
       SettingsItem(
+        id: 'achievements',
+        label: AppStrings.achievementsTitle,
+        subtitle: AppStrings.achievementsSubtitle,
+        iconName: 'emoji_events',
+      ),
+      SettingsItem(
         id: 'notifications',
         label: AppStrings.notifications,
         iconName: 'notifications_outlined',

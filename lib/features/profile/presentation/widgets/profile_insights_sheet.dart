@@ -179,6 +179,20 @@ class ProfileInsightsSheet extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: AppDimensions.paddingMD),
+              SizedBox(
+                width: double.infinity,
+                child: TextButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    context.pushNamed(
+                      AppRoutes.analyticsName,
+                      extra: stats,
+                    );
+                  },
+                  icon: const Icon(LucideIcons.barChart3, size: AppDimensions.iconSM),
+                  label: const Text('View Full Analytics'),
+                ),
+              ),
             ],
           ),
         ),

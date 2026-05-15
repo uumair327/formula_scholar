@@ -492,6 +492,8 @@ abstract final class AppStrings {
   static const String newContentDesc = 'When new chapters are available';
   static const String achievementNotifications = 'Achievements';
   static const String achievements = 'Milestone Alerts';
+  static const String achievementsTitle = 'Achievements';
+  static const String achievementsSubtitle = 'View your earned badges and trophies';
   static const String achievementsDesc = 'When you hit learning milestones';
   static const String weeklyReport = 'Weekly Report';
   static const String weeklyReportDesc = 'Summary of your weekly progress';
@@ -540,8 +542,32 @@ abstract final class AppStrings {
   static const String appVersion = 'Version 1.0.0 (Beta)';
   static const String madeWithLove = 'Made with ❤️ for scholars';
 
-  // ──────────────────────── Global Actions ───────────────────
+  // ──────────────────────── Search ──────────────────────────────
   static const String searchLabel = 'Search';
+  static const String searchFormulas = 'Search formulas';
+  static const String searchNoResults = 'No formulas found';
+  static const String searchNoResultsDesc = 'Try a different search term or browse chapters';
+  static const String searchResultsFor = 'Results for';
+
+  // ──────────────────────── Flashcards ─────────────────────────
+  static const String flashcards = 'Flashcards';
+  static const String flashcardStudy = 'Study Mode';
+  static const String flashcardFlip = 'Tap to flip';
+  static const String flashcardMastered = 'Mastered';
+  static const String flashcardReview = 'Review Again';
+  static const String flashcardSessionComplete = 'Session Complete!';
+  static const String flashcardSessionDesc = 'Great work! Keep practicing to master all formulas.';
+
+  // ──────────────────────── Notes ──────────────────────────────
+  static const String addNote = 'Add Note';
+  static const String editNote = 'Edit Note';
+  static const String deleteNote = 'Delete Note';
+  static const String noteHint = 'Write your note here...';
+  static const String noteSaved = 'Note saved';
+  static const String noteDeleted = 'Note deleted';
+  static const String noteTitleHint = 'Note title';
+
+  // ──────────────────────── Global Actions ───────────────────
   static const String quickPractice = 'Quick Practice';
 
   // ──────────────────────── Formulas Page ────────────────────

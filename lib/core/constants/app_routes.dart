@@ -100,6 +100,30 @@ abstract final class AppRoutes {
   static const String helpSupportPath = '/profile/help';
   static const String helpSupportName = 'helpSupport';
 
+  // ──────────────────────── Analytics ──────────────────────────
+  static const String analyticsPath = '/analytics';
+  static const String analyticsName = 'analytics';
+
+  // ──────────────────────── Achievements ───────────────────────
+  static const String achievementsPath = '/achievements';
+  static const String achievementsName = 'achievements';
+
+  // ──────────────────────── Cheat Sheet ────────────────────────
+  static const String cheatSheetPath = '/cheat-sheet';
+  static const String cheatSheetName = 'cheatSheet';
+
+  // ──────────────────────── Comparison ─────────────────────────
+  static const String comparisonPath = '/compare';
+  static const String comparisonName = 'compare';
+
+  // ──────────────────────── Flashcards ──────────────────────────
+  static const String flashcardsPath = '/flashcards';
+  static const String flashcardsName = 'flashcards';
+
+  // ──────────────────────── Search ──────────────────────────────
+  static const String searchPath = '/search';
+  static const String searchName = 'search';
+
   // ──────────────────────── Legal / Compliance ────────────────
   /// Privacy Policy page (required for Play Store).
   static const String privacyPolicyPath = '/legal/privacy';

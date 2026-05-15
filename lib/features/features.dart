@@ -12,3 +12,8 @@ export 'onboarding/onboarding.dart';
 export 'practice/practice.dart';
 export 'profile/profile.dart';
 export 'saved/saved.dart';
+export 'search/search.dart';
+export 'flashcards/flashcards.dart';
+export 'comparison/comparison.dart';
+export 'achievements/achievements.dart';
+export 'analytics/analytics.dart';

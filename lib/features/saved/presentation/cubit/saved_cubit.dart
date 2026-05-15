@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
@@ -18,17 +19,26 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
     required GetSavedNotesUseCase getSavedNotes,
     required RemoveBookmarkUseCase removeBookmark,
     required RemoveSavedChapterUseCase removeSavedChapter,
+    required AddNoteUseCase addNote,
+    required UpdateNoteUseCase updateNote,
+    required DeleteNoteUseCase deleteNote,
   }) : _getBookmarks = getBookmarks,
        _getSavedChapters = getSavedChapters,
        _getSavedNotes = getSavedNotes,
        _removeBookmark = removeBookmark,
        _removeSavedChapter = removeSavedChapter,
+       _addNote = addNote,
+       _updateNote = updateNote,
+       _deleteNote = deleteNote,
        super(const SavedState());
   final GetBookmarksUseCase _getBookmarks;
   final GetSavedChaptersUseCase _getSavedChapters;
   final GetSavedNotesUseCase _getSavedNotes;
   final RemoveBookmarkUseCase _removeBookmark;
   final RemoveSavedChapterUseCase _removeSavedChapter;
+  final AddNoteUseCase _addNote;
+  final UpdateNoteUseCase _updateNote;
+  final DeleteNoteUseCase _deleteNote;
 
   String? _activeCurriculumKey;
 
@@ -164,6 +174,69 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
           errorMessage: 'Failed to remove bookmark',
         ),
       );
+    }
+  }
+
+  /// Adds a new note and reloads.
+  Future<void> addNote({
+    required String title,
+    required String content,
+    required String subject,
+    required String curriculumKey,
+    String? subjectId,
+    String? chapterId,
+    String? formulaId,
+    String? formulaTitle,
+    String? formulaLatex,
+  }) async {
+    final note = SavedNote(
+      id: 'note_${DateTime.now().millisecondsSinceEpoch}_${Random().nextInt(9999)}',
+      title: title,
+      subject: subject,
+      content: content,
+      curriculumKey: curriculumKey,
+      savedAt: DateTime.now(),
+      subjectId: subjectId,
+      chapterId: chapterId,
+      formulaId: formulaId,
+      formulaTitle: formulaTitle,
+      formulaLatex: formulaLatex,
+    );
+
+    final result = await _addNote(note);
+    if (result is Error<void>) {
+      logFailure('add note', result.failure);
+      emit(state.copyWith(errorMessage: 'Failed to add note'));
+      return;
+    }
+
+    final updatedNotes = List<SavedNote>.from(state.notes)..add(note);
+    emit(state.copyWith(notes: updatedNotes));
+  }
+
+  /// Updates an existing note.
+  Future<void> editNote(SavedNote note) async {
+    final result = await _updateNote(note);
+    if (result is Error<void>) {
+      logFailure('update note', result.failure);
+      emit(state.copyWith(errorMessage: 'Failed to update note'));
+      return;
+    }
+
+    final updatedNotes = state.notes.map((n) => n.id == note.id ? note : n).toList();
+    emit(state.copyWith(notes: updatedNotes));
+  }
+
+  /// Deletes a note.
+  Future<void> removeNote(String noteId) async {
+    final initialNotes = List<SavedNote>.from(state.notes);
+    final updatedList = initialNotes.where((n) => n.id != noteId).toList();
+    emit(state.copyWith(notes: updatedList));
+
+    final result = await _deleteNote(noteId);
+    if (result is Error<void>) {
+      logFailure('delete note', result.failure);
+      emit(state.copyWith(notes: initialNotes, errorMessage: 'Failed to delete note'));
     }
   }
 

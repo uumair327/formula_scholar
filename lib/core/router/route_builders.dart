@@ -11,6 +11,12 @@ import '../../features/onboarding/onboarding.dart';
 import '../../features/practice/practice.dart';
 import '../../features/profile/profile.dart';
 import '../../features/saved/saved.dart';
+import '../../features/search/search.dart';
+import '../../features/flashcards/flashcards.dart';
+import '../../features/comparison/comparison.dart';
+import '../../features/achievements/achievements.dart';
+import '../../features/analytics/analytics.dart';
+import '../../features/chapters/presentation/pages/cheat_sheet_page.dart';
 import '../../shared/shared.dart';
 import 'app_page_transitions.dart';
 
@@ -90,6 +96,118 @@ abstract final class RouteBuilders {
           return AppPageTransitions.fadeTransition(
             state: state,
             child: const HelpSupportPage(),
+          );
+        },
+      ),
+    ];
+  }
+
+  // ─── Analytics Route ────────────────────────────────────────
+  static List<GoRoute> analyticsRoutes() {
+    return [
+      GoRoute(
+        path: AppRoutes.analyticsPath,
+        name: AppRoutes.analyticsName,
+        pageBuilder: (context, state) {
+          final stats = state.extra as List<ProfileStat>? ?? const [];
+          return AppPageTransitions.fadeTransition(
+            state: state,
+            child: AnalyticsPage(stats: stats),
+          );
+        },
+      ),
+    ];
+  }
+
+  // ─── Achievements Route ─────────────────────────────────────
+  static List<GoRoute> achievementsRoutes() {
+    return [
+      GoRoute(
+        path: AppRoutes.achievementsPath,
+        name: AppRoutes.achievementsName,
+        pageBuilder: (context, state) {
+          return AppPageTransitions.fadeTransition(
+            state: state,
+            child: BlocProvider(
+              create: (_) => getIt<AchievementsCubit>(),
+              child: const AchievementsPage(),
+            ),
+          );
+        },
+      ),
+    ];
+  }
+
+  // ─── Cheat Sheet Route ──────────────────────────────────────
+  static List<GoRoute> cheatSheetRoutes() {
+    return [
+      GoRoute(
+        path: AppRoutes.cheatSheetPath,
+        name: AppRoutes.cheatSheetName,
+        pageBuilder: (context, state) {
+          return AppPageTransitions.fadeTransition(
+            state: state,
+            child: const CheatSheetPage(),
+          );
+        },
+      ),
+    ];
+  }
+
+  // ─── Comparison Route ────────────────────────────────────────
+  static List<GoRoute> comparisonRoutes() {
+    return [
+      GoRoute(
+        path: AppRoutes.comparisonPath,
+        name: AppRoutes.comparisonName,
+        pageBuilder: (context, state) {
+          return AppPageTransitions.fadeTransition(
+            state: state,
+            child: BlocProvider(
+              create: (_) => getIt<ComparisonCubit>(),
+              child: const ComparisonPage(),
+            ),
+          );
+        },
+      ),
+    ];
+  }
+
+  // ─── Flashcards Route ────────────────────────────────────────
+  static List<GoRoute> flashcardRoutes() {
+    return [
+      GoRoute(
+        path: AppRoutes.flashcardsPath,
+        name: AppRoutes.flashcardsName,
+        pageBuilder: (context, state) {
+          return AppPageTransitions.fadeTransition(
+            state: state,
+            child: BlocProvider(
+              create: (_) {
+                final cubit = getIt<FlashcardsCubit>();
+                return cubit;
+              },
+              child: const FlashcardsPage(),
+            ),
+          );
+        },
+      ),
+    ];
+  }
+
+  // ─── Search Route ─────────────────────────────────────────────
+  static List<GoRoute> searchRoutes() {
+    return [
+      GoRoute(
+        path: AppRoutes.searchPath,
+        name: AppRoutes.searchName,
+        pageBuilder: (context, state) {
+          return AppPageTransitions.fadeTransition(
+            state: state,
+            child: BlocProvider(
+              create: (_) => getIt<SearchCubit>(),
+              child: const SearchPage(),
+            ),
           );
         },
       ),

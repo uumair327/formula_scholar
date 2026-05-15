@@ -6,6 +6,8 @@ import 'package:flutter_math_fork/flutter_math.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
+import '../../../flashcards/flashcards.dart';
+import '../../../comparison/comparison.dart';
 import '../../domain/domain.dart';
 import '../cubit/formulas_cubit.dart';
 import '../cubit/formulas_state.dart';
@@ -251,6 +253,38 @@ class FormulasPage extends StatelessWidget {
             );
           },
         ),
+        Tooltip(
+          message: 'Generate cheat sheet',
+          child: IconButton(
+            onPressed: () {
+              context.pushNamed(AppRoutes.cheatSheetName);
+            },
+            icon: Icon(LucideIcons.fileText, color: colorScheme.outline),
+          ),
+        ),
+        Tooltip(
+          message: 'Study as flashcards',
+          child: IconButton(
+            onPressed: () {
+              final allFormulas = context.read<FormulasCubit>().state.formulas;
+              if (allFormulas.isEmpty) return;
+              getIt<FlashcardsCubit>().startSession(
+                allFormulas.map((f) => Flashcard(
+                  id: f.id,
+                  title: f.title,
+                  latex: f.latex,
+                  description: f.description,
+                  subjectId: '',
+                  subjectName: '',
+                  chapterId: '',
+                  chapterName: '',
+                )).toList(),
+              );
+              context.pushNamed(AppRoutes.flashcardsName);
+            },
+            icon: Icon(LucideIcons.wand2, color: colorScheme.outline),
+          ),
+        ),
         const SizedBox(width: AppDimensions.paddingSM),
       ],
     );
@@ -408,7 +442,6 @@ class _FormulaCard extends StatelessWidget {
                         ),
                         if (formula.canonicalFormulaId != null &&
                             formula.canonicalFormulaId!.isNotEmpty) ...[
-                          const SizedBox(width: AppDimensions.paddingSM),
                           Tooltip(
                             message:
                                 'Canonical Formula: Linked to global library',
@@ -465,6 +498,32 @@ class _FormulaCard extends StatelessWidget {
                       : colorScheme.outline,
                 ),
               ),
+              IconButton(
+                onPressed: () {
+                  final formulasCubit = context.read<FormulasCubit>();
+                  final allFormulas = formulasCubit.state.formulas;
+                  final otherFormulas = allFormulas
+                      .where((f) => f.id != formula.id)
+                      .toList();
+                  if (otherFormulas.isEmpty) return;
+
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (sheetContext) {
+                      return _CompareFormulaSheet(
+                        sourceFormula: formula,
+                        formulas: otherFormulas,
+                      );
+                    },
+                  );
+                },
+                icon: Icon(
+                  LucideIcons.gitCompare,
+                  size: AppDimensions.iconMD,
+                  color: colorScheme.outline,
+                ),
+                tooltip: 'Compare formula',
+              ),
             ],
           ),
           const SizedBox(height: AppDimensions.paddingLG),
@@ -498,6 +557,73 @@ class _FormulaCard extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _CompareFormulaSheet extends StatelessWidget {
+  const _CompareFormulaSheet({
+    required this.sourceFormula,
+    required this.formulas,
+  });
+
+  final Formula sourceFormula;
+  final List<Formula> formulas;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(AppDimensions.paddingMD),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(LucideIcons.gitCompare, color: colorScheme.primary),
+                const SizedBox(width: AppDimensions.paddingSM),
+                Text(
+                  'Compare "${sourceFormula.title}" with:',
+                  style: AppTextStyles.titleMedium.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppDimensions.paddingMD),
+            SizedBox(
+              height: 200,
+              child: ListView.separated(
+                itemCount: formulas.length,
+                separatorBuilder: (_, _) =>
+                    const Divider(height: 1),
+                itemBuilder: (context, index) {
+                  final f = formulas[index];
+                  return ListTile(
+                    leading: Icon(
+                      LucideIcons.fileText,
+                      color: colorScheme.primary,
+                    ),
+                    title: Text(f.title),
+                    subtitle: Text(
+                      f.description,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    onTap: () {
+                      getIt<ComparisonCubit>().setFormulas(sourceFormula, f);
+                      context.pushNamed(AppRoutes.comparisonName);
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

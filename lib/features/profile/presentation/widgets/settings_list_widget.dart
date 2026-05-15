@@ -31,6 +31,7 @@ class SettingsListWidget extends StatelessWidget {
       'palette_outlined' => Icons.palette_outlined,
       'help_outline' => Icons.help_outline,
       'logout' => Icons.logout,
+      'emoji_events' => Icons.emoji_events,
       _ => Icons.settings,
     };
   }

@@ -13,3 +13,6 @@ export 'usecases/get_saved_chapters_use_case.dart';
 export 'usecases/get_saved_notes_use_case.dart';
 export 'usecases/remove_bookmark_use_case.dart';
 export 'usecases/remove_saved_chapter_use_case.dart';
+export 'usecases/add_note_use_case.dart';
+export 'usecases/update_note_use_case.dart';
+export 'usecases/delete_note_use_case.dart';

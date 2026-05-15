@@ -19,6 +19,8 @@ import '../cubit/curriculum_options_state.dart';
 import '../cubit/dashboard_cubit.dart';
 import '../cubit/dashboard_state.dart';
 import '../widgets/widgets.dart';
+import '../widgets/daily_challenge_dialog.dart';
+import '../data/daily_challenges.dart';
 
 /// Dashboard page – the main landing screen of the app.
 ///
@@ -230,14 +232,10 @@ class DashboardPage extends StatelessWidget {
           ),
           actions: [
             Semantics(
-              label: 'Search chapters',
+              label: 'Search formulas',
               button: true,
               child: IconButton(
-                onPressed: () {
-                  // Navigate to Chapters tab for browsing
-                  final shell = StatefulNavigationShell.of(context);
-                  shell.goBranch(1);
-                },
+                onPressed: () => context.pushNamed(AppRoutes.searchName),
                 icon: Icon(LucideIcons.search, color: colorScheme.outline),
               ),
             ),
@@ -937,9 +935,15 @@ class DashboardPage extends StatelessWidget {
               button: true,
               child: ElevatedButton(
                 onPressed: () {
-                  // Navigate to Practice tab (index 2)
-                  final shell = StatefulNavigationShell.of(context);
-                  shell.goBranch(2);
+                  final challenge = DailyChallenges.random();
+                  DailyChallengeDialog.show(
+                    context: context,
+                    formulaTitle: challenge.formulaTitle,
+                    formulaLatex: challenge.formulaLatex,
+                    question: challenge.question,
+                    options: challenge.options,
+                    correctIndex: challenge.correctIndex,
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,

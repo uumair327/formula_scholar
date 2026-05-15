@@ -310,6 +310,64 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
     }
   }
 
+  @override
+  Future<void> addNote(SavedNote note) async {
+    final uid = _firebaseAuth.currentUser?.uid;
+    if (uid == null) {
+      throw const CacheException(message: 'User must be logged in to add a note');
+    }
+    await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('saved_notes')
+        .doc(note.id)
+        .set({
+      'id': note.id,
+      'title': note.title,
+      'subject': note.subject,
+      'content': note.content,
+      'curriculumKey': note.curriculumKey,
+      'savedAt': Timestamp.fromDate(note.savedAt),
+      'subjectId': note.subjectId,
+      'chapterId': note.chapterId,
+      'formulaId': note.formulaId,
+      'formulaTitle': note.formulaTitle,
+      'formulaLatex': note.formulaLatex,
+    });
+  }
+
+  @override
+  Future<void> updateNote(SavedNote note) async {
+    final uid = _firebaseAuth.currentUser?.uid;
+    if (uid == null) {
+      throw const CacheException(message: 'User must be logged in to update a note');
+    }
+    await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('saved_notes')
+        .doc(note.id)
+        .update({
+      'title': note.title,
+      'content': note.content,
+      'savedAt': Timestamp.fromDate(note.savedAt),
+    });
+  }
+
+  @override
+  Future<void> deleteNote(String noteId) async {
+    final uid = _firebaseAuth.currentUser?.uid;
+    if (uid == null) {
+      throw const CacheException(message: 'User must be logged in to delete a note');
+    }
+    await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('saved_notes')
+        .doc(noteId)
+        .delete();
+  }
+
   Iterable<List<T>> _chunk<T>(List<T> source, int size) sync* {
     for (var index = 0; index < source.length; index += size) {
       final end = (index + size < source.length) ? index + size : source.length;
