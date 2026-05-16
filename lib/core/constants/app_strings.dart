@@ -424,6 +424,21 @@ abstract final class AppStrings {
   static const String wrongAnswer = 'Incorrect';
   static const String tryNextTime = 'Review and try again next time';
   static String quizScoreSummary(int points) => 'You scored $points points';
+  static const String practiceReadyTitle = 'Ready to Practice?';
+  static const String practiceReadyDesc =
+      'Choose a subject and test your knowledge with practice questions.';
+  static const String practiceChooseSubject = 'Choose Subject';
+  static const String allSubjects = 'All Subjects';
+  static const String timedMode = 'Timed Mode';
+  static const String timedModeDesc = 'Set a time limit for this quiz';
+  static const String duration = 'Duration';
+  static const String scoreLabel = 'Score';
+  static const String correctLabel = 'Correct';
+  static const String incorrectLabel = 'Incorrect';
+  static const String perCategory = 'Per Category';
+  static const String retryIncorrect = 'Retry Incorrect';
+  static const String backToDashboard = 'Back to Dashboard';
+  static const String timeTaken = 'Time Taken';
 
   // ──────────────────────── Saved / Bookmarks ─────────────────
   static const String formulaFlow = 'FormulaFlow';

@@ -1,11 +1,9 @@
 import '../../../../core/error/result.dart';
 import '../entities/quiz_answer_record.dart';
 import '../entities/quiz_question.dart';
+import '../entities/quiz_result.dart';
 
 /// Port: Defines the contract for practice quiz data access.
-///
-/// Accepts curriculum identifiers to scope questions to the
-/// user's selected board and grade.
 abstract interface class PracticeRepositoryPort {
   Future<Result<List<QuizQuestion>>> getQuestions({
     required String boardId,
@@ -20,6 +18,11 @@ abstract interface class PracticeRepositoryPort {
     required int answeredQuestions,
   });
 
-  /// Persists per-question answer records for weak-area analysis.
   Future<Result<void>> saveAnswerRecords(List<QuizAnswerRecord> records);
+
+  Future<Result<void>> saveQuizResult(QuizResult result);
+
+  Future<Result<List<QuizResult>>> getQuizResults({int limit = 20});
+
+  Future<Result<List<QuizResult>>> getRecentQuizResults({int limit = 5});
 }

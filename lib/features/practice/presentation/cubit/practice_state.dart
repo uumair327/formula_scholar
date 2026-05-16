@@ -27,6 +27,8 @@ class PracticeState extends Equatable {
     this.timedMode = false,
     this.totalSeconds = 0,
     this.remainingSeconds = 0,
+    this.answerRecords = const [],
+    this.quizStartTime,
   });
   final PracticeStatus status;
   final List<QuizQuestion> questions;
@@ -38,49 +40,71 @@ class PracticeState extends Equatable {
   final String? boardId;
   final String? gradeId;
   final String? subjectId;
-
-  // Timer fields
   final TimerStatus timerStatus;
   final bool timedMode;
   final int totalSeconds;
   final int remainingSeconds;
+  final List<QuizAnswerRecord> answerRecords;
+  final DateTime? quizStartTime;
 
-  /// The current question being displayed.
   QuizQuestion? get currentQuestion =>
       currentIndex < questions.length ? questions[currentIndex] : null;
 
-  /// Total number of questions.
   int get totalQuestions => questions.length;
 
-  /// Progress as 0.0 – 1.0.
   double get progress =>
       totalQuestions > 0 ? (currentIndex + 1) / totalQuestions : 0;
 
-  /// Whether the selected option is the correct one.
   bool get isCorrect =>
       selectedOptionId != null &&
       currentQuestion != null &&
       selectedOptionId == currentQuestion!.correctOptionId;
 
-  /// Whether the user is on the last question.
   bool get isLastQuestion =>
       totalQuestions > 0 && currentIndex >= totalQuestions - 1;
 
-  /// Remaining time formatted as MM:SS.
+  int get correctCount =>
+      answerRecords.where((r) => r.isCorrect).length;
+
+  int get incorrectCount =>
+      answerRecords.where((r) => !r.isCorrect).length;
+
+  int get maxPoints =>
+      questions.fold(0, (sum, q) => sum + q.points);
+
+  int get timeTakenSeconds {
+    if (quizStartTime == null) return 0;
+    return DateTime.now().difference(quizStartTime!).inSeconds;
+  }
+
+  double get scorePercent =>
+      totalQuestions > 0 ? (correctCount / totalQuestions) * 100 : 0;
+
+  int get starRating {
+    final pct = scorePercent;
+    if (pct >= 95) return 5;
+    if (pct >= 80) return 4;
+    if (pct >= 60) return 3;
+    if (pct >= 40) return 2;
+    return 1;
+  }
+
   String get formattedRemaining {
     final mins = (remainingSeconds ~/ 60).toString().padLeft(2, '0');
     final secs = (remainingSeconds % 60).toString().padLeft(2, '0');
     return '$mins:$secs';
   }
 
-  /// Timer progress as 0.0 – 1.0.
   double get timerProgress =>
       totalSeconds > 0 ? remainingSeconds / totalSeconds : 1.0;
 
-  /// Whether the timer is in a warning state (less than 25% remaining).
   bool get isTimerWarning =>
       timedMode && timerStatus == TimerStatus.running &&
       totalSeconds > 0 && remainingSeconds / totalSeconds < 0.25;
+
+  /// Question IDs that were answered incorrectly (for retry).
+  List<String> get incorrectQuestionIds =>
+      answerRecords.where((r) => !r.isCorrect).map((r) => r.questionId).toList();
 
   PracticeState copyWith({
     PracticeStatus? status,
@@ -97,6 +121,8 @@ class PracticeState extends Equatable {
     bool? timedMode,
     int? totalSeconds,
     int? remainingSeconds,
+    List<QuizAnswerRecord>? answerRecords,
+    Object? quizStartTime = _unset,
   }) {
     return PracticeState(
       status: status ?? this.status,
@@ -117,6 +143,10 @@ class PracticeState extends Equatable {
       timedMode: timedMode ?? this.timedMode,
       totalSeconds: totalSeconds ?? this.totalSeconds,
       remainingSeconds: remainingSeconds ?? this.remainingSeconds,
+      answerRecords: answerRecords ?? this.answerRecords,
+      quizStartTime: identical(quizStartTime, _unset)
+          ? this.quizStartTime
+          : quizStartTime as DateTime?,
     );
   }
 
@@ -136,11 +166,12 @@ class PracticeState extends Equatable {
     timedMode,
     totalSeconds,
     remainingSeconds,
+    answerRecords,
+    quizStartTime,
   ];
 }
 
 /// Calculates a reasonable time limit based on question count.
 int defaultTimeLimit(int questionCount) {
-  // Allow 60 seconds per question, minimum 5 minutes.
   return max(300, questionCount * 60);
 }

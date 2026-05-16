@@ -69,4 +69,31 @@ class PracticeRepositoryImpl implements PracticeRepositoryPort {
       execute: () => _dataSource.saveAnswerRecords(records),
     );
   }
+
+  @override
+  Future<Result<void>> saveQuizResult(QuizResult result) {
+    return safeOperation(
+      tag: AppLogTags.practiceRepo,
+      operation: 'saveQuizResult(${result.id})',
+      execute: () => _dataSource.saveQuizResult(result),
+    );
+  }
+
+  @override
+  Future<Result<List<QuizResult>>> getQuizResults({int limit = 20}) {
+    return safeOperation(
+      tag: AppLogTags.practiceRepo,
+      operation: 'getQuizResults(limit=$limit)',
+      execute: () => _dataSource.getQuizResults(limit: limit),
+    );
+  }
+
+  @override
+  Future<Result<List<QuizResult>>> getRecentQuizResults({int limit = 5}) {
+    return safeOperation(
+      tag: AppLogTags.practiceRepo,
+      operation: 'getRecentQuizResults(limit=$limit)',
+      execute: () => _dataSource.getRecentQuizResults(limit: limit),
+    );
+  }
 }

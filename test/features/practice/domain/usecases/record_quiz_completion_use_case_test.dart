@@ -81,4 +81,19 @@ class _FakePracticeRepository implements PracticeRepositoryPort {
   Future<Result<void>> saveAnswerRecords(List<QuizAnswerRecord> records) async {
     return const Success<void>(null);
   }
+
+  @override
+  Future<Result<void>> saveQuizResult(QuizResult result) async {
+    return const Success<void>(null);
+  }
+
+  @override
+  Future<Result<List<QuizResult>>> getQuizResults({int limit = 20}) async {
+    return const Success<List<QuizResult>>(<QuizResult>[]);
+  }
+
+  @override
+  Future<Result<List<QuizResult>>> getRecentQuizResults({int limit = 5}) async {
+    return const Success<List<QuizResult>>(<QuizResult>[]);
+  }
 }

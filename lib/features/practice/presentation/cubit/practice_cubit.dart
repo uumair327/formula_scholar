@@ -8,25 +8,32 @@ import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 import 'practice_state.dart';
 
-/// Cubit managing the Practice quiz screen's state.
-///
-/// Uses [CubitFailureLogger] mixin to eliminate error logging boilerplate.
 @injectable
 class PracticeCubit extends Cubit<PracticeState>
     with CubitFailureLogger<PracticeState> {
   PracticeCubit({
     required GetQuestionsUseCase getQuestions,
     required RecordQuizCompletionUseCase recordQuizCompletion,
+    required SaveQuizResultUseCase saveQuizResult,
     required ActivityRefreshCubit activityRefreshCubit,
   }) : _getQuestions = getQuestions,
        _recordQuizCompletion = recordQuizCompletion,
+       _saveQuizResult = saveQuizResult,
        _activityRefreshCubit = activityRefreshCubit,
        super(const PracticeState());
+
   final GetQuestionsUseCase _getQuestions;
   final RecordQuizCompletionUseCase _recordQuizCompletion;
+  final SaveQuizResultUseCase _saveQuizResult;
   final ActivityRefreshCubit _activityRefreshCubit;
   Timer? _timer;
-  final List<QuizAnswerRecord> _answerRecords = [];
+  String? _quizId;
+
+  static String _generateId() =>
+      'quiz_${DateTime.now().millisecondsSinceEpoch}_${_randomSuffix()}';
+
+  static String _randomSuffix() =>
+      DateTime.now().microsecondsSinceEpoch.toRadixString(36);
 
   @override
   String get logTag => AppLogTags.practiceCubit;
@@ -37,26 +44,26 @@ class PracticeCubit extends Cubit<PracticeState>
     return super.close();
   }
 
-  /// Loads quiz questions.
   Future<void> loadQuestions({
     required String boardId,
     required String gradeId,
     String? subjectId,
     bool timedMode = false,
     int? durationSeconds,
+    List<String>? questionIds,
   }) async {
-    AppLogger.info('Loading practice questions', tag: AppLogTags.practiceCubit);
     _timer?.cancel();
-    emit(
-      state.copyWith(
-        status: PracticeStatus.loading,
-        boardId: boardId,
-        gradeId: gradeId,
-        subjectId: subjectId,
-        timedMode: timedMode,
-        timerStatus: TimerStatus.idle,
-      ),
-    );
+    _quizId = _generateId();
+    emit(state.copyWith(
+      status: PracticeStatus.loading,
+      boardId: boardId,
+      gradeId: gradeId,
+      subjectId: subjectId,
+      timedMode: timedMode,
+      timerStatus: TimerStatus.idle,
+      answerRecords: const [],
+      quizStartTime: DateTime.now(),
+    ));
 
     final result = await _getQuestions(
       boardId: boardId,
@@ -66,14 +73,15 @@ class PracticeCubit extends Cubit<PracticeState>
 
     switch (result) {
       case Success(:final data):
-        AppLogger.info(
-          'Loaded ${data.length} questions',
-          tag: AppLogTags.practiceCubit,
-        );
-        final totalSecs = durationSeconds ?? defaultTimeLimit(data.length);
+        var questions = data;
+        if (questionIds != null && questionIds.isNotEmpty) {
+          questions = data.where((q) => questionIds.contains(q.id)).toList();
+          if (questions.isEmpty) questions = data;
+        }
+        final totalSecs = durationSeconds ?? defaultTimeLimit(questions.length);
         emit(state.copyWith(
           status: PracticeStatus.loaded,
-          questions: data,
+          questions: questions,
           totalSeconds: totalSecs,
           remainingSeconds: timedMode ? totalSecs : 0,
           timerStatus: timedMode ? TimerStatus.running : TimerStatus.idle,
@@ -81,19 +89,15 @@ class PracticeCubit extends Cubit<PracticeState>
         if (timedMode) _startTimer();
       case Error(:final failure):
         logFailure('practice questions', failure);
-        emit(
-          state.copyWith(
-            status: PracticeStatus.error,
-            errorMessage: failure.message,
-          ),
-        );
+        emit(state.copyWith(
+          status: PracticeStatus.error,
+          errorMessage: failure.message,
+        ));
     }
   }
 
-  /// Selects an answer option.
   void selectOption(String optionId) {
     if (state.selectedOptionId != null) return;
-
     final question = state.currentQuestion;
     if (question == null) return;
 
@@ -102,39 +106,35 @@ class PracticeCubit extends Cubit<PracticeState>
         ? state.totalPoints + question.points
         : state.totalPoints;
 
-    _answerRecords.add(QuizAnswerRecord(
+    final record = QuizAnswerRecord(
       questionId: question.id,
       category: question.category,
       topic: question.topic,
       selectedOptionId: optionId,
       correctOptionId: question.correctOptionId,
       isCorrect: isCorrect,
-    ));
+    );
 
     AppLogger.debug(
       'Option selected: $optionId (correct: $isCorrect)',
       tag: AppLogTags.practiceCubit,
     );
 
-    emit(
-      state.copyWith(
-        selectedOptionId: optionId,
-        showResult: true,
-        totalPoints: newPoints,
-      ),
-    );
+    emit(state.copyWith(
+      selectedOptionId: optionId,
+      showResult: true,
+      totalPoints: newPoints,
+      answerRecords: [...state.answerRecords, record],
+    ));
   }
 
-  /// Moves to the next question, or completes the quiz if on the last one.
   Future<void> nextQuestion() async {
     if (state.currentIndex < state.totalQuestions - 1) {
-      emit(
-        state.copyWith(
-          currentIndex: state.currentIndex + 1,
-          selectedOptionId: null,
-          showResult: false,
-        ),
-      );
+      emit(state.copyWith(
+        currentIndex: state.currentIndex + 1,
+        selectedOptionId: null,
+        showResult: false,
+      ));
     } else {
       await _finishQuiz();
     }
@@ -142,10 +142,9 @@ class PracticeCubit extends Cubit<PracticeState>
 
   Future<void> _finishQuiz() async {
     _timer?.cancel();
-    await _persistQuizCompletion();
-    _answerRecords.clear();
+    await _persistQuiz();
     AppLogger.info(
-      'Quiz completed — ${state.totalPoints} total points',
+      'Quiz completed — ${state.totalPoints} points, ${state.correctCount}/${state.totalQuestions} correct',
       tag: AppLogTags.practiceCubit,
     );
     emit(state.copyWith(
@@ -155,7 +154,6 @@ class PracticeCubit extends Cubit<PracticeState>
     ));
   }
 
-  /// Called when the timer expires — auto-submits the quiz.
   void onTimerExpired() {
     AppLogger.info('Timer expired — auto-submitting quiz', tag: AppLogTags.practiceCubit);
     emit(state.copyWith(timerStatus: TimerStatus.expired));
@@ -174,49 +172,68 @@ class PracticeCubit extends Cubit<PracticeState>
     });
   }
 
-  Future<void> _persistQuizCompletion() async {
+  Future<void> _persistQuiz() async {
     final boardId = state.boardId;
     final gradeId = state.gradeId;
-    if (boardId == null || gradeId == null) {
-      AppLogger.warning(
-        'Skipping quiz completion persistence due to missing board/grade context',
-        tag: AppLogTags.practiceCubit,
-      );
-      return;
-    }
+    if (boardId == null || gradeId == null) return;
 
-    final result = await _recordQuizCompletion(
+    await _recordQuizCompletion(
       boardId: boardId,
       gradeId: gradeId,
       earnedPoints: state.totalPoints,
       answeredQuestions: state.totalQuestions,
-      answerRecords: List.of(_answerRecords),
+      answerRecords: List.of(state.answerRecords),
     );
 
-    if (result is Error<void>) {
-      logFailure('recordQuizCompletion', result.failure);
-      return;
+    final quizResult = QuizResult(
+      id: _quizId ?? _generateId(),
+      boardId: boardId,
+      gradeId: gradeId,
+      subjectId: state.subjectId,
+      totalQuestions: state.totalQuestions,
+      correctCount: state.correctCount,
+      incorrectCount: state.incorrectCount,
+      totalPoints: state.totalPoints,
+      maxPoints: state.maxPoints,
+      timedMode: state.timedMode,
+      timeTakenSeconds: state.timeTakenSeconds,
+      answers: List.of(state.answerRecords),
+      completedAt: DateTime.now(),
+    );
+
+    final saveResult = await _saveQuizResult(quizResult);
+    if (saveResult is Error<void>) {
+      logFailure('saveQuizResult', saveResult.failure);
     }
 
     _activityRefreshCubit.notifyProgressUpdated();
   }
 
-  /// Resets the quiz for a replay.
+  void retryIncorrect() {
+    final ids = state.incorrectQuestionIds;
+    if (ids.isEmpty) return;
+    final boardId = state.boardId;
+    final gradeId = state.gradeId;
+    if (boardId == null || gradeId == null) return;
+    loadQuestions(
+      boardId: boardId,
+      gradeId: gradeId,
+      subjectId: state.subjectId,
+      questionIds: ids,
+    );
+  }
+
   void resetQuiz() {
-    AppLogger.info('Quiz reset requested', tag: AppLogTags.practiceCubit);
     _timer?.cancel();
-    _answerRecords.clear();
     final boardId = state.boardId;
     final gradeId = state.gradeId;
     final subjectId = state.subjectId;
-    emit(
-      PracticeState(
-        status: PracticeStatus.initial,
-        boardId: boardId,
-        gradeId: gradeId,
-        subjectId: subjectId,
-      ),
-    );
+    emit(PracticeState(
+      status: PracticeStatus.initial,
+      boardId: boardId,
+      gradeId: gradeId,
+      subjectId: subjectId,
+    ));
     if (boardId != null && gradeId != null) {
       loadQuestions(
         boardId: boardId,

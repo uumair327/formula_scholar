@@ -137,4 +137,49 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
       tag: AppLogTags.practiceDataSource,
     );
   }
+
+  @override
+  Future<void> saveQuizResult(QuizResult result) async {
+    final uid = _firebaseAuth.currentUser?.uid;
+    if (uid == null) return;
+
+    final docRef = _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('quiz_results')
+        .doc(result.id);
+
+    await docRef.set({
+      ...result.toJson(),
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+
+    AppLogger.info(
+      'Saved quiz result ${result.id} for uid=$uid (${result.correctCount}/${result.totalQuestions})',
+      tag: AppLogTags.practiceDataSource,
+    );
+  }
+
+  @override
+  Future<List<QuizResult>> getQuizResults({int limit = 20}) async {
+    final uid = _firebaseAuth.currentUser?.uid;
+    if (uid == null) return const [];
+
+    final snapshot = await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('quiz_results')
+        .orderBy('createdAt', descending: true)
+        .limit(limit)
+        .get();
+
+    return snapshot.docs.map((doc) {
+      return QuizResult.fromJson(doc.data());
+    }).toList();
+  }
+
+  @override
+  Future<List<QuizResult>> getRecentQuizResults({int limit = 5}) async {
+    return getQuizResults(limit: limit);
+  }
 }

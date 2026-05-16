@@ -117,8 +117,12 @@ import '../../features/practice/domain/ports/practice_repository_port.dart'
     as _i1061;
 import '../../features/practice/domain/usecases/get_questions_use_case.dart'
     as _i525;
+import '../../features/practice/domain/usecases/get_recent_quiz_results_use_case.dart'
+    as _i611;
 import '../../features/practice/domain/usecases/record_quiz_completion_use_case.dart'
     as _i813;
+import '../../features/practice/domain/usecases/save_quiz_result_use_case.dart'
+    as _i310;
 import '../../features/practice/infrastructure/adapters/practice_firebase_adapter.dart'
     as _i660;
 import '../../features/practice/infrastructure/repositories/practice_hive_cache.dart'
@@ -550,8 +554,18 @@ extension GetItInjectableX on _i174.GetIt {
         repository: gh<_i1061.PracticeRepositoryPort>(),
       ),
     );
+    gh.factory<_i611.GetRecentQuizResultsUseCase>(
+      () => _i611.GetRecentQuizResultsUseCase(
+        repository: gh<_i1061.PracticeRepositoryPort>(),
+      ),
+    );
     gh.factory<_i813.RecordQuizCompletionUseCase>(
       () => _i813.RecordQuizCompletionUseCase(
+        repository: gh<_i1061.PracticeRepositoryPort>(),
+      ),
+    );
+    gh.factory<_i310.SaveQuizResultUseCase>(
+      () => _i310.SaveQuizResultUseCase(
         repository: gh<_i1061.PracticeRepositoryPort>(),
       ),
     );
@@ -563,6 +577,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i614.ToggleBookmarkUseCase>(
       () => _i614.ToggleBookmarkUseCase(
         repository: gh<_i193.FormulasRepositoryPort>(),
+      ),
+    );
+    gh.factory<_i411.PracticeCubit>(
+      () => _i411.PracticeCubit(
+        getQuestions: gh<_i899.GetQuestionsUseCase>(),
+        recordQuizCompletion: gh<_i899.RecordQuizCompletionUseCase>(),
+        saveQuizResult: gh<_i899.SaveQuizResultUseCase>(),
+        activityRefreshCubit: gh<_i914.ActivityRefreshCubit>(),
       ),
     );
     gh.factory<_i36.ProfileCubit>(
@@ -666,13 +688,6 @@ extension GetItInjectableX on _i174.GetIt {
         getFormulaNote: gh<_i750.GetFormulaNoteUseCase>(),
         saveFormulaNote: gh<_i750.SaveFormulaNoteUseCase>(),
         deleteFormulaNote: gh<_i750.DeleteFormulaNoteUseCase>(),
-      ),
-    );
-    gh.factory<_i411.PracticeCubit>(
-      () => _i411.PracticeCubit(
-        getQuestions: gh<_i899.GetQuestionsUseCase>(),
-        recordQuizCompletion: gh<_i899.RecordQuizCompletionUseCase>(),
-        activityRefreshCubit: gh<_i914.ActivityRefreshCubit>(),
       ),
     );
     gh.factory<_i24.DashboardCubit>(

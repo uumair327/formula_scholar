@@ -64,6 +64,19 @@ class _FakePracticeDataSource implements PracticeDataSourcePort {
 
   @override
   Future<void> saveAnswerRecords(List<QuizAnswerRecord> records) async {}
+
+  @override
+  Future<void> saveQuizResult(QuizResult result) async {}
+
+  @override
+  Future<List<QuizResult>> getQuizResults({int limit = 20}) async {
+    return const <QuizResult>[];
+  }
+
+  @override
+  Future<List<QuizResult>> getRecentQuizResults({int limit = 5}) async {
+    return const <QuizResult>[];
+  }
 }
 
 class _FakePracticeCache implements PracticeCachePort {
