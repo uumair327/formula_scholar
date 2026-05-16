@@ -14,6 +14,11 @@ class Flashcard extends Equatable {
     required this.chapterName,
     this.difficulty = FlashcardDifficulty.medium,
     this.isMastered = false,
+    this.easeFactor = 2.5,
+    this.interval = 0,
+    this.reviewCount = 0,
+    this.lapses = 0,
+    this.nextReviewAt,
   });
 
   final String id;
@@ -27,7 +32,22 @@ class Flashcard extends Equatable {
   final FlashcardDifficulty difficulty;
   final bool isMastered;
 
-  Flashcard copyWith({bool? isMastered, FlashcardDifficulty? difficulty}) {
+  // Spaced Repetition (SM-2) fields
+  final double easeFactor;
+  final int interval;
+  final int reviewCount;
+  final int lapses;
+  final DateTime? nextReviewAt;
+
+  Flashcard copyWith({
+    bool? isMastered,
+    FlashcardDifficulty? difficulty,
+    double? easeFactor,
+    int? interval,
+    int? reviewCount,
+    int? lapses,
+    DateTime? nextReviewAt,
+  }) {
     return Flashcard(
       id: id,
       title: title,
@@ -39,9 +59,24 @@ class Flashcard extends Equatable {
       chapterName: chapterName,
       difficulty: difficulty ?? this.difficulty,
       isMastered: isMastered ?? this.isMastered,
+      easeFactor: easeFactor ?? this.easeFactor,
+      interval: interval ?? this.interval,
+      reviewCount: reviewCount ?? this.reviewCount,
+      lapses: lapses ?? this.lapses,
+      nextReviewAt: nextReviewAt ?? this.nextReviewAt,
     );
   }
 
   @override
-  List<Object?> get props => [id, title, latex, isMastered];
+  List<Object?> get props => [
+    id,
+    title,
+    latex,
+    isMastered,
+    easeFactor,
+    interval,
+    reviewCount,
+    lapses,
+    nextReviewAt,
+  ];
 }

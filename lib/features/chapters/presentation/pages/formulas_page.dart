@@ -6,6 +6,7 @@ import 'package:flutter_math_fork/flutter_math.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
+import '../../../auth/auth.dart';
 import '../../../flashcards/flashcards.dart';
 import '../../../comparison/comparison.dart';
 import '../../domain/domain.dart';
@@ -268,17 +269,21 @@ class FormulasPage extends StatelessWidget {
             onPressed: () {
               final allFormulas = context.read<FormulasCubit>().state.formulas;
               if (allFormulas.isEmpty) return;
+              final userId =
+                  context.read<AuthCubit>().state.user?.uid ?? '';
+              final cards = allFormulas.map((f) => Flashcard(
+                id: f.id,
+                title: f.title,
+                latex: f.latex,
+                description: f.description,
+                subjectId: '',
+                subjectName: '',
+                chapterId: '',
+                chapterName: '',
+              )).toList();
               getIt<FlashcardsCubit>().startSession(
-                allFormulas.map((f) => Flashcard(
-                  id: f.id,
-                  title: f.title,
-                  latex: f.latex,
-                  description: f.description,
-                  subjectId: '',
-                  subjectName: '',
-                  chapterId: '',
-                  chapterName: '',
-                )).toList(),
+                cards: cards,
+                userId: userId,
               );
               context.pushNamed(AppRoutes.flashcardsName);
             },

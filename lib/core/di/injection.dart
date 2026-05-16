@@ -4,6 +4,8 @@ import 'package:injectable/injectable.dart';
 
 import 'injection.config.dart';
 
+import '../../features/flashcards/domain/ports/flashcard_review_port.dart';
+import '../../features/flashcards/infrastructure/adapters/firestore_flashcard_review_adapter.dart';
 import '../../features/flashcards/presentation/cubit/flashcards_cubit.dart';
 import '../../features/search/domain/ports/search_data_source_port.dart';
 import '../../features/search/domain/ports/search_repository_port.dart';
@@ -74,7 +76,12 @@ void configureDependencies() {
   );
 
   // Flashcards
-  getIt.registerFactory<FlashcardsCubit>(() => FlashcardsCubit());
+  getIt.registerLazySingleton<FlashcardReviewPort>(
+    () => FirestoreFlashcardReviewAdapter(getIt<FirebaseFirestore>()),
+  );
+  getIt.registerFactory<FlashcardsCubit>(
+    () => FlashcardsCubit(reviewPort: getIt<FlashcardReviewPort>()),
+  );
 
   // Comparison
   getIt.registerFactory<ComparisonCubit>(() => ComparisonCubit());
