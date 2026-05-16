@@ -662,7 +662,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
 
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingHero),
-      decoration: const SignatureGlowDecoration(),
+      decoration: signatureGlowDecoration(colorScheme),
       child: Stack(
         children: [
           Column(

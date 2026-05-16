@@ -12,8 +12,8 @@ class AppIconCircle extends StatelessWidget {
     super.key,
     required this.icon,
     this.size = AppDimensions.avatarMD,
-    this.backgroundColor = AppColors.primaryFixed,
-    this.iconColor = AppColors.primary,
+    this.backgroundColor,
+    this.iconColor,
     this.iconSize = AppDimensions.iconDefault,
     this.borderRadius,
     this.boxShadow,
@@ -26,10 +26,10 @@ class AppIconCircle extends StatelessWidget {
   final double size;
 
   /// Background colour of the circle.
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   /// Icon colour.
-  final Color iconColor;
+  final Color? iconColor;
 
   /// Icon size. Defaults to [AppDimensions.iconDefault].
   final double iconSize;
@@ -43,18 +43,20 @@ class AppIconCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: backgroundColor ?? colorScheme.primaryContainer,
         shape: borderRadius != null ? BoxShape.rectangle : BoxShape.circle,
         borderRadius: borderRadius != null
             ? BorderRadius.circular(borderRadius!)
             : null,
         boxShadow: boxShadow,
       ),
-      child: Icon(icon, size: iconSize, color: iconColor),
+      child: Icon(icon, size: iconSize, color: iconColor ?? colorScheme.primary),
     );
   }
 }

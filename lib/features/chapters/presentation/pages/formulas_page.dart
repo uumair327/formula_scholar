@@ -302,7 +302,7 @@ class FormulasPage extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingXXL),
-      decoration: const SignatureGlowDecoration(),
+      decoration: signatureGlowDecoration(colorScheme),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

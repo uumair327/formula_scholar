@@ -33,6 +33,8 @@ class AppTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return TextFormField(
       controller: controller,
       obscureText: obscureText,
@@ -43,18 +45,18 @@ class AppTextField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         labelStyle: AppTextStyles.bodyMedium.copyWith(
-          color: AppColors.onSurfaceVariant.withValues(
+          color: colorScheme.onSurfaceVariant.withValues(
             alpha: AppDimensions.opacityMedium,
           ),
           fontWeight: FontWeight.w600,
         ),
         floatingLabelStyle: AppTextStyles.labelMedium.copyWith(
-          color: AppColors.primary,
+          color: colorScheme.primary,
           fontWeight: FontWeight.w700,
         ),
         hintText: hintText,
         hintStyle: AppTextStyles.bodyMedium.copyWith(
-          color: AppColors.onSurfaceVariant.withValues(
+          color: colorScheme.onSurfaceVariant.withValues(
             alpha: AppDimensions.opacityLight,
           ),
         ),
@@ -64,7 +66,7 @@ class AppTextField extends StatelessWidget {
                 child: Icon(
                   prefixIcon,
                   size: AppDimensions.iconDefault,
-                  color: AppColors.outline,
+                  color: colorScheme.outline,
                 ),
               )
             : null,
@@ -79,14 +81,14 @@ class AppTextField extends StatelessWidget {
             : null,
         suffixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
         filled: true,
-        fillColor: AppColors.surfaceContainerHighest,
+        fillColor: colorScheme.surfaceContainerHighest,
         border: OutlineInputBorder(
           borderSide: BorderSide.none,
           borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: AppColors.primary.withValues(
+            color: colorScheme.primary.withValues(
               alpha: AppDimensions.opacitySubtle,
             ),
             width: AppDimensions.borderWidth,

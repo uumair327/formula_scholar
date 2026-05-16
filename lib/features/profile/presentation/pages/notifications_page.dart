@@ -221,7 +221,7 @@ class NotificationsPage extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingXL),
-      decoration: const SignatureGlowDecoration(),
+      decoration: signatureGlowDecoration(colorScheme),
       child: Row(
         children: [
           Container(

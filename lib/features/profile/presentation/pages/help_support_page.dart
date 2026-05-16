@@ -190,7 +190,7 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
 
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingXXL),
-      decoration: const SignatureGlowDecoration(),
+      decoration: signatureGlowDecoration(colorScheme),
       child: Column(
         children: [
           Container(

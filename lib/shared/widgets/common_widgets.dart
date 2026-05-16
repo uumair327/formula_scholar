@@ -3,23 +3,20 @@ import 'package:flutter/material.dart';
 import '../../core/core.dart';
 
 /// Gradient box decoration matching the React app's `.signature-glow`.
-class SignatureGlowDecoration extends BoxDecoration {
-  const SignatureGlowDecoration()
-    : super(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [AppColors.primary, AppColors.primaryContainer],
-        ),
-        borderRadius: const BorderRadius.all(
-          Radius.circular(AppDimensions.radiusLG),
-        ),
-      );
+BoxDecoration signatureGlowDecoration(ColorScheme colorScheme) {
+  return BoxDecoration(
+    gradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [colorScheme.primary, colorScheme.primaryContainer],
+    ),
+    borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+  );
 }
 
 /// Ghost shadow matching the React app's `.ghost-shadow`.
 BoxDecoration ghostShadowDecoration({
-  Color color = AppColors.surfaceContainerLowest,
+  required Color color,
   double borderRadius = AppDimensions.radiusLG,
 }) {
   return BoxDecoration(
@@ -34,21 +31,23 @@ class ProgressBar extends StatelessWidget {
   const ProgressBar({
     super.key,
     required this.percentage,
-    this.barColor = AppColors.secondary,
-    this.backgroundColor = AppColors.secondaryFixedDim,
+    this.barColor,
+    this.backgroundColor,
     this.height = AppDimensions.progressBarDefault,
   });
   final double percentage;
-  final Color barColor;
-  final Color backgroundColor;
+  final Color? barColor;
+  final Color? backgroundColor;
   final double height;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       height: height,
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: backgroundColor ?? colorScheme.secondaryFixedDim,
         borderRadius: BorderRadius.circular(height),
       ),
       child: FractionallySizedBox(
@@ -56,7 +55,7 @@ class ProgressBar extends StatelessWidget {
         widthFactor: (percentage / 100).clamp(0, 1),
         child: Container(
           decoration: BoxDecoration(
-            color: barColor,
+            color: barColor ?? colorScheme.secondary,
             borderRadius: BorderRadius.circular(height),
           ),
         ),
@@ -70,27 +69,31 @@ class CategoryChip extends StatelessWidget {
   const CategoryChip({
     super.key,
     required this.label,
-    this.backgroundColor = AppColors.primaryFixed,
-    this.textColor = AppColors.onPrimaryFixed,
+    this.backgroundColor,
+    this.textColor,
   });
   final String label;
-  final Color backgroundColor;
-  final Color textColor;
+  final Color? backgroundColor;
+  final Color? textColor;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppDimensions.paddingMD,
         vertical: AppDimensions.paddingXS,
       ),
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: backgroundColor ?? colorScheme.primaryFixed,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
       ),
       child: Text(
         label.toUpperCase(),
-        style: AppTextStyles.overline.copyWith(color: textColor),
+        style: AppTextStyles.overline.copyWith(
+          color: textColor ?? colorScheme.onPrimaryFixed,
+        ),
       ),
     );
   }
@@ -110,6 +113,8 @@ class SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -120,13 +125,13 @@ class SectionHeader extends StatelessWidget {
             icon: Text(
               actionLabel!,
               style: AppTextStyles.labelLarge.copyWith(
-                color: AppColors.primary,
+                color: colorScheme.primary,
               ),
             ),
-            label: const Icon(
+            label: Icon(
               Icons.arrow_forward,
               size: AppDimensions.iconSM,
-              color: AppColors.primary,
+              color: colorScheme.primary,
             ),
           ),
       ],

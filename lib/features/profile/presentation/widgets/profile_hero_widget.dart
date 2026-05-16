@@ -21,7 +21,7 @@ class ProfileHeroWidget extends StatelessWidget {
         horizontal: AppDimensions.paddingHero,
         vertical: AppDimensions.paddingSection,
       ),
-      decoration: const SignatureGlowDecoration(),
+      decoration: signatureGlowDecoration(colorScheme),
       child: Row(
         children: [
           // Avatar with Pro badge

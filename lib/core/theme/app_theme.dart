@@ -92,87 +92,89 @@ abstract final class AppTheme {
       brightness: Brightness.dark,
       scaffoldBackgroundColor: AppColors.inverseSurface,
       colorScheme: const ColorScheme.dark(
-        primary: AppColors.primaryFixedDim,
-        onPrimary: AppColors.onPrimaryFixed,
-        primaryContainer: AppColors.primaryContainer,
-        onPrimaryContainer: AppColors.onPrimaryContainer,
-        secondary: AppColors.secondaryFixedDim,
-        onSecondary: AppColors.onSecondaryFixed,
-        secondaryContainer: AppColors.secondaryContainer,
-        onSecondaryContainer: AppColors.onSecondaryContainer,
-        tertiary: AppColors.tertiaryFixedDim,
-        onTertiary: AppColors.onTertiaryFixed,
-        tertiaryContainer: AppColors.tertiaryContainer,
-        onTertiaryContainer: AppColors.onTertiaryContainer,
-        surface: AppColors.inverseSurface,
-        onSurface: AppColors.inverseOnSurface,
-        onSurfaceVariant: AppColors.surfaceContainerHighest,
-        outline: AppColors.outlineVariant,
-        outlineVariant: AppColors.surfaceVariant,
+        primary: AppColors.darkPrimary,
+        onPrimary: AppColors.darkOnPrimary,
+        primaryContainer: AppColors.darkPrimaryContainer,
+        onPrimaryContainer: AppColors.darkOnPrimaryContainer,
+        secondary: AppColors.darkSecondary,
+        onSecondary: AppColors.darkOnSecondary,
+        secondaryContainer: AppColors.darkSecondaryContainer,
+        onSecondaryContainer: AppColors.darkOnSecondaryContainer,
+        tertiary: AppColors.darkTertiary,
+        onTertiary: AppColors.darkOnTertiary,
+        tertiaryContainer: AppColors.darkTertiaryContainer,
+        onTertiaryContainer: AppColors.darkOnTertiaryContainer,
+        error: AppColors.darkError,
+        onError: AppColors.darkOnError,
+        surface: AppColors.darkSurface,
+        onSurface: AppColors.darkOnSurface,
+        onSurfaceVariant: AppColors.darkOnSurfaceVariant,
+        outline: AppColors.darkOutline,
+        outlineVariant: AppColors.darkOnSurfaceVariant,
       ),
       textTheme: TextTheme(
         displayLarge: AppTextStyles.displayLarge.copyWith(
-          color: AppColors.inverseOnSurface,
+          color: AppColors.darkOnSurface,
         ),
         headlineLarge: AppTextStyles.headlineLarge.copyWith(
-          color: AppColors.inverseOnSurface,
+          color: AppColors.darkOnSurface,
         ),
         headlineMedium: AppTextStyles.headlineMedium.copyWith(
-          color: AppColors.inverseOnSurface,
+          color: AppColors.darkOnSurface,
         ),
         headlineSmall: AppTextStyles.headlineSmall.copyWith(
-          color: AppColors.inverseOnSurface,
+          color: AppColors.darkOnSurface,
         ),
         titleLarge: AppTextStyles.titleLarge.copyWith(
-          color: AppColors.inverseOnSurface,
+          color: AppColors.darkOnSurface,
         ),
         titleMedium: AppTextStyles.titleMedium.copyWith(
-          color: AppColors.inverseOnSurface,
+          color: AppColors.darkOnSurface,
         ),
         titleSmall: AppTextStyles.titleSmall.copyWith(
-          color: AppColors.inverseOnSurface,
+          color: AppColors.darkOnSurface,
         ),
         bodyLarge: AppTextStyles.bodyLarge.copyWith(
-          color: AppColors.inverseOnSurface,
+          color: AppColors.darkOnSurface,
         ),
         bodyMedium: AppTextStyles.bodyMedium.copyWith(
-          color: AppColors.inverseOnSurface,
+          color: AppColors.darkOnSurface,
         ),
         bodySmall: AppTextStyles.bodySmall.copyWith(
-          color: AppColors.inverseOnSurface,
+          color: AppColors.darkOnSurface,
         ),
         labelLarge: AppTextStyles.labelLarge.copyWith(
-          color: AppColors.inverseOnSurface,
+          color: AppColors.darkOnSurface,
         ),
         labelMedium: AppTextStyles.labelMedium.copyWith(
-          color: AppColors.inverseOnSurface,
+          color: AppColors.darkOnSurface,
         ),
         labelSmall: AppTextStyles.labelSmall.copyWith(
-          color: AppColors.inverseOnSurface,
+          color: AppColors.darkOnSurface,
         ),
       ),
       appBarTheme: AppBarTheme(
-        backgroundColor: AppColors.inverseSurface.withValues(
+        backgroundColor: AppColors.darkSurface.withValues(
           alpha: AppDimensions.opacityHigh,
         ),
         elevation: AppDimensions.elevationNone,
         scrolledUnderElevation: AppDimensions.elevationSM,
         centerTitle: false,
         titleTextStyle: AppTextStyles.headlineSmall.copyWith(
-          color: AppColors.inverseOnSurface,
+          color: AppColors.darkOnSurface,
         ),
       ),
       cardTheme: CardThemeData(
-        color: AppColors.surfaceContainerLow,
+        color: AppColors.darkSurfaceContainerLow,
         elevation: AppDimensions.elevationNone,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
         ),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: AppColors.inverseSurface,
-        selectedItemColor: AppColors.inverseOnSurface,
-        unselectedItemColor: AppColors.outlineVariant,
+        backgroundColor: AppColors.darkSurface,
+        selectedItemColor: AppColors.darkOnSurface,
+        unselectedItemColor: AppColors.darkOnSurfaceVariant,
         type: BottomNavigationBarType.fixed,
         elevation: AppDimensions.elevationNone,
       ),
@@ -181,10 +183,10 @@ abstract final class AppTheme {
         radius: const Radius.circular(AppDimensions.radiusSM),
         thumbColor: WidgetStateProperty.resolveWith((states) =>
             states.contains(WidgetState.hovered)
-                ? AppColors.outlineVariant
-                : AppColors.outlineVariant.withValues(alpha: AppDimensions.opacityMedium)),
+                ? AppColors.darkOnSurfaceVariant
+                : AppColors.darkOnSurfaceVariant.withValues(alpha: AppDimensions.opacityMedium)),
         trackColor: WidgetStateProperty.all(
-          AppColors.surfaceVariant.withValues(alpha: AppDimensions.opacitySubtle),
+          AppColors.darkOnSurfaceVariant.withValues(alpha: AppDimensions.opacitySubtle),
         ),
       ),
     );

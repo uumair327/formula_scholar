@@ -25,6 +25,8 @@ class AppErrorState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -33,17 +35,17 @@ class AppErrorState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
+            Icon(
               Icons.error_outline,
               size: AppDimensions.iconHero,
-              color: AppColors.error,
+              color: colorScheme.error,
             ),
             const SizedBox(height: AppDimensions.paddingLG),
             Text(
               message ?? AppStrings.somethingWentWrong,
               textAlign: TextAlign.center,
               style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.onSurfaceVariant,
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: AppDimensions.paddingLG),

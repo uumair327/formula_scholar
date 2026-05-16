@@ -145,7 +145,7 @@ class DailyChallengeDialog extends StatelessWidget {
             Icon(
               isCorrect ? LucideIcons.checkCircle : LucideIcons.xCircle,
               size: 48,
-              color: isCorrect ? Colors.green : Colors.red,
+              color: isCorrect ? colorScheme.secondary : colorScheme.error,
             ),
             const SizedBox(height: AppDimensions.paddingMD),
             Text(

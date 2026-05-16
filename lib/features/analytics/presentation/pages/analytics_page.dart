@@ -263,10 +263,10 @@ class AnalyticsPage extends StatelessWidget {
                         sections: [
                           PieChartSectionData(
                             value: mastered.toDouble(),
-                            color: Colors.green,
+                            color: colorScheme.secondary,
                             title: '$mastered',
                             titleStyle: TextStyle(
-                              color: Colors.green.shade800,
+                              color: colorScheme.onSecondaryContainer,
                               fontWeight: FontWeight.w700,
                               fontSize: 14,
                             ),
@@ -274,10 +274,10 @@ class AnalyticsPage extends StatelessWidget {
                           ),
                           PieChartSectionData(
                             value: inProgress.toDouble(),
-                            color: Colors.orange,
+                            color: colorScheme.tertiary,
                             title: '$inProgress',
                             titleStyle: TextStyle(
-                              color: Colors.orange.shade800,
+                              color: colorScheme.onTertiaryContainer,
                               fontWeight: FontWeight.w700,
                               fontSize: 14,
                             ),
@@ -303,9 +303,9 @@ class AnalyticsPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _legendDot(Colors.green, 'Mastered'),
+                      _legendDot(colorScheme.secondary, 'Mastered'),
                       const SizedBox(height: 8),
-                      _legendDot(Colors.orange, 'In Progress'),
+                      _legendDot(colorScheme.tertiary, 'In Progress'),
                       const SizedBox(height: 8),
                       _legendDot(
                         colorScheme.surfaceContainerHighest,
@@ -344,13 +344,13 @@ class AnalyticsPage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: AppDimensions.paddingMD),
-            _activityRow(context, 'Studied Algebra', '2 hours ago', Icons.check_circle, Colors.green),
+            _activityRow(context, 'Studied Algebra', '2 hours ago', Icons.check_circle, colorScheme.secondary),
             const Divider(height: AppDimensions.paddingLG),
-            _activityRow(context, 'Completed Quiz: Geometry', 'Yesterday', Icons.check_circle, Colors.green),
+            _activityRow(context, 'Completed Quiz: Geometry', 'Yesterday', Icons.check_circle, colorScheme.secondary),
             const Divider(height: AppDimensions.paddingLG),
-            _activityRow(context, 'Mastered 3 formulas', '2 days ago', Icons.trending_up, Colors.blue),
+            _activityRow(context, 'Mastered 3 formulas', '2 days ago', Icons.trending_up, colorScheme.primary),
             const Divider(height: AppDimensions.paddingLG),
-            _activityRow(context, 'Studied Calculus', '3 days ago', Icons.access_time, Colors.grey),
+            _activityRow(context, 'Studied Calculus', '3 days ago', Icons.access_time, colorScheme.onSurfaceVariant),
           ],
         ),
       ),

@@ -42,8 +42,9 @@ class AppCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final cardColor =
-        color ?? Theme.of(context).cardTheme.color ?? AppColors.surface;
+        color ?? Theme.of(context).cardTheme.color ?? colorScheme.surfaceContainerLowest;
 
     return Container(
       padding: padding,
@@ -70,7 +71,7 @@ class AppSectionTitle extends StatelessWidget {
     this.actionLabel,
     this.onAction,
     this.leadingIcon,
-    this.leadingIconColor = AppColors.primary,
+    this.leadingIconColor,
   });
 
   /// Section title text.
@@ -86,7 +87,7 @@ class AppSectionTitle extends StatelessWidget {
   final IconData? leadingIcon;
 
   /// Colour of the leading icon.
-  final Color leadingIconColor;
+  final Color? leadingIconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +104,7 @@ class AppSectionTitle extends StatelessWidget {
                 Icon(
                   leadingIcon,
                   size: AppDimensions.iconLG,
-                  color: leadingIconColor,
+                  color: leadingIconColor ?? colorScheme.primary,
                 ),
                 const SizedBox(width: AppDimensions.paddingSM),
               ],

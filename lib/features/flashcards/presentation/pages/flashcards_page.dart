@@ -209,6 +209,7 @@ class FlashcardsPage extends StatelessWidget {
 
   Widget _buildRatingRow(BuildContext context) {
     final cubit = context.read<FlashcardsCubit>();
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Column(
       children: [
@@ -225,7 +226,7 @@ class FlashcardsPage extends StatelessWidget {
               child: _RatingButton(
                 label: 'Again',
                 icon: LucideIcons.rotateCcw,
-                color: Colors.red,
+                color: colorScheme.error,
                 onTap: () => cubit.rateCard(ReviewQuality.again),
               ),
             ),
@@ -234,7 +235,7 @@ class FlashcardsPage extends StatelessWidget {
               child: _RatingButton(
                 label: 'Hard',
                 icon: LucideIcons.batteryLow,
-                color: Colors.orange,
+                color: colorScheme.tertiary,
                 onTap: () => cubit.rateCard(ReviewQuality.hard),
               ),
             ),
@@ -243,7 +244,7 @@ class FlashcardsPage extends StatelessWidget {
               child: _RatingButton(
                 label: 'Good',
                 icon: LucideIcons.batteryMedium,
-                color: Colors.green,
+                color: colorScheme.secondary,
                 onTap: () => cubit.rateCard(ReviewQuality.good),
               ),
             ),
@@ -252,7 +253,7 @@ class FlashcardsPage extends StatelessWidget {
               child: _RatingButton(
                 label: 'Easy',
                 icon: LucideIcons.batteryFull,
-                color: Colors.teal,
+                color: colorScheme.primary,
                 onTap: () => cubit.rateCard(ReviewQuality.easy),
               ),
             ),

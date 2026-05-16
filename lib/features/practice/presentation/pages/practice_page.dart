@@ -27,6 +27,7 @@ class PracticePage extends StatelessWidget {
               prev.selectedOptionId != curr.selectedOptionId ||
               prev.showResult != curr.showResult,
           builder: (context, state) {
+            final colorScheme = Theme.of(context).colorScheme;
             if (state.status == PracticeStatus.initial) {
               return _buildPreFilterScreen(context, authState);
             }
@@ -77,7 +78,7 @@ class PracticePage extends StatelessWidget {
                       width: AppDimensions.decorativeBlurLG,
                       height: AppDimensions.decorativeBlurLG,
                       decoration: BoxDecoration(
-                        color: AppColors.primaryContainer.withValues(
+                        color: colorScheme.primaryContainer.withValues(
                           alpha: AppDimensions.opacityFaint,
                         ),
                         shape: BoxShape.circle,
@@ -93,7 +94,7 @@ class PracticePage extends StatelessWidget {
                       width: AppDimensions.decorativeBlurLG,
                       height: AppDimensions.decorativeBlurLG,
                       decoration: BoxDecoration(
-                        color: AppColors.secondaryContainer.withValues(
+                        color: colorScheme.secondaryContainer.withValues(
                           alpha: AppDimensions.opacityFaint,
                         ),
                         shape: BoxShape.circle,
@@ -349,6 +350,7 @@ class PracticePage extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context, String photoUrl) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: AppDimensions.paddingXXL,
@@ -366,7 +368,7 @@ class PracticePage extends StatelessWidget {
             style: AppTextStyles.titleLarge.copyWith(
               fontWeight: FontWeight.w800,
               letterSpacing: AppDimensions.letterSpacingTight,
-              color: AppColors.primary,
+              color: colorScheme.primary,
             ),
           ),
           const Spacer(),
@@ -378,12 +380,12 @@ class PracticePage extends StatelessWidget {
                     imageUrl: photoUrl,
                     size: AppDimensions.avatarSM,
                     fallbackIcon: LucideIcons.userCircle,
-                    fallbackIconColor: AppColors.primary,
+                    fallbackIconColor: colorScheme.primary,
                   )
-                : const Icon(
+                : Icon(
                     LucideIcons.userCircle,
                     size: AppDimensions.iconLG,
-                    color: AppColors.primary,
+                    color: colorScheme.primary,
                   ),
           ),
         ],
@@ -537,21 +539,21 @@ class PracticePage extends StatelessWidget {
               padding: const EdgeInsets.all(AppDimensions.paddingXXL),
               decoration: BoxDecoration(
                 color: showCorrectState || showCorrectHint
-                    ? AppColors.secondaryContainer.withValues(
+                    ? colorScheme.secondaryContainer.withValues(
                         alpha: AppDimensions.opacitySubtle,
                       )
                     : showWrongState
-                    ? AppColors.error.withValues(
+                    ? colorScheme.error.withValues(
                         alpha: AppDimensions.opacityFaint,
                       )
                     : colorScheme.surfaceContainerLowest,
                 borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
                 border: Border.all(
                   color: showCorrectState || showCorrectHint
-                      ? AppColors.secondary
+                      ? colorScheme.secondary
                       : showWrongState
-                      ? AppColors.error
-                      : AppColors.transparent,
+                      ? colorScheme.error
+                      : Colors.transparent,
                   width: AppDimensions.borderWidth,
                 ),
                 boxShadow: const [AppShadows.ghost],
@@ -565,9 +567,9 @@ class PracticePage extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: showCorrectState || showCorrectHint
-                          ? AppColors.secondary
+                          ? colorScheme.secondary
                           : showWrongState
-                          ? AppColors.error
+                          ? colorScheme.error
                           : colorScheme.surfaceContainerHigh,
                     ),
                     alignment: Alignment.center,
@@ -576,9 +578,9 @@ class PracticePage extends StatelessWidget {
                       style: AppTextStyles.titleMedium.copyWith(
                         fontWeight: FontWeight.w700,
                         color: showCorrectState || showCorrectHint
-                            ? AppColors.onSecondary
+                            ? colorScheme.onSecondary
                             : showWrongState
-                            ? AppColors.onError
+                            ? colorScheme.onError
                             : colorScheme.outline,
                       ),
                     ),
@@ -595,24 +597,24 @@ class PracticePage extends StatelessWidget {
                             ? FontWeight.w700
                             : FontWeight.w500,
                         color: showCorrectState || showCorrectHint
-                            ? AppColors.onSecondaryContainer
+                            ? colorScheme.onSecondaryContainer
                             : showWrongState
-                            ? AppColors.error
+                            ? colorScheme.error
                             : null,
                       ),
                     ),
                   ),
                   if (showCorrectState || showCorrectHint)
-                    const Icon(
+                    Icon(
                       LucideIcons.checkCircle2,
                       size: AppDimensions.iconLG,
-                      color: AppColors.secondary,
+                      color: colorScheme.secondary,
                     ),
                   if (showWrongState)
-                    const Icon(
+                    Icon(
                       LucideIcons.xCircle,
                       size: AppDimensions.iconLG,
-                      color: AppColors.error,
+                      color: colorScheme.error,
                     ),
                 ],
               ),
@@ -651,6 +653,7 @@ class PracticePage extends StatelessWidget {
   }
 
   Widget _buildSuccessToast(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Positioned(
       bottom: AppDimensions.bottomNavPadding + AppDimensions.paddingXL,
       left: AppDimensions.paddingXXL,
@@ -662,7 +665,7 @@ class PracticePage extends StatelessWidget {
             vertical: AppDimensions.paddingLG,
           ),
           decoration: BoxDecoration(
-            color: AppColors.secondary,
+            color: colorScheme.secondary,
             borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
             boxShadow: const [AppShadows.medium],
           ),
@@ -672,15 +675,15 @@ class PracticePage extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(AppDimensions.paddingXS),
                 decoration: BoxDecoration(
-                  color: AppColors.onSecondary.withValues(
+                  color: colorScheme.onSecondary.withValues(
                     alpha: AppDimensions.opacitySubtle,
                   ),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   LucideIcons.partyPopper,
                   size: AppDimensions.iconMD,
-                  color: AppColors.onSecondary,
+                  color: colorScheme.onSecondary,
                 ),
               ),
               const SizedBox(width: AppDimensions.paddingLG),
@@ -691,14 +694,14 @@ class PracticePage extends StatelessWidget {
                   Text(
                     '${AppStrings.correct} ${AppStrings.plusPointsTemplate}',
                     style: AppTextStyles.labelLarge.copyWith(
-                      color: AppColors.onSecondary,
+                      color: colorScheme.onSecondary,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                   Text(
                     AppStrings.masteryLevelIncreasing,
                     style: AppTextStyles.labelSmall.copyWith(
-                      color: AppColors.onSecondary.withValues(
+                      color: colorScheme.onSecondary.withValues(
                         alpha: AppDimensions.opacityHigh,
                       ),
                       fontWeight: FontWeight.w700,
@@ -716,6 +719,7 @@ class PracticePage extends StatelessWidget {
   }
 
   Widget _buildWrongAnswerToast(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Positioned(
       bottom: AppDimensions.bottomNavPadding + AppDimensions.paddingXL,
       left: AppDimensions.paddingXXL,
@@ -727,7 +731,7 @@ class PracticePage extends StatelessWidget {
             vertical: AppDimensions.paddingLG,
           ),
           decoration: BoxDecoration(
-            color: AppColors.error,
+            color: colorScheme.error,
             borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
             boxShadow: const [AppShadows.medium],
           ),
@@ -737,15 +741,15 @@ class PracticePage extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(AppDimensions.paddingXS),
                 decoration: BoxDecoration(
-                  color: AppColors.onError.withValues(
+                  color: colorScheme.onError.withValues(
                     alpha: AppDimensions.opacitySubtle,
                   ),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   LucideIcons.xCircle,
                   size: AppDimensions.iconMD,
-                  color: AppColors.onError,
+                  color: colorScheme.onError,
                 ),
               ),
               const SizedBox(width: AppDimensions.paddingLG),
@@ -756,14 +760,14 @@ class PracticePage extends StatelessWidget {
                   Text(
                     AppStrings.wrongAnswer,
                     style: AppTextStyles.labelLarge.copyWith(
-                      color: AppColors.onError,
+                      color: colorScheme.onError,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                   Text(
                     AppStrings.tryNextTime,
                     style: AppTextStyles.labelSmall.copyWith(
-                      color: AppColors.onError.withValues(
+                      color: colorScheme.onError.withValues(
                         alpha: AppDimensions.opacityHigh,
                       ),
                       fontWeight: FontWeight.w700,
@@ -862,13 +866,13 @@ class PracticePage extends StatelessWidget {
                         icon: LucideIcons.star,
                         value: '${state.totalPoints}',
                         label: AppStrings.ptsLabel,
-                        color: AppColors.secondary,
+                        color: colorScheme.secondary,
                       ),
                       _ScoreStat(
                         icon: LucideIcons.checkCircle2,
                         value: '${state.totalQuestions}',
                         label: AppStrings.practiceQuestionLabel,
-                        color: AppColors.primary,
+                        color: colorScheme.primary,
                       ),
                     ],
                   ),

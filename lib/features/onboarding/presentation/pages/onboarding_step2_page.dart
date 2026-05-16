@@ -28,12 +28,13 @@ class OnboardingStep2Page extends StatelessWidget {
     };
   }
 
-  Color _getColorForBoardType(BoardType type) {
+  Color _getColorForBoardType(BuildContext context, BoardType type) {
+    final cs = Theme.of(context).colorScheme;
     return switch (type) {
-      BoardType.state => const Color(0xFF00639A),
-      BoardType.national => const Color(0xFF00639A),
-      BoardType.private => const Color(0xFF056C42),
-      BoardType.examination => const Color(0xFF655781),
+      BoardType.state => cs.primary,
+      BoardType.national => cs.primary,
+      BoardType.private => cs.secondary,
+      BoardType.examination => cs.tertiary,
     };
   }
 
@@ -107,7 +108,7 @@ class OnboardingStep2Page extends StatelessWidget {
                                 board: b,
                                 isSelected: state.selectedBoard?.id == b.id,
                                 icon: _getIconForBoardType(b.type),
-                                color: _getColorForBoardType(b.type),
+                                color: _getColorForBoardType(context, b.type),
                                 onTap: () => context
                                     .read<OnboardingCubit>()
                                     .selectBoard(b),
@@ -125,7 +126,7 @@ class OnboardingStep2Page extends StatelessWidget {
                                 board: b,
                                 isSelected: state.selectedBoard?.id == b.id,
                                 icon: _getIconForBoardType(b.type),
-                                color: _getColorForBoardType(b.type),
+                                color: _getColorForBoardType(context, b.type),
                                 onTap: () => context
                                     .read<OnboardingCubit>()
                                     .selectBoard(b),

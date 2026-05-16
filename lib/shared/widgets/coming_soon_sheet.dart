@@ -55,11 +55,13 @@ class _ComingSoonContent extends StatelessWidget {
         "We're working hard to bring you $featureName. "
             'Stay tuned for updates!';
 
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       margin: const EdgeInsets.all(AppDimensions.paddingLG),
       padding: const EdgeInsets.all(AppDimensions.paddingHero),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(AppDimensions.radiusShell),
         boxShadow: const [AppShadows.ghost],
       ),
@@ -72,7 +74,7 @@ class _ComingSoonContent extends StatelessWidget {
             height: AppDimensions.paddingXS,
             margin: const EdgeInsets.only(bottom: AppDimensions.paddingXXL),
             decoration: BoxDecoration(
-              color: AppColors.outlineVariant,
+              color: colorScheme.outlineVariant,
               borderRadius: BorderRadius.circular(AppDimensions.radiusXS),
             ),
           ),
@@ -88,15 +90,15 @@ class _ComingSoonContent extends StatelessWidget {
               width: AppDimensions.avatarProfile,
               height: AppDimensions.avatarProfile,
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
+                gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [AppColors.primaryFixed, AppColors.primaryFixedDim],
+                  colors: [colorScheme.primaryFixed, colorScheme.primaryFixedDim],
                 ),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primary.withValues(
+                    color: colorScheme.primary.withValues(
                       alpha: AppDimensions.opacitySubtle,
                     ),
                     blurRadius: AppDimensions.blurRadiusLG,
@@ -107,7 +109,7 @@ class _ComingSoonContent extends StatelessWidget {
               child: Icon(
                 icon,
                 size: AppDimensions.iconHero,
-                color: AppColors.primary,
+                color: colorScheme.primary,
               ),
             ),
           ),
@@ -119,15 +121,15 @@ class _ComingSoonContent extends StatelessWidget {
               vertical: AppDimensions.chipPaddingVerticalLG,
             ),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [AppColors.primary, AppColors.primaryContainer],
+              gradient: LinearGradient(
+                colors: [colorScheme.primary, colorScheme.primaryContainer],
               ),
               borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
             ),
             child: Text(
               AppStrings.comingSoon,
               style: AppTextStyles.labelSmall.copyWith(
-                color: AppColors.white,
+                color: colorScheme.onPrimary,
                 letterSpacing: AppDimensions.letterSpacingWide,
               ),
             ),
@@ -137,7 +139,7 @@ class _ComingSoonContent extends StatelessWidget {
           Text(
             featureName,
             style: AppTextStyles.headlineSmall.copyWith(
-              color: AppColors.onSurface,
+              color: colorScheme.onSurface,
             ),
             textAlign: TextAlign.center,
           ),
@@ -150,7 +152,7 @@ class _ComingSoonContent extends StatelessWidget {
             child: Text(
               desc,
               style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.onSurfaceVariant,
+                color: colorScheme.onSurfaceVariant,
                 height: AppDimensions.lineHeightRelaxed,
               ),
               textAlign: TextAlign.center,
@@ -163,10 +165,10 @@ class _ComingSoonContent extends StatelessWidget {
             runSpacing: AppDimensions.paddingSM,
             alignment: WrapAlignment.center,
             children: [
-              _buildFeatureChip(LucideIcons.zap, AppStrings.comingSoonChip1),
-              _buildFeatureChip(LucideIcons.bell, AppStrings.comingSoonChip2),
+              _buildFeatureChip(colorScheme, LucideIcons.zap, AppStrings.comingSoonChip1),
+              _buildFeatureChip(colorScheme, LucideIcons.bell, AppStrings.comingSoonChip2),
               _buildFeatureChip(
-                LucideIcons.sparkles,
+                colorScheme, LucideIcons.sparkles,
                 AppStrings.comingSoonChip3,
               ),
             ],
@@ -178,8 +180,8 @@ class _ComingSoonContent extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () => Navigator.of(context).pop(),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.onPrimary,
+                backgroundColor: colorScheme.primary,
+                foregroundColor: colorScheme.onPrimary,
                 padding: const EdgeInsets.symmetric(
                   vertical: AppDimensions.paddingLG,
                 ),
@@ -196,25 +198,25 @@ class _ComingSoonContent extends StatelessWidget {
     );
   }
 
-  Widget _buildFeatureChip(IconData chipIcon, String label) {
+  Widget _buildFeatureChip(ColorScheme colorScheme, IconData chipIcon, String label) {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppDimensions.chipPaddingHorizontal,
         vertical: AppDimensions.chipPaddingVertical,
       ),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainer,
+        color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(chipIcon, size: AppDimensions.iconSM, color: AppColors.primary),
+          Icon(chipIcon, size: AppDimensions.iconSM, color: colorScheme.primary),
           const SizedBox(width: AppDimensions.paddingXS),
           Text(
             label,
             style: AppTextStyles.labelMedium.copyWith(
-              color: AppColors.onSurfaceVariant,
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
         ],

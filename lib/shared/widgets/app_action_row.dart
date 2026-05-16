@@ -11,7 +11,7 @@ class AppActionRow extends StatelessWidget {
   const AppActionRow({
     super.key,
     required this.label,
-    this.color = AppColors.primary,
+    this.color,
     this.onTap,
     this.trailingIcon = LucideIcons.chevronRight,
   });
@@ -20,7 +20,7 @@ class AppActionRow extends StatelessWidget {
   final String label;
 
   /// Colour applied to both text and chevron icon.
-  final Color color;
+  final Color? color;
 
   /// Callback when the row is tapped.
   final VoidCallback? onTap;
@@ -30,15 +30,26 @@ class AppActionRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(label, style: AppTextStyles.labelLarge.copyWith(color: color)),
+          Text(
+            label,
+            style: AppTextStyles.labelLarge.copyWith(
+              color: color ?? colorScheme.primary,
+            ),
+          ),
           const SizedBox(width: AppDimensions.paddingXS),
-          Icon(trailingIcon, size: AppDimensions.iconMD, color: color),
+          Icon(
+            trailingIcon,
+            size: AppDimensions.iconMD,
+            color: color ?? colorScheme.primary,
+          ),
         ],
       ),
     );

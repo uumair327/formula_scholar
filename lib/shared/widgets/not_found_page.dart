@@ -21,6 +21,8 @@ class NotFoundPage extends StatelessWidget {
       tag: AppLogTags.router,
     );
 
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       body: Center(
         child: Padding(
@@ -33,14 +35,14 @@ class NotFoundPage extends StatelessWidget {
               Container(
                 width: AppDimensions.avatarProfile,
                 height: AppDimensions.avatarProfile,
-                decoration: const BoxDecoration(
-                  color: AppColors.primaryFixed,
+                decoration: BoxDecoration(
+                  color: colorScheme.primaryFixed,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   LucideIcons.mapPinOff,
                   size: AppDimensions.iconHero,
-                  color: AppColors.primary,
+                  color: colorScheme.primary,
                 ),
               ),
               const SizedBox(height: AppDimensions.paddingHero),
@@ -53,7 +55,7 @@ class NotFoundPage extends StatelessWidget {
               Text(
                 AppStrings.pageNotFoundDescription,
                 style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.onSurfaceVariant,
+                  color: colorScheme.onSurfaceVariant,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -74,8 +76,8 @@ class NotFoundPage extends StatelessWidget {
                   ),
                   label: const Text(AppStrings.goHome),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: AppColors.onPrimary,
+                    backgroundColor: colorScheme.primary,
+                    foregroundColor: colorScheme.onPrimary,
                     padding: const EdgeInsets.symmetric(
                       vertical: AppDimensions.paddingLG,
                     ),

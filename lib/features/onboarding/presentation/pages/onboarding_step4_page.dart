@@ -29,21 +29,18 @@ class _OnboardingStep4PageState extends State<OnboardingStep4Page> {
       icon: LucideIcons.target,
       title: AppStrings.step4Casual,
       subtitle: AppStrings.step4CasualDesc,
-      color: Color(0xFF056C42),
     ),
     _GoalOption(
       id: 'regular',
       icon: LucideIcons.flame,
       title: AppStrings.step4Regular,
       subtitle: AppStrings.step4RegularDesc,
-      color: Color(0xFF00639A),
     ),
     _GoalOption(
       id: 'intensive',
       icon: LucideIcons.zap,
       title: AppStrings.step4Intensive,
       subtitle: AppStrings.step4IntensiveDesc,
-      color: Color(0xFF655781),
     ),
   ];
 
@@ -109,9 +106,19 @@ class _GoalCard extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
+  Color _goalAccent(ColorScheme cs) {
+    return switch (goal.id) {
+      'casual' => cs.secondary,
+      'regular' => cs.primary,
+      'intensive' => cs.tertiary,
+      _ => cs.primary,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final accent = _goalAccent(colorScheme);
 
     return GestureDetector(
       onTap: onTap,
@@ -123,7 +130,7 @@ class _GoalCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
           border: Border.all(
             color: isSelected
-                ? goal.color.withValues(alpha: AppDimensions.opacityMedium)
+                ? accent.withValues(alpha: AppDimensions.opacityMedium)
                 : AppColors.transparent,
             width: isSelected
                 ? AppDimensions.borderWidthThick
@@ -140,13 +147,13 @@ class _GoalCard extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: isSelected
-                    ? goal.color
-                    : goal.color.withValues(alpha: AppDimensions.opacityFaint),
+                    ? accent
+                    : accent.withValues(alpha: AppDimensions.opacityFaint),
               ),
               child: Icon(
                 goal.icon,
                 size: AppDimensions.iconDefault,
-                color: isSelected ? AppColors.onPrimary : goal.color,
+                color: isSelected ? colorScheme.onPrimary : accent,
               ),
             ),
             const SizedBox(width: AppDimensions.paddingXL),
@@ -176,12 +183,12 @@ class _GoalCard extends StatelessWidget {
                 height: AppDimensions.iconMD,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: goal.color,
+                  color: accent,
                 ),
-                child: const Icon(
+                child: Icon(
                   LucideIcons.check,
                   size: AppDimensions.iconSM,
-                  color: AppColors.onPrimary,
+                  color: colorScheme.onPrimary,
                 ),
               ),
           ],
@@ -197,11 +204,9 @@ class _GoalOption {
     required this.icon,
     required this.title,
     required this.subtitle,
-    required this.color,
   });
   final String id;
   final IconData icon;
   final String title;
   final String subtitle;
-  final Color color;
 }

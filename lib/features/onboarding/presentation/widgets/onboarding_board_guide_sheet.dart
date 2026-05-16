@@ -164,7 +164,7 @@ class _BoardGuideCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final accent = _accentColor(board.type);
+    final accent = _accentColor(colorScheme, board.type);
     return Material(
       color: AppColors.transparent,
       child: InkWell(
@@ -239,12 +239,12 @@ class _BoardGuideCard extends StatelessWidget {
     };
   }
 
-  Color _accentColor(BoardType type) {
+  Color _accentColor(ColorScheme cs, BoardType type) {
     return switch (type) {
-      BoardType.state => const Color(0xFF00639A),
-      BoardType.national => const Color(0xFF00639A),
-      BoardType.private => const Color(0xFF056C42),
-      BoardType.examination => const Color(0xFF655781),
+      BoardType.state => cs.primary,
+      BoardType.national => cs.primary,
+      BoardType.private => cs.secondary,
+      BoardType.examination => cs.tertiary,
     };
   }
 

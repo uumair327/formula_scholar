@@ -106,7 +106,7 @@ class CheatSheetPage extends StatelessWidget {
                 _StatChip(
                   icon: LucideIcons.checkCircle,
                   label: '$mastered/$total mastered',
-                  color: Colors.green,
+                  color: colorScheme.secondary,
                 ),
                 const SizedBox(width: AppDimensions.paddingSM),
                 _StatChip(
@@ -150,7 +150,7 @@ class CheatSheetPage extends StatelessWidget {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.green.withValues(alpha: 0.15),
+                        color: colorScheme.secondaryContainer,
                         borderRadius: BorderRadius.circular(
                           AppDimensions.radiusSM,
                         ),
@@ -158,7 +158,7 @@ class CheatSheetPage extends StatelessWidget {
                       child: Text(
                         'MASTERED',
                         style: AppTextStyles.overline.copyWith(
-                          color: Colors.green.shade700,
+                          color: colorScheme.onSecondaryContainer,
                           fontWeight: FontWeight.w700,
                           fontSize: 10,
                         ),

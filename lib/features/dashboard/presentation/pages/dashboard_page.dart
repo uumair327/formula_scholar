@@ -566,7 +566,7 @@ class DashboardPage extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingHero),
-      decoration: const SignatureGlowDecoration(),
+      decoration: signatureGlowDecoration(colorScheme),
       child: Stack(
         children: [
           Column(
@@ -876,10 +876,10 @@ class DashboardPage extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return AppCard(
-      color: AppColors.primary.withValues(alpha: AppDimensions.opacityOverlay),
+      color: colorScheme.primary.withValues(alpha: AppDimensions.opacityOverlay),
       padding: const EdgeInsets.all(AppDimensions.paddingXXL),
       border: Border.all(
-        color: AppColors.primary.withValues(alpha: AppDimensions.opacityFaint),
+        color: colorScheme.primary.withValues(alpha: AppDimensions.opacityFaint),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -887,11 +887,11 @@ class DashboardPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const AppIconCircle(
+              AppIconCircle(
                 icon: LucideIcons.helpCircle,
                 size: AppDimensions.avatarMD,
-                backgroundColor: AppColors.primaryFixed,
-                iconColor: AppColors.primary,
+                backgroundColor: colorScheme.primaryContainer,
+                iconColor: colorScheme.primary,
                 iconSize: AppDimensions.iconLG,
                 borderRadius: AppDimensions.radiusXL,
               ),
@@ -901,7 +901,7 @@ class DashboardPage extends StatelessWidget {
                   vertical: AppDimensions.paddingXXS,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.error,
+                  color: colorScheme.error,
                   borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
                 ),
                 child: Text(
@@ -946,8 +946,8 @@ class DashboardPage extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: AppColors.onPrimary,
+                  backgroundColor: colorScheme.primary,
+                  foregroundColor: colorScheme.onPrimary,
                   padding: const EdgeInsets.symmetric(
                     vertical: AppDimensions.progressBarMD,
                   ),
@@ -985,10 +985,10 @@ class DashboardPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
                   boxShadow: const [AppShadows.subtle],
                 ),
-                child: const Icon(
+                child: Icon(
                   LucideIcons.folderOpen,
                   size: AppDimensions.iconLG,
-                  color: AppColors.primary,
+                  color: colorScheme.primary,
                 ),
               ),
               const SizedBox(width: AppDimensions.paddingLG),

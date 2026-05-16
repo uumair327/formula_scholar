@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 /// All colors follow Material Design 3 naming conventions
 /// and correspond directly to the Tailwind CSS custom properties.
 abstract final class AppColors {
+  /// Returns light or dark color based on [context] brightness.
+  static Color of(BuildContext context, Color light, Color dark) =>
+      Theme.of(context).brightness == Brightness.dark ? dark : light;
   // Background & Surface
   static const Color background = Color(0xFFF7F9FF);
   static const Color surface = Color(0xFFF7F9FF);
@@ -82,6 +85,28 @@ abstract final class AppColors {
   static const Color inverseSurface = Color(0xFF2D3135);
   static const Color inverseOnSurface = Color(0xFFEFF1F6);
   static const Color inversePrimary = Color(0xFF96CCFF);
+
+  // Dark mode variants
+  static const Color darkSurface = Color(0xFF121416);
+  static const Color darkOnSurface = Color(0xFFE2E3E8);
+  static const Color darkSurfaceContainerLowest = Color(0xFF1B1D22);
+  static const Color darkSurfaceContainerLow = Color(0xFF23262B);
+  static const Color darkOnSurfaceVariant = Color(0xFFC2C7CF);
+  static const Color darkPrimary = Color(0xFF96CCFF);
+  static const Color darkOnPrimary = Color(0xFF003353);
+  static const Color darkPrimaryContainer = Color(0xFF004B77);
+  static const Color darkOnPrimaryContainer = Color(0xFFD1E4FF);
+  static const Color darkSecondary = Color(0xFF82D8A4);
+  static const Color darkOnSecondary = Color(0xFF003921);
+  static const Color darkSecondaryContainer = Color(0xFF00522F);
+  static const Color darkOnSecondaryContainer = Color(0xFF9EF5C0);
+  static const Color darkTertiary = Color(0xFFD0BFEE);
+  static const Color darkOnTertiary = Color(0xFF36284E);
+  static const Color darkTertiaryContainer = Color(0xFF4D3F65);
+  static const Color darkOnTertiaryContainer = Color(0xFFECDCFF);
+  static const Color darkError = Color(0xFFFFB4AB);
+  static const Color darkOnError = Color(0xFF690005);
+  static const Color darkOutline = Color(0xFF8C929C);
 
   // Core utility colors
   static const Color white = Color(0xFFFFFFFF);

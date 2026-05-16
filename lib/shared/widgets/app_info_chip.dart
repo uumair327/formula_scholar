@@ -11,8 +11,8 @@ class AppInfoChip extends StatelessWidget {
   const AppInfoChip({
     super.key,
     required this.label,
-    this.backgroundColor = AppColors.surfaceContainerHigh,
-    this.textColor = AppColors.onSurface,
+    this.backgroundColor,
+    this.textColor,
     this.textStyle,
     this.horizontalPadding = AppDimensions.paddingMD,
     this.verticalPadding = AppDimensions.paddingXS,
@@ -22,10 +22,10 @@ class AppInfoChip extends StatelessWidget {
   final String label;
 
   /// Background colour of the chip.
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   /// Text colour.
-  final Color textColor;
+  final Color? textColor;
 
   /// Text style override. Defaults to [AppTextStyles.bodySmall] w500.
   final TextStyle? textStyle;
@@ -38,13 +38,15 @@ class AppInfoChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: horizontalPadding,
         vertical: verticalPadding,
       ),
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: backgroundColor ?? colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
       ),
       child: Text(
@@ -53,7 +55,7 @@ class AppInfoChip extends StatelessWidget {
             textStyle ??
             AppTextStyles.bodySmall.copyWith(
               fontWeight: FontWeight.w500,
-              color: textColor,
+              color: textColor ?? colorScheme.onSurface,
             ),
       ),
     );
