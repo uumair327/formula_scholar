@@ -12,6 +12,7 @@ import '../../../comparison/comparison.dart';
 import '../../domain/domain.dart';
 import '../cubit/formulas_cubit.dart';
 import '../cubit/formulas_state.dart';
+import '../widgets/formula_note_sheet.dart';
 
 /// Formulas page — displays all formulas for a given chapter.
 ///
@@ -502,6 +503,26 @@ class _FormulaCard extends StatelessWidget {
                       ? AppColors.primary
                       : colorScheme.outline,
                 ),
+              ),
+              IconButton(
+                onPressed: () {
+                  final cubit = context.read<FormulasCubit>();
+                  cubit.loadFormulaNote(formula.id);
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (_) => FormulaNoteSheet(
+                      formulaId: formula.id,
+                      formulaTitle: formula.title,
+                    ),
+                  );
+                },
+                icon: Icon(
+                  LucideIcons.stickyNote,
+                  size: AppDimensions.iconMD,
+                  color: colorScheme.outline,
+                ),
+                tooltip: 'Notes',
               ),
               IconButton(
                 onPressed: () {

@@ -1,4 +1,5 @@
 import '../entities/formula.dart';
+import '../entities/formula_note.dart';
 
 /// Port: Driven port for formula data.
 ///
@@ -21,9 +22,6 @@ abstract interface class FormulasDataSourcePort {
   });
 
   /// Marks chapter as started for the authenticated user.
-  ///
-  /// Creates/updates progress under
-  /// `users/{uid}/progress/{subjectId}/chapters/{chapterId}`.
   Future<void> markChapterStarted(
     String subjectId,
     String chapterId, {
@@ -40,4 +38,13 @@ abstract interface class FormulasDataSourcePort {
     required int totalFormulas,
     required String chapterName,
   });
+
+  /// Loads the user's note for a given formula.
+  Future<FormulaNote?> getFormulaNote(String formulaId);
+
+  /// Saves (creates or updates) the user's note for a formula.
+  Future<void> saveFormulaNote(FormulaNote note);
+
+  /// Deletes the user's note for a formula.
+  Future<void> deleteFormulaNote(String formulaId);
 }

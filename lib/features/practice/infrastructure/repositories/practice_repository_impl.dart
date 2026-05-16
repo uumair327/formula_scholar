@@ -61,4 +61,12 @@ class PracticeRepositoryImpl implements PracticeRepositoryPort {
       ),
     );
   }
+  @override
+  Future<Result<void>> saveAnswerRecords(List<QuizAnswerRecord> records) {
+    return safeOperation(
+      tag: AppLogTags.practiceRepo,
+      operation: 'saveAnswerRecords(${records.length} records)',
+      execute: () => _dataSource.saveAnswerRecords(records),
+    );
+  }
 }

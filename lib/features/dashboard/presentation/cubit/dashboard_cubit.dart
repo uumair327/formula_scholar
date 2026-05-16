@@ -17,6 +17,7 @@ class DashboardCubit extends Cubit<DashboardState>
     required GetRecentStudiesUseCase getRecentStudies,
     required GetBannersUseCase getBanners,
     required GetAnnouncementsUseCase getAnnouncements,
+    required GetWeakAreasUseCase getWeakAreas,
     required CurriculumCubit curriculumCubit,
     required ActivityRefreshCubit activityRefreshCubit,
   }) : _getStudyProgress = getStudyProgress,
@@ -24,6 +25,7 @@ class DashboardCubit extends Cubit<DashboardState>
        _getRecentStudies = getRecentStudies,
        _getBanners = getBanners,
        _getAnnouncements = getAnnouncements,
+       _getWeakAreas = getWeakAreas,
        _curriculumCubit = curriculumCubit,
        _activityRefreshCubit = activityRefreshCubit,
        super(const DashboardState()) {
@@ -35,6 +37,7 @@ class DashboardCubit extends Cubit<DashboardState>
   final GetRecentStudiesUseCase _getRecentStudies;
   final GetBannersUseCase _getBanners;
   final GetAnnouncementsUseCase _getAnnouncements;
+  final GetWeakAreasUseCase _getWeakAreas;
   final CurriculumCubit _curriculumCubit;
   final ActivityRefreshCubit _activityRefreshCubit;
   late final StreamSubscription<CurriculumState> _curriculumSubscription;
@@ -108,12 +111,13 @@ class DashboardCubit extends Cubit<DashboardState>
       tag: AppLogTags.dashboardCubit,
     );
 
-    final (progressResult, subjectsResult, studiesResult, bannersResult, announcementsResult) = await (
+    final (progressResult, subjectsResult, studiesResult, bannersResult, announcementsResult, weakAreasResult) = await (
       _getStudyProgress(),
       _getSubjects(curriculum.boardId, curriculum.gradeId),
       _getRecentStudies(),
       _getBanners(),
       _getAnnouncements(),
+      _getWeakAreas(),
     ).wait;
 
     final progress = switch (progressResult) {
@@ -141,6 +145,11 @@ class DashboardCubit extends Cubit<DashboardState>
       Error(:final failure) => logFailure('announcements', failure),
     };
 
+    final weakAreas = switch (weakAreasResult) {
+      Success(:final data) => data,
+      Error(:final failure) => logFailure('weak areas', failure),
+    };
+
     if (progress != null && subjects != null && recentStudies != null) {
       final vaultItems = subjects
           .map(
@@ -161,6 +170,7 @@ class DashboardCubit extends Cubit<DashboardState>
           vaultItems: vaultItems,
           banners: banners ?? const [],
           announcements: announcements ?? const [],
+          weakAreas: weakAreas ?? const [],
           selectedBoardName: curriculum.boardName,
           selectedGradeName: curriculum.gradeLabel,
           errorMessage: null,

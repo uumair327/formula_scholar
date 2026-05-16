@@ -149,6 +149,15 @@ class DashboardPage extends StatelessWidget {
                               delay: const Duration(milliseconds: 200),
                               child: _buildContinueStudying(context, state),
                             ),
+                            if (state.weakAreas.isNotEmpty) ...[
+                              const SizedBox(height: AppDimensions.paddingSection),
+                              EntranceWrapper(
+                                delay: const Duration(milliseconds: 250),
+                                child: WeakAreasSection(
+                                  weakAreas: state.weakAreas,
+                                ),
+                              ),
+                            ],
                             const SizedBox(height: AppDimensions.bottomNavPadding),
                           ]),
                         ),

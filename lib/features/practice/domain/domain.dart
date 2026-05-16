@@ -1,6 +1,7 @@
 /// Barrel file for the practice domain layer.
 library;
 
+export 'entities/quiz_answer_record.dart';
 export 'entities/quiz_question.dart';
 export 'ports/practice_cache_port.dart';
 export 'ports/practice_repository_port.dart';

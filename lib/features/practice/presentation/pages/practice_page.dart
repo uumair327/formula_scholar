@@ -12,8 +12,16 @@ import '../cubit/practice_cubit.dart';
 import '../cubit/practice_state.dart';
 
 /// Practice quiz page matching the React prototype.
-class PracticePage extends StatelessWidget {
+class PracticePage extends StatefulWidget {
   const PracticePage({super.key});
+
+  @override
+  State<PracticePage> createState() => _PracticePageState();
+}
+
+class _PracticePageState extends State<PracticePage> {
+  bool _isTimed = false;
+  int? _timedDuration;
 
   @override
   Widget build(BuildContext context) {
@@ -185,73 +193,143 @@ class PracticePage extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(AppDimensions.paddingXXL),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      'Ready to Practice?',
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.headlineSmall.copyWith(
-                        color: colorScheme.onSurface,
-                        fontWeight: FontWeight.w800,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        'Ready to Practice?',
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.headlineSmall.copyWith(
+                          color: colorScheme.onSurface,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: AppDimensions.paddingLG),
-                    Text(
-                      'Select a subject to focus your quiz, or test your overall knowledge.',
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.bodyLarge.copyWith(
-                        color: colorScheme.onSurfaceVariant,
+                      const SizedBox(height: AppDimensions.paddingLG),
+                      Text(
+                        'Select a subject to focus your quiz, or test your overall knowledge.',
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.bodyLarge.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: AppDimensions.paddingXXL),
-                    AppCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Text(
-                            'Choose Subject',
-                            style: AppTextStyles.titleMedium,
-                          ),
-                          const SizedBox(height: AppDimensions.paddingMD),
-                          Wrap(
-                            spacing: AppDimensions.paddingSM,
-                            runSpacing: AppDimensions.paddingSM,
-                            children: [
-                              ChoiceChip(
-                                label: const Text('All Subjects'),
-                                selected: true, // simplified for now, we just act as buttons
-                                onSelected: (_) {
-                                  if (curriculumState.hasSelection) {
-                                    context.read<PracticeCubit>().loadQuestions(
-                                      boardId: curriculumState.boardId!,
-                                      gradeId: curriculumState.gradeId!,
-                                    );
-                                  }
-                                },
-                              ),
-                              ...subjectState.availableSubjects.map((subject) {
-                                return ChoiceChip(
-                                  label: Text(subject.name),
-                                  selected: false,
+                      const SizedBox(height: AppDimensions.paddingXXL),
+                      AppCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              'Choose Subject',
+                              style: AppTextStyles.titleMedium,
+                            ),
+                            const SizedBox(height: AppDimensions.paddingMD),
+                            Wrap(
+                              spacing: AppDimensions.paddingSM,
+                              runSpacing: AppDimensions.paddingSM,
+                              children: [
+                                ChoiceChip(
+                                  label: const Text('All Subjects'),
+                                  selected: true,
                                   onSelected: (_) {
                                     if (curriculumState.hasSelection) {
                                       context.read<PracticeCubit>().loadQuestions(
                                         boardId: curriculumState.boardId!,
                                         gradeId: curriculumState.gradeId!,
-                                        subjectId: subject.category,
+                                        timedMode: _isTimed,
+                                        durationSeconds: _timedDuration,
                                       );
                                     }
                                   },
-                                );
-                              }),
+                                ),
+                                ...subjectState.availableSubjects.map((subject) {
+                                  return ChoiceChip(
+                                    label: Text(subject.name),
+                                    selected: false,
+                                    onSelected: (_) {
+                                      if (curriculumState.hasSelection) {
+                                        context.read<PracticeCubit>().loadQuestions(
+                                          boardId: curriculumState.boardId!,
+                                          gradeId: curriculumState.gradeId!,
+                                          subjectId: subject.category,
+                                          timedMode: _isTimed,
+                                          durationSeconds: _timedDuration,
+                                        );
+                                      }
+                                    },
+                                  );
+                                }),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: AppDimensions.paddingLG),
+                      AppCard(
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Timed Mode',
+                                    style: AppTextStyles.titleSmall.copyWith(
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  const SizedBox(height: AppDimensions.paddingXXS),
+                                  Text(
+                                    'Set a time limit for the quiz',
+                                    style: AppTextStyles.bodySmall.copyWith(
+                                      color: colorScheme.onSurfaceVariant,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Switch(
+                              value: _isTimed,
+                              onChanged: (v) {
+                                setState(() => _isTimed = v);
+                                if (!v) _timedDuration = null;
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (_isTimed) ...[
+                        const SizedBox(height: AppDimensions.paddingSM),
+                        AppCard(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Duration',
+                                style: AppTextStyles.titleSmall.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(height: AppDimensions.paddingMD),
+                              Wrap(
+                                spacing: AppDimensions.paddingSM,
+                                runSpacing: AppDimensions.paddingSM,
+                                children: [5, 10, 15, 30, 60].map((mins) {
+                                  return ChoiceChip(
+                                    label: Text('$mins min'),
+                                    selected: _timedDuration == mins * 60,
+                                    onSelected: (_) {
+                                      setState(() => _timedDuration = mins * 60);
+                                    },
+                                  );
+                                }).toList(),
+                              ),
                             ],
                           ),
-                        ],
-                      ),
-                    ),
-                  ],
+                        ),
+                      ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -395,6 +473,9 @@ class PracticePage extends StatelessWidget {
 
   Widget _buildProgressSection(BuildContext context, PracticeState state) {
     final colorScheme = Theme.of(context).colorScheme;
+    final timerColor = state.isTimerWarning
+        ? colorScheme.error
+        : colorScheme.primary;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -425,6 +506,27 @@ class PracticePage extends StatelessWidget {
             ),
             Row(
               children: [
+                if (state.timedMode) ...[
+                  Icon(
+                    state.timerStatus == TimerStatus.expired
+                        ? LucideIcons.clock
+                        : state.isTimerWarning
+                            ? LucideIcons.alertTriangle
+                            : LucideIcons.timer,
+                    size: AppDimensions.iconSM,
+                    color: timerColor,
+                  ),
+                  const SizedBox(width: AppDimensions.paddingXS),
+                  Text(
+                    state.formattedRemaining,
+                    style: AppTextStyles.labelLarge.copyWith(
+                      color: timerColor,
+                      fontWeight: FontWeight.w700,
+                      fontFeatures: const [FontFeature.tabularFigures()],
+                    ),
+                  ),
+                  const SizedBox(width: AppDimensions.paddingLG),
+                ],
                 Icon(
                   LucideIcons.star,
                   size: AppDimensions.iconSM,

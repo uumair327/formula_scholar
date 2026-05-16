@@ -16,6 +16,7 @@ class FormulasState extends Equatable {
     this.formulas = const [],
     this.isChapterSaved = false,
     this.errorMessage,
+    this.formulaNotes = const {},
   });
   final FormulasStatus status;
   final String? subjectId;
@@ -24,11 +25,15 @@ class FormulasState extends Equatable {
   final List<Formula> formulas;
   final bool isChapterSaved;
   final String? errorMessage;
+  final Map<String, FormulaNote?> formulaNotes;
 
   int get masteredCount => formulas.where((f) => f.isMastered).toList().length;
   int get totalCount => formulas.length;
   double get progressPercent =>
       totalCount > 0 ? (masteredCount / totalCount) * 100 : 0;
+
+  /// Returns the note for a given formula id, or null if none exists.
+  FormulaNote? noteFor(String formulaId) => formulaNotes[formulaId];
 
   FormulasState copyWith({
     FormulasStatus? status,
@@ -38,6 +43,7 @@ class FormulasState extends Equatable {
     List<Formula>? formulas,
     bool? isChapterSaved,
     Object? errorMessage = _unset,
+    Map<String, FormulaNote?>? formulaNotes,
   }) {
     return FormulasState(
       status: status ?? this.status,
@@ -49,6 +55,7 @@ class FormulasState extends Equatable {
       errorMessage: identical(errorMessage, _unset)
           ? this.errorMessage
           : errorMessage as String?,
+      formulaNotes: formulaNotes ?? this.formulaNotes,
     );
   }
 
@@ -61,5 +68,6 @@ class FormulasState extends Equatable {
     formulas,
     isChapterSaved,
     errorMessage,
+    formulaNotes,
   ];
 }

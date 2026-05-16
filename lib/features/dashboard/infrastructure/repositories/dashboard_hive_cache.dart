@@ -10,6 +10,7 @@ class DashboardHiveCache implements DashboardCachePort {
   static const String _recentStudiesKey = 'recent_studies';
   static const String _bannersKey = 'banners';
   static const String _announcementsKey = 'announcements';
+  static const String _weakAreasKey = 'weak_areas';
 
   Future<Box<dynamic>> _box() => Hive.openBox<dynamic>(_boxName);
 
@@ -242,6 +243,48 @@ class DashboardHiveCache implements DashboardCachePort {
             colorValue: (item['colorValue'] as num?)?.toInt() ?? 0xFF00639A,
             backgroundColorValue:
                 (item['backgroundColorValue'] as num?)?.toInt() ?? 0xFFCEE5FF,
+          ),
+        )
+        .toList();
+  }
+
+  @override
+  Future<void> cacheWeakAreas(List<WeakArea> areas) async {
+    final box = await _box();
+    await box.put(
+      _weakAreasKey,
+      areas
+          .map(
+            (a) => {
+              'category': a.category,
+              'subjectName': a.subjectName,
+              'totalAttempts': a.totalAttempts,
+              'correctAttempts': a.correctAttempts,
+              'iconName': a.iconName,
+              'colorValue': a.colorValue,
+            },
+          )
+          .toList(),
+    );
+  }
+
+  @override
+  Future<List<WeakArea>> getWeakAreas() async {
+    final box = await _box();
+    final cached = box.get(_weakAreasKey) as List<dynamic>?;
+    if (cached == null) return const [];
+
+    return cached
+        .whereType<Map>()
+        .map((item) => Map<String, dynamic>.from(item))
+        .map(
+          (item) => WeakArea(
+            category: item['category'] as String? ?? '',
+            subjectName: item['subjectName'] as String? ?? '',
+            totalAttempts: (item['totalAttempts'] as num?)?.toInt() ?? 0,
+            correctAttempts: (item['correctAttempts'] as num?)?.toInt() ?? 0,
+            iconName: item['iconName'] as String? ?? 'book-open',
+            colorValue: (item['colorValue'] as num?)?.toInt() ?? 0xFF00639A,
           ),
         )
         .toList();

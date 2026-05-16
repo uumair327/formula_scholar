@@ -15,6 +15,7 @@ class DashboardState extends Equatable {
     this.vaultItems = const [],
     this.banners = const [],
     this.announcements = const [],
+    this.weakAreas = const [],
     this.errorMessage,
     this.selectedBoardName = '',
     this.selectedGradeName = '',
@@ -26,6 +27,7 @@ class DashboardState extends Equatable {
   final List<FormulaVaultItem> vaultItems;
   final List<CarouselItem> banners;
   final List<AppAnnouncement> announcements;
+  final List<WeakArea> weakAreas;
   final String? errorMessage;
   final String selectedBoardName;
   final String selectedGradeName;
@@ -83,6 +85,7 @@ class DashboardState extends Equatable {
     List<FormulaVaultItem>? vaultItems,
     List<CarouselItem>? banners,
     List<AppAnnouncement>? announcements,
+    List<WeakArea>? weakAreas,
     Object? errorMessage = unset,
     String? selectedBoardName,
     String? selectedGradeName,
@@ -95,6 +98,7 @@ class DashboardState extends Equatable {
       vaultItems: vaultItems ?? this.vaultItems,
       banners: banners ?? this.banners,
       announcements: announcements ?? this.announcements,
+      weakAreas: weakAreas ?? this.weakAreas,
       errorMessage: identical(errorMessage, unset)
           ? this.errorMessage
           : errorMessage as String?,
@@ -112,6 +116,7 @@ class DashboardState extends Equatable {
     vaultItems,
     banners,
     announcements,
+    weakAreas,
     errorMessage,
     selectedBoardName,
     selectedGradeName,

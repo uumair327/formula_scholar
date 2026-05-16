@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:equatable/equatable.dart';
 
 import '../../domain/domain.dart';
@@ -5,6 +7,8 @@ import '../../domain/domain.dart';
 const Object _unset = Object();
 
 enum PracticeStatus { initial, loading, loaded, completed, error }
+
+enum TimerStatus { idle, running, paused, expired }
 
 /// State for the Practice quiz feature.
 class PracticeState extends Equatable {
@@ -19,6 +23,10 @@ class PracticeState extends Equatable {
     this.boardId,
     this.gradeId,
     this.subjectId,
+    this.timerStatus = TimerStatus.idle,
+    this.timedMode = false,
+    this.totalSeconds = 0,
+    this.remainingSeconds = 0,
   });
   final PracticeStatus status;
   final List<QuizQuestion> questions;
@@ -30,6 +38,12 @@ class PracticeState extends Equatable {
   final String? boardId;
   final String? gradeId;
   final String? subjectId;
+
+  // Timer fields
+  final TimerStatus timerStatus;
+  final bool timedMode;
+  final int totalSeconds;
+  final int remainingSeconds;
 
   /// The current question being displayed.
   QuizQuestion? get currentQuestion =>
@@ -52,6 +66,22 @@ class PracticeState extends Equatable {
   bool get isLastQuestion =>
       totalQuestions > 0 && currentIndex >= totalQuestions - 1;
 
+  /// Remaining time formatted as MM:SS.
+  String get formattedRemaining {
+    final mins = (remainingSeconds ~/ 60).toString().padLeft(2, '0');
+    final secs = (remainingSeconds % 60).toString().padLeft(2, '0');
+    return '$mins:$secs';
+  }
+
+  /// Timer progress as 0.0 – 1.0.
+  double get timerProgress =>
+      totalSeconds > 0 ? remainingSeconds / totalSeconds : 1.0;
+
+  /// Whether the timer is in a warning state (less than 25% remaining).
+  bool get isTimerWarning =>
+      timedMode && timerStatus == TimerStatus.running &&
+      totalSeconds > 0 && remainingSeconds / totalSeconds < 0.25;
+
   PracticeState copyWith({
     PracticeStatus? status,
     List<QuizQuestion>? questions,
@@ -63,6 +93,10 @@ class PracticeState extends Equatable {
     String? boardId,
     String? gradeId,
     String? subjectId,
+    TimerStatus? timerStatus,
+    bool? timedMode,
+    int? totalSeconds,
+    int? remainingSeconds,
   }) {
     return PracticeState(
       status: status ?? this.status,
@@ -79,6 +113,10 @@ class PracticeState extends Equatable {
       boardId: boardId ?? this.boardId,
       gradeId: gradeId ?? this.gradeId,
       subjectId: subjectId ?? this.subjectId,
+      timerStatus: timerStatus ?? this.timerStatus,
+      timedMode: timedMode ?? this.timedMode,
+      totalSeconds: totalSeconds ?? this.totalSeconds,
+      remainingSeconds: remainingSeconds ?? this.remainingSeconds,
     );
   }
 
@@ -94,5 +132,15 @@ class PracticeState extends Equatable {
     boardId,
     gradeId,
     subjectId,
+    timerStatus,
+    timedMode,
+    totalSeconds,
+    remainingSeconds,
   ];
+}
+
+/// Calculates a reasonable time limit based on question count.
+int defaultTimeLimit(int questionCount) {
+  // Allow 60 seconds per question, minimum 5 minutes.
+  return max(300, questionCount * 60);
 }

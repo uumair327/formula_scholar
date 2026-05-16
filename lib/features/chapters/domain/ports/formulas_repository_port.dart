@@ -1,5 +1,6 @@
 import '../../../../core/error/result.dart';
 import '../entities/formula.dart';
+import '../entities/formula_note.dart';
 
 /// Port: Primary hexagonal port for formula data access.
 ///
@@ -36,4 +37,13 @@ abstract interface class FormulasRepositoryPort {
     required int totalFormulas,
     required String chapterName,
   });
+
+  /// Loads the user's note for a given formula.
+  Future<Result<FormulaNote?>> getFormulaNote(String formulaId);
+
+  /// Saves (creates or updates) the user's note for a formula.
+  Future<Result<void>> saveFormulaNote(FormulaNote note);
+
+  /// Deletes the user's note for a formula.
+  Future<Result<void>> deleteFormulaNote(String formulaId);
 }

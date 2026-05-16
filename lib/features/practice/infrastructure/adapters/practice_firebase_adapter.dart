@@ -111,4 +111,30 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
       tag: AppLogTags.practiceDataSource,
     );
   }
+
+  @override
+  Future<void> saveAnswerRecords(List<QuizAnswerRecord> records) async {
+    final uid = _firebaseAuth.currentUser?.uid;
+    if (uid == null || records.isEmpty) return;
+
+    final batch = _firestore.batch();
+    final answersRef = _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('quiz_answers');
+
+    for (final record in records) {
+      final docRef = answersRef.doc();
+      batch.set(docRef, {
+        ...record.toJson(),
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    }
+
+    await batch.commit();
+    AppLogger.info(
+      'Saved ${records.length} answer records for uid=$uid',
+      tag: AppLogTags.practiceDataSource,
+    );
+  }
 }

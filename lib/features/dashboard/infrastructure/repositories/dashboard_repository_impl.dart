@@ -102,4 +102,18 @@ class DashboardRepositoryImpl implements DashboardRepositoryPort {
       },
     );
   }
+
+  @override
+  Future<Result<List<WeakArea>>> getWeakAreas() {
+    return safeOperation(
+      tag: AppLogTags.dashboardRepo,
+      operation: 'getWeakAreas',
+      execute: () async {
+        final result = await _dataSource.getWeakAreas();
+        await _cache.cacheWeakAreas(result);
+        return result;
+      },
+      fallback: () => _cache.getWeakAreas(),
+    );
+  }
 }

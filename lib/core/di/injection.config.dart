@@ -16,6 +16,8 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:google_sign_in/google_sign_in.dart' as _i116;
 import 'package:injectable/injectable.dart' as _i526;
 
+import '../../features/achievements/presentation/cubit/achievements_cubit.dart'
+    as _i693;
 import '../../features/auth/domain/domain.dart' as _i140;
 import '../../features/auth/domain/ports/auth_repository_port.dart' as _i320;
 import '../../features/auth/domain/usecases/delete_account_use_case.dart'
@@ -65,6 +67,8 @@ import '../../features/chapters/presentation/cubit/chapters_cubit.dart'
     as _i919;
 import '../../features/chapters/presentation/cubit/formulas_cubit.dart'
     as _i883;
+import '../../features/comparison/presentation/cubit/comparison_cubit.dart'
+    as _i430;
 import '../../features/dashboard/domain/domain.dart' as _i95;
 import '../../features/dashboard/domain/ports/dashboard_repository_port.dart'
     as _i190;
@@ -78,6 +82,8 @@ import '../../features/dashboard/domain/usecases/get_study_progress_use_case.dar
     as _i1065;
 import '../../features/dashboard/domain/usecases/get_subjects_use_case.dart'
     as _i603;
+import '../../features/dashboard/domain/usecases/get_weak_areas_use_case.dart'
+    as _i337;
 import '../../features/dashboard/infrastructure/adapters/dashboard_firebase_adapter.dart'
     as _i72;
 import '../../features/dashboard/infrastructure/repositories/dashboard_hive_cache.dart'
@@ -86,6 +92,11 @@ import '../../features/dashboard/infrastructure/repositories/dashboard_repositor
     as _i367;
 import '../../features/dashboard/presentation/cubit/dashboard_cubit.dart'
     as _i24;
+import '../../features/flashcards/domain/domain.dart' as _i944;
+import '../../features/flashcards/infrastructure/adapters/firestore_flashcard_review_adapter.dart'
+    as _i227;
+import '../../features/flashcards/presentation/cubit/flashcards_cubit.dart'
+    as _i762;
 import '../../features/onboarding/domain/domain.dart' as _i634;
 import '../../features/onboarding/domain/usecases/get_boards_use_case.dart'
     as _i543;
@@ -144,6 +155,9 @@ import '../../features/profile/presentation/cubit/notifications_cubit.dart'
 import '../../features/profile/presentation/cubit/profile_cubit.dart' as _i36;
 import '../../features/saved/domain/domain.dart' as _i385;
 import '../../features/saved/domain/ports/saved_repository_port.dart' as _i793;
+import '../../features/saved/domain/usecases/add_note_use_case.dart' as _i530;
+import '../../features/saved/domain/usecases/delete_note_use_case.dart'
+    as _i744;
 import '../../features/saved/domain/usecases/get_bookmarks_use_case.dart'
     as _i527;
 import '../../features/saved/domain/usecases/get_saved_chapters_use_case.dart'
@@ -154,6 +168,8 @@ import '../../features/saved/domain/usecases/remove_bookmark_use_case.dart'
     as _i221;
 import '../../features/saved/domain/usecases/remove_saved_chapter_use_case.dart'
     as _i174;
+import '../../features/saved/domain/usecases/update_note_use_case.dart'
+    as _i642;
 import '../../features/saved/infrastructure/adapters/saved_firebase_adapter.dart'
     as _i1050;
 import '../../features/saved/infrastructure/repositories/saved_hive_cache.dart'
@@ -161,6 +177,33 @@ import '../../features/saved/infrastructure/repositories/saved_hive_cache.dart'
 import '../../features/saved/infrastructure/repositories/saved_repository_impl.dart'
     as _i79;
 import '../../features/saved/presentation/cubit/saved_cubit.dart' as _i712;
+import '../../features/search/domain/domain.dart' as _i686;
+import '../../features/search/domain/ports/search_repository_port.dart'
+    as _i360;
+import '../../features/search/domain/usecases/search_formulas_use_case.dart'
+    as _i445;
+import '../../features/search/infrastructure/adapters/search_firebase_adapter.dart'
+    as _i138;
+import '../../features/search/infrastructure/repositories/search_repository_impl.dart'
+    as _i702;
+import '../../features/search/presentation/cubit/search_cubit.dart' as _i341;
+import '../../features/study_planner/domain/domain.dart' as _i62;
+import '../../features/study_planner/domain/ports/study_planner_port.dart'
+    as _i984;
+import '../../features/study_planner/domain/usecases/create_plan_usecase.dart'
+    as _i930;
+import '../../features/study_planner/domain/usecases/delete_plan_usecase.dart'
+    as _i789;
+import '../../features/study_planner/domain/usecases/get_plans_usecase.dart'
+    as _i719;
+import '../../features/study_planner/domain/usecases/update_plan_usecase.dart'
+    as _i193;
+import '../../features/study_planner/domain/usecases/update_session_usecase.dart'
+    as _i622;
+import '../../features/study_planner/infrastructure/adapters/firestore_study_planner_adapter.dart'
+    as _i415;
+import '../../features/study_planner/presentation/cubit/study_planner_cubit.dart'
+    as _i454;
 import '../../shared/cubit/activity_refresh_cubit.dart' as _i64;
 import '../../shared/cubit/curriculum_cubit.dart' as _i427;
 import '../../shared/cubit/subject_selection_cubit.dart' as _i414;
@@ -203,6 +246,8 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final firebaseModule = _$FirebaseModule();
     gh.factory<_i724.ApiInterceptor>(() => _i724.ApiInterceptor());
+    gh.factory<_i693.AchievementsCubit>(() => _i693.AchievementsCubit());
+    gh.factory<_i430.ComparisonCubit>(() => _i430.ComparisonCubit());
     gh.lazySingleton<_i59.FirebaseAuth>(() => firebaseModule.firebaseAuth);
     gh.lazySingleton<_i974.FirebaseFirestore>(() => firebaseModule.firestore);
     gh.lazySingleton<_i116.GoogleSignIn>(() => firebaseModule.googleSignIn);
@@ -222,6 +267,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i750.FormulasCachePort>(() => _i682.FormulasHiveCache());
     gh.lazySingleton<_i193.ProfileCachePort>(() => _i700.ProfileHiveCache());
+    gh.factory<_i719.GetPlansUseCase>(
+      () => _i719.GetPlansUseCase(port: gh<_i984.StudyPlannerPort>()),
+    );
     gh.lazySingleton<_i557.ApiClient>(
       () => _i557.ApiClient(
         gh<_i724.ApiInterceptor>(),
@@ -252,6 +300,18 @@ extension GetItInjectableX on _i174.GetIt {
         cache: gh<_i750.ChaptersCachePort>(),
       ),
     );
+    gh.factory<_i930.CreatePlanUseCase>(
+      () => _i930.CreatePlanUseCase(port: gh<_i984.StudyPlannerPort>()),
+    );
+    gh.factory<_i789.DeletePlanUseCase>(
+      () => _i789.DeletePlanUseCase(port: gh<_i984.StudyPlannerPort>()),
+    );
+    gh.factory<_i193.UpdatePlanUseCase>(
+      () => _i193.UpdatePlanUseCase(port: gh<_i984.StudyPlannerPort>()),
+    );
+    gh.factory<_i622.UpdateSessionUseCase>(
+      () => _i622.UpdateSessionUseCase(port: gh<_i984.StudyPlannerPort>()),
+    );
     gh.lazySingleton<_i525.ThemePreferenceDataSourcePort>(
       () => _i230.ThemePreferenceFirebaseAdapter(
         gh<_i974.FirebaseFirestore>(),
@@ -261,14 +321,28 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i159.NetworkInfoPort>(
       () => _i105.ConnectivityNetworkInfo(gh<_i895.Connectivity>()),
     );
+    gh.factory<_i454.StudyPlannerCubit>(
+      () => _i454.StudyPlannerCubit(
+        getPlans: gh<_i62.GetPlansUseCase>(),
+        createPlan: gh<_i62.CreatePlanUseCase>(),
+        deletePlan: gh<_i62.DeletePlanUseCase>(),
+        updateSession: gh<_i62.UpdateSessionUseCase>(),
+      ),
+    );
     gh.lazySingleton<_i193.ProfileDataSourcePort>(
       () => _i943.ProfileFirebaseAdapter(
         gh<_i974.FirebaseFirestore>(),
         gh<_i59.FirebaseAuth>(),
       ),
     );
+    gh.lazySingleton<_i686.SearchDataSourcePort>(
+      () => _i138.SearchFirebaseAdapter(gh<_i974.FirebaseFirestore>()),
+    );
     gh.lazySingleton<_i634.OnboardingDataSourcePort>(
       () => _i985.OnboardingFirebaseAdapter(gh<_i974.FirebaseFirestore>()),
+    );
+    gh.factory<_i762.FlashcardsCubit>(
+      () => _i762.FlashcardsCubit(reviewPort: gh<_i944.FlashcardReviewPort>()),
     );
     gh.lazySingleton<_i525.ThemePreferenceRepositoryPort>(
       () => _i436.ThemePreferenceRepositoryImpl(
@@ -280,6 +354,13 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i974.FirebaseFirestore>(),
         gh<_i59.FirebaseAuth>(),
       ),
+    );
+    gh.factory<_i227.FirestoreFlashcardReviewAdapter>(
+      () =>
+          _i227.FirestoreFlashcardReviewAdapter(gh<_i974.FirebaseFirestore>()),
+    );
+    gh.factory<_i415.FirestoreStudyPlannerAdapter>(
+      () => _i415.FirestoreStudyPlannerAdapter(gh<_i974.FirebaseFirestore>()),
     );
     gh.lazySingleton<_i525.CurriculumDataSourcePort>(
       () => _i303.CurriculumFirebaseAdapter(
@@ -394,6 +475,11 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i224.OnboardingRepositoryImpl(gh<_i634.OnboardingDataSourcePort>()),
     );
+    gh.lazySingleton<_i686.SearchRepositoryPort>(
+      () => _i702.SearchRepositoryImpl(
+        dataSource: gh<_i686.SearchDataSourcePort>(),
+      ),
+    );
     gh.factory<_i117.AuthCubit>(
       () => _i117.AuthCubit(
         signIn: gh<_i140.SignInUseCase>(),
@@ -494,14 +580,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i174.RemoveSavedChapterUseCase>(
       () => _i174.RemoveSavedChapterUseCase(gh<_i793.SavedRepositoryPort>()),
     );
-    gh.factory<_i883.FormulasCubit>(
-      () => _i883.FormulasCubit(
-        getFormulas: gh<_i750.GetFormulasUseCase>(),
-        toggleBookmark: gh<_i750.ToggleBookmarkUseCase>(),
-        formulasRepository: gh<_i750.FormulasRepositoryPort>(),
-        chaptersRepository: gh<_i750.ChaptersRepositoryPort>(),
-      ),
-    );
     gh.factory<_i1052.LoadCurriculumUseCase>(
       () => _i1052.LoadCurriculumUseCase(gh<_i1064.CurriculumRepositoryPort>()),
     );
@@ -510,6 +588,13 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i264.WatchCurriculumUseCase>(
       () => _i264.WatchCurriculumUseCase(gh<_i1064.CurriculumRepositoryPort>()),
+    );
+    gh.factory<_i530.AddNoteUseCase>(
+      () => _i530.AddNoteUseCase(repository: gh<_i793.SavedRepositoryPort>()),
+    );
+    gh.factory<_i744.DeleteNoteUseCase>(
+      () =>
+          _i744.DeleteNoteUseCase(repository: gh<_i793.SavedRepositoryPort>()),
     );
     gh.factory<_i527.GetBookmarksUseCase>(
       () => _i527.GetBookmarksUseCase(
@@ -525,6 +610,10 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i873.GetSavedNotesUseCase(
         repository: gh<_i793.SavedRepositoryPort>(),
       ),
+    );
+    gh.factory<_i642.UpdateNoteUseCase>(
+      () =>
+          _i642.UpdateNoteUseCase(repository: gh<_i793.SavedRepositoryPort>()),
     );
     gh.lazySingleton<_i427.CurriculumCubit>(
       () => _i427.CurriculumCubit(
@@ -558,10 +647,43 @@ extension GetItInjectableX on _i174.GetIt {
         repository: gh<_i190.DashboardRepositoryPort>(),
       ),
     );
+    gh.factory<_i337.GetWeakAreasUseCase>(
+      () => _i337.GetWeakAreasUseCase(
+        repository: gh<_i190.DashboardRepositoryPort>(),
+      ),
+    );
+    gh.factory<_i445.SearchFormulasUseCase>(
+      () => _i445.SearchFormulasUseCase(
+        repository: gh<_i360.SearchRepositoryPort>(),
+      ),
+    );
+    gh.factory<_i883.FormulasCubit>(
+      () => _i883.FormulasCubit(
+        getFormulas: gh<_i750.GetFormulasUseCase>(),
+        toggleBookmark: gh<_i750.ToggleBookmarkUseCase>(),
+        formulasRepository: gh<_i750.FormulasRepositoryPort>(),
+        chaptersRepository: gh<_i750.ChaptersRepositoryPort>(),
+        getFormulaNote: gh<_i750.GetFormulaNoteUseCase>(),
+        saveFormulaNote: gh<_i750.SaveFormulaNoteUseCase>(),
+        deleteFormulaNote: gh<_i750.DeleteFormulaNoteUseCase>(),
+      ),
+    );
     gh.factory<_i411.PracticeCubit>(
       () => _i411.PracticeCubit(
         getQuestions: gh<_i899.GetQuestionsUseCase>(),
         recordQuizCompletion: gh<_i899.RecordQuizCompletionUseCase>(),
+        activityRefreshCubit: gh<_i914.ActivityRefreshCubit>(),
+      ),
+    );
+    gh.factory<_i24.DashboardCubit>(
+      () => _i24.DashboardCubit(
+        getStudyProgress: gh<_i95.GetStudyProgressUseCase>(),
+        getSubjects: gh<_i95.GetSubjectsUseCase>(),
+        getRecentStudies: gh<_i95.GetRecentStudiesUseCase>(),
+        getBanners: gh<_i95.GetBannersUseCase>(),
+        getAnnouncements: gh<_i95.GetAnnouncementsUseCase>(),
+        getWeakAreas: gh<_i95.GetWeakAreasUseCase>(),
+        curriculumCubit: gh<_i914.CurriculumCubit>(),
         activityRefreshCubit: gh<_i914.ActivityRefreshCubit>(),
       ),
     );
@@ -595,20 +717,13 @@ extension GetItInjectableX on _i174.GetIt {
         deleteNote: gh<_i385.DeleteNoteUseCase>(),
       ),
     );
+    gh.factory<_i341.SearchCubit>(
+      () =>
+          _i341.SearchCubit(searchFormulas: gh<_i686.SearchFormulasUseCase>()),
+    );
     gh.lazySingleton<_i414.SubjectSelectionCubit>(
       () => _i414.SubjectSelectionCubit(
         watchCurriculum: gh<_i525.WatchCurriculumUseCase>(),
-      ),
-    );
-    gh.factory<_i24.DashboardCubit>(
-      () => _i24.DashboardCubit(
-        getStudyProgress: gh<_i95.GetStudyProgressUseCase>(),
-        getSubjects: gh<_i95.GetSubjectsUseCase>(),
-        getRecentStudies: gh<_i95.GetRecentStudiesUseCase>(),
-        getBanners: gh<_i95.GetBannersUseCase>(),
-        getAnnouncements: gh<_i95.GetAnnouncementsUseCase>(),
-        curriculumCubit: gh<_i914.CurriculumCubit>(),
-        activityRefreshCubit: gh<_i914.ActivityRefreshCubit>(),
       ),
     );
     return this;

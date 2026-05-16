@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
@@ -6,8 +8,6 @@ import '../../domain/domain.dart';
 import 'formulas_state.dart';
 
 /// Cubit managing the formula detail screen's state.
-///
-/// Loads formulas for a specific chapter within a subject.
 @injectable
 class FormulasCubit extends Cubit<FormulasState>
     with CubitFailureLogger<FormulasState> {
@@ -16,21 +16,36 @@ class FormulasCubit extends Cubit<FormulasState>
     required ToggleBookmarkUseCase toggleBookmark,
     required FormulasRepositoryPort formulasRepository,
     required ChaptersRepositoryPort chaptersRepository,
+    required GetFormulaNoteUseCase getFormulaNote,
+    required SaveFormulaNoteUseCase saveFormulaNote,
+    required DeleteFormulaNoteUseCase deleteFormulaNote,
   }) : _getFormulas = getFormulas,
        _toggleBookmark = toggleBookmark,
        _formulasRepository = formulasRepository,
        _chaptersRepository = chaptersRepository,
+       _getFormulaNote = getFormulaNote,
+       _saveFormulaNote = saveFormulaNote,
+       _deleteFormulaNote = deleteFormulaNote,
        super(const FormulasState());
 
   final GetFormulasUseCase _getFormulas;
   final ToggleBookmarkUseCase _toggleBookmark;
   final FormulasRepositoryPort _formulasRepository;
   final ChaptersRepositoryPort _chaptersRepository;
+  final GetFormulaNoteUseCase _getFormulaNote;
+  final SaveFormulaNoteUseCase _saveFormulaNote;
+  final DeleteFormulaNoteUseCase _deleteFormulaNote;
+  Timer? _noteDebounce;
 
   @override
   String get logTag => AppLogTags.formulasCubit;
 
-  /// Loads formulas for the given [subjectId] and [chapterId].
+  @override
+  Future<void> close() {
+    _noteDebounce?.cancel();
+    return super.close();
+  }
+
   Future<void> loadFormulas({
     required String subjectId,
     required String chapterId,
@@ -82,7 +97,6 @@ class FormulasCubit extends Cubit<FormulasState>
             case Success(:final data):
               emit(state.copyWith(isChapterSaved: data));
             case Error():
-              // Keep the default false state if lookup fails.
               AppLogger.debug(
                 'Failed to read chapter bookmark state, using default false',
                 tag: AppLogTags.formulasCubit,
@@ -100,7 +114,38 @@ class FormulasCubit extends Cubit<FormulasState>
     }
   }
 
-  /// Toggles mastery status for a formula and syncs aggregate chapter progress.
+  Future<void> loadFormulaNote(String formulaId) async {
+    final result = await _getFormulaNote(formulaId);
+    switch (result) {
+      case Success(:final data):
+        emit(state.copyWith(formulaNotes: {formulaId: data}));
+      case Error():
+        AppLogger.debug(
+          'Failed to load note for formula $formulaId',
+          tag: AppLogTags.formulasCubit,
+        );
+    }
+  }
+
+  void saveFormulaNote(FormulaNote note) {
+    _noteDebounce?.cancel();
+    _noteDebounce = Timer(const Duration(milliseconds: 500), () async {
+      emit(state.copyWith(formulaNotes: {note.formulaId: note}));
+      final result = await _saveFormulaNote(note);
+      if (result is Error<void>) {
+        logFailure('saveFormulaNote', result.failure);
+      }
+    });
+  }
+
+  Future<void> deleteFormulaNote(String formulaId) async {
+    emit(state.copyWith(formulaNotes: {formulaId: null}));
+    final result = await _deleteFormulaNote(formulaId);
+    if (result is Error<void>) {
+      logFailure('deleteFormulaNote', result.failure);
+    }
+  }
+
   Future<void> toggleMastery(Formula formula) async {
     final subjectId = state.subjectId;
     final chapterId = state.chapterId;
@@ -114,7 +159,6 @@ class FormulasCubit extends Cubit<FormulasState>
     }
 
     final newMasteredState = !formula.isMastered;
-
     final updatedList = state.formulas.map((f) {
       if (f.id == formula.id) {
         return Formula(
@@ -172,7 +216,6 @@ class FormulasCubit extends Cubit<FormulasState>
     String subjectName, {
     required String curriculumKey,
   }) async {
-    // Optimistic UI update
     final newBookmarkState = !formula.isBookmarked;
     final updatedList = state.formulas.map((f) {
       if (f.id == formula.id) {
@@ -199,7 +242,6 @@ class FormulasCubit extends Cubit<FormulasState>
     );
     if (result is Error<void>) {
       logFailure('toggleBookmark', result.failure);
-      // Revert on failure
       final revertedList = state.formulas.map((f) {
         if (f.id == formula.id) {
           return Formula(
@@ -224,9 +266,6 @@ class FormulasCubit extends Cubit<FormulasState>
     }
   }
 
-  /// Toggles the saved/bookmarked status of the current chapter.
-  ///
-  /// Uses optimistic UI update for responsive feedback.
   Future<void> toggleChapterBookmark(
     String chapterName,
     String subjectName, {
@@ -240,11 +279,9 @@ class FormulasCubit extends Cubit<FormulasState>
       return;
     }
 
-    // Optimistic UI update
     final newSavedState = !state.isChapterSaved;
     emit(state.copyWith(isChapterSaved: newSavedState));
 
-    // Create a temporary Chapter object for the repository call
     final chapter = Chapter(
       id: state.chapterId!,
       name: chapterName,
@@ -264,7 +301,6 @@ class FormulasCubit extends Cubit<FormulasState>
 
     if (result is Error<void>) {
       logFailure('toggleChapterBookmark', result.failure);
-      // Revert on failure
       emit(state.copyWith(isChapterSaved: !newSavedState));
       emit(state.copyWith(errorMessage: 'Failed to bookmark chapter'));
     } else {

@@ -1,4 +1,5 @@
 import '../../../../core/error/result.dart';
+import '../entities/quiz_answer_record.dart';
 import '../entities/quiz_question.dart';
 
 /// Port: Defines the contract for practice quiz data access.
@@ -18,4 +19,7 @@ abstract interface class PracticeRepositoryPort {
     required int earnedPoints,
     required int answeredQuestions,
   });
+
+  /// Persists per-question answer records for weak-area analysis.
+  Future<Result<void>> saveAnswerRecords(List<QuizAnswerRecord> records);
 }

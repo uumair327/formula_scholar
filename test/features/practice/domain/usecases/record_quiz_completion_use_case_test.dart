@@ -76,4 +76,9 @@ class _FakePracticeRepository implements PracticeRepositoryPort {
     lastAnsweredQuestions = answeredQuestions;
     return recordResult;
   }
+
+  @override
+  Future<Result<void>> saveAnswerRecords(List<QuizAnswerRecord> records) async {
+    return const Success<void>(null);
+  }
 }

@@ -290,4 +290,54 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
     }
     return null;
   }
+
+  @override
+  Future<List<WeakArea>> getWeakAreas() async {
+    AppLogger.trace(
+      'getWeakAreas() aggregating quiz answers',
+      tag: AppLogTags.dashboardDataSource,
+    );
+
+    final uid = _firebaseAuth.currentUser?.uid;
+    if (uid == null) return const [];
+
+    final snapshot = await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('quiz_answers')
+        .orderBy('createdAt', descending: true)
+        .limit(200)
+        .get();
+
+    if (snapshot.docs.isEmpty) return const [];
+
+    final Map<String, _CategoryStats> statsMap = {};
+    for (final doc in snapshot.docs) {
+      final data = doc.data();
+      final category = data['category'] as String? ?? '';
+      if (category.isEmpty) continue;
+      final isCorrect = data['isCorrect'] as bool? ?? false;
+      statsMap.putIfAbsent(category, () => _CategoryStats());
+      statsMap[category]!.total++;
+      if (isCorrect) statsMap[category]!.correct++;
+    }
+
+    final List<WeakArea> results = [];
+    for (final entry in statsMap.entries) {
+      if (entry.value.total < 2) continue;
+      results.add(WeakArea(
+        category: entry.key,
+        totalAttempts: entry.value.total,
+        correctAttempts: entry.value.correct,
+      ));
+    }
+
+    results.sort((a, b) => b.weaknessScore.compareTo(a.weaknessScore));
+    return results.take(5).toList();
+  }
+}
+
+class _CategoryStats {
+  int total = 0;
+  int correct = 0;
 }

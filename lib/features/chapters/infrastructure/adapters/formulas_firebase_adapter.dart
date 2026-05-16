@@ -367,6 +367,50 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
         .doc(chapterId);
   }
 
+  @override
+  Future<FormulaNote?> getFormulaNote(String formulaId) async {
+    final user = _firebaseAuth.currentUser;
+    if (user == null) return null;
+    final doc = await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('formula_notes')
+        .doc(formulaId)
+        .get();
+    if (!doc.exists) return null;
+    return FormulaNote(
+      formulaId: doc.id,
+      content: doc.data()!['content'] as String? ?? '',
+      updatedAt: (doc.data()!['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+    );
+  }
+
+  @override
+  Future<void> saveFormulaNote(FormulaNote note) async {
+    final user = _firebaseAuth.currentUser;
+    if (user == null) throw Exception('User not authenticated');
+    await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('formula_notes')
+        .doc(note.formulaId)
+        .set({
+      'content': note.content,
+      'updatedAt': Timestamp.fromDate(note.updatedAt),
+    });
+  }
+
+  @override
+  Future<void> deleteFormulaNote(String formulaId) async {
+    final user = _firebaseAuth.currentUser;
+    if (user == null) throw Exception('User not authenticated');
+    await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('formula_notes')
+        .doc(formulaId)
+        .delete();
+  }
 }
 
 

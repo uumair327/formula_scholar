@@ -2,6 +2,7 @@ import '../../../../core/error/result.dart';
 import '../entities/study_progress.dart';
 import '../entities/subject.dart';
 import '../entities/recent_study.dart';
+import '../entities/weak_area.dart';
 import '../models/announcement.dart';
 import '../models/carousel_item.dart';
 
@@ -15,4 +16,7 @@ abstract interface class DashboardRepositoryPort {
   Future<Result<List<CarouselItem>>> getBanners();
 
   Future<Result<List<AppAnnouncement>>> getActiveAnnouncements();
+
+  /// Aggregates quiz answer records into weakness scores per category.
+  Future<Result<List<WeakArea>>> getWeakAreas();
 }

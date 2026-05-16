@@ -146,4 +146,70 @@ class FormulasRepositoryImpl implements FormulasRepositoryPort {
       );
     }
   }
+
+  @override
+  Future<Result<FormulaNote?>> getFormulaNote(String formulaId) async {
+    try {
+      final note = await _dataSource.getFormulaNote(formulaId);
+      return Success(note);
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'getFormulaNote failed',
+        tag: AppLogTags.formulasRepo,
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return Error(
+        CacheFailure(
+          message: 'Failed to load formula note',
+          originalError: e,
+          stackTrace: stackTrace,
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Result<void>> saveFormulaNote(FormulaNote note) async {
+    try {
+      await _dataSource.saveFormulaNote(note);
+      return const Success(null);
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'saveFormulaNote failed',
+        tag: AppLogTags.formulasRepo,
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return Error(
+        CacheFailure(
+          message: 'Failed to save formula note',
+          originalError: e,
+          stackTrace: stackTrace,
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Result<void>> deleteFormulaNote(String formulaId) async {
+    try {
+      await _dataSource.deleteFormulaNote(formulaId);
+      return const Success(null);
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'deleteFormulaNote failed',
+        tag: AppLogTags.formulasRepo,
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return Error(
+        CacheFailure(
+          message: 'Failed to delete formula note',
+          originalError: e,
+          stackTrace: stackTrace,
+        ),
+      );
+    }
+  }
 }

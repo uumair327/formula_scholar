@@ -61,6 +61,9 @@ class _FakePracticeDataSource implements PracticeDataSourcePort {
     lastEarnedPoints = earnedPoints;
     lastAnsweredQuestions = answeredQuestions;
   }
+
+  @override
+  Future<void> saveAnswerRecords(List<QuizAnswerRecord> records) async {}
 }
 
 class _FakePracticeCache implements PracticeCachePort {
