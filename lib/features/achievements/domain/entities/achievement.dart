@@ -7,7 +7,6 @@ class Achievement extends Equatable {
     required this.id,
     required this.title,
     required this.description,
-    required this.iconCodePoint,
     required this.tier,
     this.progress = 0,
     this.target = 1,
@@ -17,7 +16,6 @@ class Achievement extends Equatable {
   final String id;
   final String title;
   final String description;
-  final int iconCodePoint;
   final AchievementTier tier;
   final int progress;
   final int target;
@@ -38,7 +36,6 @@ class Achievement extends Equatable {
       id: id,
       title: title,
       description: description,
-      iconCodePoint: iconCodePoint,
       tier: tier,
       progress: progress ?? this.progress,
       target: target,

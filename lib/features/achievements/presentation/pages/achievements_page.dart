@@ -178,7 +178,7 @@ class AchievementsPage extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: Icon(
-        IconData(achievement.iconCodePoint, fontFamily: 'MaterialIcons'),
+        AchievementsCubit.iconFor(achievement.id),
         color: isUnlocked
             ? _tierColor(achievement.tier)
             : colorScheme.onSurfaceVariant.withValues(alpha: 0.4),

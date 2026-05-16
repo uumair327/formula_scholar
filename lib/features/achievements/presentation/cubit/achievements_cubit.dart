@@ -1,8 +1,26 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../domain/entities/achievement.dart';
 import 'achievements_state.dart';
+
+IconData _achievementIcon(String id) {
+  return switch (id) {
+    'first_mastered' => LucideIcons.checkCircle,
+    'ten_mastered' => LucideIcons.trendingUp,
+    'fifty_mastered' => LucideIcons.trophy,
+    'first_flashcard' => LucideIcons.layers,
+    'ten_flashcards' => LucideIcons.bookOpen,
+    'first_note' => LucideIcons.fileText,
+    'ten_notes' => LucideIcons.stickyNote,
+    'daily_challenge' => LucideIcons.zap,
+    'seven_day_streak' => LucideIcons.calendarCheck,
+    'all_subjects' => LucideIcons.globe,
+    _ => LucideIcons.award,
+  };
+}
 
 @injectable
 class AchievementsCubit extends Cubit<AchievementsState> {
@@ -15,7 +33,6 @@ class AchievementsCubit extends Cubit<AchievementsState> {
       id: 'first_mastered',
       title: 'First Step',
       description: 'Master your first formula',
-      icon: 0xe802,
       tier: AchievementTier.bronze,
       target: 1,
     ),
@@ -23,7 +40,6 @@ class AchievementsCubit extends Cubit<AchievementsState> {
       id: 'ten_mastered',
       title: 'Getting Started',
       description: 'Master 10 formulas',
-      icon: 0xe803,
       tier: AchievementTier.silver,
       target: 10,
     ),
@@ -31,7 +47,6 @@ class AchievementsCubit extends Cubit<AchievementsState> {
       id: 'fifty_mastered',
       title: 'Formula Scholar',
       description: 'Master 50 formulas',
-      icon: 0xe804,
       tier: AchievementTier.gold,
       target: 50,
     ),
@@ -39,7 +54,6 @@ class AchievementsCubit extends Cubit<AchievementsState> {
       id: 'first_flashcard',
       title: 'Flashcard Rookie',
       description: 'Complete your first flashcard session',
-      icon: 0xe805,
       tier: AchievementTier.bronze,
       target: 1,
     ),
@@ -47,7 +61,6 @@ class AchievementsCubit extends Cubit<AchievementsState> {
       id: 'ten_flashcards',
       title: 'Study Streak',
       description: 'Complete 10 flashcard sessions',
-      icon: 0xe806,
       tier: AchievementTier.silver,
       target: 10,
     ),
@@ -55,7 +68,6 @@ class AchievementsCubit extends Cubit<AchievementsState> {
       id: 'first_note',
       title: 'Note Taker',
       description: 'Write your first note on a formula',
-      icon: 0xe807,
       tier: AchievementTier.bronze,
       target: 1,
     ),
@@ -63,7 +75,6 @@ class AchievementsCubit extends Cubit<AchievementsState> {
       id: 'ten_notes',
       title: 'Study Notes',
       description: 'Write 10 notes',
-      icon: 0xe808,
       tier: AchievementTier.silver,
       target: 10,
     ),
@@ -71,7 +82,6 @@ class AchievementsCubit extends Cubit<AchievementsState> {
       id: 'daily_challenge',
       title: 'Daily Grind',
       description: 'Complete your first daily challenge',
-      icon: 0xe809,
       tier: AchievementTier.bronze,
       target: 1,
     ),
@@ -79,7 +89,6 @@ class AchievementsCubit extends Cubit<AchievementsState> {
       id: 'seven_day_streak',
       title: 'Week Warrior',
       description: 'Use the app 7 days in a row',
-      icon: 0xe80a,
       tier: AchievementTier.gold,
       target: 7,
     ),
@@ -87,7 +96,6 @@ class AchievementsCubit extends Cubit<AchievementsState> {
       id: 'all_subjects',
       title: 'Renaissance',
       description: 'View formulas from all subjects',
-      icon: 0xe80b,
       tier: AchievementTier.diamond,
       target: 1,
     ),
@@ -99,7 +107,6 @@ class AchievementsCubit extends Cubit<AchievementsState> {
         id: d.id,
         title: d.title,
         description: d.description,
-        iconCodePoint: d.icon,
         tier: d.tier,
         target: d.target,
       )).toList(),
@@ -121,6 +128,9 @@ class AchievementsCubit extends Cubit<AchievementsState> {
 
     emit(state.copyWith(achievements: updated));
   }
+
+  /// Returns the icon for a given achievement id.
+  static IconData iconFor(String id) => _achievementIcon(id);
 }
 
 class _AchievementData {
@@ -128,7 +138,6 @@ class _AchievementData {
     required this.id,
     required this.title,
     required this.description,
-    required this.icon,
     required this.tier,
     required this.target,
   });
@@ -136,7 +145,6 @@ class _AchievementData {
   final String id;
   final String title;
   final String description;
-  final int icon;
   final AchievementTier tier;
   final int target;
 }
