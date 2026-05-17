@@ -121,7 +121,7 @@ jobs:
 
       # ── Build ─────────────────────────────────────────────────────
       - name: Build Flutter Web (release)
-        run: flutter build web --release
+        run: flutter build web --release --base-href "/"
 
       # ── Firebase Deploy ───────────────────────────────────────────
       - name: Deploy to Firebase Hosting

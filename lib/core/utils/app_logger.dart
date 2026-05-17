@@ -23,7 +23,7 @@ class AppLogger {
       printEmojis: true,
       dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart,
     ),
-    level: kReleaseMode ? Level.off : Level.trace,
+    level: kReleaseMode ? Level.error : Level.trace,
   );
 
   /// Formats the log message with an optional tag prefix.

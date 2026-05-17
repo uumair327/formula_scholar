@@ -40,10 +40,21 @@ void main() {
       );
 
       // Initialize Firebase before anything else.
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
-      AppLogger.info('Firebase initialized', tag: AppLogTags.main);
+      try {
+        await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
+        AppLogger.info('Firebase initialized', tag: AppLogTags.main);
+      } catch (e, st) {
+        AppLogger.fatal(
+          'Firebase initialization failed',
+          tag: AppLogTags.main,
+          error: e,
+          stackTrace: st,
+        );
+        runApp(const _FirebaseInitError(message: 'Failed to connect to backend. Please check your network and reload.'));
+        return;
+      }
 
       // Initialize Google Sign-In with the Web OAuth client ID (type 3).
       // Required by google_sign_in v7+ on Android to obtain ID tokens.
@@ -164,6 +175,29 @@ class _FormulaScholarAppState extends State<FormulaScholarApp>
             routerConfig: AppRouter.router,
           );
         },
+      ),
+    );
+  }
+}
+
+class _FirebaseInitError extends StatelessWidget {
+  const _FirebaseInitError({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Text(
+              message,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
       ),
     );
   }
