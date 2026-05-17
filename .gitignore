@@ -108,6 +108,7 @@ coverage/
 .AppleDouble
 .LSOverride
 Icon?
+!web/icons/
 ._*
 .Spotlight-V100
 .Trashes

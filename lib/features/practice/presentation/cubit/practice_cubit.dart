@@ -74,7 +74,9 @@ class PracticeCubit extends Cubit<PracticeState>
         var questions = data;
         if (questionIds != null && questionIds.isNotEmpty) {
           questions = data.where((q) => questionIds.contains(q.id)).toList();
-          if (questions.isEmpty) questions = data;
+          if (questions.isEmpty) {
+            questions = data;
+          }
         }
         final totalSecs = durationSeconds ?? defaultTimeLimit(questions.length);
         emit(state.copyWith(
@@ -84,7 +86,9 @@ class PracticeCubit extends Cubit<PracticeState>
           remainingSeconds: timedMode ? totalSecs : 0,
           timerStatus: timedMode ? TimerStatus.running : TimerStatus.idle,
         ));
-        if (timedMode) _startTimer();
+        if (timedMode) {
+          _startTimer();
+        }
       case Error(:final failure):
         logFailure('practice questions', failure);
         emit(state.copyWith(
@@ -95,9 +99,13 @@ class PracticeCubit extends Cubit<PracticeState>
   }
 
   void selectOption(String optionId) {
-    if (state.selectedOptionId != null) return;
+    if (state.selectedOptionId != null) {
+      return;
+    }
     final question = state.currentQuestion;
-    if (question == null) return;
+    if (question == null) {
+      return;
+    }
 
     final isCorrect = optionId == question.correctOptionId;
     final newPoints = isCorrect
@@ -173,7 +181,9 @@ class PracticeCubit extends Cubit<PracticeState>
   Future<void> _persistQuiz() async {
     final boardId = state.boardId;
     final gradeId = state.gradeId;
-    if (boardId == null || gradeId == null) return;
+    if (boardId == null || gradeId == null) {
+      return;
+    }
 
     await _recordQuizCompletion(
       boardId: boardId,
@@ -222,10 +232,14 @@ class PracticeCubit extends Cubit<PracticeState>
 
   void retryIncorrect() {
     final ids = state.incorrectQuestionIds;
-    if (ids.isEmpty) return;
+    if (ids.isEmpty) {
+      return;
+    }
     final boardId = state.boardId;
     final gradeId = state.gradeId;
-    if (boardId == null || gradeId == null) return;
+    if (boardId == null || gradeId == null) {
+      return;
+    }
     loadQuestions(boardId: boardId, gradeId: gradeId, subjectId: state.subjectId, questionIds: ids);
   }
 
@@ -235,6 +249,8 @@ class PracticeCubit extends Cubit<PracticeState>
     final gId = state.gradeId;
     final sId = state.subjectId;
     emit(PracticeState(status: PracticeStatus.initial, boardId: bId, gradeId: gId, subjectId: sId));
-    if (bId != null && gId != null) loadQuestions(boardId: bId, gradeId: gId, subjectId: sId);
+    if (bId != null && gId != null) {
+      loadQuestions(boardId: bId, gradeId: gId, subjectId: sId);
+    }
   }
 }
