@@ -249,6 +249,7 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
     // Client-side filtering to enforce strict grade separation
     final filteredDocs = snapshot.docs.where((doc) {
       final data = doc.data();
+      if (data['isActive'] == false) return false;
 
       final aud = (data['audiences'] as List<dynamic>?)
               ?.map((e) => e.toString())

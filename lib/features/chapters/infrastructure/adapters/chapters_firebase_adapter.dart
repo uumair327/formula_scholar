@@ -130,7 +130,10 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
     }
 
     // 3. Merge data — always use doc.id as the canonical key
-    return snapshot.docs.map((doc) {
+    return snapshot.docs.where((doc) {
+      final data = doc.data();
+      return data['isActive'] != false;
+    }).map((doc) {
       final data = doc.data();
       // Look up progress by doc.id first, then by data['id'] as fallback
       final progressData = progressMap[doc.id] ?? progressMap[data['id']] ?? {};
@@ -245,24 +248,24 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
       ];
     }
 
-    final loadedTools = snapshot.docs.map((doc) {
+    final loadedTools = snapshot.docs.where((doc) {
+      final data = doc.data();
+      return data['isEnabled'] != false;
+    }).map((doc) {
       final data = doc.data();
       final id = data['id'] as String? ?? doc.id;
       final label = data['label'] as String? ?? doc.id;
       final iconName = data['iconName'] as String? ?? 'helpCircle';
       final category = data['category'] as String? ?? 'general';
 
-      bool isEnabled = data['isEnabled'] as bool? ?? false;
+      bool isEnabled = data['isEnabled'] as bool? ?? true;
       String? routeName = data['routeName'] as String?;
 
       if (id == 'cheat_sheets' || id == 'cheat_sheet') {
-        isEnabled = true;
         routeName = 'cheatSheet';
       } else if (id == 'visualizer_3d') {
-        isEnabled = true;
         routeName = 'visualizer_3d';
       } else if (id == 'flashcards') {
-        isEnabled = true;
         routeName = 'flashcards';
       }
 

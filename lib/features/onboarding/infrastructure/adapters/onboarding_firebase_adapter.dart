@@ -27,7 +27,10 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
       startAfterId: startAfterId,
     );
 
-    final data = snapshot.docs.map((doc) {
+    final data = snapshot.docs.where((doc) {
+      final map = doc.data();
+      return map['isActive'] != false;
+    }).map((doc) {
       final map = doc.data();
       return Country(
         id: doc.id,
@@ -61,7 +64,10 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
       startAfterId: startAfterId,
     );
 
-    final data = snapshot.docs.map((doc) {
+    final data = snapshot.docs.where((doc) {
+      final map = doc.data();
+      return map['isActive'] != false;
+    }).map((doc) {
       final map = doc.data();
       return StateRegion(
         id: doc.id,
@@ -98,7 +104,10 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
       startAfterId: startAfterId,
       baseQuery: collectionRef.where('countryId', isEqualTo: countryId),
     );
-    var data = snapshot.docs.map((doc) {
+    var data = snapshot.docs.where((doc) {
+      final map = doc.data();
+      return map['isActive'] != false;
+    }).map((doc) {
       final map = doc.data();
 
       final typeStr = map['type'] as String? ?? 'state';
@@ -160,7 +169,10 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
             startAfterId: startAfterId,
           );
 
-    final parsedGrades = snapshot.docs.map((doc) {
+    final parsedGrades = snapshot.docs.where((doc) {
+      final map = doc.data();
+      return map['isActive'] != false;
+    }).map((doc) {
       final map = doc.data();
       final rawLabel = (map['label'] ?? '').toString();
       final classNumber = _resolveClassNumber(

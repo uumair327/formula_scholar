@@ -95,7 +95,10 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
       return [];
     }
 
-    return snapshot.docs
+    return snapshot.docs.where((doc) {
+      final data = doc.data();
+      return data['isActive'] != false;
+    })
         .map(
           (doc) => _docToFormula(
             doc,

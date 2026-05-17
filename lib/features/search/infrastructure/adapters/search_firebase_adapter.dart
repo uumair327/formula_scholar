@@ -29,6 +29,7 @@ class SearchFirebaseAdapter implements SearchDataSourcePort {
     final subjects = await _firestore.collection('subjects').get();
 
     for (final subjectDoc in subjects.docs) {
+      if (subjectDoc.data()['isActive'] == false) continue;
       final subjectId = subjectDoc.id;
       final subjectName = subjectDoc.data()['name'] as String? ?? subjectId;
 
@@ -39,6 +40,7 @@ class SearchFirebaseAdapter implements SearchDataSourcePort {
           .get();
 
       for (final chapterDoc in chapters.docs) {
+        if (chapterDoc.data()['isActive'] == false) continue;
         final chapterId = chapterDoc.id;
         final chapterName = chapterDoc.data()['name'] as String? ?? chapterId;
 
@@ -62,6 +64,7 @@ class SearchFirebaseAdapter implements SearchDataSourcePort {
 
         for (final formulaDoc in formulas.docs) {
           final data = formulaDoc.data();
+          if (data['isActive'] == false) continue;
           final title = (data['title'] as String? ?? '').toLowerCase();
           final description = data['description'] as String? ?? '';
           final descLower = description.toLowerCase();
