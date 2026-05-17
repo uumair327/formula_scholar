@@ -84,8 +84,8 @@ class _DesktopShell extends StatelessWidget {
                 label: Text(AppStrings.navHome),
               ),
               NavigationRailDestination(
-                icon: Icon(LucideIcons.bookOpen),
-                label: Text(AppStrings.navChapters),
+                icon: Icon(LucideIcons.layers),
+                label: Text(AppStrings.navSubjects),
               ),
               NavigationRailDestination(
                 icon: Icon(LucideIcons.gamepad2),
@@ -170,8 +170,8 @@ class _BottomNavBar extends StatelessWidget {
                 onTap: () => onTap(0),
               ),
               _NavItem(
-                icon: LucideIcons.bookOpen,
-                label: AppStrings.navChapters,
+                icon: LucideIcons.layers,
+                label: AppStrings.navSubjects,
                 isSelected: currentIndex == 1,
                 onTap: () => onTap(1),
               ),

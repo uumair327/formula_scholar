@@ -66,7 +66,7 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
 
     final subjectSnapshot = await _fetchSubjects(boardId, gradeId);
 
-    if (subjectSnapshot.docs.isEmpty) {
+    if (subjectSnapshot.isEmpty) {
       return const StudyProgress(
         masteryPercentage: 0,
         completedChapters: 0,
@@ -79,7 +79,7 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
     var masterySum = 0.0;
     var masteryCount = 0;
 
-    for (final subjectDoc in subjectSnapshot.docs) {
+    for (final subjectDoc in subjectSnapshot) {
       final data = subjectDoc.data();
       final unitCount = (data['unitCount'] as num?)?.toInt() ?? 0;
       totalChapters += unitCount;
@@ -111,7 +111,7 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
       tag: AppLogTags.dashboardDataSource,
     );
     final snapshot = await _fetchSubjects(boardId, gradeId);
-    return snapshot.docs.map((doc) {
+    return snapshot.map((doc) {
       final data = doc.data();
       return Subject(
         id: data['id'] ?? doc.id,
@@ -193,7 +193,7 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
 
     final subjectSnapshot = await _fetchSubjects(boardId, gradeId);
 
-    final docs = [...subjectSnapshot.docs];
+    final docs = [...subjectSnapshot];
     docs.sort((a, b) {
       final aMastery =
           (a.data()['masteryPercentage'] as num?)?.toDouble() ?? 0.0;
@@ -219,33 +219,108 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
     }).toList();
   }
 
-  Future<QuerySnapshot<Map<String, dynamic>>> _fetchSubjects(
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> _fetchSubjects(
     String boardId,
     String gradeId,
   ) async {
     final token = '${boardId}_$gradeId';
     final tokenAlt = '${boardId}_${_alternateGradeId(gradeId)}';
+    final tokenCountry = 'IN_${boardId}_$gradeId';
+    final tokenCountryAlt = 'IN_${boardId}_${_alternateGradeId(gradeId)}';
 
-    // Using Firestore Filter.or to pull universal content OR strictly assigned targeted content
-    // Also falling back to old 'boardId' check to support legacy seeded data
+    // We fetch subjects matching the boardId or specific audiences
     final snapshot = await _firestore
         .collection('subjects')
         .where(
           Filter.or(
             Filter('isGeneralContent', isEqualTo: true),
-            Filter('audiences', arrayContainsAny: [token, tokenAlt, boardId]),
+            Filter('audiences', arrayContainsAny: [
+              token,
+              tokenAlt,
+              tokenCountry,
+              tokenCountryAlt,
+            ]),
             Filter('boardId', isEqualTo: boardId),
+            Filter('boardId', isEqualTo: 'IN_$boardId'),
           ),
         )
         .get();
 
-    // Final fallback to load EVERYTHING if database lacks assignment but needs to render
-    if (snapshot.docs.isEmpty) {
-      return _firestore.collection('subjects').get();
-    }
+    // Client-side filtering to enforce strict grade separation
+    final filteredDocs = snapshot.docs.where((doc) {
+      final data = doc.data();
 
-    return snapshot;
+      final aud = (data['audiences'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [];
+
+      // 1. If audiences are explicitly defined, check if they match
+      if (aud.isNotEmpty) {
+        final matchesGrade = aud.contains(token) ||
+            aud.contains(tokenAlt) ||
+            aud.contains(tokenCountry) ||
+            aud.contains(tokenCountryAlt);
+
+        // Explicitly targeted for this grade
+        if (matchesGrade) return true;
+
+        final matchesBoardOnly =
+            aud.contains(boardId) || aud.contains('IN_$boardId');
+        if (!matchesBoardOnly) {
+          return false; // Audiences exist but none match this grade or board
+        }
+      }
+
+      // 2. Check explicit boardId field if present
+      final docBoard = data['boardId']?.toString();
+      if (docBoard != null && docBoard.isNotEmpty) {
+        if (docBoard != boardId && docBoard != 'IN_$boardId') {
+          return false; // Specifically assigned to a DIFFERENT board
+        }
+      }
+
+      // 3. Check explicit gradeId field if present
+      final docGrade = data['gradeId']?.toString();
+      if (docGrade != null && docGrade.isNotEmpty) {
+        if (docGrade != gradeId && docGrade != _alternateGradeId(gradeId)) {
+          return false; // Specifically assigned to a DIFFERENT grade
+        }
+      }
+
+      // 4. Handle General Content (fallback)
+      if (data['isGeneralContent'] == true) {
+        final badge = data['badgeText']?.toString().toLowerCase() ?? '';
+        final currentBoardLower = boardId.toLowerCase();
+
+        // Defensive check: If the badge explicitly names a board, ensure we are on it.
+        if ((badge.contains('cbse') && !currentBoardLower.contains('cbse')) ||
+            (badge.contains('icse') && !currentBoardLower.contains('icse')) ||
+            (badge.contains('msbshse') &&
+                !currentBoardLower.contains('msbshse'))) {
+          return false;
+        }
+
+        // Defensive check: If the badge explicitly names a grade, ensure we are on it.
+        // E.g. "CBSE 10 CURATED" -> block for grade 9.
+        final gradeStr = gradeId.toString();
+        if (badge.contains('10') && !badge.contains('9') && gradeStr == '9') {
+          return false;
+        }
+        if (badge.contains('9') && !badge.contains('10') && gradeStr == '10') {
+          return false;
+        }
+
+        return true;
+      }
+
+      // 5. If it reaches here, it has no audiences, matching board/grade, and is not general content.
+      return true;
+    }).toList();
+
+    return filteredDocs;
   }
+
 
   @override
   Future<List<CarouselItem>> getBanners() async {

@@ -417,36 +417,68 @@ abstract final class RouteBuilders {
             return AppPageTransitions.fadeTransition(
               state: state,
               child: BlocProvider(
-                create: (_) => getIt<ChaptersCubit>(),
-                child: const ChaptersPage(),
+                create: (_) {
+                  final cubit = getIt<SubjectsCubit>();
+                  final curriculum =
+                      getIt<CurriculumCubit>().state.curriculum;
+                  if (curriculum != null) {
+                    Future.microtask(
+                      () => cubit.loadSubjects(
+                        curriculum.boardId,
+                        curriculum.gradeId,
+                      ),
+                    );
+                  }
+                  return cubit;
+                },
+                child: const SubjectsPage(),
               ),
             );
           },
           routes: [
             GoRoute(
-              path: AppRoutes.formulaDetailPath,
-              name: AppRoutes.formulaDetailName,
+              path: AppRoutes.subjectChaptersPath,
+              name: AppRoutes.subjectChaptersName,
               pageBuilder: (context, state) {
-                final subjectId = state.pathParameters['subjectId'] ?? '';
-                final chapterId = state.pathParameters['chapterId'] ?? '';
-                final chapterName =
-                    state.uri.queryParameters['name'] ?? 'Formulas';
-                final curriculumKey =
-                    getIt<CurriculumCubit>().state.curriculum?.curriculumKey;
                 return AppPageTransitions.fadeTransition(
                   state: state,
                   child: BlocProvider(
-                    create: (_) => getIt<FormulasCubit>()
-                      ..loadFormulas(
-                        subjectId: subjectId,
-                        chapterId: chapterId,
-                        chapterName: chapterName,
-                        curriculumKey: curriculumKey,
-                      ),
-                    child: const FormulasPage(),
+                    create: (_) => getIt<ChaptersCubit>(),
+                    child: const SubjectChaptersPage(),
                   ),
                 );
               },
+              routes: [
+                GoRoute(
+                  path: AppRoutes.formulaDetailPath,
+                  name: AppRoutes.formulaDetailName,
+                  pageBuilder: (context, state) {
+                    final subjectId =
+                        state.pathParameters['subjectId'] ?? '';
+                    final chapterId =
+                        state.pathParameters['chapterId'] ?? '';
+                    final chapterName =
+                        state.uri.queryParameters['name'] ?? 'Formulas';
+                    final curriculumKey = getIt<CurriculumCubit>()
+                        .state
+                        .curriculum
+                        ?.curriculumKey;
+                    return AppPageTransitions.fadeTransition(
+                      state: state,
+                      child: BlocProvider(
+                        create: (_) => getIt<FormulasCubit>()
+                          ..loadFormulas(
+                            subjectId: subjectId,
+                            chapterId: chapterId,
+                            chapterName: chapterName,
+                            curriculumKey: curriculumKey,
+                          ),
+                        child: const FormulasPage(),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
           ],
         ),

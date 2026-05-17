@@ -86,6 +86,8 @@ import '../../features/chapters/presentation/cubit/chapters_cubit.dart'
     as _i919;
 import '../../features/chapters/presentation/cubit/formulas_cubit.dart'
     as _i883;
+import '../../features/chapters/presentation/cubit/subjects_cubit.dart'
+    as _i522;
 import '../../features/comparison/presentation/cubit/comparison_cubit.dart'
     as _i430;
 import '../../features/dashboard/domain/domain.dart' as _i95;
@@ -743,6 +745,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i337.GetWeakAreasUseCase>(
       () => _i337.GetWeakAreasUseCase(
         repository: gh<_i190.DashboardRepositoryPort>(),
+      ),
+    );
+    gh.factory<_i522.SubjectsCubit>(
+      () => _i522.SubjectsCubit(
+        gh<_i95.GetSubjectsUseCase>(),
+        gh<_i914.WatchCurriculumUseCase>(),
       ),
     );
     gh.factory<_i445.SearchFormulasUseCase>(

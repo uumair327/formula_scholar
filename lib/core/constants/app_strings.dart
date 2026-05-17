@@ -160,7 +160,9 @@ abstract final class AppStrings {
 
   // ──────────────────────── Bottom Nav ───────────────────────
   static const String navHome = 'Home';
-  static const String navChapters = 'Chapters';
+  static const String navSubjects = 'Subjects';
+  /// @deprecated Use [navSubjects] instead.
+  static const String navChapters = navSubjects;
   static const String navPractice = 'Practice';
   static const String navSaved = 'Saved';
   static const String navProfile = 'Profile';

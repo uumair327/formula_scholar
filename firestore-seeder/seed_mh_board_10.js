@@ -81,7 +81,11 @@ async function seedMhBoard10() {
         subtitle: 'Linear Equations, Quadratic Equations & More.',
         unitCount: 6,
         formulaCount: 6,
-        isFeatured: true
+        isFeatured: true,
+        boardId: 'msbshse',
+        gradeId: '10',
+        audiences: ['IN_msbshse_10'],
+        isGeneralContent: false
       },
       chapters: [
         { id: 'chap_01', name: 'Linear Equations in Two Variables' },
@@ -104,7 +108,11 @@ async function seedMhBoard10() {
         subtitle: 'Similarity, Pythagoras, Trigonometry & More.',
         unitCount: 7,
         formulaCount: 7,
-        isFeatured: true
+        isFeatured: true,
+        boardId: 'msbshse',
+        gradeId: '10',
+        audiences: ['IN_msbshse_10'],
+        isGeneralContent: false
       },
       chapters: [
         { id: 'chap_01', name: 'Similarity' },
@@ -128,7 +136,11 @@ async function seedMhBoard10() {
         subtitle: 'Physics and Chemistry concepts.',
         unitCount: 10,
         formulaCount: 10,
-        isFeatured: true
+        isFeatured: true,
+        boardId: 'msbshse',
+        gradeId: '10',
+        audiences: ['IN_msbshse_10'],
+        isGeneralContent: false
       },
       chapters: [
         { id: 'chap_01', name: 'Gravitation' },
@@ -155,7 +167,11 @@ async function seedMhBoard10() {
         subtitle: 'Biology and Environmental Science concepts.',
         unitCount: 10,
         formulaCount: 10,
-        isFeatured: true
+        isFeatured: true,
+        boardId: 'msbshse',
+        gradeId: '10',
+        audiences: ['IN_msbshse_10'],
+        isGeneralContent: false
       },
       chapters: [
         { id: 'chap_01', name: 'Heredity and Evolution' },

@@ -22,14 +22,14 @@ import '../widgets/subject_analytics_sheet.dart';
 ///
 /// The same page UI serves Geometry, Algebra, Physics, Chemistry, etc.
 /// Content is driven by data from [ChaptersCubit], not hardcoded per subject.
-class ChaptersPage extends StatefulWidget {
-  const ChaptersPage({super.key});
+class SubjectChaptersPage extends StatefulWidget {
+  const SubjectChaptersPage({super.key});
 
   @override
-  State<ChaptersPage> createState() => _ChaptersPageState();
+  State<SubjectChaptersPage> createState() => _SubjectChaptersPageState();
 }
 
-class _ChaptersPageState extends State<ChaptersPage> {
+class _SubjectChaptersPageState extends State<SubjectChaptersPage> {
   bool _isLoadingAvailableSubjects = false;
   bool _isAutoSelectScheduled = false;
   String _searchQuery = '';

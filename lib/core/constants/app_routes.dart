@@ -48,6 +48,10 @@ abstract final class AppRoutes {
 
   /// Chapters screen – shows chapters for the selected subject.
   static const String chaptersPath = '/chapters';
+  
+  /// Sub-route for chapters of a specific subject
+  static const String subjectChaptersPath = ':subjectId';
+  static const String subjectChaptersName = 'subjectChapters';
 
   /// Practice quiz screen.
   static const String practicePath = '/practice';
@@ -83,8 +87,9 @@ abstract final class AppRoutes {
   // static const String topicDetailName = 'topicDetail';
 
   /// Formula detail page — shows formulas for a chapter.
-  /// Used as a sub-route inside the Chapters shell branch.
-  static const String formulaDetailPath = 'formulas/:subjectId/:chapterId';
+  /// Used as a sub-route under the subject chapters route.
+  /// Full path: /chapters/:subjectId/formulas/:chapterId
+  static const String formulaDetailPath = 'formulas/:chapterId';
   static const String formulaDetailName = 'formulaDetail';
 
   // ──────────────────────── Profile Sub-Routes ───────────────

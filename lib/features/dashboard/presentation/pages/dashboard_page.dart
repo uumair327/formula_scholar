@@ -847,8 +847,10 @@ class DashboardPage extends StatelessWidget {
       description: subject.description,
       subtitle: subject.subtitle ?? '',
     );
-    final shell = StatefulNavigationShell.of(context);
-    shell.goBranch(1);
+    context.goNamed(
+      AppRoutes.subjectChaptersName,
+      pathParameters: {'subjectId': subject.id},
+    );
   }
 
   void _showSubjectAnalytics(
