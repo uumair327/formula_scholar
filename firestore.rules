@@ -212,6 +212,18 @@ service cloud.firestore {
         allow read: if request.auth.uid == userId;
         allow write: if request.auth.uid == userId;
       }
+
+      // User-scoped quiz_answers — self-only
+      match /quiz_answers/{answerId} {
+        allow read: if request.auth.uid == userId;
+        allow write: if request.auth.uid == userId;
+      }
+
+      // User-scoped quiz_results — self-only
+      match /quiz_results/{resultId} {
+        allow read: if request.auth.uid == userId;
+        allow write: if request.auth.uid == userId;
+      }
     }
 
     match /moderator_applications/{document} {
