@@ -60,7 +60,7 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      backgroundColor: colorScheme.surface,
       appBar: AppBar(
         title: Text(AppStrings.visualizer3d, style: AppTextStyles.titleMedium),
         centerTitle: true,
@@ -95,7 +95,7 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
                     Icon(
                       LucideIcons.box,
                       size: 64,
-                      color: colorScheme.outline.withOpacity(0.5),
+                      color: colorScheme.outline.withValues(alpha: 0.5),
                     ),
                     const SizedBox(height: AppDimensions.paddingLG),
                     Text(
@@ -121,7 +121,7 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
                 end: Alignment.bottomCenter,
                 colors: [
                   colorScheme.surface,
-                  colorScheme.background,
+                  colorScheme.surface,
                 ],
               ),
             ),
@@ -148,12 +148,12 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
                       ),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.4),
+                          color: Colors.black.withValues(alpha: 0.4),
                           borderRadius: BorderRadius.circular(
                             AppDimensions.radiusXL,
                           ),
                           border: Border.all(
-                            color: colorScheme.outline.withOpacity(0.1),
+                            color: colorScheme.outline.withValues(alpha: 0.1),
                           ),
                           boxShadow: const [
                             BoxShadow(
@@ -224,9 +224,9 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
         vertical: AppDimensions.paddingXS,
       ),
       decoration: BoxDecoration(
-        color: colorScheme.surface.withOpacity(0.6),
+        color: colorScheme.surface.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
-        border: Border.all(color: colorScheme.primary.withOpacity(0.2)),
+        border: Border.all(color: colorScheme.primary.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -237,7 +237,7 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
               fontSize: 8,
               letterSpacing: 1.5,
               fontWeight: FontWeight.bold,
-              color: colorScheme.primary.withOpacity(0.7),
+              color: colorScheme.primary.withValues(alpha: 0.7),
             ),
           ),
           Text(
@@ -279,7 +279,7 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
           ),
           const SizedBox(height: AppDimensions.paddingXS),
           AppCard(
-            color: colorScheme.surfaceVariant.withOpacity(0.8),
+            color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.8),
             child: Row(
               children: [
                 IconButton(
@@ -398,9 +398,9 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
           child: SliderTheme(
             data: SliderThemeData(
               activeTrackColor: colorScheme.primary,
-              inactiveTrackColor: colorScheme.outline.withOpacity(0.2),
+              inactiveTrackColor: colorScheme.outline.withValues(alpha: 0.2),
               thumbColor: colorScheme.primary,
-              overlayColor: colorScheme.primary.withOpacity(0.1),
+              overlayColor: colorScheme.primary.withValues(alpha: 0.1),
             ),
             child: Slider(
               value: value,
@@ -504,7 +504,7 @@ class _GridBackgroundPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = colorScheme.outline.withOpacity(0.04)
+      ..color = colorScheme.outline.withValues(alpha: 0.04)
       ..strokeWidth = 1.0;
 
     final cellWidth = size.width / 16;
@@ -521,7 +521,7 @@ class _GridBackgroundPainter extends CustomPainter {
 
     // Neon center crosshairs
     final centerPaint = Paint()
-      ..color = colorScheme.primary.withOpacity(0.1)
+      ..color = colorScheme.primary.withValues(alpha: 0.1)
       ..strokeWidth = 1.5;
     canvas.drawLine(Offset(size.width / 2, 0), Offset(size.width / 2, size.height), centerPaint);
     canvas.drawLine(Offset(0, size.height / 2), Offset(size.width, size.height / 2), centerPaint);
@@ -598,19 +598,19 @@ class _ThreeDCanvasPainter extends CustomPainter {
   void _draw3DSphere(Canvas canvas, Offset center, double radiusBase) {
     final radius = radiusBase * paramA;
     final strokePaint = Paint()
-      ..color = colorScheme.primary.withOpacity(0.4)
+      ..color = colorScheme.primary.withValues(alpha: 0.4)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
     final glowPaint = Paint()
-      ..color = colorScheme.primary.withOpacity(0.05)
+      ..color = colorScheme.primary.withValues(alpha: 0.05)
       ..style = PaintingStyle.fill;
 
     // Outer silhouette sphere glow
     canvas.drawCircle(center, radius, glowPaint);
 
     // Draw longitudinal and latitudinal wireframe rings
-    final ringCount = 8;
+    const ringCount = 8;
     for (int i = 0; i < ringCount; i++) {
       final double lat = (i / ringCount) * math.pi;
       final path = Path();
@@ -640,7 +640,7 @@ class _ThreeDCanvasPainter extends CustomPainter {
     final radius = radiusBase * paramA;
     final height = radiusBase * 1.5 * paramB;
     final strokePaint = Paint()
-      ..color = AppColors.orange500.withOpacity(0.5)
+      ..color = AppColors.orange500.withValues(alpha: 0.5)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
 
@@ -688,7 +688,7 @@ class _ThreeDCanvasPainter extends CustomPainter {
     final radius = radiusBase * paramA;
     final height = radiusBase * 1.5 * paramB;
     final strokePaint = Paint()
-      ..color = colorScheme.secondary.withOpacity(0.5)
+      ..color = colorScheme.secondary.withValues(alpha: 0.5)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
 
@@ -735,7 +735,7 @@ class _ThreeDCanvasPainter extends CustomPainter {
       ..color = AppColors.orange500
       ..style = PaintingStyle.fill;
     final sunGlow = Paint()
-      ..color = AppColors.orange500.withOpacity(0.2)
+      ..color = AppColors.orange500.withValues(alpha: 0.2)
       ..style = PaintingStyle.fill;
 
     canvas.drawCircle(center, sunMass, sunPaint);
@@ -743,7 +743,7 @@ class _ThreeDCanvasPainter extends CustomPainter {
 
     // Draw 3D Orbit path
     final orbitPaint = Paint()
-      ..color = colorScheme.outline.withOpacity(0.2)
+      ..color = colorScheme.outline.withValues(alpha: 0.2)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
@@ -781,7 +781,7 @@ class _ThreeDCanvasPainter extends CustomPainter {
 
     // Draw gravitational vector pull line
     final vectorPaint = Paint()
-      ..color = colorScheme.primary.withOpacity(0.4)
+      ..color = colorScheme.primary.withValues(alpha: 0.4)
       ..strokeWidth = 2.0;
     canvas.drawLine(center, planetPos, vectorPaint);
   }
@@ -792,7 +792,7 @@ class _ThreeDCanvasPainter extends CustomPainter {
     // Renders a beautiful 3D glass prism refracting a neon laser beam
     final prismSize = radiusBase * 1.4 * paramB;
     final strokePaint = Paint()
-      ..color = colorScheme.primary.withOpacity(0.6)
+      ..color = colorScheme.primary.withValues(alpha: 0.6)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
 
@@ -863,11 +863,11 @@ class _ThreeDCanvasPainter extends CustomPainter {
     final double cVal = paramC * 10;
 
     final paint = Paint()
-      ..color = colorScheme.primary.withOpacity(0.3)
+      ..color = colorScheme.primary.withValues(alpha: 0.3)
       ..strokeWidth = 1.0;
 
     final gridPoints = <List<_Point3D>>[];
-    final steps = 10;
+    const steps = 10;
     final gridExtent = radiusBase * 1.5;
 
     for (int i = -steps; i <= steps; i++) {
@@ -915,9 +915,9 @@ class _ThreeDCanvasPainter extends CustomPainter {
     final helixLength = radiusBase * 1.8 * paramB;
     final rPaint = Paint()..color = const Color(0xFF00FFFF)..strokeWidth = 3.0;
     final gPaint = Paint()..color = const Color(0xFFFF00FF)..strokeWidth = 3.0;
-    final strandPaint = Paint()..color = colorScheme.primary.withOpacity(0.4)..strokeWidth = 1.5;
+    final strandPaint = Paint()..color = colorScheme.primary.withValues(alpha: 0.4)..strokeWidth = 1.5;
 
-    final steps = 24;
+    const steps = 24;
     final double freq = 2.5 * paramC;
 
     for (int i = 0; i < steps; i++) {
@@ -954,7 +954,7 @@ class _ThreeDCanvasPainter extends CustomPainter {
     final size = radiusBase * 1.3 * paramA;
     final height = radiusBase * 1.5 * paramB;
     final strokePaint = Paint()
-      ..color = colorScheme.primary.withOpacity(0.7)
+      ..color = colorScheme.primary.withValues(alpha: 0.7)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
 

@@ -108,6 +108,7 @@ class _FormulaNoteSheetState extends State<FormulaNoteSheet> {
             controller: _controller,
             maxLines: 5,
             minLines: 3,
+            onChanged: (_) => setState(() {}),
             decoration: InputDecoration(
               hintText: hasNote ? 'Edit your note...' : 'Write a note about this formula...',
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppDimensions.radiusMD)),

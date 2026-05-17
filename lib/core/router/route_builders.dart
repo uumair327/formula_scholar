@@ -455,20 +455,7 @@ abstract final class RouteBuilders {
             return AppPageTransitions.fadeTransition(
               state: state,
               child: BlocProvider(
-                create: (_) {
-                  final cubit = getIt<SubjectsCubit>();
-                  final curriculum =
-                      getIt<CurriculumCubit>().state.curriculum;
-                  if (curriculum != null) {
-                    Future.microtask(
-                      () => cubit.loadSubjects(
-                        curriculum.boardId,
-                        curriculum.gradeId,
-                      ),
-                    );
-                  }
-                  return cubit;
-                },
+                create: (_) => getIt<SubjectsCubit>(),
                 child: const SubjectsPage(),
               ),
             );

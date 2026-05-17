@@ -258,7 +258,7 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
       final iconName = data['iconName'] as String? ?? 'helpCircle';
       final category = data['category'] as String? ?? 'general';
 
-      bool isEnabled = data['isEnabled'] as bool? ?? true;
+      final bool isEnabled = data['isEnabled'] as bool? ?? true;
       String? routeName = data['routeName'] as String?;
 
       if (id == 'cheat_sheets' || id == 'cheat_sheet') {

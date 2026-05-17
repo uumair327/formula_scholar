@@ -135,8 +135,8 @@ class MasteryToolsSection extends StatelessWidget {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext dialogContext) {
-        return WillPopScope(
-          onWillPop: () async => false,
+        return PopScope(
+          canPop: false,
           child: Center(
             child: AppCard(
               padding: const EdgeInsets.all(AppDimensions.paddingXL),
@@ -167,7 +167,7 @@ class MasteryToolsSection extends StatelessWidget {
       }).toList();
 
       final results = await Future.wait(futures);
-      List<Formula> allFormulas = [];
+      final List<Formula> allFormulas = [];
       for (final res in results) {
         if (res is Success<List<Formula>>) {
           allFormulas.addAll(res.data);

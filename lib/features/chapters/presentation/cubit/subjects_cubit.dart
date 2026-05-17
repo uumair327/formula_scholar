@@ -17,17 +17,25 @@ import 'subjects_state.dart';
 class SubjectsCubit extends Cubit<SubjectsState> {
   SubjectsCubit(
     this._getSubjectsUseCase,
-    this._watchCurriculumUseCase,
+    this._curriculumCubit,
   ) : super(const SubjectsState()) {
-    _curriculumSubscription =
-        _watchCurriculumUseCase().listen(_onCurriculumChanged);
+    _curriculumSubscription = _curriculumCubit.stream
+        .distinct()
+        .listen(_onCurriculumStateChanged);
+
+    // Synchronously check and load initial curriculum if already available
+    _onCurriculumStateChanged(_curriculumCubit.state);
   }
 
   final GetSubjectsUseCase _getSubjectsUseCase;
-  final WatchCurriculumUseCase _watchCurriculumUseCase;
-  late final StreamSubscription<SelectedCurriculum?> _curriculumSubscription;
+  final CurriculumCubit _curriculumCubit;
+  late final StreamSubscription<CurriculumState> _curriculumSubscription;
 
-  Future<void> _onCurriculumChanged(SelectedCurriculum? curriculum) async {
+  Future<void> _onCurriculumStateChanged(CurriculumState curriculumState) async {
+    if (curriculumState.isLoading) {
+      return;
+    }
+    final curriculum = curriculumState.curriculum;
     if (curriculum == null) {
       emit(const SubjectsState());
       return;

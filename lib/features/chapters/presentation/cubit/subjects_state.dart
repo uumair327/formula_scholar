@@ -10,7 +10,7 @@ class SubjectsState extends Equatable {
   const SubjectsState({
     this.status = SubjectsStatus.initial,
     this.subjects = const [],
-    this.errorMessage,
+    this.errorMessage = '',
   });
 
   final SubjectsStatus status;

@@ -747,12 +747,6 @@ extension GetItInjectableX on _i174.GetIt {
         repository: gh<_i190.DashboardRepositoryPort>(),
       ),
     );
-    gh.factory<_i522.SubjectsCubit>(
-      () => _i522.SubjectsCubit(
-        gh<_i95.GetSubjectsUseCase>(),
-        gh<_i914.WatchCurriculumUseCase>(),
-      ),
-    );
     gh.factory<_i445.SearchFormulasUseCase>(
       () => _i445.SearchFormulasUseCase(
         repository: gh<_i360.SearchRepositoryPort>(),
@@ -784,6 +778,12 @@ extension GetItInjectableX on _i174.GetIt {
         getWeakAreas: gh<_i95.GetWeakAreasUseCase>(),
         curriculumCubit: gh<_i914.CurriculumCubit>(),
         activityRefreshCubit: gh<_i914.ActivityRefreshCubit>(),
+      ),
+    );
+    gh.factory<_i522.SubjectsCubit>(
+      () => _i522.SubjectsCubit(
+        gh<_i95.GetSubjectsUseCase>(),
+        gh<_i914.CurriculumCubit>(),
       ),
     );
     gh.factory<_i153.NotificationsCubit>(
