@@ -21,6 +21,47 @@ class Flashcard extends Equatable {
     this.nextReviewAt,
   });
 
+  factory Flashcard.fromJson(Map<String, dynamic> json) => Flashcard(
+    id: json['id'] as String? ?? '',
+    title: json['title'] as String? ?? '',
+    latex: json['latex'] as String? ?? '',
+    description: json['description'] as String? ?? '',
+    subjectId: json['subjectId'] as String? ?? '',
+    subjectName: json['subjectName'] as String? ?? '',
+    chapterId: json['chapterId'] as String? ?? '',
+    chapterName: json['chapterName'] as String? ?? '',
+    difficulty: FlashcardDifficulty.values.firstWhere(
+      (d) => d.name == json['difficulty'],
+      orElse: () => FlashcardDifficulty.medium,
+    ),
+    isMastered: json['isMastered'] as bool? ?? false,
+    easeFactor: (json['easeFactor'] as num?)?.toDouble() ?? 2.5,
+    interval: json['interval'] as int? ?? 0,
+    reviewCount: json['reviewCount'] as int? ?? 0,
+    lapses: json['lapses'] as int? ?? 0,
+    nextReviewAt: json['nextReviewAt'] != null
+        ? DateTime.tryParse(json['nextReviewAt'] as String)
+        : null,
+  );
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'title': title,
+    'latex': latex,
+    'description': description,
+    'subjectId': subjectId,
+    'subjectName': subjectName,
+    'chapterId': chapterId,
+    'chapterName': chapterName,
+    'difficulty': difficulty.name,
+    'isMastered': isMastered,
+    'easeFactor': easeFactor,
+    'interval': interval,
+    'reviewCount': reviewCount,
+    'lapses': lapses,
+    'nextReviewAt': nextReviewAt?.toIso8601String(),
+  };
+
   final String id;
   final String title;
   final String latex;

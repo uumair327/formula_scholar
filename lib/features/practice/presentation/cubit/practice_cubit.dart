@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
+import '../../../achievements/domain/domain.dart';
 import '../../domain/domain.dart';
 import 'practice_state.dart';
 
@@ -30,10 +31,7 @@ class PracticeCubit extends Cubit<PracticeState>
   String? _quizId;
 
   static String _generateId() =>
-      'quiz_${DateTime.now().millisecondsSinceEpoch}_${_randomSuffix()}';
-
-  static String _randomSuffix() =>
-      DateTime.now().microsecondsSinceEpoch.toRadixString(36);
+      'quiz_${DateTime.now().millisecondsSinceEpoch}_${DateTime.now().microsecondsSinceEpoch.toRadixString(36)}';
 
   @override
   String get logTag => AppLogTags.practiceCubit;
@@ -184,7 +182,6 @@ class PracticeCubit extends Cubit<PracticeState>
       answeredQuestions: state.totalQuestions,
       answerRecords: List.of(state.answerRecords),
     );
-
     final quizResult = QuizResult(
       id: _quizId ?? _generateId(),
       boardId: boardId,
@@ -200,13 +197,27 @@ class PracticeCubit extends Cubit<PracticeState>
       answers: List.of(state.answerRecords),
       completedAt: DateTime.now(),
     );
-
     final saveResult = await _saveQuizResult(quizResult);
     if (saveResult is Error<void>) {
       logFailure('saveQuizResult', saveResult.failure);
     }
-
     _activityRefreshCubit.notifyProgressUpdated();
+    unawaited(_reportAchievementProgress());
+  }
+
+  Future<void> _reportAchievementProgress() async {
+    try {
+      final useCase = getIt<ReportAchievementProgressUseCase>();
+      final correct = state.correctCount;
+      await useCase('first_mastered', correct);
+      await useCase('ten_mastered', correct);
+      await useCase('fifty_mastered', correct);
+    } catch (_) {
+      AppLogger.warning(
+        'Failed to report achievement progress',
+        tag: AppLogTags.practiceCubit,
+      );
+    }
   }
 
   void retryIncorrect() {
@@ -215,31 +226,15 @@ class PracticeCubit extends Cubit<PracticeState>
     final boardId = state.boardId;
     final gradeId = state.gradeId;
     if (boardId == null || gradeId == null) return;
-    loadQuestions(
-      boardId: boardId,
-      gradeId: gradeId,
-      subjectId: state.subjectId,
-      questionIds: ids,
-    );
+    loadQuestions(boardId: boardId, gradeId: gradeId, subjectId: state.subjectId, questionIds: ids);
   }
 
   void resetQuiz() {
     _timer?.cancel();
-    final boardId = state.boardId;
-    final gradeId = state.gradeId;
-    final subjectId = state.subjectId;
-    emit(PracticeState(
-      status: PracticeStatus.initial,
-      boardId: boardId,
-      gradeId: gradeId,
-      subjectId: subjectId,
-    ));
-    if (boardId != null && gradeId != null) {
-      loadQuestions(
-        boardId: boardId,
-        gradeId: gradeId,
-        subjectId: subjectId,
-      );
-    }
+    final bId = state.boardId;
+    final gId = state.gradeId;
+    final sId = state.subjectId;
+    emit(PracticeState(status: PracticeStatus.initial, boardId: bId, gradeId: gId, subjectId: sId));
+    if (bId != null && gId != null) loadQuestions(boardId: bId, gradeId: gId, subjectId: sId);
   }
 }

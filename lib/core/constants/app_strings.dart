@@ -439,6 +439,11 @@ abstract final class AppStrings {
   static const String retryIncorrect = 'Retry Incorrect';
   static const String backToDashboard = 'Back to Dashboard';
   static const String timeTaken = 'Time Taken';
+  static const String practiceHistory = 'Practice History';
+  static const String noPracticeHistory = 'No practice history yet';
+  static const String noPracticeHistoryDesc =
+      'Complete a practice quiz to see your results here.';
+  static const String today = 'Today';
 
   // ──────────────────────── Saved / Bookmarks ─────────────────
   static const String formulaFlow = 'FormulaFlow';

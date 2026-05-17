@@ -108,4 +108,19 @@ abstract final class AppLogTags {
   static const String searchRepo = 'SearchRepo';
   static const String searchDataSource = 'SearchDataSource';
   static const String searchUseCase = 'SearchUseCase';
+
+  // ──────────────────────── Achievements ─────────────────────────
+  static const String achievementsCubit = 'AchievementsCubit';
+  static const String achievementsPage = 'AchievementsPage';
+  static const String achievementsRepo = 'AchievementsRepo';
+  static const String achievementsDataSource = 'AchievementsDataSource';
+  static const String achievementsCache = 'AchievementsCache';
+  static const String achievementsUseCase = 'AchievementsUseCase';
+
+  // ──────────────────────── Flashcards ───────────────────────────
+  static const String flashcardsCubit = 'FlashcardsCubit';
+  static const String flashcardsPage = 'FlashcardsPage';
+  static const String flashcardsRepo = 'FlashcardsRepo';
+  static const String flashcardsCache = 'FlashcardsCache';
+  static const String flashcardsDataSource = 'FlashcardsDataSource';
 }

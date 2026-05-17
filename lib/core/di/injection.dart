@@ -4,9 +4,7 @@ import 'package:injectable/injectable.dart';
 
 import 'injection.config.dart';
 
-import '../../features/flashcards/domain/ports/flashcard_review_port.dart';
-import '../../features/flashcards/infrastructure/adapters/firestore_flashcard_review_adapter.dart';
-import '../../features/flashcards/presentation/cubit/flashcards_cubit.dart';
+import '../../features/flashcards/flashcards.dart';
 import '../../features/search/domain/ports/search_data_source_port.dart';
 import '../../features/search/domain/ports/search_repository_port.dart';
 import '../../features/search/domain/usecases/search_formulas_use_case.dart';
@@ -14,7 +12,7 @@ import '../../features/search/infrastructure/adapters/search_firebase_adapter.da
 import '../../features/search/infrastructure/repositories/search_repository_impl.dart';
 import '../../features/search/presentation/cubit/search_cubit.dart';
 import '../../features/comparison/presentation/cubit/comparison_cubit.dart';
-import '../../features/achievements/presentation/cubit/achievements_cubit.dart';
+import '../../features/achievements/achievements.dart';
 import '../../features/study_planner/domain/usecases/create_plan_usecase.dart';
 import '../../features/study_planner/domain/usecases/get_plans_usecase.dart';
 import '../../features/study_planner/domain/usecases/delete_plan_usecase.dart';
@@ -79,15 +77,48 @@ void configureDependencies() {
   getIt.registerLazySingleton<FlashcardReviewPort>(
     () => FirestoreFlashcardReviewAdapter(getIt<FirebaseFirestore>()),
   );
+  getIt.registerLazySingleton<FlashcardCachePort>(
+    () => FlashcardHiveCache(),
+  );
+  getIt.registerLazySingleton<FlashcardRepositoryPort>(
+    () => FlashcardRepositoryImpl(
+      dataSource: getIt<FlashcardReviewPort>(),
+      cache: getIt<FlashcardCachePort>(),
+    ),
+  );
   getIt.registerFactory<FlashcardsCubit>(
-    () => FlashcardsCubit(reviewPort: getIt<FlashcardReviewPort>()),
+    () => FlashcardsCubit(repository: getIt<FlashcardRepositoryPort>()),
   );
 
   // Comparison
   getIt.registerFactory<ComparisonCubit>(() => ComparisonCubit());
 
   // Achievements
-  getIt.registerFactory<AchievementsCubit>(() => AchievementsCubit());
+  getIt.registerLazySingleton<AchievementDataSourcePort>(
+    () => AchievementLocalDataSource(),
+  );
+  getIt.registerLazySingleton<AchievementCachePort>(
+    () => AchievementHiveCache(),
+  );
+  getIt.registerLazySingleton<AchievementRepositoryPort>(
+    () => AchievementRepositoryImpl(
+      dataSource: getIt<AchievementDataSourcePort>(),
+      cache: getIt<AchievementCachePort>(),
+    ),
+  );
+  getIt.registerFactory<GetAchievementsUseCase>(
+    () => GetAchievementsUseCase(repository: getIt<AchievementRepositoryPort>()),
+  );
+  getIt.registerFactory<ReportAchievementProgressUseCase>(
+    () => ReportAchievementProgressUseCase(
+      repository: getIt<AchievementRepositoryPort>(),
+    ),
+  );
+  getIt.registerFactory<AchievementsCubit>(
+    () => AchievementsCubit(
+      getAchievements: getIt<GetAchievementsUseCase>(),
+    ),
+  );
 
   // Study Planner
   getIt.registerLazySingleton<StudyPlannerPort>(

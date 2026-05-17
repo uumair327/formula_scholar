@@ -4,9 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../cubit/practice_cubit.dart';
-import '../cubit/practice_state.dart';
+import 'practice_completion_category_breakdown.dart';
+import 'practice_completion_score_summary.dart';
+import 'practice_completion_time_info.dart';
 
 /// Enhanced quiz completion screen with per-category breakdown,
 /// star rating, timer info, and retry-incorrect button.
@@ -61,13 +62,13 @@ class PracticeCompletionScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: AppDimensions.paddingXL),
-                _ScoreSummaryCard(state: state),
+                ScoreSummaryCard(state: state),
                 const SizedBox(height: AppDimensions.paddingLG),
                 if (state.answerRecords.isNotEmpty)
-                  _CategoryBreakdown(state: state),
+                  CategoryBreakdown(state: state),
                 const SizedBox(height: AppDimensions.paddingLG),
                 if (state.timedMode)
-                  _TimeInfo(state: state),
+                  TimeInfo(state: state),
                 const SizedBox(height: AppDimensions.paddingXL),
                 SizedBox(
                   width: double.infinity,
@@ -161,220 +162,6 @@ class PracticeCompletionScreen extends StatelessWidget {
           ),
         );
       }),
-    );
-  }
-}
-
-class _ScoreSummaryCard extends StatelessWidget {
-  const _ScoreSummaryCard({required this.state});
-  final PracticeState state;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return AppCard(
-      padding: const EdgeInsets.all(AppDimensions.paddingXXL),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _ScoreStat(
-            icon: LucideIcons.checkCircle2,
-            value: '${state.correctCount}',
-            label: AppStrings.correctLabel,
-            color: colorScheme.secondary,
-          ),
-          Container(
-            width: AppDimensions.dividerHeight,
-            height: AppDimensions.avatarMD,
-            color: colorScheme.surfaceContainerHighest,
-          ),
-          _ScoreStat(
-            icon: LucideIcons.xCircle,
-            value: '${state.incorrectCount}',
-            label: AppStrings.incorrectLabel,
-            color: colorScheme.error,
-          ),
-          Container(
-            width: AppDimensions.dividerHeight,
-            height: AppDimensions.avatarMD,
-            color: colorScheme.surfaceContainerHighest,
-          ),
-          _ScoreStat(
-            icon: LucideIcons.star,
-            value: '${state.totalPoints}',
-            label: AppStrings.ptsLabel,
-            color: colorScheme.primary,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ScoreStat extends StatelessWidget {
-  const _ScoreStat({
-    required this.icon,
-    required this.value,
-    required this.label,
-    required this.color,
-  });
-  final IconData icon;
-  final String value;
-  final String label;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Column(
-      children: [
-        Icon(icon, size: AppDimensions.iconLG, color: color),
-        const SizedBox(height: AppDimensions.paddingSM),
-        Text(
-          value,
-          style: AppTextStyles.headlineMedium.copyWith(
-            fontWeight: FontWeight.w800,
-            color: color,
-          ),
-        ),
-        Text(
-          label,
-          style: AppTextStyles.labelSmall.copyWith(
-            color: colorScheme.outline,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _CategoryBreakdown extends StatelessWidget {
-  const _CategoryBreakdown({required this.state});
-  final PracticeState state;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final categories = <String, _CatStats>{};
-
-    for (final r in state.answerRecords) {
-      categories.putIfAbsent(r.category, () => _CatStats());
-      categories[r.category]!.total++;
-      if (r.isCorrect) categories[r.category]!.correct++;
-    }
-
-    return AppCard(
-      padding: const EdgeInsets.all(AppDimensions.paddingXXL),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            AppStrings.perCategory,
-            style: AppTextStyles.titleMedium.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: AppDimensions.paddingMD),
-          ...categories.entries.map((entry) {
-            final pct = entry.value.total > 0
-                ? (entry.value.correct / entry.value.total) * 100
-                : 0.0;
-            return Padding(
-              padding: const EdgeInsets.only(bottom: AppDimensions.paddingMD),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      entry.key,
-                      style: AppTextStyles.bodySmall.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: AppDimensions.paddingMD),
-                  Expanded(
-                    flex: 3,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
-                      child: LinearProgressIndicator(
-                        value: pct / 100,
-                        backgroundColor: colorScheme.surfaceContainerHighest,
-                        color: pct >= 80
-                            ? colorScheme.secondary
-                            : pct >= 50
-                                ? colorScheme.tertiary
-                                : colorScheme.error,
-                        minHeight: AppDimensions.progressBarSM,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: AppDimensions.paddingMD),
-                  SizedBox(
-                    width: 36,
-                    child: Text(
-                      '${pct.round()}%',
-                      textAlign: TextAlign.end,
-                      style: AppTextStyles.labelSmall.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }),
-        ],
-      ),
-    );
-  }
-}
-
-class _CatStats {
-  int total = 0;
-  int correct = 0;
-}
-
-class _TimeInfo extends StatelessWidget {
-  const _TimeInfo({required this.state});
-  final PracticeState state;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final total = state.totalSeconds;
-    final taken = total - state.remainingSeconds;
-    final mins = (taken ~/ 60).toString().padLeft(2, '0');
-    final secs = (taken % 60).toString().padLeft(2, '0');
-
-    return AppCard(
-      padding: const EdgeInsets.all(AppDimensions.paddingLG),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(LucideIcons.clock, size: AppDimensions.iconMD,
-              color: colorScheme.outline),
-          const SizedBox(width: AppDimensions.paddingSM),
-          Text(
-            '$mins:$secs',
-            style: AppTextStyles.titleMedium.copyWith(
-              fontWeight: FontWeight.w700,
-              fontFeatures: const [FontFeature.tabularFigures()],
-            ),
-          ),
-          const SizedBox(width: AppDimensions.paddingXS),
-          Text(
-            AppStrings.timeTaken,
-            style: AppTextStyles.bodySmall.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

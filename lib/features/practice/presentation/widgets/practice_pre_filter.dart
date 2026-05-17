@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
 import '../../../auth/auth.dart';
 import '../cubit/practice_cubit.dart';
+import 'practice_pre_filter_header.dart';
+import 'practice_pre_filter_timed_mode.dart';
 
 /// Pre-quiz filter screen for selecting subject and timed mode.
 class PracticePreFilter extends StatelessWidget {
@@ -35,7 +35,7 @@ class PracticePreFilter extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            _Header(photoUrl: photoUrl),
+            PreFilterHeader(photoUrl: photoUrl),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(AppDimensions.paddingXXL),
@@ -61,42 +61,15 @@ class PracticePreFilter extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: AppDimensions.paddingXXL),
-                      AppCard(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Text(
-                              AppStrings.practiceChooseSubject,
-                              style: AppTextStyles.titleMedium,
-                            ),
-                            const SizedBox(height: AppDimensions.paddingMD),
-                            Wrap(
-                              spacing: AppDimensions.paddingSM,
-                              runSpacing: AppDimensions.paddingSM,
-                              children: [
-                                ChoiceChip(
-                                  label: const Text(AppStrings.allSubjects),
-                                  selected: true,
-                                  onSelected: (_) => _startQuiz(
-                                    context, curriculumState, null,
-                                  ),
-                                ),
-                                ...subjectState.availableSubjects.map((subject) {
-                                  return ChoiceChip(
-                                    label: Text(subject.name),
-                                    selected: false,
-                                    onSelected: (_) => _startQuiz(
-                                      context, curriculumState, subject.category,
-                                    ),
-                                  );
-                                }),
-                              ],
-                            ),
-                          ],
+                      _SubjectSelector(
+                        subjectState: subjectState,
+                        curriculumState: curriculumState,
+                        onSubjectSelected: (id) => _startQuiz(
+                          context, curriculumState, id,
                         ),
                       ),
                       const SizedBox(height: AppDimensions.paddingLG),
-                      _TimedModeCard(
+                      PreFilterTimedModeCard(
                         isTimed: isTimed,
                         timedDuration: timedDuration,
                         onTimedChanged: onTimedChanged,
@@ -129,128 +102,48 @@ class PracticePreFilter extends StatelessWidget {
   }
 }
 
-class _Header extends StatelessWidget {
-  const _Header({required this.photoUrl});
-  final String photoUrl;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppDimensions.paddingXXL,
-        vertical: AppDimensions.paddingSM,
-      ),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: () => StatefulNavigationShell.of(context).goBranch(1),
-            child: Icon(LucideIcons.x, size: AppDimensions.iconLG,
-                color: colorScheme.onSurface),
-          ),
-          const SizedBox(width: AppDimensions.paddingMD),
-          Text(
-            AppStrings.formulaFlow,
-            style: AppTextStyles.titleLarge.copyWith(
-              fontWeight: FontWeight.w800,
-              letterSpacing: AppDimensions.letterSpacingTight,
-              color: colorScheme.primary,
-            ),
-          ),
-          const Spacer(),
-          AppAvatar(
-            imageUrl: photoUrl,
-            size: AppDimensions.avatarSM,
-            fallbackIcon: LucideIcons.userCircle,
-            fallbackIconColor: colorScheme.primary,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _TimedModeCard extends StatelessWidget {
-  const _TimedModeCard({
-    required this.isTimed,
-    required this.timedDuration,
-    required this.onTimedChanged,
-    required this.onDurationChanged,
+class _SubjectSelector extends StatelessWidget {
+  const _SubjectSelector({
+    required this.subjectState,
+    required this.curriculumState,
+    required this.onSubjectSelected,
   });
 
-  final bool isTimed;
-  final int? timedDuration;
-  final ValueChanged<bool> onTimedChanged;
-  final ValueChanged<int?> onDurationChanged;
+  final SubjectSelectionState subjectState;
+  final CurriculumState curriculumState;
+  final ValueChanged<String?> onSubjectSelected;
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Column(
-      children: [
-        AppCard(
-          child: Row(
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            AppStrings.practiceChooseSubject,
+            style: AppTextStyles.titleMedium,
+          ),
+          const SizedBox(height: AppDimensions.paddingMD),
+          Wrap(
+            spacing: AppDimensions.paddingSM,
+            runSpacing: AppDimensions.paddingSM,
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      AppStrings.timedMode,
-                      style: AppTextStyles.titleSmall.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: AppDimensions.paddingXXS),
-                    Text(
-                      AppStrings.timedModeDesc,
-                      style: AppTextStyles.bodySmall.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
+              ChoiceChip(
+                label: const Text(AppStrings.allSubjects),
+                selected: true,
+                onSelected: (_) => onSubjectSelected(null),
               ),
-              Switch(
-                value: isTimed,
-                onChanged: (v) {
-                  onTimedChanged(v);
-                  if (!v) onDurationChanged(null);
-                },
-              ),
+              ...subjectState.availableSubjects.map((subject) {
+                return ChoiceChip(
+                  label: Text(subject.name),
+                  selected: false,
+                  onSelected: (_) => onSubjectSelected(subject.category),
+                );
+              }),
             ],
           ),
-        ),
-        if (isTimed) ...[
-          const SizedBox(height: AppDimensions.paddingSM),
-          AppCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  AppStrings.duration,
-                  style: AppTextStyles.titleSmall.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: AppDimensions.paddingMD),
-                Wrap(
-                  spacing: AppDimensions.paddingSM,
-                  runSpacing: AppDimensions.paddingSM,
-                  children: [5, 10, 15, 30, 60].map((mins) {
-                    return ChoiceChip(
-                      label: Text('$mins min'),
-                      selected: timedDuration == mins * 60,
-                      onSelected: (_) => onDurationChanged(mins * 60),
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
-          ),
         ],
-      ],
+      ),
     );
   }
 }

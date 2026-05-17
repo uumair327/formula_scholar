@@ -131,6 +131,7 @@ abstract final class AppRouter {
       ...RouteBuilders.flashcardRoutes(),
       ...RouteBuilders.studyPlannerRoutes(),
       ...RouteBuilders.legalRoutes(),
+      ...RouteBuilders.practiceHistoryRoutes(),
       RouteBuilders.onboardingRoutes(),
       RouteBuilders.mainShellRoute(),
     ],

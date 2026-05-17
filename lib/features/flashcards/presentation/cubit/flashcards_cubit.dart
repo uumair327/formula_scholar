@@ -4,18 +4,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
+import '../../../achievements/domain/domain.dart';
 import '../../domain/domain.dart';
 import 'flashcards_state.dart';
 
 @injectable
-class FlashcardsCubit extends Cubit<FlashcardsState> {
-  FlashcardsCubit({required FlashcardReviewPort reviewPort})
-    : _reviewPort = reviewPort,
+class FlashcardsCubit extends Cubit<FlashcardsState>
+    with CubitFailureLogger<FlashcardsState> {
+  FlashcardsCubit({required FlashcardRepositoryPort repository})
+    : _repository = repository,
       super(const FlashcardsState());
 
-  final FlashcardReviewPort _reviewPort;
+  final FlashcardRepositoryPort _repository;
   final SpacedRepetitionService _srs = SpacedRepetitionService();
   String? _userId;
+
+  @override
+  String get logTag => AppLogTags.flashcardsCubit;
 
   Future<void> startSession({
     required List<Flashcard> cards,
@@ -24,16 +29,21 @@ class FlashcardsCubit extends Cubit<FlashcardsState> {
     _userId = userId;
     AppLogger.info(
       'Starting flashcard session with ${cards.length} cards',
-      tag: 'FlashcardsCubit',
+      tag: AppLogTags.flashcardsCubit,
     );
-    final enriched = await _reviewPort.loadReviews(userId: userId, cards: cards);
-    final due = _srs.dueCards(enriched);
-    final sessionCards = due.isEmpty ? enriched : due;
-    emit(FlashcardsState(
-      status: FlashcardsStatus.ready,
-      session: FlashcardSession(cards: sessionCards),
-      totalCardCount: enriched.length,
-    ));
+    final result = await _repository.loadReviews(userId: userId, cards: cards);
+    switch (result) {
+      case Success(:final data):
+        final due = _srs.dueCards(data);
+        final sessionCards = due.isEmpty ? data : due;
+        emit(FlashcardsState(
+          status: FlashcardsStatus.ready,
+          session: FlashcardSession(cards: sessionCards),
+          totalCardCount: data.length,
+        ));
+      case Error(:final failure):
+        logFailure('loadReviews', failure);
+    }
   }
 
   void flipCard() {
@@ -78,7 +88,13 @@ class FlashcardsCubit extends Cubit<FlashcardsState> {
 
     final uid = _userId;
     if (uid != null) {
-      unawaited(_reviewPort.saveReview(userId: uid, card: updatedCard));
+      final saveResult = await _repository.saveReview(
+        userId: uid,
+        card: updatedCard,
+      );
+      if (saveResult is Error<void>) {
+        logFailure('saveReview', saveResult.failure);
+      }
     }
 
     _checkComplete();
@@ -95,6 +111,21 @@ class FlashcardsCubit extends Cubit<FlashcardsState> {
           mastered: session.masteredIds.length,
         ),
       ));
+      _reportAchievementProgress();
+    }
+  }
+
+  void _reportAchievementProgress() {
+    try {
+      final useCase = getIt<ReportAchievementProgressUseCase>();
+      final graduated = state.session.graduatedIds.length;
+      unawaited(useCase('first_flashcard', graduated));
+      unawaited(useCase('ten_flashcards', graduated));
+    } catch (_) {
+      AppLogger.warning(
+        'Failed to report flashcard achievement progress',
+        tag: AppLogTags.flashcardsCubit,
+      );
     }
   }
 

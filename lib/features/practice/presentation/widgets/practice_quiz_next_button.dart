@@ -1,0 +1,39 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../core/core.dart';
+import '../cubit/practice_cubit.dart';
+import '../cubit/practice_state.dart';
+
+class QuizNextButton extends StatelessWidget {
+  const QuizNextButton({super.key, required this.state});
+  final PracticeState state;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      bottom: AppDimensions.paddingLG,
+      left: AppDimensions.paddingXXL,
+      right: AppDimensions.paddingXXL,
+      child: SafeArea(
+        child: FilledButton(
+          onPressed: () => context.read<PracticeCubit>().nextQuestion(),
+          style: FilledButton.styleFrom(
+            padding: const EdgeInsets.symmetric(
+              vertical: AppDimensions.paddingLG,
+            ),
+            shape: const StadiumBorder(),
+          ),
+          child: Text(
+            state.isLastQuestion
+                ? AppStrings.quizCompleteTitle
+                : AppStrings.nextQuestion,
+            style: AppTextStyles.labelLarge.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

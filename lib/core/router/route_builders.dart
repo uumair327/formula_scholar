@@ -130,7 +130,11 @@ abstract final class RouteBuilders {
           return AppPageTransitions.fadeTransition(
             state: state,
             child: BlocProvider(
-              create: (_) => getIt<AchievementsCubit>(),
+              create: (_) {
+                final cubit = getIt<AchievementsCubit>();
+                cubit.loadAchievements();
+                return cubit;
+              },
               child: const AchievementsPage(),
             ),
           );
@@ -266,6 +270,25 @@ abstract final class RouteBuilders {
           return AppPageTransitions.fadeTransition(
             state: state,
             child: LegalPage.termsOfService(),
+          );
+        },
+      ),
+    ];
+  }
+
+  // ─── Practice History Route ──────────────────────────────────
+  static List<GoRoute> practiceHistoryRoutes() {
+    return [
+      GoRoute(
+        path: AppRoutes.practiceHistoryPath,
+        name: AppRoutes.practiceHistoryName,
+        pageBuilder: (context, state) {
+          return AppPageTransitions.fadeTransition(
+            state: state,
+            child: BlocProvider(
+              create: (_) => getIt<PracticeHistoryCubit>(),
+              child: const PracticeHistoryPage(),
+            ),
           );
         },
       ),

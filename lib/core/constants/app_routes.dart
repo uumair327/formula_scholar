@@ -138,4 +138,8 @@ abstract final class AppRoutes {
   /// Terms of Service page (required for Play Store).
   static const String termsOfServicePath = '/legal/terms';
   static const String termsOfServiceName = 'termsOfService';
+
+  // ──────────────────────── Practice History ─────────────────
+  static const String practiceHistoryPath = '/practice-history';
+  static const String practiceHistoryName = 'practiceHistory';
 }

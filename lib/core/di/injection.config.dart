@@ -16,8 +16,6 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:google_sign_in/google_sign_in.dart' as _i116;
 import 'package:injectable/injectable.dart' as _i526;
 
-import '../../features/achievements/presentation/cubit/achievements_cubit.dart'
-    as _i693;
 import '../../features/auth/domain/domain.dart' as _i140;
 import '../../features/auth/domain/ports/auth_repository_port.dart' as _i320;
 import '../../features/auth/domain/usecases/delete_account_use_case.dart'
@@ -92,11 +90,9 @@ import '../../features/dashboard/infrastructure/repositories/dashboard_repositor
     as _i367;
 import '../../features/dashboard/presentation/cubit/dashboard_cubit.dart'
     as _i24;
-import '../../features/flashcards/domain/domain.dart' as _i944;
 import '../../features/flashcards/infrastructure/adapters/firestore_flashcard_review_adapter.dart'
     as _i227;
-import '../../features/flashcards/presentation/cubit/flashcards_cubit.dart'
-    as _i762;
+
 import '../../features/onboarding/domain/domain.dart' as _i634;
 import '../../features/onboarding/domain/usecases/get_boards_use_case.dart'
     as _i543;
@@ -250,7 +246,6 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final firebaseModule = _$FirebaseModule();
     gh.factory<_i724.ApiInterceptor>(() => _i724.ApiInterceptor());
-    gh.factory<_i693.AchievementsCubit>(() => _i693.AchievementsCubit());
     gh.factory<_i430.ComparisonCubit>(() => _i430.ComparisonCubit());
     gh.lazySingleton<_i59.FirebaseAuth>(() => firebaseModule.firebaseAuth);
     gh.lazySingleton<_i974.FirebaseFirestore>(() => firebaseModule.firestore);
@@ -344,9 +339,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i634.OnboardingDataSourcePort>(
       () => _i985.OnboardingFirebaseAdapter(gh<_i974.FirebaseFirestore>()),
-    );
-    gh.factory<_i762.FlashcardsCubit>(
-      () => _i762.FlashcardsCubit(reviewPort: gh<_i944.FlashcardReviewPort>()),
     );
     gh.lazySingleton<_i525.ThemePreferenceRepositoryPort>(
       () => _i436.ThemePreferenceRepositoryImpl(
