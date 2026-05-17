@@ -46,23 +46,29 @@ async function seedSubjects() {
       routeName: 'practice',
     },
     {
+      id: 'flashcards',
+      label: 'Flashcards',
+      iconName: 'creditCard',
+      category: 'quick_reference',
+      isEnabled: true,
+      displayOrder: 2,
+      routeName: 'flashcards',
+    },
+    {
       id: 'cheat_sheets',
       label: 'Cheat Sheets',
       iconName: 'fileText',
       category: 'quick_reference',
-      isEnabled: false,
-      supportSubtitle:
-        'Cheat Sheets provide quick formula reference guides. Contact support to request this feature for your curriculum.',
+      isEnabled: true,
       displayOrder: 3,
+      routeName: 'cheatSheet',
     },
     {
       id: 'visualizer_3d',
       label: 'Visualizer 3D',
       iconName: 'box',
       category: 'visual_learning',
-      isEnabled: false,
-      supportSubtitle:
-        '3D Visualizer helps understand geometric concepts. Contact support to request 3D visualization tools.',
+      isEnabled: true,
       displayOrder: 4,
     },
   ];

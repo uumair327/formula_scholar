@@ -61,6 +61,11 @@ const scripts = [
         stage: 'Content'
     },
     {
+        name: 'seed_mh_board_10.js',
+        description: 'MH Board 10th Standard subjects and short notes',
+        stage: 'Content'
+    },
+    {
         name: 'seed_status.js',
         description: 'Dashboard seed/sync metadata',
         stage: 'Dashboard'
