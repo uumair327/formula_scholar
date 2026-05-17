@@ -414,7 +414,11 @@ class _SubjectChaptersPageState extends State<SubjectChaptersPage> {
                               const SizedBox(
                                 height: AppDimensions.paddingSection,
                               ),
-                              MasteryToolsSection(tools: state.masteryTools),
+                              MasteryToolsSection(
+                                tools: state.masteryTools,
+                                subjectId: subjectState.subject!.id,
+                                chapters: state.chapters,
+                              ),
                               const SizedBox(
                                 height: AppDimensions.bottomNavPadding,
                               ),

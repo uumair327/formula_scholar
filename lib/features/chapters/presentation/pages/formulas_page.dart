@@ -259,7 +259,10 @@ class FormulasPage extends StatelessWidget {
           message: 'Generate cheat sheet',
           child: IconButton(
             onPressed: () {
-              context.pushNamed(AppRoutes.cheatSheetName);
+              context.pushNamed(
+                AppRoutes.cheatSheetName,
+                extra: context.read<FormulasCubit>(),
+              );
             },
             icon: Icon(LucideIcons.fileText, color: colorScheme.outline),
           ),
@@ -282,11 +285,12 @@ class FormulasPage extends StatelessWidget {
                 chapterId: '',
                 chapterName: '',
               )).toList();
-              getIt<FlashcardsCubit>().startSession(
+              final cubit = getIt<FlashcardsCubit>();
+              cubit.startSession(
                 cards: cards,
                 userId: userId,
               );
-              context.pushNamed(AppRoutes.flashcardsName);
+              context.pushNamed(AppRoutes.flashcardsName, extra: cubit);
             },
             icon: Icon(LucideIcons.wand2, color: colorScheme.outline),
           ),

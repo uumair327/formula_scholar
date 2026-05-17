@@ -220,37 +220,101 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
           label: 'Cheat Sheets',
           iconName: 'fileText',
           category: 'quick_reference',
-          isEnabled: false,
-          supportSubtitle:
-              'Cheat Sheets provide quick formula reference guides. Contact support to request this feature for your curriculum.',
+          isEnabled: true,
           displayOrder: 3,
+          routeName: 'cheatSheet',
         ),
         MasteryTool(
           id: 'visualizer_3d',
           label: 'Visualizer 3D',
           iconName: 'box',
           category: 'visual_learning',
-          isEnabled: false,
-          supportSubtitle:
-              '3D Visualizer helps understand geometric concepts. Contact support to request 3D visualization tools.',
+          isEnabled: true,
           displayOrder: 4,
+          routeName: 'visualizer_3d',
+        ),
+        MasteryTool(
+          id: 'flashcards',
+          label: 'Flashcards',
+          iconName: 'creditCard',
+          category: 'quick_reference',
+          isEnabled: true,
+          displayOrder: 5,
+          routeName: 'flashcards',
         ),
       ];
     }
 
-    return snapshot.docs.map((doc) {
+    final loadedTools = snapshot.docs.map((doc) {
       final data = doc.data();
+      final id = data['id'] as String? ?? doc.id;
+      final label = data['label'] as String? ?? doc.id;
+      final iconName = data['iconName'] as String? ?? 'helpCircle';
+      final category = data['category'] as String? ?? 'general';
+
+      bool isEnabled = data['isEnabled'] as bool? ?? false;
+      String? routeName = data['routeName'] as String?;
+
+      if (id == 'cheat_sheets' || id == 'cheat_sheet') {
+        isEnabled = true;
+        routeName = 'cheatSheet';
+      } else if (id == 'visualizer_3d') {
+        isEnabled = true;
+        routeName = 'visualizer_3d';
+      } else if (id == 'flashcards') {
+        isEnabled = true;
+        routeName = 'flashcards';
+      }
+
       return MasteryTool(
-        id: data['id'] as String? ?? doc.id,
-        label: data['label'] as String? ?? doc.id,
-        iconName: data['iconName'] as String? ?? 'helpCircle',
-        category: data['category'] as String? ?? 'general',
-        isEnabled: data['isEnabled'] as bool? ?? false,
+        id: id,
+        label: label,
+        iconName: iconName,
+        category: category,
+        isEnabled: isEnabled,
         supportSubtitle: data['supportSubtitle'] as String?,
         displayOrder: data['displayOrder'] as int? ?? 0,
-        routeName: data['routeName'] as String?,
+        routeName: routeName,
       );
     }).toList();
+
+    // Self-healing: if flashcards or other crucial tools are missing, inject them.
+    if (!loadedTools.any((t) => t.id == 'flashcards')) {
+      loadedTools.add(const MasteryTool(
+        id: 'flashcards',
+        label: 'Flashcards',
+        iconName: 'creditCard',
+        category: 'quick_reference',
+        isEnabled: true,
+        displayOrder: 5,
+        routeName: 'flashcards',
+      ));
+    }
+    if (!loadedTools.any((t) => t.id == 'cheat_sheets')) {
+      loadedTools.add(const MasteryTool(
+        id: 'cheat_sheets',
+        label: 'Cheat Sheets',
+        iconName: 'fileText',
+        category: 'quick_reference',
+        isEnabled: true,
+        displayOrder: 3,
+        routeName: 'cheatSheet',
+      ));
+    }
+    if (!loadedTools.any((t) => t.id == 'visualizer_3d')) {
+      loadedTools.add(const MasteryTool(
+        id: 'visualizer_3d',
+        label: 'Visualizer 3D',
+        iconName: 'box',
+        category: 'visual_learning',
+        isEnabled: true,
+        displayOrder: 4,
+        routeName: 'visualizer_3d',
+      ));
+    }
+
+    loadedTools.sort((a, b) => a.displayOrder.compareTo(b.displayOrder));
+    return loadedTools;
   }
 
   @override

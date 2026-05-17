@@ -1,16 +1,28 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
-import 'package:go_router/go_router.dart';
-import '../../domain/domain.dart';
+import '../../../auth/auth.dart';
+import '../../../flashcards/flashcards.dart';
 import '../../../profile/profile.dart';
+import '../../domain/domain.dart';
+import '../cubit/formulas_cubit.dart';
 
 class MasteryToolsSection extends StatelessWidget {
-  const MasteryToolsSection({super.key, required this.tools});
+  const MasteryToolsSection({
+    super.key,
+    required this.tools,
+    required this.subjectId,
+    required this.chapters,
+  });
 
   final List<MasteryTool> tools;
+  final String subjectId;
+  final List<Chapter> chapters;
 
   @override
   Widget build(BuildContext context) {
@@ -62,22 +74,32 @@ class MasteryToolsSection extends StatelessWidget {
               final icon = _iconFor(tool.iconName);
               final color = _colorFor(tool.iconName);
               return GestureDetector(
-                onTap: () {
-                  if (tool.isEnabled &&
-                      _navigateForRoute(context, tool.routeName)) {
+                onTap: () async {
+                  if (!tool.isEnabled) {
+                    _showUnimplementedSheet(context, tool);
                     return;
                   }
 
-                  {
-                    // Provide support contact flow for unimplemented mastery tools
-                    final subtitle = _getToolSubtitle(tool);
-                    SupportContactSheet.show(
-                      context,
-                      title: tool.label,
-                      subtitle: subtitle,
-                      email: 'support@formulascholar.app',
-                    );
+                  if (tool.routeName == 'cheatSheet') {
+                    await _handleCheatSheetTap(context);
+                    return;
                   }
+
+                  if (tool.routeName == 'flashcards') {
+                    await _handleFlashcardsTap(context);
+                    return;
+                  }
+
+                  if (tool.routeName == 'visualizer_3d') {
+                    await _handleVisualizer3dTap(context);
+                    return;
+                  }
+
+                  if (_navigateForRoute(context, tool.routeName)) {
+                    return;
+                  }
+
+                  _showUnimplementedSheet(context, tool);
                 },
                 child: AppCard(
                   boxShadow: const [AppShadows.subtle],
@@ -102,6 +124,169 @@ class MasteryToolsSection extends StatelessWidget {
     );
   }
 
+  // ──────────────────────── Async Subject Formulas Loader ───────────────────────
+
+  Future<List<Formula>?> _prepareFormulas(
+    BuildContext context,
+    String message,
+    String? curriculumKey,
+  ) async {
+    unawaited(showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: Center(
+            child: AppCard(
+              padding: const EdgeInsets.all(AppDimensions.paddingXL),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: AppDimensions.paddingLG),
+                  Text(
+                    message,
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    ));
+
+    try {
+      final getFormulas = getIt<GetFormulasUseCase>();
+
+      final List<Future<Result<List<Formula>>>> futures = chapters.map((ch) {
+        return getFormulas(subjectId, ch.id, curriculumKey: curriculumKey);
+      }).toList();
+
+      final results = await Future.wait(futures);
+      List<Formula> allFormulas = [];
+      for (final res in results) {
+        if (res is Success<List<Formula>>) {
+          allFormulas.addAll(res.data);
+        }
+      }
+
+      if (context.mounted) {
+        Navigator.of(context).pop(); // Dismiss loading
+      }
+      return allFormulas;
+    } catch (e) {
+      if (context.mounted) {
+        Navigator.of(context).pop(); // Dismiss loading
+      }
+      AppLogger.error('Failed to prepare subject formulas', error: e);
+      return null;
+    }
+  }
+
+  Future<void> _handleCheatSheetTap(BuildContext context) async {
+    final curriculumKey =
+        context.read<CurriculumCubit>().state.curriculum?.curriculumKey;
+
+    final formulas = await _prepareFormulas(context, 'Syncing formulas...', curriculumKey);
+    if (!context.mounted) return;
+
+    if (formulas == null || formulas.isEmpty) {
+      _showErrorSnackBar(context, 'No formulas found for this subject.');
+      return;
+    }
+
+    final cubit = getIt<FormulasCubit>();
+    cubit.loadDirectFormulas(
+      formulas: formulas,
+      subjectId: subjectId,
+      chapterName: 'Subject Reference',
+    );
+
+    await context.pushNamed(AppRoutes.cheatSheetName, extra: cubit);
+  }
+
+  Future<void> _handleFlashcardsTap(BuildContext context) async {
+    final curriculumKey =
+        context.read<CurriculumCubit>().state.curriculum?.curriculumKey;
+    final userId = context.read<AuthCubit>().state.user?.uid ?? '';
+
+    final formulas = await _prepareFormulas(context, 'Generating flashcards...', curriculumKey);
+    if (!context.mounted) return;
+
+    if (formulas == null || formulas.isEmpty) {
+      _showErrorSnackBar(context, 'No formulas found for this subject.');
+      return;
+    }
+
+    final cards = formulas
+        .map((f) => Flashcard(
+              id: f.id,
+              title: f.title,
+              latex: f.latex,
+              description: f.description,
+              subjectId: subjectId,
+              subjectName: '',
+              chapterId: '',
+              chapterName: '',
+            ))
+        .toList();
+
+    final cubit = getIt<FlashcardsCubit>();
+    await cubit.startSession(
+      cards: cards,
+      userId: userId,
+    );
+
+    if (!context.mounted) return;
+    await context.pushNamed(AppRoutes.flashcardsName, extra: cubit);
+  }
+
+  Future<void> _handleVisualizer3dTap(BuildContext context) async {
+    final curriculumKey =
+        context.read<CurriculumCubit>().state.curriculum?.curriculumKey;
+
+    final formulas = await _prepareFormulas(context, 'Preparing 3D visuals...', curriculumKey);
+    if (!context.mounted) return;
+
+    if (formulas == null || formulas.isEmpty) {
+      _showErrorSnackBar(context, 'No formulas found for this subject.');
+      return;
+    }
+
+    final cubit = getIt<FormulasCubit>();
+    cubit.loadDirectFormulas(
+      formulas: formulas,
+      subjectId: subjectId,
+      chapterName: 'Subject Visualizer',
+    );
+
+    await context.pushNamed(AppRoutes.visualizer3dName, extra: cubit);
+  }
+
+  void _showErrorSnackBar(BuildContext context, String message) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Theme.of(context).colorScheme.error,
+      ),
+    );
+  }
+
+  void _showUnimplementedSheet(BuildContext context, MasteryTool tool) {
+    final subtitle = _getToolSubtitle(tool);
+    SupportContactSheet.show(
+      context,
+      title: tool.label,
+      subtitle: subtitle,
+      email: 'support@formulascholar.app',
+    );
+  }
+
   /// Returns context-specific subtitle for each mastery tool.
   String _getToolSubtitle(MasteryTool tool) {
     if (tool.supportSubtitle != null && tool.supportSubtitle!.isNotEmpty) {
@@ -118,7 +303,7 @@ class MasteryToolsSection extends StatelessWidget {
     return 'This feature is not yet available. Contact support for more information.';
   }
 
-  /// Routes to a known shell branch for backend-provided route names.
+  /// Routes to a known shell branch or standalone page for backend-provided route names.
   bool _navigateForRoute(BuildContext context, String? routeName) {
     if (routeName == null || routeName.isEmpty) {
       return false;
@@ -151,6 +336,8 @@ class MasteryToolsSection extends StatelessWidget {
         return LucideIcons.helpCircle;
       case 'fileText':
         return LucideIcons.fileText;
+      case 'creditCard':
+        return LucideIcons.creditCard;
       case 'box':
         return LucideIcons.box;
       default:
@@ -166,6 +353,8 @@ class MasteryToolsSection extends StatelessWidget {
         return AppColors.secondary;
       case 'fileText':
         return AppColors.orange500;
+      case 'creditCard':
+        return AppColors.secondary;
       case 'box':
         return AppColors.tertiary;
       default:

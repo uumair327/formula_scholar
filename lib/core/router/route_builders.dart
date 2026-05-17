@@ -18,6 +18,7 @@ import '../../features/achievements/achievements.dart';
 import '../../features/analytics/analytics.dart';
 import '../../features/study_planner/study_planner.dart';
 import '../../features/chapters/presentation/pages/cheat_sheet_page.dart';
+import '../../features/chapters/presentation/pages/visualizer_3d_page.dart';
 import '../../shared/shared.dart';
 import 'app_page_transitions.dart';
 
@@ -150,9 +151,18 @@ abstract final class RouteBuilders {
         path: AppRoutes.cheatSheetPath,
         name: AppRoutes.cheatSheetName,
         pageBuilder: (context, state) {
+          final extra = state.extra;
           return AppPageTransitions.fadeTransition(
             state: state,
-            child: const CheatSheetPage(),
+            child: extra is FormulasCubit
+                ? BlocProvider.value(
+                    value: extra,
+                    child: const CheatSheetPage(),
+                  )
+                : BlocProvider(
+                    create: (_) => getIt<FormulasCubit>(),
+                    child: const CheatSheetPage(),
+                  ),
           );
         },
       ),
@@ -185,15 +195,43 @@ abstract final class RouteBuilders {
         path: AppRoutes.flashcardsPath,
         name: AppRoutes.flashcardsName,
         pageBuilder: (context, state) {
+          final extra = state.extra;
           return AppPageTransitions.fadeTransition(
             state: state,
-            child: BlocProvider(
-              create: (_) {
-                final cubit = getIt<FlashcardsCubit>();
-                return cubit;
-              },
-              child: const FlashcardsPage(),
-            ),
+            child: extra is FlashcardsCubit
+                ? BlocProvider.value(
+                    value: extra,
+                    child: const FlashcardsPage(),
+                  )
+                : BlocProvider(
+                    create: (_) => getIt<FlashcardsCubit>(),
+                    child: const FlashcardsPage(),
+                  ),
+          );
+        },
+      ),
+    ];
+  }
+
+  // ─── Visualizer 3D Route ──────────────────────────────────────
+  static List<GoRoute> visualizer3dRoutes() {
+    return [
+      GoRoute(
+        path: AppRoutes.visualizer3dPath,
+        name: AppRoutes.visualizer3dName,
+        pageBuilder: (context, state) {
+          final extra = state.extra;
+          return AppPageTransitions.fadeTransition(
+            state: state,
+            child: extra is FormulasCubit
+                ? BlocProvider.value(
+                    value: extra,
+                    child: const Visualizer3DPage(),
+                  )
+                : BlocProvider(
+                    create: (_) => getIt<FormulasCubit>(),
+                    child: const Visualizer3DPage(),
+                  ),
           );
         },
       ),

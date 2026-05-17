@@ -129,6 +129,7 @@ abstract final class AppRouter {
       ...RouteBuilders.cheatSheetRoutes(),
       ...RouteBuilders.comparisonRoutes(),
       ...RouteBuilders.flashcardRoutes(),
+      ...RouteBuilders.visualizer3dRoutes(),
       ...RouteBuilders.studyPlannerRoutes(),
       ...RouteBuilders.legalRoutes(),
       ...RouteBuilders.practiceHistoryRoutes(),

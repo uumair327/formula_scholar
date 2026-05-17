@@ -310,4 +310,22 @@ class FormulasCubit extends Cubit<FormulasState>
       );
     }
   }
+
+  /// Directly seeds a list of pre-fetched formulas into state.
+  /// Used for subject-level cheat sheets to avoid re-fetching databases.
+  void loadDirectFormulas({
+    required List<Formula> formulas,
+    required String subjectId,
+    required String chapterName,
+  }) {
+    emit(
+      state.copyWith(
+        status: FormulasStatus.loaded,
+        subjectId: subjectId,
+        chapterId: '',
+        chapterName: chapterName,
+        formulas: formulas,
+      ),
+    );
+  }
 }

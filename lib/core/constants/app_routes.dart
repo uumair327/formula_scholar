@@ -147,4 +147,8 @@ abstract final class AppRoutes {
   // ──────────────────────── Practice History ─────────────────
   static const String practiceHistoryPath = '/practice-history';
   static const String practiceHistoryName = 'practiceHistory';
+
+  // ──────────────────────── Visualizer 3D ───────────────────────
+  static const String visualizer3dPath = '/visualizer-3d';
+  static const String visualizer3dName = 'visualizer3d';
 }

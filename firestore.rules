@@ -147,6 +147,12 @@ service cloud.firestore {
         allow write: if request.auth.uid == userId || isAdmin();
       }
 
+      // User-scoped flashcard_reviews — self-only
+      match /flashcard_reviews/{reviewId} {
+        allow read: if request.auth.uid == userId;
+        allow write: if request.auth.uid == userId;
+      }
+
       // User-scoped formula_notes — self-only
       match /formula_notes/{noteId} {
         allow read: if request.auth.uid == userId;
