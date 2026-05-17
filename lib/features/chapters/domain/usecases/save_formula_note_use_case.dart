@@ -1,8 +1,11 @@
+import 'package:injectable/injectable.dart';
+
 import '../../../../core/core.dart';
 import '../entities/formula_note.dart';
 import '../ports/formulas_repository_port.dart';
 
 /// Saves (creates or updates) the user's note for a formula.
+@injectable
 class SaveFormulaNoteUseCase {
   const SaveFormulaNoteUseCase(this._repository);
 

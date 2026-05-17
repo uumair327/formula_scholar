@@ -5,7 +5,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../domain/domain.dart';
 
-@injectable
+@LazySingleton(as: StudyPlannerPort)
 class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
   FirestoreStudyPlannerAdapter(this._firestore);
 

@@ -3,7 +3,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../domain/domain.dart';
 
-@injectable
+@LazySingleton(as: FlashcardReviewPort)
 class FirestoreFlashcardReviewAdapter implements FlashcardReviewPort {
   FirestoreFlashcardReviewAdapter(this._firestore);
 

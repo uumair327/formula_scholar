@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
-
+import 'package:hive_flutter/hive_flutter.dart';
 import '../../domain/domain.dart';
 
 @LazySingleton(as: FlashcardCachePort)

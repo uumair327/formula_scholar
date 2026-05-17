@@ -209,8 +209,8 @@ abstract final class RouteBuilders {
         pageBuilder: (context, state) {
           return AppPageTransitions.fadeTransition(
             state: state,
-            child: BlocProvider(
-              create: (_) => getIt<StudyPlannerCubit>(),
+            child: BlocProvider.value(
+              value: getIt<StudyPlannerCubit>(),
               child: const StudyPlannerPage(),
             ),
           );
@@ -222,7 +222,10 @@ abstract final class RouteBuilders {
             pageBuilder: (context, state) {
               return AppPageTransitions.fadeTransition(
                 state: state,
-                child: const CreatePlanPage(),
+                child: BlocProvider.value(
+                  value: getIt<StudyPlannerCubit>(),
+                  child: const CreatePlanPage(),
+                ),
               );
             },
           ),

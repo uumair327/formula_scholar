@@ -1,6 +1,14 @@
 {
   "indexes": [
     {
+      "collectionGroup": "app_banners",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "isActive", "order": "ASCENDING" },
+        { "fieldPath": "displayOrder", "order": "ASCENDING" }
+      ]
+    },
+    {
       "collectionGroup": "announcements",
       "queryScope": "COLLECTION",
       "fields": [

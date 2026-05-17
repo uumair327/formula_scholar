@@ -511,9 +511,12 @@ class _FormulaCard extends StatelessWidget {
                   showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
-                    builder: (_) => FormulaNoteSheet(
-                      formulaId: formula.id,
-                      formulaTitle: formula.title,
+                    builder: (_) => BlocProvider.value(
+                      value: cubit,
+                      child: FormulaNoteSheet(
+                        formulaId: formula.id,
+                        formulaTitle: formula.title,
+                      ),
                     ),
                   );
                 },

@@ -118,8 +118,11 @@ class DailyChallengeDialog extends StatelessWidget {
                     width: double.infinity,
                     child: OutlinedButton(
                       onPressed: () {
-                        Navigator.of(context).pop();
-                        _showResult(context, index == correctIndex);
+                        // Capture navigator before pop() deactivates context.
+                        final navigator = Navigator.of(context);
+                        final isCorrect = index == correctIndex;
+                        navigator.pop();
+                        _showResult(navigator, isCorrect);
                       },
                       child: Text(options[index]),
                     ),
@@ -133,45 +136,49 @@ class DailyChallengeDialog extends StatelessWidget {
     );
   }
 
-  void _showResult(BuildContext context, bool isCorrect) {
-    final colorScheme = Theme.of(context).colorScheme;
+  void _showResult(NavigatorState navigator, bool isCorrect) {
+    navigator.push(
+      DialogRoute(
+        context: navigator.context,
+        builder: (dialogContext) {
+          final colorScheme = Theme.of(dialogContext).colorScheme;
 
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              isCorrect ? LucideIcons.checkCircle : LucideIcons.xCircle,
-              size: 48,
-              color: isCorrect ? colorScheme.secondary : colorScheme.error,
+          return AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  isCorrect ? LucideIcons.checkCircle : LucideIcons.xCircle,
+                  size: 48,
+                  color: isCorrect ? colorScheme.secondary : colorScheme.error,
+                ),
+                const SizedBox(height: AppDimensions.paddingMD),
+                Text(
+                  isCorrect ? 'Correct!' : 'Not quite',
+                  style: AppTextStyles.titleLarge.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: AppDimensions.paddingSM),
+                Text(
+                  isCorrect
+                      ? 'Great job! Keep up the daily practice.'
+                      : 'Keep practicing! You will get it next time.',
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: AppDimensions.paddingMD),
-            Text(
-              isCorrect ? 'Correct!' : 'Not quite',
-              style: AppTextStyles.titleLarge.copyWith(
-                fontWeight: FontWeight.w700,
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(),
+                child: const Text(AppStrings.gotIt),
               ),
-            ),
-            const SizedBox(height: AppDimensions.paddingSM),
-            Text(
-              isCorrect
-                  ? 'Great job! Keep up the daily practice.'
-                  : 'Keep practicing! You will get it next time.',
-              textAlign: TextAlign.center,
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text(AppStrings.gotIt),
-          ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }

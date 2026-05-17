@@ -7,7 +7,7 @@ import '../../../../core/core.dart';
 import '../../domain/domain.dart';
 import 'study_planner_state.dart';
 
-@injectable
+@lazySingleton
 class StudyPlannerCubit extends Cubit<StudyPlannerState> {
   StudyPlannerCubit({
     required GetPlansUseCase getPlans,

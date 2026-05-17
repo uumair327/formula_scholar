@@ -117,6 +117,11 @@ service cloud.firestore {
       allow write: if isEditor();
     }
 
+    match /announcements/{document} {
+      allow read: if isAuth();
+      allow write: if isEditor();
+    }
+
     match /forum_posts/{document} {
       allow read: if isAuth();
       allow write: if isEditor();
@@ -140,6 +145,12 @@ service cloud.firestore {
       match /saved_notes/{noteId} {
         allow read: if isAuth();
         allow write: if request.auth.uid == userId || isAdmin();
+      }
+
+      // User-scoped formula_notes — self-only
+      match /formula_notes/{noteId} {
+        allow read: if request.auth.uid == userId;
+        allow write: if request.auth.uid == userId;
       }
 
       // User-scoped bookmarks — self-only
@@ -171,10 +182,10 @@ service cloud.firestore {
         match /chapters/{chapter} {
           allow read: if request.auth.uid == userId;
           allow write: if request.auth.uid == userId;
-        }
-        match /formulas/{formula} {
-          allow read: if request.auth.uid == userId;
-          allow write: if request.auth.uid == userId;
+          match /formulas/{formula} {
+            allow read: if request.auth.uid == userId;
+            allow write: if request.auth.uid == userId;
+          }
         }
       }
 
@@ -186,6 +197,12 @@ service cloud.firestore {
 
       // User-scoped recent_studies
       match /recent_studies/{document} {
+        allow read: if request.auth.uid == userId;
+        allow write: if request.auth.uid == userId;
+      }
+
+      // User-scoped study_plans
+      match /study_plans/{document} {
         allow read: if request.auth.uid == userId;
         allow write: if request.auth.uid == userId;
       }

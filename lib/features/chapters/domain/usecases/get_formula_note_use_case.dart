@@ -1,8 +1,11 @@
+import 'package:injectable/injectable.dart';
+
 import '../../../../core/core.dart';
 import '../entities/formula_note.dart';
 import '../ports/formulas_repository_port.dart';
 
 /// Loads the user's note for a given formula.
+@injectable
 class GetFormulaNoteUseCase {
   const GetFormulaNoteUseCase(this._repository);
 
