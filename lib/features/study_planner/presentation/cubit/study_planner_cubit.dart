@@ -8,20 +8,27 @@ import '../../domain/domain.dart';
 import 'study_planner_state.dart';
 
 @lazySingleton
-class StudyPlannerCubit extends Cubit<StudyPlannerState> {
+class StudyPlannerCubit extends Cubit<StudyPlannerState>
+    with CubitFailureLogger<StudyPlannerState> {
   StudyPlannerCubit({
     required GetPlansUseCase getPlans,
     required CreatePlanUseCase createPlan,
+    required UpdatePlanUseCase updatePlan,
     required DeletePlanUseCase deletePlan,
     required UpdateSessionUseCase updateSession,
   }) : _getPlans = getPlans,
        _createPlan = createPlan,
+       _updatePlan = updatePlan,
        _deletePlan = deletePlan,
        _updateSession = updateSession,
        super(const StudyPlannerState());
 
+  @override
+  String get logTag => AppLogTags.studyPlannerCubit;
+
   final GetPlansUseCase _getPlans;
   final CreatePlanUseCase _createPlan;
+  final UpdatePlanUseCase _updatePlan;
   final DeletePlanUseCase _deletePlan;
   final UpdateSessionUseCase _updateSession;
   StreamSubscription<List<StudyPlan>>? _plansSub;
@@ -47,6 +54,19 @@ class StudyPlannerCubit extends Cubit<StudyPlannerState> {
   }) async {
     emit(state.copyWith(status: StudyPlannerStatus.creating));
     final result = await _createPlan(userId: userId, plan: plan);
+    if (result is Error) {
+      emit(state.copyWith(
+        status: StudyPlannerStatus.error,
+        errorMessage: result.failure.message,
+      ));
+    }
+  }
+
+  Future<void> updatePlan({
+    required String userId,
+    required StudyPlan plan,
+  }) async {
+    final result = await _updatePlan(userId: userId, plan: plan);
     if (result is Error) {
       emit(state.copyWith(
         status: StudyPlannerStatus.error,

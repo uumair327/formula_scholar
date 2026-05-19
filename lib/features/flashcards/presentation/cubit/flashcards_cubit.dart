@@ -1,21 +1,26 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
 import '../../../achievements/domain/domain.dart';
 import '../../domain/domain.dart';
 import 'flashcards_state.dart';
 
-@injectable
 class FlashcardsCubit extends Cubit<FlashcardsState>
     with CubitFailureLogger<FlashcardsState> {
-  FlashcardsCubit({required FlashcardRepositoryPort repository})
-    : _repository = repository,
-      super(const FlashcardsState());
+  FlashcardsCubit({
+    required LoadReviewsUseCase loadReviews,
+    required SaveReviewUseCase saveReview,
+    required ReportAchievementProgressUseCase reportAchievement,
+  }) : _loadReviews = loadReviews,
+       _saveReview = saveReview,
+       _reportAchievement = reportAchievement,
+       super(const FlashcardsState());
 
-  final FlashcardRepositoryPort _repository;
+  final LoadReviewsUseCase _loadReviews;
+  final SaveReviewUseCase _saveReview;
+  final ReportAchievementProgressUseCase _reportAchievement;
   final SpacedRepetitionService _srs = SpacedRepetitionService();
   String? _userId;
 
@@ -31,7 +36,7 @@ class FlashcardsCubit extends Cubit<FlashcardsState>
       'Starting flashcard session with ${cards.length} cards',
       tag: AppLogTags.flashcardsCubit,
     );
-    final result = await _repository.loadReviews(userId: userId, cards: cards);
+    final result = await _loadReviews(userId: userId, cards: cards);
     switch (result) {
       case Success(:final data):
         final due = _srs.dueCards(data);
@@ -88,7 +93,7 @@ class FlashcardsCubit extends Cubit<FlashcardsState>
 
     final uid = _userId;
     if (uid != null) {
-      final saveResult = await _repository.saveReview(
+      final saveResult = await _saveReview(
         userId: uid,
         card: updatedCard,
       );
@@ -116,17 +121,9 @@ class FlashcardsCubit extends Cubit<FlashcardsState>
   }
 
   void _reportAchievementProgress() {
-    try {
-      final useCase = getIt<ReportAchievementProgressUseCase>();
-      final graduated = state.session.graduatedIds.length;
-      unawaited(useCase('first_flashcard', graduated));
-      unawaited(useCase('ten_flashcards', graduated));
-    } catch (_) {
-      AppLogger.warning(
-        'Failed to report flashcard achievement progress',
-        tag: AppLogTags.flashcardsCubit,
-      );
-    }
+    final graduated = state.session.graduatedIds.length;
+    unawaited(_reportAchievement('first_flashcard', graduated));
+    unawaited(_reportAchievement('ten_flashcards', graduated));
   }
 
   void restart() {

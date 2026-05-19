@@ -123,4 +123,21 @@ abstract final class AppLogTags {
   static const String flashcardsRepo = 'FlashcardsRepo';
   static const String flashcardsCache = 'FlashcardsCache';
   static const String flashcardsDataSource = 'FlashcardsDataSource';
+  static const String flashcardsUseCase = 'FlashcardsUseCase';
+
+  // ──────────────────────── Analytics ────────────────────────────
+  static const String analyticsCubit = 'AnalyticsCubit';
+  static const String analyticsPage = 'AnalyticsPage';
+  static const String analyticsRepo = 'AnalyticsRepo';
+  static const String analyticsDataSource = 'AnalyticsDataSource';
+  static const String analyticsUseCase = 'AnalyticsUseCase';
+  static const String analyticsCache = 'AnalyticsCache';
+
+  // ──────────────────────── Study Planner ─────────────────────────
+  static const String studyPlannerCubit = 'StudyPlannerCubit';
+  static const String studyPlannerPage = 'StudyPlannerPage';
+  static const String studyPlannerRepo = 'StudyPlannerRepo';
+  static const String studyPlannerDataSource = 'StudyPlannerDataSource';
+  static const String studyPlannerCache = 'StudyPlannerCache';
+  static const String studyPlannerUseCase = 'StudyPlannerUseCase';
 }

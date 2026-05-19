@@ -7,4 +7,4 @@ export 'pages/onboarding_step1_page.dart';
 export 'pages/onboarding_step2_page.dart';
 export 'pages/onboarding_step3_page.dart';
 export 'pages/onboarding_step4_page.dart';
-export 'widgets/onboarding_shell.dart';
+export 'widgets/widgets.dart';

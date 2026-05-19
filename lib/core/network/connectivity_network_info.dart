@@ -1,6 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:injectable/injectable.dart';
 
+import '../utils/app_logger.dart';
 import 'network_info_port.dart';
 
 /// Concrete implementation of [NetworkInfoPort] using `connectivity_plus`.
@@ -19,6 +20,8 @@ class ConnectivityNetworkInfo implements NetworkInfoPort {
   @override
   Future<bool> get isConnected async {
     final results = await _connectivity.checkConnectivity();
-    return results.any((result) => result != ConnectivityResult.none);
+    final connected = results.any((result) => result != ConnectivityResult.none);
+    AppLogger.trace('Connectivity check: $connected', tag: 'Connectivity');
+    return connected;
   }
 }

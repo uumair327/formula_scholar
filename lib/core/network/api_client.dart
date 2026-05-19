@@ -16,7 +16,9 @@ class ApiClient {
   ApiClient(ApiInterceptor interceptor, RetryInterceptor retryInterceptor) {
     _dio = Dio(
       BaseOptions(
-        // Replace with actual production URL (or via env variables)
+        // TODO: Replace with actual Firebase Functions URL when deployed.
+        // This is a placeholder — no feature currently uses ApiClient.
+        // All data access goes through Firebase (Firestore, Auth).
         baseUrl: 'https://api.example.com/v1',
         connectTimeout: const Duration(seconds: 15),
         receiveTimeout: const Duration(seconds: 15),

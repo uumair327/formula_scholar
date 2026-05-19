@@ -1,17 +1,18 @@
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
-import '../ports/study_planner_port.dart';
+import '../ports/study_planner_repository_port.dart';
 
 @injectable
 class DeletePlanUseCase {
-  const DeletePlanUseCase({required StudyPlannerPort port}) : _port = port;
+  const DeletePlanUseCase({required StudyPlannerRepositoryPort repository})
+      : _repository = repository;
 
-  final StudyPlannerPort _port;
+  final StudyPlannerRepositoryPort _repository;
 
   Future<Result<void>> call({required String userId, required String planId}) async {
     try {
-      await _port.deletePlan(userId: userId, planId: planId);
+      await _repository.deletePlan(userId: userId, planId: planId);
       return const Success(null);
     } catch (e) {
       return Error(ServerFailure(message: e.toString()));

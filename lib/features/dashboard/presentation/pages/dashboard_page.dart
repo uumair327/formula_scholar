@@ -19,7 +19,6 @@ import '../cubit/curriculum_options_state.dart';
 import '../cubit/dashboard_cubit.dart';
 import '../cubit/dashboard_state.dart';
 import '../widgets/widgets.dart';
-import '../widgets/daily_challenge_dialog.dart';
 import '../data/daily_challenges.dart';
 
 /// Dashboard page – the main landing screen of the app.

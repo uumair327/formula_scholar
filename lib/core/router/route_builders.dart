@@ -17,8 +17,6 @@ import '../../features/comparison/comparison.dart';
 import '../../features/achievements/achievements.dart';
 import '../../features/analytics/analytics.dart';
 import '../../features/study_planner/study_planner.dart';
-import '../../features/chapters/presentation/pages/cheat_sheet_page.dart';
-import '../../features/chapters/presentation/pages/visualizer_3d_page.dart';
 import '../../shared/shared.dart';
 import 'app_page_transitions.dart';
 
@@ -111,10 +109,12 @@ abstract final class RouteBuilders {
         path: AppRoutes.analyticsPath,
         name: AppRoutes.analyticsName,
         pageBuilder: (context, state) {
-          final stats = state.extra as List<ProfileStat>? ?? const [];
           return AppPageTransitions.fadeTransition(
             state: state,
-            child: AnalyticsPage(stats: stats),
+            child: BlocProvider(
+              create: (_) => getIt<AnalyticsCubit>(),
+              child: const AnalyticsPage(),
+            ),
           );
         },
       ),

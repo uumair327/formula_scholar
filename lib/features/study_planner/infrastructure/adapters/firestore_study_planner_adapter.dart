@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../../../core/core.dart';
 import '../../domain/domain.dart';
 
 @LazySingleton(as: StudyPlannerPort)
@@ -16,6 +17,8 @@ class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
 
   @override
   Stream<List<StudyPlan>> watchPlans(String userId) {
+    AppLogger.trace('watchPlans($userId)',
+        tag: AppLogTags.studyPlannerDataSource);
     return _plansRef(userId)
         .orderBy('updatedAt', descending: true)
         .snapshots()
@@ -80,16 +83,22 @@ class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
 
   @override
   Future<void> createPlan({required String userId, required StudyPlan plan}) async {
+    AppLogger.trace('createPlan($userId, ${plan.id})',
+        tag: AppLogTags.studyPlannerDataSource);
     await _plansRef(userId).doc(plan.id).set(_planToMap(plan));
   }
 
   @override
   Future<void> updatePlan({required String userId, required StudyPlan plan}) async {
+    AppLogger.trace('updatePlan($userId, ${plan.id})',
+        tag: AppLogTags.studyPlannerDataSource);
     await _plansRef(userId).doc(plan.id).update(_planToMap(plan));
   }
 
   @override
   Future<void> deletePlan({required String userId, required String planId}) async {
+    AppLogger.trace('deletePlan($userId, $planId)',
+        tag: AppLogTags.studyPlannerDataSource);
     await _plansRef(userId).doc(planId).delete();
   }
 
@@ -100,6 +109,8 @@ class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
     required String sessionId,
     DocumentReference? transactionRef,
   }) async {
+    AppLogger.trace('updateSessionStatus($userId, $planId, $sessionId)',
+        tag: AppLogTags.studyPlannerDataSource);
     final docRef = _plansRef(userId).doc(planId);
 
     if (transactionRef != null) {
@@ -109,7 +120,12 @@ class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
           .map((s) => Map<String, dynamic>.from(s as Map))
           .toList();
       final idx = sessions.indexWhere((s) => s['id'] == sessionId);
-      if (idx == -1) return;
+      if (idx == -1) {
+        AppLogger.warning(
+            'updateSessionStatus: session $sessionId not found in plan $planId',
+            tag: AppLogTags.studyPlannerDataSource);
+        return;
+      }
       sessions[idx]['status'] = SessionStatus.completed.name;
       await docRef.update({'sessions': sessions, 'updatedAt': Timestamp.now()});
     }

@@ -17,11 +17,18 @@ class CurriculumFirebaseAdapter implements CurriculumDataSourcePort {
   Future<SelectedCurriculum?> loadCurriculum() async {
     final uid = _firebaseAuth.currentUser?.uid;
     if (uid == null) {
+      AppLogger.trace('loadCurriculum: no authenticated user', tag: AppLogTags.curriculumDataSource);
       return null;
     }
 
+    AppLogger.trace('loadCurriculum: uid=$uid', tag: AppLogTags.curriculumDataSource);
     final snapshot = await _firestore.collection('users').doc(uid).get();
-    return _mapCurriculum(snapshot.data());
+    final curriculum = _mapCurriculum(snapshot.data());
+    AppLogger.trace(
+      'loadCurriculum: ${curriculum != null ? "found" : "not found"}',
+      tag: AppLogTags.curriculumDataSource,
+    );
+    return curriculum;
   }
 
   @override
@@ -30,6 +37,11 @@ class CurriculumFirebaseAdapter implements CurriculumDataSourcePort {
     if (uid == null) {
       throw const ServerException(message: 'No authenticated user found');
     }
+
+    AppLogger.trace(
+      'saveCurriculum: uid=$uid, board=${curriculum.boardId}, grade=${curriculum.gradeId}',
+      tag: AppLogTags.curriculumDataSource,
+    );
 
     await _firestore.collection('users').doc(uid).set({
       'boardId': curriculum.boardId,

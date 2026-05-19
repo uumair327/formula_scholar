@@ -120,8 +120,6 @@ import '../../features/flashcards/infrastructure/repositories/flashcard_hive_cac
     as _i441;
 import '../../features/flashcards/infrastructure/repositories/flashcard_repository_impl.dart'
     as _i565;
-import '../../features/flashcards/presentation/cubit/flashcards_cubit.dart'
-    as _i762;
 import '../../features/onboarding/domain/domain.dart' as _i634;
 import '../../features/onboarding/domain/usecases/get_boards_use_case.dart'
     as _i543;
@@ -219,8 +217,6 @@ import '../../features/search/infrastructure/repositories/search_repository_impl
     as _i702;
 import '../../features/search/presentation/cubit/search_cubit.dart' as _i341;
 import '../../features/study_planner/domain/domain.dart' as _i62;
-import '../../features/study_planner/domain/ports/study_planner_port.dart'
-    as _i984;
 import '../../features/study_planner/domain/usecases/create_plan_usecase.dart'
     as _i930;
 import '../../features/study_planner/domain/usecases/delete_plan_usecase.dart'
@@ -305,10 +301,7 @@ extension GetItInjectableX on _i174.GetIt {
       ),
     );
     gh.factory<_i10.RetryInterceptor>(
-      () => _i10.RetryInterceptor(
-        maxRetries: gh<int>(),
-        baseDelay: gh<Duration>(),
-      ),
+      () => _i10.RetryInterceptor(),
     );
     gh.lazySingleton<_i750.FormulasCachePort>(() => _i682.FormulasHiveCache());
     gh.lazySingleton<_i193.ProfileCachePort>(() => _i700.ProfileHiveCache());
@@ -346,16 +339,16 @@ extension GetItInjectableX on _i174.GetIt {
       ),
     );
     gh.factory<_i930.CreatePlanUseCase>(
-      () => _i930.CreatePlanUseCase(port: gh<_i984.StudyPlannerPort>()),
+      () => _i930.CreatePlanUseCase(repository: gh<_i62.StudyPlannerRepositoryPort>()),
     );
     gh.factory<_i789.DeletePlanUseCase>(
-      () => _i789.DeletePlanUseCase(port: gh<_i984.StudyPlannerPort>()),
+      () => _i789.DeletePlanUseCase(repository: gh<_i62.StudyPlannerRepositoryPort>()),
     );
     gh.factory<_i193.UpdatePlanUseCase>(
-      () => _i193.UpdatePlanUseCase(port: gh<_i984.StudyPlannerPort>()),
+      () => _i193.UpdatePlanUseCase(repository: gh<_i62.StudyPlannerRepositoryPort>()),
     );
     gh.factory<_i622.UpdateSessionUseCase>(
-      () => _i622.UpdateSessionUseCase(port: gh<_i984.StudyPlannerPort>()),
+      () => _i622.UpdateSessionUseCase(repository: gh<_i62.StudyPlannerRepositoryPort>()),
     );
     gh.lazySingleton<_i525.ThemePreferenceDataSourcePort>(
       () => _i230.ThemePreferenceFirebaseAdapter(
@@ -503,7 +496,7 @@ extension GetItInjectableX on _i174.GetIt {
       ),
     );
     gh.factory<_i719.GetPlansUseCase>(
-      () => _i719.GetPlansUseCase(port: gh<_i984.StudyPlannerPort>()),
+      () => _i719.GetPlansUseCase(repository: gh<_i62.StudyPlannerRepositoryPort>()),
     );
     gh.lazySingleton<_i750.FormulasRepositoryPort>(
       () => _i164.FormulasRepositoryImpl(
@@ -548,6 +541,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i454.StudyPlannerCubit(
         getPlans: gh<_i62.GetPlansUseCase>(),
         createPlan: gh<_i62.CreatePlanUseCase>(),
+        updatePlan: gh<_i62.UpdatePlanUseCase>(),
         deletePlan: gh<_i62.DeletePlanUseCase>(),
         updateSession: gh<_i62.UpdateSessionUseCase>(),
       ),
@@ -569,11 +563,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i509.GetStatesUseCase>(
       () => _i509.GetStatesUseCase(gh<_i634.OnboardingRepositoryPort>()),
-    );
-    gh.factory<_i762.FlashcardsCubit>(
-      () => _i762.FlashcardsCubit(
-        repository: gh<_i944.FlashcardRepositoryPort>(),
-      ),
     );
     gh.factory<_i627.GetNotificationPreferencesUseCase>(
       () => _i627.GetNotificationPreferencesUseCase(
