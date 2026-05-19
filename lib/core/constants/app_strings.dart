@@ -235,6 +235,7 @@ abstract final class AppStrings {
   static const String dashboardNoRecentDescription =
       'Start learning from the chapters tab and your recent progress will appear here.';
   static const String dashboardOpenChapters = 'Open Chapters';
+  static const String exploreTools = 'Explore Tools';
   static const String chaptersNoContentTitle = 'No chapters available yet';
   static const String chaptersNoContentDescription =
       'This subject has not been populated with chapters yet. Try another subject or check back after the backend sync finishes.';

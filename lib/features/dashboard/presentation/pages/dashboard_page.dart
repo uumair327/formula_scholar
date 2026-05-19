@@ -136,6 +136,11 @@ class DashboardPage extends StatelessWidget {
                             const SizedBox(height: AppDimensions.paddingSection),
                             EntranceWrapper(
                               delay: const Duration(milliseconds: 100),
+                              child: _buildQuickActions(context, state),
+                            ),
+                            const SizedBox(height: AppDimensions.paddingSection),
+                            EntranceWrapper(
+                              delay: const Duration(milliseconds: 100),
                               child: _buildAcademicPath(context, state),
                             ),
                             const SizedBox(height: AppDimensions.paddingSection),
@@ -696,6 +701,68 @@ class DashboardPage extends StatelessWidget {
     }
     context.read<SubjectSelectionCubit>().clearSelection();
     StatefulNavigationShell.of(context).goBranch(1);
+  }
+
+  // ──────────────────────── Quick Actions ───────────────────────
+
+  Widget _buildQuickActions(BuildContext context, DashboardState state) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SectionHeader(
+          title: AppStrings.exploreTools,
+          actionLabel: null,
+        ),
+        const SizedBox(height: AppDimensions.paddingLG),
+        Row(
+          children: [
+            Expanded(
+              child: Material(
+                color: AppColors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    final shell = StatefulNavigationShell.of(context);
+                    shell.goBranch(1);
+                  },
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+                  child: Container(
+                    padding: const EdgeInsets.all(AppDimensions.paddingLG),
+                    decoration: BoxDecoration(
+                      color: colorScheme.surfaceContainerLowest,
+                      borderRadius: BorderRadius.circular(
+                        AppDimensions.radiusXL,
+                      ),
+                      border: Border.all(
+                        color: colorScheme.primary.withValues(alpha: 0.3),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(
+                          LucideIcons.box,
+                          size: AppDimensions.iconLG,
+                          color: colorScheme.primary,
+                        ),
+                        const SizedBox(height: AppDimensions.paddingSM),
+                        Text(
+                          AppStrings.visualizer3d,
+                          style: AppTextStyles.labelLarge.copyWith(
+                            color: colorScheme.primary,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   // ──────────────────────── Academic Path ───────────────────────

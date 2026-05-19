@@ -117,6 +117,10 @@ abstract final class AppLogTags {
   static const String achievementsCache = 'AchievementsCache';
   static const String achievementsUseCase = 'AchievementsUseCase';
 
+  // ──────────────────────── Visualizer 3D ─────────────────────────
+  static const String visualizerCubit = 'VisualizerCubit';
+  static const String visualizerPage = 'VisualizerPage';
+
   // ──────────────────────── Flashcards ───────────────────────────
   static const String flashcardsCubit = 'FlashcardsCubit';
   static const String flashcardsPage = 'FlashcardsPage';

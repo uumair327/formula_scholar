@@ -17,6 +17,7 @@ import '../../features/comparison/comparison.dart';
 import '../../features/achievements/achievements.dart';
 import '../../features/analytics/analytics.dart';
 import '../../features/study_planner/study_planner.dart';
+import '../../features/visualizer_3d/visualizer_3d.dart';
 import '../../shared/shared.dart';
 import 'app_page_transitions.dart';
 
@@ -220,18 +221,22 @@ abstract final class RouteBuilders {
         path: AppRoutes.visualizer3dPath,
         name: AppRoutes.visualizer3dName,
         pageBuilder: (context, state) {
+          List<Formula> formulas = const [];
+          String? initialType;
+
           final extra = state.extra;
+          if (extra is FormulasCubit) {
+            formulas = extra.state.formulas;
+          } else if (extra is List<Formula>) {
+            formulas = extra;
+          }
+
           return AppPageTransitions.fadeTransition(
             state: state,
-            child: extra is FormulasCubit
-                ? BlocProvider.value(
-                    value: extra,
-                    child: const Visualizer3DPage(),
-                  )
-                : BlocProvider(
-                    create: (_) => getIt<FormulasCubit>(),
-                    child: const Visualizer3DPage(),
-                  ),
+            child: VisualizerPage(
+              formulas: formulas,
+              initialType: initialType,
+            ),
           );
         },
       ),
