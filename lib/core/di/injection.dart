@@ -46,13 +46,6 @@ void configureDependencies() {
       cache: getIt<AnalyticsCachePort>(),
     ),
   );
-  getIt.registerFactory<GetAnalyticsDataUseCase>(
-    () => GetAnalyticsDataUseCase(repository: getIt<AnalyticsRepositoryPort>()),
-  );
-  getIt.registerFactory<AnalyticsCubit>(
-    () => AnalyticsCubit(getAnalytics: getIt<GetAnalyticsDataUseCase>()),
-  );
-
   // Flashcards
   getIt.registerFactory<LoadReviewsUseCase>(
     () => LoadReviewsUseCase(repository: getIt<FlashcardRepositoryPort>()),
@@ -76,31 +69,6 @@ void configureDependencies() {
     () => StudyPlannerRepositoryImpl(
       dataSource: getIt<StudyPlannerPort>(),
       cache: getIt<StudyPlannerCachePort>(),
-    ),
-  );
-  final repo = getIt<StudyPlannerRepositoryPort>();
-  getIt.registerFactory<CreatePlanUseCase>(
-    () => CreatePlanUseCase(repository: repo),
-  );
-  getIt.registerFactory<GetPlansUseCase>(
-    () => GetPlansUseCase(repository: repo),
-  );
-  getIt.registerFactory<UpdatePlanUseCase>(
-    () => UpdatePlanUseCase(repository: repo),
-  );
-  getIt.registerFactory<DeletePlanUseCase>(
-    () => DeletePlanUseCase(repository: repo),
-  );
-  getIt.registerFactory<UpdateSessionUseCase>(
-    () => UpdateSessionUseCase(repository: repo),
-  );
-  getIt.registerFactory<StudyPlannerCubit>(
-    () => StudyPlannerCubit(
-      getPlans: getIt<GetPlansUseCase>(),
-      createPlan: getIt<CreatePlanUseCase>(),
-      updatePlan: getIt<UpdatePlanUseCase>(),
-      deletePlan: getIt<DeletePlanUseCase>(),
-      updateSession: getIt<UpdateSessionUseCase>(),
     ),
   );
 }

@@ -711,7 +711,7 @@ class DashboardPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionHeader(
+        const SectionHeader(
           title: AppStrings.exploreTools,
           actionLabel: null,
         ),

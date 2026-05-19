@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,7 +5,6 @@ import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
 import '../../../../features/chapters/domain/entities/formula.dart';
-import '../../domain/domain.dart';
 import '../cubit/visualizer_cubit.dart';
 import '../cubit/visualizer_state.dart';
 import '../widgets/formula_card_selector.dart';

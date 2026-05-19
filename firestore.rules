@@ -3,8 +3,17 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // ─── Helper functions ──────────────────────────────────────
-    function isAuth() { return request.auth != null; }
+    // ═══════════════════════════════════════════════════════════
+    //  HELPER FUNCTIONS
+    // ═══════════════════════════════════════════════════════════
+
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuth() && request.auth.uid == userId;
+    }
 
     function getRole() {
       return isAuth() && (
@@ -12,248 +21,383 @@ service cloud.firestore {
       );
     }
 
-    function isAdmin() { return getRole() in ['SUPER_ADMIN', 'ADMIN']; }
-    function isRegistrar() { return getRole() in ['SUPER_ADMIN', 'ADMIN', 'REGISTRAR']; }
-    function isModerator() { return getRole() in ['SUPER_ADMIN', 'ADMIN', 'MODERATOR']; }
-    function isEditor() { return getRole() in ['SUPER_ADMIN', 'ADMIN', 'EDITOR']; }
+    function isAdmin()      { return getRole() in ['SUPER_ADMIN', 'ADMIN']; }
+    function isRegistrar()  { return getRole() in ['SUPER_ADMIN', 'ADMIN', 'REGISTRAR']; }
+    function isModerator()  { return getRole() in ['SUPER_ADMIN', 'ADMIN', 'MODERATOR']; }
+    function isEditor()     { return getRole() in ['SUPER_ADMIN', 'ADMIN', 'EDITOR']; }
 
-    // ─── Public content — anyone can read ───────────────────────
+    // ─── Field type validators ───────────────────────────────────
+    function hasOnly(d, allowed) {
+      return d.keys().hasOnly(allowed);
+    }
+
+    function hasRequired(d, required) {
+      return d.keys().hasAll(required);
+    }
+
+    // ─── Common field sets ────────────────────────────────────────
+
+
+    // ═══════════════════════════════════════════════════════════════
+    //  PUBLIC CONTENT — world-readable, role-gated mutation
+    // ═══════════════════════════════════════════════════════════════
+
+    // ─── Countries & States ─────────────────────────────────────
     match /countries/{document} {
       allow read: if true;
-      allow write: if isRegistrar();
+      allow create: if isRegistrar();
+      allow update: if isRegistrar();
+      allow delete: if isAdmin();
+
       match /states/{state} {
         allow read: if true;
-        allow write: if isRegistrar();
+        allow create: if isRegistrar();
+        allow update: if isRegistrar();
+        allow delete: if isAdmin();
       }
     }
 
+    // ─── Boards, Classes & Grades ───────────────────────────────
     match /boards/{document} {
       allow read: if true;
-      allow write: if isRegistrar();
+      allow create: if isRegistrar();
+      allow update: if isRegistrar();
+      allow delete: if isAdmin();
+
       match /classes/{class} {
         allow read: if true;
-        allow write: if isRegistrar();
+        allow create: if isRegistrar();
+        allow update: if isRegistrar();
+        allow delete: if isAdmin();
       }
+
       match /grades/{grade} {
         allow read: if true;
-        allow write: if isRegistrar();
+        allow create: if isRegistrar();
+        allow update: if isRegistrar();
+        allow delete: if isAdmin();
       }
     }
 
+    // ─── Subjects, Chapters, Formulas, Quizzes, Mastery Tools ───
     match /subjects/{document} {
       allow read: if true;
-      allow write: if isRegistrar();
+      allow create: if isRegistrar();
+      allow update: if isRegistrar();
+      allow delete: if isAdmin();
+
       match /chapters/{chapter} {
         allow read: if true;
-        allow write: if isEditor();
+        allow create: if isEditor();
+        allow update: if isEditor();
+        allow delete: if isAdmin();
+
         match /formulas/{formula} {
           allow read: if true;
-          allow write: if isEditor();
+          allow create: if isEditor();
+          allow update: if isEditor();
+          allow delete: if isAdmin();
         }
-      }
-      match /quizzes/{quiz} {
-        allow read: if true;
-        allow write: if isEditor();
-        match /questions/{question} {
+
+        // Chapter-scoped quizzes (seeder path)
+        match /quizzes/{quiz} {
           allow read: if true;
-          allow write: if isEditor();
-        }
-      }
-      match /mastery_tools/{tool} {
-        allow read: if true;
-        allow write: if isEditor();
-      }
-    }
+          allow create: if isEditor();
+          allow update: if isEditor();
+          allow delete: if isAdmin();
 
-    match /practice_questions/{document} {
-      allow read: if true;
-      allow write: if isEditor();
-    }
-
-    match /canonical_chapters/{document} {
-      allow read: if true;
-      allow write: if isRegistrar();
-    }
-
-    match /canonical_formulas/{document} {
-      allow read: if true;
-      allow write: if isRegistrar();
-    }
-
-    match /feature_flags/{document} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // ─── Dashboard governance — authenticated read, admin write ──
-    match /dashboard_curriculum_registry/{document} {
-      allow read: if isAuth();
-      allow write: if isRegistrar();
-    }
-
-    match /dashboard_content_registry/{document} {
-      allow read: if isAuth();
-      allow write: if isRegistrar();
-    }
-
-    match /dashboard_governance_audit/{document} {
-      allow read: if isAuth();
-      allow write: if isAuth();
-    }
-
-    match /dashboard_seed_status/{document} {
-      allow read: if isAuth();
-      allow write: if isAdmin();
-    }
-
-    // ─── Dashboard-managed app data — editor write ────────────
-    match /practice_settings/{document} {
-      allow read: if isAuth();
-      allow write: if isEditor();
-    }
-
-    match /app_banners/{document} {
-      allow read: if isAuth();
-      allow write: if isEditor();
-    }
-
-    match /announcements/{document} {
-      allow read: if isAuth();
-      allow write: if isEditor();
-    }
-
-    match /forum_posts/{document} {
-      allow read: if isAuth();
-      allow write: if isEditor();
-    }
-
-    match /video_tutorials/{document} {
-      allow read: if isAuth();
-      allow write: if isEditor();
-    }
-
-    // ─── User management — role-based ─────────────────────────
-    match /users/{userId} {
-      allow read: if isAuth();
-      allow write: if isAuth() && (
-        request.auth.uid == userId ||
-        isAdmin()
-      );
-      allow create: if isAuth();
-
-      // User-scoped saved_notes — self-write, moderator-read
-      match /saved_notes/{noteId} {
-        allow read: if isAuth();
-        allow write: if request.auth.uid == userId || isAdmin();
-      }
-
-      // User-scoped flashcard_reviews — self-only
-      match /flashcard_reviews/{reviewId} {
-        allow read: if request.auth.uid == userId;
-        allow write: if request.auth.uid == userId;
-      }
-
-      // User-scoped formula_notes — self-only
-      match /formula_notes/{noteId} {
-        allow read: if request.auth.uid == userId;
-        allow write: if request.auth.uid == userId;
-      }
-
-      // User-scoped bookmarks — self-only
-      match /bookmarks/{document} {
-        allow read: if request.auth.uid == userId;
-        allow write: if request.auth.uid == userId;
-      }
-
-      // User-scoped saved_chapters with nested subjects subcollection
-      match /saved_chapters/{curriculumKey} {
-        allow read: if request.auth.uid == userId;
-        allow write: if request.auth.uid == userId;
-        match /subjects/{subjectId} {
-          allow read: if request.auth.uid == userId;
-          allow write: if request.auth.uid == userId;
-        }
-      }
-
-      // User-scoped stats
-      match /stats/{document} {
-        allow read: if request.auth.uid == userId;
-        allow write: if request.auth.uid == userId;
-      }
-
-      // User-scoped progress
-      match /progress/{document} {
-        allow read: if request.auth.uid == userId;
-        allow write: if request.auth.uid == userId;
-        match /chapters/{chapter} {
-          allow read: if request.auth.uid == userId;
-          allow write: if request.auth.uid == userId;
-          match /formulas/{formula} {
-            allow read: if request.auth.uid == userId;
-            allow write: if request.auth.uid == userId;
+          match /questions/{question} {
+            allow read: if true;
+            allow create: if isEditor();
+            allow update: if isEditor();
+            allow delete: if isAdmin();
           }
         }
       }
 
-      // User-scoped progress_summary
-      match /progress_summary/{document} {
-        allow read: if request.auth.uid == userId;
-        allow write: if request.auth.uid == userId;
+      // Subject-scoped quizzes (adapter path)
+      match /quizzes/{quiz} {
+        allow read: if true;
+        allow create: if isEditor();
+        allow update: if isEditor();
+        allow delete: if isAdmin();
+
+        match /questions/{question} {
+          allow read: if true;
+          allow create: if isEditor();
+          allow update: if isEditor();
+          allow delete: if isAdmin();
+        }
       }
 
-      // User-scoped recent_studies
-      match /recent_studies/{document} {
-        allow read: if request.auth.uid == userId;
-        allow write: if request.auth.uid == userId;
-      }
-
-      // User-scoped study_plans
-      match /study_plans/{document} {
-        allow read: if request.auth.uid == userId;
-        allow write: if request.auth.uid == userId;
-      }
-
-      // User-scoped quiz_answers — self-only
-      match /quiz_answers/{answerId} {
-        allow read: if request.auth.uid == userId;
-        allow write: if request.auth.uid == userId;
-      }
-
-      // User-scoped quiz_results — self-only
-      match /quiz_results/{resultId} {
-        allow read: if request.auth.uid == userId;
-        allow write: if request.auth.uid == userId;
+      match /mastery_tools/{tool} {
+        allow read: if true;
+        allow create: if isEditor();
+        allow update: if isEditor();
+        allow delete: if isAdmin();
       }
     }
+
+    // ─── Practice Questions ─────────────────────────────────────
+    match /practice_questions/{document} {
+      allow read: if true;
+      allow create: if isEditor();
+      allow update: if isEditor();
+      allow delete: if isAdmin();
+    }
+
+    // ─── Canonical References ───────────────────────────────────
+    match /canonical_chapters/{document} {
+      allow read: if true;
+      allow create: if isRegistrar();
+      allow update: if isRegistrar();
+      allow delete: if isAdmin();
+    }
+
+    match /canonical_formulas/{document} {
+      allow read: if true;
+      allow create: if isRegistrar();
+      allow update: if isRegistrar();
+      allow delete: if isAdmin();
+    }
+
+    // ─── Top-Level Formulas (seeder reads) ──────────────────────
+    match /formulas/{document} {
+      allow read: if true;
+      allow create: if isEditor();
+      allow update: if isEditor();
+      allow delete: if isAdmin();
+    }
+
+    // ─── Top-Level Saved Notes (legacy scripts) ─────────────────
+    match /saved_notes/{document} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update: if isOwner(request.auth.uid);
+      allow delete: if isOwner(request.auth.uid) || isAdmin();
+    }
+
+    // ─── Feature Flags ──────────────────────────────────────────
+    match /feature_flags/{document} {
+      allow read: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  DASHBOARD ADMIN DATA — all-authenticated read, role write
+    // ═══════════════════════════════════════════════════════════════
+
+    match /dashboard_curriculum_registry/{document} {
+      allow read: if isAuth();
+      allow create: if isRegistrar();
+      allow update: if isRegistrar();
+      allow delete: if isAdmin();
+    }
+
+    match /dashboard_content_registry/{document} {
+      allow read: if isAuth();
+      allow create: if isRegistrar();
+      allow update: if isRegistrar();
+      allow delete: if isAdmin();
+    }
+
+    match /dashboard_governance_audit/{document} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update: if isAuth();
+      allow delete: if isAdmin();
+    }
+
+    match /dashboard_seed_status/{document} {
+      allow read: if isAuth();
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ─── Dashboard-managed App Data ────────────────────────────
+    match /practice_settings/{document} {
+      allow read: if isAuth();
+      allow create: if isEditor();
+      allow update: if isEditor();
+      allow delete: if isAdmin();
+    }
+
+    match /app_banners/{document} {
+      allow read: if isAuth();
+      allow create: if isEditor();
+      allow update: if isEditor();
+      allow delete: if isAdmin();
+    }
+
+    match /announcements/{document} {
+      allow read: if isAuth();
+      allow create: if isEditor();
+      allow update: if isEditor();
+      allow delete: if isAdmin();
+    }
+
+    match /forum_posts/{document} {
+      allow read: if isAuth();
+      allow create: if isEditor();
+      allow update: if isEditor();
+      allow delete: if isAdmin();
+    }
+
+    match /video_tutorials/{document} {
+      allow read: if isAuth();
+      allow create: if isEditor();
+      allow update: if isEditor();
+      allow delete: if isAdmin();
+    }
+
+    // ─── Runtime & Module Registry ─────────────────────────────
+    match /runtime_settings/{document} {
+      allow read: if isAuth();
+      allow create: if isEditor();
+      allow update: if isEditor();
+      allow delete: if isAdmin();
+    }
+
+    match /module_registry/{document} {
+      allow read: if isAuth();
+      allow create: if isEditor();
+      allow update: if isEditor();
+      allow delete: if isAdmin();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  USER MANAGEMENT — self-driven, admin-override
+    // ═══════════════════════════════════════════════════════════════
+
+    match /users/{userId} {
+
+      // ─── User document — self-on-create, self-update, admin-delete ──
+      allow read: if isAuth();
+      allow create: if request.auth.uid == userId &&
+        request.resource.data.keys().hasAll(['name', 'grade']) &&
+        request.resource.data.name is string;
+      allow update: if isOwner(userId) || isAdmin();
+      allow delete: if isAdmin();
+
+      // ─── Saved Notes — self-only ─────────────────────────────
+      match /saved_notes/{noteId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // ─── Flashcard Reviews — self-only ───────────────────────
+      match /flashcard_reviews/{reviewId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) &&
+          hasRequired(request.resource.data, ['title', 'subjectId', 'chapterId']);
+        allow update: if isOwner(userId);
+        allow delete: if isOwner(userId);
+      }
+
+      // ─── Formula Notes — self-only ───────────────────────────
+      match /formula_notes/{noteId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) &&
+          request.resource.data.keys().hasAll(['content']);
+        allow update: if isOwner(userId);
+        allow delete: if isOwner(userId);
+      }
+
+      // ─── Bookmarks — self-only ───────────────────────────────
+      match /bookmarks/{document} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) &&
+          hasRequired(request.resource.data, ['type', 'referenceId']);
+        allow update: if isOwner(userId);
+        allow delete: if isOwner(userId);
+      }
+
+      // ─── Saved Chapters w/ nested Subjects — self-only ────────
+      match /saved_chapters/{curriculumKey} {
+        allow read, write: if isOwner(userId);
+
+        match /subjects/{subjectId} {
+          allow read, write: if isOwner(userId);
+        }
+      }
+
+      // ─── Stats — self-only ───────────────────────────────────
+      match /stats/{document} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // ─── Progress w/ nested Chapters + Formulas — self-only ──
+      match /progress/{subjectId} {
+        allow read, write: if isOwner(userId);
+
+        match /chapters/{chapterId} {
+          allow read, write: if isOwner(userId);
+
+          match /formulas/{formulaId} {
+            allow read, write: if isOwner(userId);
+          }
+        }
+      }
+
+      // ─── Progress Summary — self-only ────────────────────────
+      match /progress_summary/{document} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // ─── Recent Studies — self-only ──────────────────────────
+      match /recent_studies/{document} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // ─── Study Plans — self-only ─────────────────────────────
+      match /study_plans/{document} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // ─── Quiz Answers — self-only ────────────────────────────
+      match /quiz_answers/{answerId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // ─── Quiz Results — self-only ────────────────────────────
+      match /quiz_results/{resultId} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  ADMIN / MODERATOR COLLECTIONS
+    // ═══════════════════════════════════════════════════════════════
 
     match /moderator_applications/{document} {
       allow read: if isModerator();
-      allow write: if isAuth();
       allow create: if isAuth();
+      allow update: if isModerator();
+      allow delete: if isAdmin();
     }
 
-    // ─── Dashboard command queue — auth write, admin read ──────
     match /dashboard_commands/{document} {
       allow read: if isAdmin();
-      allow write: if isAuth();
+      allow create: if isAuth();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
     }
 
-    // ─── Audit logs — auth write, moderator read ───────────────
     match /audit_logs/{document} {
       allow read: if isModerator();
-      allow write: if isAuth();
+      allow create: if isAuth();
+      allow update: if isModerator();
+      allow delete: if isAdmin();
     }
 
-    // ─── Runtime settings — editor write, auth read ────────────
-    match /runtime_settings/{document} {
-      allow read: if isAuth();
-      allow write: if isEditor();
-    }
+    // ═══════════════════════════════════════════════════════════════
+    //  DEFAULT DENY — reject any unlisted path
+    // ═══════════════════════════════════════════════════════════════
 
-    // ─── Module registry — editor write, auth read ─────────────
-    match /module_registry/{document} {
-      allow read: if isAuth();
-      allow write: if isEditor();
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

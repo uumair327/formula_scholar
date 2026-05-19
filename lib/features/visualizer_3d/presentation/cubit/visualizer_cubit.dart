@@ -15,7 +15,6 @@ class VisualizerCubit extends Cubit<VisualizerState> {
     visualizerType: _parseInitialType(formulas, initialType),
   ));
 
-  @override
   String get logTag => AppLogTags.visualizerCubit;
 
   void selectFormula(int index) {

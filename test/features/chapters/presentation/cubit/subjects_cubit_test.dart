@@ -6,7 +6,6 @@ import 'package:formula_scholar/features/chapters/presentation/cubit/subjects_cu
 import 'package:formula_scholar/features/chapters/presentation/cubit/subjects_state.dart';
 import 'package:formula_scholar/features/dashboard/domain/domain.dart';
 import 'package:formula_scholar/shared/cubit/curriculum_cubit.dart';
-import 'package:formula_scholar/shared/cubit/curriculum_state.dart';
 import 'package:formula_scholar/shared/domain/domain.dart';
 
 void main() {
@@ -18,7 +17,6 @@ void main() {
     SubjectsCubit? subjectsCubit;
 
     setUp(() {
-      print('=== setUp ===');
       curriculumRepository = _FakeCurriculumRepository();
       dashboardRepository = _FakeDashboardRepository();
       getSubjectsUseCase = GetSubjectsUseCase(repository: dashboardRepository);
@@ -27,14 +25,12 @@ void main() {
     });
 
     tearDown(() async {
-      print('=== tearDown ===');
       await subjectsCubit?.close();
       await curriculumCubit?.close();
       await curriculumRepository.dispose();
     });
 
     test('initializes with default empty state', () {
-      print('--- TEST: initializes with default empty state ---');
       curriculumCubit = CurriculumCubit(
         loadCurriculum: LoadCurriculumUseCase(curriculumRepository),
         saveCurriculum: SaveCurriculumUseCase(curriculumRepository),
@@ -48,7 +44,6 @@ void main() {
     });
 
     test('immediately loads subjects when curriculum is already available on init', () async {
-      print('--- TEST: immediately loads subjects when curriculum is already available on init ---');
       const initialCurriculum = SelectedCurriculum(
         boardId: 'cbse',
         boardName: 'CBSE',
@@ -78,7 +73,7 @@ void main() {
       dashboardRepository.subjectsResult = Success(mockSubjects);
 
       subjectsCubit = SubjectsCubit(getSubjectsUseCase, curriculumCubit!);
-      subjectsCubit!.stream.listen((s) => print('SubjectsCubit state update: ${s.status}'));
+      subjectsCubit!.stream.listen((s) {});
 
       await Future<void>.delayed(const Duration(milliseconds: 50));
 
@@ -88,7 +83,7 @@ void main() {
     });
 
     test('loads subjects when curriculum state transitions from null/loading to loaded', () async {
-      print('--- TEST: loads subjects when curriculum state transitions from null/loading to loaded ---');
+
       curriculumCubit = CurriculumCubit(
         loadCurriculum: LoadCurriculumUseCase(curriculumRepository),
         saveCurriculum: SaveCurriculumUseCase(curriculumRepository),
@@ -96,7 +91,7 @@ void main() {
       );
 
       subjectsCubit = SubjectsCubit(getSubjectsUseCase, curriculumCubit!);
-      subjectsCubit!.stream.listen((s) => print('SubjectsCubit state update: ${s.status}'));
+      subjectsCubit!.stream.listen((s) {});
       expect(subjectsCubit!.state.status, SubjectsStatus.initial);
 
       final mockSubjects = [
@@ -130,7 +125,7 @@ void main() {
     });
 
     test('emits error status when loading subjects fails', () async {
-      print('--- TEST: emits error status when loading subjects fails ---');
+
       const curriculum = SelectedCurriculum(
         boardId: 'cbse',
         boardName: 'CBSE',
@@ -147,10 +142,10 @@ void main() {
       );
 
       const failure = ServerFailure(message: 'Failed to fetch subjects from firestore');
-      dashboardRepository.subjectsResult = Error(failure);
+      dashboardRepository.subjectsResult = const Error(failure);
 
       subjectsCubit = SubjectsCubit(getSubjectsUseCase, curriculumCubit!);
-      subjectsCubit!.stream.listen((s) => print('SubjectsCubit state update: ${s.status}'));
+      subjectsCubit!.stream.listen((s) {});
 
       await Future<void>.delayed(const Duration(milliseconds: 50));
 
@@ -159,7 +154,7 @@ void main() {
     });
 
     test('resets to empty state when curriculum is cleared/null', () async {
-      print('--- TEST: resets to empty state when curriculum is cleared/null ---');
+
       const curriculum = SelectedCurriculum(
         boardId: 'cbse',
         boardName: 'CBSE',
@@ -177,7 +172,7 @@ void main() {
 
       dashboardRepository.subjectsResult = const Success([]);
       subjectsCubit = SubjectsCubit(getSubjectsUseCase, curriculumCubit!);
-      subjectsCubit!.stream.listen((s) => print('SubjectsCubit state update: ${s.status}'));
+      subjectsCubit!.stream.listen((s) {});
 
       await Future<void>.delayed(const Duration(milliseconds: 50));
       expect(subjectsCubit!.state.status, SubjectsStatus.loaded);
