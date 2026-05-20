@@ -2,17 +2,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../chapters/domain/entities/formula.dart';
+import '../../domain/domain.dart';
 import 'comparison_state.dart';
 
 @injectable
 class ComparisonCubit extends Cubit<ComparisonState> {
-  ComparisonCubit() : super(const ComparisonState());
+  ComparisonCubit({FormulaCompareService? compareService})
+      : _compareService = compareService ?? FormulaCompareService(),
+        super(const ComparisonState());
+
+  final FormulaCompareService _compareService;
 
   void setFormulas(Formula a, Formula b) {
+    final comparison = _compareService.compare(a, b);
     emit(ComparisonState(
       status: ComparisonStatus.loaded,
       formulaA: a,
       formulaB: b,
+      comparison: comparison,
     ));
   }
 
@@ -20,6 +27,15 @@ class ComparisonCubit extends Cubit<ComparisonState> {
     final a = state.formulaA;
     final b = state.formulaB;
     if (a == null || b == null) return;
-    emit(state.copyWith(formulaA: b, formulaB: a));
+    final comparison = _compareService.compare(b, a);
+    emit(state.copyWith(
+      formulaA: b,
+      formulaB: a,
+      comparison: comparison,
+    ));
+  }
+
+  void clear() {
+    emit(const ComparisonState());
   }
 }

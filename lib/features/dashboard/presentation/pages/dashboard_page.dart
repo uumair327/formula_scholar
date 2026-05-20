@@ -759,6 +759,45 @@ class DashboardPage extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(width: AppDimensions.paddingMD),
+            Expanded(
+              child: Material(
+                color: AppColors.transparent,
+                child: InkWell(
+                  onTap: () => context.pushNamed(AppRoutes.studyPlannerName),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+                  child: Container(
+                    padding: const EdgeInsets.all(AppDimensions.paddingLG),
+                    decoration: BoxDecoration(
+                      color: colorScheme.surfaceContainerLowest,
+                      borderRadius: BorderRadius.circular(
+                        AppDimensions.radiusXL,
+                      ),
+                      border: Border.all(
+                        color: colorScheme.secondary.withValues(alpha: 0.3),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(
+                          LucideIcons.calendarCheck,
+                          size: AppDimensions.iconLG,
+                          color: colorScheme.secondary,
+                        ),
+                        const SizedBox(height: AppDimensions.paddingSM),
+                        Text(
+                          'Study Planner',
+                          style: AppTextStyles.labelLarge.copyWith(
+                            color: colorScheme.secondary,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ],

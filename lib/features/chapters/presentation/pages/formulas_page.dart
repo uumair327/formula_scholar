@@ -8,7 +8,6 @@ import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
 import '../../../auth/auth.dart';
 import '../../../flashcards/flashcards.dart';
-import '../../../comparison/comparison.dart';
 import '../../domain/domain.dart';
 import '../cubit/formulas_cubit.dart';
 import '../cubit/formulas_state.dart';
@@ -648,8 +647,10 @@ class _CompareFormulaSheet extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     onTap: () {
-                      getIt<ComparisonCubit>().setFormulas(sourceFormula, f);
-                      context.pushNamed(AppRoutes.comparisonName);
+                      context.pushNamed(
+                        AppRoutes.comparisonName,
+                        extra: {'a': sourceFormula, 'b': f},
+                      );
                     },
                   );
                 },

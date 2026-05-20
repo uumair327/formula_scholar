@@ -5,6 +5,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
 import '../../../chapters/domain/entities/formula.dart';
+import '../../domain/domain.dart';
 import '../cubit/comparison_cubit.dart';
 import '../cubit/comparison_state.dart';
 
@@ -34,29 +35,186 @@ class ComparisonPage extends StatelessWidget {
           return SingleChildScrollView(
             padding: const EdgeInsets.all(AppDimensions.paddingMD),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _FormulaCompareCard(
-                  formula: state.formulaA!,
-                  label: 'Formula A',
-                  color: AppColors.primary,
-                ),
-                const SizedBox(height: AppDimensions.paddingMD),
-                Icon(
-                  LucideIcons.arrowDown,
-                  size: 24,
-                  color: Theme.of(context).colorScheme.outline,
-                ),
-                const SizedBox(height: AppDimensions.paddingMD),
-                _FormulaCompareCard(
-                  formula: state.formulaB!,
-                  label: 'Formula B',
-                  color: AppColors.secondary,
-                ),
+                _buildSimilarityBadge(context, state.comparison),
+                const SizedBox(height: AppDimensions.paddingLG),
+                _buildSideBySideFormulas(context, state),
+                if (state.comparison != null) ...[
+                  const SizedBox(height: AppDimensions.paddingLG),
+                  _buildVariableComparison(context, state.comparison!),
+                ],
+                const SizedBox(height: 32),
               ],
             ),
           );
         },
       ),
+    );
+  }
+
+  Widget _buildSimilarityBadge(
+    BuildContext context,
+    FormulaComparison? comparison,
+  ) {
+    final colorScheme = Theme.of(context).colorScheme;
+    if (comparison == null) return const SizedBox.shrink();
+
+    final score = comparison.similarityScore;
+    final label = score > 0.7
+        ? 'High Similarity'
+        : score > 0.4
+            ? 'Moderate Similarity'
+            : 'Low Similarity';
+    final color = score > 0.7
+        ? colorScheme.primary
+        : score > 0.4
+            ? colorScheme.secondary
+            : colorScheme.error;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDimensions.paddingMD,
+        vertical: AppDimensions.paddingSM,
+      ),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(LucideIcons.percent, size: 16, color: color),
+          const SizedBox(width: AppDimensions.paddingXS),
+          Text(
+            '$label — ${(score * 100).toInt()}%',
+            style: AppTextStyles.labelLarge.copyWith(color: color),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSideBySideFormulas(
+    BuildContext context,
+    ComparisonState state,
+  ) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: _FormulaCompareCard(
+            formula: state.formulaA!,
+            label: 'A',
+            color: colorScheme.primary,
+          ),
+        ),
+        const SizedBox(width: AppDimensions.paddingSM),
+        Expanded(
+          child: _FormulaCompareCard(
+            formula: state.formulaB!,
+            label: 'B',
+            color: colorScheme.secondary,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildVariableComparison(
+    BuildContext context,
+    FormulaComparison comparison,
+  ) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(AppDimensions.paddingMD),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(LucideIcons.variable, size: 18, color: colorScheme.primary),
+                const SizedBox(width: AppDimensions.paddingXS),
+                Text('Variables', style: AppTextStyles.titleSmall),
+              ],
+            ),
+            const Divider(),
+            if (comparison.hasSharedVariables) ...[
+              _buildVariableSection(
+                context,
+                'Shared',
+                comparison.sharedVariables,
+                colorScheme.primary,
+              ),
+              const SizedBox(height: AppDimensions.paddingSM),
+            ],
+            if (comparison.uniqueToA.isNotEmpty) ...[
+              _buildVariableSection(
+                context,
+                'Only in A',
+                comparison.uniqueToA,
+                colorScheme.error,
+              ),
+              const SizedBox(height: AppDimensions.paddingSM),
+            ],
+            if (comparison.uniqueToB.isNotEmpty)
+              _buildVariableSection(
+                context,
+                'Only in B',
+                comparison.uniqueToB,
+                colorScheme.secondary,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildVariableSection(
+    BuildContext context,
+    String label,
+    Set<String> variables,
+    Color color,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: AppTextStyles.labelMedium.copyWith(
+            color: color,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: AppDimensions.paddingXS),
+        Wrap(
+          spacing: AppDimensions.paddingXS,
+          runSpacing: AppDimensions.paddingXS / 2,
+          children: variables.map((v) {
+            return Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppDimensions.paddingSM,
+                vertical: AppDimensions.paddingXS / 2,
+              ),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
+                border: Border.all(color: color.withValues(alpha: 0.3)),
+              ),
+              child: Math.tex(
+                v,
+                textStyle: AppTextStyles.bodyMedium.copyWith(color: color),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
     );
   }
 }
@@ -83,7 +241,7 @@ class _FormulaCompareCard extends StatelessWidget {
         side: BorderSide(color: color.withValues(alpha: 0.3)),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(AppDimensions.paddingLG),
+        padding: const EdgeInsets.all(AppDimensions.paddingMD),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -92,7 +250,7 @@ class _FormulaCompareCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppDimensions.paddingSM,
-                    vertical: AppDimensions.paddingXS,
+                    vertical: AppDimensions.paddingXS / 2,
                   ),
                   decoration: BoxDecoration(
                     color: color,
@@ -108,17 +266,19 @@ class _FormulaCompareCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: AppDimensions.paddingMD),
+            const SizedBox(height: AppDimensions.paddingSM),
             Text(
               formula.title,
-              style: AppTextStyles.titleLarge.copyWith(
+              style: AppTextStyles.titleMedium.copyWith(
                 fontWeight: FontWeight.w700,
               ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: AppDimensions.paddingLG),
+            const SizedBox(height: AppDimensions.paddingMD),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(AppDimensions.paddingLG),
+              padding: const EdgeInsets.all(AppDimensions.paddingMD),
               decoration: BoxDecoration(
                 color: colorScheme.surfaceContainerLow,
                 borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
@@ -128,7 +288,7 @@ class _FormulaCompareCard extends StatelessWidget {
                   fit: BoxFit.scaleDown,
                   child: Math.tex(
                     formula.latex,
-                    textStyle: AppTextStyles.headlineMedium.copyWith(
+                    textStyle: AppTextStyles.headlineSmall.copyWith(
                       color: colorScheme.onSurface,
                     ),
                   ),
@@ -136,13 +296,15 @@ class _FormulaCompareCard extends StatelessWidget {
               ),
             ),
             if (formula.description.isNotEmpty) ...[
-              const SizedBox(height: AppDimensions.paddingMD),
+              const SizedBox(height: AppDimensions.paddingSM),
               Text(
                 formula.description,
-                style: AppTextStyles.bodyMedium.copyWith(
+                style: AppTextStyles.bodySmall.copyWith(
                   color: colorScheme.onSurfaceVariant,
                   height: 1.5,
                 ),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ],

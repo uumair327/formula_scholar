@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../entities/study_plan.dart';
 
 abstract class StudyPlannerPort {
@@ -11,6 +9,5 @@ abstract class StudyPlannerPort {
     required String userId,
     required String planId,
     required String sessionId,
-    DocumentReference? transactionRef,
   });
 }

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
@@ -84,7 +83,6 @@ class StudyPlannerRepositoryImpl implements StudyPlannerRepositoryPort {
     required String userId,
     required String planId,
     required String sessionId,
-    DocumentReference? transactionRef,
   }) async {
     final result = await safeOperation(
       tag: AppLogTags.studyPlannerRepo,
@@ -93,7 +91,6 @@ class StudyPlannerRepositoryImpl implements StudyPlannerRepositoryPort {
         userId: userId,
         planId: planId,
         sessionId: sessionId,
-        transactionRef: transactionRef,
       ),
     );
     if (result is Error) throw result.failure;

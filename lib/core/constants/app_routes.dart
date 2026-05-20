@@ -130,6 +130,10 @@ abstract final class AppRoutes {
   static const String studyPlannerName = 'studyPlanner';
   static const String createPlanPath = '/study-planner/create';
   static const String createPlanName = 'createPlan';
+  static const String planDetailPath = ':planId';
+  static const String planDetailName = 'planDetail';
+  static const String editPlanPath = 'edit';
+  static const String editPlanName = 'editPlan';
 
   // ──────────────────────── Search ──────────────────────────────
   static const String searchPath = '/search';

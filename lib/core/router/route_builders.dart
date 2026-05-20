@@ -177,10 +177,15 @@ abstract final class RouteBuilders {
         path: AppRoutes.comparisonPath,
         name: AppRoutes.comparisonName,
         pageBuilder: (context, state) {
+          final extra = state.extra;
+          final cubit = getIt<ComparisonCubit>();
+          if (extra is Map<String, Formula>) {
+            cubit.setFormulas(extra['a']!, extra['b']!);
+          }
           return AppPageTransitions.fadeTransition(
             state: state,
-            child: BlocProvider(
-              create: (_) => getIt<ComparisonCubit>(),
+            child: BlocProvider.value(
+              value: cubit,
               child: const ComparisonPage(),
             ),
           );
@@ -271,6 +276,34 @@ abstract final class RouteBuilders {
                 ),
               );
             },
+          ),
+          GoRoute(
+            path: AppRoutes.planDetailPath,
+            name: AppRoutes.planDetailName,
+            pageBuilder: (context, state) {
+              return AppPageTransitions.fadeTransition(
+                state: state,
+                child: BlocProvider.value(
+                  value: getIt<StudyPlannerCubit>(),
+                  child: const PlanDetailPage(),
+                ),
+              );
+            },
+            routes: [
+              GoRoute(
+                path: AppRoutes.editPlanPath,
+                name: AppRoutes.editPlanName,
+                pageBuilder: (context, state) {
+                  return AppPageTransitions.fadeTransition(
+                    state: state,
+                    child: BlocProvider.value(
+                      value: getIt<StudyPlannerCubit>(),
+                      child: const EditPlanPage(),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
         ],
       ),

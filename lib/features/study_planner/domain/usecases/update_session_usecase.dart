@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
@@ -16,14 +15,12 @@ class UpdateSessionUseCase {
     required String userId,
     required String planId,
     required String sessionId,
-    DocumentReference? transactionRef,
   }) async {
     try {
       await _repository.updateSessionStatus(
         userId: userId,
         planId: planId,
         sessionId: sessionId,
-        transactionRef: transactionRef,
       );
       return const Success(null);
     } catch (e) {

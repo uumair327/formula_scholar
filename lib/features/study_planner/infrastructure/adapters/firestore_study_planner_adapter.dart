@@ -107,27 +107,29 @@ class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
     required String userId,
     required String planId,
     required String sessionId,
-    DocumentReference? transactionRef,
   }) async {
     AppLogger.trace('updateSessionStatus($userId, $planId, $sessionId)',
         tag: AppLogTags.studyPlannerDataSource);
     final docRef = _plansRef(userId).doc(planId);
-
-    if (transactionRef != null) {
-      final snap = await docRef.get();
-      final data = snap.data() as Map<String, dynamic>;
-      final sessions = (data['sessions'] as List<dynamic>)
-          .map((s) => Map<String, dynamic>.from(s as Map))
-          .toList();
-      final idx = sessions.indexWhere((s) => s['id'] == sessionId);
-      if (idx == -1) {
-        AppLogger.warning(
-            'updateSessionStatus: session $sessionId not found in plan $planId',
-            tag: AppLogTags.studyPlannerDataSource);
-        return;
-      }
-      sessions[idx]['status'] = SessionStatus.completed.name;
-      await docRef.update({'sessions': sessions, 'updatedAt': Timestamp.now()});
+    final snap = await docRef.get();
+    final data = snap.data() as Map<String, dynamic>?;
+    if (data == null) {
+      AppLogger.warning(
+          'updateSessionStatus: plan $planId not found',
+          tag: AppLogTags.studyPlannerDataSource);
+      return;
     }
+    final sessions = (data['sessions'] as List<dynamic>)
+        .map((s) => Map<String, dynamic>.from(s as Map))
+        .toList();
+    final idx = sessions.indexWhere((s) => s['id'] == sessionId);
+    if (idx == -1) {
+      AppLogger.warning(
+          'updateSessionStatus: session $sessionId not found in plan $planId',
+          tag: AppLogTags.studyPlannerDataSource);
+      return;
+    }
+    sessions[idx]['status'] = SessionStatus.completed.name;
+    await docRef.update({'sessions': sessions, 'updatedAt': Timestamp.now()});
   }
 }

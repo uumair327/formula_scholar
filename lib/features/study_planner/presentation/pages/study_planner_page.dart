@@ -86,6 +86,18 @@ class _StudyPlannerPageState extends State<StudyPlannerPage> {
                     color: colorScheme.onSurfaceVariant,
                   ),
                 ),
+                const SizedBox(height: AppDimensions.paddingXL),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppDimensions.paddingXL,
+                  ),
+                  child: FilledButton.icon(
+                    onPressed: () =>
+                        context.pushNamed(AppRoutes.createPlanName),
+                    icon: const Icon(LucideIcons.plus),
+                    label: const Text('Create Plan'),
+                  ),
+                ),
               ],
             );
           }
@@ -107,9 +119,10 @@ class _StudyPlannerPageState extends State<StudyPlannerPage> {
                 final plan = state.plans[index];
                 return PlanCard(
                   plan: plan,
-                  onTap: () {
-                    context.read<StudyPlannerCubit>().selectPlan(plan);
-                  },
+                  onTap: () => context.pushNamed(
+                    AppRoutes.planDetailName,
+                    pathParameters: {'planId': plan.id},
+                  ),
                   onDelete: () => _confirmDelete(context, plan),
                 );
               },
