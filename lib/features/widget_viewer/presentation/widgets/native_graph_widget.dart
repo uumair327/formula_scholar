@@ -241,80 +241,7 @@ class _GraphPainter extends CustomPainter {
   }
 
   double? _evaluate(String latex, double x, Map<String, double> params) {
-    try {
-      // Clean the LaTeX to a math-evaluable string
-      var expr = latex.toLowerCase().replaceAll(' ', '');
-      // Remove 'y=' prefix
-      if (expr.startsWith('y=')) {
-        expr = expr.substring(2);
-      }
-
-      // Replace known LaTeX commands with operator equivalents
-      expr = expr
-          .replaceAll('\\\\cdot', '*')
-          .replaceAll('\\cdot', '*')
-          .replaceAll('**', '^');
-
-      return _evalExpr(expr, x, params);
-    } catch (_) {
-      return null;
-    }
-  }
-
-  /// Recursive-descent expression evaluator supporting +, -, *, /, ^,
-  /// parentheses, sin, cos, tan, sqrt, abs, log, and named parameters.
-  double? _evalExpr(String raw, double x, Map<String, double> params) {
-    final tokens = _tokenize(raw);
-    if (tokens.isEmpty) return null;
-    final parser = _ExprParser(tokens, x, params);
-    final result = parser.parseExpression();
-    return result;
-  }
-
-  List<String> _tokenize(String expr) {
-    final tokens = <String>[];
-    var i = 0;
-    while (i < expr.length) {
-      final ch = expr[i];
-      if (ch == ' ') {
-        i++;
-        continue;
-      }
-      // Numbers (with optional decimal)
-      if (_isDigit(ch) || (ch == '.' && i + 1 < expr.length && _isDigit(expr[i + 1]))) {
-        final sb = StringBuffer();
-        while (i < expr.length && (_isDigit(expr[i]) || expr[i] == '.')) {
-          sb.write(expr[i]);
-          i++;
-        }
-        tokens.add(sb.toString());
-        continue;
-      }
-      // Operators and parens
-      if ('+-*/^()'.contains(ch)) {
-        tokens.add(ch);
-        i++;
-        continue;
-      }
-      // Identifiers / functions
-      if (_isAlpha(ch)) {
-        final sb = StringBuffer();
-        while (i < expr.length && (_isAlpha(expr[i]) || _isDigit(expr[i]) || expr[i] == '_')) {
-          sb.write(expr[i]);
-          i++;
-        }
-        tokens.add(sb.toString());
-        continue;
-      }
-      i++; // skip unknown chars
-    }
-    return tokens;
-  }
-
-  bool _isDigit(String ch) => ch.codeUnitAt(0) >= 48 && ch.codeUnitAt(0) <= 57;
-  bool _isAlpha(String ch) {
-    final c = ch.codeUnitAt(0);
-    return (c >= 65 && c <= 90) || (c >= 97 && c <= 122);
+    return GraphExpressionEvaluator.evaluate(latex, x, params);
   }
 
   void _drawRoots(
@@ -370,13 +297,97 @@ class _GraphPainter extends CustomPainter {
 /// Recursive-descent parser for mathematical expressions.
 ///
 /// Grammar:
+/// Utility class to evaluate math expressions from LaTeX/text formula format.
+class GraphExpressionEvaluator {
+  /// Evaluates an expression at a given x with named parameters.
+  static double? evaluate(String latex, double x, Map<String, double> params) {
+    try {
+      // Clean the LaTeX to a math-evaluable string
+      var expr = latex.toLowerCase().replaceAll(' ', '');
+      // Remove 'y=' prefix
+      if (expr.startsWith('y=')) {
+        expr = expr.substring(2);
+      }
+
+      // Replace known LaTeX commands with operator equivalents
+      expr = expr
+          .replaceAll('\\\\cdot', '*')
+          .replaceAll('\\cdot', '*')
+          .replaceAll('**', '^');
+
+      return evalExpr(expr, x, params);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Evaluates a raw expression string.
+  static double? evalExpr(String raw, double x, Map<String, double> params) {
+    final tokens = tokenize(raw);
+    if (tokens.isEmpty) return null;
+    final parser = ExprParser(tokens, x, params);
+    final result = parser.parseExpression();
+    return result;
+  }
+
+  /// Tokenizes a raw mathematical expression string.
+  static List<String> tokenize(String expr) {
+    final tokens = <String>[];
+    var i = 0;
+    while (i < expr.length) {
+      final ch = expr[i];
+      if (ch == ' ') {
+        i++;
+        continue;
+      }
+      // Numbers (with optional decimal)
+      if (_isDigit(ch) || (ch == '.' && i + 1 < expr.length && _isDigit(expr[i + 1]))) {
+        final sb = StringBuffer();
+        while (i < expr.length && (_isDigit(expr[i]) || expr[i] == '.')) {
+          sb.write(expr[i]);
+          i++;
+        }
+        tokens.add(sb.toString());
+        continue;
+      }
+      // Operators and parens
+      if ('+-*/^()'.contains(ch)) {
+        tokens.add(ch);
+        i++;
+        continue;
+      }
+      // Identifiers / functions
+      if (_isAlpha(ch)) {
+        final sb = StringBuffer();
+        while (i < expr.length && (_isAlpha(expr[i]) || _isDigit(expr[i]) || expr[i] == '_')) {
+          sb.write(expr[i]);
+          i++;
+        }
+        tokens.add(sb.toString());
+        continue;
+      }
+      i++; // skip unknown chars
+    }
+    return tokens;
+  }
+
+  static bool _isDigit(String ch) => ch.codeUnitAt(0) >= 48 && ch.codeUnitAt(0) <= 57;
+  static bool _isAlpha(String ch) {
+    final c = ch.codeUnitAt(0);
+    return (c >= 65 && c <= 90) || (c >= 97 && c <= 122);
+  }
+}
+
+/// Recursive-descent parser for mathematical expressions.
+///
+/// Grammar:
 ///   expression = term (('+' | '-') term)*
 ///   term       = unary (('*' | '/') unary)*
 ///   unary      = ('-')? power
 ///   power      = atom ('^' unary)?
 ///   atom       = NUMBER | IDENT | IDENT '(' expression ')' | '(' expression ')'
-class _ExprParser {
-  _ExprParser(this._tokens, this._x, this._params);
+class ExprParser {
+  ExprParser(this._tokens, this._x, this._params);
 
   final List<String> _tokens;
   final double _x;
