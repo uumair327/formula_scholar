@@ -91,13 +91,13 @@ void main() {
 
     group('compare', () {
       test('identifies shared variables between similar formulas', () {
-        final a = const Formula(
+        const a = Formula(
           id: '1',
           title: 'Newton\'s Second Law',
           latex: 'F = ma',
           description: 'Force equals mass times acceleration',
         );
-        final b = const Formula(
+        const b = Formula(
           id: '2',
           title: 'Momentum',
           latex: 'p = mv',
@@ -114,13 +114,13 @@ void main() {
       });
 
       test('computes similarity score between 0 and 1', () {
-        final a = const Formula(
+        const a = Formula(
           id: '1',
           title: 'A',
           latex: 'E = mc^2',
           description: 'Energy mass equivalence',
         );
-        final b = const Formula(
+        const b = Formula(
           id: '2',
           title: 'B',
           latex: 'F = ma',
@@ -134,13 +134,13 @@ void main() {
       });
 
       test('high similarity for nearly identical formulas', () {
-        final a = const Formula(
+        const a = Formula(
           id: '1',
           title: 'Kinetic Energy',
           latex: 'KE = \\frac{1}{2}mv^2',
           description: 'Kinetic energy of a moving object',
         );
-        final b = const Formula(
+        const b = Formula(
           id: '2',
           title: 'Kinetic Energy Alt',
           latex: 'E_k = \\frac{1}{2}mv^2',
@@ -153,13 +153,13 @@ void main() {
       });
 
       test('low similarity for unrelated formulas', () {
-        final a = const Formula(
+        const a = Formula(
           id: '1',
           title: 'Ohm\'s Law',
           latex: 'V = IR',
           description: 'Voltage equals current times resistance',
         );
-        final b = const Formula(
+        const b = Formula(
           id: '2',
           title: 'Gravity',
           latex: 'F = G\\frac{m_1m_2}{r^2}',

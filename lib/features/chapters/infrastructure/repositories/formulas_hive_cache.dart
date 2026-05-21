@@ -37,6 +37,7 @@ class FormulasHiveCache implements FormulasCachePort {
               'audiences': f.audiences,
               'isGeneralContent': f.isGeneralContent,
               'canonicalFormulaId': f.canonicalFormulaId,
+              'widgetConfig': f.widgetConfig,
             },
           )
           .toList(),
@@ -71,6 +72,9 @@ class FormulasHiveCache implements FormulasCachePort {
                   const [],
               isGeneralContent: item['isGeneralContent'] as bool? ?? false,
               canonicalFormulaId: item['canonicalFormulaId'] as String?,
+              widgetConfig: item['widgetConfig'] != null
+                  ? Map<String, dynamic>.from(item['widgetConfig'] as Map)
+                  : null,
             ))
         .toList();
   }

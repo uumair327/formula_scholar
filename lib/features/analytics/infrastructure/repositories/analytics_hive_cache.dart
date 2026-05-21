@@ -1,7 +1,9 @@
 import 'package:hive/hive.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../domain/domain.dart';
 
+@LazySingleton(as: AnalyticsCachePort)
 class AnalyticsHiveCache implements AnalyticsCachePort {
   static const String _boxName = 'analytics_cache';
 

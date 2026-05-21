@@ -225,20 +225,21 @@ class _SearchResultCard extends StatelessWidget {
                   _SubjectBadge(subject: result.subjectName),
                   const SizedBox(width: AppDimensions.paddingSM),
                   Text(
-                    _highlightMatch(result.chapterName, query),
+                    result.chapterName,
                     style: AppTextStyles.overline.copyWith(
                       color: colorScheme.outline,
                     ),
                   ),
+                  if (query.isNotEmpty) ...[
+                    const SizedBox(width: AppDimensions.paddingXS),
+                    _buildHighlightChip(result.chapterName, query, colorScheme),
+                  ],
                 ],
               ),
               const SizedBox(height: AppDimensions.paddingSM),
-              Text(
-                _highlightMatch(result.title, query),
-                style: AppTextStyles.titleMedium.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
+              _buildHighlightedText(result.title, query, AppTextStyles.titleMedium.copyWith(
+                fontWeight: FontWeight.w700,
+              ), colorScheme),
               const SizedBox(height: AppDimensions.paddingSM),
               Container(
                 width: double.infinity,
@@ -266,8 +267,76 @@ class _SearchResultCard extends StatelessWidget {
     );
   }
 
-  String _highlightMatch(String text, String query) {
-    return text;
+  Widget _buildHighlightedText(
+    String text,
+    String query,
+    TextStyle style,
+    ColorScheme colorScheme,
+  ) {
+    if (query.isEmpty) {
+      return Text(text, style: style);
+    }
+
+    final lowerText = text.toLowerCase();
+    final lowerQuery = query.toLowerCase();
+    final index = lowerText.indexOf(lowerQuery);
+
+    if (index == -1) {
+      return Text(text, style: style);
+    }
+
+    final before = text.substring(0, index);
+    final match = text.substring(index, index + query.length);
+    final after = text.substring(index + query.length);
+
+    return RichText(
+      text: TextSpan(
+        style: style,
+        children: [
+          if (before.isNotEmpty) TextSpan(text: before),
+          TextSpan(
+            text: match,
+            style: style.copyWith(
+              color: colorScheme.primary,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          if (after.isNotEmpty) TextSpan(text: after),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHighlightChip(
+    String text,
+    String query,
+    ColorScheme colorScheme,
+  ) {
+    final lowerText = text.toLowerCase();
+    final lowerQuery = query.toLowerCase();
+    final index = lowerText.indexOf(lowerQuery);
+
+    if (index == -1) {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDimensions.paddingXS,
+        vertical: AppDimensions.paddingXXS,
+      ),
+      decoration: BoxDecoration(
+        color: colorScheme.primary.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusXS),
+      ),
+      child: Text(
+        text.substring(index, index + query.length),
+        style: AppTextStyles.overline.copyWith(
+          color: colorScheme.primary,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
   }
 }
 

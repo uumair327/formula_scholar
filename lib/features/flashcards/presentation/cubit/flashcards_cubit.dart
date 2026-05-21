@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
 import '../../../achievements/domain/domain.dart';
 import '../../domain/domain.dart';
 import 'flashcards_state.dart';
 
+@injectable
 class FlashcardsCubit extends Cubit<FlashcardsState>
     with CubitFailureLogger<FlashcardsState> {
   FlashcardsCubit({

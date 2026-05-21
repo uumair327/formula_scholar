@@ -129,6 +129,7 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
               .toList() ??
           const [],
       canonicalFormulaId: data['canonicalFormulaId'] as String?,
+      widgetConfig: data['widgetConfig'] as Map<String, dynamic>?,
     );
   }
 

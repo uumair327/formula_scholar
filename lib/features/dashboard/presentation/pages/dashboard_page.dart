@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -95,7 +95,6 @@ class DashboardPage extends StatelessWidget {
           if (state.status == DashboardStatus.error) {
             return Scaffold(
               body: AppErrorState(
-                message: state.errorMessage,
                 onRetry: () =>
                     context.read<DashboardCubit>().retryLoadDashboard(),
               ),
@@ -719,83 +718,42 @@ class DashboardPage extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: Material(
-                color: AppColors.transparent,
-                child: InkWell(
-                  onTap: () {
-                    final shell = StatefulNavigationShell.of(context);
-                    shell.goBranch(1);
-                  },
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-                  child: Container(
-                    padding: const EdgeInsets.all(AppDimensions.paddingLG),
-                    decoration: BoxDecoration(
-                      color: colorScheme.surfaceContainerLowest,
-                      borderRadius: BorderRadius.circular(
-                        AppDimensions.radiusXL,
-                      ),
-                      border: Border.all(
-                        color: colorScheme.primary.withValues(alpha: 0.3),
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        Icon(
-                          LucideIcons.box,
-                          size: AppDimensions.iconLG,
-                          color: colorScheme.primary,
-                        ),
-                        const SizedBox(height: AppDimensions.paddingSM),
-                        Text(
-                          AppStrings.visualizer3d,
-                          style: AppTextStyles.labelLarge.copyWith(
-                            color: colorScheme.primary,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              child: _ToolCard(
+                icon: LucideIcons.box,
+                label: AppStrings.visualizer3d,
+                color: colorScheme.primary,
+                onTap: () => context.pushNamed(AppRoutes.visualizer3dName),
               ),
             ),
             const SizedBox(width: AppDimensions.paddingMD),
             Expanded(
-              child: Material(
-                color: AppColors.transparent,
-                child: InkWell(
-                  onTap: () => context.pushNamed(AppRoutes.studyPlannerName),
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-                  child: Container(
-                    padding: const EdgeInsets.all(AppDimensions.paddingLG),
-                    decoration: BoxDecoration(
-                      color: colorScheme.surfaceContainerLowest,
-                      borderRadius: BorderRadius.circular(
-                        AppDimensions.radiusXL,
-                      ),
-                      border: Border.all(
-                        color: colorScheme.secondary.withValues(alpha: 0.3),
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        Icon(
-                          LucideIcons.calendarCheck,
-                          size: AppDimensions.iconLG,
-                          color: colorScheme.secondary,
-                        ),
-                        const SizedBox(height: AppDimensions.paddingSM),
-                        Text(
-                          'Study Planner',
-                          style: AppTextStyles.labelLarge.copyWith(
-                            color: colorScheme.secondary,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              child: _ToolCard(
+                icon: LucideIcons.calendarCheck,
+                label: 'Study Planner',
+                color: colorScheme.secondary,
+                onTap: () => context.pushNamed(AppRoutes.studyPlannerName),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: AppDimensions.paddingMD),
+        Row(
+          children: [
+            Expanded(
+              child: _ToolCard(
+                icon: LucideIcons.barChart3,
+                label: 'Analytics',
+                color: colorScheme.tertiary,
+                onTap: () => context.pushNamed(AppRoutes.analyticsName),
+              ),
+            ),
+            const SizedBox(width: AppDimensions.paddingMD),
+            Expanded(
+              child: _ToolCard(
+                icon: LucideIcons.layers,
+                label: 'Flashcards',
+                color: colorScheme.primary,
+                onTap: () => context.pushNamed(AppRoutes.flashcardsName),
               ),
             ),
           ],
@@ -1866,6 +1824,50 @@ class _CurriculumChipState extends State<_CurriculumChip> {
                       ),
                     ),
                 ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ToolCard extends StatelessWidget {
+  const _ToolCard({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+        child: Container(
+          padding: const EdgeInsets.all(AppDimensions.paddingLG),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surfaceContainerLowest,
+            borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+            border: Border.all(color: color.withValues(alpha: 0.3)),
+          ),
+          child: Column(
+            children: [
+              Icon(icon, size: AppDimensions.iconLG, color: color),
+              const SizedBox(height: AppDimensions.paddingSM),
+              Text(
+                label,
+                style: AppTextStyles.labelLarge.copyWith(color: color),
+                textAlign: TextAlign.center,
               ),
             ],
           ),

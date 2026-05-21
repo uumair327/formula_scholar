@@ -12,6 +12,8 @@ import '../../domain/domain.dart';
 import '../cubit/formulas_cubit.dart';
 import '../cubit/formulas_state.dart';
 import '../widgets/formula_note_sheet.dart';
+import '../../../widget_viewer/widget_viewer.dart';
+
 
 /// Formulas page — displays all formulas for a given chapter.
 ///
@@ -398,14 +400,22 @@ class FormulasPage extends StatelessWidget {
 // ═══════════════════════════════════════════════════════════════════
 
 /// A single formula card with LaTeX preview, title, and mastery status.
-class _FormulaCard extends StatelessWidget {
+class _FormulaCard extends StatefulWidget {
   const _FormulaCard({required this.formula, required this.index});
 
   final Formula formula;
   final int index;
 
   @override
+  State<_FormulaCard> createState() => _FormulaCardState();
+}
+
+class _FormulaCardState extends State<_FormulaCard> {
+  bool _isExpanded = false;
+
+  @override
   Widget build(BuildContext context) {
+    final formula = widget.formula;
     final colorScheme = Theme.of(context).colorScheme;
 
     return AppCard(
@@ -588,6 +598,52 @@ class _FormulaCard extends StatelessWidget {
               height: AppDimensions.lineHeightRelaxed,
             ),
           ),
+          if (formula.widgetConfig != null) ...[
+            const SizedBox(height: AppDimensions.paddingMD),
+            const Divider(),
+            const SizedBox(height: AppDimensions.paddingSM),
+            InkWell(
+              onTap: () {
+                setState(() {
+                  _isExpanded = !_isExpanded;
+                });
+              },
+              borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: AppDimensions.paddingSM,
+                  horizontal: AppDimensions.paddingMD,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      _isExpanded ? LucideIcons.chevronUp : LucideIcons.playCircle,
+                      color: colorScheme.primary,
+                      size: 20,
+                    ),
+                    const SizedBox(width: AppDimensions.paddingSM),
+                    Text(
+                      _isExpanded ? 'Hide Visualizer' : 'Open Interactive Visualizer',
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            AnimatedCrossFade(
+              firstChild: const SizedBox.shrink(),
+              secondChild: Padding(
+                padding: const EdgeInsets.only(top: AppDimensions.paddingMD),
+                child: InteractiveWidgetContainer(widgetConfig: formula.widgetConfig!),
+              ),
+              crossFadeState: _isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+              duration: const Duration(milliseconds: 300),
+            ),
+          ],
         ],
       ),
     );

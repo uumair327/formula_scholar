@@ -1,9 +1,12 @@
 library;
 
+import 'package:injectable/injectable.dart';
+
 import '../../../../core/error/result.dart';
 import '../entities/flashcard.dart';
 import '../ports/flashcard_repository_port.dart';
 
+@injectable
 class SaveReviewUseCase {
   const SaveReviewUseCase({required FlashcardRepositoryPort repository})
     : _repository = repository;

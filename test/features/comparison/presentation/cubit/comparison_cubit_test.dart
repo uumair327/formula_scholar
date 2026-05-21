@@ -19,13 +19,13 @@ void main() {
     });
 
     test('copyWith preserves unchanged fields', () {
-      final formulaA = const Formula(
+      const formulaA = Formula(
         id: '1',
         title: 'A',
         latex: 'a',
         description: '',
       );
-      final state = ComparisonState(
+      const state = ComparisonState(
         status: ComparisonStatus.loaded,
         formulaA: formulaA,
       );
@@ -68,13 +68,13 @@ void main() {
     });
 
     test('setFormulas emits loaded state with both formulas and comparison', () {
-      final formulaA = const Formula(
+      const formulaA = Formula(
         id: '1',
         title: 'Newton\'s Law',
         latex: 'F = ma',
         description: 'Force equals mass times acceleration',
       );
-      final formulaB = const Formula(
+      const formulaB = Formula(
         id: '2',
         title: 'Momentum',
         latex: 'p = mv',
@@ -91,13 +91,13 @@ void main() {
     });
 
     test('swap exchanges formulaA and formulaB and recomputes comparison', () {
-      final formulaA = const Formula(
+      const formulaA = Formula(
         id: '1',
         title: 'A',
         latex: 'F = ma',
         description: 'Force',
       );
-      final formulaB = const Formula(
+      const formulaB = Formula(
         id: '2',
         title: 'B',
         latex: 'p = mv',
@@ -118,13 +118,13 @@ void main() {
     });
 
     test('clear resets to initial state', () {
-      final formulaA = const Formula(
+      const formulaA = Formula(
         id: '1',
         title: 'A',
         latex: 'F = ma',
         description: 'Force',
       );
-      final formulaB = const Formula(
+      const formulaB = Formula(
         id: '2',
         title: 'B',
         latex: 'p = mv',
@@ -142,13 +142,13 @@ void main() {
     });
 
     test('emits states in correct order', () async {
-      final formulaA = const Formula(
+      const formulaA = Formula(
         id: '1',
         title: 'A',
         latex: 'F = ma',
         description: 'Force',
       );
-      final formulaB = const Formula(
+      const formulaB = Formula(
         id: '2',
         title: 'B',
         latex: 'p = mv',

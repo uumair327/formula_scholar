@@ -95,7 +95,7 @@ void main() {
     });
 
     test('createPlan emits error on failure', () async {
-      createPlan.result = Error<void>(
+      createPlan.result = const Error<void>(
         ServerFailure(message: 'create failed'),
       );
 
@@ -115,7 +115,7 @@ void main() {
     });
 
     test('updatePlan emits error on failure', () async {
-      updatePlan.result = Error<void>(
+      updatePlan.result = const Error<void>(
         ServerFailure(message: 'update failed'),
       );
 
@@ -134,7 +134,7 @@ void main() {
     });
 
     test('deletePlan emits error on failure', () async {
-      deletePlan.result = Error<void>(
+      deletePlan.result = const Error<void>(
         ServerFailure(message: 'delete failed'),
       );
 
@@ -157,7 +157,7 @@ void main() {
     });
 
     test('markSessionComplete emits error on failure', () async {
-      updateSession.result = Error<void>(
+      updateSession.result = const Error<void>(
         ServerFailure(message: 'session failed'),
       );
 

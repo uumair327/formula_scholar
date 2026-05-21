@@ -58,6 +58,7 @@ dependencies:
   carousel_slider: ^5.1.2
   url_launcher: ^6.3.2
   fl_chart: ^0.70.2
+  webview_flutter: ^4.8.0
 
 dev_dependencies:
   dart_firebase_admin: any
