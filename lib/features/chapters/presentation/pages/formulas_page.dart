@@ -375,16 +375,12 @@ class FormulasPage extends StatelessWidget {
   }
 
   Widget _buildFormulaGrid(BuildContext context, FormulasState state) {
-    return GridView.builder(
+    return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        mainAxisSpacing: AppDimensions.paddingLG,
-        crossAxisSpacing: AppDimensions.paddingLG,
-        childAspectRatio: 1.4,
-      ),
       itemCount: state.formulas.length,
+      separatorBuilder: (context, index) =>
+          const SizedBox(height: AppDimensions.paddingLG),
       itemBuilder: (context, index) {
         return _FormulaCard(
           formula: state.formulas[index],
