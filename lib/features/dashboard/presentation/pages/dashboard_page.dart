@@ -1930,7 +1930,10 @@ class _ToolCardState extends State<_ToolCard>
     final colorScheme = Theme.of(context).colorScheme;
 
     return GestureDetector(
-      onTapDown: (_) => _controller.forward(),
+      onTapDown: (_) {
+        HapticsHelper.selectionClick();
+        _controller.forward();
+      },
       onTapUp: (_) => _controller.reverse(),
       onTapCancel: () => _controller.reverse(),
       onTap: widget.onTap,

@@ -61,31 +61,37 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
 
   Widget _buildContent(AnalyticsState state, ColorScheme colorScheme) {
     final data = state.data!;
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppDimensions.paddingMD),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          EntranceWrapper.stagger(
-            index: 0,
-            child: _overviewCards(data, colorScheme),
-          ),
-          const SizedBox(height: AppDimensions.paddingMD),
-          EntranceWrapper.stagger(
-            index: 1,
-            child: _weeklyChart(data.weeklyActivity, colorScheme),
-          ),
-          const SizedBox(height: AppDimensions.paddingMD),
-          EntranceWrapper.stagger(
-            index: 2,
-            child: _masteryChart(data.masteryDistribution, colorScheme),
-          ),
-          const SizedBox(height: AppDimensions.paddingMD),
-          EntranceWrapper.stagger(
-            index: 3,
-            child: _recentActivity(data.recentActivity, colorScheme),
-          ),
-        ],
+    return RefreshIndicator(
+      onRefresh: () async {
+        context.read<AnalyticsCubit>().load();
+      },
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(AppDimensions.paddingMD),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            EntranceWrapper.stagger(
+              index: 0,
+              child: _overviewCards(data, colorScheme),
+            ),
+            const SizedBox(height: AppDimensions.paddingMD),
+            EntranceWrapper.stagger(
+              index: 1,
+              child: _weeklyChart(data.weeklyActivity, colorScheme),
+            ),
+            const SizedBox(height: AppDimensions.paddingMD),
+            EntranceWrapper.stagger(
+              index: 2,
+              child: _masteryChart(data.masteryDistribution, colorScheme),
+            ),
+            const SizedBox(height: AppDimensions.paddingMD),
+            EntranceWrapper.stagger(
+              index: 3,
+              child: _recentActivity(data.recentActivity, colorScheme),
+            ),
+          ],
+        ),
       ),
     );
   }

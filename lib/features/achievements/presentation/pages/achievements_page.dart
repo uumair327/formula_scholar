@@ -31,23 +31,28 @@ class AchievementsPage extends StatelessWidget {
           final unlocked = state.unlocked;
           final locked = state.locked;
 
-          return ListView(
-            padding: const EdgeInsets.all(AppDimensions.paddingMD),
-            children: [
-              AchievementProgressCard(state: state),
-              const SizedBox(height: AppDimensions.paddingLG),
-              if (unlocked.isNotEmpty) ...[
-                _sectionHeader('Unlocked (${unlocked.length})'),
-                const SizedBox(height: AppDimensions.paddingSM),
-                ...unlocked.map((a) => AchievementTile(achievement: a)),
+          return RefreshIndicator(
+            onRefresh: () async {
+              context.read<AchievementsCubit>().loadAchievements();
+            },
+            child: ListView(
+              padding: const EdgeInsets.all(AppDimensions.paddingMD),
+              children: [
+                AchievementProgressCard(state: state),
                 const SizedBox(height: AppDimensions.paddingLG),
+                if (unlocked.isNotEmpty) ...[
+                  _sectionHeader('Unlocked (${unlocked.length})'),
+                  const SizedBox(height: AppDimensions.paddingSM),
+                  ...unlocked.map((a) => AchievementTile(achievement: a)),
+                  const SizedBox(height: AppDimensions.paddingLG),
+                ],
+                if (locked.isNotEmpty) ...[
+                  _sectionHeader('Locked (${locked.length})'),
+                  const SizedBox(height: AppDimensions.paddingSM),
+                  ...locked.map((a) => AchievementTile(achievement: a)),
+                ],
               ],
-              if (locked.isNotEmpty) ...[
-                _sectionHeader('Locked (${locked.length})'),
-                const SizedBox(height: AppDimensions.paddingSM),
-                ...locked.map((a) => AchievementTile(achievement: a)),
-              ],
-            ],
+            ),
           );
         },
       ),

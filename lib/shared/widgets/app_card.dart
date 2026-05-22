@@ -91,7 +91,10 @@ class _AppCardState extends State<AppCard>
       widget.animate && (widget.onTap != null || widget.onLongPress != null);
 
   void _handleTapDown(TapDownDetails _) {
-    if (_interactive) _controller.forward();
+    if (_interactive) {
+      HapticsHelper.selectionClick();
+      _controller.forward();
+    }
   }
 
   void _handleTapUp(TapUpDetails _) {

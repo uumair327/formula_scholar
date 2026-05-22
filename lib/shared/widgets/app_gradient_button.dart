@@ -76,6 +76,7 @@ class _AppGradientButtonState extends State<AppGradientButton>
 
   void _handleTapDown(TapDownDetails details) {
     if (!widget.isLoading && widget.onPressed != null) {
+      HapticsHelper.lightImpact();
       setState(() => _isPressed = true);
       _controller.forward();
     }

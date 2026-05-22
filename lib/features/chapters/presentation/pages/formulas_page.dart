@@ -776,7 +776,10 @@ class _MasteryToggleButton extends StatelessWidget {
           : colorScheme.surfaceContainerHigh,
       borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
       child: InkWell(
-        onTap: onToggle,
+        onTap: () {
+          HapticsHelper.mediumImpact();
+          onToggle();
+        },
         borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
         child: AnimatedContainer(
           duration: AppDurations.animationFast,
@@ -837,7 +840,10 @@ class _BookmarkButton extends StatelessWidget {
           : colorScheme.surfaceContainerHigh,
       borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
       child: InkWell(
-        onTap: onToggle,
+        onTap: () {
+          HapticsHelper.lightImpact();
+          onToggle();
+        },
         borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
         child: AnimatedContainer(
           duration: AppDurations.animationFast,

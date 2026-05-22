@@ -49,12 +49,7 @@ class SubjectCard extends StatelessWidget {
       button: true,
       child: MouseRegion(
         cursor: SystemMouseCursors.click,
-        child: GestureDetector(
-          onTap: onTap,
-          onLongPress: onLongPress,
-          behavior: HitTestBehavior.opaque,
-          child: card,
-        ),
+        child: card,
       ),
     );
   }
@@ -72,6 +67,8 @@ class SubjectCard extends StatelessWidget {
     return AppCard(
       padding: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
+      onTap: onTap,
+      onLongPress: onLongPress,
       child: ConstrainedBox(
         constraints: const BoxConstraints(
           minHeight: AppDimensions.cardMinHeightLG,
@@ -85,13 +82,16 @@ class SubjectCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  AppIconCircle(
-                    icon: iconData,
-                    size: AppDimensions.avatarLG,
-                    backgroundColor: lightColor,
-                    iconColor: accentColor,
-                    iconSize: AppDimensions.iconXL,
-                    borderRadius: AppDimensions.radiusLG,
+                  Hero(
+                    tag: 'subject_icon_${subject.id}',
+                    child: AppIconCircle(
+                      icon: iconData,
+                      size: AppDimensions.avatarLG,
+                      backgroundColor: lightColor,
+                      iconColor: accentColor,
+                      iconSize: AppDimensions.iconXL,
+                      borderRadius: AppDimensions.radiusLG,
+                    ),
                   ),
                   if (subject.badgeText != null)
                     Container(
@@ -184,6 +184,8 @@ class SubjectCard extends StatelessWidget {
       color: lightColor,
       padding: const EdgeInsets.all(AppDimensions.paddingXXL),
       border: Border.all(color: faintColor),
+      onTap: onTap,
+      onLongPress: onLongPress,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -191,13 +193,16 @@ class SubjectCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              AppIconCircle(
-                icon: iconData,
-                size: AppDimensions.avatarMD,
-                backgroundColor: lightColor,
-                iconColor: accentColor,
-                iconSize: AppDimensions.iconLG,
-                borderRadius: AppDimensions.radiusXL,
+              Hero(
+                tag: 'subject_icon_${subject.id}',
+                child: AppIconCircle(
+                  icon: iconData,
+                  size: AppDimensions.avatarMD,
+                  backgroundColor: lightColor,
+                  iconColor: accentColor,
+                  iconSize: AppDimensions.iconLG,
+                  borderRadius: AppDimensions.radiusXL,
+                ),
               ),
               if (subject.badgeText != null)
                 Container(

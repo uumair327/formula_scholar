@@ -663,10 +663,13 @@ class _SubjectChaptersPageState extends State<SubjectChaptersPage> {
               opacity: AppDimensions.opacityFaint,
               child: Transform.rotate(
                 angle: AppDimensions.rotationSubtle,
-                child: Icon(
-                  LucideIcons.compass,
-                  size: AppDimensions.iconDecorative,
-                  color: colorScheme.onPrimary,
+                child: Hero(
+                  tag: 'subject_icon_${subject.id}',
+                  child: Icon(
+                    AppIconMapper.resolve(subject.iconName),
+                    size: AppDimensions.iconDecorative,
+                    color: colorScheme.onPrimary,
+                  ),
                 ),
               ),
             ),
