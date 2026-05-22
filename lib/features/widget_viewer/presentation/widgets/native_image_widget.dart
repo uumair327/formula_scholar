@@ -53,17 +53,22 @@ class _NativeImageWidgetState extends State<NativeImageWidget>
 
               return Stack(
                 children: [
-                  // Base image
                   Positioned.fill(
                     child: url.isNotEmpty
-                        ? CachedNetworkImage(
-                            imageUrl: url,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                            errorWidget: (context, url, error) => _buildPlaceholderImage(),
-                          )
+                        ? (url.startsWith('http')
+                            ? CachedNetworkImage(
+                                imageUrl: url,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                                errorWidget: (context, url, error) => _buildPlaceholderImage(),
+                              )
+                            : Image.asset(
+                                url,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) => _buildPlaceholderImage(),
+                              ))
                         : _buildPlaceholderImage(),
                   ),
 

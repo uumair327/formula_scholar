@@ -196,10 +196,21 @@ Water Molecule (Offline Fallback)
       }
     };
 
-    // Execute immediately with config injected into HTML
-    window.onload = function() {
-      window.renderMolecule('$renderMode', '$smiles');
-    };
+    // Execute with a polling interval to wait for scripts to load
+    let attempts = 0;
+    function init() {
+      if (typeof window.\$3Dmol !== 'undefined' && typeof window.SmilesDrawer !== 'undefined') {
+        renderMolecule('$renderMode', '$smiles');
+      } else {
+        attempts++;
+        if (attempts < 50) {
+          setTimeout(init, 100);
+        } else {
+          document.getElementById('container').innerHTML = '<div style="color:#ff6b6b;font-size:12px;">Failed to load visualizer libraries</div>';
+        }
+      }
+    }
+    init();
   </script>
 </body>
 </html>
