@@ -70,6 +70,7 @@ class VisualizerCubit extends Cubit<VisualizerState> {
     final title = formula.title.toLowerCase();
     final latex = formula.latex.toLowerCase();
 
+    if (title.contains('frustum')) return VisualizerType.frustum;
     if (title.contains('sphere') || title.contains('hemisphere')) {
       return VisualizerType.sphere;
     }

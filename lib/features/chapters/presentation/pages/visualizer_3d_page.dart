@@ -346,7 +346,11 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
     String labelB = 'Height';
     String labelC = 'Rotation';
 
-    if (type == _VisualizerType.gravitation) {
+    if (type == _VisualizerType.frustum) {
+      labelA = 'Bottom Radius';
+      labelB = 'Top Radius';
+      labelC = 'Height';
+    } else if (type == _VisualizerType.gravitation) {
       labelA = 'Mass Factor';
       labelB = 'Orbit Distance';
       labelC = 'Orbital Speed';
@@ -429,6 +433,9 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
     final title = formula.title.toLowerCase();
     final latex = formula.latex.toLowerCase();
 
+    if (title.contains('frustum')) {
+      return _VisualizerType.frustum;
+    }
     if (title.contains('sphere') ||
         latex.contains('sphere') ||
         title.contains('hemisphere')) {
@@ -477,6 +484,10 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
       _paramA = 0.6;
       _paramB = 1.2;
       _paramC = 1.5;
+    } else if (type == _VisualizerType.frustum) {
+      _paramA = 1.0;
+      _paramB = 1.0;
+      _paramC = 1.0;
     } else {
       _paramA = 1.0;
       _paramB = 1.5;
@@ -493,7 +504,8 @@ enum _VisualizerType {
   refraction,
   quadratic,
   dna,
-  polyhedron
+  polyhedron,
+  frustum
 }
 
 /// Starfield and cyber-grid lines background for 3D visualizer.
@@ -572,6 +584,8 @@ class _ThreeDCanvasPainter extends CustomPainter {
         _draw3DDNA(canvas, center, radiusBase);
       case _VisualizerType.polyhedron:
         _draw3DPolyhedron(canvas, center, radiusBase);
+      case _VisualizerType.frustum:
+        _draw3DFrustum(canvas, center, radiusBase);
     }
   }
 
@@ -982,6 +996,46 @@ class _ThreeDCanvasPainter extends CustomPainter {
     canvas.drawLine(offsets[2], offsets[3], strokePaint);
     canvas.drawLine(offsets[3], offsets[4], strokePaint);
     canvas.drawLine(offsets[4], offsets[1], strokePaint);
+  }
+
+  void _draw3DFrustum(Canvas canvas, Offset center, double radiusBase) {
+    final r1 = radiusBase * paramA;
+    final r2 = radiusBase * paramB * 0.6;
+    final height = radiusBase * 1.5 * paramC;
+    final strokePaint = Paint()
+      ..color = colorScheme.secondary.withValues(alpha: 0.5)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5;
+    final topRing = Path();
+    final bottomRing = Path();
+    bool first = true;
+    final topPoints = <Offset>[];
+    final bottomPoints = <Offset>[];
+
+    for (int i = 0; i <= 36; i++) {
+      final double angle = (i / 36) * 2 * math.pi;
+      final xTop = r2 * math.cos(angle);
+      final zTop = r2 * math.sin(angle);
+      final xBottom = r1 * math.cos(angle);
+      final zBottom = r1 * math.sin(angle);
+      final ptTop = _project(_Point3D(xTop, -height / 2, zTop), r2);
+      final ptBottom = _project(_Point3D(xBottom, height / 2, zBottom), r1);
+      topPoints.add(Offset(center.dx + ptTop.x, center.dy + ptTop.y));
+      bottomPoints.add(Offset(center.dx + ptBottom.x, center.dy + ptBottom.y));
+      if (first) {
+        topRing.moveTo(center.dx + ptTop.x, center.dy + ptTop.y);
+        bottomRing.moveTo(center.dx + ptBottom.x, center.dy + ptBottom.y);
+        first = false;
+      } else {
+        topRing.lineTo(center.dx + ptTop.x, center.dy + ptTop.y);
+        bottomRing.lineTo(center.dx + ptBottom.x, center.dy + ptBottom.y);
+      }
+    }
+    canvas.drawPath(topRing, strokePaint);
+    canvas.drawPath(bottomRing, strokePaint);
+    for (int i = 0; i < 36; i += 6) {
+      canvas.drawLine(topPoints[i], bottomPoints[i], strokePaint);
+    }
   }
 
   @override

@@ -25,6 +25,7 @@ class ParameterControls extends StatelessWidget {
 
   String _labelA() {
     switch (type) {
+      case VisualizerType.frustum: return 'Bottom Radius';
       case VisualizerType.gravitation: return 'Mass Factor';
       case VisualizerType.refraction: return 'Beam Angle';
       case VisualizerType.quadratic: return 'Variable A';
@@ -34,6 +35,7 @@ class ParameterControls extends StatelessWidget {
 
   String _labelB() {
     switch (type) {
+      case VisualizerType.frustum: return 'Top Radius';
       case VisualizerType.gravitation: return 'Orbit Distance';
       case VisualizerType.refraction: return 'Prism Size';
       case VisualizerType.quadratic: return 'Variable B';
@@ -43,6 +45,7 @@ class ParameterControls extends StatelessWidget {
 
   String _labelC() {
     switch (type) {
+      case VisualizerType.frustum: return 'Height';
       case VisualizerType.gravitation: return 'Orbital Speed';
       case VisualizerType.refraction: return 'Refraction Index';
       case VisualizerType.quadratic: return 'Variable C';

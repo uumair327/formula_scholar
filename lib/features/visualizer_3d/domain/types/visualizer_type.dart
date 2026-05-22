@@ -7,4 +7,5 @@ enum VisualizerType {
   quadratic,
   dna,
   polyhedron,
+  frustum,
 }

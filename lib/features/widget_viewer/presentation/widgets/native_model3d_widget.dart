@@ -130,6 +130,7 @@ class _NativeModel3DWidgetState extends State<NativeModel3DWidget>
 
   VisualizerType _parseShapeType(String shape) {
     final lower = shape.toLowerCase();
+    if (lower.contains('frustum')) return VisualizerType.frustum;
     if (lower.contains('sphere')) return VisualizerType.sphere;
     if (lower.contains('cone')) return VisualizerType.cone;
     if (lower.contains('cylinder')) return VisualizerType.cylinder;
