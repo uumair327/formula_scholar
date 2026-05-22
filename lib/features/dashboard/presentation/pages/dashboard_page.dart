@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -296,9 +297,15 @@ class DashboardPage extends StatelessWidget {
           builder: (context, options) {
             final isBusy = options.status == CurriculumOptionsStatus.loading;
 
-            return AppCard(
+            return Container(
               padding: const EdgeInsets.all(AppDimensions.paddingLG),
-              border: Border.all(color: colorScheme.surfaceContainerHigh),
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerLowest.withValues(alpha: 0.5),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+                border: Border.all(
+                  color: colorScheme.outlineVariant.withValues(alpha: 0.2),
+                ),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -309,21 +316,15 @@ class DashboardPage extends StatelessWidget {
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(
-                              AppDimensions.paddingXS,
-                            ),
+                            padding: const EdgeInsets.all(AppDimensions.paddingXS),
                             decoration: BoxDecoration(
-                              color: colorScheme.primaryContainer.withValues(
-                                alpha: AppDimensions.opacityFaint,
-                              ),
-                              borderRadius: BorderRadius.circular(
-                                AppDimensions.radiusSM,
-                              ),
+                              gradient: AppColors.primaryGradientOf(context),
+                              borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
                             ),
-                            child: Icon(
+                            child: const Icon(
                               LucideIcons.slidersHorizontal,
                               size: AppDimensions.iconSM,
-                              color: colorScheme.primary,
+                              color: AppColors.white,
                             ),
                           ),
                           const SizedBox(width: AppDimensions.paddingSM),
@@ -340,18 +341,20 @@ class DashboardPage extends StatelessWidget {
                         label: 'Switch board or grade',
                         button: true,
                         child: GestureDetector(
-                          onTap: () => context.go(AppRoutes.onboardingPath),
+                          onTap: () {
+                            HapticsHelper.lightImpact();
+                            context.go(AppRoutes.onboardingPath);
+                          },
                           child: Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: AppDimensions.paddingSM,
                               vertical: AppDimensions.paddingXXS,
                             ),
                             decoration: BoxDecoration(
-                              color: colorScheme.primaryContainer.withValues(
-                                alpha: AppDimensions.opacityFaint,
-                              ),
-                              borderRadius: BorderRadius.circular(
-                                AppDimensions.radiusXXL,
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
+                              border: Border.all(
+                                color: colorScheme.outlineVariant.withValues(alpha: 0.5),
                               ),
                             ),
                             child: Row(
@@ -359,14 +362,14 @@ class DashboardPage extends StatelessWidget {
                                 Icon(
                                   LucideIcons.arrowLeftRight,
                                   size: AppDimensions.iconSM,
-                                  color: colorScheme.primary,
+                                  color: colorScheme.onSurfaceVariant,
                                 ),
                                 const SizedBox(width: AppDimensions.paddingXXS),
                                 Text(
                                   AppStrings.dashboardSwitchBoardGrade,
                                   style: AppTextStyles.labelSmall.copyWith(
-                                    color: colorScheme.primary,
-                                    fontWeight: FontWeight.w700,
+                                    color: colorScheme.onSurfaceVariant,
+                                    fontWeight: FontWeight.w600,
                                     fontSize: AppDimensions.fontSizeXSPlus,
                                   ),
                                 ),
@@ -611,6 +614,36 @@ class DashboardPage extends StatelessWidget {
       ),
       child: Stack(
         children: [
+          // Decorative circles
+          Positioned(
+            top: -20,
+            right: -20,
+            child: Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    AppColors.white.withValues(alpha: 0.2),
+                    AppColors.white.withValues(alpha: 0.0),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: -40,
+            right: 20,
+            child: Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.white.withValues(alpha: 0.1),
+              ),
+            ),
+          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -621,9 +654,7 @@ class DashboardPage extends StatelessWidget {
                   vertical: AppDimensions.badgePaddingVertical,
                 ),
                 decoration: BoxDecoration(
-                  color: colorScheme.surface.withValues(
-                    alpha: AppDimensions.opacitySubtle,
-                  ),
+                  color: AppColors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
                 ),
                 child: Row(
@@ -641,7 +672,7 @@ class DashboardPage extends StatelessWidget {
                     Text(
                       state.heroBadge,
                       style: AppTextStyles.labelSmall.copyWith(
-                        color: colorScheme.onPrimary,
+                        color: AppColors.white,
                         fontWeight: FontWeight.w700,
                         fontSize: AppDimensions.fontSizeXS,
                       ),
@@ -654,7 +685,7 @@ class DashboardPage extends StatelessWidget {
               Text(
                 state.heroTitle,
                 style: AppTextStyles.headlineLarge.copyWith(
-                  color: colorScheme.onPrimary,
+                  color: AppColors.white,
                   fontWeight: FontWeight.w800,
                   height: AppDimensions.lineHeightCompact,
                 ),
@@ -664,77 +695,60 @@ class DashboardPage extends StatelessWidget {
               Text(
                 state.heroDescription,
                 style: AppTextStyles.bodyMedium.copyWith(
-                  color: colorScheme.onPrimary.withValues(
-                    alpha: AppDimensions.opacityNearOpaque,
-                  ),
+                  color: AppColors.white.withValues(alpha: 0.9),
                 ),
               ),
               const SizedBox(height: AppDimensions.paddingXL),
-              // Resume button — premium gradient
+              // Resume button — premium glass style
               Semantics(
                 label: 'Resume learning',
                 button: true,
                 child: GestureDetector(
-                  onTap: () => _resumeLearning(context, state),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppDimensions.paddingHero,
-                      vertical: AppDimensions.progressBarLG,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
-                      boxShadow: const [AppShadows.medium],
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          AppStrings.dashboardResumeLesson,
-                          style: AppTextStyles.labelLarge.copyWith(
-                            color: colorScheme.primary,
-                            fontWeight: FontWeight.w800,
+                  onTap: () {
+                    HapticsHelper.lightImpact();
+                    _resumeLearning(context, state);
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppDimensions.paddingHero,
+                          vertical: AppDimensions.progressBarLG,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.white.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
+                          border: Border.all(
+                            color: AppColors.white.withValues(alpha: 0.5),
+                            width: 1,
                           ),
                         ),
-                        const SizedBox(width: AppDimensions.paddingSM),
-                        Icon(
-                          LucideIcons.arrowRight,
-                          size: AppDimensions.iconSM,
-                          color: colorScheme.primary,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              AppStrings.dashboardResumeLesson,
+                              style: AppTextStyles.labelLarge.copyWith(
+                                color: AppColors.white,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            const SizedBox(width: AppDimensions.paddingSM),
+                            const Icon(
+                              LucideIcons.arrowRight,
+                              size: AppDimensions.iconSM,
+                              color: AppColors.white,
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
               ),
             ],
-          ),
-          // Decorative circles
-          Positioned(
-            top: -AppDimensions.paddingSM,
-            right: -AppDimensions.paddingSM,
-            child: Container(
-              width: AppDimensions.glowCircleSizeSM,
-              height: AppDimensions.glowCircleSizeSM,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: colorScheme.surface.withValues(
-                  alpha: AppDimensions.opacityFaint,
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: -20,
-            right: 40,
-            child: Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: colorScheme.surface.withValues(alpha: 0.06),
-              ),
-            ),
           ),
         ],
       ),
@@ -1645,96 +1659,132 @@ class _AnnouncementBanner extends StatefulWidget {
 
 class _AnnouncementBannerState extends State<_AnnouncementBanner> {
   final Set<String> _dismissed = {};
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final visible = widget.announcements
         .where((a) => !_dismissed.contains(a.id))
-        .take(3)
         .toList();
+
     if (visible.isEmpty) return const SizedBox.shrink();
 
-    return Semantics(
-      label: 'Announcements',
-      child: Column(
-        children: visible.map((announcement) {
-          final isUrgent = announcement.isUrgent;
-          return Dismissible(
-            key: ValueKey(announcement.id),
-            direction: DismissDirection.horizontal,
-            onDismissed: (_) {
-              setState(() => _dismissed.add(announcement.id));
+    return Column(
+      children: [
+        CarouselSlider.builder(
+          itemCount: visible.length,
+          options: CarouselOptions(
+            height: 90,
+            viewportFraction: 1.0,
+            autoPlay: visible.length > 1,
+            autoPlayInterval: const Duration(seconds: 5),
+            onPageChanged: (index, reason) {
+              setState(() => _currentIndex = index);
             },
-            background: Container(
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.only(left: AppDimensions.paddingMD),
-              decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
-              ),
-              child: Icon(Icons.close, color: colorScheme.onSurfaceVariant),
-            ),
-            child: Container(
+          ),
+          itemBuilder: (context, index, realIndex) {
+            final announcement = visible[index];
+            final isUrgent = announcement.isUrgent;
+
+            return Container(
               width: double.infinity,
-              margin: const EdgeInsets.only(bottom: AppDimensions.paddingSM),
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppDimensions.paddingMD,
-                vertical: AppDimensions.paddingSM,
-              ),
+              margin: const EdgeInsets.symmetric(horizontal: 2),
+              padding: const EdgeInsets.all(AppDimensions.paddingLG),
               decoration: BoxDecoration(
-                color: isUrgent
-                    ? colorScheme.errorContainer
-                    : colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
-                border: isUrgent
-                    ? Border.all(
-                        color: colorScheme.error.withValues(alpha: 0.5),
-                      )
-                    : null,
+                gradient: isUrgent
+                    ? (isDark ? AppColors.darkErrorGradient : AppColors.errorGradient)
+                    : (isDark ? AppColors.darkPrimaryGradient : AppColors.primaryGradient),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+                boxShadow: const [AppShadows.medium],
               ),
-              child: Row(
+              child: Stack(
                 children: [
-                  Icon(
-                    isUrgent ? Icons.warning_rounded : Icons.campaign_rounded,
-                    size: AppDimensions.iconMD,
-                    color: isUrgent
-                        ? colorScheme.onErrorContainer
-                        : colorScheme.onPrimaryContainer,
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(AppDimensions.paddingSM),
+                        decoration: BoxDecoration(
+                          color: AppColors.white.withValues(alpha: 0.2),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          isUrgent ? LucideIcons.alertTriangle : LucideIcons.megaphone,
+                          color: AppColors.white,
+                          size: AppDimensions.iconMD,
+                        ),
+                      ),
+                      const SizedBox(width: AppDimensions.paddingMD),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              announcement.title,
+                              style: AppTextStyles.labelLarge.copyWith(
+                                color: AppColors.white,
+                                fontWeight: FontWeight.w800,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              announcement.message,
+                              style: AppTextStyles.bodySmall.copyWith(
+                                color: AppColors.white.withValues(alpha: 0.9),
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: AppDimensions.paddingXL),
+                    ],
                   ),
-                  const SizedBox(width: AppDimensions.paddingSM),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          announcement.title,
-                          style: AppTextStyles.labelMedium.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: isUrgent
-                                ? colorScheme.onErrorContainer
-                                : colorScheme.onPrimaryContainer,
-                          ),
-                        ),
-                        Text(
-                          announcement.message,
-                          style: AppTextStyles.bodySmall.copyWith(
-                            color: isUrgent
-                                ? colorScheme.onErrorContainer
-                                : colorScheme.onPrimaryContainer,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+                  Positioned(
+                    top: -8,
+                    right: -8,
+                    child: IconButton(
+                      icon: const Icon(LucideIcons.x, color: AppColors.white, size: 20),
+                      onPressed: () {
+                        setState(() {
+                          _dismissed.add(announcement.id);
+                          if (_currentIndex >= visible.length - 1) {
+                            _currentIndex = 0;
+                          }
+                        });
+                      },
                     ),
                   ),
                 ],
               ),
-            ),
-          );
-        }).toList(),
-      ),
+            );
+          },
+        ),
+        if (visible.length > 1) ...[
+          const SizedBox(height: AppDimensions.paddingSM),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: visible.asMap().entries.map((entry) {
+              return Container(
+                width: 8.0,
+                height: 8.0,
+                margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _currentIndex == entry.key
+                      ? colorScheme.primary
+                      : colorScheme.primary.withValues(alpha: 0.2),
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ],
     );
   }
 }
@@ -1812,10 +1862,14 @@ class _CurriculumChipState extends State<_CurriculumChip> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final selected = widget.selected;
 
     return GestureDetector(
-      onTap: widget.onTap,
+      onTap: () {
+        HapticsHelper.lightImpact();
+        widget.onTap?.call();
+      },
       child: Semantics(
         label: widget.label,
         selected: selected,
@@ -1828,14 +1882,15 @@ class _CurriculumChipState extends State<_CurriculumChip> {
             vertical: AppDimensions.paddingSM,
           ),
           decoration: BoxDecoration(
-            color: selected
-                ? colorScheme.primary
-                : colorScheme.surfaceContainerLow,
+            gradient: selected
+                ? (isDark ? AppColors.darkPrimaryGradient : AppColors.primaryGradient)
+                : null,
+            color: selected ? null : Colors.transparent,
             borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
             border: Border.all(
               color: selected
-                  ? colorScheme.primary
-                  : colorScheme.surfaceContainerHigh,
+                  ? Colors.transparent
+                  : colorScheme.outlineVariant.withValues(alpha: 0.4),
             ),
             boxShadow: selected ? const [AppShadows.chip] : null,
           ),
@@ -1843,14 +1898,14 @@ class _CurriculumChipState extends State<_CurriculumChip> {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (selected)
-                Padding(
-                  padding: const EdgeInsets.only(
+                const Padding(
+                  padding: EdgeInsets.only(
                     right: AppDimensions.paddingXS,
                   ),
                   child: Icon(
                     LucideIcons.check,
                     size: AppDimensions.iconSM,
-                    color: colorScheme.onPrimary,
+                    color: AppColors.white,
                   ),
                 ),
               Column(
@@ -1861,7 +1916,7 @@ class _CurriculumChipState extends State<_CurriculumChip> {
                     widget.label,
                     style: AppTextStyles.labelMedium.copyWith(
                       color: selected
-                          ? colorScheme.onPrimary
+                          ? AppColors.white
                           : colorScheme.onSurface,
                       fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
                     ),
@@ -1871,7 +1926,7 @@ class _CurriculumChipState extends State<_CurriculumChip> {
                       widget.subtitle!,
                       style: AppTextStyles.labelSmall.copyWith(
                         color: selected
-                            ? colorScheme.onPrimary.withValues(
+                            ? AppColors.white.withValues(
                                 alpha: AppDimensions.opacityMedium,
                               )
                             : colorScheme.onSurfaceVariant,

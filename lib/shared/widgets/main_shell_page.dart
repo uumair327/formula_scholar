@@ -145,18 +145,29 @@ class _MobileShell extends StatelessWidget {
     return Scaffold(
       body: navigationShell,
       extendBody: true,
-      bottomNavigationBar: _GlassBottomNavBar(
-        currentIndex: navigationShell.currentIndex,
-        onTap: (index) {
-          AppLogger.debug(
-            'Bottom nav tapped: index=$index',
-            tag: AppLogTags.mainShellPage,
-          );
-          navigationShell.goBranch(
-            index,
-            initialLocation: index == navigationShell.currentIndex,
-          );
-        },
+      bottomNavigationBar: SafeArea(
+        bottom: true,
+        child: Padding(
+          padding: const EdgeInsets.only(
+            left: AppDimensions.paddingXL,
+            right: AppDimensions.paddingXL,
+            bottom: AppDimensions.paddingLG,
+          ),
+          child: _GlassBottomNavBar(
+            currentIndex: navigationShell.currentIndex,
+            onTap: (index) {
+              HapticsHelper.lightImpact();
+              AppLogger.debug(
+                'Bottom nav tapped: index=$index',
+                tag: AppLogTags.mainShellPage,
+              );
+              navigationShell.goBranch(
+                index,
+                initialLocation: index == navigationShell.currentIndex,
+              );
+            },
+          ),
+        ),
       ),
     );
   }
@@ -177,9 +188,7 @@ class _GlassBottomNavBar extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return ClipRRect(
-      borderRadius: const BorderRadius.vertical(
-        top: Radius.circular(AppDimensions.radiusXL),
-      ),
+      borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
       child: BackdropFilter(
         filter: ImageFilter.blur(
           sigmaX: AppDimensions.glassBlurSigma,
@@ -188,34 +197,38 @@ class _GlassBottomNavBar extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             color: isDark ? AppColors.glassDark : AppColors.glassLight,
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(AppDimensions.radiusXL),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
+            border: Border.all(
+              color: isDark
+                  ? AppColors.glassBorderDark
+                  : AppColors.glassBorderLight,
+              width: AppDimensions.borderWidth,
             ),
-            border: Border(
-              top: BorderSide(
-                color: isDark
-                    ? AppColors.glassBorderDark
-                    : AppColors.glassBorderLight,
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.primary.withValues(alpha: 0.1),
+                blurRadius: 24,
+                offset: const Offset(0, 8),
               ),
-            ),
+            ],
           ),
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppDimensions.paddingMD,
-                vertical: AppDimensions.paddingSM,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: _navItems.asMap().entries.map((entry) {
-                  return _NavItem(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppDimensions.paddingSM,
+              vertical: AppDimensions.paddingSM,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: _navItems.asMap().entries.map((entry) {
+                return Expanded(
+                  child: _NavItem(
                     icon: entry.value.icon,
                     label: entry.value.label,
                     isSelected: entry.key == currentIndex,
                     onTap: () => onTap(entry.key),
-                  );
-                }).toList(),
-              ),
+                  ),
+                );
+              }).toList(),
             ),
           ),
         ),
@@ -285,11 +298,11 @@ class _NavItemState extends State<_NavItem>
         child: AnimatedContainer(
           duration: AppDurations.animationDefault,
           curve: AppDurations.curvePremium,
-          padding: EdgeInsets.symmetric(
-            horizontal: widget.isSelected
-                ? AppDimensions.paddingLG
-                : AppDimensions.paddingMD,
+          padding: const EdgeInsets.symmetric(
             vertical: AppDimensions.paddingSM,
+          ),
+          margin: const EdgeInsets.symmetric(
+            horizontal: AppDimensions.paddingXXS,
           ),
           decoration: BoxDecoration(
             gradient: widget.isSelected
@@ -297,7 +310,7 @@ class _NavItemState extends State<_NavItem>
                     ? AppColors.darkPrimaryGradient
                     : AppColors.primaryGradient)
                 : null,
-            borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
