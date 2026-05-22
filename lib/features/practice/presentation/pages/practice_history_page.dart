@@ -29,11 +29,12 @@ class _PracticeHistoryPageState extends State<PracticeHistoryPage> {
     return BlocBuilder<PracticeHistoryCubit, PracticeHistoryState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(
-            title: Text(
+          appBar: GlassAppBar(
+            titleWidget: Text(
               AppStrings.practiceHistory,
               style: AppTextStyles.titleLarge.copyWith(
                 fontWeight: FontWeight.w800,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
           ),
@@ -62,37 +63,10 @@ class _PracticeHistoryPageState extends State<PracticeHistoryPage> {
   }
 
   Widget _buildEmptyState(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppDimensions.paddingHero),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              LucideIcons.clipboardList,
-              size: AppDimensions.imageLG,
-              color: colorScheme.outlineVariant,
-            ),
-            const SizedBox(height: AppDimensions.paddingXL),
-            Text(
-              AppStrings.noPracticeHistory,
-              style: AppTextStyles.titleMedium.copyWith(
-                fontWeight: FontWeight.w700,
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: AppDimensions.paddingSM),
-            Text(
-              AppStrings.noPracticeHistoryDesc,
-              textAlign: TextAlign.center,
-              style: AppTextStyles.bodySmall.copyWith(
-                color: colorScheme.outline,
-              ),
-            ),
-          ],
-        ),
-      ),
+    return const AppEmptyState(
+      icon: LucideIcons.clipboardList,
+      title: AppStrings.noPracticeHistory,
+      description: AppStrings.noPracticeHistoryDesc,
     );
   }
 
@@ -104,7 +78,10 @@ class _PracticeHistoryPageState extends State<PracticeHistoryPage> {
         itemCount: state.results.length,
         itemBuilder: (context, index) {
           final result = state.results[index];
-          return HistoryCard(result: result);
+          return EntranceWrapper.stagger(
+            index: index,
+            child: HistoryCard(result: result),
+          );
         },
       ),
     );

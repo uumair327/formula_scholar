@@ -109,7 +109,20 @@ const geometryFormulas = {
         latex: 'AC^2 = AB^2 + BC^2',
         description: 'In a right-angled triangle, the square of the hypotenuse is equal to the sum of the squares of the remaining two sides.',
         category: 'theorem',
-        difficulty: 'easy'
+        difficulty: 'easy',
+        widgetConfig: {
+          type: 'graph',
+          title: 'Pythagorean Theorem Circle',
+          config: {
+            expressions: [
+              { latex: 'x^2 + y^2 = r^2', color: '#10B981' }
+            ],
+            viewport: { xMin: -10.0, xMax: 10.0, yMin: -10.0, yMax: 10.0 },
+            sliders: [
+              { id: 'r', label: 'Hypotenuse (r)', min: 1.0, max: 10.0, default: 5.0, step: 0.5 }
+            ]
+          }
+        }
       },
       {
         id: 'mh_geo_pyth_002',
@@ -178,7 +191,21 @@ const geometryFormulas = {
         latex: 'l \\perp OA',
         description: 'A tangent at any point of a circle is perpendicular to the radius at the point of contact.',
         category: 'theorem',
-        difficulty: 'easy'
+        difficulty: 'easy',
+        widgetConfig: {
+          type: 'graph',
+          title: 'Tangent to a Circle',
+          config: {
+            expressions: [
+              { latex: 'x^2 + y^2 = r^2', color: '#3B82F6' },
+              { latex: 'x = r', color: '#EF4444' }
+            ],
+            viewport: { xMin: -10.0, xMax: 10.0, yMin: -10.0, yMax: 10.0 },
+            sliders: [
+              { id: 'r', label: 'Radius (r)', min: 1.0, max: 8.0, default: 5.0, step: 0.5 }
+            ]
+          }
+        }
       },
       {
         id: 'mh_geo_cir_002',
@@ -300,7 +327,20 @@ const geometryFormulas = {
         latex: 'd(O, P) = \\sqrt{x^2 + y^2}',
         description: 'If coordinates of point P are (x,y), then its distance from the origin O(0,0) is √(x² + y²).',
         category: 'coordinate',
-        difficulty: 'easy'
+        difficulty: 'easy',
+        widgetConfig: {
+          type: 'graph',
+          title: 'Distance from Origin',
+          config: {
+            expressions: [
+              { latex: 'x^2 + y^2 = d^2', color: '#10B981' }
+            ],
+            viewport: { xMin: -10.0, xMax: 10.0, yMin: -10.0, yMax: 10.0 },
+            sliders: [
+              { id: 'd', label: 'Distance (d)', min: 1.0, max: 10.0, default: 5.0, step: 0.5 }
+            ]
+          }
+        }
       },
       {
         id: 'mh_geo_cg_002',
@@ -487,7 +527,20 @@ const geometryFormulas = {
         latex: 'A = \\frac{\\theta}{360} \\times \\pi r^2',
         description: 'Area of a sector of a circle with radius r and central angle θ.',
         category: 'sector',
-        difficulty: 'easy'
+        difficulty: 'easy',
+        widgetConfig: {
+          type: 'graph',
+          title: 'Area of Sector (Circle)',
+          config: {
+            expressions: [
+              { latex: 'x^2 + y^2 = r^2', color: '#3B82F6' }
+            ],
+            viewport: { xMin: -10.0, xMax: 10.0, yMin: -10.0, yMax: 10.0 },
+            sliders: [
+              { id: 'r', label: 'Radius (r)', min: 1.0, max: 10.0, default: 5.0, step: 0.5 }
+            ]
+          }
+        }
       },
       {
         id: 'mh_geo_mens_006',
@@ -532,7 +585,19 @@ const geometryFormulas = {
         latex: 'TSA = 2(lb + bh + lh), \\quad V = l \\cdot b \\cdot h',
         description: 'Total surface area and volume of a cuboid with dimensions length (l), breadth (b) and height (h).',
         category: 'cuboid',
-        difficulty: 'easy'
+        difficulty: 'easy',
+        widgetConfig: {
+          type: 'model3d',
+          title: '3D Cuboid Explorer',
+          config: {
+            shape: 'box',
+            sliders: [
+              { id: 'a', label: 'Width (l)', min: 0.5, max: 3.0, default: 1.5, step: 0.1 },
+              { id: 'b', label: 'Height (h)', min: 0.5, max: 3.0, default: 1.0, step: 0.1 },
+              { id: 'c', label: 'Depth (b)', min: 0.5, max: 3.0, default: 2.0, step: 0.1 }
+            ]
+          }
+        }
       },
       {
         id: 'mh_geo_mens_010',
@@ -540,7 +605,17 @@ const geometryFormulas = {
         latex: 'TSA = 6l^2, \\quad V = l^3',
         description: 'Total surface area and volume of a cube with side length l.',
         category: 'cube',
-        difficulty: 'easy'
+        difficulty: 'easy',
+        widgetConfig: {
+          type: 'model3d',
+          title: '3D Cube Explorer',
+          config: {
+            shape: 'box',
+            sliders: [
+              { id: 'a', label: 'Side (l)', min: 0.5, max: 3.0, default: 1.5, step: 0.1 }
+            ]
+          }
+        }
       },
       {
         id: 'mh_geo_mens_011',

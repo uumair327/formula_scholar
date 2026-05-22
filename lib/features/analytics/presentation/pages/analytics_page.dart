@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/shared.dart';
 import '../../domain/entities/analytics_data.dart';
 import '../../domain/entities/mastery_distribution.dart';
 import '../../domain/entities/recent_activity_item.dart';
@@ -28,7 +29,15 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBar(title: const Text('Analytics'), centerTitle: true),
+      appBar: GlassAppBar(
+        titleWidget: Text(
+          'Analytics',
+          style: AppTextStyles.titleMedium.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      ),
       body: BlocBuilder<AnalyticsCubit, AnalyticsState>(
         builder: (context, state) {
           return switch (state.status) {
@@ -44,29 +53,9 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   }
 
   Widget _buildError(AnalyticsState state, ColorScheme colorScheme) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppDimensions.paddingLG),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(LucideIcons.alertCircle, size: 48, color: colorScheme.error),
-            const SizedBox(height: AppDimensions.paddingMD),
-            Text(
-              state.errorMessage ?? 'Failed to load analytics',
-              textAlign: TextAlign.center,
-              style: AppTextStyles.bodyLarge.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: AppDimensions.paddingLG),
-            FilledButton.tonal(
-              onPressed: () => context.read<AnalyticsCubit>().load(),
-              child: const Text('Retry'),
-            ),
-          ],
-        ),
-      ),
+    return AppErrorState(
+      message: state.errorMessage ?? 'Failed to load analytics',
+      onRetry: () => context.read<AnalyticsCubit>().load(),
     );
   }
 
@@ -77,20 +66,32 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _overviewCards(data, colorScheme),
+          EntranceWrapper.stagger(
+            index: 0,
+            child: _overviewCards(data, colorScheme),
+          ),
           const SizedBox(height: AppDimensions.paddingMD),
-          _weeklyChart(data.weeklyActivity, colorScheme),
+          EntranceWrapper.stagger(
+            index: 1,
+            child: _weeklyChart(data.weeklyActivity, colorScheme),
+          ),
           const SizedBox(height: AppDimensions.paddingMD),
-          _masteryChart(data.masteryDistribution, colorScheme),
+          EntranceWrapper.stagger(
+            index: 2,
+            child: _masteryChart(data.masteryDistribution, colorScheme),
+          ),
           const SizedBox(height: AppDimensions.paddingMD),
-          _recentActivity(data.recentActivity, colorScheme),
+          EntranceWrapper.stagger(
+            index: 3,
+            child: _recentActivity(data.recentActivity, colorScheme),
+          ),
         ],
       ),
     );
   }
 
   Widget _overviewCards(AnalyticsData data, ColorScheme colorScheme) {
-    return Card(
+    return AppCard(
       child: Padding(
         padding: const EdgeInsets.all(AppDimensions.paddingMD),
         child: Column(
@@ -135,7 +136,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   }
 
   Widget _weeklyChart(WeeklyActivity activity, ColorScheme colorScheme) {
-    return Card(
+    return AppCard(
       child: Padding(
         padding: const EdgeInsets.all(AppDimensions.paddingMD),
         child: Column(
@@ -167,7 +168,9 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                           Container(
                             height: height.clamp(4, 120),
                             decoration: BoxDecoration(
-                              color: colorScheme.primary,
+                              gradient: Theme.of(context).brightness == Brightness.dark
+                                  ? AppColors.darkPrimaryGradient
+                                  : AppColors.primaryGradient,
                               borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
                             ),
                           ),
@@ -189,7 +192,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   }
 
   Widget _masteryChart(MasteryDistribution dist, ColorScheme colorScheme) {
-    return Card(
+    return AppCard(
       child: Padding(
         padding: const EdgeInsets.all(AppDimensions.paddingMD),
         child: Column(
@@ -254,7 +257,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   }
 
   Widget _recentActivity(List<RecentActivityItem> items, ColorScheme colorScheme) {
-    return Card(
+    return AppCard(
       child: Padding(
         padding: const EdgeInsets.all(AppDimensions.paddingMD),
         child: Column(
@@ -276,10 +279,10 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                 padding: const EdgeInsets.symmetric(vertical: 6),
                 child: Row(
                   children: [
-                    Icon(
-                      item.isPositive ? LucideIcons.checkCircle : LucideIcons.trendingUp,
-                      size: 18,
-                      color: item.isPositive ? colorScheme.secondary : colorScheme.primary,
+                    AppIconCircle(
+                      icon: item.isPositive ? LucideIcons.checkCircle : LucideIcons.trendingUp,
+                      iconColor: item.isPositive ? colorScheme.secondary : colorScheme.primary,
+                      backgroundColor: (item.isPositive ? colorScheme.secondary : colorScheme.primary).withValues(alpha: AppDimensions.opacityFaint),
                     ),
                     const SizedBox(width: AppDimensions.paddingSM),
                     Expanded(child: Text(item.title, style: AppTextStyles.bodyMedium)),

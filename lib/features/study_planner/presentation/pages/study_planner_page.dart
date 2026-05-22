@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/shared.dart';
 import '../../../auth/auth.dart';
 import '../../domain/domain.dart';
 import '../cubit/study_planner_cubit.dart';
@@ -32,14 +33,31 @@ class _StudyPlannerPageState extends State<StudyPlannerPage> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Study Planner'),
-        centerTitle: true,
+      appBar: GlassAppBar(
+        titleWidget: Text(
+          'Study Planner',
+          style: AppTextStyles.titleMedium.copyWith(
+            color: colorScheme.onSurface,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.pushNamed(AppRoutes.createPlanName),
-        icon: const Icon(LucideIcons.plus),
-        label: const Text('New Plan'),
+      floatingActionButton: Container(
+        decoration: BoxDecoration(
+          gradient: Theme.of(context).brightness == Brightness.dark
+              ? AppColors.darkPrimaryGradient
+              : AppColors.primaryGradient,
+          borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
+          boxShadow: [AppShadows.glow(AppColors.primary)],
+        ),
+        child: FloatingActionButton.extended(
+          onPressed: () => context.pushNamed(AppRoutes.createPlanName),
+          icon: const Icon(LucideIcons.plus),
+          label: const Text('New Plan'),
+          backgroundColor: AppColors.transparent,
+          foregroundColor: AppColors.onPrimary,
+          elevation: 0,
+        ),
       ),
       body: BlocBuilder<StudyPlannerCubit, StudyPlannerState>(
         builder: (context, state) {
@@ -64,41 +82,29 @@ class _StudyPlannerPageState extends State<StudyPlannerPage> {
           }
 
           if (state.plans.isEmpty) {
-            return ListView(
-              children: [
-                const SizedBox(height: 80),
-                Icon(
-                  LucideIcons.calendar,
-                  size: 64,
-                  color: colorScheme.onSurfaceVariant,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'No study plans yet',
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.titleMedium,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Create your first study plan to get started',
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.bodySmall.copyWith(
-                    color: colorScheme.onSurfaceVariant,
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const AppEmptyState(
+                    icon: LucideIcons.calendar,
+                    title: 'No study plans yet',
+                    description: 'Create your first study plan to get started',
                   ),
-                ),
-                const SizedBox(height: AppDimensions.paddingXL),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppDimensions.paddingXL,
+                  const SizedBox(height: AppDimensions.paddingXL),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimensions.paddingXL,
+                    ),
+                    child: AppGradientButton(
+                      label: 'Create Plan',
+                      onPressed: () =>
+                          context.pushNamed(AppRoutes.createPlanName),
+                      icon: LucideIcons.plus,
+                    ),
                   ),
-                  child: FilledButton.icon(
-                    onPressed: () =>
-                        context.pushNamed(AppRoutes.createPlanName),
-                    icon: const Icon(LucideIcons.plus),
-                    label: const Text('Create Plan'),
-                  ),
-                ),
-              ],
+                ],
+              ),
             );
           }
 
@@ -117,13 +123,16 @@ class _StudyPlannerPageState extends State<StudyPlannerPage> {
               itemCount: state.plans.length,
               itemBuilder: (context, index) {
                 final plan = state.plans[index];
-                return PlanCard(
-                  plan: plan,
-                  onTap: () => context.pushNamed(
-                    AppRoutes.planDetailName,
-                    pathParameters: {'planId': plan.id},
+                return EntranceWrapper.stagger(
+                  index: index,
+                  child: PlanCard(
+                    plan: plan,
+                    onTap: () => context.pushNamed(
+                      AppRoutes.planDetailName,
+                      pathParameters: {'planId': plan.id},
+                    ),
+                    onDelete: () => _confirmDelete(context, plan),
                   ),
-                  onDelete: () => _confirmDelete(context, plan),
                 );
               },
             ),

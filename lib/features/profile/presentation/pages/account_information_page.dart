@@ -44,75 +44,108 @@ class AccountInformationPage extends StatelessWidget {
                   delegate: SliverChildListDelegate([
                     const SizedBox(height: AppDimensions.paddingXXL),
                     // Profile card
-                    _buildProfileCard(context, profile),
+                    EntranceWrapper.stagger(
+                      index: 0,
+                      child: _buildProfileCard(context, profile),
+                    ),
                     const SizedBox(height: AppDimensions.paddingXXL),
                     // Personal Info section
-                    const AppSectionTitle(title: AppStrings.personalInfo),
+                    EntranceWrapper.stagger(
+                      index: 1,
+                      child: const AppSectionTitle(title: AppStrings.personalInfo),
+                    ),
                     const SizedBox(height: AppDimensions.paddingLG),
-                    _buildInfoTile(
-                      context: context,
-                      icon: LucideIcons.user,
-                      label: AppStrings.fullName,
-                      value: profile?.name ?? AppStrings.welcomeScholar,
-                    ),
-                    const SizedBox(height: AppDimensions.paddingMD),
-                    _buildInfoTile(
-                      context: context,
-                      icon: LucideIcons.mail,
-                      label: AppStrings.emailAddress,
-                      value: profile?.email ?? '—',
-                    ),
-                    const SizedBox(height: AppDimensions.paddingXXL),
-                    // Academic Info section
-                    const AppSectionTitle(title: AppStrings.academicInfo),
-                    const SizedBox(height: AppDimensions.paddingLG),
-                    _buildInfoTile(
-                      context: context,
-                      icon: LucideIcons.graduationCap,
-                      label: AppStrings.currentGrade,
-                      value: profile?.grade ?? '—',
-                    ),
-                    const SizedBox(height: AppDimensions.paddingMD),
-                    _buildInfoTile(
-                      context: context,
-                      icon: LucideIcons.award,
-                      label: AppStrings.accountType,
-                      value: profile?.isPro == true
-                          ? AppStrings.proBadge
-                          : AppStrings.freeAccount,
-                      valueColor: profile?.isPro == true
-                          ? AppColors.secondary
-                          : colorScheme.outline,
-                    ),
-                    const SizedBox(height: AppDimensions.paddingXXL),
-                    // Account Actions
-                    const AppSectionTitle(title: AppStrings.accountActions),
-                    const SizedBox(height: AppDimensions.paddingLG),
-                    _buildActionTile(
-                      context: context,
-                      icon: LucideIcons.edit3,
-                      label: AppStrings.editProfile,
-                      color: AppColors.primary,
-                      onTap: () => showEditProfileDialog(context),
-                    ),
-                    const SizedBox(height: AppDimensions.paddingMD),
-                    _buildActionTile(
-                      context: context,
-                      icon: LucideIcons.lock,
-                      label: AppStrings.changePassword,
-                      color: AppColors.primary,
-                      onTap: () => showForgotPasswordDialog(
-                        context,
-                        profile?.email ?? '',
+                    EntranceWrapper.stagger(
+                      index: 2,
+                      child: _buildInfoTile(
+                        context: context,
+                        icon: LucideIcons.user,
+                        label: AppStrings.fullName,
+                        value: profile?.name ?? AppStrings.welcomeScholar,
                       ),
                     ),
                     const SizedBox(height: AppDimensions.paddingMD),
-                    _buildActionTile(
-                      context: context,
-                      icon: LucideIcons.trash2,
-                      label: AppStrings.deleteAccount,
-                      color: AppColors.error,
-                      onTap: () => _showDeleteAccountDialog(context),
+                    EntranceWrapper.stagger(
+                      index: 3,
+                      child: _buildInfoTile(
+                        context: context,
+                        icon: LucideIcons.mail,
+                        label: AppStrings.emailAddress,
+                        value: profile?.email ?? '—',
+                      ),
+                    ),
+                    const SizedBox(height: AppDimensions.paddingXXL),
+                    // Academic Info section
+                    EntranceWrapper.stagger(
+                      index: 4,
+                      child: const AppSectionTitle(title: AppStrings.academicInfo),
+                    ),
+                    const SizedBox(height: AppDimensions.paddingLG),
+                    EntranceWrapper.stagger(
+                      index: 5,
+                      child: _buildInfoTile(
+                        context: context,
+                        icon: LucideIcons.graduationCap,
+                        label: AppStrings.currentGrade,
+                        value: profile?.grade ?? '—',
+                      ),
+                    ),
+                    const SizedBox(height: AppDimensions.paddingMD),
+                    EntranceWrapper.stagger(
+                      index: 6,
+                      child: _buildInfoTile(
+                        context: context,
+                        icon: LucideIcons.award,
+                        label: AppStrings.accountType,
+                        value: profile?.isPro == true
+                            ? AppStrings.proBadge
+                            : AppStrings.freeAccount,
+                        valueColor: profile?.isPro == true
+                            ? AppColors.secondary
+                            : colorScheme.outline,
+                      ),
+                    ),
+                    const SizedBox(height: AppDimensions.paddingXXL),
+                    // Account Actions
+                    EntranceWrapper.stagger(
+                      index: 7,
+                      child: const AppSectionTitle(title: AppStrings.accountActions),
+                    ),
+                    const SizedBox(height: AppDimensions.paddingLG),
+                    EntranceWrapper.stagger(
+                      index: 8,
+                      child: _buildActionTile(
+                        context: context,
+                        icon: LucideIcons.edit3,
+                        label: AppStrings.editProfile,
+                        color: AppColors.primary,
+                        onTap: () => showEditProfileDialog(context),
+                      ),
+                    ),
+                    const SizedBox(height: AppDimensions.paddingMD),
+                    EntranceWrapper.stagger(
+                      index: 9,
+                      child: _buildActionTile(
+                        context: context,
+                        icon: LucideIcons.lock,
+                        label: AppStrings.changePassword,
+                        color: AppColors.primary,
+                        onTap: () => showForgotPasswordDialog(
+                          context,
+                          profile?.email ?? '',
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: AppDimensions.paddingMD),
+                    EntranceWrapper.stagger(
+                      index: 10,
+                      child: _buildActionTile(
+                        context: context,
+                        icon: LucideIcons.trash2,
+                        label: AppStrings.deleteAccount,
+                        color: AppColors.error,
+                        onTap: () => _showDeleteAccountDialog(context),
+                      ),
                     ),
                     const SizedBox(height: AppDimensions.bottomNavPadding),
                   ]),
@@ -127,25 +160,21 @@ class AccountInformationPage extends StatelessWidget {
     );
   }
 
-  SliverAppBar _buildAppBar(BuildContext context) {
+  Widget _buildAppBar(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return SliverAppBar(
-      floating: true,
-      snap: true,
-      backgroundColor: colorScheme.surfaceContainerLowest.withValues(
-        alpha: AppDimensions.opacityAppBar,
-      ),
-      surfaceTintColor: AppColors.transparent,
+    return SliverGlassAppBar(
       leading: IconButton(
         onPressed: () => context.go(AppRoutes.profilePath),
         icon: Icon(LucideIcons.arrowLeft, color: colorScheme.onSurface),
       ),
-      title: Text(
+      titleWidget: Text(
         AppStrings.accountInformation,
-        style: AppTextStyles.titleLarge.copyWith(color: colorScheme.onSurface),
+        style: AppTextStyles.titleMedium.copyWith(
+          color: colorScheme.onSurface,
+          fontWeight: FontWeight.w800,
+        ),
       ),
-      centerTitle: true,
     );
   }
 

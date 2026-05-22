@@ -4,11 +4,15 @@ import 'package:flutter/material.dart';
 ///
 /// All colors follow Material Design 3 naming conventions
 /// and correspond directly to the Tailwind CSS custom properties.
+///
+/// Extended with gradient presets, glassmorphism tokens, and
+/// semantic color aliases for premium UI treatment.
 abstract final class AppColors {
   /// Returns light or dark color based on [context] brightness.
   static Color of(BuildContext context, Color light, Color dark) =>
       Theme.of(context).brightness == Brightness.dark ? dark : light;
-  // Background & Surface
+
+  // ──────────────────────── Background & Surface ─────────────────
   static const Color background = Color(0xFFF7F9FF);
   static const Color surface = Color(0xFFF7F9FF);
   static const Color surfaceContainerLowest = Color(0xFFFFFFFF);
@@ -17,11 +21,11 @@ abstract final class AppColors {
   static const Color surfaceContainerHigh = Color(0xFFE6E8EE);
   static const Color surfaceContainerHighest = Color(0xFFE0E2E8);
 
-  // On-Surface
+  // ──────────────────────── On-Surface ───────────────────────────
   static const Color onSurface = Color(0xFF181C20);
   static const Color onSurfaceVariant = Color(0xFF404750);
 
-  // Primary
+  // ──────────────────────── Primary ──────────────────────────────
   static const Color primary = Color(0xFF00639A);
   static const Color onPrimary = Color(0xFFFFFFFF);
   static const Color primaryContainer = Color(0xFF5DA9E9);
@@ -31,7 +35,7 @@ abstract final class AppColors {
   static const Color onPrimaryFixed = Color(0xFF001D32);
   static const Color onPrimaryFixedVariant = Color(0xFF004A76);
 
-  // Secondary
+  // ──────────────────────── Secondary ────────────────────────────
   static const Color secondary = Color(0xFF056C42);
   static const Color onSecondary = Color(0xFFFFFFFF);
   static const Color secondaryContainer = Color(0xFF9DF5BF);
@@ -41,7 +45,7 @@ abstract final class AppColors {
   static const Color onSecondaryFixed = Color(0xFF002110);
   static const Color onSecondaryFixedVariant = Color(0xFF005230);
 
-  // Tertiary
+  // ──────────────────────── Tertiary ─────────────────────────────
   static const Color tertiary = Color(0xFF655781);
   static const Color onTertiary = Color(0xFFFFFFFF);
   static const Color tertiaryContainer = Color(0xFFAC9CCA);
@@ -51,17 +55,17 @@ abstract final class AppColors {
   static const Color onTertiaryFixed = Color(0xFF211439);
   static const Color onTertiaryFixedVariant = Color(0xFF4D4068);
 
-  // Outline
+  // ──────────────────────── Outline ──────────────────────────────
   static const Color outline = Color(0xFF707881);
   static const Color outlineVariant = Color(0xFFC0C7D1);
 
-  // Error
+  // ──────────────────────── Error ────────────────────────────────
   static const Color error = Color(0xFFBA1A1A);
   static const Color onError = Color(0xFFFFFFFF);
   static const Color errorContainer = Color(0xFFFFDAD6);
   static const Color onErrorContainer = Color(0xFF93000A);
 
-  // Extra utility colors
+  // ──────────────────────── Extra utility colors ─────────────────
   static const Color blue50 = Color(0xFFEFF6FF);
   static const Color blue100 = Color(0xFFDBEAFE);
   static const Color blue600 = Color(0xFF2563EB);
@@ -77,7 +81,7 @@ abstract final class AppColors {
   static const Color green200 = Color(0xFFBBF7D0);
   static const Color blue200 = Color(0xFFBFDBFE);
 
-  // Surface variants
+  // ──────────────────────── Surface variants ─────────────────────
   static const Color surfaceDim = Color(0xFFD8DADF);
   static const Color surfaceBright = Color(0xFFF7F9FF);
   static const Color surfaceVariant = Color(0xFFE0E2E8);
@@ -86,11 +90,14 @@ abstract final class AppColors {
   static const Color inverseOnSurface = Color(0xFFEFF1F6);
   static const Color inversePrimary = Color(0xFF96CCFF);
 
-  // Dark mode variants
-  static const Color darkSurface = Color(0xFF121416);
+  // ──────────────────────── Dark mode variants ───────────────────
+  static const Color darkSurface = Color(0xFF0F1419);
   static const Color darkOnSurface = Color(0xFFE2E3E8);
-  static const Color darkSurfaceContainerLowest = Color(0xFF1B1D22);
-  static const Color darkSurfaceContainerLow = Color(0xFF23262B);
+  static const Color darkSurfaceContainerLowest = Color(0xFF161B22);
+  static const Color darkSurfaceContainerLow = Color(0xFF1C2128);
+  static const Color darkSurfaceContainer = Color(0xFF22272E);
+  static const Color darkSurfaceContainerHigh = Color(0xFF2D333B);
+  static const Color darkSurfaceContainerHighest = Color(0xFF373E47);
   static const Color darkOnSurfaceVariant = Color(0xFFC2C7CF);
   static const Color darkPrimary = Color(0xFF96CCFF);
   static const Color darkOnPrimary = Color(0xFF003353);
@@ -108,7 +115,97 @@ abstract final class AppColors {
   static const Color darkOnError = Color(0xFF690005);
   static const Color darkOutline = Color(0xFF8C929C);
 
-  // Core utility colors
+  // ──────────────────────── Core utility ─────────────────────────
   static const Color white = Color(0xFFFFFFFF);
   static const Color transparent = Color(0x00000000);
+
+  // ═══════════════════════════════════════════════════════════════
+  // PREMIUM DESIGN EXTENSIONS
+  // ═══════════════════════════════════════════════════════════════
+
+  // ──────────────────────── Semantic Colors ──────────────────────
+  static const Color successGreen = Color(0xFF10B981);
+  static const Color successGreenLight = Color(0xFFD1FAE5);
+  static const Color warningAmber = Color(0xFFF59E0B);
+  static const Color warningAmberLight = Color(0xFFFEF3C7);
+  static const Color infoBlue = Color(0xFF3B82F6);
+  static const Color infoBlueLight = Color(0xFFDBEAFE);
+
+  // ──────────────────────── Glassmorphism ────────────────────────
+  /// Light mode glass surface.
+  static const Color glassLight = Color(0xCCFFFFFF); // ~80% white
+  /// Dark mode glass surface.
+  static const Color glassDark = Color(0xB30F1419); // ~70% dark
+  /// Glass border — subtle white line.
+  static const Color glassBorderLight = Color(0x33FFFFFF); // ~20% white
+  static const Color glassBorderDark = Color(0x1AFFFFFF); // ~10% white
+
+  /// Returns glass surface color based on brightness.
+  static Color glass(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark ? glassDark : glassLight;
+
+  /// Returns glass border color based on brightness.
+  static Color glassBorder(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? glassBorderDark
+          : glassBorderLight;
+
+  // ──────────────────────── Gradient Presets ─────────────────────
+  /// Primary gradient — hero cards, CTAs.
+  static const LinearGradient primaryGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF0077B6), Color(0xFF00B4D8)],
+  );
+
+  /// Hero gradient — onboarding, splash, large hero sections.
+  static const LinearGradient heroGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF003C61), Color(0xFF00639A), Color(0xFF5DA9E9)],
+  );
+
+  /// Accent gradient — secondary actions, badges.
+  static const LinearGradient accentGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF056C42), Color(0xFF10B981)],
+  );
+
+  /// Card shimmer gradient — subtle premium shine on cards.
+  static const LinearGradient cardShimmer = LinearGradient(
+    begin: Alignment(-1.0, -0.3),
+    end: Alignment(1.0, 0.3),
+    colors: [
+      Color(0x00FFFFFF),
+      Color(0x0DFFFFFF),
+      Color(0x00FFFFFF),
+    ],
+  );
+
+  /// Dark mode primary gradient — adjusted for dark surfaces.
+  static const LinearGradient darkPrimaryGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF004B77), Color(0xFF0077B6)],
+  );
+
+  /// Dark mode hero gradient.
+  static const LinearGradient darkHeroGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF001D32), Color(0xFF003C61), Color(0xFF004B77)],
+  );
+
+  /// Returns the primary gradient for the current brightness.
+  static LinearGradient primaryGradientOf(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? darkPrimaryGradient
+          : primaryGradient;
+
+  /// Returns the hero gradient for the current brightness.
+  static LinearGradient heroGradientOf(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? darkHeroGradient
+          : heroGradient;
 }

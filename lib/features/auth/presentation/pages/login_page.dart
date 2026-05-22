@@ -124,6 +124,7 @@ class _LoginPageState extends State<LoginPage> {
 class _BackgroundDecor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Stack(
       children: [
         Positioned(
@@ -138,8 +139,13 @@ class _BackgroundDecor extends StatelessWidget {
             height: AppDimensions.decorativeBlurLG,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.primaryFixed.withValues(
-                alpha: AppDimensions.opacityFaint,
+              gradient: RadialGradient(
+                colors: [
+                  (isDark ? AppColors.darkPrimary : AppColors.primaryFixed)
+                      .withValues(alpha: 0.12),
+                  (isDark ? AppColors.darkPrimary : AppColors.primaryFixed)
+                      .withValues(alpha: 0.0),
+                ],
               ),
             ),
           ),
@@ -156,8 +162,32 @@ class _BackgroundDecor extends StatelessWidget {
             height: AppDimensions.decorativeBlurMD,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.secondaryFixed.withValues(
-                alpha: AppDimensions.opacityFaint,
+              gradient: RadialGradient(
+                colors: [
+                  (isDark ? AppColors.darkSecondary : AppColors.secondaryFixed)
+                      .withValues(alpha: 0.1),
+                  (isDark ? AppColors.darkSecondary : AppColors.secondaryFixed)
+                      .withValues(alpha: 0.0),
+                ],
+              ),
+            ),
+          ),
+        ),
+        // Additional subtle tertiary orb
+        Positioned(
+          top: MediaQuery.of(context).size.height * 0.4,
+          right: -80,
+          child: Container(
+            width: 200,
+            height: 200,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                colors: [
+                  (isDark ? AppColors.darkTertiary : AppColors.tertiaryFixed)
+                      .withValues(alpha: 0.08),
+                  AppColors.transparent,
+                ],
               ),
             ),
           ),
@@ -273,14 +303,11 @@ class _NarrowLayout extends StatelessWidget {
 class _BrandColumn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingHero),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [AppColors.primary, AppColors.primaryContainer],
-        ),
+      decoration: BoxDecoration(
+        gradient: isDark ? AppColors.darkHeroGradient : AppColors.heroGradient,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -501,33 +528,11 @@ class _FormContent extends StatelessWidget {
           BlocBuilder<AuthCubit, AuthState>(
             builder: (context, state) {
               final isLoading = state.status == AuthStatus.loading;
-              return SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: isLoading ? null : onSignIn,
-                  style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: AppDimensions.paddingLG,
-                    ),
-                    shape: const StadiumBorder(),
-                    elevation: AppDimensions.elevationMD,
-                  ),
-                  child: isLoading
-                      ? const SizedBox(
-                          width: AppDimensions.iconDefault,
-                          height: AppDimensions.iconDefault,
-                          child: CircularProgressIndicator(
-                            strokeWidth: AppDimensions.borderWidth,
-                            color: AppColors.onPrimary,
-                          ),
-                        )
-                      : Text(
-                          AppStrings.loginSignIn,
-                          style: AppTextStyles.labelLarge.copyWith(
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                ),
+              return AppGradientButton(
+                label: AppStrings.loginSignIn,
+                onPressed: isLoading ? null : onSignIn,
+                isLoading: isLoading,
+                icon: LucideIcons.logIn,
               );
             },
           ),

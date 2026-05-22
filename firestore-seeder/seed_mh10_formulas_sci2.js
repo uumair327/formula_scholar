@@ -75,7 +75,27 @@ const sci2Formulas = {
           }
         }
       },
-      { id: 'mh_s2_lp1_004', title: 'BMI (Body Mass Index)', latex: 'BMI = \\frac{\\text{Weight (kg)}}{\\text{Height (m)}^2}', description: 'Used to classify underweight, normal, overweight, and obese categories.', category: 'health', difficulty: 'easy' },
+      {
+        id: 'mh_s2_lp1_004',
+        title: 'BMI (Body Mass Index)',
+        latex: 'BMI = \\frac{\\text{Weight (kg)}}{\\text{Height (m)}^2}',
+        description: 'Used to classify underweight, normal, overweight, and obese categories.',
+        category: 'health',
+        difficulty: 'easy',
+        widgetConfig: {
+          type: 'graph',
+          title: 'BMI vs Weight Curve',
+          config: {
+            expressions: [
+              { latex: 'y = x / (h^2)', color: '#E67E22' }
+            ],
+            viewport: { xMin: 0.0, xMax: 150.0, yMin: 0.0, yMax: 50.0 },
+            sliders: [
+              { id: 'h', label: 'Height (m)', min: 1.0, max: 2.5, default: 1.75, step: 0.05 }
+            ]
+          }
+        }
+      },
     ]
   },
   chap_03: {
@@ -113,7 +133,27 @@ const sci2Formulas = {
   chap_07: {
     name: 'Introduction to Microbiology',
     formulas: [
-      { id: 'mh_s2_micro_001', title: 'Bacterial Growth (Exponential)', latex: 'N_t = N_0 \\times 2^n', description: 'Population after n generations. N₀ = initial count, each gen doubles.', category: 'microbiology', difficulty: 'intermediate' },
+      {
+        id: 'mh_s2_micro_001',
+        title: 'Bacterial Growth (Exponential)',
+        latex: 'N_t = N_0 \\times 2^n',
+        description: 'Population after n generations. N₀ = initial count, each gen doubles.',
+        category: 'microbiology',
+        difficulty: 'intermediate',
+        widgetConfig: {
+          type: 'graph',
+          title: 'Exponential Growth Curve',
+          config: {
+            expressions: [
+              { latex: 'y = n0 * 2^x', color: '#EF4444' }
+            ],
+            viewport: { xMin: 0.0, xMax: 10.0, yMin: 0.0, yMax: 1000.0 },
+            sliders: [
+              { id: 'n0', label: 'Initial (N₀)', min: 1.0, max: 100.0, default: 10.0, step: 1.0 }
+            ]
+          }
+        }
+      },
       { id: 'mh_s2_micro_002', title: 'Generation Time', latex: 'g = \\frac{t}{n}', description: 'Average time for one bacterial division. E. coli ≈ 20 min.', category: 'microbiology', difficulty: 'easy' },
       { id: 'mh_s2_micro_003', title: 'Koch\'s Postulates', latex: '\\text{Isolate} \\rightarrow \\text{Culture} \\rightarrow \\text{Infect} \\rightarrow \\text{Re-isolate}', description: 'Four steps to prove a specific microorganism causes a disease.', category: 'concept', difficulty: 'intermediate' },
     ]
@@ -136,7 +176,25 @@ const sci2Formulas = {
   chap_10: {
     name: 'Disaster Management',
     formulas: [
-      { id: 'mh_s2_dm_001', title: 'Richter Scale (Earthquake)', latex: 'M_L = \\log_{10} A', description: 'Earthquake magnitude. Each whole number increase = 10x amplitude.', category: 'measurement', difficulty: 'intermediate' },
+      {
+        id: 'mh_s2_dm_001',
+        title: 'Richter Scale (Earthquake)',
+        latex: 'M_L = \\log_{10} A',
+        description: 'Earthquake magnitude. Each whole number increase = 10x amplitude.',
+        category: 'measurement',
+        difficulty: 'intermediate',
+        widgetConfig: {
+          type: 'graph',
+          title: 'Richter Scale Curve',
+          config: {
+            expressions: [
+              { latex: 'y = log(x)', color: '#3B82F6' }
+            ],
+            viewport: { xMin: 1.0, xMax: 1000000.0, yMin: 0.0, yMax: 8.0 },
+            sliders: []
+          }
+        }
+      },
       { id: 'mh_s2_dm_002', title: 'Disaster Management Cycle', latex: '\\text{Mitigation} \\rightarrow \\text{Preparedness} \\rightarrow \\text{Response} \\rightarrow \\text{Recovery}', description: 'Four phases of disaster management framework.', category: 'concept', difficulty: 'easy' },
     ]
   }

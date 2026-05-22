@@ -128,61 +128,27 @@ class FormulasPage extends StatelessWidget {
   }
 
   Widget _buildEmptyFormulasState(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppDimensions.paddingXXL),
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(AppDimensions.paddingLG),
-              decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                LucideIcons.fileQuestion,
-                size: AppDimensions.iconXL,
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: AppDimensions.paddingLG),
-            Text(
-              'No formulas available yet',
-              style: AppTextStyles.titleMedium,
-            ),
-            const SizedBox(height: AppDimensions.paddingSM),
-            Text(
-              'Content for this chapter is being prepared. Check back later!',
-              textAlign: TextAlign.center,
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ),
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: AppDimensions.paddingXXL),
+      child: AppEmptyState(
+        icon: LucideIcons.fileQuestion,
+        title: 'No formulas available yet',
+        description: 'Content for this chapter is being prepared. Check back later!',
       ),
     );
   }
 
   // ──────────────────────── App Bar ─────────────────────────────
 
-  SliverAppBar _buildAppBar(BuildContext context, FormulasState state) {
+  Widget _buildAppBar(BuildContext context, FormulasState state) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return SliverAppBar(
-      floating: true,
-      snap: true,
-      backgroundColor: colorScheme.surfaceContainerLowest.withValues(
-        alpha: AppDimensions.opacityAppBar,
-      ),
-      surfaceTintColor: AppColors.transparent,
+    return SliverGlassAppBar(
       leading: IconButton(
         onPressed: () => context.pop(),
         icon: Icon(LucideIcons.arrowLeft, color: colorScheme.onSurface),
       ),
-      title: Column(
+      titleWidget: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(

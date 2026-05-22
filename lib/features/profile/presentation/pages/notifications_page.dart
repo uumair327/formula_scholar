@@ -56,114 +56,147 @@ class NotificationsPage extends StatelessWidget {
                     sliver: SliverList(
                       delegate: SliverChildListDelegate([
                         const SizedBox(height: AppDimensions.paddingXXL),
-                        _buildStatusCard(context),
-                        const SizedBox(height: AppDimensions.paddingXXL),
-                        const AppSectionTitle(
-                          title: AppStrings.studyNotifications,
-                        ),
-                        const SizedBox(height: AppDimensions.paddingLG),
-                        _buildToggleTile(
-                          context: context,
-                          icon: LucideIcons.clock,
-                          title: AppStrings.studyReminders,
-                          subtitle: AppStrings.studyRemindersDesc,
-                          value: prefs.studyReminders,
-                          onChanged: (v) => context
-                              .read<NotificationsCubit>()
-                              .updatePreferences(
-                                prefs.copyWith(studyReminders: v),
-                              ),
-                          color: AppColors.primary,
-                        ),
-                        const SizedBox(height: AppDimensions.paddingMD),
-                        _buildToggleTile(
-                          context: context,
-                          icon: LucideIcons.flame,
-                          title: AppStrings.streakAlerts,
-                          subtitle: AppStrings.streakAlertsDesc,
-                          value: prefs.streakAlerts,
-                          onChanged: (v) => context
-                              .read<NotificationsCubit>()
-                              .updatePreferences(
-                                prefs.copyWith(streakAlerts: v),
-                              ),
-                          color: AppColors.orange500,
-                        ),
-                        const SizedBox(height: AppDimensions.paddingMD),
-                        _buildToggleTile(
-                          context: context,
-                          icon: LucideIcons.sparkles,
-                          title: AppStrings.newContent,
-                          subtitle: AppStrings.newContentDesc,
-                          value: prefs.newContent,
-                          onChanged: (v) => context
-                              .read<NotificationsCubit>()
-                              .updatePreferences(prefs.copyWith(newContent: v)),
-                          color: AppColors.secondary,
+                        EntranceWrapper.stagger(
+                          index: 0,
+                          child: _buildStatusCard(context),
                         ),
                         const SizedBox(height: AppDimensions.paddingXXL),
-                        const AppSectionTitle(
-                          title: AppStrings.achievementNotifications,
+                        EntranceWrapper.stagger(
+                          index: 1,
+                          child: const AppSectionTitle(
+                            title: AppStrings.studyNotifications,
+                          ),
                         ),
                         const SizedBox(height: AppDimensions.paddingLG),
-                        _buildToggleTile(
-                          context: context,
-                          icon: LucideIcons.trophy,
-                          title: AppStrings.achievements,
-                          subtitle: AppStrings.achievementsDesc,
-                          value: prefs.achievements,
-                          onChanged: (v) => context
-                              .read<NotificationsCubit>()
-                              .updatePreferences(
-                                prefs.copyWith(achievements: v),
-                              ),
-                          color: AppColors.orange500,
+                        EntranceWrapper.stagger(
+                          index: 2,
+                          child: _buildToggleTile(
+                            context: context,
+                            icon: LucideIcons.clock,
+                            title: AppStrings.studyReminders,
+                            subtitle: AppStrings.studyRemindersDesc,
+                            value: prefs.studyReminders,
+                            onChanged: (v) => context
+                                .read<NotificationsCubit>()
+                                .updatePreferences(
+                                  prefs.copyWith(studyReminders: v),
+                                ),
+                            color: AppColors.primary,
+                          ),
                         ),
                         const SizedBox(height: AppDimensions.paddingMD),
-                        _buildToggleTile(
-                          context: context,
-                          icon: LucideIcons.barChart2,
-                          title: AppStrings.weeklyReport,
-                          subtitle: AppStrings.weeklyReportDesc,
-                          value: prefs.weeklyReport,
-                          onChanged: (v) => context
-                              .read<NotificationsCubit>()
-                              .updatePreferences(
-                                prefs.copyWith(weeklyReport: v),
-                              ),
-                          color: AppColors.tertiary,
+                        EntranceWrapper.stagger(
+                          index: 3,
+                          child: _buildToggleTile(
+                            context: context,
+                            icon: LucideIcons.flame,
+                            title: AppStrings.streakAlerts,
+                            subtitle: AppStrings.streakAlertsDesc,
+                            value: prefs.streakAlerts,
+                            onChanged: (v) => context
+                                .read<NotificationsCubit>()
+                                .updatePreferences(
+                                  prefs.copyWith(streakAlerts: v),
+                                ),
+                            color: AppColors.orange500,
+                          ),
+                        ),
+                        const SizedBox(height: AppDimensions.paddingMD),
+                        EntranceWrapper.stagger(
+                          index: 4,
+                          child: _buildToggleTile(
+                            context: context,
+                            icon: LucideIcons.sparkles,
+                            title: AppStrings.newContent,
+                            subtitle: AppStrings.newContentDesc,
+                            value: prefs.newContent,
+                            onChanged: (v) => context
+                                .read<NotificationsCubit>()
+                                .updatePreferences(prefs.copyWith(newContent: v)),
+                            color: AppColors.secondary,
+                          ),
                         ),
                         const SizedBox(height: AppDimensions.paddingXXL),
-                        const AppSectionTitle(
-                          title: AppStrings.deliveryChannels,
+                        EntranceWrapper.stagger(
+                          index: 5,
+                          child: const AppSectionTitle(
+                            title: AppStrings.achievementNotifications,
+                          ),
                         ),
                         const SizedBox(height: AppDimensions.paddingLG),
-                        _buildToggleTile(
-                          context: context,
-                          icon: LucideIcons.bell,
-                          title: AppStrings.pushNotificationsLabel,
-                          subtitle: AppStrings.pushNotificationsDesc,
-                          value: prefs.pushNotifications,
-                          onChanged: (v) => context
-                              .read<NotificationsCubit>()
-                              .updatePreferences(
-                                prefs.copyWith(pushNotifications: v),
-                              ),
-                          color: AppColors.primary,
+                        EntranceWrapper.stagger(
+                          index: 6,
+                          child: _buildToggleTile(
+                            context: context,
+                            icon: LucideIcons.trophy,
+                            title: AppStrings.achievements,
+                            subtitle: AppStrings.achievementsDesc,
+                            value: prefs.achievements,
+                            onChanged: (v) => context
+                                .read<NotificationsCubit>()
+                                .updatePreferences(
+                                  prefs.copyWith(achievements: v),
+                                ),
+                            color: AppColors.orange500,
+                          ),
                         ),
                         const SizedBox(height: AppDimensions.paddingMD),
-                        _buildToggleTile(
-                          context: context,
-                          icon: LucideIcons.mail,
-                          title: AppStrings.emailNotificationsLabel,
-                          subtitle: AppStrings.emailNotificationsDesc,
-                          value: prefs.emailNotifications,
-                          onChanged: (v) => context
-                              .read<NotificationsCubit>()
-                              .updatePreferences(
-                                prefs.copyWith(emailNotifications: v),
-                              ),
-                          color: colorScheme.outline,
+                        EntranceWrapper.stagger(
+                          index: 7,
+                          child: _buildToggleTile(
+                            context: context,
+                            icon: LucideIcons.barChart2,
+                            title: AppStrings.weeklyReport,
+                            subtitle: AppStrings.weeklyReportDesc,
+                            value: prefs.weeklyReport,
+                            onChanged: (v) => context
+                                .read<NotificationsCubit>()
+                                .updatePreferences(
+                                  prefs.copyWith(weeklyReport: v),
+                                ),
+                            color: AppColors.tertiary,
+                          ),
+                        ),
+                        const SizedBox(height: AppDimensions.paddingXXL),
+                        EntranceWrapper.stagger(
+                          index: 8,
+                          child: const AppSectionTitle(
+                            title: AppStrings.deliveryChannels,
+                          ),
+                        ),
+                        const SizedBox(height: AppDimensions.paddingLG),
+                        EntranceWrapper.stagger(
+                          index: 9,
+                          child: _buildToggleTile(
+                            context: context,
+                            icon: LucideIcons.bell,
+                            title: AppStrings.pushNotificationsLabel,
+                            subtitle: AppStrings.pushNotificationsDesc,
+                            value: prefs.pushNotifications,
+                            onChanged: (v) => context
+                                .read<NotificationsCubit>()
+                                .updatePreferences(
+                                  prefs.copyWith(pushNotifications: v),
+                                ),
+                            color: AppColors.primary,
+                          ),
+                        ),
+                        const SizedBox(height: AppDimensions.paddingMD),
+                        EntranceWrapper.stagger(
+                          index: 10,
+                          child: _buildToggleTile(
+                            context: context,
+                            icon: LucideIcons.mail,
+                            title: AppStrings.emailNotificationsLabel,
+                            subtitle: AppStrings.emailNotificationsDesc,
+                            value: prefs.emailNotifications,
+                            onChanged: (v) => context
+                                .read<NotificationsCubit>()
+                                .updatePreferences(
+                                  prefs.copyWith(emailNotifications: v),
+                                ),
+                            color: colorScheme.outline,
+                          ),
                         ),
                         const SizedBox(height: AppDimensions.bottomNavPadding),
                       ]),
@@ -194,25 +227,21 @@ class NotificationsPage extends StatelessWidget {
     );
   }
 
-  SliverAppBar _buildAppBar(BuildContext context) {
+  Widget _buildAppBar(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return SliverAppBar(
-      floating: true,
-      snap: true,
-      backgroundColor: colorScheme.surfaceContainerLowest.withValues(
-        alpha: AppDimensions.opacityAppBar,
-      ),
-      surfaceTintColor: AppColors.transparent,
+    return SliverGlassAppBar(
       leading: IconButton(
         onPressed: () => context.go(AppRoutes.profilePath),
         icon: Icon(LucideIcons.arrowLeft, color: colorScheme.onSurface),
       ),
-      title: Text(
+      titleWidget: Text(
         AppStrings.notifications,
-        style: AppTextStyles.titleLarge.copyWith(color: colorScheme.onSurface),
+        style: AppTextStyles.titleMedium.copyWith(
+          color: colorScheme.onSurface,
+          fontWeight: FontWeight.w800,
+        ),
       ),
-      centerTitle: true,
     );
   }
 

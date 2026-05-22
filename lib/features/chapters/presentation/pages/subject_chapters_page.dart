@@ -269,70 +269,21 @@ class _SubjectChaptersPageState extends State<SubjectChaptersPage> {
                         }
 
                         if (state.chapters.isEmpty) {
-                          final colorScheme = Theme.of(context).colorScheme;
-
                           return SliverFillRemaining(
                             hasScrollBody: false,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: AppDimensions.paddingXXL,
-                              ),
-                              child: Center(
-                                child: AppCard(
-                                  padding: const EdgeInsets.all(
-                                    AppDimensions.paddingXXL,
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const Icon(
-                                        LucideIcons.bookOpen,
-                                        size: AppDimensions.imageLG,
-                                        color: AppColors.primary,
-                                      ),
-                                      const SizedBox(
-                                        height: AppDimensions.paddingXXL,
-                                      ),
-                                      Text(
-                                        AppStrings.chaptersNoContentTitle,
-                                        textAlign: TextAlign.center,
-                                        style: AppTextStyles.headlineSmall
-                                            .copyWith(
-                                              fontWeight: FontWeight.w800,
-                                            ),
-                                      ),
-                                      const SizedBox(
-                                        height: AppDimensions.paddingSM,
-                                      ),
-                                      Text(
-                                        AppStrings.chaptersNoContentDescription,
-                                        textAlign: TextAlign.center,
-                                        style: AppTextStyles.bodyMedium
-                                            .copyWith(
-                                              color:
-                                                  colorScheme.onSurfaceVariant,
-                                            ),
-                                      ),
-                                      const SizedBox(
-                                        height: AppDimensions.paddingXXL,
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          context
-                                              .read<SubjectSelectionCubit>()
-                                              .clearSelection();
-                                          StatefulNavigationShell.of(
-                                            context,
-                                          ).goBranch(0);
-                                        },
-                                        child: const Text(
-                                          AppStrings.chaptersBrowseSubjects,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
+                            child: AppEmptyState(
+                              title: AppStrings.chaptersNoContentTitle,
+                              description: AppStrings.chaptersNoContentDescription,
+                              icon: LucideIcons.bookOpen,
+                              actionLabel: AppStrings.chaptersBrowseSubjects,
+                              onAction: () {
+                                context
+                                    .read<SubjectSelectionCubit>()
+                                    .clearSelection();
+                                StatefulNavigationShell.of(
+                                  context,
+                                ).goBranch(0);
+                              },
                             ),
                           );
                         }
@@ -454,27 +405,23 @@ class _SubjectChaptersPageState extends State<SubjectChaptersPage> {
 
   // ──────────────────────── App Bar ─────────────────────────────
 
-  SliverAppBar _buildAppBar(
+  SliverGlassAppBar _buildAppBar(
     BuildContext context,
     SubjectSelectionState subjectState,
   ) {
     final colorScheme = Theme.of(context).colorScheme;
 
     final subject = subjectState.subject;
-    return SliverAppBar(
-      floating: true,
-      snap: true,
-      backgroundColor: colorScheme.surfaceContainerLowest.withValues(
-        alpha: AppDimensions.opacityAppBar,
-      ),
-      surfaceTintColor: AppColors.transparent,
-      title: Column(
+    return SliverGlassAppBar(
+      titleWidget: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             subject?.name ?? AppStrings.selectSubjectTitle,
-            style: AppTextStyles.headlineSmall.copyWith(
-              color: AppColors.onPrimaryFixedVariant,
+            style: AppTextStyles.titleMedium.copyWith(
+              color: colorScheme.onSurface,
+              fontWeight: FontWeight.w800,
             ),
           ),
           if (subject != null)
@@ -663,10 +610,15 @@ class _SubjectChaptersPageState extends State<SubjectChaptersPage> {
 
   Widget _buildHeroSection(BuildContext context, SelectedSubject subject) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingHero),
-      decoration: signatureGlowDecoration(colorScheme),
+      decoration: BoxDecoration(
+        gradient: isDark ? AppColors.darkHeroGradient : AppColors.heroGradient,
+        borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+        boxShadow: [AppShadows.glow(colorScheme.primary)],
+      ),
       child: Stack(
         children: [
           Column(
@@ -687,6 +639,7 @@ class _SubjectChaptersPageState extends State<SubjectChaptersPage> {
                 subject.name,
                 style: AppTextStyles.displayLarge.copyWith(
                   color: colorScheme.onPrimary,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
               const SizedBox(height: AppDimensions.paddingSM),
@@ -714,6 +667,21 @@ class _SubjectChaptersPageState extends State<SubjectChaptersPage> {
                   LucideIcons.compass,
                   size: AppDimensions.iconDecorative,
                   color: colorScheme.onPrimary,
+                ),
+              ),
+            ),
+          ),
+          // Decorative circle
+          Positioned(
+            top: -AppDimensions.paddingSM,
+            right: -AppDimensions.paddingSM,
+            child: Container(
+              width: AppDimensions.glowCircleSizeSM,
+              height: AppDimensions.glowCircleSizeSM,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: colorScheme.surface.withValues(
+                  alpha: AppDimensions.opacityFaint,
                 ),
               ),
             ),

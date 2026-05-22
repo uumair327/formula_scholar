@@ -15,9 +15,14 @@ class CheatSheetPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Cheat Sheet'),
-        centerTitle: true,
+      appBar: GlassAppBar(
+        titleWidget: Text(
+          'Cheat Sheet',
+          style: AppTextStyles.titleMedium.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: () => _printCheatSheet(context),
@@ -29,7 +34,11 @@ class CheatSheetPage extends StatelessWidget {
       body: BlocBuilder<FormulasCubit, FormulasState>(
         builder: (context, state) {
           if (state.formulas.isEmpty) {
-            return const Center(child: Text('No formulas to display'));
+            return const AppEmptyState(
+              icon: LucideIcons.fileText,
+              title: 'No formulas',
+              description: 'There are no formulas in this chapter yet.',
+            );
           }
 
           final subjectName = _getSubjectName(context);
@@ -42,10 +51,16 @@ class CheatSheetPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildHeader(context, subjectName, chapterName, mastered, total),
+                EntranceWrapper.stagger(
+                  index: 0,
+                  child: _buildHeader(context, subjectName, chapterName, mastered, total),
+                ),
                 const SizedBox(height: AppDimensions.paddingLG),
-                ...state.formulas.map(
-                  (f) => _buildFormulaEntry(context, f),
+                ...state.formulas.asMap().entries.map(
+                  (entry) => EntranceWrapper.stagger(
+                    index: entry.key + 1,
+                    child: _buildFormulaEntry(context, entry.value),
+                  ),
                 ),
                 const SizedBox(height: AppDimensions.paddingSection),
               ],
@@ -74,10 +89,9 @@ class CheatSheetPage extends StatelessWidget {
   ) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(AppDimensions.paddingLG),
-        child: Column(
+    return AppCard(
+      padding: const EdgeInsets.all(AppDimensions.paddingLG),
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -118,7 +132,6 @@ class CheatSheetPage extends StatelessWidget {
             ),
           ],
         ),
-      ),
     );
   }
 
@@ -127,12 +140,11 @@ class CheatSheetPage extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppDimensions.paddingMD),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(AppDimensions.paddingMD),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+      child: AppCard(
+        padding: const EdgeInsets.all(AppDimensions.paddingMD),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
               Row(
                 children: [
                   Expanded(
@@ -196,8 +208,7 @@ class CheatSheetPage extends StatelessWidget {
                   ),
                 ),
               ],
-            ],
-          ),
+          ],
         ),
       ),
     );

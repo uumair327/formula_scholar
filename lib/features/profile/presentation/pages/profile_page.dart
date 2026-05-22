@@ -59,27 +59,36 @@ class ProfilePage extends StatelessWidget {
                         delegate: SliverChildListDelegate([
                           const SizedBox(height: AppDimensions.paddingLG),
                           if (state.profile != null)
-                            ProfileHeroWidget(profile: state.profile!),
+                            EntranceWrapper.stagger(
+                              index: 0,
+                              child: ProfileHeroWidget(profile: state.profile!),
+                            ),
                           const SizedBox(height: AppDimensions.paddingHero),
-                          ProgressStatsWidget(
-                            stats: state.stats,
-                            displayName: displayName,
+                          EntranceWrapper.stagger(
+                            index: 1,
+                            child: ProgressStatsWidget(
+                              stats: state.stats,
+                              displayName: displayName,
+                            ),
                           ),
                           const SizedBox(height: AppDimensions.paddingHero),
-                          BlocBuilder<ThemeCubit, ThemeState>(
-                            buildWhen: (prev, curr) =>
-                                prev.isDarkMode != curr.isDarkMode,
-                            builder: (context, themeState) {
-                              return SettingsListWidget(
-                                items: state.settingsItems,
-                                isDarkMode: themeState.isDarkMode,
-                                onDarkModeToggle: () {
-                                  context.read<ThemeCubit>().toggleTheme();
-                                },
-                                onItemTapped: (id) =>
-                                    _handleSettingsNavigation(context, id),
-                              );
-                            },
+                          EntranceWrapper.stagger(
+                            index: 2,
+                            child: BlocBuilder<ThemeCubit, ThemeState>(
+                              buildWhen: (prev, curr) =>
+                                  prev.isDarkMode != curr.isDarkMode,
+                              builder: (context, themeState) {
+                                return SettingsListWidget(
+                                  items: state.settingsItems,
+                                  isDarkMode: themeState.isDarkMode,
+                                  onDarkModeToggle: () {
+                                    context.read<ThemeCubit>().toggleTheme();
+                                  },
+                                  onItemTapped: (id) =>
+                                      _handleSettingsNavigation(context, id),
+                                );
+                              },
+                            ),
                           ),
                           const SizedBox(height: AppDimensions.bottomNavPadding),
                         ]),
@@ -95,28 +104,40 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  SliverAppBar _buildAppBar(
+  SliverGlassAppBar _buildAppBar(
     BuildContext context,
     ProfileState state,
     String displayName,
   ) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final avatarUrl = state.profile?.avatarUrl ?? AppAssets.profileAvatarUrl;
 
-    return SliverAppBar(
-      floating: true,
-      snap: true,
-      backgroundColor: colorScheme.surfaceContainerLowest.withValues(
-        alpha: AppDimensions.opacityAppBar,
-      ),
-      surfaceTintColor: AppColors.transparent,
-      title: Row(
+    return SliverGlassAppBar(
+      titleWidget: Row(
         children: [
-          AppAvatar(
-            imageUrl: avatarUrl,
-            border: Border.all(
-              color: AppColors.primaryContainer,
-              width: AppDimensions.borderWidth,
+          // Gradient ring avatar
+          Container(
+            padding: const EdgeInsets.all(2.0),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: isDark
+                  ? AppColors.darkPrimaryGradient
+                  : AppColors.primaryGradient,
+            ),
+            child: Container(
+              width: AppDimensions.avatarMD - 4,
+              height: AppDimensions.avatarMD - 4,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: colorScheme.surface,
+                  width: 2.0,
+                ),
+              ),
+              child: AppAvatar(
+                imageUrl: avatarUrl,
+              ),
             ),
           ),
           const SizedBox(width: AppDimensions.paddingMD),
@@ -126,8 +147,9 @@ class ProfilePage extends StatelessWidget {
               children: [
                 Text(
                   displayName,
-                  style: AppTextStyles.headlineSmall.copyWith(
+                  style: AppTextStyles.titleMedium.copyWith(
                     color: colorScheme.onSurface,
+                    fontWeight: FontWeight.w800,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -145,15 +167,21 @@ class ProfilePage extends StatelessWidget {
         ],
       ),
       actions: [
-        IconButton(
-          onPressed: () => ProfileInsightsSheet.show(
-            context,
-            displayName: state.profile?.name ?? AppStrings.welcomeScholar,
-            stats: state.stats,
+        Container(
+          margin: const EdgeInsets.only(right: AppDimensions.paddingSM),
+          decoration: BoxDecoration(
+            color: colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
           ),
-          icon: Icon(LucideIcons.barChart2, color: colorScheme.primary),
+          child: IconButton(
+            onPressed: () => ProfileInsightsSheet.show(
+              context,
+              displayName: state.profile?.name ?? AppStrings.welcomeScholar,
+              stats: state.stats,
+            ),
+            icon: Icon(LucideIcons.barChart2, color: colorScheme.primary),
+          ),
         ),
-        const SizedBox(width: AppDimensions.paddingSM),
       ],
     );
   }

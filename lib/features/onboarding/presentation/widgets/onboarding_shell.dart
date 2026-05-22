@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-
 import '../../../../core/core.dart';
+import '../../../../shared/shared.dart';
 
 /// Shared layout shell for all 4 onboarding steps.
 ///
@@ -124,16 +124,35 @@ class _OnboardingProgressBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingXL),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
-        child: LinearProgressIndicator(
-          value: progress,
-          minHeight: AppDimensions.progressBarSM,
-          backgroundColor: colorScheme.surfaceContainer,
-          valueColor: const AlwaysStoppedAnimation(AppColors.primary),
+        child: SizedBox(
+          height: AppDimensions.progressBarSM,
+          child: Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: colorScheme.surfaceContainer,
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
+                ),
+              ),
+              FractionallySizedBox(
+                widthFactor: progress.clamp(0.0, 1.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: isDark
+                        ? AppColors.darkPrimaryGradient
+                        : AppColors.primaryGradient,
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -191,29 +210,11 @@ class _OnboardingBottomNav extends StatelessWidget {
             ],
             Expanded(
               flex: 2,
-              child: FilledButton.icon(
+              child: AppGradientButton(
+                label: continueLabel,
                 onPressed: isLoading ? null : onContinue,
-                icon: isLoading
-                    ? const SizedBox(
-                        width: AppDimensions.iconSM,
-                        height: AppDimensions.iconSM,
-                        child: CircularProgressIndicator(
-                          strokeWidth: AppDimensions.borderWidth,
-                          color: AppColors.onPrimary,
-                        ),
-                      )
-                    : const Icon(LucideIcons.chevronRight),
-                label: Text(continueLabel),
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: AppDimensions.paddingLG,
-                  ),
-                  shape: const StadiumBorder(),
-                  textStyle: AppTextStyles.labelLarge.copyWith(
-                    fontWeight: FontWeight.w900,
-                  ),
-                  elevation: AppDimensions.elevationMD,
-                ),
+                isLoading: isLoading,
+                icon: LucideIcons.chevronRight,
               ),
             ),
           ],
@@ -294,6 +295,7 @@ class OnboardingSelectCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return GestureDetector(
       onTap: onTap,
@@ -301,19 +303,27 @@ class OnboardingSelectCard extends StatelessWidget {
         duration: AppDurations.animationFast,
         padding: const EdgeInsets.all(AppDimensions.paddingXXL),
         decoration: BoxDecoration(
-          color: colorScheme.surfaceContainerLowest,
+          color: isSelected
+              ? (isDark
+                  ? AppColors.darkPrimary.withValues(alpha: 0.08)
+                  : AppColors.primaryFixed.withValues(alpha: 0.08))
+              : colorScheme.surfaceContainerLowest,
           borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
           border: Border.all(
             color: isSelected
                 ? AppColors.primary.withValues(
                     alpha: AppDimensions.opacityMedium,
                   )
-                : AppColors.transparent,
+                : colorScheme.surfaceContainerHigh.withValues(
+                    alpha: AppDimensions.opacitySubtle,
+                  ),
             width: isSelected
                 ? AppDimensions.borderWidthThick
                 : AppDimensions.borderWidth,
           ),
-          boxShadow: isSelected ? [AppShadows.ghost] : [AppShadows.subtle],
+          boxShadow: isSelected
+              ? [AppShadows.glow(AppColors.primary)]
+              : const [AppShadows.subtle],
         ),
         child: Stack(
           children: [
@@ -344,9 +354,11 @@ class OnboardingSelectCard extends StatelessWidget {
                 child: Container(
                   width: AppDimensions.iconMD,
                   height: AppDimensions.iconMD,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppColors.primary,
+                    gradient: isDark
+                        ? AppColors.darkPrimaryGradient
+                        : AppColors.primaryGradient,
                   ),
                   child: const Icon(
                     LucideIcons.check,

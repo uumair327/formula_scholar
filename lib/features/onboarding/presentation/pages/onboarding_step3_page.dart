@@ -8,6 +8,8 @@ import '../../domain/domain.dart';
 import '../cubit/onboarding_cubit.dart';
 import '../cubit/onboarding_state.dart';
 import '../widgets/onboarding_shell.dart';
+import '../../../../shared/shared.dart';
+
 
 /// Onboarding Step 3 — Grade selection.
 /// Driven dynamically by OnboardingCubit based on the chosen Board.
@@ -74,13 +76,16 @@ class OnboardingStep3Page extends StatelessWidget {
                                   (constraints.maxWidth -
                                       AppDimensions.paddingLG) /
                                   2,
-                              child: _GradeCard(
-                                grade: g,
-                                isSelected: state.selectedGrade?.id == g.id,
-                                colorScheme: colorScheme,
-                                onTap: () => context
-                                    .read<OnboardingCubit>()
-                                    .selectGrade(g),
+                              child: EntranceWrapper.stagger(
+                                index: state.grades.indexOf(g),
+                                child: _GradeCard(
+                                  grade: g,
+                                  isSelected: state.selectedGrade?.id == g.id,
+                                  colorScheme: colorScheme,
+                                  onTap: () => context
+                                      .read<OnboardingCubit>()
+                                      .selectGrade(g),
+                                ),
                               ),
                             );
                           }).toList(),
@@ -91,13 +96,16 @@ class OnboardingStep3Page extends StatelessWidget {
                               padding: const EdgeInsets.only(
                                 bottom: AppDimensions.paddingLG,
                               ),
-                              child: _GradeCard(
-                                grade: g,
-                                isSelected: state.selectedGrade?.id == g.id,
-                                colorScheme: colorScheme,
-                                onTap: () => context
-                                    .read<OnboardingCubit>()
-                                    .selectGrade(g),
+                              child: EntranceWrapper.stagger(
+                                index: state.grades.indexOf(g),
+                                child: _GradeCard(
+                                  grade: g,
+                                  isSelected: state.selectedGrade?.id == g.id,
+                                  colorScheme: colorScheme,
+                                  onTap: () => context
+                                      .read<OnboardingCubit>()
+                                      .selectGrade(g),
+                                ),
                               ),
                             );
                           }).toList(),

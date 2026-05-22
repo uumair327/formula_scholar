@@ -151,6 +151,7 @@ class _SignupPageState extends State<SignupPage> {
 class _SignupBackgroundDecor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Stack(
       children: [
         Positioned(
@@ -165,8 +166,13 @@ class _SignupBackgroundDecor extends StatelessWidget {
             height: AppDimensions.decorativeBlurLG,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.primaryFixed.withValues(
-                alpha: AppDimensions.opacityFaint * AppDimensions.opacitySubtle,
+              gradient: RadialGradient(
+                colors: [
+                  (isDark ? AppColors.darkPrimary : AppColors.primaryFixed)
+                      .withValues(alpha: 0.1),
+                  (isDark ? AppColors.darkPrimary : AppColors.primaryFixed)
+                      .withValues(alpha: 0.0),
+                ],
               ),
             ),
           ),
@@ -183,8 +189,13 @@ class _SignupBackgroundDecor extends StatelessWidget {
             height: AppDimensions.decorativeBlurMD,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.tertiaryContainer.withValues(
-                alpha: AppDimensions.opacityFaint * AppDimensions.opacitySubtle,
+              gradient: RadialGradient(
+                colors: [
+                  (isDark ? AppColors.darkTertiary : AppColors.tertiaryContainer)
+                      .withValues(alpha: 0.08),
+                  (isDark ? AppColors.darkTertiary : AppColors.tertiaryContainer)
+                      .withValues(alpha: 0.0),
+                ],
               ),
             ),
           ),
@@ -267,14 +278,11 @@ class _SignupWideLayout extends StatelessWidget {
 class _SignupBrandColumn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingHero),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [AppColors.primary, AppColors.primaryContainer],
-        ),
+      decoration: BoxDecoration(
+        gradient: isDark ? AppColors.darkHeroGradient : AppColors.heroGradient,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -601,33 +609,11 @@ class _SignupFormScroll extends StatelessWidget {
             BlocBuilder<AuthCubit, AuthState>(
               builder: (context, state) {
                 final isLoading = state.status == AuthStatus.loading;
-                return SizedBox(
-                  width: double.infinity,
-                  child: FilledButton(
-                    onPressed: isLoading ? null : onCreateAccount,
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: AppDimensions.paddingLG,
-                      ),
-                      shape: const StadiumBorder(),
-                      elevation: AppDimensions.elevationMD,
-                    ),
-                    child: isLoading
-                        ? const SizedBox(
-                            width: AppDimensions.iconDefault,
-                            height: AppDimensions.iconDefault,
-                            child: CircularProgressIndicator(
-                              strokeWidth: AppDimensions.borderWidth,
-                              color: AppColors.onPrimary,
-                            ),
-                          )
-                        : Text(
-                            AppStrings.signupCreateAccount,
-                            style: AppTextStyles.labelLarge.copyWith(
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                  ),
+                return AppGradientButton(
+                  label: AppStrings.signupCreateAccount,
+                  onPressed: isLoading ? null : onCreateAccount,
+                  isLoading: isLoading,
+                  icon: LucideIcons.userPlus,
                 );
               },
             ),

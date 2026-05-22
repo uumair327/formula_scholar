@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -196,6 +196,7 @@ class DashboardPage extends StatelessWidget {
 
   Widget _buildAppBar(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return BlocBuilder<AuthCubit, AuthState>(
       buildWhen: (prev, curr) => prev.user != curr.user,
@@ -204,40 +205,57 @@ class DashboardPage extends StatelessWidget {
         final userName = user?.displayName ?? AppStrings.dashboardSanctuary;
         final photoUrl = user?.photoUrl ?? AppAssets.dashboardStudentProfileUrl;
 
-        return SliverAppBar(
-          floating: true,
-          snap: true,
-          backgroundColor: colorScheme.surface.withValues(
-            alpha: AppDimensions.opacityHigh,
-          ),
-          surfaceTintColor: AppColors.transparent,
-          title: GestureDetector(
+        return SliverGlassAppBar(
+          titleWidget: GestureDetector(
             onTap: () => context.go(AppRoutes.profilePath),
             behavior: HitTestBehavior.opaque,
             child: Row(
               children: [
+                // Gradient ring avatar
                 Container(
-                  width: AppDimensions.avatarMD,
-                  height: AppDimensions.avatarMD,
+                  padding: const EdgeInsets.all(2.0),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: colorScheme.primaryContainer,
+                    gradient: isDark
+                        ? AppColors.darkPrimaryGradient
+                        : AppColors.primaryGradient,
                   ),
-                  clipBehavior: Clip.antiAlias,
-                  child: CachedNetworkImage(
-                    imageUrl: photoUrl,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => const SizedBox(),
-                    errorWidget: (context, url, error) =>
-                        Icon(LucideIcons.user, color: colorScheme.primary),
+                  child: Container(
+                    width: AppDimensions.avatarMD - 4,
+                    height: AppDimensions.avatarMD - 4,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: colorScheme.surface,
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    child: CachedNetworkImage(
+                      imageUrl: photoUrl,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => const SizedBox(),
+                      errorWidget: (context, url, error) =>
+                          Icon(LucideIcons.user, color: colorScheme.primary),
+                    ),
                   ),
                 ),
                 const SizedBox(width: AppDimensions.paddingMD),
-                Text(
-                  userName,
-                  style: AppTextStyles.headlineSmall.copyWith(
-                    color: colorScheme.onSurface,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      userName,
+                      style: AppTextStyles.titleMedium.copyWith(
+                        color: colorScheme.onSurface,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    Text(
+                      'Welcome back ✨',
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -246,12 +264,18 @@ class DashboardPage extends StatelessWidget {
             Semantics(
               label: 'Search formulas',
               button: true,
-              child: IconButton(
-                onPressed: () => context.pushNamed(AppRoutes.searchName),
-                icon: Icon(LucideIcons.search, color: colorScheme.outline),
+              child: Container(
+                margin: const EdgeInsets.only(right: AppDimensions.paddingSM),
+                decoration: BoxDecoration(
+                  color: colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+                ),
+                child: IconButton(
+                  onPressed: () => context.pushNamed(AppRoutes.searchName),
+                  icon: Icon(LucideIcons.search, color: colorScheme.onSurfaceVariant),
+                ),
               ),
             ),
-            const SizedBox(width: AppDimensions.paddingSM),
           ],
         );
       },
@@ -575,10 +599,15 @@ class DashboardPage extends StatelessWidget {
 
   Widget _buildHeroStatusCard(BuildContext context, DashboardState state) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingHero),
-      decoration: signatureGlowDecoration(colorScheme),
+      decoration: BoxDecoration(
+        gradient: isDark ? AppColors.darkHeroGradient : AppColors.heroGradient,
+        borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+        boxShadow: [AppShadows.glow(colorScheme.primary)],
+      ),
       child: Stack(
         children: [
           Column(
@@ -602,9 +631,9 @@ class DashboardPage extends StatelessWidget {
                     Container(
                       width: AppDimensions.dotIndicatorSize,
                       height: AppDimensions.dotIndicatorSize,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         shape: BoxShape.circle,
-                        color: colorScheme.tertiary,
+                        color: AppColors.successGreen,
                       ),
                     ),
                     const SizedBox(width: AppDimensions.paddingSM),
@@ -640,35 +669,46 @@ class DashboardPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppDimensions.paddingXL),
-              // Resume button
+              // Resume button — premium gradient
               Semantics(
                 label: 'Resume learning',
                 button: true,
-                child: ElevatedButton(
-                  onPressed: () {
-                    _resumeLearning(context, state);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: colorScheme.onPrimary,
-                    foregroundColor: colorScheme.primary,
+                child: GestureDetector(
+                  onTap: () => _resumeLearning(context, state),
+                  child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppDimensions.paddingHero,
                       vertical: AppDimensions.progressBarLG,
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        AppDimensions.radiusXXL,
-                      ),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
+                      boxShadow: const [AppShadows.medium],
                     ),
-                    elevation: AppDimensions.elevationMD,
-                    textStyle: AppTextStyles.labelLarge,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          AppStrings.dashboardResumeLesson,
+                          style: AppTextStyles.labelLarge.copyWith(
+                            color: colorScheme.primary,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        const SizedBox(width: AppDimensions.paddingSM),
+                        Icon(
+                          LucideIcons.arrowRight,
+                          size: AppDimensions.iconSM,
+                          color: colorScheme.primary,
+                        ),
+                      ],
+                    ),
                   ),
-                  child: const Text(AppStrings.dashboardResumeLesson),
                 ),
               ),
             ],
           ),
-          // Decorative circle
+          // Decorative circles
           Positioned(
             top: -AppDimensions.paddingSM,
             right: -AppDimensions.paddingSM,
@@ -680,6 +720,18 @@ class DashboardPage extends StatelessWidget {
                 color: colorScheme.surface.withValues(
                   alpha: AppDimensions.opacityFaint,
                 ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: -20,
+            right: 40,
+            child: Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: colorScheme.surface.withValues(alpha: 0.06),
               ),
             ),
           ),
@@ -1833,7 +1885,7 @@ class _CurriculumChipState extends State<_CurriculumChip> {
   }
 }
 
-class _ToolCard extends StatelessWidget {
+class _ToolCard extends StatefulWidget {
   const _ToolCard({
     required this.icon,
     required this.label,
@@ -1847,26 +1899,88 @@ class _ToolCard extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
+  State<_ToolCard> createState() => _ToolCardState();
+}
+
+class _ToolCardState extends State<_ToolCard>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: AppDurations.instant,
+    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
+      CurvedAnimation(parent: _controller, curve: AppDurations.curvePremium),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Material(
-      color: AppColors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return GestureDetector(
+      onTapDown: (_) => _controller.forward(),
+      onTapUp: (_) => _controller.reverse(),
+      onTapCancel: () => _controller.reverse(),
+      onTap: widget.onTap,
+      child: AnimatedBuilder(
+        animation: _scaleAnimation,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _scaleAnimation.value,
+            child: child,
+          );
+        },
         child: Container(
           padding: const EdgeInsets.all(AppDimensions.paddingLG),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceContainerLowest,
+            color: colorScheme.surfaceContainerLowest,
             borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-            border: Border.all(color: color.withValues(alpha: 0.3)),
+            border: Border.all(
+              color: widget.color.withValues(alpha: 0.15),
+            ),
+            boxShadow: const [AppShadows.soft],
           ),
           child: Column(
             children: [
-              Icon(icon, size: AppDimensions.iconLG, color: color),
+              // Gradient icon background
+              Container(
+                padding: const EdgeInsets.all(AppDimensions.paddingMD),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      widget.color.withValues(alpha: 0.15),
+                      widget.color.withValues(alpha: 0.05),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+                ),
+                child: Icon(
+                  widget.icon,
+                  size: AppDimensions.iconLG,
+                  color: widget.color,
+                ),
+              ),
               const SizedBox(height: AppDimensions.paddingSM),
               Text(
-                label,
-                style: AppTextStyles.labelLarge.copyWith(color: color),
+                widget.label,
+                style: AppTextStyles.labelMedium.copyWith(
+                  color: colorScheme.onSurface,
+                  fontWeight: FontWeight.w600,
+                ),
                 textAlign: TextAlign.center,
               ),
             ],

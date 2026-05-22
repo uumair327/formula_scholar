@@ -45,115 +45,156 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
             sliver: SliverList(
               delegate: SliverChildListDelegate([
                 const SizedBox(height: AppDimensions.paddingXXL),
-                // Hero card
-                _buildHeroCard(context),
+                EntranceWrapper.stagger(
+                  index: 0,
+                  child: _buildHeroCard(context),
+                ),
                 const SizedBox(height: AppDimensions.paddingXXL),
                 // Quick actions
-                const AppSectionTitle(title: AppStrings.quickActions),
+                EntranceWrapper.stagger(
+                  index: 1,
+                  child: const AppSectionTitle(title: AppStrings.quickActions),
+                ),
                 const SizedBox(height: AppDimensions.paddingLG),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildQuickAction(
-                        context: context,
-                        icon: LucideIcons.messageCircle,
-                        label: AppStrings.chatWithUs,
-                        color: AppColors.primary,
-                        bgColor: AppColors.primaryFixed,
+                EntranceWrapper.stagger(
+                  index: 2,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _buildQuickAction(
+                          context: context,
+                          icon: LucideIcons.messageCircle,
+                          label: AppStrings.chatWithUs,
+                          color: AppColors.primary,
+                          bgColor: AppColors.primaryFixed,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: AppDimensions.paddingMD),
-                    Expanded(
-                      child: _buildQuickAction(
-                        context: context,
-                        icon: LucideIcons.mail,
-                        label: AppStrings.emailUs,
-                        color: AppColors.secondary,
-                        bgColor: AppColors.secondaryFixed,
+                      const SizedBox(width: AppDimensions.paddingMD),
+                      Expanded(
+                        child: _buildQuickAction(
+                          context: context,
+                          icon: LucideIcons.mail,
+                          label: AppStrings.emailUs,
+                          color: AppColors.secondary,
+                          bgColor: AppColors.secondaryFixed,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: AppDimensions.paddingMD),
-                    Expanded(
-                      child: _buildQuickAction(
-                        context: context,
-                        icon: LucideIcons.fileQuestion,
-                        label: AppStrings.faqLabel,
-                        color: AppColors.tertiary,
-                        bgColor: AppColors.tertiaryFixed,
+                      const SizedBox(width: AppDimensions.paddingMD),
+                      Expanded(
+                        child: _buildQuickAction(
+                          context: context,
+                          icon: LucideIcons.fileQuestion,
+                          label: AppStrings.faqLabel,
+                          color: AppColors.tertiary,
+                          bgColor: AppColors.tertiaryFixed,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 const SizedBox(height: AppDimensions.paddingXXL),
                 // FAQ section
                 Container(
                   key: _faqSectionKey,
-                  child: const AppSectionTitle(
-                    title: AppStrings.frequentlyAsked,
+                  child: EntranceWrapper.stagger(
+                    index: 3,
+                    child: const AppSectionTitle(
+                      title: AppStrings.frequentlyAsked,
+                    ),
                   ),
                 ),
                 const SizedBox(height: AppDimensions.paddingLG),
-                _buildFaqCard(
-                  context,
-                  question: AppStrings.faq1Question,
-                  answer: AppStrings.faq1Answer,
+                EntranceWrapper.stagger(
+                  index: 4,
+                  child: _buildFaqCard(
+                    context,
+                    question: AppStrings.faq1Question,
+                    answer: AppStrings.faq1Answer,
+                  ),
                 ),
                 const SizedBox(height: AppDimensions.paddingMD),
-                _buildFaqCard(
-                  context,
-                  question: AppStrings.faq2Question,
-                  answer: AppStrings.faq2Answer,
+                EntranceWrapper.stagger(
+                  index: 5,
+                  child: _buildFaqCard(
+                    context,
+                    question: AppStrings.faq2Question,
+                    answer: AppStrings.faq2Answer,
+                  ),
                 ),
                 const SizedBox(height: AppDimensions.paddingMD),
-                _buildFaqCard(
-                  context,
-                  question: AppStrings.faq3Question,
-                  answer: AppStrings.faq3Answer,
+                EntranceWrapper.stagger(
+                  index: 6,
+                  child: _buildFaqCard(
+                    context,
+                    question: AppStrings.faq3Question,
+                    answer: AppStrings.faq3Answer,
+                  ),
                 ),
                 const SizedBox(height: AppDimensions.paddingMD),
-                _buildFaqCard(
-                  context,
-                  question: AppStrings.faq4Question,
-                  answer: AppStrings.faq4Answer,
+                EntranceWrapper.stagger(
+                  index: 7,
+                  child: _buildFaqCard(
+                    context,
+                    question: AppStrings.faq4Question,
+                    answer: AppStrings.faq4Answer,
+                  ),
                 ),
                 const SizedBox(height: AppDimensions.paddingXXL),
                 // Resources section
-                const AppSectionTitle(title: AppStrings.resources),
+                EntranceWrapper.stagger(
+                  index: 8,
+                  child: const AppSectionTitle(title: AppStrings.resources),
+                ),
                 const SizedBox(height: AppDimensions.paddingLG),
-                _buildResourceTile(
-                  context: context,
-                  icon: LucideIcons.book,
-                  title: AppStrings.userGuide,
-                  subtitle: AppStrings.userGuideDesc,
-                  onTap: () => ComingSoonSheet.show(context, featureName: AppStrings.userGuide),
+                EntranceWrapper.stagger(
+                  index: 9,
+                  child: _buildResourceTile(
+                    context: context,
+                    icon: LucideIcons.book,
+                    title: AppStrings.userGuide,
+                    subtitle: AppStrings.userGuideDesc,
+                    onTap: () => ComingSoonSheet.show(context, featureName: AppStrings.userGuide),
+                  ),
                 ),
                 const SizedBox(height: AppDimensions.paddingMD),
-                _buildResourceTile(
-                  context: context,
-                  icon: LucideIcons.video,
-                  title: AppStrings.videoTutorials,
-                  subtitle: AppStrings.videoTutorialsDesc,
-                  onTap: () => ComingSoonSheet.show(context, featureName: AppStrings.videoTutorials),
+                EntranceWrapper.stagger(
+                  index: 10,
+                  child: _buildResourceTile(
+                    context: context,
+                    icon: LucideIcons.video,
+                    title: AppStrings.videoTutorials,
+                    subtitle: AppStrings.videoTutorialsDesc,
+                    onTap: () => ComingSoonSheet.show(context, featureName: AppStrings.videoTutorials),
+                  ),
                 ),
                 const SizedBox(height: AppDimensions.paddingMD),
-                _buildResourceTile(
-                  context: context,
-                  icon: LucideIcons.shield,
-                  title: AppStrings.privacyPolicyTitle,
-                  subtitle: AppStrings.privacyPolicyDesc,
-                  onTap: () => context.pushNamed(AppRoutes.privacyPolicyName),
+                EntranceWrapper.stagger(
+                  index: 11,
+                  child: _buildResourceTile(
+                    context: context,
+                    icon: LucideIcons.shield,
+                    title: AppStrings.privacyPolicyTitle,
+                    subtitle: AppStrings.privacyPolicyDesc,
+                    onTap: () => context.pushNamed(AppRoutes.privacyPolicyName),
+                  ),
                 ),
                 const SizedBox(height: AppDimensions.paddingMD),
-                _buildResourceTile(
-                  context: context,
-                  icon: LucideIcons.fileText,
-                  title: AppStrings.termsOfServiceTitle,
-                  subtitle: AppStrings.termsOfServiceDesc,
-                  onTap: () => context.pushNamed(AppRoutes.termsOfServiceName),
+                EntranceWrapper.stagger(
+                  index: 12,
+                  child: _buildResourceTile(
+                    context: context,
+                    icon: LucideIcons.fileText,
+                    title: AppStrings.termsOfServiceTitle,
+                    subtitle: AppStrings.termsOfServiceDesc,
+                    onTap: () => context.pushNamed(AppRoutes.termsOfServiceName),
+                  ),
                 ),
                 const SizedBox(height: AppDimensions.paddingXXL),
                 // App version info
-                _buildVersionCard(context),
+                EntranceWrapper.stagger(
+                  index: 13,
+                  child: _buildVersionCard(context),
+                ),
                 const SizedBox(height: AppDimensions.bottomNavPadding),
               ]),
             ),
@@ -163,25 +204,21 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
     );
   }
 
-  SliverAppBar _buildAppBar(BuildContext context) {
+  Widget _buildAppBar(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return SliverAppBar(
-      floating: true,
-      snap: true,
-      backgroundColor: colorScheme.surfaceContainerLowest.withValues(
-        alpha: AppDimensions.opacityAppBar,
-      ),
-      surfaceTintColor: AppColors.transparent,
+    return SliverGlassAppBar(
       leading: IconButton(
         onPressed: () => context.go(AppRoutes.profilePath),
         icon: Icon(LucideIcons.arrowLeft, color: colorScheme.onSurface),
       ),
-      title: Text(
+      titleWidget: Text(
         AppStrings.helpAndSupport,
-        style: AppTextStyles.titleLarge.copyWith(color: colorScheme.onSurface),
+        style: AppTextStyles.titleMedium.copyWith(
+          color: colorScheme.onSurface,
+          fontWeight: FontWeight.w800,
+        ),
       ),
-      centerTitle: true,
     );
   }
 

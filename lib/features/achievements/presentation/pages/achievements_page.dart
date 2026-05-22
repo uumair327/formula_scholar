@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/shared.dart';
 import '../cubit/achievements_cubit.dart';
 import '../cubit/achievements_state.dart';
 import '../widgets/achievement_progress_card.dart';
@@ -13,9 +14,14 @@ class AchievementsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Achievements'),
-        centerTitle: true,
+      appBar: GlassAppBar(
+        titleWidget: Text(
+          'Achievements',
+          style: AppTextStyles.titleMedium.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
       ),
       body: BlocBuilder<AchievementsCubit, AchievementsState>(
         builder: (context, state) {

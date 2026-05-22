@@ -104,21 +104,17 @@ class SubjectsPage extends StatelessWidget {
 
   // ─────────────────────── App Bar ──────────────────────────────
 
-  SliverAppBar _buildAppBar(BuildContext context, ColorScheme colorScheme) {
-    return SliverAppBar(
-      floating: true,
-      snap: true,
-      backgroundColor: colorScheme.surfaceContainerLowest.withValues(
-        alpha: AppDimensions.opacityAppBar,
-      ),
-      surfaceTintColor: AppColors.transparent,
-      title: Column(
+  SliverGlassAppBar _buildAppBar(BuildContext context, ColorScheme colorScheme) {
+    return SliverGlassAppBar(
+      titleWidget: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             AppStrings.navSubjects,
             style: AppTextStyles.headlineSmall.copyWith(
               color: colorScheme.onSurface,
+              fontWeight: FontWeight.w800,
             ),
           ),
           BlocBuilder<CurriculumCubit, CurriculumState>(
@@ -138,15 +134,17 @@ class SubjectsPage extends StatelessWidget {
         ],
       ),
       actions: [
-        Semantics(
-          label: 'Search formulas',
-          button: true,
+        Container(
+          margin: const EdgeInsets.only(right: AppDimensions.paddingSM),
+          decoration: BoxDecoration(
+            color: colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+          ),
           child: IconButton(
             onPressed: () => context.pushNamed(AppRoutes.searchName),
-            icon: Icon(LucideIcons.search, color: colorScheme.outline),
+            icon: Icon(LucideIcons.search, color: colorScheme.onSurfaceVariant),
           ),
         ),
-        const SizedBox(width: AppDimensions.paddingSM),
       ],
     );
   }
@@ -225,10 +223,13 @@ class SubjectsPage extends StatelessWidget {
         delegate: SliverChildBuilderDelegate(
           (context, index) {
             final subject = subjects[index];
-            return SubjectCard(
-              subject: subject,
-              onTap: () => _onSubjectTap(context, subject),
-              onLongPress: () {},
+            return EntranceWrapper.stagger(
+              index: index,
+              child: SubjectCard(
+                subject: subject,
+                onTap: () => _onSubjectTap(context, subject),
+                onLongPress: () {},
+              ),
             );
           },
           childCount: subjects.length,
@@ -243,41 +244,14 @@ class SubjectsPage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(AppDimensions.paddingXXL),
       child: Center(
-        child: AppCard(
-          padding: const EdgeInsets.all(AppDimensions.paddingXXL),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(
-                LucideIcons.layers,
-                size: AppDimensions.imageLG,
-                color: AppColors.primary,
-              ),
-              const SizedBox(height: AppDimensions.paddingXXL),
-              Text(
-                'No subjects available',
-                textAlign: TextAlign.center,
-                style: AppTextStyles.headlineSmall.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              const SizedBox(height: AppDimensions.paddingSM),
-              Text(
-                'Set your board and grade on the Home tab to discover available subjects.',
-                textAlign: TextAlign.center,
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ),
-              const SizedBox(height: AppDimensions.paddingXXL),
-              ElevatedButton(
-                onPressed: () {
-                  StatefulNavigationShell.of(context).goBranch(0);
-                },
-                child: const Text('Go to Home'),
-              ),
-            ],
-          ),
+        child: AppEmptyState(
+          title: 'No subjects available',
+          description: 'Set your board and grade on the Home tab to discover available subjects.',
+          icon: LucideIcons.layers,
+          actionLabel: 'Go to Home',
+          onAction: () {
+            StatefulNavigationShell.of(context).goBranch(0);
+          },
         ),
       ),
     );

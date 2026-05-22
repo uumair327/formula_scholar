@@ -492,61 +492,77 @@ class _SavedPageState extends State<SavedPage> {
 
   PreferredSizeWidget _buildAppBar(BuildContext context, AuthUser? user) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final photoUrl = user?.photoUrl ?? '';
 
-    return AppBar(
-      backgroundColor: colorScheme.surfaceContainerLowest.withValues(
-        alpha: AppDimensions.opacityAppBar,
-      ),
-      surfaceTintColor: AppColors.transparent,
-      title: Row(
+    return GlassAppBar(
+      titleWidget: Row(
         children: [
           GestureDetector(
             onTap: () => context.go(AppRoutes.profilePath),
             behavior: HitTestBehavior.opaque,
-            child: photoUrl.isNotEmpty
-                ? AppAvatar(
-                    imageUrl: photoUrl,
-                    size: AppDimensions.avatarMD,
-                    fallbackIcon: LucideIcons.bookmark,
-                    fallbackIconColor: colorScheme.primary,
-                  )
-                : Container(
-                    width: AppDimensions.avatarMD,
-                    height: AppDimensions.avatarMD,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: colorScheme.primaryContainer,
-                    ),
-                    child: Icon(
-                      LucideIcons.bookmark,
-                      color: colorScheme.primary,
-                    ),
+            child: Container(
+              padding: const EdgeInsets.all(2.0),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: isDark
+                    ? AppColors.darkPrimaryGradient
+                    : AppColors.primaryGradient,
+              ),
+              child: Container(
+                width: AppDimensions.avatarMD - 4,
+                height: AppDimensions.avatarMD - 4,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: colorScheme.surface,
+                    width: 2.0,
                   ),
+                ),
+                child: photoUrl.isNotEmpty
+                    ? AppAvatar(
+                        imageUrl: photoUrl,
+                        size: AppDimensions.avatarMD - 8,
+                        fallbackIcon: LucideIcons.bookmark,
+                        fallbackIconColor: colorScheme.primary,
+                      )
+                    : Icon(
+                        LucideIcons.bookmark,
+                        color: colorScheme.primary,
+                        size: AppDimensions.iconSM,
+                      ),
+              ),
+            ),
           ),
           const SizedBox(width: AppDimensions.paddingMD),
           Text(
             AppStrings.navSaved,
-            style: AppTextStyles.headlineSmall.copyWith(
+            style: AppTextStyles.titleMedium.copyWith(
               color: colorScheme.onSurface,
+              fontWeight: FontWeight.w800,
             ),
           ),
         ],
       ),
-      centerTitle: false,
       actions: [
-        IconButton(
-          onPressed: () {
-            final curr = context.read<CurriculumCubit>().state.curriculum;
-            if (curr != null) {
-              context.read<SavedCubit>().loadBookmarks(
-                curriculumKey: curr.curriculumKey,
-              );
-            }
-          },
-          icon: Icon(LucideIcons.refreshCw, color: colorScheme.outline),
+        Container(
+          margin: const EdgeInsets.only(right: AppDimensions.paddingSM),
+          decoration: BoxDecoration(
+            color: colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+          ),
+          child: IconButton(
+            onPressed: () {
+              final curr = context.read<CurriculumCubit>().state.curriculum;
+              if (curr != null) {
+                context.read<SavedCubit>().loadBookmarks(
+                  curriculumKey: curr.curriculumKey,
+                );
+              }
+            },
+            icon: Icon(LucideIcons.refreshCw, color: colorScheme.primary),
+          ),
         ),
-        const SizedBox(width: AppDimensions.paddingSM),
       ],
     );
   }

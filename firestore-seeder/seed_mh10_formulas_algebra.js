@@ -74,7 +74,26 @@ const algebraFormulas = {
         latex: '\\frac{a_1}{a_2} \\neq \\frac{b_1}{b_2}',
         description: 'Nature of solutions: (1) a₁/a₂ ≠ b₁/b₂: Consistent with a unique solution (intersecting lines). (2) a₁/a₂ = b₁/b₂ ≠ c₁/c₂: Inconsistent with no solution (parallel lines). (3) a₁/a₂ = b₁/b₂ = c₁/c₂: Consistent with infinitely many solutions (coincident lines).',
         category: 'system',
-        difficulty: 'intermediate'
+        difficulty: 'intermediate',
+        widgetConfig: {
+          type: 'graph',
+          title: 'System Consistency',
+          config: {
+            expressions: [
+              { latex: 'y = (c1 - a1*x)/b1', color: '#3B82F6' },
+              { latex: 'y = (c2 - a2*x)/b2', color: '#EF4444' }
+            ],
+            viewport: { xMin: -10.0, xMax: 10.0, yMin: -10.0, yMax: 10.0 },
+            sliders: [
+              { id: 'a1', label: 'a1', min: -5.0, max: 5.0, default: 2.0, step: 0.5 },
+              { id: 'b1', label: 'b1', min: -5.0, max: 5.0, default: -1.0, step: 0.5 },
+              { id: 'c1', label: 'c1', min: -10.0, max: 10.0, default: 4.0, step: 0.5 },
+              { id: 'a2', label: 'a2', min: -5.0, max: 5.0, default: 4.0, step: 0.5 },
+              { id: 'b2', label: 'b2', min: -5.0, max: 5.0, default: -2.0, step: 0.5 },
+              { id: 'c2', label: 'c2', min: -10.0, max: 10.0, default: 8.0, step: 0.5 }
+            ]
+          }
+        }
       }
     ]
   },
@@ -153,7 +172,23 @@ const algebraFormulas = {
         latex: '\\alpha + \\beta = -\\frac{b}{a}, \\quad \\alpha\\beta = \\frac{c}{a}',
         description: 'Core relationships between roots (α, β) and coefficients (a, b, c) of a quadratic equation.',
         category: 'roots',
-        difficulty: 'intermediate'
+        difficulty: 'intermediate',
+        widgetConfig: {
+          type: 'graph',
+          title: 'Sum and Product of Roots',
+          config: {
+            expressions: [
+              { latex: 'y = -b/a', color: '#3B82F6' },
+              { latex: 'y = c/a', color: '#EF4444' }
+            ],
+            viewport: { xMin: -10.0, xMax: 10.0, yMin: -10.0, yMax: 10.0 },
+            sliders: [
+              { id: 'a', label: 'a', min: 1.0, max: 5.0, default: 1.0, step: 0.5 },
+              { id: 'b', label: 'b', min: -5.0, max: 5.0, default: -3.0, step: 0.5 },
+              { id: 'c', label: 'c', min: -5.0, max: 5.0, default: 2.0, step: 0.5 }
+            ]
+          }
+        }
       },
       {
         id: 'mh_alg_qe_005',
@@ -161,7 +196,21 @@ const algebraFormulas = {
         latex: 'x^2 - (\\alpha + \\beta)x + \\alpha\\beta = 0',
         description: 'Constructs the quadratic equation in variable x given its roots α and β.',
         category: 'algebraic',
-        difficulty: 'intermediate'
+        difficulty: 'intermediate',
+        widgetConfig: {
+          type: 'graph',
+          title: 'Equation from Roots',
+          config: {
+            expressions: [
+              { latex: 'y = x^2 - (a + b)*x + a*b', color: '#10B981' }
+            ],
+            viewport: { xMin: -5.0, xMax: 5.0, yMin: -10.0, yMax: 10.0 },
+            sliders: [
+              { id: 'a', label: 'Root α', min: -5.0, max: 5.0, default: 1.0, step: 0.5 },
+              { id: 'b', label: 'Root β', min: -5.0, max: 5.0, default: 3.0, step: 0.5 }
+            ]
+          }
+        }
       },
       {
         id: 'mh_alg_qe_006',
@@ -190,7 +239,21 @@ const algebraFormulas = {
         latex: 't_n = S_n - S_{n-1}',
         description: 'Relationship to find any specific term (tn) of a sequence if the sum formula (Sn) is provided.',
         category: 'sequence',
-        difficulty: 'intermediate'
+        difficulty: 'intermediate',
+        widgetConfig: {
+          type: 'graph',
+          title: 'Term from Sum',
+          config: {
+            expressions: [
+              { latex: 'y = s - p', color: '#E67E22' }
+            ],
+            viewport: { xMin: -5.0, xMax: 5.0, yMin: -10.0, yMax: 50.0 },
+            sliders: [
+              { id: 's', label: 'Sum Sn', min: 0.0, max: 100.0, default: 45.0, step: 1.0 },
+              { id: 'p', label: 'Sum S(n-1)', min: 0.0, max: 100.0, default: 36.0, step: 1.0 }
+            ]
+          }
+        }
       },
       {
         id: 'mh_alg_ap_003',
@@ -242,7 +305,22 @@ const algebraFormulas = {
         latex: 'S_n = \\frac{n}{2}[t_1 + t_n] = \\frac{n}{2}[a + l]',
         description: 'Computes sum of n terms if the first term (a) and last term (l = tn) are known.',
         category: 'series',
-        difficulty: 'easy'
+        difficulty: 'easy',
+        widgetConfig: {
+          type: 'graph',
+          title: 'Sum (First and Last)',
+          config: {
+            expressions: [
+              { latex: 'y = (n/2)*(a + l)', color: '#3B82F6' }
+            ],
+            viewport: { xMin: -5.0, xMax: 5.0, yMin: 0.0, yMax: 200.0 },
+            sliders: [
+              { id: 'n', label: 'n terms', min: 1.0, max: 20.0, default: 10.0, step: 1.0 },
+              { id: 'a', label: 'first (a)', min: -10.0, max: 20.0, default: 2.0, step: 1.0 },
+              { id: 'l', label: 'last (l)', min: -10.0, max: 50.0, default: 20.0, step: 1.0 }
+            ]
+          }
+        }
       },
       {
         id: 'mh_alg_ap_006',
@@ -310,7 +388,22 @@ const algebraFormulas = {
         latex: '\\text{Buying Price} = \\text{MV} + \\text{Brokerage}',
         description: 'Transactions: Buying Price (CP) = MV + Brokerage. Selling Price = MV - Brokerage.',
         category: 'finance',
-        difficulty: 'easy'
+        difficulty: 'easy',
+        widgetConfig: {
+          type: 'graph',
+          title: 'Brokerage Effect',
+          config: {
+            expressions: [
+              { latex: 'y = m + b', color: '#EF4444' },
+              { latex: 'y = m - b', color: '#10B981' }
+            ],
+            viewport: { xMin: -5.0, xMax: 5.0, yMin: 0.0, yMax: 200.0 },
+            sliders: [
+              { id: 'm', label: 'Market Value (MV)', min: 10.0, max: 200.0, default: 100.0, step: 5.0 },
+              { id: 'b', label: 'Brokerage', min: 0.0, max: 20.0, default: 5.0, step: 1.0 }
+            ]
+          }
+        }
       }
     ]
   },
@@ -382,7 +475,24 @@ const algebraFormulas = {
         latex: '\\text{Median} = L + \\left(\\frac{\\frac{N}{2} - cf}{f}\\right)h',
         description: 'L is lower limit of median class, N is total frequency, cf is cumulative frequency of class preceding median class, f is frequency of median class, h is class width.',
         category: 'statistics',
-        difficulty: 'intermediate'
+        difficulty: 'intermediate',
+        widgetConfig: {
+          type: 'graph',
+          title: 'Median Value Calculator',
+          config: {
+            expressions: [
+              { latex: 'y = l + (((n/2) - c)/f)*h', color: '#10B981' }
+            ],
+            viewport: { xMin: -5.0, xMax: 5.0, yMin: 0.0, yMax: 100.0 },
+            sliders: [
+              { id: 'l', label: 'Lower Limit (L)', min: 0.0, max: 100.0, default: 40.0, step: 5.0 },
+              { id: 'n', label: 'Total Freq (N)', min: 10.0, max: 200.0, default: 100.0, step: 10.0 },
+              { id: 'c', label: 'Cum Freq (cf)', min: 0.0, max: 100.0, default: 30.0, step: 5.0 },
+              { id: 'f', label: 'Freq (f)', min: 5.0, max: 50.0, default: 40.0, step: 5.0 },
+              { id: 'h', label: 'Class Width (h)', min: 5.0, max: 20.0, default: 10.0, step: 1.0 }
+            ]
+          }
+        }
       },
       {
         id: 'mh_alg_stat_005',
@@ -390,7 +500,24 @@ const algebraFormulas = {
         latex: '\\text{Mode} = L + \\left(\\frac{f_m - f_1}{2f_m - f_1 - f_2}\\right)h',
         description: 'L is lower limit of modal class, fm is maximum class frequency, f1 is frequency of pre-modal class, f2 is frequency of post-modal class, h is class width.',
         category: 'statistics',
-        difficulty: 'intermediate'
+        difficulty: 'intermediate',
+        widgetConfig: {
+          type: 'graph',
+          title: 'Mode Value Calculator',
+          config: {
+            expressions: [
+              { latex: 'y = l + ((m - f1)/(2*m - f1 - f2))*h', color: '#3B82F6' }
+            ],
+            viewport: { xMin: -5.0, xMax: 5.0, yMin: 0.0, yMax: 100.0 },
+            sliders: [
+              { id: 'l', label: 'Lower Limit (L)', min: 0.0, max: 100.0, default: 40.0, step: 5.0 },
+              { id: 'm', label: 'Max Freq (fm)', min: 10.0, max: 100.0, default: 50.0, step: 5.0 },
+              { id: 'f1', label: 'Pre-Freq (f1)', min: 0.0, max: 100.0, default: 30.0, step: 5.0 },
+              { id: 'f2', label: 'Post-Freq (f2)', min: 0.0, max: 100.0, default: 20.0, step: 5.0 },
+              { id: 'h', label: 'Class Width (h)', min: 5.0, max: 20.0, default: 10.0, step: 1.0 }
+            ]
+          }
+        }
       },
       {
         id: 'mh_alg_stat_006',

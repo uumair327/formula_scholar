@@ -195,4 +195,29 @@ abstract final class AppDimensions {
   // ──────────────────────── Container Heights ────────────────
   /// Subject chip filter bar height.
   static const double chipContainerHeight = 60.0;
+
+  // ──────────────────────── Premium Additions ─────────────────────
+  /// Pill-shaped radius (very large for stadium shapes).
+  static const double radiusPill = 999.0;
+
+  /// Consistent bottom nav bar height.
+  static const double navBarHeight = 72.0;
+
+  /// Consistent app bar / header height.
+  static const double headerHeight = 56.0;
+
+  /// Glass blur sigma value.
+  static const double glassBlurSigma = 20.0;
+
+  /// Card press-down scale factor.
+  static const double cardPressScale = 0.97;
+
+  /// Hover lift scale factor.
+  static const double cardHoverScale = 1.02;
+
+  /// Stagger delay multiplier base (ms per index).
+  static const int staggerDelayMs = 60;
+
+  /// Maximum content width for centered layouts.
+  static const double maxContentWidth = 680.0;
 }

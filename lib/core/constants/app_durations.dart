@@ -54,4 +54,31 @@ abstract final class AppDurations {
 
   /// Elastic easing – attention-grabbing emphasis animations.
   static const Curve curveElastic = Curves.elasticOut;
+
+  // ──────────────────────── Premium Curves ─────────────────────
+  /// Premium smooth easing — the default for all premium animations.
+  static const Curve curvePremium = Curves.easeOutCubic;
+
+  /// Snap easing — for crisp, responsive interactions.
+  static const Curve curveSnap = Curves.easeOutExpo;
+
+  /// Overshoot easing — playful bounce for key moments.
+  static const Curve curveOvershoot = Curves.easeOutBack;
+
+  /// Smooth decelerate — for content entering view.
+  static const Curve curveEnter = Cubic(0.0, 0.0, 0.2, 1.0);
+
+  // ──────────────────────── Page Transitions ──────────────────
+  /// Page route transition duration.
+  static const Duration pageTransition = Duration(milliseconds: 350);
+
+  // ──────────────────────── Stagger Helpers ───────────────────
+  /// Stagger delay base for list item animations.
+  static const Duration staggerBase = Duration(milliseconds: 60);
+
+  /// Creates a stagger delay for item at [index].
+  static Duration staggerDelay(int index, {int maxMs = 400}) {
+    final ms = (index * staggerBase.inMilliseconds).clamp(0, maxMs);
+    return Duration(milliseconds: ms);
+  }
 }
