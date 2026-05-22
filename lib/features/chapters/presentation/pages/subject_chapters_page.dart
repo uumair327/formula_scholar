@@ -88,6 +88,7 @@ class _SubjectChaptersPageState extends State<SubjectChaptersPage> {
         name: first.name,
         category: first.category,
         description: first.description,
+        iconName: first.iconName,
         subtitle: first.subtitle,
       );
     } else {
@@ -133,6 +134,7 @@ class _SubjectChaptersPageState extends State<SubjectChaptersPage> {
                 name: subject.name,
                 category: subject.category,
                 description: subject.description,
+                iconName: subject.iconName,
                 subtitle: subject.subtitle ?? '',
               ),
             )
@@ -569,6 +571,7 @@ class _SubjectChaptersPageState extends State<SubjectChaptersPage> {
                   name: subject.name,
                   category: subject.category,
                   description: subject.description,
+                  iconName: subject.iconName,
                 );
               },
               child: AnimatedContainer(

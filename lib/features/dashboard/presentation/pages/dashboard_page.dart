@@ -46,6 +46,7 @@ class DashboardPage extends StatelessWidget {
                       name: s.name,
                       category: s.category,
                       description: s.description,
+                      iconName: s.iconName,
                       subtitle: s.subtitle ?? '',
                     ),
                   )
@@ -960,6 +961,7 @@ class DashboardPage extends StatelessWidget {
       name: subject.name,
       category: subject.category,
       description: subject.description,
+      iconName: subject.iconName,
       subtitle: subject.subtitle ?? '',
     );
     context.goNamed(
@@ -1464,6 +1466,7 @@ class DashboardPage extends StatelessWidget {
           name: subject.name,
           category: subject.category,
           description: subject.description,
+          iconName: subject.iconName,
           subtitle: subject.subtitle ?? '',
         );
 

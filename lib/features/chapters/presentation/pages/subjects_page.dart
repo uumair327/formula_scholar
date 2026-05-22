@@ -266,6 +266,7 @@ class SubjectsPage extends StatelessWidget {
           name: subject.name,
           category: subject.category,
           description: subject.description,
+          iconName: subject.iconName,
           subtitle: subject.subtitle ?? '',
         );
 

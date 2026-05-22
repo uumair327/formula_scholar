@@ -172,6 +172,13 @@ abstract final class AppColors {
     colors: [Color(0xFF056C42), Color(0xFF10B981)],
   );
 
+  /// Error gradient — destructive actions, delete buttons.
+  static const LinearGradient errorGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFFBA1A1A), Color(0xFFFF5449)],
+  );
+
   /// Card shimmer gradient — subtle premium shine on cards.
   static const LinearGradient cardShimmer = LinearGradient(
     begin: Alignment(-1.0, -0.3),
@@ -197,6 +204,13 @@ abstract final class AppColors {
     colors: [Color(0xFF001D32), Color(0xFF003C61), Color(0xFF004B77)],
   );
 
+  /// Dark mode error gradient.
+  static const LinearGradient darkErrorGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF690005), Color(0xFFBA1A1A)],
+  );
+
   /// Returns the primary gradient for the current brightness.
   static LinearGradient primaryGradientOf(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark
@@ -208,4 +222,10 @@ abstract final class AppColors {
       Theme.of(context).brightness == Brightness.dark
           ? darkHeroGradient
           : heroGradient;
+
+  /// Returns the error gradient for the current brightness.
+  static LinearGradient errorGradientOf(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? darkErrorGradient
+          : errorGradient;
 }

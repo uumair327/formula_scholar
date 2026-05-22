@@ -12,6 +12,7 @@ class SelectedSubject extends Equatable {
     required this.name,
     required this.category,
     required this.description,
+    required this.iconName,
     this.subtitle = '',
   });
   final String id;
@@ -19,9 +20,10 @@ class SelectedSubject extends Equatable {
   final String category;
   final String description;
   final String subtitle;
+  final String iconName;
 
   @override
-  List<Object?> get props => [id, name, category, description, subtitle];
+  List<Object?> get props => [id, name, category, description, subtitle, iconName];
 }
 
 /// State for subject selection, consumed by Chapters, Saved, Practice.

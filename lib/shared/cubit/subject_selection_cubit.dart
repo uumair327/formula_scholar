@@ -27,6 +27,7 @@ class SubjectSelectionCubit extends HydratedCubit<SubjectSelectionState> {
     required String name,
     required String category,
     required String description,
+    required String iconName,
     String subtitle = '',
   }) {
     AppLogger.info(
@@ -39,6 +40,7 @@ class SubjectSelectionCubit extends HydratedCubit<SubjectSelectionState> {
         name: name,
         category: category,
         description: description,
+        iconName: iconName,
         subtitle: subtitle,
       ),
       curriculumKey: _activeCurriculumKey,
@@ -139,6 +141,7 @@ class SubjectSelectionCubit extends HydratedCubit<SubjectSelectionState> {
               name: subjectMap['name'] as String,
               category: subjectMap['category'] as String,
               description: subjectMap['description'] as String,
+              iconName: subjectMap['iconName'] as String? ?? 'book',
               subtitle: subjectMap['subtitle'] as String? ?? '',
             ),
       curriculumKey: json['curriculumKey'] as String?,
@@ -157,6 +160,7 @@ class SubjectSelectionCubit extends HydratedCubit<SubjectSelectionState> {
               'name': subject.name,
               'category': subject.category,
               'description': subject.description,
+              'iconName': subject.iconName,
               'subtitle': subject.subtitle,
             },
     };

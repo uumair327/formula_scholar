@@ -63,7 +63,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
     final data = state.data!;
     return RefreshIndicator(
       onRefresh: () async {
-        context.read<AnalyticsCubit>().load();
+        await context.read<AnalyticsCubit>().load();
       },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),

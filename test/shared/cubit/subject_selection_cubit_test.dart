@@ -42,6 +42,7 @@ void main() {
         name: 'Mathematics',
         category: 'math',
         description: 'Core mathematics',
+        iconName: 'sigma',
       );
 
       repository.emit(
@@ -77,6 +78,7 @@ void main() {
         name: 'Physics',
         category: 'science',
         description: 'Motion and force',
+        iconName: 'zap',
       );
 
       repository.emit(
@@ -112,6 +114,7 @@ void main() {
           name: 'Mathematics',
           category: 'science',
           description: 'Core mathematics',
+          iconName: 'sigma',
           subtitle: 'Numbers and equations',
         ),
         const SelectedSubject(
@@ -119,6 +122,7 @@ void main() {
           name: 'Science',
           category: 'science',
           description: 'Core science',
+          iconName: 'flaskConical',
         ),
       ]);
 

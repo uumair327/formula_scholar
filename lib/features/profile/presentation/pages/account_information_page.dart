@@ -303,49 +303,45 @@ class AccountInformationPage extends StatelessWidget {
     required Color color,
     VoidCallback? onTap,
   }) {
-    return Material(
-      color: AppColors.transparent,
-      child: InkWell(
-        onTap:
-            onTap ??
-            () => SupportContactSheet.show(
-              context,
-              title: label,
-              subtitle:
-                  'This account action is being expanded. Contact support and we will help you right away.',
-              email: 'support@formulascholar.app',
+    return AppCard(
+      onTap: onTap ??
+          () => SupportContactSheet.show(
+                context,
+                title: label,
+                subtitle:
+                    'This account action is being expanded. Contact support and we will help you right away.',
+                email: 'support@formulascholar.app',
+              ),
+      boxShadow: const [AppShadows.subtle],
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDimensions.paddingXL,
+        vertical: AppDimensions.paddingLG,
+      ),
+      child: Row(
+        children: [
+          AppIconCircle(
+            icon: icon,
+            backgroundColor: color.withValues(
+              alpha: AppDimensions.opacityFaint,
             ),
-        borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
-        child: AppCard(
-          boxShadow: const [AppShadows.subtle],
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.paddingXL,
-            vertical: AppDimensions.paddingLG,
+            iconColor: color,
           ),
-          child: Row(
-            children: [
-              AppIconCircle(
-                icon: icon,
-                backgroundColor: color.withValues(
-                  alpha: AppDimensions.opacityFaint,
-                ),
-                iconColor: color,
+          const SizedBox(width: AppDimensions.paddingLG),
+          Expanded(
+            child: Text(
+              label,
+              style: AppTextStyles.labelLarge.copyWith(
+                color: color,
+                fontWeight: FontWeight.w700,
               ),
-              const SizedBox(width: AppDimensions.paddingLG),
-              Expanded(
-                child: Text(
-                  label,
-                  style: AppTextStyles.labelLarge.copyWith(color: color),
-                ),
-              ),
-              Icon(
-                LucideIcons.chevronRight,
-                size: AppDimensions.iconMD,
-                color: color.withValues(alpha: AppDimensions.opacityMedium),
-              ),
-            ],
+            ),
           ),
-        ),
+          Icon(
+            LucideIcons.chevronRight,
+            size: AppDimensions.iconMD,
+            color: color.withValues(alpha: AppDimensions.opacityMedium),
+          ),
+        ],
       ),
     );
   }
@@ -409,33 +405,18 @@ class AccountInformationPage extends StatelessWidget {
               BlocBuilder<AuthCubit, AuthState>(
                 builder: (context, state) {
                   final isLoading = state.status == AuthStatus.loading;
-                  return ElevatedButton(
+                  return AppGradientButton(
                     onPressed: isLoading
                         ? null
-                        : () => context.read<AuthCubit>().deleteAccount(),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.error,
-                      foregroundColor: AppColors.onError,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppDimensions.paddingXL,
-                        vertical: AppDimensions.paddingMD,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          AppDimensions.radiusLG,
-                        ),
-                      ),
-                    ),
-                    child: isLoading
-                        ? const SizedBox(
-                            width: AppDimensions.iconSM,
-                            height: AppDimensions.iconSM,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: AppColors.onError,
-                            ),
-                          )
-                        : const Text(AppStrings.deleteAccountButton),
+                        : () {
+                            HapticsHelper.heavyImpact();
+                            context.read<AuthCubit>().deleteAccount();
+                          },
+                    label: AppStrings.deleteAccountButton,
+                    icon: LucideIcons.trash2,
+                    isLoading: isLoading,
+                    gradient: AppColors.errorGradient,
+                    isExpanded: true,
                   );
                 },
               ),

@@ -33,7 +33,7 @@ class AchievementsPage extends StatelessWidget {
 
           return RefreshIndicator(
             onRefresh: () async {
-              context.read<AchievementsCubit>().loadAchievements();
+              await context.read<AchievementsCubit>().loadAchievements();
             },
             child: ListView(
               padding: const EdgeInsets.all(AppDimensions.paddingMD),
