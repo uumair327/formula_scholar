@@ -1,5 +1,9 @@
+import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:universal_html/html.dart' as html;
+import 'dart:ui_web' as ui_web;
 
 class WebviewChemistryWidget extends StatefulWidget {
   const WebviewChemistryWidget({
@@ -14,41 +18,61 @@ class WebviewChemistryWidget extends StatefulWidget {
 }
 
 class _WebviewChemistryWidgetState extends State<WebviewChemistryWidget> {
-  late final WebViewController _controller;
+  WebViewController? _controller;
+  late final String _viewId;
   bool _pageLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(const Color(0x00000000))
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onPageFinished: (url) {
-            setState(() {
-              _pageLoaded = true;
-            });
-            _triggerRender();
-          },
-        ),
-      )
-      ..loadHtmlString(_buildHtmlString());
+    if (kIsWeb) {
+      _viewId = 'chemistry-viewer-${Random().nextInt(1000000)}';
+      ui_web.platformViewRegistry.registerViewFactory(_viewId, (int viewId) {
+        final iframe = html.IFrameElement()
+          ..style.border = 'none'
+          ..style.width = '100%'
+          ..style.height = '100%'
+          ..srcdoc = _buildHtmlString();
+        return iframe;
+      });
+    } else {
+      _controller = WebViewController()
+        ..setJavaScriptMode(JavaScriptMode.unrestricted)
+        ..setBackgroundColor(const Color(0x00000000))
+        ..setNavigationDelegate(
+          NavigationDelegate(
+            onPageFinished: (url) {
+              setState(() {
+                _pageLoaded = true;
+              });
+              _triggerRender();
+            },
+          ),
+        )
+        ..loadHtmlString(_buildHtmlString());
+    }
   }
 
   @override
   void didUpdateWidget(covariant WebviewChemistryWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.config != oldWidget.config && _pageLoaded) {
-      _triggerRender();
+    if (widget.config != oldWidget.config) {
+      if (kIsWeb) {
+        // For web, if iframe is used, srcdoc update is harder, 
+        // we could just rebuild by changing viewId, but it's simpler to keep it static for now
+        // since formulas don't typically change dynamically without a full widget rebuild.
+      } else if (_pageLoaded) {
+        _triggerRender();
+      }
     }
   }
 
   void _triggerRender() {
-    final smiles = widget.config['smiles'] as String? ?? 'CCO'; // Default Ethanol
-    final renderMode = widget.config['renderMode'] as String? ?? '2d'; // '2d' or '3d'
+    if (kIsWeb || _controller == null) return;
+    final smiles = widget.config['smiles'] as String? ?? 'CCO';
+    final renderMode = widget.config['renderMode'] as String? ?? '2d';
     
-    _controller.runJavaScript(
+    _controller!.runJavaScript(
       "if (window.renderMolecule) { window.renderMolecule('$renderMode', '$smiles'); }"
     );
   }
@@ -57,11 +81,16 @@ class _WebviewChemistryWidgetState extends State<WebviewChemistryWidget> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.black.withValues(alpha: 0.4),
-      child: WebViewWidget(controller: _controller),
+      child: kIsWeb
+          ? HtmlElementView(viewType: _viewId)
+          : WebViewWidget(controller: _controller!),
     );
   }
 
   String _buildHtmlString() {
+    final smiles = widget.config['smiles'] as String? ?? 'CCO';
+    final renderMode = widget.config['renderMode'] as String? ?? '2d';
+
     return """
 <!DOCTYPE html>
 <html>
@@ -71,7 +100,7 @@ class _WebviewChemistryWidgetState extends State<WebviewChemistryWidget> {
   <style>
     body, html {
       margin: 0; padding: 0; width: 100%; height: 100%;
-      background-color: #121212; overflow: hidden;
+      background-color: transparent; overflow: hidden;
       display: flex; justify-content: center; align-items: center;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       color: #ffffff;
@@ -103,7 +132,7 @@ class _WebviewChemistryWidgetState extends State<WebviewChemistryWidget> {
         container.appendChild(div);
 
         setTimeout(() => {
-          let viewer = \$3Dmol.createViewer(\$(div), { backgroundColor: '#121212' });
+          let viewer = \$3Dmol.createViewer(\$(div), { backgroundColor: '#1e1e1e' });
           let url = '';
           if (formula.length < 30 && !formula.includes('=') && !formula.includes('#')) {
             url = 'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/' + encodeURIComponent(formula) + '/SDF?record_type=3d';
@@ -117,7 +146,6 @@ class _WebviewChemistryWidgetState extends State<WebviewChemistryWidget> {
             viewer.zoomTo();
             viewer.render();
             
-            // Subtle rotation animation
             let angle = 0;
             setInterval(() => {
               if (viewer) {
@@ -126,7 +154,6 @@ class _WebviewChemistryWidgetState extends State<WebviewChemistryWidget> {
               }
             }, 30);
           }).fail(function() {
-            // Mock SDF for offline fallback (Water Molecule)
             let mockSDF = `
 Water Molecule (Offline Fallback)
   3Dmol.js
@@ -167,6 +194,11 @@ Water Molecule (Offline Fallback)
           }
         }, 100);
       }
+    };
+
+    // Execute immediately with config injected into HTML
+    window.onload = function() {
+      window.renderMolecule('$renderMode', '$smiles');
     };
   </script>
 </body>

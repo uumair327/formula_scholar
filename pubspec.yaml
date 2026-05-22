@@ -59,6 +59,8 @@ dependencies:
   url_launcher: ^6.3.2
   fl_chart: ^0.70.2
   webview_flutter: ^4.8.0
+  webview_flutter_web: ^0.2.3+4
+  universal_html: ^2.3.0
 
 dev_dependencies:
   dart_firebase_admin: any
@@ -84,9 +86,8 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - assets/banners/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
