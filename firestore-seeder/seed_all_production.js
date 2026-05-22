@@ -62,7 +62,27 @@ const scripts = [
     },
     {
         name: 'seed_mh_board_10.js',
-        description: 'MH Board 10th Standard subjects and short notes',
+        description: 'MH Board 10th Standard subjects and structure',
+        stage: 'Content'
+    },
+    {
+        name: 'seed_mh10_formulas_algebra.js',
+        description: 'MH Board 10th Algebra formulas with premium graph widgets',
+        stage: 'Content'
+    },
+    {
+        name: 'seed_mh10_formulas_geometry.js',
+        description: 'MH Board 10th Geometry formulas with 3D/graph widgets',
+        stage: 'Content'
+    },
+    {
+        name: 'seed_mh10_formulas_sci1.js',
+        description: 'MH Board 10th Science 1 formulas with interactive circuits/simulations/3D chemistry structures',
+        stage: 'Content'
+    },
+    {
+        name: 'seed_mh10_formulas_sci2.js',
+        description: 'MH Board 10th Science 2 formulas with 3D chemistry structures',
         stage: 'Content'
     },
     {

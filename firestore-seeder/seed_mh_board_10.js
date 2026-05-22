@@ -84,7 +84,7 @@ async function seedMhBoard10() {
         isFeatured: true,
         boardId: 'msbshse',
         gradeId: '10',
-        audiences: ['IN_msbshse_10'],
+        audiences: ['msbshse_10', 'IN_msbshse_10', 'msbshse_class_10'],
         isGeneralContent: false
       },
       chapters: [
@@ -111,7 +111,7 @@ async function seedMhBoard10() {
         isFeatured: true,
         boardId: 'msbshse',
         gradeId: '10',
-        audiences: ['IN_msbshse_10'],
+        audiences: ['msbshse_10', 'IN_msbshse_10', 'msbshse_class_10'],
         isGeneralContent: false
       },
       chapters: [
@@ -139,7 +139,7 @@ async function seedMhBoard10() {
         isFeatured: true,
         boardId: 'msbshse',
         gradeId: '10',
-        audiences: ['IN_msbshse_10'],
+        audiences: ['msbshse_10', 'IN_msbshse_10', 'msbshse_class_10'],
         isGeneralContent: false
       },
       chapters: [
@@ -170,7 +170,7 @@ async function seedMhBoard10() {
         isFeatured: true,
         boardId: 'msbshse',
         gradeId: '10',
-        audiences: ['IN_msbshse_10'],
+        audiences: ['msbshse_10', 'IN_msbshse_10', 'msbshse_class_10'],
         isGeneralContent: false
       },
       chapters: [
@@ -201,22 +201,9 @@ async function seedMhBoard10() {
         subtitle: `Important concepts for ${chapter.name}`
       });
 
-      // Add a short note / formula for the chapter
+      // Delete any pre-existing dummy short note / formula for the chapter to prevent clutter
       const formulaRef = chapterRef.collection('formulas').doc(`formula_${subject.id}_${formulaCounter}`);
-      batch.set(formulaRef, {
-        id: `formula_${subject.id}_${formulaCounter}`,
-        title: `Short Note on ${chapter.name}`,
-        latex: `\\text{Key concepts of } ${chapter.name.replace(/[^a-zA-Z0-9 ]/g, '')}`,
-        description: `This is a short summary and note for ${chapter.name}. Ensure you understand the primary concepts and definitions.`,
-        category: 'concept',
-        difficulty: 'easy',
-        isGeneralContent: false,
-        audiences: ['IN_msbshse_10'],
-        examples: [`Example question related to ${chapter.name}`],
-        tags: ['maharashtra-board', '10th', chapter.name.toLowerCase().replace(/\\s+/g, '-')],
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
-        updatedAt: admin.firestore.FieldValue.serverTimestamp()
-      });
+      batch.delete(formulaRef);
       formulaCounter++;
     }
   }

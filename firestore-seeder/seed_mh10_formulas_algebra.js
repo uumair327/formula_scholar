@@ -11,14 +11,35 @@ if (!admin.apps.length) {
 }
 const db = admin.firestore();
 
-const AUDIENCE = ['IN_msbshse_10'];
+const AUDIENCE = ['msbshse_10', 'IN_msbshse_10', 'msbshse_class_10'];
 const TAGS_BASE = ['maharashtra-board', '10th'];
 
 const algebraFormulas = {
   chap_01: {
     name: 'Linear Equations in Two Variables',
     formulas: [
-      { id: 'mh_alg_le_001', title: 'General Form', latex: 'ax + by + c = 0', description: 'Standard form of a linear equation in two variables where a, b are not both zero.', category: 'definition', difficulty: 'easy' },
+      {
+        id: 'mh_alg_le_001',
+        title: 'General Form',
+        latex: 'ax + by + c = 0',
+        description: 'Standard form of a linear equation in two variables where a, b are not both zero.',
+        category: 'definition',
+        difficulty: 'easy',
+        widgetConfig: {
+          type: 'graph',
+          title: 'Linear Equation Grapher',
+          config: {
+            expressions: [
+              { latex: 'y = m*x + c', color: '#3B82F6' }
+            ],
+            viewport: { xMin: -8.0, xMax: 8.0, yMin: -8.0, yMax: 8.0 },
+            sliders: [
+              { id: 'm', label: 'Slope (m)', min: -5.0, max: 5.0, default: 1.0, step: 0.1 },
+              { id: 'c', label: 'Intercept (c)', min: -6.0, max: 6.0, default: 0.0, step: 0.5 }
+            ]
+          }
+        }
+      },
       { id: 'mh_alg_le_002', title: 'Slope-Intercept Form', latex: 'y = mx + c', description: 'Where m is the slope and c is the y-intercept of the line.', category: 'linear', difficulty: 'easy' },
       { id: 'mh_alg_le_003', title: 'Slope Formula', latex: 'm = \\frac{y_2 - y_1}{x_2 - x_1}', description: 'Slope of a line passing through two points (x₁, y₁) and (x₂, y₂).', category: 'linear', difficulty: 'easy' },
       { id: 'mh_alg_le_004', title: 'Consistent System (Unique Solution)', latex: '\\frac{a_1}{a_2} \\neq \\frac{b_1}{b_2}', description: 'Condition for a pair of linear equations to have exactly one solution (intersecting lines).', category: 'system', difficulty: 'intermediate' },
@@ -29,7 +50,37 @@ const algebraFormulas = {
   chap_02: {
     name: 'Quadratic Equations',
     formulas: [
-      { id: 'mh_alg_qe_001', title: 'Standard Form', latex: 'ax^2 + bx + c = 0,\\quad a \\neq 0', description: 'General form of a quadratic equation with real coefficients.', category: 'definition', difficulty: 'easy' },
+      {
+        id: 'mh_alg_qe_001',
+        title: 'Standard Form',
+        latex: 'ax^2 + bx + c = 0,\\quad a \\neq 0',
+        description: 'General form of a quadratic equation with real coefficients.',
+        category: 'definition',
+        difficulty: 'easy',
+        widgetConfig: {
+          type: 'graph',
+          title: 'Quadratic Graph Explorer',
+          config: {
+            expressions: [
+              {
+                latex: 'y = a*x^2 + b*x + c',
+                color: '#E67E22'
+              }
+            ],
+            viewport: {
+              xMin: -6.0,
+              xMax: 6.0,
+              yMin: -8.0,
+              yMax: 8.0
+            },
+            sliders: [
+              { id: 'a', label: 'Coefficient a', min: -3.0, max: 3.0, default: 1.0, step: 0.1 },
+              { id: 'b', label: 'Coefficient b', min: -5.0, max: 5.0, default: 0.0, step: 0.1 },
+              { id: 'c', label: 'Coefficient c', min: -8.0, max: 8.0, default: -4.0, step: 0.1 }
+            ]
+          }
+        }
+      },
       { id: 'mh_alg_qe_002', title: 'Quadratic Formula (Shreedharacharya)', latex: 'x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}', description: 'Gives the roots of any quadratic equation. Also known as Shreedharacharya\'s formula.', category: 'algebraic', difficulty: 'intermediate' },
       { id: 'mh_alg_qe_003', title: 'Discriminant', latex: '\\Delta = b^2 - 4ac', description: 'Determines the nature of roots: Δ>0 → two distinct real roots, Δ=0 → equal roots, Δ<0 → no real roots.', category: 'algebraic', difficulty: 'intermediate' },
       { id: 'mh_alg_qe_004', title: 'Sum of Roots', latex: '\\alpha + \\beta = -\\frac{b}{a}', description: 'The sum of roots of ax² + bx + c = 0.', category: 'roots', difficulty: 'intermediate' },
@@ -40,7 +91,28 @@ const algebraFormulas = {
   chap_03: {
     name: 'Arithmetic Progression',
     formulas: [
-      { id: 'mh_alg_ap_001', title: 'General Term (nth term)', latex: 'a_n = a + (n-1)d', description: 'The nth term of an AP where a is the first term and d is the common difference.', category: 'sequence', difficulty: 'easy' },
+      {
+        id: 'mh_alg_ap_001',
+        title: 'General Term (nth term)',
+        latex: 'a_n = a + (n-1)d',
+        description: 'The nth term of an AP where a is the first term and d is the common difference.',
+        category: 'sequence',
+        difficulty: 'easy',
+        widgetConfig: {
+          type: 'graph',
+          title: 'AP Sequence Visualiser',
+          config: {
+            expressions: [
+              { latex: 'y = a + (x - 1)*d', color: '#2ECC71' }
+            ],
+            viewport: { xMin: 0.0, xMax: 20.0, yMin: -20.0, yMax: 50.0 },
+            sliders: [
+              { id: 'a', label: 'First term (a)', min: -10.0, max: 20.0, default: 3.0, step: 1.0 },
+              { id: 'd', label: 'Common diff (d)', min: -5.0, max: 5.0, default: 2.0, step: 0.5 }
+            ]
+          }
+        }
+      },
       { id: 'mh_alg_ap_002', title: 'Sum of First n Terms', latex: 'S_n = \\frac{n}{2}[2a + (n-1)d]', description: 'Sum of first n terms of an arithmetic progression.', category: 'series', difficulty: 'intermediate' },
       { id: 'mh_alg_ap_003', title: 'Sum Using First and Last Term', latex: 'S_n = \\frac{n}{2}(a + l)', description: 'Where a is the first term and l is the last term.', category: 'series', difficulty: 'easy' },
       { id: 'mh_alg_ap_004', title: 'Common Difference', latex: 'd = a_{n} - a_{n-1}', description: 'The constant difference between consecutive terms.', category: 'sequence', difficulty: 'easy' },
@@ -51,7 +123,29 @@ const algebraFormulas = {
     name: 'Financial Planning',
     formulas: [
       { id: 'mh_alg_fp_001', title: 'Simple Interest', latex: 'SI = \\frac{P \\times R \\times T}{100}', description: 'Where P = Principal, R = Rate of interest per annum, T = Time in years.', category: 'finance', difficulty: 'easy' },
-      { id: 'mh_alg_fp_002', title: 'Compound Interest', latex: 'A = P\\left(1 + \\frac{R}{100}\\right)^T', description: 'Amount after T years with compound interest. CI = A − P.', category: 'finance', difficulty: 'intermediate' },
+      {
+        id: 'mh_alg_fp_002',
+        title: 'Compound Interest',
+        latex: 'A = P\\left(1 + \\frac{R}{100}\\right)^T',
+        description: 'Amount after T years with compound interest. CI = A − P.',
+        category: 'finance',
+        difficulty: 'intermediate',
+        widgetConfig: {
+          type: 'graph',
+          title: 'Compound Interest Growth',
+          config: {
+            expressions: [
+              { latex: 'y = P*(1 + R/100)^x', color: '#E74C3C' },
+              { latex: 'y = P + P*R*x/100', color: '#95A5A6' }
+            ],
+            viewport: { xMin: 0.0, xMax: 20.0, yMin: 0.0, yMax: 50000.0 },
+            sliders: [
+              { id: 'P', label: 'Principal (₹)', min: 1000.0, max: 10000.0, default: 5000.0, step: 500.0 },
+              { id: 'R', label: 'Rate (%)', min: 1.0, max: 15.0, default: 8.0, step: 0.5 }
+            ]
+          }
+        }
+      },
       { id: 'mh_alg_fp_003', title: 'EMI Formula', latex: 'EMI = \\frac{P \\cdot r \\cdot (1+r)^n}{(1+r)^n - 1}', description: 'Equated Monthly Installment where r = monthly rate, n = number of months.', category: 'finance', difficulty: 'hard' },
       { id: 'mh_alg_fp_004', title: 'GST Calculation', latex: '\\text{GST Amount} = \\frac{\\text{Price} \\times \\text{Rate}}{100}', description: 'Goods and Services Tax calculation on the base price.', category: 'tax', difficulty: 'easy' },
       { id: 'mh_alg_fp_005', title: 'Depreciation', latex: 'V = P\\left(1 - \\frac{R}{100}\\right)^T', description: 'Value after depreciation where R is the rate of depreciation.', category: 'finance', difficulty: 'intermediate' },

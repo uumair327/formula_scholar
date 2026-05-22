@@ -11,7 +11,7 @@ if (!admin.apps.length) {
 }
 const db = admin.firestore();
 
-const AUDIENCE = ['IN_msbshse_10'];
+const AUDIENCE = ['msbshse_10', 'IN_msbshse_10', 'msbshse_class_10'];
 const TAGS_BASE = ['maharashtra-board', '10th'];
 
 const sci2Formulas = {
@@ -27,9 +27,54 @@ const sci2Formulas = {
   chap_02: {
     name: 'Life Processes in Living Organisms Part -1',
     formulas: [
-      { id: 'mh_s2_lp1_001', title: 'Aerobic Respiration', latex: 'C_6H_{12}O_6 + 6O_2 \\rightarrow 6CO_2 + 6H_2O + \\text{ATP}', description: 'Complete oxidation of glucose in the presence of oxygen (38 ATP produced).', category: 'respiration', difficulty: 'intermediate' },
-      { id: 'mh_s2_lp1_002', title: 'Anaerobic Respiration (Yeast)', latex: 'C_6H_{12}O_6 \\rightarrow 2C_2H_5OH + 2CO_2 + \\text{ATP}', description: 'Fermentation by yeast: glucose → ethanol + CO₂ (2 ATP).', category: 'respiration', difficulty: 'intermediate' },
-      { id: 'mh_s2_lp1_003', title: 'Photosynthesis', latex: '6CO_2 + 6H_2O \\xrightarrow{\\text{sunlight}} C_6H_{12}O_6 + 6O_2', description: 'Plants convert CO₂ and water into glucose using sunlight and chlorophyll.', category: 'nutrition', difficulty: 'easy' },
+      {
+        id: 'mh_s2_lp1_001',
+        title: 'Aerobic Respiration',
+        latex: 'C_6H_{12}O_6 + 6O_2 \\rightarrow 6CO_2 + 6H_2O + \\text{ATP}',
+        description: 'Complete oxidation of glucose in the presence of oxygen (38 ATP produced).',
+        category: 'respiration',
+        difficulty: 'intermediate',
+        widgetConfig: {
+          type: 'chemistry',
+          title: 'Glucose Molecule (3D)',
+          config: {
+            smiles: 'C(C1C(C(C(C(O1)O)O)O)O)O',
+            renderMode: '3d'
+          }
+        }
+      },
+      {
+        id: 'mh_s2_lp1_002',
+        title: 'Anaerobic Respiration (Yeast)',
+        latex: 'C_6H_{12}O_6 \\rightarrow 2C_2H_5OH + 2CO_2 + \\text{ATP}',
+        description: 'Fermentation by yeast: glucose → ethanol + CO₂ (2 ATP).',
+        category: 'respiration',
+        difficulty: 'intermediate',
+        widgetConfig: {
+          type: 'chemistry',
+          title: 'Ethanol Molecule (3D)',
+          config: {
+            smiles: 'CCO',
+            renderMode: '3d'
+          }
+        }
+      },
+      {
+        id: 'mh_s2_lp1_003',
+        title: 'Photosynthesis',
+        latex: '6CO_2 + 6H_2O \\xrightarrow{\\text{sunlight}} C_6H_{12}O_6 + 6O_2',
+        description: 'Plants convert CO₂ and water into glucose using sunlight and chlorophyll.',
+        category: 'nutrition',
+        difficulty: 'easy',
+        widgetConfig: {
+          type: 'chemistry',
+          title: 'Carbon Dioxide Molecule (3D)',
+          config: {
+            smiles: 'O=C=O',
+            renderMode: '3d'
+          }
+        }
+      },
       { id: 'mh_s2_lp1_004', title: 'BMI (Body Mass Index)', latex: 'BMI = \\frac{\\text{Weight (kg)}}{\\text{Height (m)}^2}', description: 'Used to classify underweight, normal, overweight, and obese categories.', category: 'health', difficulty: 'easy' },
     ]
   },

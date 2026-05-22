@@ -11,7 +11,7 @@ if (!admin.apps.length) {
 }
 const db = admin.firestore();
 
-const AUDIENCE = ['IN_msbshse_10'];
+const AUDIENCE = ['msbshse_10', 'IN_msbshse_10', 'msbshse_class_10'];
 const TAGS_BASE = ['maharashtra-board', '10th'];
 
 const geometryFormulas = {
@@ -60,7 +60,29 @@ const geometryFormulas = {
       { id: 'mh_geo_cg_001', title: 'Distance Formula', latex: 'd = \\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}', description: 'Distance between two points (x₁,y₁) and (x₂,y₂).', category: 'coordinate', difficulty: 'easy' },
       { id: 'mh_geo_cg_002', title: 'Section Formula (Internal)', latex: 'P = \\left(\\frac{mx_2 + nx_1}{m+n},\\; \\frac{my_2 + ny_1}{m+n}\\right)', description: 'Point dividing segment internally in ratio m:n.', category: 'coordinate', difficulty: 'intermediate' },
       { id: 'mh_geo_cg_003', title: 'Midpoint Formula', latex: 'M = \\left(\\frac{x_1+x_2}{2},\\; \\frac{y_1+y_2}{2}\\right)', description: 'Midpoint of a line segment joining two points.', category: 'coordinate', difficulty: 'easy' },
-      { id: 'mh_geo_cg_004', title: 'Slope of a Line', latex: 'm = \\frac{y_2 - y_1}{x_2 - x_1}', description: 'Slope/gradient of a line through two given points.', category: 'linear', difficulty: 'easy' },
+      {
+        id: 'mh_geo_cg_004',
+        title: 'Slope of a Line',
+        latex: 'm = \\frac{y_2 - y_1}{x_2 - x_1}',
+        description: 'Slope/gradient of a line through two given points.',
+        category: 'linear',
+        difficulty: 'easy',
+        widgetConfig: {
+          type: 'graph',
+          title: 'Slope Explorer',
+          config: {
+            expressions: [
+              { latex: 'y = m*(x - x1) + y1', color: '#9B59B6' }
+            ],
+            viewport: { xMin: -10.0, xMax: 10.0, yMin: -10.0, yMax: 10.0 },
+            sliders: [
+              { id: 'm', label: 'Slope (m)', min: -5.0, max: 5.0, default: 1.0, step: 0.1 },
+              { id: 'x1', label: 'Point x₁', min: -5.0, max: 5.0, default: 0.0, step: 0.5 },
+              { id: 'y1', label: 'Point y₁', min: -5.0, max: 5.0, default: 0.0, step: 0.5 }
+            ]
+          }
+        }
+      },
       { id: 'mh_geo_cg_005', title: 'Area of Triangle (Coordinates)', latex: 'A = \\frac{1}{2}|x_1(y_2-y_3) + x_2(y_3-y_1) + x_3(y_1-y_2)|', description: 'Area of triangle with vertices at three coordinate points.', category: 'area', difficulty: 'intermediate' },
       { id: 'mh_geo_cg_006', title: 'Collinearity Condition', latex: 'x_1(y_2-y_3) + x_2(y_3-y_1) + x_3(y_1-y_2) = 0', description: 'Three points are collinear if the area of the triangle they form is zero.', category: 'coordinate', difficulty: 'intermediate' },
     ]
@@ -68,7 +90,28 @@ const geometryFormulas = {
   chap_06: {
     name: 'Trigonometry',
     formulas: [
-      { id: 'mh_geo_trig_001', title: 'Sine Ratio', latex: '\\sin\\theta = \\frac{\\text{Opposite}}{\\text{Hypotenuse}}', description: 'Ratio of opposite side to hypotenuse in a right triangle.', category: 'ratio', difficulty: 'easy' },
+      {
+        id: 'mh_geo_trig_001',
+        title: 'Sine Ratio',
+        latex: '\\sin\\theta = \\frac{\\text{Opposite}}{\\text{Hypotenuse}}',
+        description: 'Ratio of opposite side to hypotenuse in a right triangle.',
+        category: 'ratio',
+        difficulty: 'easy',
+        widgetConfig: {
+          type: 'graph',
+          title: 'Sine & Cosine Curves',
+          config: {
+            expressions: [
+              { latex: 'y = A*sin(x)', color: '#3B82F6' },
+              { latex: 'y = A*cos(x)', color: '#EF4444' }
+            ],
+            viewport: { xMin: -6.28, xMax: 6.28, yMin: -3.0, yMax: 3.0 },
+            sliders: [
+              { id: 'A', label: 'Amplitude', min: 0.5, max: 3.0, default: 1.0, step: 0.1 }
+            ]
+          }
+        }
+      },
       { id: 'mh_geo_trig_002', title: 'Cosine Ratio', latex: '\\cos\\theta = \\frac{\\text{Adjacent}}{\\text{Hypotenuse}}', description: 'Ratio of adjacent side to hypotenuse.', category: 'ratio', difficulty: 'easy' },
       { id: 'mh_geo_trig_003', title: 'Tangent Ratio', latex: '\\tan\\theta = \\frac{\\sin\\theta}{\\cos\\theta} = \\frac{\\text{Opposite}}{\\text{Adjacent}}', description: 'Ratio of opposite to adjacent side.', category: 'ratio', difficulty: 'easy' },
       { id: 'mh_geo_trig_004', title: 'Pythagorean Identity', latex: '\\sin^2\\theta + \\cos^2\\theta = 1', description: 'Fundamental trigonometric identity valid for all angles.', category: 'identity', difficulty: 'easy' },
@@ -81,12 +124,82 @@ const geometryFormulas = {
     formulas: [
       { id: 'mh_geo_mens_001', title: 'Curved Surface Area of Cylinder', latex: 'CSA = 2\\pi r h', description: 'Lateral surface area of a right circular cylinder.', category: 'surface-area', difficulty: 'easy' },
       { id: 'mh_geo_mens_002', title: 'Total Surface Area of Cylinder', latex: 'TSA = 2\\pi r(r + h)', description: 'Total surface including both circular bases.', category: 'surface-area', difficulty: 'easy' },
-      { id: 'mh_geo_mens_003', title: 'Volume of Cylinder', latex: 'V = \\pi r^2 h', description: 'Volume of a right circular cylinder.', category: 'volume', difficulty: 'easy' },
+      {
+        id: 'mh_geo_mens_003',
+        title: 'Volume of Cylinder',
+        latex: 'V = \\pi r^2 h',
+        description: 'Volume of a right circular cylinder.',
+        category: 'volume',
+        difficulty: 'easy',
+        widgetConfig: {
+          type: 'model3d',
+          title: '3D Cylinder Explorer',
+          config: {
+            shape: 'cylinder',
+            sliders: [
+              { id: 'a', label: 'Radius (r)', min: 0.5, max: 2.0, default: 1.0, step: 0.1 },
+              { id: 'b', label: 'Height (h)', min: 0.5, max: 3.0, default: 1.5, step: 0.1 }
+            ]
+          }
+        }
+      },
       { id: 'mh_geo_mens_004', title: 'Slant Height of Cone', latex: 'l = \\sqrt{r^2 + h^2}', description: 'Slant height from Pythagoras theorem.', category: 'cone', difficulty: 'easy' },
-      { id: 'mh_geo_mens_005', title: 'Volume of Cone', latex: 'V = \\frac{1}{3}\\pi r^2 h', description: 'Volume of a right circular cone.', category: 'volume', difficulty: 'easy' },
+      {
+        id: 'mh_geo_mens_005',
+        title: 'Volume of Cone',
+        latex: 'V = \\frac{1}{3}\\pi r^2 h',
+        description: 'Volume of a right circular cone.',
+        category: 'volume',
+        difficulty: 'easy',
+        widgetConfig: {
+          type: 'model3d',
+          title: '3D Cone Explorer',
+          config: {
+            shape: 'cone',
+            sliders: [
+              { id: 'a', label: 'Radius (r)', min: 0.5, max: 2.0, default: 1.0, step: 0.1 },
+              { id: 'b', label: 'Height (h)', min: 0.5, max: 3.0, default: 1.5, step: 0.1 }
+            ]
+          }
+        }
+      },
       { id: 'mh_geo_mens_006', title: 'Surface Area of Sphere', latex: 'SA = 4\\pi r^2', description: 'Total surface area of a sphere.', category: 'surface-area', difficulty: 'easy' },
-      { id: 'mh_geo_mens_007', title: 'Volume of Sphere', latex: 'V = \\frac{4}{3}\\pi r^3', description: 'Volume of a sphere with radius r.', category: 'volume', difficulty: 'easy' },
-      { id: 'mh_geo_mens_008', title: 'Volume of Hemisphere', latex: 'V = \\frac{2}{3}\\pi r^3', description: 'Half the volume of a sphere.', category: 'volume', difficulty: 'easy' },
+      {
+        id: 'mh_geo_mens_007',
+        title: 'Volume of Sphere',
+        latex: 'V = \\frac{4}{3}\\pi r^3',
+        description: 'Volume of a sphere with radius r.',
+        category: 'volume',
+        difficulty: 'easy',
+        widgetConfig: {
+          type: 'model3d',
+          title: '3D Sphere Explorer',
+          config: {
+            shape: 'sphere',
+            sliders: [
+              { id: 'a', label: 'Radius (r)', min: 0.5, max: 2.5, default: 1.0, step: 0.1 }
+            ]
+          }
+        }
+      },
+      {
+        id: 'mh_geo_mens_008',
+        title: 'Volume of Hemisphere',
+        latex: 'V = \\frac{2}{3}\\pi r^3',
+        description: 'Half the volume of a sphere.',
+        category: 'volume',
+        difficulty: 'easy',
+        widgetConfig: {
+          type: 'model3d',
+          title: '3D Hemisphere Explorer',
+          config: {
+            shape: 'sphere',
+            sliders: [
+              { id: 'a', label: 'Radius (r)', min: 0.5, max: 2.5, default: 1.0, step: 0.1 }
+            ]
+          }
+        }
+      },
     ]
   }
 };
