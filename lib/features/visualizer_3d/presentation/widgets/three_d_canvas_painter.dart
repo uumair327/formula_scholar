@@ -32,7 +32,8 @@ class ThreeDCanvasPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
-    final radiusBase = size.width * 0.18;
+    // Use min of width/height to ensure uniform scaling that doesn't blow out vertical bounds on web
+    final radiusBase = math.min(size.width, size.height) * 0.35;
 
     switch (type) {
       case VisualizerType.sphere:

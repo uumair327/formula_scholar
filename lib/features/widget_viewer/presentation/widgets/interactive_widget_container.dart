@@ -129,6 +129,7 @@ class _InteractiveWidgetContainerState extends State<InteractiveWidgetContainer>
           // Primary Visualization View
           Container(
             height: 280,
+            clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
               color: Colors.black.withValues(alpha: 0.15),
               border: Border(
