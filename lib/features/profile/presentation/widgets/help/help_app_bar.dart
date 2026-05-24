@@ -16,6 +16,7 @@ class HelpAppBar extends StatelessWidget {
       leading: IconButton(
         onPressed: () => context.go(AppRoutes.profilePath),
         icon: Icon(LucideIcons.arrowLeft, color: colorScheme.onSurface),
+        tooltip: MaterialLocalizations.of(context).backButtonTooltip,
       ),
       titleWidget: Text(
         AppStrings.helpAndSupport,

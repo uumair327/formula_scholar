@@ -50,6 +50,7 @@ class BookmarkCard extends StatelessWidget {
                   size: AppDimensions.iconMD,
                   color: AppColors.primary,
                 ),
+                tooltip: AppStrings.removeBookmark,
               ),
             ],
           ),

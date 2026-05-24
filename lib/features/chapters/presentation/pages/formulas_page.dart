@@ -11,37 +11,8 @@ import '../widgets/formula_app_bar_actions.dart';
 import '../widgets/formula_mastery_header.dart';
 import '../widgets/formula_study_card.dart';
 
-class FormulasPage extends StatefulWidget {
+class FormulasPage extends StatelessWidget {
   const FormulasPage({super.key});
-
-  @override
-  State<FormulasPage> createState() => _FormulasPageState();
-}
-
-class _FormulasPageState extends State<FormulasPage> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final state = GoRouterState.of(context);
-      final subjectId = state.pathParameters['subjectId'] ?? '';
-      final chapterId = state.pathParameters['chapterId'] ?? '';
-      final chapterName = state.uri.queryParameters['name'] ?? 'Formulas';
-      final curriculumKey = context
-          .read<CurriculumCubit>()
-          .state
-          .curriculum
-          ?.curriculumKey;
-      if (subjectId.isNotEmpty && chapterId.isNotEmpty) {
-        context.read<FormulasCubit>().loadFormulas(
-          subjectId: subjectId,
-          chapterId: chapterId,
-          chapterName: chapterName,
-          curriculumKey: curriculumKey,
-        );
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,18 +72,29 @@ class _FormulasPageState extends State<FormulasPage> {
             },
             child: LayoutBuilder(
               builder: (context, constraints) {
-                final isDesktop = constraints.maxWidth >= AppDimensions.breakpointDesktop;
+                final isDesktop =
+                    constraints.maxWidth >= AppDimensions.breakpointDesktop;
                 final hp = isDesktop
-                    ? ((constraints.maxWidth - AppDimensions.breakpointMaxContent) / 2).clamp(
-                        AppDimensions.paddingSectionLG, double.infinity,
-                      )
+                    ? ((constraints.maxWidth -
+                                  AppDimensions.breakpointMaxContent) /
+                              2)
+                          .clamp(
+                            AppDimensions.paddingSectionLG,
+                            double.infinity,
+                          )
                     : AppDimensions.paddingLG;
                 return CustomScrollView(
                   slivers: [
                     SliverGlassAppBar(
                       leading: IconButton(
                         onPressed: () => context.pop(),
-                        icon: Icon(LucideIcons.arrowLeft, color: colorScheme.onSurface),
+                        icon: Icon(
+                          LucideIcons.arrowLeft,
+                          color: colorScheme.onSurface,
+                        ),
+                        tooltip: MaterialLocalizations.of(
+                          context,
+                        ).backButtonTooltip,
                       ),
                       titleWidget: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,11 +121,14 @@ class _FormulasPageState extends State<FormulasPage> {
                           const SizedBox(height: AppDimensions.paddingMD),
                           if (state.formulas.isEmpty)
                             const Padding(
-                              padding: EdgeInsets.symmetric(vertical: AppDimensions.paddingXXL),
+                              padding: EdgeInsets.symmetric(
+                                vertical: AppDimensions.paddingXXL,
+                              ),
                               child: AppEmptyState(
                                 icon: LucideIcons.fileQuestion,
                                 title: AppStrings.noFormulasAvailable,
-                                description: 'Content for this chapter is being prepared. Check back later!',
+                                description:
+                                    'Content for this chapter is being prepared. Check back later!',
                               ),
                             )
                           else
@@ -162,7 +147,9 @@ class _FormulasPageState extends State<FormulasPage> {
                                 ),
                               ),
                             ),
-                          const SizedBox(height: AppDimensions.bottomNavPadding),
+                          const SizedBox(
+                            height: AppDimensions.bottomNavPadding,
+                          ),
                         ]),
                       ),
                     ),

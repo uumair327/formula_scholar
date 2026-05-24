@@ -28,14 +28,21 @@ class SubjectChaptersAppBar extends StatelessWidget {
         children: [
           Text(
             subject?.name ?? AppStrings.selectSubjectTitle,
-            style: AppTextStyles.titleMedium.copyWith(color: colorScheme.onSurface, fontWeight: FontWeight.w800),
+            style: AppTextStyles.titleMedium.copyWith(
+              color: colorScheme.onSurface,
+              fontWeight: FontWeight.w800,
+            ),
           ),
           if (subject != null)
             Row(
               children: [
-                Text(AppStrings.breadcrumbHome, style: AppTextStyles.overline.copyWith(
-                  color: colorScheme.outline, fontSize: AppDimensions.fontSizeXS,
-                )),
+                Text(
+                  AppStrings.breadcrumbHome,
+                  style: AppTextStyles.overline.copyWith(
+                    color: colorScheme.outline,
+                    fontSize: AppDimensions.fontSizeXS,
+                  ),
+                ),
                 Icon(
                   Directionality.of(context) == TextDirection.rtl
                       ? LucideIcons.chevronLeft
@@ -43,9 +50,13 @@ class SubjectChaptersAppBar extends StatelessWidget {
                   size: AppDimensions.iconXS,
                   color: colorScheme.outlineVariant,
                 ),
-                Text(subject!.name.toUpperCase(), style: AppTextStyles.overline.copyWith(
-                  color: AppColors.primary, fontSize: AppDimensions.fontSizeXS,
-                )),
+                Text(
+                  subject!.name.toUpperCase(),
+                  style: AppTextStyles.overline.copyWith(
+                    color: AppColors.primary,
+                    fontSize: AppDimensions.fontSizeXS,
+                  ),
+                ),
               ],
             ),
         ],
@@ -56,10 +67,15 @@ class SubjectChaptersAppBar extends StatelessWidget {
         BlocBuilder<AuthCubit, AuthState>(
           buildWhen: (prev, curr) => prev.user != curr.user,
           builder: (context, authState) {
-            final photoUrl = authState.user?.photoUrl ?? AppAssets.dashboardStudentProfileUrl;
+            final photoUrl =
+                authState.user?.photoUrl ??
+                AppAssets.dashboardStudentProfileUrl;
             return GestureDetector(
               onTap: () => context.push(AppRoutes.profilePath),
-              child: AppAvatar(imageUrl: photoUrl, placeholderColor: colorScheme.surfaceContainerHighest),
+              child: AppAvatar(
+                imageUrl: photoUrl,
+                placeholderColor: colorScheme.surfaceContainerHighest,
+              ),
             );
           },
         ),
@@ -84,15 +100,19 @@ class _AnalyticsButton extends StatelessWidget {
           );
           return;
         }
-        unawaited(showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (_) => const Center(child: CircularProgressIndicator()),
-        ));
+        unawaited(
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) => const Center(child: CircularProgressIndicator()),
+          ),
+        );
         final statsResult = await getIt<GetProfileStatsUseCase>().call();
         var currentStreak = 0;
         if (statsResult is Success<List<ProfileStat>>) {
-          final streakStat = statsResult.data.where((s) => s.id == 'streak').firstOrNull;
+          final streakStat = statsResult.data
+              .where((s) => s.id == 'streak')
+              .firstOrNull;
           currentStreak = int.tryParse(streakStat?.value ?? '0') ?? 0;
         }
         if (!context.mounted) return;
@@ -112,7 +132,9 @@ class _AnalyticsButton extends StatelessWidget {
           completedFormulas: completed,
           totalFormulas: total,
           currentStreak: currentStreak,
-          grade: context.read<CurriculumCubit>().state.gradeLabel ?? AppStrings.unknownGrade,
+          grade:
+              context.read<CurriculumCubit>().state.gradeLabel ??
+              AppStrings.unknownGrade,
         );
       },
       icon: const AppIconCircle(
@@ -123,6 +145,9 @@ class _AnalyticsButton extends StatelessWidget {
         iconSize: AppDimensions.iconMD,
         borderRadius: AppDimensions.radiusMD,
       ),
+      tooltip: subject == null
+          ? AppStrings.selectSubjectFirst
+          : AppStrings.viewAnalytics,
     );
   }
 }

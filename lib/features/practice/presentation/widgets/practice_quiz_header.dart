@@ -22,6 +22,7 @@ class QuizHeader extends StatelessWidget {
           IconButton(
             onPressed: () => StatefulNavigationShell.of(context).goBranch(1),
             icon: const Icon(LucideIcons.x, size: AppDimensions.iconLG),
+            tooltip: AppStrings.closeQuiz,
           ),
           const SizedBox(width: AppDimensions.paddingMD),
           Text(

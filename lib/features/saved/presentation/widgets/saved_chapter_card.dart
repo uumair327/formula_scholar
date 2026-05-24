@@ -70,6 +70,7 @@ class SavedChapterCard extends StatelessWidget {
                     size: AppDimensions.iconMD,
                     color: AppColors.primary,
                   ),
+                  tooltip: AppStrings.removeSavedChapter,
                 ),
               ],
             ),

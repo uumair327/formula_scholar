@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
+import '../../../auth/auth.dart';
 import '../../domain/domain.dart';
 import 'study_planner_state.dart';
 
@@ -16,12 +17,17 @@ class StudyPlannerCubit extends Cubit<StudyPlannerState>
     required UpdatePlanUseCase updatePlan,
     required DeletePlanUseCase deletePlan,
     required UpdateSessionUseCase updateSession,
+    required AuthCubit authCubit,
   }) : _getPlans = getPlans,
        _createPlan = createPlan,
        _updatePlan = updatePlan,
        _deletePlan = deletePlan,
        _updateSession = updateSession,
-       super(const StudyPlannerState());
+       _authCubit = authCubit,
+       super(const StudyPlannerState()) {
+    _authSubscription = _authCubit.stream.listen(_handleAuthState);
+    _handleAuthState(_authCubit.state);
+  }
 
   @override
   String get logTag => AppLogTags.studyPlannerCubit;
@@ -31,20 +37,42 @@ class StudyPlannerCubit extends Cubit<StudyPlannerState>
   final UpdatePlanUseCase _updatePlan;
   final DeletePlanUseCase _deletePlan;
   final UpdateSessionUseCase _updateSession;
+  final AuthCubit _authCubit;
+  StreamSubscription<AuthState>? _authSubscription;
   StreamSubscription<List<StudyPlan>>? _plansSub;
+  String? _activeUserId;
+
+  void _handleAuthState(AuthState state) {
+    final userId = state.user?.uid;
+    if (userId == null) {
+      _activeUserId = null;
+      _plansSub?.cancel();
+      _plansSub = null;
+      emit(const StudyPlannerState());
+      return;
+    }
+
+    if (_activeUserId == userId && state.status != AuthStatus.unauthenticated) {
+      return;
+    }
+
+    _activeUserId = userId;
+    loadPlans(userId);
+  }
 
   void loadPlans(String userId) {
+    _activeUserId = userId;
     emit(state.copyWith(status: StudyPlannerStatus.loading));
     _plansSub?.cancel();
     _plansSub = _getPlans(userId).listen(
-      (plans) => emit(state.copyWith(
-        status: StudyPlannerStatus.loaded,
-        plans: plans,
-      )),
-      onError: (e) => emit(state.copyWith(
-        status: StudyPlannerStatus.error,
-        errorMessage: e.toString(),
-      )),
+      (plans) =>
+          emit(state.copyWith(status: StudyPlannerStatus.loaded, plans: plans)),
+      onError: (e) => emit(
+        state.copyWith(
+          status: StudyPlannerStatus.error,
+          errorMessage: e.toString(),
+        ),
+      ),
     );
   }
 
@@ -56,10 +84,12 @@ class StudyPlannerCubit extends Cubit<StudyPlannerState>
     final result = await _createPlan(userId: userId, plan: plan);
     if (isClosed) return;
     if (result is Error) {
-      emit(state.copyWith(
-        status: StudyPlannerStatus.error,
-        errorMessage: result.failure.message,
-      ));
+      emit(
+        state.copyWith(
+          status: StudyPlannerStatus.error,
+          errorMessage: result.failure.message,
+        ),
+      );
     }
   }
 
@@ -70,10 +100,12 @@ class StudyPlannerCubit extends Cubit<StudyPlannerState>
     final result = await _updatePlan(userId: userId, plan: plan);
     if (isClosed) return;
     if (result is Error) {
-      emit(state.copyWith(
-        status: StudyPlannerStatus.error,
-        errorMessage: result.failure.message,
-      ));
+      emit(
+        state.copyWith(
+          status: StudyPlannerStatus.error,
+          errorMessage: result.failure.message,
+        ),
+      );
     }
   }
 
@@ -84,10 +116,12 @@ class StudyPlannerCubit extends Cubit<StudyPlannerState>
     final result = await _deletePlan(userId: userId, planId: planId);
     if (isClosed) return;
     if (result is Error) {
-      emit(state.copyWith(
-        status: StudyPlannerStatus.error,
-        errorMessage: result.failure.message,
-      ));
+      emit(
+        state.copyWith(
+          status: StudyPlannerStatus.error,
+          errorMessage: result.failure.message,
+        ),
+      );
     }
   }
 
@@ -103,10 +137,12 @@ class StudyPlannerCubit extends Cubit<StudyPlannerState>
     );
     if (isClosed) return;
     if (result is Error) {
-      emit(state.copyWith(
-        status: StudyPlannerStatus.error,
-        errorMessage: result.failure.message,
-      ));
+      emit(
+        state.copyWith(
+          status: StudyPlannerStatus.error,
+          errorMessage: result.failure.message,
+        ),
+      );
     }
   }
 
@@ -115,8 +151,9 @@ class StudyPlannerCubit extends Cubit<StudyPlannerState>
   }
 
   @override
-  Future<void> close() {
-    _plansSub?.cancel();
+  Future<void> close() async {
+    await _authSubscription?.cancel();
+    await _plansSub?.cancel();
     return super.close();
   }
 }

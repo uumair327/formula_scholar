@@ -7,25 +7,8 @@ import '../cubit/saved_cubit.dart';
 import '../cubit/saved_state.dart';
 import '../widgets/widgets.dart';
 
-class SavedPage extends StatefulWidget {
+class SavedPage extends StatelessWidget {
   const SavedPage({super.key});
-
-  @override
-  State<SavedPage> createState() => _SavedPageState();
-}
-
-class _SavedPageState extends State<SavedPage> {
-  @override
-  void initState() {
-    super.initState();
-    final curriculum = context.read<CurriculumCubit>().state.curriculum;
-    final cubit = context.read<SavedCubit>();
-    if (curriculum != null) {
-      Future.microtask(
-        () => cubit.loadBookmarks(curriculumKey: curriculum.curriculumKey),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,10 +32,7 @@ class _SavedPageState extends State<SavedPage> {
             body: AppErrorState(
               message: state.errorMessage,
               onRetry: () {
-                final curr = context
-                    .read<CurriculumCubit>()
-                    .state
-                    .curriculum;
+                final curr = context.read<CurriculumCubit>().state.curriculum;
                 if (curr != null) {
                   context.read<SavedCubit>().loadBookmarks(
                     curriculumKey: curr.curriculumKey,

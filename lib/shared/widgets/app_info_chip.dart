@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/core.dart';
+import 'app_text.dart';
 
 /// Reusable pill-shaped info chip with solid background.
 ///
@@ -49,7 +50,7 @@ class AppInfoChip extends StatelessWidget {
         color: backgroundColor ?? colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
       ),
-      child: Text(
+      child: AppText(
         label,
         style:
             textStyle ??
@@ -57,6 +58,8 @@ class AppInfoChip extends StatelessWidget {
               fontWeight: FontWeight.w500,
               color: textColor ?? colorScheme.onSurface,
             ),
+        maxLines: 1,
+        softWrap: false,
       ),
     );
   }

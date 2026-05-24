@@ -15,13 +15,11 @@ import 'subjects_state.dart';
 /// when the user switches board or grade on the Dashboard.
 @injectable
 class SubjectsCubit extends Cubit<SubjectsState> {
-  SubjectsCubit(
-    this._getSubjectsUseCase,
-    this._curriculumCubit,
-  ) : super(const SubjectsState()) {
-    _curriculumSubscription = _curriculumCubit.stream
-        .distinct()
-        .listen(_onCurriculumStateChanged);
+  SubjectsCubit(this._getSubjectsUseCase, this._curriculumCubit)
+    : super(const SubjectsState()) {
+    _curriculumSubscription = _curriculumCubit.stream.distinct().listen(
+      _onCurriculumStateChanged,
+    );
 
     // Synchronously check and load initial curriculum if already available
     _onCurriculumStateChanged(_curriculumCubit.state);
@@ -31,7 +29,9 @@ class SubjectsCubit extends Cubit<SubjectsState> {
   final CurriculumCubit _curriculumCubit;
   late final StreamSubscription<CurriculumState> _curriculumSubscription;
 
-  Future<void> _onCurriculumStateChanged(CurriculumState curriculumState) async {
+  Future<void> _onCurriculumStateChanged(
+    CurriculumState curriculumState,
+  ) async {
     if (curriculumState.isLoading) {
       return;
     }
@@ -53,21 +53,20 @@ class SubjectsCubit extends Cubit<SubjectsState> {
 
     switch (result) {
       case Success(:final data):
-        emit(state.copyWith(
-          status: SubjectsStatus.loaded,
-          subjects: data,
-        ));
+        emit(state.copyWith(status: SubjectsStatus.loaded, subjects: data));
       case Error(:final failure):
-        emit(state.copyWith(
-          status: SubjectsStatus.error,
-          errorMessage: failure.message,
-        ));
+        emit(
+          state.copyWith(
+            status: SubjectsStatus.error,
+            errorMessage: failure.message,
+          ),
+        );
     }
   }
 
   @override
-  Future<void> close() {
-    _curriculumSubscription.cancel();
+  Future<void> close() async {
+    await _curriculumSubscription.cancel();
     return super.close();
   }
 }

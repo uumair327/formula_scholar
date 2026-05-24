@@ -21,11 +21,12 @@ class NotificationsPage extends StatelessWidget {
           n.errorMessage != null &&
           n.errorMessage!.isNotEmpty,
       listener: (context, state) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(state.errorMessage!)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
       },
-      buildWhen: (p, n) => p.preferences != n.preferences || p.status != n.status,
+      buildWhen: (p, n) =>
+          p.preferences != n.preferences || p.status != n.status,
       builder: (context, state) {
         if (state.status == NotificationsStatus.loading ||
             state.status == NotificationsStatus.initial) {
@@ -40,7 +41,8 @@ class NotificationsPage extends StatelessWidget {
           body: Stack(
             children: [
               RefreshIndicator(
-                onRefresh: () => context.read<NotificationsCubit>().loadPreferences(),
+                onRefresh: () =>
+                    context.read<NotificationsCubit>().loadPreferences(),
                 child: CustomScrollView(
                   slivers: [
                     _buildAppBar(context),
@@ -49,7 +51,9 @@ class NotificationsPage extends StatelessWidget {
                         horizontal: Responsive.value(
                           context: context,
                           mobile: AppDimensions.paddingXL,
-                          desktop: AppDimensions.paddingSectionLG * 2 + AppDimensions.paddingXL,
+                          desktop:
+                              AppDimensions.paddingSectionLG * 2 +
+                              AppDimensions.paddingXL,
                         ),
                       ),
                       sliver: SliverList(
@@ -108,7 +112,9 @@ class NotificationsPage extends StatelessWidget {
                               value: prefs.newContent,
                               onChanged: (v) => context
                                   .read<NotificationsCubit>()
-                                  .updatePreferences(prefs.copyWith(newContent: v)),
+                                  .updatePreferences(
+                                    prefs.copyWith(newContent: v),
+                                  ),
                               color: AppColors.secondary,
                             ),
                           ),
@@ -190,7 +196,9 @@ class NotificationsPage extends StatelessWidget {
                               color: colorScheme.outline,
                             ),
                           ),
-                          const SizedBox(height: AppDimensions.bottomNavPadding),
+                          const SizedBox(
+                            height: AppDimensions.bottomNavPadding,
+                          ),
                         ]),
                       ),
                     ),
@@ -225,6 +233,7 @@ class NotificationsPage extends StatelessWidget {
       leading: IconButton(
         onPressed: () => context.go(AppRoutes.profilePath),
         icon: Icon(LucideIcons.arrowLeft, color: colorScheme.onSurface),
+        tooltip: MaterialLocalizations.of(context).backButtonTooltip,
       ),
       titleWidget: Text(
         AppStrings.notifications,

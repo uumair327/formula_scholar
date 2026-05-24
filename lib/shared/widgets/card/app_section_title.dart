@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/core.dart';
+import '../app_text.dart';
 
 class AppSectionTitle extends StatelessWidget {
   const AppSectionTitle({
@@ -27,32 +28,40 @@ class AppSectionTitle extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              if (leadingIcon != null) ...[
-                Icon(
-                  leadingIcon,
-                  size: AppDimensions.iconLG,
-                  color: leadingIconColor ?? colorScheme.primary,
+          Expanded(
+            child: Row(
+              children: [
+                if (leadingIcon != null) ...[
+                  Icon(
+                    leadingIcon,
+                    size: AppDimensions.iconLG,
+                    color: leadingIconColor ?? colorScheme.primary,
+                  ),
+                  const SizedBox(width: AppDimensions.paddingSM),
+                ],
+                Expanded(
+                  child: AppText(
+                    title,
+                    style: AppTextStyles.titleLarge.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+                    maxLines: 1,
+                    softWrap: false,
+                  ),
                 ),
-                const SizedBox(width: AppDimensions.paddingSM),
               ],
-              Text(
-                title,
-                style: AppTextStyles.titleLarge.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ],
+            ),
           ),
           if (actionLabel != null)
             GestureDetector(
               onTap: onAction,
-              child: Text(
+              child: AppText(
                 actionLabel!,
                 style: AppTextStyles.labelLarge.copyWith(
                   color: colorScheme.primary,
                 ),
+                maxLines: 1,
+                softWrap: false,
               ),
             ),
         ],

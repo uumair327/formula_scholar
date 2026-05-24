@@ -8,21 +8,8 @@ import '../cubit/practice_history_cubit.dart';
 import 'practice_history_card.dart';
 import 'practice_history_shimmer.dart';
 
-class PracticeHistoryPage extends StatefulWidget {
+class PracticeHistoryPage extends StatelessWidget {
   const PracticeHistoryPage({super.key});
-
-  @override
-  State<PracticeHistoryPage> createState() => _PracticeHistoryPageState();
-}
-
-class _PracticeHistoryPageState extends State<PracticeHistoryPage> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => context.read<PracticeHistoryCubit>().loadHistory(),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {

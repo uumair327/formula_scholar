@@ -10,22 +10,8 @@ import '../cubit/study_planner_cubit.dart';
 import '../cubit/study_planner_state.dart';
 import '../widgets/session_tile.dart';
 
-class PlanDetailPage extends StatefulWidget {
+class PlanDetailPage extends StatelessWidget {
   const PlanDetailPage({super.key});
-
-  @override
-  State<PlanDetailPage> createState() => _PlanDetailPageState();
-}
-
-class _PlanDetailPageState extends State<PlanDetailPage> {
-  @override
-  void initState() {
-    super.initState();
-    final userId = context.read<AuthCubit>().state.user?.uid;
-    if (userId != null) {
-      context.read<StudyPlannerCubit>().loadPlans(userId);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +29,15 @@ class _PlanDetailPageState extends State<PlanDetailPage> {
               AppRoutes.editPlanName,
               pathParameters: {'planId': planId},
             ),
+            tooltip: AppStrings.editPlan,
           ),
         ],
       ),
       body: BlocBuilder<StudyPlannerCubit, StudyPlannerState>(
-        buildWhen: (p, n) => p.status != n.status || p.plans != n.plans || p.selectedPlan != n.selectedPlan,
+        buildWhen: (p, n) =>
+            p.status != n.status ||
+            p.plans != n.plans ||
+            p.selectedPlan != n.selectedPlan,
         builder: (context, state) {
           if (state.status == StudyPlannerStatus.initial ||
               state.status == StudyPlannerStatus.loading) {
@@ -64,8 +54,11 @@ class _PlanDetailPageState extends State<PlanDetailPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(LucideIcons.alertCircle,
-                      size: 48, color: colorScheme.error),
+                  Icon(
+                    LucideIcons.alertCircle,
+                    size: 48,
+                    color: colorScheme.error,
+                  ),
                   const SizedBox(height: 16),
                   const Text('Plan not found'),
                 ],
@@ -103,10 +96,7 @@ class _PlanDetailPageState extends State<PlanDetailPage> {
         const SizedBox(height: AppDimensions.paddingLG),
         _buildProgressSection(plan, colorScheme),
         const SizedBox(height: AppDimensions.paddingLG),
-        Text(
-          'Sessions',
-          style: AppTextStyles.titleMedium,
-        ),
+        Text('Sessions', style: AppTextStyles.titleMedium),
         const SizedBox(height: AppDimensions.paddingSM),
         if (plan.sessions.isEmpty)
           Center(
@@ -170,10 +160,7 @@ class _PlanDetailPageState extends State<PlanDetailPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'Progress',
-              style: AppTextStyles.labelLarge,
-            ),
+            Text('Progress', style: AppTextStyles.labelLarge),
             Text(
               '${plan.completedSessions}/${plan.totalSessions}',
               style: AppTextStyles.labelLarge.copyWith(
@@ -201,22 +188,32 @@ class _PlanDetailPageState extends State<PlanDetailPage> {
     if (userId == null) return;
 
     await context.read<StudyPlannerCubit>().markSessionComplete(
-          userId: userId,
-          planId: plan.id,
-          sessionId: session.id,
-        );
-
-    if (!mounted) return;
-    // ignore: use_build_context_synchronously
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Session marked as complete')),
+      userId: userId,
+      planId: plan.id,
+      sessionId: session.id,
     );
+
+    if (!context.mounted) return;
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Session marked as complete')));
   }
 
   String _formatDate(DateTime date) {
     final months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }

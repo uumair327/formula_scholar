@@ -23,12 +23,11 @@ class PracticeHistoryState extends Equatable {
     PracticeHistoryStatus? status,
     List<QuizResult>? results,
     String? errorMessage,
-  }) =>
-      PracticeHistoryState(
-        status: status ?? this.status,
-        results: results ?? this.results,
-        errorMessage: errorMessage ?? this.errorMessage,
-      );
+  }) => PracticeHistoryState(
+    status: status ?? this.status,
+    results: results ?? this.results,
+    errorMessage: errorMessage ?? this.errorMessage,
+  );
 
   @override
   List<Object?> get props => [status, results, errorMessage];
@@ -40,7 +39,9 @@ class PracticeHistoryCubit extends Cubit<PracticeHistoryState>
   PracticeHistoryCubit({
     required GetRecentQuizResultsUseCase getRecentQuizResults,
   }) : _getRecentQuizResults = getRecentQuizResults,
-       super(const PracticeHistoryState());
+       super(const PracticeHistoryState()) {
+    Future.microtask(loadHistory);
+  }
 
   final GetRecentQuizResultsUseCase _getRecentQuizResults;
 
@@ -53,16 +54,17 @@ class PracticeHistoryCubit extends Cubit<PracticeHistoryState>
     final result = await _getRecentQuizResults(limit: limit);
     switch (result) {
       case Success(:final data):
-        emit(state.copyWith(
-          status: PracticeHistoryStatus.loaded,
-          results: data,
-        ));
+        emit(
+          state.copyWith(status: PracticeHistoryStatus.loaded, results: data),
+        );
       case Error(:final failure):
         logFailure('loadHistory', failure);
-        emit(state.copyWith(
-          status: PracticeHistoryStatus.error,
-          errorMessage: failure.message,
-        ));
+        emit(
+          state.copyWith(
+            status: PracticeHistoryStatus.error,
+            errorMessage: failure.message,
+          ),
+        );
     }
   }
 }

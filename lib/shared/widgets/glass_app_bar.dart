@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import '../../core/core.dart';
+import 'app_text.dart';
 
 /// Reusable frosted-glass app bar for a consistent premium look.
 ///
@@ -46,9 +47,8 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double toolbarHeight;
 
   @override
-  Size get preferredSize => Size.fromHeight(
-        toolbarHeight + (bottom?.preferredSize.height ?? 0),
-      );
+  Size get preferredSize =>
+      Size.fromHeight(toolbarHeight + (bottom?.preferredSize.height ?? 0));
 
   @override
   Widget build(BuildContext context) {
@@ -62,9 +62,7 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
           sigmaY: AppDimensions.glassBlurSigma,
         ),
         child: AppBar(
-          backgroundColor: isDark
-              ? AppColors.glassDark
-              : AppColors.glassLight,
+          backgroundColor: isDark ? AppColors.glassDark : AppColors.glassLight,
           surfaceTintColor: AppColors.transparent,
           elevation: elevation,
           scrolledUnderElevation: 0,
@@ -72,13 +70,16 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
           automaticallyImplyLeading: automaticallyImplyLeading,
           toolbarHeight: toolbarHeight,
           leading: leading,
-          title: titleWidget ??
+          title:
+              titleWidget ??
               (title != null
-                  ? Text(
+                  ? AppText(
                       title!,
                       style: AppTextStyles.headlineSmall.copyWith(
                         color: colorScheme.onSurface,
                       ),
+                      maxLines: 1,
+                      softWrap: false,
                     )
                   : null),
           actions: actions,
@@ -129,22 +130,23 @@ class SliverGlassAppBar extends StatelessWidget {
       pinned: pinned,
       expandedHeight: expandedHeight,
       toolbarHeight: toolbarHeight,
-      backgroundColor: isDark
-          ? AppColors.glassDark
-          : AppColors.glassLight,
+      backgroundColor: isDark ? AppColors.glassDark : AppColors.glassLight,
       surfaceTintColor: AppColors.transparent,
       elevation: 0,
       scrolledUnderElevation: 0,
       centerTitle: false,
       automaticallyImplyLeading: automaticallyImplyLeading,
       leading: leading,
-      title: titleWidget ??
+      title:
+          titleWidget ??
           (title != null
-              ? Text(
+              ? AppText(
                   title!,
                   style: AppTextStyles.headlineSmall.copyWith(
                     color: colorScheme.onSurface,
                   ),
+                  maxLines: 1,
+                  softWrap: false,
                 )
               : null),
       actions: actions,

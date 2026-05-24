@@ -108,6 +108,7 @@ class LegalPage extends StatelessWidget {
             leading: IconButton(
               onPressed: () => Navigator.of(context).maybePop(),
               icon: const Icon(LucideIcons.arrowLeft),
+              tooltip: MaterialLocalizations.of(context).backButtonTooltip,
             ),
             title: Text(
               title,
@@ -140,5 +141,3 @@ class LegalPage extends StatelessWidget {
     );
   }
 }
-
-

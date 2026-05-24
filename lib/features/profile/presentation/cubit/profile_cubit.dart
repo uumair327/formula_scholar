@@ -27,7 +27,7 @@ class ProfileCubit extends Cubit<ProfileState>
        _getSettingsItems = getSettingsItems,
        _updateProfile = updateProfile,
        _activityRefreshCubit = activityRefreshCubit,
-        super(const ProfileState()) {
+       super(const ProfileState()) {
     _activityRefreshSubscription = _activityRefreshCubit.stream.listen((_) {
       if (state.status == ProfileStatus.loading) {
         return;
@@ -47,8 +47,8 @@ class ProfileCubit extends Cubit<ProfileState>
   String get logTag => AppLogTags.profileCubit;
 
   @override
-  Future<void> close() {
-    _activityRefreshSubscription.cancel();
+  Future<void> close() async {
+    await _activityRefreshSubscription.cancel();
     return super.close();
   }
 

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 import 'saved_state.dart';
 
@@ -22,6 +23,7 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
     required AddNoteUseCase addNote,
     required UpdateNoteUseCase updateNote,
     required DeleteNoteUseCase deleteNote,
+    required CurriculumCubit curriculumCubit,
   }) : _getBookmarks = getBookmarks,
        _getSavedChapters = getSavedChapters,
        _getSavedNotes = getSavedNotes,
@@ -30,7 +32,13 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
        _addNote = addNote,
        _updateNote = updateNote,
        _deleteNote = deleteNote,
-       super(const SavedState());
+       _curriculumCubit = curriculumCubit,
+       super(const SavedState()) {
+    _curriculumSubscription = _curriculumCubit.stream.listen(
+      _handleCurriculumState,
+    );
+    _handleCurriculumState(_curriculumCubit.state);
+  }
   final GetBookmarksUseCase _getBookmarks;
   final GetSavedChaptersUseCase _getSavedChapters;
   final GetSavedNotesUseCase _getSavedNotes;
@@ -39,11 +47,28 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
   final AddNoteUseCase _addNote;
   final UpdateNoteUseCase _updateNote;
   final DeleteNoteUseCase _deleteNote;
+  final CurriculumCubit _curriculumCubit;
+  late final StreamSubscription<CurriculumState> _curriculumSubscription;
 
   String? _activeCurriculumKey;
 
   @override
   String get logTag => AppLogTags.savedCubit;
+
+  void _handleCurriculumState(CurriculumState state) {
+    final curriculum = state.curriculum;
+    if (curriculum == null) {
+      return;
+    }
+
+    final curriculumKey = curriculum.curriculumKey;
+    if (_activeCurriculumKey == curriculumKey &&
+        this.state.status != SavedStatus.initial) {
+      return;
+    }
+
+    unawaited(loadBookmarks(curriculumKey: curriculumKey));
+  }
 
   /// Loads saved bookmarks.
   Future<void> loadBookmarks({required String curriculumKey}) async {
@@ -293,5 +318,11 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
         ),
       );
     }
+  }
+
+  @override
+  Future<void> close() async {
+    await _curriculumSubscription.cancel();
+    return super.close();
   }
 }

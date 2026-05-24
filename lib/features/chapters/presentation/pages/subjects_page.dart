@@ -21,12 +21,12 @@ class SubjectsPage extends StatelessWidget {
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {
-          final curriculum =
-              context.read<CurriculumCubit>().state.curriculum;
+          final curriculum = context.read<CurriculumCubit>().state.curriculum;
           if (curriculum != null) {
-            await context
-                .read<SubjectsCubit>()
-                .loadSubjects(curriculum.boardId, curriculum.gradeId);
+            await context.read<SubjectsCubit>().loadSubjects(
+              curriculum.boardId,
+              curriculum.gradeId,
+            );
           }
         },
         child: LayoutBuilder(
@@ -35,8 +35,8 @@ class SubjectsPage extends StatelessWidget {
                 constraints.maxWidth >= AppDimensions.breakpointDesktop;
             final hp = isDesktop
                 ? ((constraints.maxWidth - AppDimensions.breakpointMaxContent) /
-                        2)
-                    .clamp(AppDimensions.paddingSectionLG, double.infinity)
+                          2)
+                      .clamp(AppDimensions.paddingSectionLG, double.infinity)
                 : AppDimensions.paddingXL;
 
             return CustomScrollView(
@@ -46,7 +46,10 @@ class SubjectsPage extends StatelessWidget {
                 SliverPadding(
                   padding: EdgeInsets.symmetric(horizontal: hp),
                   sliver: BlocBuilder<SubjectsCubit, SubjectsState>(
-                    buildWhen: (p, n) => p.status != n.status || p.subjects != n.subjects || p.errorMessage != n.errorMessage,
+                    buildWhen: (p, n) =>
+                        p.status != n.status ||
+                        p.subjects != n.subjects ||
+                        p.errorMessage != n.errorMessage,
                     builder: (context, state) {
                       if (state.status == SubjectsStatus.initial ||
                           state.status == SubjectsStatus.loading) {
@@ -68,9 +71,9 @@ class SubjectsPage extends StatelessWidget {
                                   .curriculum;
                               if (curriculum != null) {
                                 context.read<SubjectsCubit>().loadSubjects(
-                                      curriculum.boardId,
-                                      curriculum.gradeId,
-                                    );
+                                  curriculum.boardId,
+                                  curriculum.gradeId,
+                                );
                               }
                             },
                           ),
@@ -99,7 +102,10 @@ class SubjectsPage extends StatelessWidget {
     );
   }
 
-  SliverGlassAppBar _buildAppBar(BuildContext context, ColorScheme colorScheme) {
+  SliverGlassAppBar _buildAppBar(
+    BuildContext context,
+    ColorScheme colorScheme,
+  ) {
     return SliverGlassAppBar(
       titleWidget: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,7 +136,9 @@ class SubjectsPage extends StatelessWidget {
       ),
       actions: [
         Container(
-            margin: const EdgeInsetsDirectional.only(end: AppDimensions.paddingSM),
+          margin: const EdgeInsetsDirectional.only(
+            end: AppDimensions.paddingSM,
+          ),
           decoration: BoxDecoration(
             color: colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
@@ -138,6 +146,7 @@ class SubjectsPage extends StatelessWidget {
           child: IconButton(
             onPressed: () => context.pushNamed(AppRoutes.searchName),
             icon: Icon(LucideIcons.search, color: colorScheme.onSurfaceVariant),
+            tooltip: AppStrings.searchLabel,
           ),
         ),
       ],
@@ -154,20 +163,17 @@ class SubjectsPage extends StatelessWidget {
           crossAxisSpacing: AppDimensions.paddingLG,
           childAspectRatio: 1.4,
         ),
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            final subject = subjects[index];
-            return EntranceWrapper.stagger(
-              index: index,
-              child: SubjectCard(
-                subject: subject,
-                onTap: () => _onSubjectTap(context, subject),
-                onLongPress: () {},
-              ),
-            );
-          },
-          childCount: subjects.length,
-        ),
+        delegate: SliverChildBuilderDelegate((context, index) {
+          final subject = subjects[index];
+          return EntranceWrapper.stagger(
+            index: index,
+            child: SubjectCard(
+              subject: subject,
+              onTap: () => _onSubjectTap(context, subject),
+              onLongPress: () {},
+            ),
+          );
+        }, childCount: subjects.length),
       ),
     );
   }
@@ -178,7 +184,8 @@ class SubjectsPage extends StatelessWidget {
       child: Center(
         child: AppEmptyState(
           title: AppStrings.noSubjectsAvailable,
-          description: 'Set your board and grade on the Home tab to discover available subjects.',
+          description:
+              'Set your board and grade on the Home tab to discover available subjects.',
           icon: LucideIcons.layers,
           actionLabel: AppStrings.goToHome,
           onAction: () {
@@ -191,13 +198,13 @@ class SubjectsPage extends StatelessWidget {
 
   void _onSubjectTap(BuildContext context, Subject subject) {
     context.read<SubjectSelectionCubit>().selectSubject(
-          id: subject.id,
-          name: subject.name,
-          category: subject.category,
-          description: subject.description,
-          iconName: subject.iconName,
-          subtitle: subject.subtitle ?? '',
-        );
+      id: subject.id,
+      name: subject.name,
+      category: subject.category,
+      description: subject.description,
+      iconName: subject.iconName,
+      subtitle: subject.subtitle ?? '',
+    );
 
     context.goNamed(
       AppRoutes.subjectChaptersName,

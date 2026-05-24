@@ -48,9 +48,9 @@ class DashboardCubit extends Cubit<DashboardState>
   String get logTag => AppLogTags.dashboardCubit;
 
   @override
-  Future<void> close() {
-    _curriculumSubscription.cancel();
-    _activityRefreshSubscription.cancel();
+  Future<void> close() async {
+    await _curriculumSubscription.cancel();
+    await _activityRefreshSubscription.cancel();
     return super.close();
   }
 

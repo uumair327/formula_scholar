@@ -30,7 +30,8 @@ class _SavedSearchBarState extends State<SavedSearchBar> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SavedCubit, SavedState>(
-      buildWhen: (p, n) => p.searchQuery != n.searchQuery || p.isEmpty != n.isEmpty,
+      buildWhen: (p, n) =>
+          p.searchQuery != n.searchQuery || p.isEmpty != n.isEmpty,
       builder: (context, state) {
         if (state.isEmpty) {
           return const SizedBox.shrink();
@@ -39,7 +40,9 @@ class _SavedSearchBarState extends State<SavedSearchBar> {
         if (_searchController.text != state.searchQuery) {
           _searchController.value = _searchController.value.copyWith(
             text: state.searchQuery,
-            selection: TextSelection.collapsed(offset: state.searchQuery.length),
+            selection: TextSelection.collapsed(
+              offset: state.searchQuery.length,
+            ),
             composing: TextRange.empty,
           );
         }
@@ -64,6 +67,7 @@ class _SavedSearchBarState extends State<SavedSearchBar> {
                       context.read<SavedCubit>().updateSearchQuery('');
                     },
                     icon: const Icon(LucideIcons.x),
+                    tooltip: AppStrings.clearSearch,
                   ),
           ),
         );

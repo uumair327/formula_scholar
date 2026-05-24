@@ -27,7 +27,10 @@ class _NavItemState extends State<NavItem> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: AppDurations.animationFast);
+    _controller = AnimationController(
+      vsync: this,
+      duration: AppDurations.animationFast,
+    );
     _scaleAnimation = Tween<double>(begin: 1.0, end: 0.85).animate(
       CurvedAnimation(parent: _controller, curve: AppDurations.curvePremium),
     );
@@ -50,41 +53,58 @@ class _NavItemState extends State<NavItem> with SingleTickerProviderStateMixin {
       onTapCancel: () => _controller.reverse(),
       onTap: widget.onTap,
       behavior: HitTestBehavior.opaque,
-      child: AnimatedBuilder(
-        animation: _scaleAnimation,
-        builder: (context, child) {
-          return Transform.scale(scale: _scaleAnimation.value, child: child);
-        },
-        child: AnimatedContainer(
-          duration: AppDurations.animationDefault,
-          curve: AppDurations.curvePremium,
-          padding: const EdgeInsets.symmetric(vertical: AppDimensions.paddingSM),
-          margin: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingXXS),
-          decoration: BoxDecoration(
-            gradient: widget.isSelected ? (isDark ? AppColors.darkPrimaryGradient : AppColors.primaryGradient) : null,
-            borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                widget.icon,
-                size: AppDimensions.iconDefault,
-                color: widget.isSelected ? AppColors.white : colorScheme.outline,
-              ),
-              const SizedBox(height: AppDimensions.paddingXXS),
-              Text(
-                widget.label,
-                style: AppTextStyles.labelSmall.copyWith(
-                  color: widget.isSelected ? AppColors.white : colorScheme.outline,
-                  fontWeight: widget.isSelected ? FontWeight.w700 : FontWeight.w500,
-                  fontSize: AppDimensions.fontSizeXS,
-                  letterSpacing: AppDimensions.letterSpacingNarrow,
+      child: Tooltip(
+        message: widget.label,
+        child: AnimatedBuilder(
+          animation: _scaleAnimation,
+          builder: (context, child) {
+            return Transform.scale(scale: _scaleAnimation.value, child: child);
+          },
+          child: AnimatedContainer(
+            duration: AppDurations.animationDefault,
+            curve: AppDurations.curvePremium,
+            padding: const EdgeInsets.symmetric(
+              vertical: AppDimensions.paddingSM,
+            ),
+            margin: const EdgeInsets.symmetric(
+              horizontal: AppDimensions.paddingXXS,
+            ),
+            decoration: BoxDecoration(
+              gradient: widget.isSelected
+                  ? (isDark
+                        ? AppColors.darkPrimaryGradient
+                        : AppColors.primaryGradient)
+                  : null,
+              borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  widget.icon,
+                  size: AppDimensions.iconDefault,
+                  color: widget.isSelected
+                      ? AppColors.white
+                      : colorScheme.outline,
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
+                const SizedBox(height: AppDimensions.paddingXXS),
+                Text(
+                  widget.label,
+                  style: AppTextStyles.labelSmall.copyWith(
+                    color: widget.isSelected
+                        ? AppColors.white
+                        : colorScheme.outline,
+                    fontWeight: widget.isSelected
+                        ? FontWeight.w700
+                        : FontWeight.w500,
+                    fontSize: AppDimensions.fontSizeXS,
+                    letterSpacing: AppDimensions.letterSpacingNarrow,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
         ),
       ),

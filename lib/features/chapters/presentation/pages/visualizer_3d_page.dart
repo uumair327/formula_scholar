@@ -37,16 +37,15 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
   @override
   void initState() {
     super.initState();
-    _autoRotateController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 15),
-    )..addListener(() {
-        if (_isAutoRotating) {
-          setState(() {
-            _angleY += 0.01;
+    _autoRotateController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 15))
+          ..addListener(() {
+            if (_isAutoRotating) {
+              setState(() {
+                _angleY += 0.01;
+              });
+            }
           });
-        }
-      });
     _autoRotateController.repeat();
   }
 
@@ -76,6 +75,9 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
                 _isAutoRotating = !_isAutoRotating;
               });
             },
+            tooltip: _isAutoRotating
+                ? 'Pause auto-rotation'
+                : 'Start auto-rotation',
           ),
         ],
       ),
@@ -121,10 +123,7 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [
-                  colorScheme.surface,
-                  colorScheme.surface,
-                ],
+                colors: [colorScheme.surface, colorScheme.surface],
               ),
             ),
             child: Column(
@@ -162,50 +161,70 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
                               color: Colors.black26,
                               blurRadius: 15,
                               offset: Offset(0, 5),
-                            )
+                            ),
                           ],
                         ),
                         clipBehavior: Clip.antiAlias,
                         child: RepaintBoundary(
                           child: Stack(
-                          children: [
-                            // Starfield or Grid lines background
-                            Positioned.fill(
-                              child: CustomPaint(
-                                painter: GridBackgroundPainter(colorScheme),
-                              ),
-                            ),
-                            // Interactive 3D render canvas
-                            Positioned.fill(
-                              child: CustomPaint(
-                                painter: ThreeDCanvasPainter(
-                                  type: type,
-                                  angleX: _angleX,
-                                  angleY: _angleY,
-                                  paramA: _paramA,
-                                  paramB: _paramB,
-                                  paramC: _paramC,
-                                  colorScheme: colorScheme,
+                            children: [
+                              // Starfield or Grid lines background
+                              Positioned.fill(
+                                child: CustomPaint(
+                                  painter: GridBackgroundPainter(colorScheme),
                                 ),
                               ),
-                            ),
-                            // Hologram status indicators
-                            Positioned(
-                              top: AppDimensions.paddingMD,
-                              left: Directionality.of(context) == TextDirection.ltr ? AppDimensions.paddingMD : null,
-                              right: Directionality.of(context) == TextDirection.rtl ? AppDimensions.paddingMD : null,
-                              child: _buildHologramStat('ROTATION Y',
-                                  '${(_angleY * 180 / math.pi).round() % 360}°'),
-                            ),
-                            Positioned(
-                              top: AppDimensions.paddingMD,
-                              right: Directionality.of(context) == TextDirection.ltr ? AppDimensions.paddingMD : null,
-                              left: Directionality.of(context) == TextDirection.rtl ? AppDimensions.paddingMD : null,
-                              child: _buildHologramStat(
-                                  'VISUALIZER MODE', type.name.toUpperCase()),
-                            ),
-                          ],
-                        ),
+                              // Interactive 3D render canvas
+                              Positioned.fill(
+                                child: CustomPaint(
+                                  painter: ThreeDCanvasPainter(
+                                    type: type,
+                                    angleX: _angleX,
+                                    angleY: _angleY,
+                                    paramA: _paramA,
+                                    paramB: _paramB,
+                                    paramC: _paramC,
+                                    colorScheme: colorScheme,
+                                  ),
+                                ),
+                              ),
+                              // Hologram status indicators
+                              Positioned(
+                                top: AppDimensions.paddingMD,
+                                left:
+                                    Directionality.of(context) ==
+                                        TextDirection.ltr
+                                    ? AppDimensions.paddingMD
+                                    : null,
+                                right:
+                                    Directionality.of(context) ==
+                                        TextDirection.rtl
+                                    ? AppDimensions.paddingMD
+                                    : null,
+                                child: _buildHologramStat(
+                                  'ROTATION Y',
+                                  '${(_angleY * 180 / math.pi).round() % 360}°',
+                                ),
+                              ),
+                              Positioned(
+                                top: AppDimensions.paddingMD,
+                                right:
+                                    Directionality.of(context) ==
+                                        TextDirection.ltr
+                                    ? AppDimensions.paddingMD
+                                    : null,
+                                left:
+                                    Directionality.of(context) ==
+                                        TextDirection.rtl
+                                    ? AppDimensions.paddingMD
+                                    : null,
+                                child: _buildHologramStat(
+                                  'VISUALIZER MODE',
+                                  type.name.toUpperCase(),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -289,15 +308,19 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
             child: Row(
               children: [
                 IconButton(
-                  icon: Icon(Directionality.of(context) == TextDirection.rtl
-                      ? LucideIcons.chevronRight
-                      : LucideIcons.chevronLeft),
+                  icon: Icon(
+                    Directionality.of(context) == TextDirection.rtl
+                        ? LucideIcons.chevronRight
+                        : LucideIcons.chevronLeft,
+                  ),
+                  tooltip: AppStrings.previousFormula,
                   onPressed: _selectedFormulaIndex > 0
                       ? () {
                           setState(() {
                             _selectedFormulaIndex--;
                             _resetParamsForFormula(
-                                _subjectFormulas[_selectedFormulaIndex]);
+                              _subjectFormulas[_selectedFormulaIndex],
+                            );
                           });
                         }
                       : null,
@@ -328,15 +351,19 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Directionality.of(context) == TextDirection.rtl
-                      ? LucideIcons.chevronLeft
-                      : LucideIcons.chevronRight),
+                  icon: Icon(
+                    Directionality.of(context) == TextDirection.rtl
+                        ? LucideIcons.chevronLeft
+                        : LucideIcons.chevronRight,
+                  ),
+                  tooltip: AppStrings.nextFormula,
                   onPressed: _selectedFormulaIndex < _subjectFormulas.length - 1
                       ? () {
                           setState(() {
                             _selectedFormulaIndex++;
                             _resetParamsForFormula(
-                                _subjectFormulas[_selectedFormulaIndex]);
+                              _subjectFormulas[_selectedFormulaIndex],
+                            );
                           });
                         }
                       : null,
@@ -350,7 +377,10 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
   }
 
   Widget _buildControlsPanel(
-      BuildContext context, Formula formula, ColorScheme colorScheme) {
+    BuildContext context,
+    Formula formula,
+    ColorScheme colorScheme,
+  ) {
     final type = _getVisualizerType(formula);
     String labelA = 'Radius';
     String labelB = 'Height';
@@ -394,8 +424,14 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
     );
   }
 
-  Widget _buildSliderRow(String label, double value, double min, double max,
-      ValueChanged<double> onChanged, ColorScheme colorScheme) {
+  Widget _buildSliderRow(
+    String label,
+    double value,
+    double min,
+    double max,
+    ValueChanged<double> onChanged,
+    ColorScheme colorScheme,
+  ) {
     return Row(
       children: [
         SizedBox(
@@ -476,7 +512,9 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
         latex.contains('x^2')) {
       return VisualizerType.quadratic;
     }
-    if (title.contains('dna') || title.contains('cell') || title.contains('heredity')) {
+    if (title.contains('dna') ||
+        title.contains('cell') ||
+        title.contains('heredity')) {
       return VisualizerType.dna;
     }
 

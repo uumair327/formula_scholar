@@ -148,7 +148,8 @@ abstract final class AppStrings {
   // ──────────────────────── Error Messages ───────────────────
   static const String failedToLoadProfile = 'Failed to load profile';
   static const String noInternetConnection = 'No internet connection';
-  static const String firestoreTimeout = 'The operation timed out. Please try again.';
+  static const String firestoreTimeout =
+      'The operation timed out. Please try again.';
   static const String failedToLoadDashboard = 'Failed to load dashboard';
   static const String dashboardCurriculumPending =
       'Syncing your board and grade...';
@@ -163,6 +164,7 @@ abstract final class AppStrings {
   // ──────────────────────── Bottom Nav ───────────────────────
   static const String navHome = 'Home';
   static const String navSubjects = 'Subjects';
+
   /// @deprecated Use [navSubjects] instead.
   static const String navChapters = navSubjects;
   static const String navPractice = 'Practice';
@@ -506,6 +508,10 @@ abstract final class AppStrings {
   static const String noBookmarksFoundDesc =
       'Try a different search term or clear the filter to see all saved formulas and chapters.';
   static const String clearSearch = 'Clear Search';
+  static const String refreshBookmarks = 'Refresh bookmarks';
+  static const String removeBookmark = 'Remove bookmark';
+  static const String bookmarkChapter = 'Bookmark chapter';
+  static const String removeSavedChapter = 'Remove saved chapter';
 
   // ──────────────────────── Notifications ────────────────────
   static const String studyNotifications = 'Study Notifications';
@@ -518,7 +524,8 @@ abstract final class AppStrings {
   static const String achievementNotifications = 'Achievements';
   static const String achievements = 'Milestone Alerts';
   static const String achievementsTitle = 'Achievements';
-  static const String achievementsSubtitle = 'View your earned badges and trophies';
+  static const String achievementsSubtitle =
+      'View your earned badges and trophies';
   static const String achievementsDesc = 'When you hit learning milestones';
   static const String weeklyReport = 'Weekly Report';
   static const String weeklyReportDesc = 'Summary of your weekly progress';
@@ -571,14 +578,19 @@ abstract final class AppStrings {
   static const String searchLabel = 'Search';
   static const String searchFormulas = 'Search formulas';
   static const String searchNoResults = 'No formulas found';
-  static const String searchNoResultsDesc = 'Try a different search term or browse chapters';
+  static const String searchNoResultsDesc =
+      'Try a different search term or browse chapters';
   static const String searchResultsFor = 'Results for';
 
   // ──────────────────────── Study Planner ──────────────────────
   static const String studyPlanner = 'Study Planner';
-  static const String studyPlannerSubtitle = 'Plan and track your study sessions';
+  static const String studyPlannerSubtitle =
+      'Plan and track your study sessions';
   static const String createPlan = 'Create Plan';
   static const String sessionComplete = 'Session Complete';
+  static const String editPlan = 'Edit plan';
+  static const String deletePlan = 'Delete plan';
+  static const String viewAnalytics = 'View analytics';
 
   // ──────────────────────── Flashcards ─────────────────────────
   static const String flashcards = 'Flashcards';
@@ -587,7 +599,8 @@ abstract final class AppStrings {
   static const String flashcardMastered = 'Mastered';
   static const String flashcardReview = 'Review Again';
   static const String flashcardSessionComplete = 'Session Complete!';
-  static const String flashcardSessionDesc = 'Great work! Keep practicing to master all formulas.';
+  static const String flashcardSessionDesc =
+      'Great work! Keep practicing to master all formulas.';
 
   // ──────────────────────── Notes ──────────────────────────────
   static const String addNote = 'Add Note';
@@ -608,6 +621,15 @@ abstract final class AppStrings {
   static const String chapterBreadcrumb = 'CHAPTER';
   static const String masteredLabel = 'MASTERED';
   static const String savedPrefix = 'SAVED';
+  static const String previousFormula = 'Previous formula';
+  static const String nextFormula = 'Next formula';
+  static const String swapFormulas = 'Swap formulas';
+  static const String dismissAnnouncement = 'Dismiss announcement';
+  static const String closeQuiz = 'Close quiz';
+  static const String closePractice = 'Close practice';
+  static const String viewInsights = 'View insights';
+  static const String showPassword = 'Show password';
+  static const String hidePassword = 'Hide password';
 
   /// Template: "X of Y formulas mastered"
   static String formulasMasteredOf(int mastered, int total) =>
@@ -726,8 +748,10 @@ abstract final class AppStrings {
 
   // ──────────────────────── Form Validation ──────────────────
   static const String validationRequired = 'This field is required';
-  static const String validationInvalidEmail = 'Please enter a valid email address';
-  static const String validationPasswordMinLength = 'Password must be at least 6 characters';
+  static const String validationInvalidEmail =
+      'Please enter a valid email address';
+  static const String validationPasswordMinLength =
+      'Password must be at least 6 characters';
   static const String validationPasswordMismatch = 'Passwords do not match';
 
   // Legal footer

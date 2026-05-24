@@ -47,7 +47,9 @@ class LoginFormContent extends StatelessWidget {
           const SizedBox(height: AppDimensions.paddingXS),
           Text(
             AppStrings.loginSubtitle,
-            style: AppTextStyles.bodyMedium.copyWith(color: colorScheme.onSurfaceVariant),
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
           ),
           const SizedBox(height: AppDimensions.paddingXXL),
           AppTextField(
@@ -61,7 +63,8 @@ class LoginFormContent extends StatelessWidget {
           Align(
             alignment: AlignmentDirectional.centerEnd,
             child: GestureDetector(
-              onTap: () => showForgotPasswordDialog(context, identityController.text),
+              onTap: () =>
+                  showForgotPasswordDialog(context, identityController.text),
               child: Text(
                 AppStrings.loginForgotPassword,
                 style: AppTextStyles.labelMedium.copyWith(
@@ -79,7 +82,8 @@ class LoginFormContent extends StatelessWidget {
             prefixIcon: LucideIcons.lock,
             obscureText: obscurePassword,
             validator: (value) {
-              if (value == null || value.isEmpty) return AppStrings.validationRequired;
+              if (value == null || value.isEmpty)
+                return AppStrings.validationRequired;
               return null;
             },
             suffixIcon: IconButton(
@@ -89,6 +93,9 @@ class LoginFormContent extends StatelessWidget {
                 size: AppDimensions.iconDefault,
                 color: colorScheme.outline,
               ),
+              tooltip: obscurePassword
+                  ? AppStrings.showPassword
+                  : AppStrings.hidePassword,
             ),
           ),
           const SizedBox(height: AppDimensions.paddingXXL),
@@ -109,7 +116,9 @@ class LoginFormContent extends StatelessWidget {
             children: [
               Expanded(child: Divider(color: colorScheme.outlineVariant)),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingMD),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppDimensions.paddingMD,
+                ),
                 child: Text(
                   AppStrings.loginOr,
                   style: AppTextStyles.labelSmall.copyWith(
@@ -137,7 +146,10 @@ class LoginFormContent extends StatelessWidget {
                 child: LoginSocialButton(
                   label: AppStrings.loginSchoolId,
                   icon: LucideIcons.graduationCap,
-                  onTap: () => ComingSoonSheet.show(context, featureName: AppStrings.loginSchoolId),
+                  onTap: () => ComingSoonSheet.show(
+                    context,
+                    featureName: AppStrings.loginSchoolId,
+                  ),
                 ),
               ),
             ],
@@ -149,7 +161,9 @@ class LoginFormContent extends StatelessWidget {
               children: [
                 Text(
                   AppStrings.loginNoAccount,
-                  style: AppTextStyles.bodyMedium.copyWith(color: colorScheme.onSurfaceVariant),
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
                 ),
                 const SizedBox(width: AppDimensions.paddingXXS),
                 GestureDetector(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/core.dart';
+import 'app_text.dart';
 
 /// Premium gradient-filled button with press animation and loading state.
 ///
@@ -95,7 +96,8 @@ class _AppGradientButtonState extends State<AppGradientButton>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final gradient = widget.gradient ??
+    final gradient =
+        widget.gradient ??
         (isDark ? AppColors.darkPrimaryGradient : AppColors.primaryGradient);
 
     final isDisabled = widget.isLoading || widget.onPressed == null;
@@ -103,10 +105,7 @@ class _AppGradientButtonState extends State<AppGradientButton>
     return AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (context, child) {
-        return Transform.scale(
-          scale: _scaleAnimation.value,
-          child: child,
-        );
+        return Transform.scale(scale: _scaleAnimation.value, child: child);
       },
       child: GestureDetector(
         onTapDown: _handleTapDown,
@@ -144,8 +143,9 @@ class _AppGradientButtonState extends State<AppGradientButton>
                     ),
                   )
                 : Row(
-                    mainAxisSize:
-                        widget.isExpanded ? MainAxisSize.max : MainAxisSize.min,
+                    mainAxisSize: widget.isExpanded
+                        ? MainAxisSize.max
+                        : MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       if (widget.icon != null) ...[
@@ -158,7 +158,7 @@ class _AppGradientButtonState extends State<AppGradientButton>
                         ),
                         const SizedBox(width: AppDimensions.paddingSM),
                       ],
-                      Text(
+                      AppText(
                         widget.label,
                         style: AppTextStyles.labelLarge.copyWith(
                           color: isDisabled
@@ -166,6 +166,8 @@ class _AppGradientButtonState extends State<AppGradientButton>
                               : AppColors.white,
                           fontWeight: FontWeight.w700,
                         ),
+                        maxLines: 1,
+                        softWrap: false,
                       ),
                     ],
                   ),

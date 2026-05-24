@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:formula_scholar/core/error/failures.dart';
 import 'package:formula_scholar/core/error/result.dart';
+import 'package:formula_scholar/features/auth/auth.dart';
 import 'package:formula_scholar/features/study_planner/domain/domain.dart';
 import 'package:formula_scholar/features/study_planner/presentation/cubit/study_planner_cubit.dart';
 import 'package:formula_scholar/features/study_planner/presentation/cubit/study_planner_state.dart';
@@ -15,6 +16,8 @@ void main() {
     late MockUpdatePlanUseCase updatePlan;
     late MockDeletePlanUseCase deletePlan;
     late MockUpdateSessionUseCase updateSession;
+    late _FakeAuthRepository authRepository;
+    late AuthCubit authCubit;
     late StudyPlannerCubit cubit;
 
     setUp(() {
@@ -23,17 +26,30 @@ void main() {
       updatePlan = MockUpdatePlanUseCase();
       deletePlan = MockDeletePlanUseCase();
       updateSession = MockUpdateSessionUseCase();
+      authRepository = _FakeAuthRepository();
+      authCubit = AuthCubit(
+        signIn: SignInUseCase(authRepository),
+        signUp: SignUpUseCase(authRepository),
+        signOut: SignOutUseCase(authRepository),
+        googleSignIn: GoogleSignInUseCase(authRepository),
+        watchAuthState: WatchAuthStateUseCase(authRepository),
+        deleteAccount: DeleteAccountUseCase(authRepository),
+        forgotPassword: ForgotPasswordUseCase(authRepository),
+      );
       cubit = StudyPlannerCubit(
         getPlans: getPlans,
         createPlan: createPlan,
         updatePlan: updatePlan,
         deletePlan: deletePlan,
         updateSession: updateSession,
+        authCubit: authCubit,
       );
     });
 
-    tearDown(() {
-      cubit.close();
+    tearDown(() async {
+      await cubit.close();
+      await authCubit.close();
+      await authRepository.dispose();
       getPlans.dispose();
     });
 
@@ -52,7 +68,8 @@ void main() {
             (s) => s.status == StudyPlannerStatus.loading,
           ),
           predicate<StudyPlannerState>(
-            (s) => s.status == StudyPlannerStatus.loaded &&
+            (s) =>
+                s.status == StudyPlannerStatus.loaded &&
                 s.plans.length == 1 &&
                 s.plans.first == plan,
           ),
@@ -73,7 +90,8 @@ void main() {
             (s) => s.status == StudyPlannerStatus.loading,
           ),
           predicate<StudyPlannerState>(
-            (s) => s.status == StudyPlannerStatus.error &&
+            (s) =>
+                s.status == StudyPlannerStatus.error &&
                 s.errorMessage == 'stream error',
           ),
         ]),
@@ -84,6 +102,34 @@ void main() {
 
       await future;
     });
+
+    test(
+      'auth state change triggers loadPlans for authenticated user',
+      () async {
+        final plan = _testPlan();
+
+        final future = expectLater(
+          cubit.stream,
+          emitsInOrder([
+            predicate<StudyPlannerState>(
+              (s) => s.status == StudyPlannerStatus.loading,
+            ),
+            predicate<StudyPlannerState>(
+              (s) =>
+                  s.status == StudyPlannerStatus.loaded &&
+                  s.plans.length == 1 &&
+                  s.plans.first == plan,
+            ),
+          ]),
+        );
+
+        authRepository.emitUser(AuthUser(uid: 'u1'));
+        await Future<void>.delayed(Duration.zero);
+        getPlans.controller.add([plan]);
+
+        await future;
+      },
+    );
 
     test('createPlan does not emit error on success', () async {
       createPlan.result = const Success<void>(null);
@@ -181,24 +227,33 @@ void main() {
 }
 
 StudyPlan _testPlan() => StudyPlan(
-      id: 'p1',
-      title: 'Test Plan',
-      createdAt: DateTime(2024, 1, 1),
-      updatedAt: DateTime(2024, 1, 1),
-    );
+  id: 'p1',
+  title: 'Test Plan',
+  createdAt: DateTime(2024, 1, 1),
+  updatedAt: DateTime(2024, 1, 1),
+);
 
 class _FakeRepository implements StudyPlannerRepositoryPort {
   @override
   Stream<List<StudyPlan>> watchPlans(String userId) => const Stream.empty();
 
   @override
-  Future<void> createPlan({required String userId, required StudyPlan plan}) async {}
+  Future<void> createPlan({
+    required String userId,
+    required StudyPlan plan,
+  }) async {}
 
   @override
-  Future<void> updatePlan({required String userId, required StudyPlan plan}) async {}
+  Future<void> updatePlan({
+    required String userId,
+    required StudyPlan plan,
+  }) async {}
 
   @override
-  Future<void> deletePlan({required String userId, required String planId}) async {}
+  Future<void> deletePlan({
+    required String userId,
+    required String planId,
+  }) async {}
 
   @override
   Future<void> updateSessionStatus({
@@ -207,6 +262,50 @@ class _FakeRepository implements StudyPlannerRepositoryPort {
     required String sessionId,
     DocumentReference? transactionRef,
   }) async {}
+}
+
+class _FakeAuthRepository implements AuthRepositoryPort {
+  final StreamController<AuthUser?> _controller =
+      StreamController<AuthUser?>.broadcast();
+
+  void emitUser(AuthUser? user) => _controller.add(user);
+
+  Future<void> dispose() async {
+    await _controller.close();
+  }
+
+  @override
+  AuthUser? get currentUser => null;
+
+  @override
+  Stream<AuthUser?> authStateChanges() => _controller.stream;
+
+  @override
+  Future<Result<void>> deleteAccount() async => const Success<void>(null);
+
+  @override
+  Future<Result<void>> sendPasswordResetEmail({required String email}) async =>
+      const Success<void>(null);
+
+  @override
+  Future<Result<AuthUser>> signInWithGoogle() async =>
+      const Error<AuthUser>(ServerFailure(message: 'not used in test'));
+
+  @override
+  Future<Result<AuthUser>> signIn({
+    required String email,
+    required String password,
+  }) async => const Error<AuthUser>(ServerFailure(message: 'not used in test'));
+
+  @override
+  Future<Result<AuthUser>> signUp({
+    required String name,
+    required String email,
+    required String password,
+  }) async => const Error<AuthUser>(ServerFailure(message: 'not used in test'));
+
+  @override
+  Future<Result<void>> signOut() async => const Success<void>(null);
 }
 
 class MockGetPlansUseCase extends GetPlansUseCase {
@@ -227,7 +326,10 @@ class MockCreatePlanUseCase extends CreatePlanUseCase {
   Result<void> result = const Success<void>(null);
 
   @override
-  Future<Result<void>> call({required String userId, required StudyPlan plan}) async {
+  Future<Result<void>> call({
+    required String userId,
+    required StudyPlan plan,
+  }) async {
     callCount++;
     return result;
   }
@@ -240,7 +342,10 @@ class MockUpdatePlanUseCase extends UpdatePlanUseCase {
   Result<void> result = const Success<void>(null);
 
   @override
-  Future<Result<void>> call({required String userId, required StudyPlan plan}) async {
+  Future<Result<void>> call({
+    required String userId,
+    required StudyPlan plan,
+  }) async {
     callCount++;
     return result;
   }
@@ -253,7 +358,10 @@ class MockDeletePlanUseCase extends DeletePlanUseCase {
   Result<void> result = const Success<void>(null);
 
   @override
-  Future<Result<void>> call({required String userId, required String planId}) async {
+  Future<Result<void>> call({
+    required String userId,
+    required String planId,
+  }) async {
     callCount++;
     return result;
   }

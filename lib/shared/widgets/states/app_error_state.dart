@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../core/core.dart';
+import '../app_text.dart';
 
 class AppErrorState extends StatelessWidget {
   const AppErrorState({
@@ -54,20 +55,23 @@ class AppErrorState extends StatelessWidget {
               ),
             ),
             const SizedBox(height: AppDimensions.paddingXXL),
-            Text(
+            AppText(
               'Something went wrong',
               style: AppTextStyles.titleLarge.copyWith(
                 fontWeight: FontWeight.w800,
               ),
+              maxLines: 2,
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: AppDimensions.paddingSM),
-            Text(
+            AppText(
               message ?? AppStrings.somethingWentWrong,
               textAlign: TextAlign.center,
               style: AppTextStyles.bodyMedium.copyWith(
                 color: colorScheme.onSurfaceVariant,
                 height: AppDimensions.lineHeightRelaxed,
               ),
+              maxLines: 3,
             ),
             const SizedBox(height: AppDimensions.paddingXXL),
             SizedBox(
@@ -75,12 +79,14 @@ class AppErrorState extends StatelessWidget {
               child: FilledButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(LucideIcons.refreshCw, size: 18),
-                label: Text(retryLabel),
+                label: AppText(retryLabel, maxLines: 1, softWrap: false),
                 style: FilledButton.styleFrom(
-                  backgroundColor:
-                      isDark ? AppColors.darkPrimary : colorScheme.primary,
-                  foregroundColor:
-                      isDark ? AppColors.darkOnPrimary : colorScheme.onPrimary,
+                  backgroundColor: isDark
+                      ? AppColors.darkPrimary
+                      : colorScheme.primary,
+                  foregroundColor: isDark
+                      ? AppColors.darkOnPrimary
+                      : colorScheme.onPrimary,
                   padding: const EdgeInsets.symmetric(
                     vertical: AppDimensions.paddingMD,
                   ),

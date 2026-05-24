@@ -89,6 +89,7 @@ class SearchPage extends StatelessWidget {
           child: IconButton(
             onPressed: () => context.read<SearchCubit>().clearSearch(),
             icon: const Icon(LucideIcons.x),
+            tooltip: AppStrings.clearSearch,
           ),
         ),
       ],

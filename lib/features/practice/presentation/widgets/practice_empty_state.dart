@@ -7,7 +7,6 @@ import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
 import '../cubit/practice_cubit.dart';
 
-
 /// Empty state shown when no questions are available.
 class PracticeEmptyState extends StatelessWidget {
   const PracticeEmptyState({super.key, required this.photoUrl});
@@ -83,8 +82,9 @@ class PracticeEmptyState extends StatelessWidget {
                               child: const Text(AppStrings.retry),
                             ),
                             OutlinedButton(
-                              onPressed: () =>
-                                  StatefulNavigationShell.of(context).goBranch(1),
+                              onPressed: () => StatefulNavigationShell.of(
+                                context,
+                              ).goBranch(1),
                               child: const Text(AppStrings.browseChapters),
                             ),
                           ],
@@ -113,6 +113,7 @@ class PracticeEmptyState extends StatelessWidget {
           IconButton(
             onPressed: () => StatefulNavigationShell.of(context).goBranch(1),
             icon: const Icon(LucideIcons.x, size: AppDimensions.iconLG),
+            tooltip: AppStrings.closePractice,
           ),
           const SizedBox(width: AppDimensions.paddingMD),
           Text(

@@ -5,12 +5,7 @@ import '../../../../core/core.dart';
 import '../../domain/domain.dart';
 
 class PlanCard extends StatelessWidget {
-  const PlanCard({
-    super.key,
-    required this.plan,
-    this.onTap,
-    this.onDelete,
-  });
+  const PlanCard({super.key, required this.plan, this.onTap, this.onDelete});
 
   final StudyPlan plan;
   final VoidCallback? onTap;
@@ -58,6 +53,7 @@ class PlanCard extends StatelessWidget {
                         color: colorScheme.error,
                       ),
                       onPressed: onDelete,
+                      tooltip: AppStrings.deletePlan,
                     ),
                 ],
               ),

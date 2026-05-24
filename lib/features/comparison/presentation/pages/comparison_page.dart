@@ -1,34 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../core/domain/entities/formula.dart';
 import '../cubit/comparison_cubit.dart';
 import '../cubit/comparison_state.dart';
 import '../widgets/formula_compare_card.dart';
 import '../widgets/similarity_badge.dart';
 import '../widgets/variable_comparison.dart';
 
-class ComparisonPage extends StatefulWidget {
+class ComparisonPage extends StatelessWidget {
   const ComparisonPage({super.key});
-
-  @override
-  State<ComparisonPage> createState() => _ComparisonPageState();
-}
-
-class _ComparisonPageState extends State<ComparisonPage> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final extra = GoRouterState.of(context).extra;
-      if (extra is Map<String, Formula>) {
-        context.read<ComparisonCubit>().setFormulas(extra['a']!, extra['b']!);
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,12 +22,16 @@ class _ComparisonPageState extends State<ComparisonPage> {
           IconButton(
             onPressed: () => context.read<ComparisonCubit>().swap(),
             icon: const Icon(LucideIcons.arrowLeftRight),
-            tooltip: 'Swap formulas',
+            tooltip: AppStrings.swapFormulas,
           ),
         ],
       ),
       body: BlocBuilder<ComparisonCubit, ComparisonState>(
-        buildWhen: (p, n) => p.status != n.status || p.formulaA != n.formulaA || p.formulaB != n.formulaB || p.comparison != n.comparison,
+        buildWhen: (p, n) =>
+            p.status != n.status ||
+            p.formulaA != n.formulaA ||
+            p.formulaB != n.formulaB ||
+            p.comparison != n.comparison,
         builder: (context, state) {
           if (state.status == ComparisonStatus.initial) {
             return const Center(child: Text('Select two formulas to compare'));

@@ -11,22 +11,8 @@ import '../cubit/study_planner_cubit.dart';
 import '../cubit/study_planner_state.dart';
 import '../widgets/plan_card.dart';
 
-class StudyPlannerPage extends StatefulWidget {
+class StudyPlannerPage extends StatelessWidget {
   const StudyPlannerPage({super.key});
-
-  @override
-  State<StudyPlannerPage> createState() => _StudyPlannerPageState();
-}
-
-class _StudyPlannerPageState extends State<StudyPlannerPage> {
-  @override
-  void initState() {
-    super.initState();
-    final userId = context.read<AuthCubit>().state.user?.uid;
-    if (userId != null) {
-      context.read<StudyPlannerCubit>().loadPlans(userId);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,14 +53,16 @@ class _StudyPlannerPageState extends State<StudyPlannerPage> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (state.status == StudyPlannerStatus.error &&
-              state.plans.isEmpty) {
+          if (state.status == StudyPlannerStatus.error && state.plans.isEmpty) {
             return Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(LucideIcons.alertCircle,
-                      size: 48, color: colorScheme.error),
+                  Icon(
+                    LucideIcons.alertCircle,
+                    size: 48,
+                    color: colorScheme.error,
+                  ),
                   const SizedBox(height: 16),
                   Text(state.errorMessage ?? 'Failed to load plans'),
                 ],
@@ -159,9 +147,10 @@ class _StudyPlannerPageState extends State<StudyPlannerPage> {
             onPressed: () {
               final userId = context.read<AuthCubit>().state.user?.uid;
               if (userId != null) {
-                context
-                    .read<StudyPlannerCubit>()
-                    .deletePlan(userId: userId, planId: plan.id);
+                context.read<StudyPlannerCubit>().deletePlan(
+                  userId: userId,
+                  planId: plan.id,
+                );
               }
               Navigator.of(ctx).pop();
             },

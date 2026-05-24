@@ -10,7 +10,9 @@ class AnalyticsCubit extends Cubit<AnalyticsState>
     with CubitFailureLogger<AnalyticsState> {
   AnalyticsCubit({required GetAnalyticsDataUseCase getAnalytics})
     : _getAnalytics = getAnalytics,
-      super(const AnalyticsState());
+      super(const AnalyticsState()) {
+    Future.microtask(load);
+  }
 
   final GetAnalyticsDataUseCase _getAnalytics;
 
@@ -26,10 +28,12 @@ class AnalyticsCubit extends Cubit<AnalyticsState>
         emit(state.copyWith(status: AnalyticsStatus.loaded, data: data));
       case Error(:final failure):
         logFailure('loadAnalytics', failure);
-        emit(state.copyWith(
-          status: AnalyticsStatus.error,
-          errorMessage: failure.message,
-        ));
+        emit(
+          state.copyWith(
+            status: AnalyticsStatus.error,
+            errorMessage: failure.message,
+          ),
+        );
     }
   }
 }

@@ -10,19 +10,8 @@ import '../widgets/overview_cards.dart';
 import '../widgets/recent_activity_list.dart';
 import '../widgets/weekly_activity_chart.dart';
 
-class AnalyticsPage extends StatefulWidget {
+class AnalyticsPage extends StatelessWidget {
   const AnalyticsPage({super.key});
-
-  @override
-  State<AnalyticsPage> createState() => _AnalyticsPageState();
-}
-
-class _AnalyticsPageState extends State<AnalyticsPage> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<AnalyticsCubit>().load();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,14 +38,22 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
               message: state.errorMessage ?? 'Failed to load analytics',
               onRetry: cubit.load,
             ),
-            AnalyticsStatus.loaded => _buildContent(state, colorScheme),
+            AnalyticsStatus.loaded => _buildContent(
+              context,
+              state,
+              colorScheme,
+            ),
           };
         },
       ),
     );
   }
 
-  Widget _buildContent(AnalyticsState state, ColorScheme colorScheme) {
+  Widget _buildContent(
+    BuildContext context,
+    AnalyticsState state,
+    ColorScheme colorScheme,
+  ) {
     final data = state.data!;
     return RefreshIndicator(
       onRefresh: () async {
@@ -68,10 +65,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            EntranceWrapper.stagger(
-              index: 0,
-              child: OverviewCards(data: data),
-            ),
+            EntranceWrapper.stagger(index: 0, child: OverviewCards(data: data)),
             const SizedBox(height: AppDimensions.paddingMD),
             EntranceWrapper.stagger(
               index: 1,
@@ -80,7 +74,9 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
             const SizedBox(height: AppDimensions.paddingMD),
             EntranceWrapper.stagger(
               index: 2,
-              child: MasteryDistributionChart(distribution: data.masteryDistribution),
+              child: MasteryDistributionChart(
+                distribution: data.masteryDistribution,
+              ),
             ),
             const SizedBox(height: AppDimensions.paddingMD),
             EntranceWrapper.stagger(

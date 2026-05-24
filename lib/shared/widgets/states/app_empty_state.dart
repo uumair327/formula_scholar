@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../core/core.dart';
+import '../app_text.dart';
 
 class AppEmptyState extends StatelessWidget {
   const AppEmptyState({
@@ -55,22 +56,24 @@ class AppEmptyState extends StatelessWidget {
               ),
             ),
             const SizedBox(height: AppDimensions.paddingXXL),
-            Text(
+            AppText(
               title,
               textAlign: TextAlign.center,
               style: AppTextStyles.titleLarge.copyWith(
                 fontWeight: FontWeight.w800,
               ),
+              maxLines: 2,
             ),
             if (description != null) ...[
               const SizedBox(height: AppDimensions.paddingSM),
-              Text(
+              AppText(
                 description!,
                 textAlign: TextAlign.center,
                 style: AppTextStyles.bodyMedium.copyWith(
                   color: colorScheme.onSurfaceVariant,
                   height: AppDimensions.lineHeightRelaxed,
                 ),
+                maxLines: 3,
               ),
             ],
             if (actionLabel != null && onAction != null) ...[
@@ -86,7 +89,7 @@ class AppEmptyState extends StatelessWidget {
                     borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
                   ),
                 ),
-                child: Text(actionLabel!),
+                child: AppText(actionLabel!, maxLines: 1, softWrap: false),
               ),
             ],
           ],

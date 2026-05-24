@@ -25,12 +25,11 @@ class _VisualizerPageState extends State<VisualizerPage>
   @override
   void initState() {
     super.initState();
-    _autoRotateController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 15),
-    )..addListener(() {
-        context.read<VisualizerCubit>().tickAutoRotate();
-      });
+    _autoRotateController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 15))
+          ..addListener(() {
+            context.read<VisualizerCubit>().tickAutoRotate();
+          });
     _autoRotateController.repeat();
   }
 
@@ -95,13 +94,14 @@ class _VisualizerPageState extends State<VisualizerPage>
             actions: [
               IconButton(
                 icon: Icon(
-                  state.isAutoRotating
-                      ? LucideIcons.pause
-                      : LucideIcons.play,
+                  state.isAutoRotating ? LucideIcons.pause : LucideIcons.play,
                   color: colorScheme.primary,
                 ),
                 onPressed: () =>
                     context.read<VisualizerCubit>().toggleAutoRotate(),
+                tooltip: state.isAutoRotating
+                    ? 'Pause auto-rotation'
+                    : 'Start auto-rotation',
               ),
             ],
           ),
@@ -186,9 +186,7 @@ class _Canvas3D extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.black.withValues(alpha: 0.4),
-                borderRadius: BorderRadius.circular(
-                  AppDimensions.radiusXL,
-                ),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
                 border: Border.all(
                   color: colorScheme.outline.withValues(alpha: 0.1),
                 ),
@@ -203,46 +201,54 @@ class _Canvas3D extends StatelessWidget {
               clipBehavior: Clip.antiAlias,
               child: RepaintBoundary(
                 child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: CustomPaint(
-                      painter: GridBackgroundPainter(colorScheme),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: CustomPaint(
-                      painter: ThreeDCanvasPainter(
-                        type: state.visualizerType,
-                        angleX: state.angleX,
-                        angleY: state.angleY,
-                        paramA: state.paramA,
-                        paramB: state.paramB,
-                        paramC: state.paramC,
-                        colorScheme: colorScheme,
+                  children: [
+                    Positioned.fill(
+                      child: CustomPaint(
+                        painter: GridBackgroundPainter(colorScheme),
                       ),
                     ),
-                  ),
-                  Positioned(
-                    top: AppDimensions.paddingMD,
-                    left: Directionality.of(context) == TextDirection.ltr ? AppDimensions.paddingMD : null,
-                    right: Directionality.of(context) == TextDirection.rtl ? AppDimensions.paddingMD : null,
-                    child: _HologramStat(
-                      label: 'ROTATION Y',
-                      value:
-                          '${(state.angleY * 180 / math.pi).round() % 360}°',
+                    Positioned.fill(
+                      child: CustomPaint(
+                        painter: ThreeDCanvasPainter(
+                          type: state.visualizerType,
+                          angleX: state.angleX,
+                          angleY: state.angleY,
+                          paramA: state.paramA,
+                          paramB: state.paramB,
+                          paramC: state.paramC,
+                          colorScheme: colorScheme,
+                        ),
+                      ),
                     ),
-                  ),
-                  Positioned(
-                    top: AppDimensions.paddingMD,
-                    right: Directionality.of(context) == TextDirection.ltr ? AppDimensions.paddingMD : null,
-                    left: Directionality.of(context) == TextDirection.rtl ? AppDimensions.paddingMD : null,
-                    child: _HologramStat(
-                      label: 'VISUALIZER MODE',
-                      value: state.visualizerType.name.toUpperCase(),
+                    Positioned(
+                      top: AppDimensions.paddingMD,
+                      left: Directionality.of(context) == TextDirection.ltr
+                          ? AppDimensions.paddingMD
+                          : null,
+                      right: Directionality.of(context) == TextDirection.rtl
+                          ? AppDimensions.paddingMD
+                          : null,
+                      child: _HologramStat(
+                        label: 'ROTATION Y',
+                        value:
+                            '${(state.angleY * 180 / math.pi).round() % 360}°',
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                    Positioned(
+                      top: AppDimensions.paddingMD,
+                      right: Directionality.of(context) == TextDirection.ltr
+                          ? AppDimensions.paddingMD
+                          : null,
+                      left: Directionality.of(context) == TextDirection.rtl
+                          ? AppDimensions.paddingMD
+                          : null,
+                      child: _HologramStat(
+                        label: 'VISUALIZER MODE',
+                        value: state.visualizerType.name.toUpperCase(),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -269,12 +275,9 @@ class _ParameterControlsSection extends StatelessWidget {
           paramA: state.paramA,
           paramB: state.paramB,
           paramC: state.paramC,
-          onChangedA: (v) =>
-              context.read<VisualizerCubit>().setParamA(v),
-          onChangedB: (v) =>
-              context.read<VisualizerCubit>().setParamB(v),
-          onChangedC: (v) =>
-              context.read<VisualizerCubit>().setParamC(v),
+          onChangedA: (v) => context.read<VisualizerCubit>().setParamA(v),
+          onChangedB: (v) => context.read<VisualizerCubit>().setParamB(v),
+          onChangedC: (v) => context.read<VisualizerCubit>().setParamC(v),
         );
       },
     );
@@ -298,9 +301,7 @@ class _HologramStat extends StatelessWidget {
       decoration: BoxDecoration(
         color: colorScheme.surface.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
-        border: Border.all(
-          color: colorScheme.primary.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: colorScheme.primary.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

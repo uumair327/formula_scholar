@@ -9,7 +9,11 @@ import '../../domain/domain.dart';
 import '../cubit/chapters_cubit.dart';
 
 class CompactChapterCard extends StatelessWidget {
-  const CompactChapterCard({super.key, required this.chapter, required this.subjectId});
+  const CompactChapterCard({
+    super.key,
+    required this.chapter,
+    required this.subjectId,
+  });
 
   final Chapter chapter;
   final String subjectId;
@@ -17,7 +21,9 @@ class CompactChapterCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final ctaText = chapter.progressPercent > 0 ? AppStrings.continueLearning : AppStrings.startNow;
+    final ctaText = chapter.progressPercent > 0
+        ? AppStrings.continueLearning
+        : AppStrings.startNow;
 
     return AppCard(
       child: Column(
@@ -27,8 +33,12 @@ class CompactChapterCard extends StatelessWidget {
               AppIconCircle(
                 icon: LucideIcons.bookOpen,
                 size: AppDimensions.avatarLG,
-                backgroundColor: chapter.isInProgress ? colorScheme.tertiaryContainer : colorScheme.surfaceContainerHighest,
-                iconColor: chapter.isInProgress ? colorScheme.tertiary : colorScheme.onSurfaceVariant,
+                backgroundColor: chapter.isInProgress
+                    ? colorScheme.tertiaryContainer
+                    : colorScheme.surfaceContainerHighest,
+                iconColor: chapter.isInProgress
+                    ? colorScheme.tertiary
+                    : colorScheme.onSurfaceVariant,
                 iconSize: AppDimensions.iconLG,
                 borderRadius: AppDimensions.radiusMD,
               ),
@@ -40,33 +50,59 @@ class CompactChapterCard extends StatelessWidget {
                     Row(
                       children: [
                         Expanded(
-                          child: Text(chapter.name, style: AppTextStyles.titleLarge, maxLines: 1, overflow: TextOverflow.ellipsis),
+                          child: Text(
+                            chapter.name,
+                            style: AppTextStyles.titleLarge,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                         Padding(
-                          padding: const EdgeInsetsDirectional.only(start: AppDimensions.paddingXS),
+                          padding: const EdgeInsetsDirectional.only(
+                            start: AppDimensions.paddingXS,
+                          ),
                           child: _BookmarkButton(chapter: chapter),
                         ),
                       ],
                     ),
-                    Text(chapter.subtitle, style: AppTextStyles.bodySmall.copyWith(color: colorScheme.onSurfaceVariant),
-                      maxLines: 1, overflow: TextOverflow.ellipsis),
+                    Text(
+                      chapter.subtitle,
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ],
                 ),
               ),
             ],
           ),
           const SizedBox(height: AppDimensions.paddingLG),
-          ProgressBar(percentage: chapter.progressPercent, barColor: colorScheme.primary,
-            backgroundColor: colorScheme.surfaceContainerHighest, height: AppDimensions.progressBarSM),
+          ProgressBar(
+            percentage: chapter.progressPercent,
+            barColor: colorScheme.primary,
+            backgroundColor: colorScheme.surfaceContainerHighest,
+            height: AppDimensions.progressBarSM,
+          ),
           const SizedBox(height: AppDimensions.paddingSM),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('${chapter.completedFormulas}/${chapter.totalFormulas} ${AppStrings.formulasLabel}',
-                style: AppTextStyles.overline.copyWith(color: colorScheme.outline)),
+              Text(
+                '${chapter.completedFormulas}/${chapter.totalFormulas} ${AppStrings.formulasLabel}',
+                style: AppTextStyles.overline.copyWith(
+                  color: colorScheme.outline,
+                ),
+              ),
               GestureDetector(
                 onTap: () => _navigateToFormulas(context, ctaText),
-                child: Text(ctaText.toUpperCase(), style: AppTextStyles.overline.copyWith(color: colorScheme.primary)),
+                child: Text(
+                  ctaText.toUpperCase(),
+                  style: AppTextStyles.overline.copyWith(
+                    color: colorScheme.primary,
+                  ),
+                ),
               ),
             ],
           ),
@@ -77,17 +113,28 @@ class CompactChapterCard extends StatelessWidget {
 
   void _navigateToFormulas(BuildContext context, String ctaText) {
     final chaptersCubit = context.read<ChaptersCubit>();
-    final curriculumKey = context.read<CurriculumCubit>().state.curriculum?.curriculumKey;
-    context.pushNamed(
-      AppRoutes.formulaDetailName,
-      pathParameters: {'subjectId': subjectId, 'chapterId': chapter.id},
-      queryParameters: {'name': chapter.name},
-    ).then((_) {
-      if (curriculumKey == null || curriculumKey.isEmpty) return;
-      chaptersCubit.loadChapters(subjectId, curriculumKey: curriculumKey,
-        searchQuery: chaptersCubit.state.searchQuery,
-        sortBy: chaptersCubit.state.sortBy, sortDesc: chaptersCubit.state.sortDesc, forceReload: true);
-    });
+    final curriculumKey = context
+        .read<CurriculumCubit>()
+        .state
+        .curriculum
+        ?.curriculumKey;
+    context
+        .pushNamed(
+          AppRoutes.formulaDetailName,
+          pathParameters: {'subjectId': subjectId, 'chapterId': chapter.id},
+          queryParameters: {'name': chapter.name},
+        )
+        .then((_) {
+          if (curriculumKey == null || curriculumKey.isEmpty) return;
+          chaptersCubit.loadChapters(
+            subjectId,
+            curriculumKey: curriculumKey,
+            searchQuery: chaptersCubit.state.searchQuery,
+            sortBy: chaptersCubit.state.sortBy,
+            sortDesc: chaptersCubit.state.sortDesc,
+            forceReload: true,
+          );
+        });
   }
 }
 
@@ -103,13 +150,27 @@ class _BookmarkButton extends StatelessWidget {
       padding: EdgeInsets.zero,
       constraints: const BoxConstraints(),
       onPressed: () {
-        final subjectName = context.read<SubjectSelectionCubit>().state.subject?.name ?? AppStrings.unknownSubject;
-        final curriculumKey = context.read<CurriculumCubit>().state.curriculum?.curriculumKey;
+        final subjectName =
+            context.read<SubjectSelectionCubit>().state.subject?.name ??
+            AppStrings.unknownSubject;
+        final curriculumKey = context
+            .read<CurriculumCubit>()
+            .state
+            .curriculum
+            ?.curriculumKey;
         if (curriculumKey == null || curriculumKey.isEmpty) return;
-        context.read<ChaptersCubit>().toggleChapterBookmark(chapter, subjectName, curriculumKey: curriculumKey);
+        context.read<ChaptersCubit>().toggleChapterBookmark(
+          chapter,
+          subjectName,
+          curriculumKey: curriculumKey,
+        );
       },
-      icon: Icon(chapter.isSaved ? Icons.bookmark : LucideIcons.bookmark,
-        size: AppDimensions.iconSM, color: chapter.isSaved ? AppColors.primary : colorScheme.outline),
+      icon: Icon(
+        chapter.isSaved ? Icons.bookmark : LucideIcons.bookmark,
+        size: AppDimensions.iconSM,
+        color: chapter.isSaved ? AppColors.primary : colorScheme.outline,
+      ),
+      tooltip: chapter.isSaved ? 'Remove bookmark' : 'Bookmark chapter',
     );
   }
 }

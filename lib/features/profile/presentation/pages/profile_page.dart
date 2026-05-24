@@ -40,15 +40,19 @@ class ProfilePage extends StatelessWidget {
 
         return Scaffold(
           body: RefreshIndicator(
-            onRefresh: () =>
-                context.read<ProfileCubit>().loadProfile(),
+            onRefresh: () => context.read<ProfileCubit>().loadProfile(),
             child: LayoutBuilder(
               builder: (context, constraints) {
-                final isDesktop = constraints.maxWidth >= AppDimensions.breakpointDesktop;
+                final isDesktop =
+                    constraints.maxWidth >= AppDimensions.breakpointDesktop;
                 final hp = isDesktop
-                    ? ((constraints.maxWidth - AppDimensions.breakpointMaxContent) / 2).clamp(
-                        AppDimensions.paddingSectionLG, double.infinity,
-                      )
+                    ? ((constraints.maxWidth -
+                                  AppDimensions.breakpointMaxContent) /
+                              2)
+                          .clamp(
+                            AppDimensions.paddingSectionLG,
+                            double.infinity,
+                          )
                     : AppDimensions.paddingXL;
                 return CustomScrollView(
                   slivers: [
@@ -90,7 +94,9 @@ class ProfilePage extends StatelessWidget {
                               },
                             ),
                           ),
-                          const SizedBox(height: AppDimensions.bottomNavPadding),
+                          const SizedBox(
+                            height: AppDimensions.bottomNavPadding,
+                          ),
                         ]),
                       ),
                     ),
@@ -130,14 +136,9 @@ class ProfilePage extends StatelessWidget {
               height: AppDimensions.avatarMD - 4,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(
-                  color: colorScheme.surface,
-                  width: 2.0,
-                ),
+                border: Border.all(color: colorScheme.surface, width: 2.0),
               ),
-              child: AppAvatar(
-                imageUrl: avatarUrl,
-              ),
+              child: AppAvatar(imageUrl: avatarUrl),
             ),
           ),
           const SizedBox(width: AppDimensions.paddingMD),
@@ -168,7 +169,9 @@ class ProfilePage extends StatelessWidget {
       ),
       actions: [
         Container(
-          margin: const EdgeInsetsDirectional.only(end: AppDimensions.paddingSM),
+          margin: const EdgeInsetsDirectional.only(
+            end: AppDimensions.paddingSM,
+          ),
           decoration: BoxDecoration(
             color: colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
@@ -180,6 +183,7 @@ class ProfilePage extends StatelessWidget {
               stats: state.stats,
             ),
             icon: Icon(LucideIcons.barChart2, color: colorScheme.primary),
+            tooltip: AppStrings.viewInsights,
           ),
         ),
       ],

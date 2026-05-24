@@ -36,6 +36,7 @@ class FormulaCardSelector extends StatelessWidget {
                   : LucideIcons.chevronLeft,
             ),
             onPressed: index > 0 ? onPrevious : null,
+            tooltip: AppStrings.previousFormula,
           ),
           Expanded(
             child: Column(
@@ -69,6 +70,7 @@ class FormulaCardSelector extends StatelessWidget {
                   : LucideIcons.chevronRight,
             ),
             onPressed: index < total - 1 ? onNext : null,
+            tooltip: AppStrings.nextFormula,
           ),
         ],
       ),

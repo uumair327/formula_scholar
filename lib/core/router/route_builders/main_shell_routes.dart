@@ -93,10 +93,28 @@ StatefulShellBranch _chaptersBranch() {
                 path: AppRoutes.formulaDetailPath,
                 name: AppRoutes.formulaDetailName,
                 pageBuilder: (context, state) {
+                  final subjectId = state.pathParameters['subjectId'] ?? '';
+                  final chapterId = state.pathParameters['chapterId'] ?? '';
+                  final chapterName =
+                      state.uri.queryParameters['name'] ?? 'Formulas';
+                  final curriculumKey = context
+                      .read<CurriculumCubit>()
+                      .state
+                      .curriculum
+                      ?.curriculumKey;
+                  final formulasCubit = getIt<FormulasCubit>();
+                  if (subjectId.isNotEmpty && chapterId.isNotEmpty) {
+                    formulasCubit.loadFormulas(
+                      subjectId: subjectId,
+                      chapterId: chapterId,
+                      chapterName: chapterName,
+                      curriculumKey: curriculumKey,
+                    );
+                  }
                   return AppPageTransitions.fadeTransition(
                     state: state,
                     child: BlocProvider(
-                      create: (_) => getIt<FormulasCubit>(),
+                      create: (_) => formulasCubit,
                       child: const FormulasPage(),
                     ),
                   );
@@ -169,4 +187,3 @@ StatefulShellBranch _profileBranch() {
     ],
   );
 }
-

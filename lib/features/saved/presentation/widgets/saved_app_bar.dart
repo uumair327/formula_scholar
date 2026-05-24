@@ -75,7 +75,9 @@ class SavedAppBar extends StatelessWidget {
           ),
           actions: [
             Container(
-              margin: const EdgeInsetsDirectional.only(end: AppDimensions.paddingSM),
+              margin: const EdgeInsetsDirectional.only(
+                end: AppDimensions.paddingSM,
+              ),
               decoration: BoxDecoration(
                 color: colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
@@ -90,6 +92,7 @@ class SavedAppBar extends StatelessWidget {
                   }
                 },
                 icon: Icon(LucideIcons.refreshCw, color: colorScheme.primary),
+                tooltip: AppStrings.refreshBookmarks,
               ),
             ),
           ],

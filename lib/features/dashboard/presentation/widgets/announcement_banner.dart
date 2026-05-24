@@ -125,6 +125,7 @@ class AnnouncementBanner extends StatelessWidget {
                       onPressed: () {
                         onDismiss(announcement.id);
                       },
+                      tooltip: AppStrings.dismissAnnouncement,
                     ),
                   ),
                 ],

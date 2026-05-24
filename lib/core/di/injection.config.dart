@@ -851,6 +851,7 @@ extension GetItInjectableX on _i174.GetIt {
         addNote: gh<_i385.AddNoteUseCase>(),
         updateNote: gh<_i385.UpdateNoteUseCase>(),
         deleteNote: gh<_i385.DeleteNoteUseCase>(),
+        curriculumCubit: gh<_i427.CurriculumCubit>(),
       ),
     );
     gh.factory<_i883.FormulasCubit>(
@@ -873,6 +874,7 @@ extension GetItInjectableX on _i174.GetIt {
         updatePlan: gh<_i62.UpdatePlanUseCase>(),
         deletePlan: gh<_i62.DeletePlanUseCase>(),
         updateSession: gh<_i62.UpdateSessionUseCase>(),
+        authCubit: gh<_i117.AuthCubit>(),
       ),
     );
     gh.lazySingleton<_i947.ThemeCubit>(

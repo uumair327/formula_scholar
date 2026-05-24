@@ -63,7 +63,9 @@ class SignupFormContent extends StatelessWidget {
             const SizedBox(height: AppDimensions.paddingXS),
             Text(
               AppStrings.signupSubtitle,
-              style: AppTextStyles.bodyMedium.copyWith(color: colorScheme.onSurfaceVariant),
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
             ),
             const SizedBox(height: AppDimensions.paddingXXL),
             Row(
@@ -75,7 +77,8 @@ class SignupFormContent extends StatelessWidget {
                     prefixIcon: LucideIcons.user,
                     controller: nameController,
                     validator: (value) {
-                      if (value == null || value.trim().isEmpty) return AppStrings.validationRequired;
+                      if (value == null || value.trim().isEmpty)
+                        return AppStrings.validationRequired;
                       return null;
                     },
                   ),
@@ -89,8 +92,11 @@ class SignupFormContent extends StatelessWidget {
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
-                      if (value == null || value.trim().isEmpty) return AppStrings.validationRequired;
-                      if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(value.trim())) {
+                      if (value == null || value.trim().isEmpty)
+                        return AppStrings.validationRequired;
+                      if (!RegExp(
+                        r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
+                      ).hasMatch(value.trim())) {
                         return AppStrings.validationInvalidEmail;
                       }
                       return null;
@@ -107,8 +113,10 @@ class SignupFormContent extends StatelessWidget {
               prefixIcon: LucideIcons.lock,
               obscureText: obscurePassword,
               validator: (value) {
-                if (value == null || value.isEmpty) return AppStrings.validationRequired;
-                if (value.length < 6) return AppStrings.validationPasswordMinLength;
+                if (value == null || value.isEmpty)
+                  return AppStrings.validationRequired;
+                if (value.length < 6)
+                  return AppStrings.validationPasswordMinLength;
                 return null;
               },
               suffixIcon: IconButton(
@@ -118,6 +126,9 @@ class SignupFormContent extends StatelessWidget {
                   color: colorScheme.onSurfaceVariant,
                   size: AppDimensions.iconDefault,
                 ),
+                tooltip: obscurePassword
+                    ? AppStrings.showPassword
+                    : AppStrings.hidePassword,
               ),
             ),
             const SizedBox(height: AppDimensions.paddingLG),
@@ -128,8 +139,10 @@ class SignupFormContent extends StatelessWidget {
               prefixIcon: LucideIcons.checkSquare,
               obscureText: obscureConfirm,
               validator: (value) {
-                if (value == null || value.isEmpty) return AppStrings.validationRequired;
-                if (value != passwordController.text) return AppStrings.validationPasswordMismatch;
+                if (value == null || value.isEmpty)
+                  return AppStrings.validationRequired;
+                if (value != passwordController.text)
+                  return AppStrings.validationPasswordMismatch;
                 return null;
               },
               suffixIcon: IconButton(
@@ -139,10 +152,16 @@ class SignupFormContent extends StatelessWidget {
                   color: colorScheme.onSurfaceVariant,
                   size: AppDimensions.iconDefault,
                 ),
+                tooltip: obscureConfirm
+                    ? AppStrings.showPassword
+                    : AppStrings.hidePassword,
               ),
             ),
             const SizedBox(height: AppDimensions.paddingLG),
-            SignupTermsRow(agreedToTerms: agreedToTerms, onTermsChanged: onTermsChanged),
+            SignupTermsRow(
+              agreedToTerms: agreedToTerms,
+              onTermsChanged: onTermsChanged,
+            ),
             const SizedBox(height: AppDimensions.paddingXL),
             BlocBuilder<AuthCubit, AuthState>(
               buildWhen: (p, n) => p.status != n.status,

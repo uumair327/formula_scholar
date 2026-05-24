@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/core.dart';
+import '../app_text.dart';
 
 class CategoryChip extends StatelessWidget {
   const CategoryChip({
@@ -25,7 +26,9 @@ class CategoryChip extends StatelessWidget {
         vertical: AppDimensions.paddingXS,
       ),
       decoration: BoxDecoration(
-        color: backgroundColor ?? colorScheme.primaryContainer.withValues(alpha: 0.2),
+        color:
+            backgroundColor ??
+            colorScheme.primaryContainer.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
       ),
       child: Row(
@@ -39,11 +42,13 @@ class CategoryChip extends StatelessWidget {
             ),
             const SizedBox(width: AppDimensions.paddingXXS),
           ],
-          Text(
+          AppText(
             label.toUpperCase(),
             style: AppTextStyles.overline.copyWith(
               color: textColor ?? colorScheme.primary,
             ),
+            maxLines: 1,
+            softWrap: false,
           ),
         ],
       ),
