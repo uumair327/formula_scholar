@@ -76,8 +76,8 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
               });
             },
             tooltip: _isAutoRotating
-                ? 'Pause auto-rotation'
-                : 'Start auto-rotation',
+                ? AppStrings.autoRotatePause
+                : AppStrings.autoRotateStart,
           ),
         ],
       ),

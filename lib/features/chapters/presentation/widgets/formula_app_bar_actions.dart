@@ -44,22 +44,20 @@ class FormulaAppBarActions extends StatelessWidget {
                 );
               },
               icon: Icon(
-                state.isChapterSaved
-                    ? Icons.bookmark
-                    : LucideIcons.bookmark,
+                state.isChapterSaved ? Icons.bookmark : LucideIcons.bookmark,
                 size: AppDimensions.iconMD,
                 color: state.isChapterSaved
                     ? AppColors.primary
                     : colorScheme.outline,
               ),
               tooltip: state.isChapterSaved
-                  ? 'Remove chapter bookmark'
-                  : 'Bookmark chapter',
+                  ? AppStrings.removeSavedChapter
+                  : AppStrings.bookmarkChapter,
             );
           },
         ),
         Tooltip(
-          message: 'Generate cheat sheet',
+          message: AppStrings.generateCheatSheet,
           child: IconButton(
             onPressed: () {
               context.pushNamed(
@@ -71,28 +69,28 @@ class FormulaAppBarActions extends StatelessWidget {
           ),
         ),
         Tooltip(
-          message: 'Study as flashcards',
+          message: AppStrings.studyAsFlashcards,
           child: IconButton(
             onPressed: () {
               final allFormulas = context.read<FormulasCubit>().state.formulas;
               if (allFormulas.isEmpty) return;
-              final userId =
-                  context.read<AuthCubit>().state.user?.uid ?? '';
-              final cards = allFormulas.map((f) => Flashcard(
-                id: f.id,
-                title: f.title,
-                latex: f.latex,
-                description: f.description,
-                subjectId: '',
-                subjectName: '',
-                chapterId: '',
-                chapterName: '',
-              )).toList();
+              final userId = context.read<AuthCubit>().state.user?.uid ?? '';
+              final cards = allFormulas
+                  .map(
+                    (f) => Flashcard(
+                      id: f.id,
+                      title: f.title,
+                      latex: f.latex,
+                      description: f.description,
+                      subjectId: '',
+                      subjectName: '',
+                      chapterId: '',
+                      chapterName: '',
+                    ),
+                  )
+                  .toList();
               final cubit = getIt<FlashcardsCubit>();
-              cubit.startSession(
-                cards: cards,
-                userId: userId,
-              );
+              cubit.startSession(cards: cards, userId: userId);
               context.pushNamed(AppRoutes.flashcardsName, extra: cubit);
             },
             icon: Icon(LucideIcons.wand2, color: colorScheme.outline),

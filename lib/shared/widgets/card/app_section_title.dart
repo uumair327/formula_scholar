@@ -53,15 +53,18 @@ class AppSectionTitle extends StatelessWidget {
             ),
           ),
           if (actionLabel != null)
-            GestureDetector(
-              onTap: onAction,
-              child: AppText(
-                actionLabel!,
-                style: AppTextStyles.labelLarge.copyWith(
-                  color: colorScheme.primary,
+            Tooltip(
+              message: actionLabel!,
+              child: GestureDetector(
+                onTap: onAction,
+                child: AppText(
+                  actionLabel!,
+                  style: AppTextStyles.labelLarge.copyWith(
+                    color: colorScheme.primary,
+                  ),
+                  maxLines: 1,
+                  softWrap: false,
                 ),
-                maxLines: 1,
-                softWrap: false,
               ),
             ),
         ],

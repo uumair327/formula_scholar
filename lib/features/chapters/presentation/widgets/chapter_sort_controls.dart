@@ -97,14 +97,16 @@ class ChapterSortControls extends StatelessWidget {
         ),
         const SizedBox(height: AppDimensions.paddingSM),
         Tooltip(
-          message: 'Toggle sort direction',
+          message: AppStrings.toggleSortDirection,
           child: IconButton.filled(
             onPressed: () {
               final newDesc = !state.sortDesc;
               applySort(state.sortBy, newDesc);
             },
             icon: Icon(directionIcon, size: 20),
-            tooltip: state.sortDesc ? 'Descending' : 'Ascending',
+            tooltip: state.sortDesc
+                ? AppStrings.sortDescending
+                : AppStrings.sortAscending,
           ),
         ),
       ],

@@ -70,11 +70,14 @@ class SubjectChaptersAppBar extends StatelessWidget {
             final photoUrl =
                 authState.user?.photoUrl ??
                 AppAssets.dashboardStudentProfileUrl;
-            return GestureDetector(
-              onTap: () => context.push(AppRoutes.profilePath),
-              child: AppAvatar(
-                imageUrl: photoUrl,
-                placeholderColor: colorScheme.surfaceContainerHighest,
+            return Tooltip(
+              message: AppStrings.viewProfile,
+              child: GestureDetector(
+                onTap: () => context.push(AppRoutes.profilePath),
+                child: AppAvatar(
+                  imageUrl: photoUrl,
+                  placeholderColor: colorScheme.surfaceContainerHighest,
+                ),
               ),
             );
           },

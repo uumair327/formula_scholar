@@ -79,13 +79,13 @@ class SavedSortControls extends StatelessWidget {
         ),
         const SizedBox(height: AppDimensions.paddingSM),
         Tooltip(
-          message: 'Toggle sort direction',
+          message: AppStrings.toggleSortDirection,
           child: IconButton.filled(
             onPressed: () => context.read<SavedCubit>().toggleSortDirection(),
             icon: Icon(directionIcon, size: 20),
             tooltip: state.sortDirection == SortDirection.asc
-                ? 'Ascending'
-                : 'Descending',
+                ? AppStrings.sortAscending
+                : AppStrings.sortDescending,
           ),
         ),
       ],

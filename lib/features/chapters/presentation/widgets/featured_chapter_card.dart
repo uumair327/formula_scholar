@@ -59,8 +59,8 @@ class FeaturedChapterCard extends StatelessWidget {
                             : colorScheme.outline,
                       ),
                       tooltip: chapter.isSaved
-                          ? 'Remove bookmark'
-                          : 'Bookmark chapter',
+                          ? AppStrings.removeBookmark
+                          : AppStrings.bookmarkChapter,
                     ),
                   ),
                   AppInfoChip(

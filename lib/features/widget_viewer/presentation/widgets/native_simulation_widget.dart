@@ -71,7 +71,8 @@ class _NativeSimulationWidgetState extends State<NativeSimulationWidget>
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textDirection = Directionality.of(context);
-    final simulationId = widget.config['simulationId'] as String? ?? 'projectile';
+    final simulationId =
+        widget.config['simulationId'] as String? ?? 'projectile';
 
     return Stack(
       children: [
@@ -93,8 +94,12 @@ class _NativeSimulationWidgetState extends State<NativeSimulationWidget>
         // Controls bar: Play/Pause and Reset
         Positioned(
           top: AppDimensions.paddingMD,
-          right: textDirection == TextDirection.ltr ? AppDimensions.paddingMD : null,
-          left: textDirection == TextDirection.rtl ? AppDimensions.paddingMD : null,
+          right: textDirection == TextDirection.ltr
+              ? AppDimensions.paddingMD
+              : null,
+          left: textDirection == TextDirection.rtl
+              ? AppDimensions.paddingMD
+              : null,
           child: Row(
             children: [
               IconButton(
@@ -103,13 +108,12 @@ class _NativeSimulationWidgetState extends State<NativeSimulationWidget>
                   color: colorScheme.primary,
                 ),
                 onPressed: _togglePlay,
+                tooltip: _isPlaying ? AppStrings.pause : AppStrings.play,
               ),
               IconButton(
-                icon: Icon(
-                  Icons.refresh,
-                  color: colorScheme.outline,
-                ),
+                icon: Icon(Icons.refresh, color: colorScheme.outline),
                 onPressed: _reset,
+                tooltip: AppStrings.reset,
               ),
             ],
           ),
@@ -149,8 +153,10 @@ class _SimulationPainter extends CustomPainter {
 
   // 1. PROJECTILE MOTION SIMULATION
   void _paintProjectile(Canvas canvas, Size size) {
-    final double v0 = parameters['v0'] ?? parameters['v'] ?? 35.0; // Initial velocity
-    final double degrees = parameters['theta'] ?? parameters['angle'] ?? 45.0; // Angle
+    final double v0 =
+        parameters['v0'] ?? parameters['v'] ?? 35.0; // Initial velocity
+    final double degrees =
+        parameters['theta'] ?? parameters['angle'] ?? 45.0; // Angle
     const double g = 9.8; // Gravity acceleration
 
     final double theta = degrees * math.pi / 180.0;
@@ -161,7 +167,7 @@ class _SimulationPainter extends CustomPainter {
 
     // Total flight time
     final double flightTime = (2 * vy0) / g;
-    
+
     // Position solver at current time (clamped to flightTime)
     final double t = time.clamp(0.0, flightTime);
     final double x = vx0 * t;
@@ -183,7 +189,11 @@ class _SimulationPainter extends CustomPainter {
       ..strokeWidth = 1.0;
 
     // Draw coordinate ground & vertical grids
-    canvas.drawLine(Offset(originX, originY), Offset(size.width - 20, originY), gridPaint);
+    canvas.drawLine(
+      Offset(originX, originY),
+      Offset(size.width - 20, originY),
+      gridPaint,
+    );
     for (double gx = 0; gx <= 150; gx += 30) {
       final p = toScreen(gx, 0);
       canvas.drawLine(Offset(p.dx, originY), Offset(p.dx, 20), gridPaint);
@@ -227,13 +237,9 @@ class _SimulationPainter extends CustomPainter {
     final vecPaint = Paint()
       ..color = Colors.greenAccent
       ..strokeWidth = 2.0;
-    
+
     // Draw Vx vector
-    canvas.drawLine(
-      currentPos,
-      currentPos + Offset(vx0 * 0.8, 0),
-      vecPaint,
-    );
+    canvas.drawLine(currentPos, currentPos + Offset(vx0 * 0.8, 0), vecPaint);
     // Draw Vy vector
     canvas.drawLine(
       currentPos,
@@ -244,10 +250,15 @@ class _SimulationPainter extends CustomPainter {
     // Draw readout text values
     final textPainter = TextPainter(textDirection: textDirection);
     textPainter.text = TextSpan(
-      text: 'Range = ${(vx0 * flightTime).toStringAsFixed(1)} m\n'
+      text:
+          'Range = ${(vx0 * flightTime).toStringAsFixed(1)} m\n'
           'Height = ${y.toStringAsFixed(1)} m\n'
           'Time = ${t.toStringAsFixed(2)} s',
-      style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 10, fontFamily: 'monospace'),
+      style: TextStyle(
+        color: colorScheme.onSurfaceVariant,
+        fontSize: 10,
+        fontFamily: 'monospace',
+      ),
     );
     textPainter.layout();
     textPainter.paint(canvas, const Offset(originX, 20));
@@ -264,7 +275,8 @@ class _SimulationPainter extends CustomPainter {
 
     final double centerX = size.width / 2;
     const double centerY = 40.0;
-    final double pixelLength = (size.height - 100.0) * (L / 2.0).clamp(0.5, 1.2);
+    final double pixelLength =
+        (size.height - 100.0) * (L / 2.0).clamp(0.5, 1.2);
 
     final Offset pivot = Offset(centerX, centerY);
     final Offset bobPos = Offset(
@@ -292,7 +304,7 @@ class _SimulationPainter extends CustomPainter {
     final vectorPaint = Paint()
       ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke;
-    
+
     // Draw Gravity arrow (down)
     canvas.drawLine(
       bobPos,
@@ -326,9 +338,14 @@ class _SimulationPainter extends CustomPainter {
     // Readout
     final textPainter = TextPainter(textDirection: textDirection);
     textPainter.text = TextSpan(
-      text: 'Angle θ = ${(theta * 180 / math.pi).toStringAsFixed(1)}°\n'
+      text:
+          'Angle θ = ${(theta * 180 / math.pi).toStringAsFixed(1)}°\n'
           'Period T = ${(2 * math.pi / omega).toStringAsFixed(2)} s',
-      style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 10, fontFamily: 'monospace'),
+      style: TextStyle(
+        color: colorScheme.onSurfaceVariant,
+        fontSize: 10,
+        fontFamily: 'monospace',
+      ),
     );
     textPainter.layout();
     textPainter.paint(canvas, const Offset(20, 20));
@@ -338,7 +355,8 @@ class _SimulationPainter extends CustomPainter {
   void _paintWave(Canvas canvas, Size size) {
     final double amp = parameters['A'] ?? parameters['amplitude'] ?? 25.0;
     final double freq = parameters['f'] ?? parameters['frequency'] ?? 1.5;
-    final double wavelength = parameters['lambda'] ?? parameters['wavelength'] ?? 120.0;
+    final double wavelength =
+        parameters['lambda'] ?? parameters['wavelength'] ?? 120.0;
 
     final double centerY = size.height / 2 + 10;
     final double k = 2 * math.pi / wavelength;
@@ -378,10 +396,15 @@ class _SimulationPainter extends CustomPainter {
     // Readout
     final textPainter = TextPainter(textDirection: textDirection);
     textPainter.text = TextSpan(
-      text: 'Velocity v = ${(freq * wavelength).toStringAsFixed(1)} m/s\n'
+      text:
+          'Velocity v = ${(freq * wavelength).toStringAsFixed(1)} m/s\n'
           'Freq f = ${freq.toStringAsFixed(1)} Hz\n'
           'Wavelength λ = ${wavelength.toStringAsFixed(0)} m',
-      style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 10, fontFamily: 'monospace'),
+      style: TextStyle(
+        color: colorScheme.onSurfaceVariant,
+        fontSize: 10,
+        fontFamily: 'monospace',
+      ),
     );
     textPainter.layout();
     textPainter.paint(canvas, const Offset(20, 20));

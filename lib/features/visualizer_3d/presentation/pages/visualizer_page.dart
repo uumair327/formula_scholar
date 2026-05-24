@@ -100,8 +100,8 @@ class _VisualizerPageState extends State<VisualizerPage>
                 onPressed: () =>
                     context.read<VisualizerCubit>().toggleAutoRotate(),
                 tooltip: state.isAutoRotating
-                    ? 'Pause auto-rotation'
-                    : 'Start auto-rotation',
+                    ? AppStrings.autoRotatePause
+                    : AppStrings.autoRotateStart,
               ),
             ],
           ),

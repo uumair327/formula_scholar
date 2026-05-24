@@ -37,27 +37,30 @@ class SectionHeader extends StatelessWidget {
               ),
             ),
             if (actionLabel != null)
-              GestureDetector(
-                onTap: onAction,
-                behavior: HitTestBehavior.opaque,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      actionLabel!,
-                      style: AppTextStyles.labelLarge.copyWith(
+              Tooltip(
+                message: actionLabel!,
+                child: GestureDetector(
+                  onTap: onAction,
+                  behavior: HitTestBehavior.opaque,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        actionLabel!,
+                        style: AppTextStyles.labelLarge.copyWith(
+                          color: colorScheme.primary,
+                        ),
+                      ),
+                      const SizedBox(width: AppDimensions.paddingXXS),
+                      Icon(
+                        Directionality.of(context) == TextDirection.rtl
+                            ? Icons.arrow_back
+                            : Icons.arrow_forward,
+                        size: AppDimensions.iconSM,
                         color: colorScheme.primary,
                       ),
-                    ),
-                    const SizedBox(width: AppDimensions.paddingXXS),
-                    Icon(
-                      Directionality.of(context) == TextDirection.rtl
-                          ? Icons.arrow_back
-                          : Icons.arrow_forward,
-                      size: AppDimensions.iconSM,
-                      color: colorScheme.primary,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
           ],

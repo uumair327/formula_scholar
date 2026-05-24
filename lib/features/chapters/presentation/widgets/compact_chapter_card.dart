@@ -95,12 +95,15 @@ class CompactChapterCard extends StatelessWidget {
                   color: colorScheme.outline,
                 ),
               ),
-              GestureDetector(
-                onTap: () => _navigateToFormulas(context, ctaText),
-                child: Text(
-                  ctaText.toUpperCase(),
-                  style: AppTextStyles.overline.copyWith(
-                    color: colorScheme.primary,
+              Tooltip(
+                message: ctaText,
+                child: GestureDetector(
+                  onTap: () => _navigateToFormulas(context, ctaText),
+                  child: Text(
+                    ctaText.toUpperCase(),
+                    style: AppTextStyles.overline.copyWith(
+                      color: colorScheme.primary,
+                    ),
                   ),
                 ),
               ),
@@ -170,7 +173,9 @@ class _BookmarkButton extends StatelessWidget {
         size: AppDimensions.iconSM,
         color: chapter.isSaved ? AppColors.primary : colorScheme.outline,
       ),
-      tooltip: chapter.isSaved ? 'Remove bookmark' : 'Bookmark chapter',
+      tooltip: chapter.isSaved
+          ? AppStrings.removeBookmark
+          : AppStrings.bookmarkChapter,
     );
   }
 }

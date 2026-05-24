@@ -19,30 +19,35 @@ class BookmarkButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Material(
-      color: isBookmarked
-          ? AppColors.primaryFixed
-          : colorScheme.surfaceContainerHigh,
-      borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-      child: InkWell(
-        onTap: () {
-          HapticsHelper.lightImpact();
-          onToggle();
-        },
+    return Tooltip(
+      message: isBookmarked
+          ? AppStrings.removeBookmark
+          : AppStrings.bookmarkChapter,
+      child: Material(
+        color: isBookmarked
+            ? AppColors.primaryFixed
+            : colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-        child: AnimatedContainer(
-          duration: AppDurations.animationFast,
-          curve: AppDurations.curveDefault,
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.paddingLG,
-            vertical: AppDimensions.paddingMD,
-          ),
-          child: Icon(
-            isBookmarked ? Icons.bookmark : LucideIcons.bookmark,
-            size: AppDimensions.iconMD,
-            color: isBookmarked
-                ? AppColors.primary
-                : colorScheme.onSurfaceVariant,
+        child: InkWell(
+          onTap: () {
+            HapticsHelper.lightImpact();
+            onToggle();
+          },
+          borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+          child: AnimatedContainer(
+            duration: AppDurations.animationFast,
+            curve: AppDurations.curveDefault,
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppDimensions.paddingLG,
+              vertical: AppDimensions.paddingMD,
+            ),
+            child: Icon(
+              isBookmarked ? Icons.bookmark : LucideIcons.bookmark,
+              size: AppDimensions.iconMD,
+              color: isBookmarked
+                  ? AppColors.primary
+                  : colorScheme.onSurfaceVariant,
+            ),
           ),
         ),
       ),

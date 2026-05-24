@@ -97,37 +97,40 @@ class SettingsListWidget extends StatelessWidget {
     final icon = _resolveIcon(item.iconName);
     return Material(
       color: AppColors.transparent,
-      child: InkWell(
-        onTap: () {
-          AppLogger.info(
-            'Settings nav tapped: ${item.id}',
-            tag: AppLogTags.settingsListWidget,
-          );
-          onItemTapped(item.id);
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.paddingXL,
-            vertical: AppDimensions.paddingLG,
-          ),
-          child: Row(
-            children: [
-              AppIconCircle(
-                icon: icon,
-                backgroundColor: colorScheme.surfaceContainerHigh,
-                iconColor: colorScheme.outline,
-              ),
-              const SizedBox(width: AppDimensions.paddingLG),
-              Expanded(
-                child: Text(item.label, style: AppTextStyles.labelLarge),
-              ),
-              Icon(
-                Directionality.of(context) == TextDirection.rtl
-                    ? Icons.chevron_left
-                    : Icons.chevron_right,
-                color: colorScheme.outlineVariant,
-              ),
-            ],
+      child: Tooltip(
+        message: item.label,
+        child: InkWell(
+          onTap: () {
+            AppLogger.info(
+              'Settings nav tapped: ${item.id}',
+              tag: AppLogTags.settingsListWidget,
+            );
+            onItemTapped(item.id);
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppDimensions.paddingXL,
+              vertical: AppDimensions.paddingLG,
+            ),
+            child: Row(
+              children: [
+                AppIconCircle(
+                  icon: icon,
+                  backgroundColor: colorScheme.surfaceContainerHigh,
+                  iconColor: colorScheme.outline,
+                ),
+                const SizedBox(width: AppDimensions.paddingLG),
+                Expanded(
+                  child: Text(item.label, style: AppTextStyles.labelLarge),
+                ),
+                Icon(
+                  Directionality.of(context) == TextDirection.rtl
+                      ? Icons.chevron_left
+                      : Icons.chevron_right,
+                  color: colorScheme.outlineVariant,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -139,48 +142,51 @@ class SettingsListWidget extends StatelessWidget {
     final icon = _resolveIcon(item.iconName);
     return Material(
       color: AppColors.transparent,
-      child: InkWell(
-        onTap: onDarkModeToggle,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.paddingXL,
-            vertical: AppDimensions.paddingLG,
-          ),
-          child: Row(
-            children: [
-              AppIconCircle(
-                icon: icon,
-                backgroundColor: colorScheme.surfaceContainerHigh,
-                iconColor: colorScheme.outline,
-              ),
-              const SizedBox(width: AppDimensions.paddingLG),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(item.label, style: AppTextStyles.labelLarge),
-                    if (item.subtitle != null)
-                      Text(
-                        item.subtitle!,
-                        style: AppTextStyles.bodySmall.copyWith(
-                          color: colorScheme.outline,
-                          fontWeight: FontWeight.w500,
+      child: Tooltip(
+        message: item.label,
+        child: InkWell(
+          onTap: onDarkModeToggle,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppDimensions.paddingXL,
+              vertical: AppDimensions.paddingLG,
+            ),
+            child: Row(
+              children: [
+                AppIconCircle(
+                  icon: icon,
+                  backgroundColor: colorScheme.surfaceContainerHigh,
+                  iconColor: colorScheme.outline,
+                ),
+                const SizedBox(width: AppDimensions.paddingLG),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(item.label, style: AppTextStyles.labelLarge),
+                      if (item.subtitle != null)
+                        Text(
+                          item.subtitle!,
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: colorScheme.outline,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              Semantics(
-                label: AppStrings.toggleDarkMode,
-                toggled: isDarkMode,
-                child: Switch.adaptive(
-                  value: isDarkMode,
-                  onChanged: (_) => onDarkModeToggle(),
-                  activeThumbColor: AppColors.primary,
-                  activeTrackColor: AppColors.primaryContainer,
+                Semantics(
+                  label: AppStrings.toggleDarkMode,
+                  toggled: isDarkMode,
+                  child: Switch.adaptive(
+                    value: isDarkMode,
+                    onChanged: (_) => onDarkModeToggle(),
+                    activeThumbColor: AppColors.primary,
+                    activeTrackColor: AppColors.primaryContainer,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -191,39 +197,42 @@ class SettingsListWidget extends StatelessWidget {
     final icon = _resolveIcon(item.iconName);
     return Material(
       color: AppColors.transparent,
-      child: InkWell(
-        onTap: () {
-          AppLogger.warning(
-            'Logout tapped',
-            tag: AppLogTags.settingsListWidget,
-          );
-          onItemTapped(item.id);
-        },
-        splashColor: AppColors.errorContainer,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.paddingXL,
-            vertical: AppDimensions.paddingLG,
-          ),
-          child: Row(
-            children: [
-              AppIconCircle(
-                icon: icon,
-                backgroundColor: AppColors.errorContainer.withValues(
-                  alpha: AppDimensions.opacityLight,
+      child: Tooltip(
+        message: item.label,
+        child: InkWell(
+          onTap: () {
+            AppLogger.warning(
+              'Logout tapped',
+              tag: AppLogTags.settingsListWidget,
+            );
+            onItemTapped(item.id);
+          },
+          splashColor: AppColors.errorContainer,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppDimensions.paddingXL,
+              vertical: AppDimensions.paddingLG,
+            ),
+            child: Row(
+              children: [
+                AppIconCircle(
+                  icon: icon,
+                  backgroundColor: AppColors.errorContainer.withValues(
+                    alpha: AppDimensions.opacityLight,
+                  ),
+                  iconColor: AppColors.error,
                 ),
-                iconColor: AppColors.error,
-              ),
-              const SizedBox(width: AppDimensions.paddingLG),
-              Expanded(
-                child: Text(
-                  item.label,
-                  style: AppTextStyles.labelLarge.copyWith(
-                    color: AppColors.error,
+                const SizedBox(width: AppDimensions.paddingLG),
+                Expanded(
+                  child: Text(
+                    item.label,
+                    style: AppTextStyles.labelLarge.copyWith(
+                      color: AppColors.error,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

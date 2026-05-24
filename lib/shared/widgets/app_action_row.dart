@@ -32,27 +32,30 @@ class AppActionRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            label,
-            style: AppTextStyles.labelLarge.copyWith(
+    return Tooltip(
+      message: label,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              label,
+              style: AppTextStyles.labelLarge.copyWith(
+                color: color ?? colorScheme.primary,
+              ),
+            ),
+            const SizedBox(width: AppDimensions.paddingXS),
+            Icon(
+              Directionality.of(context) == TextDirection.rtl
+                  ? LucideIcons.chevronLeft
+                  : LucideIcons.chevronRight,
+              size: AppDimensions.iconMD,
               color: color ?? colorScheme.primary,
             ),
-          ),
-          const SizedBox(width: AppDimensions.paddingXS),
-          Icon(
-            Directionality.of(context) == TextDirection.rtl
-                ? LucideIcons.chevronLeft
-                : LucideIcons.chevronRight,
-            size: AppDimensions.iconMD,
-            color: color ?? colorScheme.primary,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

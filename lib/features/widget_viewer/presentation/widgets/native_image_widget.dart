@@ -3,10 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/core.dart';
 
 class NativeImageWidget extends StatefulWidget {
-  const NativeImageWidget({
-    super.key,
-    required this.config,
-  });
+  const NativeImageWidget({super.key, required this.config});
 
   final Map<String, dynamic> config;
 
@@ -56,25 +53,28 @@ class _NativeImageWidgetState extends State<NativeImageWidget>
                   Positioned.fill(
                     child: url.isNotEmpty
                         ? (url.startsWith('http')
-                            ? CachedNetworkImage(
-                                imageUrl: url,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                                errorWidget: (context, url, error) => _buildPlaceholderImage(),
-                              )
-                            : Image.asset(
-                                url,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) => _buildPlaceholderImage(),
-                              ))
+                              ? CachedNetworkImage(
+                                  imageUrl: url,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      _buildPlaceholderImage(),
+                                )
+                              : Image.asset(
+                                  url,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      _buildPlaceholderImage(),
+                                ))
                         : _buildPlaceholderImage(),
                   ),
 
                   // Overlay annotations
                   ...annotations.map((ann) {
-                    if (ann is! Map<String, dynamic>) return const SizedBox.shrink();
+                    if (ann is! Map<String, dynamic>)
+                      return const SizedBox.shrink();
                     final x = (ann['x'] ?? 0.5) as double;
                     final y = (ann['y'] ?? 0.5) as double;
 
@@ -99,7 +99,9 @@ class _NativeImageWidgetState extends State<NativeImageWidget>
                                   width: 24 * scale,
                                   height: 24 * scale,
                                   decoration: BoxDecoration(
-                                    color: colorScheme.primary.withValues(alpha: 0.3),
+                                    color: colorScheme.primary.withValues(
+                                      alpha: 0.3,
+                                    ),
                                     shape: BoxShape.circle,
                                   ),
                                   child: child,
@@ -113,7 +115,10 @@ class _NativeImageWidgetState extends State<NativeImageWidget>
                             decoration: BoxDecoration(
                               color: colorScheme.primary,
                               shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white, width: 1.5),
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 1.5,
+                              ),
                               boxShadow: const [
                                 BoxShadow(
                                   color: Colors.black38,
@@ -163,7 +168,8 @@ class _NativeImageWidgetState extends State<NativeImageWidget>
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          _selectedAnnotation!['title'] as String? ?? 'Annotation',
+                          _selectedAnnotation!['title'] as String? ??
+                              'Annotation',
                           style: AppTextStyles.bodyMedium.copyWith(
                             fontWeight: FontWeight.bold,
                             color: colorScheme.onSurface,
@@ -180,12 +186,17 @@ class _NativeImageWidgetState extends State<NativeImageWidget>
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.close, color: colorScheme.outline, size: 18),
+                    icon: Icon(
+                      Icons.close,
+                      color: colorScheme.outline,
+                      size: 18,
+                    ),
                     onPressed: () {
                       setState(() {
                         _selectedAnnotation = null;
                       });
                     },
+                    tooltip: AppStrings.closeLabel,
                   ),
                 ],
               ),

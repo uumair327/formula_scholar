@@ -189,6 +189,12 @@ abstract final class AppStrings {
   static const String formulaCheatSheets = 'Formula Cheat Sheets';
   static const String cheatSheetDesc =
       'Quick-access PDFs for last-minute exam revision.';
+  static const String generateCheatSheet = 'Generate cheat sheet';
+  static const String studyAsFlashcards = 'Study as flashcards';
+  static const String toggleSortDirection = 'Toggle sort direction';
+  static const String sortAscending = 'Ascending';
+  static const String sortDescending = 'Descending';
+  static const String viewProfile = 'View profile';
   static const String continueStudying = 'Continue Studying';
   static const String lastViewedTemplate = 'Last viewed';
 
@@ -428,6 +434,12 @@ abstract final class AppStrings {
   static const String practiceNoQuestionsDesc =
       'Your current curriculum does not have practice questions available yet. Try again soon or open Chapters to keep learning.';
   static const String playAgain = 'Play Again';
+  static const String play = 'Play';
+  static const String pause = 'Pause';
+  static const String reset = 'Reset';
+  static const String closeLabel = 'Close';
+  static const String autoRotateStart = 'Start auto-rotation';
+  static const String autoRotatePause = 'Pause auto-rotation';
   static const String wrongAnswer = 'Incorrect';
   static const String tryNextTime = 'Review and try again next time';
   static String quizScoreSummary(int points) => 'You scored $points points';

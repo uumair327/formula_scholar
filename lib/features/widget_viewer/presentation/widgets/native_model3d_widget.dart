@@ -29,16 +29,15 @@ class _NativeModel3DWidgetState extends State<NativeModel3DWidget>
   @override
   void initState() {
     super.initState();
-    _autoRotateController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 15),
-    )..addListener(() {
-        if (_isAutoRotating) {
-          setState(() {
-            _angleY += 0.01;
+    _autoRotateController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 15))
+          ..addListener(() {
+            if (_isAutoRotating) {
+              setState(() {
+                _angleY += 0.01;
+              });
+            }
           });
-        }
-      });
     _autoRotateController.repeat();
   }
 
@@ -53,8 +52,11 @@ class _NativeModel3DWidgetState extends State<NativeModel3DWidget>
     final colorScheme = Theme.of(context).colorScheme;
 
     // Determine shape/visualizer type from config
-    final shapeStr = widget.config['shape'] ??
-        (widget.config['source'] is Map ? widget.config['source']['shape'] : null) ??
+    final shapeStr =
+        widget.config['shape'] ??
+        (widget.config['source'] is Map
+            ? widget.config['source']['shape']
+            : null) ??
         'sphere';
 
     final visualizerType = _parseShapeType(shapeStr.toString());
@@ -67,7 +69,10 @@ class _NativeModel3DWidgetState extends State<NativeModel3DWidget>
     return GestureDetector(
       onPanUpdate: (details) {
         setState(() {
-          _angleX = (_angleX - details.delta.dy * 0.01).clamp(-math.pi / 2, math.pi / 2);
+          _angleX = (_angleX - details.delta.dy * 0.01).clamp(
+            -math.pi / 2,
+            math.pi / 2,
+          );
           _angleY += details.delta.dx * 0.01;
           _isAutoRotating = false; // Disable auto-rotate on user drag
         });
@@ -76,55 +81,56 @@ class _NativeModel3DWidgetState extends State<NativeModel3DWidget>
         color: Colors.black.withValues(alpha: 0.3),
         child: RepaintBoundary(
           child: Stack(
-          children: [
-            // Holographic grid background
-            Positioned.fill(
-              child: CustomPaint(
-                painter: GridBackgroundPainter(colorScheme),
+            children: [
+              // Holographic grid background
+              Positioned.fill(
+                child: CustomPaint(painter: GridBackgroundPainter(colorScheme)),
               ),
-            ),
 
-            // 3D Canvas Projection Painter
-            Positioned.fill(
-              child: CustomPaint(
-                painter: ThreeDCanvasPainter(
-                  type: visualizerType,
-                  angleX: _angleX,
-                  angleY: _angleY,
-                  paramA: a,
-                  paramB: b,
-                  paramC: c,
-                  colorScheme: colorScheme,
+              // 3D Canvas Projection Painter
+              Positioned.fill(
+                child: CustomPaint(
+                  painter: ThreeDCanvasPainter(
+                    type: visualizerType,
+                    angleX: _angleX,
+                    angleY: _angleY,
+                    paramA: a,
+                    paramB: b,
+                    paramC: c,
+                    colorScheme: colorScheme,
+                  ),
                 ),
               ),
-            ),
 
-            // Holographic data overlay
-            Positioned(
-              top: AppDimensions.paddingMD,
-              left: AppDimensions.paddingMD,
-              child: _HologramStat(
-                label: 'SHAPE MODE',
-                value: visualizerType.name.toUpperCase(),
-              ),
-            ),
-            Positioned(
-              top: AppDimensions.paddingMD,
-              right: AppDimensions.paddingMD,
-              child: IconButton(
-                icon: Icon(
-                  _isAutoRotating ? Icons.pause_circle : Icons.play_circle,
-                  color: colorScheme.primary,
+              // Holographic data overlay
+              Positioned(
+                top: AppDimensions.paddingMD,
+                left: AppDimensions.paddingMD,
+                child: _HologramStat(
+                  label: 'SHAPE MODE',
+                  value: visualizerType.name.toUpperCase(),
                 ),
-                onPressed: () {
-                  setState(() {
-                    _isAutoRotating = !_isAutoRotating;
-                  });
-                },
               ),
-            ),
-          ],
-        ),
+              Positioned(
+                top: AppDimensions.paddingMD,
+                right: AppDimensions.paddingMD,
+                child: IconButton(
+                  icon: Icon(
+                    _isAutoRotating ? Icons.pause_circle : Icons.play_circle,
+                    color: colorScheme.primary,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isAutoRotating = !_isAutoRotating;
+                    });
+                  },
+                  tooltip: _isAutoRotating
+                      ? AppStrings.autoRotatePause
+                      : AppStrings.autoRotateStart,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -161,9 +167,7 @@ class _HologramStat extends StatelessWidget {
       decoration: BoxDecoration(
         color: colorScheme.surface.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
-        border: Border.all(
-          color: colorScheme.primary.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: colorScheme.primary.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
