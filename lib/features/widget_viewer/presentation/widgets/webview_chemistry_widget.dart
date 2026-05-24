@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:universal_html/html.dart' as html;
 import 'package:webview_flutter/webview_flutter.dart';
+import 'platform_view_registry.dart';
 
 class WebviewChemistryWidget extends StatefulWidget {
   const WebviewChemistryWidget({
@@ -24,7 +26,15 @@ class _WebviewChemistryWidgetState extends State<WebviewChemistryWidget> {
     super.initState();
     if (kIsWeb) {
       _viewId = 'chemistry-viewer-${DateTime.now().millisecondsSinceEpoch}';
-      // Note: HtmlElementView will be used in build method
+      
+      registerViewFactory(_viewId, (int viewId) {
+        final iframe = html.IFrameElement()
+          ..style.border = 'none'
+          ..style.width = '100%'
+          ..style.height = '100%'
+          ..srcdoc = _buildHtmlString();
+        return iframe;
+      });
     } else {
       _controller = WebViewController()
         ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -91,18 +101,28 @@ class _WebviewChemistryWidgetState extends State<WebviewChemistryWidget> {
     body, html {
       margin: 0; padding: 0; width: 100%; height: 100%;
       background-color: transparent; overflow: hidden;
-      display: flex; justify-content: center; align-items: center;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       color: #ffffff;
+      box-sizing: border-box;
     }
-    #container { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
-    canvas { max-width: 95%; max-height: 95%; }
-    .mol-container {
-      width: 100%; height: 100%;
+    #container { 
+      width: 100%; height: 100%; 
       position: relative;
+      overflow: hidden;
+    }
+    canvas { 
+      max-width: 100% !important; 
+      max-height: 100% !important; 
+      object-fit: contain;
+    }
+    .mol-container {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      width: 100%; height: 100%;
+      overflow: hidden;
     }
   </style>
-  <script src="https://unpkg.com/smiles-drawer@2.0.1/dist/smiles-drawer.min.js"></script>
+  <script src="https://unpkg.com/smiles-drawer@1.0.10/dist/smiles-drawer.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.0.4/3Dmol-min.js"></script>
 </head>
@@ -161,13 +181,19 @@ Water Molecule (Offline Fallback)
       } else {
         const canvas = document.createElement('canvas');
         canvas.id = 'canvas-2d';
+        canvas.style.position = 'absolute';
+        canvas.style.top = '50%';
+        canvas.style.left = '50%';
+        canvas.style.transform = 'translate(-50%, -50%)';
         container.appendChild(canvas);
 
         setTimeout(() => {
           try {
+            let cw = container.clientWidth || window.innerWidth;
+            let ch = container.clientHeight || window.innerHeight;
             let smilesDrawer = new SmilesDrawer.Drawer({
-              width: window.innerWidth * 0.9,
-              height: window.innerHeight * 0.9,
+              width: cw * 0.95,
+              height: ch * 0.95,
               theme: 'dark',
               overlapSensitivity: 1.0,
               bondThickness: 2.0,

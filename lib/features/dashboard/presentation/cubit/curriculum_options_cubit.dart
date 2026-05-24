@@ -34,12 +34,16 @@ class CurriculumOptionsCubit extends Cubit<CurriculumOptionsState>
   final CurriculumCubit _curriculumCubit;
   late final StreamSubscription<CurriculumState> _curriculumSubscription;
 
+  int _operationId = 0;
+
   @override
   String get logTag => AppLogTags.dashboardCurriculumOptionsCubit;
 
   Future<void> loadOptions() async {
+    final operationId = ++_operationId;
     final curriculum = _curriculumCubit.state.curriculum;
     if (curriculum == null) {
+      if (operationId != _operationId) return;
       emit(const CurriculumOptionsState(status: CurriculumOptionsStatus.loaded));
       return;
     }
@@ -47,7 +51,7 @@ class CurriculumOptionsCubit extends Cubit<CurriculumOptionsState>
     emit(state.copyWith(status: CurriculumOptionsStatus.loading, clearError: true));
 
     final countriesResult = await _getCountries(limit: 100);
-    if (isClosed) return;
+    if (isClosed || operationId != _operationId) return;
 
     final countries = switch (countriesResult) {
       Success(:final data) => data.data,
@@ -71,6 +75,7 @@ class CurriculumOptionsCubit extends Cubit<CurriculumOptionsState>
     }
 
     await _loadStatesAndDownstream(
+      operationId: operationId,
       draftCountryId: draftCountryId,
       countries: countries,
       targetStateId: curriculum.stateId,
@@ -80,6 +85,7 @@ class CurriculumOptionsCubit extends Cubit<CurriculumOptionsState>
   }
 
   Future<void> _loadStatesAndDownstream({
+    required int operationId,
     required String draftCountryId,
     required List<Country> countries,
     String? targetStateId,
@@ -87,7 +93,7 @@ class CurriculumOptionsCubit extends Cubit<CurriculumOptionsState>
     String? targetGradeId,
   }) async {
     final statesResult = await _getStates(draftCountryId, limit: 100);
-    if (isClosed) return;
+    if (isClosed || operationId != _operationId) return;
 
     final states = switch (statesResult) {
       Success(:final data) => data.data,
@@ -108,6 +114,7 @@ class CurriculumOptionsCubit extends Cubit<CurriculumOptionsState>
     }
 
     await _loadBoardsAndDownstream(
+      operationId: operationId,
       draftCountryId: draftCountryId,
       draftStateId: draftStateId,
       countries: countries,
@@ -118,6 +125,7 @@ class CurriculumOptionsCubit extends Cubit<CurriculumOptionsState>
   }
 
   Future<void> _loadBoardsAndDownstream({
+    required int operationId,
     required String draftCountryId,
     required String? draftStateId,
     required List<Country> countries,
@@ -126,7 +134,7 @@ class CurriculumOptionsCubit extends Cubit<CurriculumOptionsState>
     String? targetGradeId,
   }) async {
     final boardResult = await _getBoards(draftCountryId, stateId: draftStateId, limit: 100);
-    if (isClosed) return;
+    if (isClosed || operationId != _operationId) return;
 
     final boards = switch (boardResult) {
       Success(:final data) => data.data,
@@ -160,6 +168,7 @@ class CurriculumOptionsCubit extends Cubit<CurriculumOptionsState>
     }
 
     await _loadGradesAndDownstream(
+      operationId: operationId,
       draftCountryId: draftCountryId,
       draftStateId: draftStateId,
       draftBoardId: draftBoardId,
@@ -171,6 +180,7 @@ class CurriculumOptionsCubit extends Cubit<CurriculumOptionsState>
   }
 
   Future<void> _loadGradesAndDownstream({
+    required int operationId,
     required String draftCountryId,
     required String? draftStateId,
     required String draftBoardId,
@@ -180,7 +190,7 @@ class CurriculumOptionsCubit extends Cubit<CurriculumOptionsState>
     String? targetGradeId,
   }) async {
     final gradesResult = await _getGrades(draftBoardId, limit: 100);
-    if (isClosed) return;
+    if (isClosed || operationId != _operationId) return;
 
     final grades = switch (gradesResult) {
       Success(:final data) => data.data,
@@ -212,8 +222,10 @@ class CurriculumOptionsCubit extends Cubit<CurriculumOptionsState>
   }
 
   Future<void> selectCountry(String countryId) async {
+    final operationId = ++_operationId;
     emit(state.copyWith(status: CurriculumOptionsStatus.loading, clearError: true));
     await _loadStatesAndDownstream(
+      operationId: operationId,
       draftCountryId: countryId,
       countries: state.countries,
       targetStateId: null,
@@ -224,8 +236,10 @@ class CurriculumOptionsCubit extends Cubit<CurriculumOptionsState>
 
   Future<void> selectState(String stateId) async {
     if (state.draftCountryId == null) return;
+    final operationId = ++_operationId;
     emit(state.copyWith(status: CurriculumOptionsStatus.loading, clearError: true));
     await _loadBoardsAndDownstream(
+      operationId: operationId,
       draftCountryId: state.draftCountryId!,
       draftStateId: stateId,
       countries: state.countries,
@@ -237,8 +251,10 @@ class CurriculumOptionsCubit extends Cubit<CurriculumOptionsState>
 
   Future<void> selectBoard(String boardId) async {
     if (state.draftCountryId == null) return;
+    final operationId = ++_operationId;
     emit(state.copyWith(status: CurriculumOptionsStatus.loading, clearError: true));
     await _loadGradesAndDownstream(
+      operationId: operationId,
       draftCountryId: state.draftCountryId!,
       draftStateId: state.draftStateId,
       draftBoardId: boardId,
