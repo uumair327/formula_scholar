@@ -22,33 +22,48 @@ class AccountActionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppCard(
-      onTap: onTap ?? () => SupportContactSheet.show(
-        context,
-        title: label,
-        subtitle: 'This account action is being expanded. Contact support and we will help you right away.',
-        email: 'support@formulascholar.app',
-      ),
       boxShadow: const [AppShadows.subtle],
-      padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingXL, vertical: AppDimensions.paddingLG),
-      child: Row(
-        children: [
-          AppIconCircle(
-            icon: icon,
-            backgroundColor: color.withValues(alpha: AppDimensions.opacityFaint),
-            iconColor: color,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            HapticsHelper.lightImpact();
+            if (onTap != null) {
+              onTap!();
+            } else {
+              SupportContactSheet.show(
+                context,
+                title: label,
+                subtitle: 'This account action is being expanded. Contact support and we will help you right away.',
+                email: 'support@formulascholar.app',
+              );
+            }
+          },
+          borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingXL, vertical: AppDimensions.paddingLG),
+            child: Row(
+              children: [
+                AppIconCircle(
+                  icon: icon,
+                  backgroundColor: color.withValues(alpha: AppDimensions.opacityFaint),
+                  iconColor: color,
+                ),
+                const SizedBox(width: AppDimensions.paddingLG),
+                Expanded(
+                  child: Text(label, style: AppTextStyles.labelLarge.copyWith(color: color, fontWeight: FontWeight.w700)),
+                ),
+                Icon(
+                  Directionality.of(context) == TextDirection.rtl
+                      ? LucideIcons.chevronLeft
+                      : LucideIcons.chevronRight,
+                  size: AppDimensions.iconMD,
+                  color: color.withValues(alpha: AppDimensions.opacityMedium),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(width: AppDimensions.paddingLG),
-          Expanded(
-            child: Text(label, style: AppTextStyles.labelLarge.copyWith(color: color, fontWeight: FontWeight.w700)),
-          ),
-          Icon(
-            Directionality.of(context) == TextDirection.rtl
-                ? LucideIcons.chevronLeft
-                : LucideIcons.chevronRight,
-            size: AppDimensions.iconMD,
-            color: color.withValues(alpha: AppDimensions.opacityMedium),
-          ),
-        ],
+        ),
       ),
     );
   }

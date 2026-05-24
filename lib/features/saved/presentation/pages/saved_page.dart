@@ -44,8 +44,8 @@ class SavedPage extends StatelessWidget {
         }
 
         if (state.isEmpty) {
-          return const Scaffold(
-            appBar: PreferredSize(
+          return Scaffold(
+            appBar: const PreferredSize(
               preferredSize: Size.fromHeight(kToolbarHeight),
               child: SavedAppBar(),
             ),
@@ -59,10 +59,10 @@ class SavedPage extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    SizedBox(height: AppDimensions.paddingSection),
-                    EmptyBookmarksState(),
-                    SizedBox(height: AppDimensions.paddingSection),
-                    ProTipBanner(),
+                    EntranceWrapper.stagger(index: 0, child: SizedBox(height: AppDimensions.paddingSection)),
+                    EntranceWrapper.stagger(index: 1, child: EmptyBookmarksState()),
+                    EntranceWrapper.stagger(index: 2, child: SizedBox(height: AppDimensions.paddingSection)),
+                    EntranceWrapper.stagger(index: 3, child: ProTipBanner()),
                   ],
                 ),
               ),
@@ -104,55 +104,73 @@ class SavedPage extends StatelessWidget {
                   ),
                 if (!hasSearchQuery || state.hasFilteredResults) ...[
                   if (filteredChapters.isNotEmpty) ...[
-                    Text(
-                      AppStrings.savedChapters,
-                      style: AppTextStyles.titleLarge.copyWith(
-                        fontWeight: FontWeight.w700,
+                    EntranceWrapper.stagger(
+                      index: 0,
+                      child: Text(
+                        AppStrings.savedChapters,
+                        style: AppTextStyles.titleLarge.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                     const SizedBox(height: AppDimensions.paddingLG),
-                    ...filteredChapters.map(
-                      (chapter) => Padding(
+                    ...filteredChapters.asMap().entries.map(
+                      (entry) => Padding(
                         padding: const EdgeInsets.only(
                           bottom: AppDimensions.paddingLG,
                         ),
-                        child: SavedChapterCard(chapter: chapter),
+                        child: EntranceWrapper.stagger(
+                          index: 1 + entry.key,
+                          child: SavedChapterCard(chapter: entry.value),
+                        ),
                       ),
                     ),
                     const SizedBox(height: AppDimensions.paddingMD),
                   ],
                   if (filteredBookmarks.isNotEmpty) ...[
-                    Text(
-                      AppStrings.savedFormulas,
-                      style: AppTextStyles.titleLarge.copyWith(
-                        fontWeight: FontWeight.w700,
+                    EntranceWrapper.stagger(
+                      index: filteredChapters.length + 1,
+                      child: Text(
+                        AppStrings.savedFormulas,
+                        style: AppTextStyles.titleLarge.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                     const SizedBox(height: AppDimensions.paddingLG),
-                    ...filteredBookmarks.map(
-                      (bookmark) => Padding(
+                    ...filteredBookmarks.asMap().entries.map(
+                      (entry) => Padding(
                         padding: const EdgeInsets.only(
                           bottom: AppDimensions.paddingLG,
                         ),
-                        child: BookmarkCard(bookmark: bookmark),
+                        child: EntranceWrapper.stagger(
+                          index: filteredChapters.length + 2 + entry.key,
+                          child: BookmarkCard(bookmark: entry.value),
+                        ),
                       ),
                     ),
                     const SizedBox(height: AppDimensions.paddingMD),
                   ],
                   if (filteredNotes.isNotEmpty) ...[
-                    Text(
-                      AppStrings.savedNotes,
-                      style: AppTextStyles.titleLarge.copyWith(
-                        fontWeight: FontWeight.w700,
+                    EntranceWrapper.stagger(
+                      index: filteredChapters.length + filteredBookmarks.length + 2,
+                      child: Text(
+                        AppStrings.savedNotes,
+                        style: AppTextStyles.titleLarge.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                     const SizedBox(height: AppDimensions.paddingLG),
-                    ...filteredNotes.map(
-                      (note) => Padding(
+                    ...filteredNotes.asMap().entries.map(
+                      (entry) => Padding(
                         padding: const EdgeInsets.only(
                           bottom: AppDimensions.paddingLG,
                         ),
-                        child: SavedNoteCard(note: note),
+                        child: EntranceWrapper.stagger(
+                          index: filteredChapters.length + filteredBookmarks.length + 3 + entry.key,
+                          child: SavedNoteCard(note: entry.value),
+                        ),
                       ),
                     ),
                   ],

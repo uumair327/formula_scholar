@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/shared.dart';
 
 class EmptyBookmarksState extends StatelessWidget {
   const EmptyBookmarksState({super.key});
@@ -12,12 +13,12 @@ class EmptyBookmarksState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
-      padding: const EdgeInsets.all(AppDimensions.paddingSectionLG),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+    return AppCard(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDimensions.paddingXL,
+        vertical: AppDimensions.paddingSectionLG,
       ),
       child: Column(
         children: [
@@ -28,25 +29,34 @@ class EmptyBookmarksState extends StatelessWidget {
                 width: AppDimensions.imageXL,
                 height: AppDimensions.imageXL,
                 decoration: BoxDecoration(
-                  color: colorScheme.tertiaryContainer,
+                  gradient: isDark
+                      ? AppColors.darkPrimaryGradient
+                      : AppColors.primaryGradient,
                   shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: colorScheme.primary.withValues(alpha: 0.3),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
                 ),
-                child: Icon(
+                child: const Icon(
                   LucideIcons.bookmark,
                   size: AppDimensions.imageLG,
-                  color: colorScheme.onTertiaryContainer,
+                  color: Colors.white,
                 ),
               ),
               Positioned(
-                bottom: AppDimensions.positionOffsetSM,
-                right: AppDimensions.positionOffsetSM,
+                bottom: -AppDimensions.positionOffsetSM,
+                right: -AppDimensions.positionOffsetSM,
                 child: Container(
                   width: AppDimensions.imageMD,
                   height: AppDimensions.imageMD,
                   decoration: BoxDecoration(
-                    color: colorScheme.surfaceContainerLowest,
+                    color: colorScheme.surface,
                     shape: BoxShape.circle,
-                    boxShadow: const [AppShadows.ghost],
+                    boxShadow: const [AppShadows.medium],
                   ),
                   child: Icon(
                     LucideIcons.plus,
@@ -61,7 +71,7 @@ class EmptyBookmarksState extends StatelessWidget {
           Text(
             AppStrings.nothingHereYet,
             style: AppTextStyles.headlineSmall.copyWith(
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w800,
             ),
           ),
           const SizedBox(height: AppDimensions.paddingSM),
@@ -73,24 +83,12 @@ class EmptyBookmarksState extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppDimensions.paddingXXL),
-          ElevatedButton.icon(
+          AppGradientButton(
+            label: AppStrings.browseLessons,
+            icon: LucideIcons.compass,
             onPressed: () {
               StatefulNavigationShell.of(context).goBranch(1);
             },
-            icon: const Icon(LucideIcons.compass),
-            label: const Text(AppStrings.browseLessons),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: colorScheme.secondaryContainer,
-              foregroundColor: colorScheme.onSecondaryContainer,
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppDimensions.paddingXXL,
-                vertical: AppDimensions.paddingMD,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
-              ),
-              elevation: AppDimensions.elevationNone,
-            ),
           ),
         ],
       ),

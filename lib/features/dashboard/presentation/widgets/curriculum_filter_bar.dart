@@ -14,6 +14,7 @@ import 'curriculum_badge.dart';
 import 'curriculum_chip_row.dart';
 import 'curriculum_error_row.dart';
 import 'filter_shimmer.dart';
+import 'curriculum_selection_bottom_sheet.dart';
 
 class CurriculumFilterBar extends StatelessWidget {
   const CurriculumFilterBar({super.key});
@@ -78,7 +79,10 @@ class CurriculumFilterBar extends StatelessWidget {
                         child: GestureDetector(
                           onTap: () {
                             HapticsHelper.lightImpact();
-                            context.go(AppRoutes.onboardingPath);
+                            showCurriculumSelectionBottomSheet(
+                              context,
+                              optionsCubit: context.read<CurriculumOptionsCubit>(),
+                            );
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(
@@ -151,44 +155,6 @@ class CurriculumFilterBar extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: AppDimensions.paddingMD),
-                  Container(
-                    height: AppDimensions.dividerHeight,
-                    color: colorScheme.surfaceContainerHighest,
-                  ),
-                  const SizedBox(height: AppDimensions.paddingMD),
-                  if (isBusy && options.boards.isEmpty)
-                    const FilterShimmer()
-                  else ...[
-                    CurriculumChipRow<Board>(
-                      label: AppStrings.dashboardAvailableBoards,
-                      items: options.boards,
-                      selectedId: selection?.boardId,
-                      itemId: (board) => board.id,
-                      itemLabel: (board) => board.name,
-                      itemSubtitle: (Board board) => board.type.name,
-                      emptyMessage: AppStrings.dashboardNoBoardsAvailable,
-                      isBusy: isBusy,
-                      onSelected: (board) => context
-                          .read<CurriculumOptionsCubit>()
-                          .selectBoard(board),
-                    ),
-                    const SizedBox(height: AppDimensions.paddingSM),
-                    CurriculumChipRow<Grade>(
-                      label: AppStrings.dashboardAvailableClasses,
-                      items: options.grades,
-                      selectedId: selection?.gradeId,
-                      itemId: (grade) => grade.id,
-                      itemLabel: (grade) => grade.displayLabel,
-                      emptyMessage: AppStrings.dashboardNoClassesAvailable,
-                      isBusy: isBusy,
-                      onSelected: (grade) => context
-                          .read<CurriculumOptionsCubit>()
-                          .selectGrade(grade),
-                    ),
-                  ],
-                  if (options.status == CurriculumOptionsStatus.error)
-                    CurriculumErrorRow(errorMessage: options.errorMessage),
                 ],
               ),
             );

@@ -10,6 +10,7 @@ export 'curriculum_chip.dart';
 export 'curriculum_chip_row.dart';
 export 'curriculum_error_row.dart';
 export 'curriculum_filter_bar.dart';
+export 'curriculum_selection_bottom_sheet.dart';
 export 'daily_challenge_dialog.dart';
 export 'dashboard_actions.dart';
 export 'dashboard_app_bar.dart';
