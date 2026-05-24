@@ -17,6 +17,7 @@ class FormulasState extends Equatable {
     this.isChapterSaved = false,
     this.errorMessage,
     this.formulaNotes = const {},
+    this.isSavingNote = false,
   });
   final FormulasStatus status;
   final String? subjectId;
@@ -26,6 +27,7 @@ class FormulasState extends Equatable {
   final bool isChapterSaved;
   final String? errorMessage;
   final Map<String, FormulaNote?> formulaNotes;
+  final bool isSavingNote;
 
   int get masteredCount => formulas.where((f) => f.isMastered).toList().length;
   int get totalCount => formulas.length;
@@ -44,6 +46,7 @@ class FormulasState extends Equatable {
     bool? isChapterSaved,
     Object? errorMessage = _unset,
     Map<String, FormulaNote?>? formulaNotes,
+    bool? isSavingNote,
   }) {
     return FormulasState(
       status: status ?? this.status,
@@ -56,6 +59,7 @@ class FormulasState extends Equatable {
           ? this.errorMessage
           : errorMessage as String?,
       formulaNotes: formulaNotes ?? this.formulaNotes,
+      isSavingNote: isSavingNote ?? this.isSavingNote,
     );
   }
 
@@ -69,5 +73,6 @@ class FormulasState extends Equatable {
     isChapterSaved,
     errorMessage,
     formulaNotes,
+    isSavingNote,
   ];
 }

@@ -12,8 +12,8 @@ import '../../shared/shared.dart';
 import 'app_router_observer.dart';
 import 'route_builders/route_builders.dart';
 
-class _AuthRouterNotifier extends ChangeNotifier {
-  _AuthRouterNotifier(
+class _AuthRouterListenable implements Listenable {
+  _AuthRouterListenable(
     this._getCurrentAuthUser,
     this._watchAuthState,
     this._curriculumCubit,
@@ -27,20 +27,37 @@ class _AuthRouterNotifier extends ChangeNotifier {
       notifyListeners();
     });
   }
+
   final GetCurrentAuthUserUseCase _getCurrentAuthUser;
   final WatchAuthStateUseCase _watchAuthState;
   final CurriculumCubit _curriculumCubit;
   late final StreamSubscription<AuthUser?> _authSubscription;
   late final StreamSubscription<CurriculumState> _curriculumSubscription;
   AuthUser? _currentUser;
+  final List<VoidCallback> _listeners = <VoidCallback>[];
 
   bool get isLoggedIn => _currentUser != null;
 
   @override
+  void addListener(VoidCallback listener) {
+    _listeners.add(listener);
+  }
+
+  @override
+  void removeListener(VoidCallback listener) {
+    _listeners.remove(listener);
+  }
+
+  void notifyListeners() {
+    for (final listener in List<VoidCallback>.from(_listeners)) {
+      listener();
+    }
+  }
+
   void dispose() {
     _authSubscription.cancel();
     _curriculumSubscription.cancel();
-    super.dispose();
+    _listeners.clear();
   }
 }
 
@@ -67,7 +84,7 @@ abstract final class AppRouter {
     AppRoutes.onboardingStep4Path,
   };
 
-  static final _authNotifier = _AuthRouterNotifier(
+  static final _authRefreshListenable = _AuthRouterListenable(
     getIt<GetCurrentAuthUserUseCase>(),
     getIt<WatchAuthStateUseCase>(),
     getIt<CurriculumCubit>(),
@@ -79,7 +96,7 @@ abstract final class AppRouter {
     initialLocation: AppRoutes.dashboardPath,
     debugLogDiagnostics: kDebugMode,
     observers: [AppRouterObserver()],
-    refreshListenable: _authNotifier,
+    refreshListenable: _authRefreshListenable,
 
     // ───────────── Error / Not-Found ─────────────
     errorBuilder: (context, state) {
@@ -91,7 +108,7 @@ abstract final class AppRouter {
     redirect: (BuildContext context, GoRouterState state) {
       AppLogger.trace('Redirect check: ${state.uri}', tag: AppLogTags.router);
 
-      final isLoggedIn = _authNotifier.isLoggedIn;
+      final isLoggedIn = _authRefreshListenable.isLoggedIn;
       final isAuthPage = _authPaths.contains(state.matchedLocation);
       final isOnboardingPage = _onboardingPaths.contains(state.matchedLocation);
 

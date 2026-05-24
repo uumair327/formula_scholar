@@ -34,7 +34,6 @@ class AddNotePage extends StatefulWidget {
 class _AddNotePageState extends State<AddNotePage> {
   late final TextEditingController _titleController;
   late final TextEditingController _contentController;
-  bool _isSaving = false;
 
   bool get _isEditing => widget.existingNote != null;
 
@@ -59,13 +58,16 @@ class _AddNotePageState extends State<AddNotePage> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isSaving = context.select<SavedCubit, bool>(
+      (cubit) => cubit.state.isSavingNote,
+    );
 
     return Scaffold(
       appBar: AppBar(
         title: Text(_isEditing ? AppStrings.editNote : AppStrings.addNote),
         actions: [
           TextButton(
-            onPressed: _isSaving ? null : _saveNote,
+            onPressed: isSaving ? null : _saveNote,
             child: const Text('Save'),
           ),
         ],
@@ -84,7 +86,11 @@ class _AddNotePageState extends State<AddNotePage> {
                 ),
                 child: Row(
                   children: [
-                    Icon(LucideIcons.fileText, size: 16, color: colorScheme.primary),
+                    Icon(
+                      LucideIcons.fileText,
+                      size: 16,
+                      color: colorScheme.primary,
+                    ),
                     const SizedBox(width: AppDimensions.paddingSM),
                     Expanded(
                       child: Text(
@@ -131,23 +137,20 @@ class _AddNotePageState extends State<AddNotePage> {
     final content = _contentController.text.trim();
     if (title.isEmpty || content.isEmpty) return;
 
-    setState(() => _isSaving = true);
-
     final cubit = context.read<SavedCubit>();
-    final curriculum =
-        context.read<CurriculumCubit>().state.curriculum;
+    final curriculum = context.read<CurriculumCubit>().state.curriculum;
 
     if (_isEditing) {
-      await cubit.editNote(widget.existingNote!.copyWith(
-        title: title,
-        content: content,
-      ));
+      await cubit.editNote(
+        widget.existingNote!.copyWith(title: title, content: content),
+      );
     } else {
       await cubit.addNote(
         title: title,
         content: content,
         subject: widget.subject ?? AppStrings.genericError,
-        curriculumKey: curriculum?.curriculumKey ?? AppStrings.unknownCurriculum,
+        curriculumKey:
+            curriculum?.curriculumKey ?? AppStrings.unknownCurriculum,
         subjectId: widget.subjectId,
         chapterId: widget.chapterId,
         formulaId: widget.formulaId,

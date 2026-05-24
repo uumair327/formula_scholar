@@ -10,20 +10,17 @@ import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 
-class CarouselBanners extends StatefulWidget {
+class CarouselBanners extends StatelessWidget {
   const CarouselBanners({
     super.key,
     required this.banners,
+    required this.currentPage,
+    required this.onPageChanged,
   });
 
   final List<CarouselItem> banners;
-
-  @override
-  State<CarouselBanners> createState() => _CarouselBannersState();
-}
-
-class _CarouselBannersState extends State<CarouselBanners> {
-  int _currentPage = 0;
+  final int currentPage;
+  final ValueChanged<int> onPageChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +44,10 @@ class _CarouselBannersState extends State<CarouselBanners> {
             aspectRatio: 16 / 9,
             initialPage: 0,
             onPageChanged: (index, _) {
-              setState(() => _currentPage = index);
+              onPageChanged(index);
             },
           ),
-          items: widget.banners.map((banner) {
+          items: banners.map((banner) {
             return Builder(
               builder: (BuildContext context) {
                 final bgColor = banner.bgColor != null
@@ -111,18 +108,18 @@ class _CarouselBannersState extends State<CarouselBanners> {
             );
           }).toList(),
         ),
-        if (widget.banners.length > 1)
+        if (banners.length > 1)
           Padding(
             padding: const EdgeInsets.only(top: AppDimensions.paddingMD),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(widget.banners.length, (i) {
-                final isActive = i == _currentPage;
+              children: List.generate(banners.length, (i) {
+                final isActive = i == currentPage;
                 return Semantics(
-                  label: 'Banner ${i + 1} of ${widget.banners.length}',
+                  label: 'Banner ${i + 1} of ${banners.length}',
                   button: true,
                   child: GestureDetector(
-                    onTap: () => _currentPage = i,
+                    onTap: () => onPageChanged(i),
                     child: AnimatedContainer(
                       duration: AppDurations.animationFast,
                       margin: const EdgeInsets.symmetric(

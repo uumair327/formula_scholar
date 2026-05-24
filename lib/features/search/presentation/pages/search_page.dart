@@ -8,29 +8,8 @@ import '../cubit/search_cubit.dart';
 import '../cubit/search_state.dart';
 import '../widgets/search_result_card.dart';
 
-class SearchPage extends StatefulWidget {
+class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
-
-  @override
-  State<SearchPage> createState() => _SearchPageState();
-}
-
-class _SearchPageState extends State<SearchPage> {
-  final TextEditingController _searchController = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
-
-  @override
-  void initState() {
-    super.initState();
-    _focusNode.requestFocus();
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    _focusNode.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,14 +20,18 @@ class _SearchPageState extends State<SearchPage> {
           _buildSearchInput(context),
           Expanded(
             child: BlocBuilder<SearchCubit, SearchState>(
-              buildWhen: (p, n) => p.status != n.status || p.results != n.results || p.query != n.query,
+              buildWhen: (p, n) =>
+                  p.status != n.status ||
+                  p.results != n.results ||
+                  p.query != n.query,
               builder: (context, state) {
                 switch (state.status) {
                   case SearchStatus.initial:
                     return const AppEmptyState(
                       icon: LucideIcons.search,
                       title: AppStrings.searchFormulasTitle,
-                      description: 'Type to search across all your subjects and chapters',
+                      description:
+                          'Type to search across all your subjects and chapters',
                     );
                   case SearchStatus.loading:
                     return const Center(child: CircularProgressIndicator());
@@ -94,10 +77,13 @@ class _SearchPageState extends State<SearchPage> {
       ),
       actions: [
         Container(
-            margin: const EdgeInsetsDirectional.only(end: AppDimensions.paddingSM),
+          margin: const EdgeInsetsDirectional.only(
+            end: AppDimensions.paddingSM,
+          ),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceContainerHigh
-                .withValues(alpha: 0.5),
+            color: Theme.of(
+              context,
+            ).colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
           ),
           child: IconButton(
@@ -115,8 +101,6 @@ class _SearchPageState extends State<SearchPage> {
     return Padding(
       padding: const EdgeInsets.all(AppDimensions.paddingMD),
       child: TextField(
-        controller: _searchController,
-        focusNode: _focusNode,
         autofocus: true,
         onChanged: (value) {
           context.read<SearchCubit>().search(

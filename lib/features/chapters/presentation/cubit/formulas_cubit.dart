@@ -135,6 +135,7 @@ class FormulasCubit extends Cubit<FormulasState>
 
   void saveFormulaNote(FormulaNote note) {
     _noteDebounce?.cancel();
+    emit(state.copyWith(isSavingNote: true));
     _noteDebounce = Timer(const Duration(milliseconds: 500), () async {
       if (isClosed) return;
       emit(state.copyWith(formulaNotes: {note.formulaId: note}));
@@ -142,14 +143,21 @@ class FormulasCubit extends Cubit<FormulasState>
       if (result is Error<void>) {
         logFailure('saveFormulaNote', result.failure);
       }
+      if (!isClosed) {
+        emit(state.copyWith(isSavingNote: false));
+      }
     });
   }
 
   Future<void> deleteFormulaNote(String formulaId) async {
+    emit(state.copyWith(isSavingNote: true));
     emit(state.copyWith(formulaNotes: {formulaId: null}));
     final result = await _deleteFormulaNote(formulaId);
     if (result is Error<void>) {
       logFailure('deleteFormulaNote', result.failure);
+    }
+    if (!isClosed) {
+      emit(state.copyWith(isSavingNote: false));
     }
   }
 
@@ -311,10 +319,12 @@ class FormulasCubit extends Cubit<FormulasState>
     if (isClosed) return;
     if (result is Error<void>) {
       logFailure('toggleChapterBookmark', result.failure);
-      emit(state.copyWith(
-        isChapterSaved: !newSavedState,
-        errorMessage: 'Failed to bookmark chapter',
-      ));
+      emit(
+        state.copyWith(
+          isChapterSaved: !newSavedState,
+          errorMessage: 'Failed to bookmark chapter',
+        ),
+      );
     } else {
       AppLogger.info(
         'Chapter ${state.chapterId} bookmark toggled to $newSavedState',

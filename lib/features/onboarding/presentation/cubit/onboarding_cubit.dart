@@ -23,7 +23,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
        _getGrades = getGrades,
        _saveCurriculum = saveCurriculum,
        _updateStudyGoal = updateStudyGoal,
-        super(const OnboardingState()) {
+       super(const OnboardingState()) {
     Future.microtask(loadCountries);
   }
   final GetCountriesUseCase _getCountries;
@@ -71,6 +71,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
         selectedState: null, // Clear past selections
         selectedBoard: null,
         selectedGrade: null,
+        stateSearchQuery: '',
         status: OnboardingStatus.loading,
       ),
     );
@@ -110,6 +111,14 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       tag: AppLogTags.onboardingCubit,
     );
     emit(state.copyWith(selectedState: stateRegion));
+  }
+
+  void updateStateSearchQuery(String value) {
+    emit(state.copyWith(stateSearchQuery: value));
+  }
+
+  void selectStudyGoal(String studyGoalId) {
+    emit(state.copyWith(selectedStudyGoalId: studyGoalId));
   }
 
   /// Triggered when user confirms step 1
@@ -181,9 +190,10 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   }
 
   /// Persists the selected curriculum and study goal, marks onboarding as complete.
-  Future<SelectedCurriculum?> completeOnboarding(String studyGoalId) async {
+  Future<SelectedCurriculum?> completeOnboarding([String? studyGoalId]) async {
     final board = state.selectedBoard;
     final grade = state.selectedGrade;
+    final selectedStudyGoalId = studyGoalId ?? state.selectedStudyGoalId;
 
     if (board == null || grade == null) {
       AppLogger.warning(
@@ -206,13 +216,13 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     );
 
     AppLogger.info(
-      'Completing onboarding for board=${board.name}, grade=${grade.displayLabel}, goal=$studyGoalId',
+      'Completing onboarding for board=${board.name}, grade=${grade.displayLabel}, goal=$selectedStudyGoalId',
       tag: AppLogTags.onboardingCubit,
     );
 
     try {
       await _saveCurriculum(curriculum);
-      final goalResult = await _updateStudyGoal(studyGoalId);
+      final goalResult = await _updateStudyGoal(selectedStudyGoalId);
       if (goalResult is Error) {
         AppLogger.warning(
           'Failed to save study goal during onboarding.',

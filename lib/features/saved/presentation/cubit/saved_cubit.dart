@@ -190,6 +190,7 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
     String? formulaTitle,
     String? formulaLatex,
   }) async {
+    emit(state.copyWith(isSavingNote: true, errorMessage: null));
     final note = SavedNote(
       id: 'note_${DateTime.now().millisecondsSinceEpoch}_${Random().nextInt(9999)}',
       title: title,
@@ -205,27 +206,39 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
     );
 
     final result = await _addNote(note);
+    if (isClosed) return;
     if (result is Error<void>) {
       logFailure('add note', result.failure);
-      emit(state.copyWith(errorMessage: 'Failed to add note'));
+      emit(
+        state.copyWith(errorMessage: 'Failed to add note', isSavingNote: false),
+      );
       return;
     }
 
     final updatedNotes = List<SavedNote>.from(state.notes)..add(note);
-    emit(state.copyWith(notes: updatedNotes));
+    emit(state.copyWith(notes: updatedNotes, isSavingNote: false));
   }
 
   /// Updates an existing note.
   Future<void> editNote(SavedNote note) async {
+    emit(state.copyWith(isSavingNote: true, errorMessage: null));
     final result = await _updateNote(note);
+    if (isClosed) return;
     if (result is Error<void>) {
       logFailure('update note', result.failure);
-      emit(state.copyWith(errorMessage: 'Failed to update note'));
+      emit(
+        state.copyWith(
+          errorMessage: 'Failed to update note',
+          isSavingNote: false,
+        ),
+      );
       return;
     }
 
-    final updatedNotes = state.notes.map((n) => n.id == note.id ? note : n).toList();
-    emit(state.copyWith(notes: updatedNotes));
+    final updatedNotes = state.notes
+        .map((n) => n.id == note.id ? note : n)
+        .toList();
+    emit(state.copyWith(notes: updatedNotes, isSavingNote: false));
   }
 
   /// Deletes a note.
@@ -238,7 +251,12 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
     if (isClosed) return;
     if (result is Error<void>) {
       logFailure('delete note', result.failure);
-      emit(state.copyWith(notes: initialNotes, errorMessage: 'Failed to delete note'));
+      emit(
+        state.copyWith(
+          notes: initialNotes,
+          errorMessage: 'Failed to delete note',
+        ),
+      );
     }
   }
 

@@ -29,6 +29,8 @@ class PracticeState extends Equatable {
     this.remainingSeconds = 0,
     this.answerRecords = const [],
     this.quizStartTime,
+    this.selectedTimedMode = false,
+    this.selectedTimedDurationSeconds,
   });
   final PracticeStatus status;
   final List<QuizQuestion> questions;
@@ -46,6 +48,8 @@ class PracticeState extends Equatable {
   final int remainingSeconds;
   final List<QuizAnswerRecord> answerRecords;
   final DateTime? quizStartTime;
+  final bool selectedTimedMode;
+  final int? selectedTimedDurationSeconds;
 
   QuizQuestion? get currentQuestion =>
       currentIndex < questions.length ? questions[currentIndex] : null;
@@ -63,14 +67,11 @@ class PracticeState extends Equatable {
   bool get isLastQuestion =>
       totalQuestions > 0 && currentIndex >= totalQuestions - 1;
 
-  int get correctCount =>
-      answerRecords.where((r) => r.isCorrect).length;
+  int get correctCount => answerRecords.where((r) => r.isCorrect).length;
 
-  int get incorrectCount =>
-      answerRecords.where((r) => !r.isCorrect).length;
+  int get incorrectCount => answerRecords.where((r) => !r.isCorrect).length;
 
-  int get maxPoints =>
-      questions.fold(0, (sum, q) => sum + q.points);
+  int get maxPoints => questions.fold(0, (sum, q) => sum + q.points);
 
   int get timeTakenSeconds {
     if (quizStartTime == null) return 0;
@@ -99,12 +100,16 @@ class PracticeState extends Equatable {
       totalSeconds > 0 ? remainingSeconds / totalSeconds : 1.0;
 
   bool get isTimerWarning =>
-      timedMode && timerStatus == TimerStatus.running &&
-      totalSeconds > 0 && remainingSeconds / totalSeconds < 0.25;
+      timedMode &&
+      timerStatus == TimerStatus.running &&
+      totalSeconds > 0 &&
+      remainingSeconds / totalSeconds < 0.25;
 
   /// Question IDs that were answered incorrectly (for retry).
-  List<String> get incorrectQuestionIds =>
-      answerRecords.where((r) => !r.isCorrect).map((r) => r.questionId).toList();
+  List<String> get incorrectQuestionIds => answerRecords
+      .where((r) => !r.isCorrect)
+      .map((r) => r.questionId)
+      .toList();
 
   PracticeState copyWith({
     PracticeStatus? status,
@@ -123,6 +128,8 @@ class PracticeState extends Equatable {
     int? remainingSeconds,
     List<QuizAnswerRecord>? answerRecords,
     Object? quizStartTime = _unset,
+    bool? selectedTimedMode,
+    Object? selectedTimedDurationSeconds = _unset,
   }) {
     return PracticeState(
       status: status ?? this.status,
@@ -147,6 +154,11 @@ class PracticeState extends Equatable {
       quizStartTime: identical(quizStartTime, _unset)
           ? this.quizStartTime
           : quizStartTime as DateTime?,
+      selectedTimedMode: selectedTimedMode ?? this.selectedTimedMode,
+      selectedTimedDurationSeconds:
+          identical(selectedTimedDurationSeconds, _unset)
+          ? this.selectedTimedDurationSeconds
+          : selectedTimedDurationSeconds as int?,
     );
   }
 
@@ -168,6 +180,8 @@ class PracticeState extends Equatable {
     remainingSeconds,
     answerRecords,
     quizStartTime,
+    selectedTimedMode,
+    selectedTimedDurationSeconds,
   ];
 }
 

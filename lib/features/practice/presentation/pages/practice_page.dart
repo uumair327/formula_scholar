@@ -8,16 +8,8 @@ import '../cubit/practice_state.dart';
 import '../widgets/widgets.dart';
 
 /// Practice page — routes between pre-filter, quiz, and completion states.
-class PracticePage extends StatefulWidget {
+class PracticePage extends StatelessWidget {
   const PracticePage({super.key});
-
-  @override
-  State<PracticePage> createState() => _PracticePageState();
-}
-
-class _PracticePageState extends State<PracticePage> {
-  bool _isTimed = false;
-  int? _timedDuration;
 
   @override
   Widget build(BuildContext context) {
@@ -34,14 +26,12 @@ class _PracticePageState extends State<PracticePage> {
             switch (state.status) {
               case PracticeStatus.initial:
                 return PracticePreFilter(
-                  isTimed: _isTimed,
-                  timedDuration: _timedDuration,
-                  onTimedChanged: (v) => setState(() {
-                    _isTimed = v;
-                    if (!v) _timedDuration = null;
-                  }),
-                  onDurationChanged: (v) =>
-                      setState(() => _timedDuration = v),
+                  isTimed: state.selectedTimedMode,
+                  timedDuration: state.selectedTimedDurationSeconds,
+                  onTimedChanged: context.read<PracticeCubit>().setTimedMode,
+                  onDurationChanged: context
+                      .read<PracticeCubit>()
+                      .setTimedDuration,
                 );
               case PracticeStatus.loading:
                 return const Scaffold(body: PracticeShimmer());

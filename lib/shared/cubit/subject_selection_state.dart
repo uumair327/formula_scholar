@@ -23,7 +23,14 @@ class SelectedSubject extends Equatable {
   final String iconName;
 
   @override
-  List<Object?> get props => [id, name, category, description, subtitle, iconName];
+  List<Object?> get props => [
+    id,
+    name,
+    category,
+    description,
+    subtitle,
+    iconName,
+  ];
 }
 
 /// State for subject selection, consumed by Chapters, Saved, Practice.
@@ -32,10 +39,12 @@ class SubjectSelectionState extends Equatable {
     this.subject,
     this.availableSubjects = const [],
     this.curriculumKey,
+    this.isLoadingAvailableSubjects = false,
   });
   final SelectedSubject? subject;
   final List<SelectedSubject> availableSubjects;
   final String? curriculumKey;
+  final bool isLoadingAvailableSubjects;
 
   bool get hasSelection => subject != null;
 
@@ -43,6 +52,7 @@ class SubjectSelectionState extends Equatable {
     Object? subject = _unset,
     List<SelectedSubject>? availableSubjects,
     Object? curriculumKey = _unset,
+    bool? isLoadingAvailableSubjects,
   }) {
     return SubjectSelectionState(
       subject: identical(subject, _unset)
@@ -52,9 +62,16 @@ class SubjectSelectionState extends Equatable {
       curriculumKey: identical(curriculumKey, _unset)
           ? this.curriculumKey
           : curriculumKey as String?,
+      isLoadingAvailableSubjects:
+          isLoadingAvailableSubjects ?? this.isLoadingAvailableSubjects,
     );
   }
 
   @override
-  List<Object?> get props => [subject, availableSubjects, curriculumKey];
+  List<Object?> get props => [
+    subject,
+    availableSubjects,
+    curriculumKey,
+    isLoadingAvailableSubjects,
+  ];
 }

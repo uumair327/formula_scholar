@@ -3,20 +3,25 @@ import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
+import 'package:formula_scholar/core/core.dart';
+import 'package:formula_scholar/features/dashboard/domain/domain.dart';
 import 'package:formula_scholar/shared/shared.dart';
 
 void main() {
   group('SubjectSelectionCubit', () {
     late _FakeStorage storage;
     late _FakeCurriculumRepository repository;
+    late _FakeDashboardRepository dashboardRepository;
     late SubjectSelectionCubit cubit;
 
     setUp(() {
       storage = _FakeStorage();
       HydratedBloc.storage = storage;
       repository = _FakeCurriculumRepository();
+      dashboardRepository = _FakeDashboardRepository();
       cubit = SubjectSelectionCubit(
         watchCurriculum: WatchCurriculumUseCase(repository),
+        getSubjects: GetSubjectsUseCase(repository: dashboardRepository),
       );
     });
 
@@ -150,6 +155,32 @@ class _FakeCurriculumRepository implements CurriculumRepositoryPort {
   }
 
   Future<void> dispose() => _controller.close();
+}
+
+class _FakeDashboardRepository implements DashboardRepositoryPort {
+  @override
+  Future<Result<List<CarouselItem>>> getBanners() async => const Success([]);
+
+  @override
+  Future<Result<StudyProgress>> getStudyProgress() async =>
+      throw UnimplementedError();
+
+  @override
+  Future<Result<List<AppAnnouncement>>> getActiveAnnouncements() async =>
+      const Success([]);
+
+  @override
+  Future<Result<List<RecentStudy>>> getRecentStudies() async =>
+      const Success([]);
+
+  @override
+  Future<Result<List<Subject>>> getSubjects(
+    String boardId,
+    String gradeId,
+  ) async => const Success([]);
+
+  @override
+  Future<Result<List<WeakArea>>> getWeakAreas() async => const Success([]);
 }
 
 class _FakeStorage implements Storage {

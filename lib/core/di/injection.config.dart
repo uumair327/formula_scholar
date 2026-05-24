@@ -917,6 +917,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i414.SubjectSelectionCubit>(
       () => _i414.SubjectSelectionCubit(
         watchCurriculum: gh<_i525.WatchCurriculumUseCase>(),
+        getSubjects: gh<_i95.GetSubjectsUseCase>(),
       ),
     );
     gh.factory<_i762.FlashcardsCubit>(

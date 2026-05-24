@@ -7,28 +7,28 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../core/core.dart';
 import '../../domain/domain.dart';
 
-class AnnouncementBanner extends StatefulWidget {
+class AnnouncementBanner extends StatelessWidget {
   const AnnouncementBanner({
     super.key,
     required this.announcements,
+    required this.dismissedAnnouncementIds,
+    required this.currentIndex,
+    required this.onPageChanged,
+    required this.onDismiss,
   });
 
   final List<AppAnnouncement> announcements;
-
-  @override
-  State<AnnouncementBanner> createState() => _AnnouncementBannerState();
-}
-
-class _AnnouncementBannerState extends State<AnnouncementBanner> {
-  final Set<String> _dismissed = {};
-  int _currentIndex = 0;
+  final List<String> dismissedAnnouncementIds;
+  final int currentIndex;
+  final ValueChanged<int> onPageChanged;
+  final ValueChanged<String> onDismiss;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final visible = widget.announcements
-        .where((a) => !_dismissed.contains(a.id))
+    final visible = announcements
+        .where((a) => !dismissedAnnouncementIds.contains(a.id))
         .toList();
 
     if (visible.isEmpty) return const SizedBox.shrink();
@@ -43,7 +43,7 @@ class _AnnouncementBannerState extends State<AnnouncementBanner> {
             autoPlay: visible.length > 1,
             autoPlayInterval: const Duration(seconds: 5),
             onPageChanged: (index, reason) {
-              setState(() => _currentIndex = index);
+              onPageChanged(index);
             },
           ),
           itemBuilder: (context, index, realIndex) {
@@ -56,8 +56,12 @@ class _AnnouncementBannerState extends State<AnnouncementBanner> {
               padding: const EdgeInsets.all(AppDimensions.paddingLG),
               decoration: BoxDecoration(
                 gradient: isUrgent
-                    ? (isDark ? AppColors.darkErrorGradient : AppColors.errorGradient)
-                    : (isDark ? AppColors.darkPrimaryGradient : AppColors.primaryGradient),
+                    ? (isDark
+                          ? AppColors.darkErrorGradient
+                          : AppColors.errorGradient)
+                    : (isDark
+                          ? AppColors.darkPrimaryGradient
+                          : AppColors.primaryGradient),
                 borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
                 boxShadow: const [AppShadows.medium],
               ),
@@ -72,7 +76,9 @@ class _AnnouncementBannerState extends State<AnnouncementBanner> {
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
-                          isUrgent ? LucideIcons.alertTriangle : LucideIcons.megaphone,
+                          isUrgent
+                              ? LucideIcons.alertTriangle
+                              : LucideIcons.megaphone,
                           color: AppColors.white,
                           size: AppDimensions.iconMD,
                         ),
@@ -111,14 +117,13 @@ class _AnnouncementBannerState extends State<AnnouncementBanner> {
                     top: -8,
                     right: -8,
                     child: IconButton(
-                      icon: const Icon(LucideIcons.x, color: AppColors.white, size: 20),
+                      icon: const Icon(
+                        LucideIcons.x,
+                        color: AppColors.white,
+                        size: 20,
+                      ),
                       onPressed: () {
-                        setState(() {
-                          _dismissed.add(announcement.id);
-                          if (_currentIndex >= visible.length - 1) {
-                            _currentIndex = 0;
-                          }
-                        });
+                        onDismiss(announcement.id);
                       },
                     ),
                   ),
@@ -138,7 +143,7 @@ class _AnnouncementBannerState extends State<AnnouncementBanner> {
                 margin: const EdgeInsets.symmetric(horizontal: 4.0),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: _currentIndex == entry.key
+                  color: currentIndex == entry.key
                       ? colorScheme.primary
                       : colorScheme.primary.withValues(alpha: 0.2),
                 ),

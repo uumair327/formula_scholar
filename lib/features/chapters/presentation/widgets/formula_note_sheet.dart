@@ -23,7 +23,6 @@ class FormulaNoteSheet extends StatefulWidget {
 
 class _FormulaNoteSheetState extends State<FormulaNoteSheet> {
   late final TextEditingController _controller;
-  bool _saving = false;
   bool _isEmpty = true;
 
   @override
@@ -55,14 +54,13 @@ class _FormulaNoteSheetState extends State<FormulaNoteSheet> {
   void _save() async {
     final content = _controller.text.trim();
     if (content.isEmpty) return;
-    setState(() => _saving = true);
-    context.read<FormulasCubit>().saveFormulaNote(FormulaNote(
-      formulaId: widget.formulaId,
-      content: content,
-      updatedAt: DateTime.now(),
-    ));
-    await Future.delayed(const Duration(milliseconds: 600));
-    if (mounted) setState(() => _saving = false);
+    context.read<FormulasCubit>().saveFormulaNote(
+      FormulaNote(
+        formulaId: widget.formulaId,
+        content: content,
+        updatedAt: DateTime.now(),
+      ),
+    );
   }
 
   void _delete() async {
@@ -72,8 +70,14 @@ class _FormulaNoteSheetState extends State<FormulaNoteSheet> {
         title: const Text('Delete note?'),
         content: const Text('This cannot be undone.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Delete')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Delete'),
+          ),
         ],
       ),
     );
@@ -88,6 +92,9 @@ class _FormulaNoteSheetState extends State<FormulaNoteSheet> {
     final colorScheme = Theme.of(context).colorScheme;
     final existing = context.select<FormulasCubit, FormulaNote?>(
       (c) => c.state.noteFor(widget.formulaId),
+    );
+    final isSaving = context.select<FormulasCubit, bool>(
+      (c) => c.state.isSavingNote,
     );
     final hasNote = existing != null && !existing.isEmpty;
 
@@ -104,7 +111,8 @@ class _FormulaNoteSheetState extends State<FormulaNoteSheet> {
         children: [
           Center(
             child: Container(
-              width: 32, height: 4,
+              width: 32,
+              height: 4,
               decoration: BoxDecoration(
                 color: colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
@@ -112,11 +120,18 @@ class _FormulaNoteSheetState extends State<FormulaNoteSheet> {
             ),
           ),
           const SizedBox(height: AppDimensions.paddingLG),
-          Text('Notes', style: AppTextStyles.titleMedium.copyWith(fontWeight: FontWeight.w700)),
+          Text(
+            'Notes',
+            style: AppTextStyles.titleMedium.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
           const SizedBox(height: AppDimensions.paddingXXS),
           Text(
             widget.formulaTitle,
-            style: AppTextStyles.bodySmall.copyWith(color: colorScheme.onSurfaceVariant),
+            style: AppTextStyles.bodySmall.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
           ),
           const SizedBox(height: AppDimensions.paddingMD),
           TextField(
@@ -124,8 +139,12 @@ class _FormulaNoteSheetState extends State<FormulaNoteSheet> {
             maxLines: 5,
             minLines: 3,
             decoration: InputDecoration(
-              hintText: hasNote ? 'Edit your note...' : 'Write a note about this formula...',
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppDimensions.radiusMD)),
+              hintText: hasNote
+                  ? 'Edit your note...'
+                  : 'Write a note about this formula...',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+              ),
               contentPadding: const EdgeInsets.all(AppDimensions.paddingMD),
             ),
           ),
@@ -138,22 +157,31 @@ class _FormulaNoteSheetState extends State<FormulaNoteSheet> {
                   onPressed: _delete,
                   icon: const Icon(LucideIcons.trash2, size: 16),
                   label: const Text('Delete'),
-                  style: TextButton.styleFrom(foregroundColor: colorScheme.error),
+                  style: TextButton.styleFrom(
+                    foregroundColor: colorScheme.error,
+                  ),
                 ),
               const SizedBox(width: AppDimensions.paddingSM),
               FilledButton.icon(
                 onPressed: _isEmpty ? null : _save,
-                icon: _saving
+                icon: isSaving
                     ? SizedBox(
-                        width: 16, height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: colorScheme.onPrimary),
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: colorScheme.onPrimary,
+                        ),
                       )
                     : const Icon(LucideIcons.save, size: 16),
                 label: Text(hasNote ? 'Update' : 'Save'),
               ),
             ],
           ),
-          SizedBox(height: MediaQuery.of(context).padding.bottom + AppDimensions.paddingMD),
+          SizedBox(
+            height:
+                MediaQuery.of(context).padding.bottom + AppDimensions.paddingMD,
+          ),
         ],
       ),
     );

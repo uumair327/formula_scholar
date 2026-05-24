@@ -66,7 +66,6 @@ class DashboardPage extends StatelessWidget {
         ),
       ],
       child: BlocBuilder<DashboardCubit, DashboardState>(
-        buildWhen: (prev, curr) => prev.status != curr.status,
         builder: (context, state) {
           if (state.status == DashboardStatus.loading ||
               state.status == DashboardStatus.initial) {
@@ -87,11 +86,16 @@ class DashboardPage extends StatelessWidget {
               onRefresh: () => context.read<DashboardCubit>().loadDashboard(),
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  final isDesktop = constraints.maxWidth >= AppDimensions.breakpointDesktop;
+                  final isDesktop =
+                      constraints.maxWidth >= AppDimensions.breakpointDesktop;
                   final hp = isDesktop
-                      ? ((constraints.maxWidth - AppDimensions.breakpointMaxContent) / 2).clamp(
-                          AppDimensions.paddingSectionLG, double.infinity,
-                        )
+                      ? ((constraints.maxWidth -
+                                    AppDimensions.breakpointMaxContent) /
+                                2)
+                            .clamp(
+                              AppDimensions.paddingSectionLG,
+                              double.infinity,
+                            )
                       : AppDimensions.paddingXL;
                   return CustomScrollView(
                     slivers: [
@@ -104,12 +108,25 @@ class DashboardPage extends StatelessWidget {
                             const CurriculumFilterBar(),
                             const SizedBox(height: AppDimensions.paddingXL),
                             if (state.announcements
-                                .where((a) => a.isUrgent || a.isHighPriority || true)
+                                .where(
+                                  (a) => a.isUrgent || a.isHighPriority || true,
+                                )
                                 .isNotEmpty)
                               AnnouncementBanner(
                                 announcements: state.announcements,
+                                dismissedAnnouncementIds:
+                                    state.dismissedAnnouncementIds,
+                                currentIndex: state.currentAnnouncementIndex,
+                                onPageChanged: (index) => context
+                                    .read<DashboardCubit>()
+                                    .setAnnouncementIndex(index),
+                                onDismiss: (id) => context
+                                    .read<DashboardCubit>()
+                                    .dismissAnnouncement(id),
                               ),
-                            const SizedBox(height: AppDimensions.paddingSection),
+                            const SizedBox(
+                              height: AppDimensions.paddingSection,
+                            ),
                             EntranceWrapper(
                               child: HeroStatusCard(
                                 badge: state.heroBadge,
@@ -118,18 +135,32 @@ class DashboardPage extends StatelessWidget {
                                 onResume: () => resumeLearning(context, state),
                               ),
                             ),
-                            const SizedBox(height: AppDimensions.paddingSection),
-                            if (state.banners.where((b) => b.isActive).isNotEmpty)
+                            const SizedBox(
+                              height: AppDimensions.paddingSection,
+                            ),
+                            if (state.banners
+                                .where((b) => b.isActive)
+                                .isNotEmpty)
                               EntranceWrapper(
                                 delay: const Duration(milliseconds: 50),
-                                child: CarouselBanners(banners: state.banners),
+                                child: CarouselBanners(
+                                  banners: state.banners,
+                                  currentPage: state.currentBannerIndex,
+                                  onPageChanged: (index) => context
+                                      .read<DashboardCubit>()
+                                      .setBannerIndex(index),
+                                ),
                               ),
-                            const SizedBox(height: AppDimensions.paddingSection),
+                            const SizedBox(
+                              height: AppDimensions.paddingSection,
+                            ),
                             const EntranceWrapper(
                               delay: Duration(milliseconds: 100),
                               child: QuickActionsSection(),
                             ),
-                            const SizedBox(height: AppDimensions.paddingSection),
+                            const SizedBox(
+                              height: AppDimensions.paddingSection,
+                            ),
                             EntranceWrapper(
                               delay: const Duration(milliseconds: 100),
                               child: AcademicPathSection(
@@ -137,16 +168,24 @@ class DashboardPage extends StatelessWidget {
                                 onSubjectTap: (subject) =>
                                     onSubjectTap(context, subject),
                                 onShowAnalytics: (subject) =>
-                                    showSubjectAnalytics(context, state, subject),
+                                    showSubjectAnalytics(
+                                      context,
+                                      state,
+                                      subject,
+                                    ),
                                 onViewAll: () {
                                   context
                                       .read<SubjectSelectionCubit>()
                                       .clearSelection();
-                                  StatefulNavigationShell.of(context).goBranch(1);
+                                  StatefulNavigationShell.of(
+                                    context,
+                                  ).goBranch(1);
                                 },
                               ),
                             ),
-                            const SizedBox(height: AppDimensions.paddingSection),
+                            const SizedBox(
+                              height: AppDimensions.paddingSection,
+                            ),
                             EntranceWrapper(
                               delay: const Duration(milliseconds: 150),
                               child: FormulaVaultSection(
@@ -168,7 +207,9 @@ class DashboardPage extends StatelessWidget {
                               ),
                             ),
                             if (state.weakAreas.isNotEmpty) ...[
-                              const SizedBox(height: AppDimensions.paddingSection),
+                              const SizedBox(
+                                height: AppDimensions.paddingSection,
+                              ),
                               EntranceWrapper(
                                 delay: const Duration(milliseconds: 250),
                                 child: WeakAreasSection(
@@ -176,7 +217,9 @@ class DashboardPage extends StatelessWidget {
                                 ),
                               ),
                             ],
-                            const SizedBox(height: AppDimensions.bottomNavPadding),
+                            const SizedBox(
+                              height: AppDimensions.bottomNavPadding,
+                            ),
                           ]),
                         ),
                       ),

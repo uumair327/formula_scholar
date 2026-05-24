@@ -4,6 +4,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../core/core.dart';
+import '../../features/dashboard/domain/domain.dart';
 import '../domain/domain.dart';
 import 'subject_selection_state.dart';
 
@@ -13,12 +14,16 @@ import 'subject_selection_state.dart';
 /// state cannot leak across board/grade changes or user sessions.
 @lazySingleton
 class SubjectSelectionCubit extends HydratedCubit<SubjectSelectionState> {
-  SubjectSelectionCubit({required WatchCurriculumUseCase watchCurriculum})
-    : _watchCurriculum = watchCurriculum,
-      super(const SubjectSelectionState()) {
+  SubjectSelectionCubit({
+    required WatchCurriculumUseCase watchCurriculum,
+    required GetSubjectsUseCase getSubjects,
+  }) : _watchCurriculum = watchCurriculum,
+       _getSubjects = getSubjects,
+       super(const SubjectSelectionState()) {
     _curriculumSubscription = _watchCurriculum().listen(_handleCurriculumSync);
   }
   final WatchCurriculumUseCase _watchCurriculum;
+  final GetSubjectsUseCase _getSubjects;
   late final StreamSubscription<SelectedCurriculum?> _curriculumSubscription;
   String? _activeCurriculumKey;
 
@@ -72,6 +77,7 @@ class SubjectSelectionCubit extends HydratedCubit<SubjectSelectionState> {
       availableSubjects: subjects,
       subject: nextSubject,
       curriculumKey: _activeCurriculumKey,
+      isLoadingAvailableSubjects: false,
     );
 
     if (nextState != state) {
@@ -116,9 +122,57 @@ class SubjectSelectionCubit extends HydratedCubit<SubjectSelectionState> {
       subject: null,
       availableSubjects: const [],
       curriculumKey: nextCurriculumKey,
+      isLoadingAvailableSubjects: false,
     );
     if (nextState != state) {
       emit(nextState);
+    }
+
+    if (curriculum != null) {
+      unawaited(_loadAvailableSubjects(curriculum));
+    }
+  }
+
+  Future<void> _loadAvailableSubjects(SelectedCurriculum curriculum) async {
+    final curriculumKey = _buildCurriculumKey(curriculum);
+    if (curriculumKey == null) {
+      return;
+    }
+
+    final loadingState = state.copyWith(isLoadingAvailableSubjects: true);
+    if (loadingState != state) {
+      emit(loadingState);
+    }
+
+    final result = await _getSubjects(curriculum.boardId, curriculum.gradeId);
+    if (_activeCurriculumKey != curriculumKey) {
+      return;
+    }
+
+    switch (result) {
+      case Success<List<Subject>>(:final data):
+        updateAvailableSubjects(
+          data
+              .map(
+                (subject) => SelectedSubject(
+                  id: subject.id,
+                  name: subject.name,
+                  category: subject.category,
+                  description: subject.description,
+                  iconName: subject.iconName,
+                  subtitle: subject.subtitle ?? '',
+                ),
+              )
+              .toList(),
+        );
+      case Error<List<Subject>>(:final failure):
+        AppLogger.error(
+          'Failed to load available subjects',
+          tag: AppLogTags.subjectSelection,
+          error: failure.originalError,
+          stackTrace: failure.stackTrace,
+        );
+        emit(state.copyWith(isLoadingAvailableSubjects: false));
     }
   }
 

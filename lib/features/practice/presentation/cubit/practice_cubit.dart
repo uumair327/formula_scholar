@@ -52,16 +52,18 @@ class PracticeCubit extends Cubit<PracticeState>
   }) async {
     _timer?.cancel();
     _quizId = _generateId();
-    emit(state.copyWith(
-      status: PracticeStatus.loading,
-      boardId: boardId,
-      gradeId: gradeId,
-      subjectId: subjectId,
-      timedMode: timedMode,
-      timerStatus: TimerStatus.idle,
-      answerRecords: const [],
-      quizStartTime: DateTime.now(),
-    ));
+    emit(
+      state.copyWith(
+        status: PracticeStatus.loading,
+        boardId: boardId,
+        gradeId: gradeId,
+        subjectId: subjectId,
+        timedMode: timedMode,
+        timerStatus: TimerStatus.idle,
+        answerRecords: const [],
+        quizStartTime: DateTime.now(),
+      ),
+    );
 
     final result = await _getQuestions(
       boardId: boardId,
@@ -79,23 +81,42 @@ class PracticeCubit extends Cubit<PracticeState>
           }
         }
         final totalSecs = durationSeconds ?? defaultTimeLimit(questions.length);
-        emit(state.copyWith(
-          status: PracticeStatus.loaded,
-          questions: questions,
-          totalSeconds: totalSecs,
-          remainingSeconds: timedMode ? totalSecs : 0,
-          timerStatus: timedMode ? TimerStatus.running : TimerStatus.idle,
-        ));
+        emit(
+          state.copyWith(
+            status: PracticeStatus.loaded,
+            questions: questions,
+            totalSeconds: totalSecs,
+            remainingSeconds: timedMode ? totalSecs : 0,
+            timerStatus: timedMode ? TimerStatus.running : TimerStatus.idle,
+          ),
+        );
         if (timedMode) {
           _startTimer();
         }
       case Error(:final failure):
         logFailure('practice questions', failure);
-        emit(state.copyWith(
-          status: PracticeStatus.error,
-          errorMessage: failure.message,
-        ));
+        emit(
+          state.copyWith(
+            status: PracticeStatus.error,
+            errorMessage: failure.message,
+          ),
+        );
     }
+  }
+
+  void setTimedMode(bool value) {
+    emit(
+      state.copyWith(
+        selectedTimedMode: value,
+        selectedTimedDurationSeconds: value
+            ? state.selectedTimedDurationSeconds
+            : null,
+      ),
+    );
+  }
+
+  void setTimedDuration(int? value) {
+    emit(state.copyWith(selectedTimedDurationSeconds: value));
   }
 
   void selectOption(String optionId) {
@@ -126,21 +147,25 @@ class PracticeCubit extends Cubit<PracticeState>
       tag: AppLogTags.practiceCubit,
     );
 
-    emit(state.copyWith(
-      selectedOptionId: optionId,
-      showResult: true,
-      totalPoints: newPoints,
-      answerRecords: [...state.answerRecords, record],
-    ));
+    emit(
+      state.copyWith(
+        selectedOptionId: optionId,
+        showResult: true,
+        totalPoints: newPoints,
+        answerRecords: [...state.answerRecords, record],
+      ),
+    );
   }
 
   Future<void> nextQuestion() async {
     if (state.currentIndex < state.totalQuestions - 1) {
-      emit(state.copyWith(
-        currentIndex: state.currentIndex + 1,
-        selectedOptionId: null,
-        showResult: false,
-      ));
+      emit(
+        state.copyWith(
+          currentIndex: state.currentIndex + 1,
+          selectedOptionId: null,
+          showResult: false,
+        ),
+      );
     } else {
       await _finishQuiz();
     }
@@ -153,15 +178,20 @@ class PracticeCubit extends Cubit<PracticeState>
       'Quiz completed — ${state.totalPoints} points, ${state.correctCount}/${state.totalQuestions} correct',
       tag: AppLogTags.practiceCubit,
     );
-    emit(state.copyWith(
-      status: PracticeStatus.completed,
-      showResult: false,
-      timerStatus: TimerStatus.idle,
-    ));
+    emit(
+      state.copyWith(
+        status: PracticeStatus.completed,
+        showResult: false,
+        timerStatus: TimerStatus.idle,
+      ),
+    );
   }
 
   void onTimerExpired() {
-    AppLogger.info('Timer expired — auto-submitting quiz', tag: AppLogTags.practiceCubit);
+    AppLogger.info(
+      'Timer expired — auto-submitting quiz',
+      tag: AppLogTags.practiceCubit,
+    );
     emit(state.copyWith(timerStatus: TimerStatus.expired));
     _finishQuiz();
   }
@@ -240,7 +270,12 @@ class PracticeCubit extends Cubit<PracticeState>
     if (boardId == null || gradeId == null) {
       return;
     }
-    loadQuestions(boardId: boardId, gradeId: gradeId, subjectId: state.subjectId, questionIds: ids);
+    loadQuestions(
+      boardId: boardId,
+      gradeId: gradeId,
+      subjectId: state.subjectId,
+      questionIds: ids,
+    );
   }
 
   void resetQuiz() {
@@ -248,7 +283,14 @@ class PracticeCubit extends Cubit<PracticeState>
     final bId = state.boardId;
     final gId = state.gradeId;
     final sId = state.subjectId;
-    emit(PracticeState(status: PracticeStatus.initial, boardId: bId, gradeId: gId, subjectId: sId));
+    emit(
+      PracticeState(
+        status: PracticeStatus.initial,
+        boardId: bId,
+        gradeId: gId,
+        subjectId: sId,
+      ),
+    );
     if (bId != null && gId != null) {
       loadQuestions(boardId: bId, gradeId: gId, subjectId: sId);
     }

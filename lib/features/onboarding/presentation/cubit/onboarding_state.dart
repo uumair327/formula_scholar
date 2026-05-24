@@ -27,6 +27,8 @@ class OnboardingState extends Equatable {
     this.selectedBoard,
     this.selectedGrade,
     this.errorMessage,
+    this.stateSearchQuery = '',
+    this.selectedStudyGoalId = 'regular',
   });
   final OnboardingStep step;
   final OnboardingStatus status;
@@ -44,6 +46,8 @@ class OnboardingState extends Equatable {
   final Grade? selectedGrade;
 
   final String? errorMessage;
+  final String stateSearchQuery;
+  final String selectedStudyGoalId;
 
   bool get isComplete =>
       selectedCountry != null && selectedBoard != null && selectedGrade != null;
@@ -75,6 +79,8 @@ class OnboardingState extends Equatable {
     Object? selectedBoard = _unset,
     Object? selectedGrade = _unset,
     Object? errorMessage = _unset,
+    String? stateSearchQuery,
+    String? selectedStudyGoalId,
   }) {
     return OnboardingState(
       step: step ?? this.step,
@@ -98,6 +104,8 @@ class OnboardingState extends Equatable {
       errorMessage: identical(errorMessage, _unset)
           ? this.errorMessage
           : errorMessage as String?,
+      stateSearchQuery: stateSearchQuery ?? this.stateSearchQuery,
+      selectedStudyGoalId: selectedStudyGoalId ?? this.selectedStudyGoalId,
     );
   }
 
@@ -114,5 +122,7 @@ class OnboardingState extends Equatable {
     selectedBoard,
     selectedGrade,
     errorMessage,
+    stateSearchQuery,
+    selectedStudyGoalId,
   ];
 }

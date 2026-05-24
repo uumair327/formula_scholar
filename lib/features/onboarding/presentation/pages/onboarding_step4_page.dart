@@ -15,14 +15,9 @@ import '../widgets/widgets.dart';
 /// On "Enter Sanctuary" it navigates to the dashboard.
 ///
 /// Design based on OnboardingStep4.tsx.
-class OnboardingStep4Page extends StatefulWidget {
+class OnboardingStep4Page extends StatelessWidget {
   const OnboardingStep4Page({super.key});
 
-  @override
-  State<OnboardingStep4Page> createState() => _OnboardingStep4PageState();
-}
-
-class _OnboardingStep4PageState extends State<OnboardingStep4Page> {
   static const List<_GoalOption> _goals = [
     _GoalOption(
       id: 'casual',
@@ -44,12 +39,10 @@ class _OnboardingStep4PageState extends State<OnboardingStep4Page> {
     ),
   ];
 
-  String _selectedId = 'regular';
-
-  Future<void> _onFinish() async {
+  Future<void> _onFinish(BuildContext context) async {
     final onboardingCubit = context.read<OnboardingCubit>();
-    final curriculum = await onboardingCubit.completeOnboarding(_selectedId);
-    if (!mounted) {
+    final curriculum = await onboardingCubit.completeOnboarding();
+    if (!context.mounted) {
       return;
     }
 
@@ -67,7 +60,7 @@ class _OnboardingStep4PageState extends State<OnboardingStep4Page> {
       continueLabel: AppStrings.step4EnterSanctuary,
       onBack: () => context.go(AppRoutes.onboardingStep3Path),
       onContinue: () {
-        _onFinish();
+        _onFinish(context);
       },
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,8 +77,11 @@ class _OnboardingStep4PageState extends State<OnboardingStep4Page> {
                 padding: const EdgeInsets.only(bottom: AppDimensions.paddingMD),
                 child: _GoalCard(
                   goal: goal,
-                  isSelected: _selectedId == goal.id,
-                  onTap: () => setState(() => _selectedId = goal.id),
+                  isSelected: context.select<OnboardingCubit, bool>(
+                    (cubit) => cubit.state.selectedStudyGoalId == goal.id,
+                  ),
+                  onTap: () =>
+                      context.read<OnboardingCubit>().selectStudyGoal(goal.id),
                 ),
               );
             }).toList(),

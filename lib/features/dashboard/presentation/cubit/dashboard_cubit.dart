@@ -55,9 +55,9 @@ class DashboardCubit extends Cubit<DashboardState>
   }
 
   void _watchCurriculumChanges() {
-    _curriculumSubscription = _curriculumCubit.stream
-        .distinct()
-        .listen(_onCurriculumStateChanged);
+    _curriculumSubscription = _curriculumCubit.stream.distinct().listen(
+      _onCurriculumStateChanged,
+    );
   }
 
   void _onCurriculumStateChanged(CurriculumState curriculumState) {
@@ -114,7 +114,14 @@ class DashboardCubit extends Cubit<DashboardState>
       tag: AppLogTags.dashboardCubit,
     );
 
-    final (progressResult, subjectsResult, studiesResult, bannersResult, announcementsResult, weakAreasResult) = await (
+    final (
+      progressResult,
+      subjectsResult,
+      studiesResult,
+      bannersResult,
+      announcementsResult,
+      weakAreasResult,
+    ) = await (
       _getStudyProgress(),
       _getSubjects(curriculum.boardId, curriculum.gradeId),
       _getRecentStudies(),
@@ -208,5 +215,39 @@ class DashboardCubit extends Cubit<DashboardState>
         await Future<void>.delayed(const Duration(milliseconds: 600));
       }
     }
+  }
+
+  void setBannerIndex(int index) {
+    emit(state.copyWith(currentBannerIndex: index));
+  }
+
+  void setAnnouncementIndex(int index) {
+    emit(state.copyWith(currentAnnouncementIndex: index));
+  }
+
+  void dismissAnnouncement(String announcementId) {
+    if (state.dismissedAnnouncementIds.contains(announcementId)) {
+      return;
+    }
+
+    final dismissedAnnouncementIds = [
+      ...state.dismissedAnnouncementIds,
+      announcementId,
+    ];
+    final visibleCount = state.announcements
+        .where(
+          (announcement) => !dismissedAnnouncementIds.contains(announcement.id),
+        )
+        .length;
+    final nextIndex = visibleCount <= 1
+        ? 0
+        : state.currentAnnouncementIndex.clamp(0, visibleCount - 1);
+
+    emit(
+      state.copyWith(
+        dismissedAnnouncementIds: dismissedAnnouncementIds,
+        currentAnnouncementIndex: nextIndex,
+      ),
+    );
   }
 }

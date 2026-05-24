@@ -20,6 +20,7 @@ class SavedState extends Equatable {
     this.sortByField = 'savedAt',
     this.sortDirection = SortDirection.desc,
     this.errorMessage,
+    this.isSavingNote = false,
   });
   final SavedStatus status;
   final List<BookmarkedFormula> bookmarks;
@@ -29,6 +30,7 @@ class SavedState extends Equatable {
   final String sortByField;
   final SortDirection sortDirection;
   final String? errorMessage;
+  final bool isSavingNote;
 
   bool get isEmpty => bookmarks.isEmpty && chapters.isEmpty && notes.isEmpty;
 
@@ -36,31 +38,40 @@ class SavedState extends Equatable {
   List<BookmarkedFormula> get filteredBookmarks {
     if (searchQuery.isEmpty) return bookmarks;
     final query = searchQuery.toLowerCase();
-    return bookmarks.where((b) =>
-      b.title.toLowerCase().contains(query) ||
-      b.subject.toLowerCase().contains(query) ||
-      b.formula.toLowerCase().contains(query),
-    ).toList();
+    return bookmarks
+        .where(
+          (b) =>
+              b.title.toLowerCase().contains(query) ||
+              b.subject.toLowerCase().contains(query) ||
+              b.formula.toLowerCase().contains(query),
+        )
+        .toList();
   }
 
   /// Returns chapters filtered by [searchQuery] (matches chapter name or subject).
   List<BookmarkedChapter> get filteredChapters {
     if (searchQuery.isEmpty) return chapters;
     final query = searchQuery.toLowerCase();
-    return chapters.where((c) =>
-      c.chapterName.toLowerCase().contains(query) ||
-      c.subjectName.toLowerCase().contains(query),
-    ).toList();
+    return chapters
+        .where(
+          (c) =>
+              c.chapterName.toLowerCase().contains(query) ||
+              c.subjectName.toLowerCase().contains(query),
+        )
+        .toList();
   }
 
   /// Returns notes filtered by [searchQuery] (matches title or content).
   List<SavedNote> get filteredNotes {
     if (searchQuery.isEmpty) return notes;
     final query = searchQuery.toLowerCase();
-    return notes.where((n) =>
-      n.title.toLowerCase().contains(query) ||
-      n.content.toLowerCase().contains(query),
-    ).toList();
+    return notes
+        .where(
+          (n) =>
+              n.title.toLowerCase().contains(query) ||
+              n.content.toLowerCase().contains(query),
+        )
+        .toList();
   }
 
   /// Whether any filtered results exist.
@@ -79,6 +90,7 @@ class SavedState extends Equatable {
     String? sortByField,
     SortDirection? sortDirection,
     Object? errorMessage = _unset,
+    bool? isSavingNote,
   }) {
     return SavedState(
       status: status ?? this.status,
@@ -91,6 +103,7 @@ class SavedState extends Equatable {
       errorMessage: identical(errorMessage, _unset)
           ? this.errorMessage
           : errorMessage as String?,
+      isSavingNote: isSavingNote ?? this.isSavingNote,
     );
   }
 
@@ -104,5 +117,6 @@ class SavedState extends Equatable {
     sortByField,
     sortDirection,
     errorMessage,
+    isSavingNote,
   ];
 }

@@ -19,7 +19,6 @@ class OnboardingStep1Page extends StatefulWidget {
 
 class _OnboardingStep1PageState extends State<OnboardingStep1Page> {
   final _stateController = TextEditingController();
-  String _stateSearchQuery = '';
 
   @override
   void dispose() {
@@ -27,8 +26,8 @@ class _OnboardingStep1PageState extends State<OnboardingStep1Page> {
     super.dispose();
   }
 
-  List<String> _filteredStateNames(List<StateRegion> states) {
-    final query = _stateSearchQuery.trim().toLowerCase();
+  List<String> _filteredStateNames(List<StateRegion> states, String queryText) {
+    final query = queryText.trim().toLowerCase();
     if (query.isEmpty) {
       return states.map((s) => s.name).toList();
     }
@@ -36,12 +35,6 @@ class _OnboardingStep1PageState extends State<OnboardingStep1Page> {
         .where((s) => s.name.toLowerCase().contains(query))
         .map((s) => s.name)
         .toList();
-  }
-
-  void _onStateChanged(String value) {
-    setState(() {
-      _stateSearchQuery = value;
-    });
   }
 
   void _onContinue() {
@@ -56,6 +49,7 @@ class _OnboardingStep1PageState extends State<OnboardingStep1Page> {
           prev.status != curr.status ||
           prev.countries != curr.countries ||
           prev.states != curr.states ||
+          prev.stateSearchQuery != curr.stateSearchQuery ||
           prev.selectedCountry != curr.selectedCountry ||
           prev.selectedState != curr.selectedState,
       builder: (context, state) {
@@ -88,20 +82,26 @@ class _OnboardingStep1PageState extends State<OnboardingStep1Page> {
                     countries: state.countries.map((c) => c.name).toList(),
                     selectedCountry: state.selectedCountry?.name ?? 'India',
                     stateController: _stateController,
-                    popularStates: _filteredStateNames(state.states),
+                    popularStates: _filteredStateNames(
+                      state.states,
+                      state.stateSearchQuery,
+                    ),
                     selectedState: state.selectedState?.name,
                     onCountryChanged: (val) {
                       final c = state.countries.firstWhere(
                         (e) => e.name == val,
                       );
                       context.read<OnboardingCubit>().selectCountry(c);
+                      _stateController.clear();
                     },
                     onStateSelected: (st) {
                       final s = state.states.firstWhere((e) => e.name == st);
                       context.read<OnboardingCubit>().selectStateRegion(s);
                       _stateController.text = st;
                     },
-                    onStateChanged: _onStateChanged,
+                    onStateChanged: context
+                        .read<OnboardingCubit>()
+                        .updateStateSearchQuery,
                   );
                   if (isWide) {
                     return Row(
@@ -109,10 +109,7 @@ class _OnboardingStep1PageState extends State<OnboardingStep1Page> {
                       children: [
                         Expanded(flex: 7, child: formCard),
                         const SizedBox(width: AppDimensions.paddingXL),
-                        const Expanded(
-                          flex: 5,
-                          child: LocationInfoCards(),
-                        ),
+                        const Expanded(flex: 5, child: LocationInfoCards()),
                       ],
                     );
                   }
@@ -132,5 +129,3 @@ class _OnboardingStep1PageState extends State<OnboardingStep1Page> {
     );
   }
 }
-
-

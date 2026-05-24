@@ -19,6 +19,9 @@ class DashboardState extends Equatable {
     this.errorMessage,
     this.selectedBoardName = '',
     this.selectedGradeName = '',
+    this.currentBannerIndex = 0,
+    this.currentAnnouncementIndex = 0,
+    this.dismissedAnnouncementIds = const [],
   });
   final DashboardStatus status;
   final StudyProgress? progress;
@@ -31,6 +34,9 @@ class DashboardState extends Equatable {
   final String? errorMessage;
   final String selectedBoardName;
   final String selectedGradeName;
+  final int currentBannerIndex;
+  final int currentAnnouncementIndex;
+  final List<String> dismissedAnnouncementIds;
 
   String get heroBadge {
     if (selectedBoardName.isEmpty || selectedGradeName.isEmpty) {
@@ -89,6 +95,9 @@ class DashboardState extends Equatable {
     Object? errorMessage = unset,
     String? selectedBoardName,
     String? selectedGradeName,
+    int? currentBannerIndex,
+    int? currentAnnouncementIndex,
+    List<String>? dismissedAnnouncementIds,
   }) {
     return DashboardState(
       status: status ?? this.status,
@@ -104,6 +113,11 @@ class DashboardState extends Equatable {
           : errorMessage as String?,
       selectedBoardName: selectedBoardName ?? this.selectedBoardName,
       selectedGradeName: selectedGradeName ?? this.selectedGradeName,
+      currentBannerIndex: currentBannerIndex ?? this.currentBannerIndex,
+      currentAnnouncementIndex:
+          currentAnnouncementIndex ?? this.currentAnnouncementIndex,
+      dismissedAnnouncementIds:
+          dismissedAnnouncementIds ?? this.dismissedAnnouncementIds,
     );
   }
 
@@ -120,5 +134,8 @@ class DashboardState extends Equatable {
     errorMessage,
     selectedBoardName,
     selectedGradeName,
+    currentBannerIndex,
+    currentAnnouncementIndex,
+    dismissedAnnouncementIds,
   ];
 }
