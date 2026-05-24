@@ -1,29 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// Shared utility for managing the `users/{uid}/stats/current` accumulator.
-///
-/// Used by both the formulas and practice adapters to keep stats
-/// (formulas mastered, streak, points) consistent and DRY.
-class UserStatsAccumulator {
-  const UserStatsAccumulator(this._firestore);
-  final FirebaseFirestore _firestore;
+import '../../core/core.dart';
 
-  /// Points awarded per newly mastered formula.
+class UserStatsAccumulator {
+  const UserStatsAccumulator(this._firestoreClient);
+  final FirestoreClientPort _firestoreClient;
+
   static const int pointsPerMastery = 10;
 
   DocumentReference<Map<String, dynamic>> _statsRef(String uid) {
-    return _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('stats')
-        .doc('current');
+    return _firestoreClient.doc(AppFirestoreCollections.userStatsCurrent(uid));
   }
 
-  /// Increments formulas mastered count, awards points, and bumps streak.
   Future<void> incrementMasteredFormulas(String uid, int delta) async {
     final todayKey = _dateKey(DateTime.now().toUtc());
 
-    await _firestore.runTransaction((tx) async {
+    await _firestoreClient.runTransaction((tx) async {
       final snapshot = await tx.get(_statsRef(uid));
       final data = snapshot.data() ?? const <String, dynamic>{};
 
@@ -52,16 +44,15 @@ class UserStatsAccumulator {
     });
   }
 
-  /// Bumps streak without changing formulas or points (e.g. opening a chapter).
   Future<void> touchDailyStreak(String uid) async {
     final todayKey = _dateKey(DateTime.now().toUtc());
 
-    await _firestore.runTransaction((tx) async {
+    await _firestoreClient.runTransaction((tx) async {
       final snapshot = await tx.get(_statsRef(uid));
       final data = snapshot.data() ?? const <String, dynamic>{};
       final lastStudyDate = (data['lastStudyDate'] as String?) ?? '';
 
-      if (lastStudyDate == todayKey) return; // Already touched today.
+      if (lastStudyDate == todayKey) return;
 
       final currentStreak = (data['streak'] as num?)?.toInt() ?? 0;
       final updatedStreak = calculateNextStreak(
@@ -78,11 +69,10 @@ class UserStatsAccumulator {
     });
   }
 
-  /// Adds points (e.g. from practice quizzes) and bumps the streak.
   Future<void> addPoints(String uid, int points) async {
     final todayKey = _dateKey(DateTime.now().toUtc());
 
-    await _firestore.runTransaction((tx) async {
+    await _firestoreClient.runTransaction((tx) async {
       final snapshot = await tx.get(_statsRef(uid));
       final data = snapshot.data() ?? const <String, dynamic>{};
 
@@ -107,7 +97,6 @@ class UserStatsAccumulator {
     });
   }
 
-  /// Calculates the next streak value based on consecutive study days.
   static int calculateNextStreak(
     String lastStudyDate,
     String todayKey, {
@@ -125,7 +114,6 @@ class UserStatsAccumulator {
     return 1;
   }
 
-  /// Formats a UTC [DateTime] as `YYYY-MM-DD`.
   static String _dateKey(DateTime utcDate) {
     final month = utcDate.month.toString().padLeft(2, '0');
     final day = utcDate.day.toString().padLeft(2, '0');

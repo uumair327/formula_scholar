@@ -6,7 +6,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
 import '../cubit/onboarding_cubit.dart';
-import '../widgets/onboarding_shell.dart';
+import '../widgets/widgets.dart';
 
 /// Onboarding Step 4 — Weekly study goal selection.
 ///

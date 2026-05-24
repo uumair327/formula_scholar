@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../../../features/chapters/domain/entities/formula.dart';
+import '../../../../core/domain/entities/formula.dart';
 import '../../domain/domain.dart';
 
 class VisualizerState extends Equatable {

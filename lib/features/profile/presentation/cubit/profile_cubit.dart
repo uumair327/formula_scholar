@@ -27,13 +27,14 @@ class ProfileCubit extends Cubit<ProfileState>
        _getSettingsItems = getSettingsItems,
        _updateProfile = updateProfile,
        _activityRefreshCubit = activityRefreshCubit,
-       super(const ProfileState()) {
+        super(const ProfileState()) {
     _activityRefreshSubscription = _activityRefreshCubit.stream.listen((_) {
       if (state.status == ProfileStatus.loading) {
         return;
       }
       Future.microtask(loadProfile);
     });
+    Future.microtask(loadProfile);
   }
   final GetUserProfileUseCase _getUserProfile;
   final GetProfileStatsUseCase _getProfileStats;
@@ -61,6 +62,8 @@ class ProfileCubit extends Cubit<ProfileState>
       _getProfileStats(),
       _getSettingsItems(),
     ).wait;
+
+    if (isClosed) return;
 
     // Pattern match on each result for typed error handling.
     final profile = switch (profileResult) {

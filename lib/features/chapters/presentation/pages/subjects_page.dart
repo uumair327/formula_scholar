@@ -9,12 +9,8 @@ import '../../../dashboard/domain/domain.dart';
 import '../../../dashboard/presentation/widgets/widgets.dart';
 import '../cubit/subjects_cubit.dart';
 import '../cubit/subjects_state.dart';
+import '../widgets/subjects_curriculum_bar.dart';
 
-/// Subjects listing page — replaces the old "Chapters" tab.
-///
-/// Displays all subjects available for the user's currently selected
-/// board + grade as a responsive grid of [SubjectCard] widgets.
-/// Tapping a card navigates to [SubjectChaptersPage] via GoRouter.
 class SubjectsPage extends StatelessWidget {
   const SubjectsPage({super.key});
 
@@ -46,10 +42,11 @@ class SubjectsPage extends StatelessWidget {
             return CustomScrollView(
               slivers: [
                 _buildAppBar(context, colorScheme),
-                _buildCurriculumInfo(context, colorScheme),
+                const SubjectsCurriculumBar(),
                 SliverPadding(
                   padding: EdgeInsets.symmetric(horizontal: hp),
                   sliver: BlocBuilder<SubjectsCubit, SubjectsState>(
+                    buildWhen: (p, n) => p.status != n.status || p.subjects != n.subjects || p.errorMessage != n.errorMessage,
                     builder: (context, state) {
                       if (state.status == SubjectsStatus.initial ||
                           state.status == SubjectsStatus.loading) {
@@ -102,8 +99,6 @@ class SubjectsPage extends StatelessWidget {
     );
   }
 
-  // ─────────────────────── App Bar ──────────────────────────────
-
   SliverGlassAppBar _buildAppBar(BuildContext context, ColorScheme colorScheme) {
     return SliverGlassAppBar(
       titleWidget: Column(
@@ -149,67 +144,6 @@ class SubjectsPage extends StatelessWidget {
     );
   }
 
-  // ─────────────────────── Curriculum info bar ──────────────────
-
-  Widget _buildCurriculumInfo(
-      BuildContext context, ColorScheme colorScheme) {
-    return SliverToBoxAdapter(
-      child: BlocBuilder<CurriculumCubit, CurriculumState>(
-        buildWhen: (prev, curr) => prev.curriculum != curr.curriculum,
-        builder: (context, currState) {
-          final curriculum = currState.curriculum;
-          if (curriculum == null) return const SizedBox.shrink();
-
-          return Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppDimensions.paddingXL,
-              vertical: AppDimensions.paddingSM,
-            ),
-            child: Container(
-              padding: const EdgeInsets.all(AppDimensions.paddingLG),
-              decoration: signatureGlowDecoration(colorScheme),
-              child: Row(
-                children: [
-                  Icon(
-                    LucideIcons.graduationCap,
-                    color: colorScheme.onPrimary,
-                    size: AppDimensions.iconXL,
-                  ),
-                  const SizedBox(width: AppDimensions.paddingLG),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${curriculum.boardName} — ${curriculum.gradeLabel}',
-                          style: AppTextStyles.titleMedium.copyWith(
-                            color: colorScheme.onPrimary,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        const SizedBox(height: AppDimensions.paddingXXS),
-                        Text(
-                          'Browse all subjects in your curriculum',
-                          style: AppTextStyles.bodySmall.copyWith(
-                            color: colorScheme.onPrimary.withValues(
-                              alpha: AppDimensions.opacityHigh,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  // ─────────────────────── Subject Grid ────────────────────────
-
   Widget _buildSubjectGrid(BuildContext context, List<Subject> subjects) {
     return SliverPadding(
       padding: const EdgeInsets.only(top: AppDimensions.paddingLG),
@@ -238,17 +172,15 @@ class SubjectsPage extends StatelessWidget {
     );
   }
 
-  // ─────────────────────── Empty State ─────────────────────────
-
   Widget _buildEmptyState(BuildContext context, ColorScheme colorScheme) {
     return Padding(
       padding: const EdgeInsets.all(AppDimensions.paddingXXL),
       child: Center(
         child: AppEmptyState(
-          title: 'No subjects available',
+          title: AppStrings.noSubjectsAvailable,
           description: 'Set your board and grade on the Home tab to discover available subjects.',
           icon: LucideIcons.layers,
-          actionLabel: 'Go to Home',
+          actionLabel: AppStrings.goToHome,
           onAction: () {
             StatefulNavigationShell.of(context).goBranch(0);
           },
@@ -257,10 +189,7 @@ class SubjectsPage extends StatelessWidget {
     );
   }
 
-  // ─────────────────────── Navigation ──────────────────────────
-
   void _onSubjectTap(BuildContext context, Subject subject) {
-    // Update the global subject selection cubit
     context.read<SubjectSelectionCubit>().selectSubject(
           id: subject.id,
           name: subject.name,
@@ -270,7 +199,6 @@ class SubjectsPage extends StatelessWidget {
           subtitle: subject.subtitle ?? '',
         );
 
-    // Navigate to chapters for this subject
     context.goNamed(
       AppRoutes.subjectChaptersName,
       pathParameters: {'subjectId': subject.id},

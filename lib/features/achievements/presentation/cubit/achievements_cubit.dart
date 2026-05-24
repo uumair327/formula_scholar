@@ -29,7 +29,9 @@ class AchievementsCubit extends Cubit<AchievementsState>
   AchievementsCubit({
     required GetAchievementsUseCase getAchievements,
   }) : _getAchievements = getAchievements,
-       super(const AchievementsState());
+        super(const AchievementsState()) {
+    Future.microtask(loadAchievements);
+  }
 
   final GetAchievementsUseCase _getAchievements;
 

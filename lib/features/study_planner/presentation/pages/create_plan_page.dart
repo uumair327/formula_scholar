@@ -95,8 +95,8 @@ class _CreatePlanPageState extends State<CreatePlanPage> {
               TextField(
                 controller: _titleCtrl,
                 decoration: const InputDecoration(
-                  labelText: 'Plan Title',
-                  hintText: 'e.g. Week 1 Revision',
+                  labelText: AppStrings.planTitle,
+                  hintText: AppStrings.planTitleHint,
                   prefixIcon: Icon(LucideIcons.calendar),
                 ),
               ),

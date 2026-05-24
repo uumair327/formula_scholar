@@ -6,6 +6,7 @@
 /// ```
 library;
 
+export 'config/config.dart';
 export 'constants/constants.dart';
 export 'di/di.dart';
 export 'domain/entities/paginated_response.dart';

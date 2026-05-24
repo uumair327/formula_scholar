@@ -1,3 +1,5 @@
+library;
+
 export 'entities/auth_user.dart';
 export 'ports/auth_data_source_port.dart';
 export 'ports/auth_repository_port.dart';

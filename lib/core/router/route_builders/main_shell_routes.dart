@@ -1,0 +1,172 @@
+﻿import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../features/dashboard/dashboard.dart';
+import '../../../features/chapters/chapters.dart';
+import '../../../features/onboarding/onboarding.dart';
+import '../../../features/practice/practice.dart';
+import '../../../features/saved/saved.dart';
+import '../../../features/profile/profile.dart';
+import '../../../shared/shared.dart';
+import '../../constants/constants.dart';
+import '../../di/injection.dart';
+import '../app_page_transitions.dart';
+
+StatefulShellRoute mainShellRoute() {
+  return StatefulShellRoute.indexedStack(
+    builder: (context, state, navigationShell) {
+      return MainShellPage(navigationShell: navigationShell);
+    },
+    branches: [
+      _dashboardBranch(),
+      _chaptersBranch(),
+      _practiceBranch(),
+      _savedBranch(),
+      _profileBranch(),
+    ],
+  );
+}
+
+StatefulShellBranch _dashboardBranch() {
+  return StatefulShellBranch(
+    routes: [
+      GoRoute(
+        path: AppRoutes.dashboardPath,
+        name: AppRoutes.dashboardName,
+        pageBuilder: (context, state) {
+          return AppPageTransitions.fadeTransition(
+            state: state,
+            child: HeroControllerScope(
+              controller: HeroController(),
+              child: MultiBlocProvider(
+                providers: [
+                  BlocProvider(create: (_) => getIt<DashboardCubit>()),
+                  BlocProvider(
+                    create: (_) => CurriculumOptionsCubit(
+                      getBoards: getIt<GetBoardsUseCase>(),
+                      getGrades: getIt<GetGradesUseCase>(),
+                      curriculumCubit: getIt<CurriculumCubit>(),
+                    ),
+                  ),
+                ],
+                child: const DashboardPage(),
+              ),
+            ),
+          );
+        },
+      ),
+    ],
+  );
+}
+
+StatefulShellBranch _chaptersBranch() {
+  return StatefulShellBranch(
+    routes: [
+      GoRoute(
+        path: AppRoutes.chaptersPath,
+        name: AppRoutes.chaptersName,
+        pageBuilder: (context, state) {
+          return AppPageTransitions.fadeTransition(
+            state: state,
+            child: BlocProvider(
+              create: (_) => getIt<SubjectsCubit>(),
+              child: const SubjectsPage(),
+            ),
+          );
+        },
+        routes: [
+          GoRoute(
+            path: AppRoutes.subjectChaptersPath,
+            name: AppRoutes.subjectChaptersName,
+            pageBuilder: (context, state) {
+              return AppPageTransitions.fadeTransition(
+                state: state,
+                child: BlocProvider(
+                  create: (_) => getIt<ChaptersCubit>(),
+                  child: const SubjectChaptersPage(),
+                ),
+              );
+            },
+            routes: [
+              GoRoute(
+                path: AppRoutes.formulaDetailPath,
+                name: AppRoutes.formulaDetailName,
+                pageBuilder: (context, state) {
+                  return AppPageTransitions.fadeTransition(
+                    state: state,
+                    child: BlocProvider(
+                      create: (_) => getIt<FormulasCubit>(),
+                      child: const FormulasPage(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+StatefulShellBranch _practiceBranch() {
+  return StatefulShellBranch(
+    routes: [
+      GoRoute(
+        path: AppRoutes.practicePath,
+        name: AppRoutes.practiceName,
+        pageBuilder: (context, state) {
+          return AppPageTransitions.fadeTransition(
+            state: state,
+            child: BlocProvider(
+              create: (_) => getIt<PracticeCubit>(),
+              child: const PracticePage(),
+            ),
+          );
+        },
+      ),
+    ],
+  );
+}
+
+StatefulShellBranch _savedBranch() {
+  return StatefulShellBranch(
+    routes: [
+      GoRoute(
+        path: AppRoutes.savedPath,
+        name: AppRoutes.savedName,
+        pageBuilder: (context, state) {
+          return AppPageTransitions.fadeTransition(
+            state: state,
+            child: BlocProvider(
+              create: (_) => getIt<SavedCubit>(),
+              child: const SavedPage(),
+            ),
+          );
+        },
+      ),
+    ],
+  );
+}
+
+StatefulShellBranch _profileBranch() {
+  return StatefulShellBranch(
+    routes: [
+      GoRoute(
+        path: AppRoutes.profilePath,
+        name: AppRoutes.profileName,
+        pageBuilder: (context, state) {
+          return AppPageTransitions.fadeTransition(
+            state: state,
+            child: BlocProvider(
+              create: (_) => getIt<ProfileCubit>(),
+              child: const ProfilePage(),
+            ),
+          );
+        },
+      ),
+    ],
+  );
+}
+

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../core/core.dart';
+import 'legal_effective_date_badge.dart';
+import 'legal_footer.dart';
+import 'legal_section.dart';
+import 'legal_section_card.dart';
 
 /// Reusable legal document page (Privacy Policy, Terms of Service).
 ///
@@ -118,70 +122,15 @@ class LegalPage extends StatelessWidget {
             ),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
-                // Effective date badge
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppDimensions.paddingLG,
-                    vertical: AppDimensions.paddingSM,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryFixed,
-                    borderRadius: BorderRadius.circular(
-                      AppDimensions.radiusXXL,
-                    ),
-                  ),
-                  child: Text(
-                    AppStrings.legalEffectiveDate,
-                    style: AppTextStyles.labelSmall.copyWith(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
+                const LegalEffectiveDateBadge(),
                 const SizedBox(height: AppDimensions.paddingXXL),
-
-                // Sections
                 ...sections.asMap().entries.map((entry) {
                   final index = entry.key;
                   final section = entry.value;
-                  return _LegalSectionCard(index: index + 1, section: section);
+                  return LegalSectionCard(index: index + 1, section: section);
                 }),
-
                 const SizedBox(height: AppDimensions.paddingXXL),
-
-                // Footer
-                Container(
-                  padding: const EdgeInsets.all(AppDimensions.paddingXXL),
-                  decoration: BoxDecoration(
-                    color: AppColors.surfaceContainerLow,
-                    borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
-                  ),
-                  child: Column(
-                    children: [
-                      const Icon(
-                        LucideIcons.shieldCheck,
-                        size: AppDimensions.iconXXL,
-                        color: AppColors.primary,
-                      ),
-                      const SizedBox(height: AppDimensions.paddingMD),
-                      Text(
-                        AppStrings.legalFooterTitle,
-                        style: AppTextStyles.titleMedium.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: AppDimensions.paddingSM),
-                      Text(
-                        AppStrings.legalFooterDesc,
-                        style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.onSurfaceVariant,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
+                const LegalFooter(),
                 const SizedBox(height: AppDimensions.bottomNavPadding),
               ]),
             ),
@@ -192,69 +141,4 @@ class LegalPage extends StatelessWidget {
   }
 }
 
-/// A section within a legal document.
-class LegalSection {
-  const LegalSection({required this.title, required this.content});
-  final String title;
-  final String content;
-}
 
-class _LegalSectionCard extends StatelessWidget {
-  const _LegalSectionCard({required this.index, required this.section});
-  final int index;
-  final LegalSection section;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppDimensions.paddingXXL),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: AppDimensions.avatarSM,
-                height: AppDimensions.avatarSM,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.primaryFixed,
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  '$index',
-                  style: AppTextStyles.labelSmall.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ),
-              const SizedBox(width: AppDimensions.paddingMD),
-              Expanded(
-                child: Text(
-                  section.title,
-                  style: AppTextStyles.titleMedium.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppDimensions.paddingMD),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: AppDimensions.avatarSM + AppDimensions.paddingMD,
-            ),
-            child: Text(
-              section.content,
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.onSurfaceVariant,
-                height: AppDimensions.lineHeightRelaxed,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

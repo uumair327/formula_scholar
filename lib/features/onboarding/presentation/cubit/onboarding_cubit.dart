@@ -23,7 +23,9 @@ class OnboardingCubit extends Cubit<OnboardingState> {
        _getGrades = getGrades,
        _saveCurriculum = saveCurriculum,
        _updateStudyGoal = updateStudyGoal,
-       super(const OnboardingState());
+        super(const OnboardingState()) {
+    Future.microtask(loadCountries);
+  }
   final GetCountriesUseCase _getCountries;
   final GetStatesUseCase _getStates;
   final GetBoardsUseCase _getBoards;

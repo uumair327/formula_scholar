@@ -1,38 +1,42 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../../../core/core.dart';
 import '../../domain/domain.dart';
 
 @LazySingleton(as: FlashcardReviewPort)
 class FirestoreFlashcardReviewAdapter implements FlashcardReviewPort {
-  FirestoreFlashcardReviewAdapter(this._firestore);
+  FirestoreFlashcardReviewAdapter(this._api);
 
-  final FirebaseFirestore _firestore;
+  final FirestoreClientPort _api;
 
   CollectionReference _reviewsRef(String uid) =>
-      _firestore.collection('users').doc(uid).collection('flashcard_reviews');
+      _api.collection(AppFirestoreCollections.userFlashcardReviews(uid));
 
   @override
   Future<void> saveReview({
     required String userId,
     required Flashcard card,
   }) async {
-    await _reviewsRef(userId).doc(card.id).set({
-      'easeFactor': card.easeFactor,
-      'interval': card.interval,
-      'reviewCount': card.reviewCount,
-      'lapses': card.lapses,
-      'isMastered': card.isMastered,
-      'nextReviewAt': card.nextReviewAt != null
-          ? Timestamp.fromDate(card.nextReviewAt!)
-          : null,
-      'lastReviewedAt': Timestamp.now(),
-      'title': card.title,
-      'latex': card.latex,
-      'subjectId': card.subjectId,
-      'chapterId': card.chapterId,
-      'updatedAt': Timestamp.now(),
-    });
+    await _api.execute(
+      () => _reviewsRef(userId).doc(card.id).set({
+        'easeFactor': card.easeFactor,
+        'interval': card.interval,
+        'reviewCount': card.reviewCount,
+        'lapses': card.lapses,
+        'isMastered': card.isMastered,
+        'nextReviewAt': card.nextReviewAt != null
+            ? Timestamp.fromDate(card.nextReviewAt!)
+            : null,
+        'lastReviewedAt': Timestamp.now(),
+        'title': card.title,
+        'latex': card.latex,
+        'subjectId': card.subjectId,
+        'chapterId': card.chapterId,
+        'updatedAt': Timestamp.now(),
+      }),
+      tag: AppLogTags.flashcardsDataSource,
+    );
   }
 
   @override
@@ -40,7 +44,10 @@ class FirestoreFlashcardReviewAdapter implements FlashcardReviewPort {
     required String userId,
     required List<Flashcard> cards,
   }) async {
-    final snapshot = await _reviewsRef(userId).get();
+    final snapshot = await _api.execute(
+      () => _reviewsRef(userId).get(),
+      tag: AppLogTags.flashcardsDataSource,
+    );
     if (snapshot.docs.isEmpty) return cards;
 
     final reviewMap = <String, Map<String, dynamic>>{};

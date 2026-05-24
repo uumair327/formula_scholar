@@ -7,8 +7,7 @@
 /// 4. Streams real-time updates for reactive UI
 library;
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-
+import '../../../core/core.dart';
 import '../../domain/domain.dart';
 import '../adapters/dashboard_registry_adapter.dart';
 
@@ -16,8 +15,8 @@ class DashboardRegistryRepository {
 
   DashboardRegistryRepository(this._adapter);
 
-  factory DashboardRegistryRepository.create(FirebaseFirestore firestore) {
-    return DashboardRegistryRepository(DashboardRegistryAdapter(firestore));
+  factory DashboardRegistryRepository.create(FirestoreClientPort api) {
+    return DashboardRegistryRepository(DashboardRegistryAdapter(api));
   }
   final DashboardRegistryAdapter _adapter;
 

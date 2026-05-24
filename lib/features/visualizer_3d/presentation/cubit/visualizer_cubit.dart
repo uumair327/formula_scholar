@@ -2,7 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
-import '../../../../features/chapters/domain/entities/formula.dart';
+import '../../../../core/domain/entities/formula.dart';
 import '../../domain/domain.dart';
 import 'visualizer_state.dart';
 

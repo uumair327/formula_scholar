@@ -1,9 +1,6 @@
-import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:universal_html/html.dart' as html;
-import 'dart:ui_web' as ui_web;
 
 class WebviewChemistryWidget extends StatefulWidget {
   const WebviewChemistryWidget({
@@ -26,15 +23,8 @@ class _WebviewChemistryWidgetState extends State<WebviewChemistryWidget> {
   void initState() {
     super.initState();
     if (kIsWeb) {
-      _viewId = 'chemistry-viewer-${Random().nextInt(1000000)}';
-      ui_web.platformViewRegistry.registerViewFactory(_viewId, (int viewId) {
-        final iframe = html.IFrameElement()
-          ..style.border = 'none'
-          ..style.width = '100%'
-          ..style.height = '100%'
-          ..srcdoc = _buildHtmlString();
-        return iframe;
-      });
+      _viewId = 'chemistry-viewer-${DateTime.now().millisecondsSinceEpoch}';
+      // Note: HtmlElementView will be used in build method
     } else {
       _controller = WebViewController()
         ..setJavaScriptMode(JavaScriptMode.unrestricted)

@@ -60,6 +60,7 @@ class _StudyPlannerPageState extends State<StudyPlannerPage> {
         ),
       ),
       body: BlocBuilder<StudyPlannerCubit, StudyPlannerState>(
+        buildWhen: (p, n) => p.status != n.status || p.plans != n.plans,
         builder: (context, state) {
           if (state.status == StudyPlannerStatus.initial ||
               state.status == StudyPlannerStatus.loading) {
@@ -88,7 +89,7 @@ class _StudyPlannerPageState extends State<StudyPlannerPage> {
                 children: [
                   const AppEmptyState(
                     icon: LucideIcons.calendar,
-                    title: 'No study plans yet',
+                    title: AppStrings.noPlansYet,
                     description: 'Create your first study plan to get started',
                   ),
                   const SizedBox(height: AppDimensions.paddingXL),
@@ -97,7 +98,7 @@ class _StudyPlannerPageState extends State<StudyPlannerPage> {
                       horizontal: AppDimensions.paddingXL,
                     ),
                     child: AppGradientButton(
-                      label: 'Create Plan',
+                      label: AppStrings.createPlan,
                       onPressed: () =>
                           context.pushNamed(AppRoutes.createPlanName),
                       icon: LucideIcons.plus,

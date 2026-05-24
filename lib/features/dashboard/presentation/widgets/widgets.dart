@@ -1,6 +1,26 @@
 library;
 
+export 'academic_path_section.dart';
+export 'announcement_banner.dart';
+export 'carousel_banners.dart';
+export 'compact_subject_card.dart';
+export 'continue_studying_section.dart';
+export 'curriculum_badge.dart';
+export 'curriculum_chip.dart';
+export 'curriculum_chip_row.dart';
+export 'curriculum_error_row.dart';
+export 'curriculum_filter_bar.dart';
 export 'daily_challenge_dialog.dart';
+export 'dashboard_actions.dart';
+export 'dashboard_app_bar.dart';
+export 'featured_subject_card.dart';
 export 'filter_chip_group.dart';
+export 'filter_shimmer.dart';
+export 'formula_vault_section.dart';
+export 'hero_status_card.dart';
+export 'quiz_card.dart';
+export 'quick_actions_section.dart';
 export 'subject_card.dart';
+export 'tool_card.dart';
+export 'vault_grid.dart';
 export 'weak_areas_section.dart';

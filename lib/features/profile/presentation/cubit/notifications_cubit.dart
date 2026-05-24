@@ -13,12 +13,14 @@ class NotificationsCubit extends Cubit<NotificationsState>
     required UpdateNotificationPreferencesUseCase updateNotificationPreferences,
   }) : _getNotificationPreferences = getNotificationPreferences,
        _updateNotificationPreferences = updateNotificationPreferences,
-       super(const NotificationsState());
+        super(const NotificationsState()) {
+    Future.microtask(loadPreferences);
+  }
   final GetNotificationPreferencesUseCase _getNotificationPreferences;
   final UpdateNotificationPreferencesUseCase _updateNotificationPreferences;
 
   @override
-  String get logTag => AppLogTags.profileCubit;
+  String get logTag => AppLogTags.notificationsCubit;
 
   Future<void> loadPreferences() async {
     emit(
@@ -57,6 +59,7 @@ class NotificationsCubit extends Cubit<NotificationsState>
     );
 
     final result = await _updateNotificationPreferences(next);
+    if (isClosed) return;
     switch (result) {
       case Success():
         emit(

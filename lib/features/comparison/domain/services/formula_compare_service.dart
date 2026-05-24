@@ -1,6 +1,6 @@
 import 'package:injectable/injectable.dart';
 
-import '../../../chapters/domain/entities/formula.dart';
+import '../../../../core/domain/entities/formula.dart';
 import '../entities/formula_comparison.dart';
 
 @injectable

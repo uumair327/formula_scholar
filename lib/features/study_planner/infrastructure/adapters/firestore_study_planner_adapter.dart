@@ -8,21 +8,24 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: StudyPlannerPort)
 class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
-  FirestoreStudyPlannerAdapter(this._firestore);
+  FirestoreStudyPlannerAdapter(this._api);
 
-  final FirebaseFirestore _firestore;
+  final FirestoreClientPort _api;
 
   CollectionReference _plansRef(String userId) =>
-      _firestore.collection('users').doc(userId).collection('study_plans');
+      _api.collection(AppFirestoreCollections.userStudyPlans(userId));
 
   @override
   Stream<List<StudyPlan>> watchPlans(String userId) {
     AppLogger.trace('watchPlans($userId)',
         tag: AppLogTags.studyPlannerDataSource);
-    return _plansRef(userId)
-        .orderBy('updatedAt', descending: true)
-        .snapshots()
-        .map((snapshot) => snapshot.docs.map(_docToPlan).toList());
+    return _api.stream(
+      () => _plansRef(userId)
+          .orderBy('updatedAt', descending: true)
+          .snapshots()
+          .map((snapshot) => snapshot.docs.map(_docToPlan).toList()),
+      tag: AppLogTags.studyPlannerDataSource,
+    );
   }
 
   StudyPlan _docToPlan(DocumentSnapshot doc) {
@@ -85,21 +88,30 @@ class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
   Future<void> createPlan({required String userId, required StudyPlan plan}) async {
     AppLogger.trace('createPlan($userId, ${plan.id})',
         tag: AppLogTags.studyPlannerDataSource);
-    await _plansRef(userId).doc(plan.id).set(_planToMap(plan));
+    await _api.execute(
+      () => _plansRef(userId).doc(plan.id).set(_planToMap(plan)),
+      tag: AppLogTags.studyPlannerDataSource,
+    );
   }
 
   @override
   Future<void> updatePlan({required String userId, required StudyPlan plan}) async {
     AppLogger.trace('updatePlan($userId, ${plan.id})',
         tag: AppLogTags.studyPlannerDataSource);
-    await _plansRef(userId).doc(plan.id).update(_planToMap(plan));
+    await _api.execute(
+      () => _plansRef(userId).doc(plan.id).update(_planToMap(plan)),
+      tag: AppLogTags.studyPlannerDataSource,
+    );
   }
 
   @override
   Future<void> deletePlan({required String userId, required String planId}) async {
     AppLogger.trace('deletePlan($userId, $planId)',
         tag: AppLogTags.studyPlannerDataSource);
-    await _plansRef(userId).doc(planId).delete();
+    await _api.execute(
+      () => _plansRef(userId).doc(planId).delete(),
+      tag: AppLogTags.studyPlannerDataSource,
+    );
   }
 
   @override
@@ -111,7 +123,10 @@ class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
     AppLogger.trace('updateSessionStatus($userId, $planId, $sessionId)',
         tag: AppLogTags.studyPlannerDataSource);
     final docRef = _plansRef(userId).doc(planId);
-    final snap = await docRef.get();
+    final snap = await _api.execute(
+      () => docRef.get(),
+      tag: AppLogTags.studyPlannerDataSource,
+    );
     final data = snap.data() as Map<String, dynamic>?;
     if (data == null) {
       AppLogger.warning(
@@ -130,6 +145,9 @@ class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
       return;
     }
     sessions[idx]['status'] = SessionStatus.completed.name;
-    await docRef.update({'sessions': sessions, 'updatedAt': Timestamp.now()});
+    await _api.execute(
+      () => docRef.update({'sessions': sessions, 'updatedAt': Timestamp.now()}),
+      tag: AppLogTags.studyPlannerDataSource,
+    );
   }
 }

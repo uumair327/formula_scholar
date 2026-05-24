@@ -7,7 +7,7 @@ import '../../../../core/core.dart';
 import '../../domain/domain.dart';
 import '../cubit/onboarding_cubit.dart';
 import '../cubit/onboarding_state.dart';
-import '../widgets/onboarding_shell.dart';
+import '../widgets/widgets.dart';
 import '../../../../shared/shared.dart';
 
 

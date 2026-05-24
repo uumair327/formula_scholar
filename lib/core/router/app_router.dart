@@ -10,26 +10,36 @@ import '../utils/utils.dart';
 import '../../features/auth/auth.dart';
 import '../../shared/shared.dart';
 import 'app_router_observer.dart';
-import 'route_builders.dart';
+import 'route_builders/route_builders.dart';
 
 class _AuthRouterNotifier extends ChangeNotifier {
-  _AuthRouterNotifier(this._getCurrentAuthUser, this._watchAuthState) {
+  _AuthRouterNotifier(
+    this._getCurrentAuthUser,
+    this._watchAuthState,
+    this._curriculumCubit,
+  ) {
     _currentUser = _getCurrentAuthUser();
-    _subscription = _watchAuthState().listen((user) {
+    _authSubscription = _watchAuthState().listen((user) {
       _currentUser = user;
+      notifyListeners();
+    });
+    _curriculumSubscription = _curriculumCubit.stream.listen((_) {
       notifyListeners();
     });
   }
   final GetCurrentAuthUserUseCase _getCurrentAuthUser;
   final WatchAuthStateUseCase _watchAuthState;
-  late final StreamSubscription<AuthUser?> _subscription;
+  final CurriculumCubit _curriculumCubit;
+  late final StreamSubscription<AuthUser?> _authSubscription;
+  late final StreamSubscription<CurriculumState> _curriculumSubscription;
   AuthUser? _currentUser;
 
   bool get isLoggedIn => _currentUser != null;
 
   @override
   void dispose() {
-    _subscription.cancel();
+    _authSubscription.cancel();
+    _curriculumSubscription.cancel();
     super.dispose();
   }
 }
@@ -60,6 +70,7 @@ abstract final class AppRouter {
   static final _authNotifier = _AuthRouterNotifier(
     getIt<GetCurrentAuthUserUseCase>(),
     getIt<WatchAuthStateUseCase>(),
+    getIt<CurriculumCubit>(),
   );
 
   /// The singleton [GoRouter] instance consumed by [MaterialApp.router].
@@ -121,20 +132,20 @@ abstract final class AppRouter {
 
     // ───────────── Route Tree (delegated to RouteBuilders) ───────
     routes: [
-      ...RouteBuilders.authRoutes(),
-      ...RouteBuilders.profileSubRoutes(),
-      ...RouteBuilders.searchRoutes(),
-      ...RouteBuilders.analyticsRoutes(),
-      ...RouteBuilders.achievementsRoutes(),
-      ...RouteBuilders.cheatSheetRoutes(),
-      ...RouteBuilders.comparisonRoutes(),
-      ...RouteBuilders.flashcardRoutes(),
-      ...RouteBuilders.visualizer3dRoutes(),
-      ...RouteBuilders.studyPlannerRoutes(),
-      ...RouteBuilders.legalRoutes(),
-      ...RouteBuilders.practiceHistoryRoutes(),
-      RouteBuilders.onboardingRoutes(),
-      RouteBuilders.mainShellRoute(),
+      ...authRoutes(),
+      ...profileSubRoutes(),
+      ...searchRoutes(),
+      ...analyticsRoutes(),
+      ...achievementsRoutes(),
+      ...cheatSheetRoutes(),
+      ...comparisonRoutes(),
+      ...flashcardRoutes(),
+      ...visualizer3dRoutes(),
+      ...studyPlannerRoutes(),
+      ...legalRoutes(),
+      ...practiceHistoryRoutes(),
+      onboardingRoutes(),
+      mainShellRoute(),
     ],
   );
 }

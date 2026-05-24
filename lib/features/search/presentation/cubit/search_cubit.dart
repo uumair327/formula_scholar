@@ -30,6 +30,7 @@ class SearchCubit extends Cubit<SearchState> with CubitFailureLogger<SearchState
 
     _debounce = Timer(AppDurations.debounceDefault, () async {
       final result = await _searchFormulas(query, curriculumKey: curriculumKey);
+      if (isClosed) return;
       switch (result) {
         case Success(:final data):
           emit(state.copyWith(status: SearchStatus.loaded, results: data));

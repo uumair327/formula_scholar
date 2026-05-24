@@ -1,9 +1,3 @@
-/// Barrel file for all shared / reusable widgets.
-///
-/// Import this single file to access any shared widget:
-/// ```dart
-/// import 'package:formula_scholar/shared/widgets/widgets.dart';
-/// ```
 library;
 
 export 'app_action_row.dart';
@@ -19,6 +13,23 @@ export 'coming_soon_sheet.dart';
 export 'common_widgets.dart';
 export 'entrance_wrapper.dart';
 export 'glass_app_bar.dart';
+export 'legal_effective_date_badge.dart';
+export 'legal_footer.dart';
 export 'legal_page.dart';
+export 'legal_section.dart';
+export 'legal_section_card.dart';
 export 'main_shell_page.dart';
 export 'not_found_page.dart';
+export 'shell/desktop_shell.dart';
+export 'shell/glass_bottom_nav_bar.dart';
+export 'shell/mobile_shell.dart';
+export 'shell/nav_item.dart';
+export 'shell/shell_nav_data.dart';
+export 'shimmer/dashboard_shimmer.dart';
+export 'shimmer/chapters_shimmer.dart';
+export 'shimmer/profile_shimmer.dart';
+export 'shimmer/saved_shimmer.dart';
+export 'shimmer/formulas_shimmer.dart';
+export 'shimmer/practice_shimmer.dart';
+export 'shimmer/notifications_shimmer.dart';
+export 'staggered_fade_slide.dart';

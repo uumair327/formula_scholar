@@ -7,9 +7,9 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: AnalyticsDataSourcePort)
 class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
-  AnalyticsFirebaseAdapter(this._firestore, this._auth);
+  AnalyticsFirebaseAdapter(this._api, this._auth);
 
-  final FirebaseFirestore _firestore;
+  final FirestoreClientPort _api;
   final FirebaseAuth _auth;
 
   @override
@@ -24,13 +24,14 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
     final now = DateTime.now();
     final weekAgo = now.subtract(const Duration(days: 7));
 
-    final results = await _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('quiz_results')
-        .orderBy('completedAt', descending: true)
-        .limit(50)
-        .get();
+    final results = await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.userQuizResults(userId))
+          .orderBy('completedAt', descending: true)
+          .limit(50)
+          .get(),
+      tag: AppLogTags.analyticsDataSource,
+    );
 
     final weekResults = results.docs.where((d) {
       final ts = (d.data()['completedAt'] as Timestamp?)?.toDate();
@@ -58,33 +59,46 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
     final accuracy = totalQuestions > 0 ? correctQuestions / totalQuestions : 0.0;
 
     var totalFormulas = 0;
-    final subjects = await _firestore.collection('subjects').get();
-    for (final subject in subjects.docs) {
-      final chapters = await _firestore
-          .collection('subjects')
-          .doc(subject.id)
-          .collection('chapters')
-          .get();
-      for (final chapter in chapters.docs) {
-        final formulas = await _firestore
-            .collection('subjects')
-            .doc(subject.id)
-            .collection('chapters')
-            .doc(chapter.id)
-            .collection('formulas')
-            .where('isActive', isEqualTo: true)
-            .count()
-            .get();
-        totalFormulas += formulas.count ?? 0;
+    final subjects = await _api.execute(
+      () => _api.collection(AppFirestoreCollections.subjects).get(),
+      tag: AppLogTags.analyticsDataSource,
+    );
+
+    final chapterSnapshots = await Future.wait(
+      subjects.docs.map((s) => _api.execute(
+        () => _api
+            .collection(AppFirestoreCollections.subjectChapters(s.id))
+            .get(),
+        tag: AppLogTags.analyticsDataSource,
+      )),
+    );
+
+    final countFutures = <Future<AggregateQuerySnapshot>>[];
+    for (var i = 0; i < subjects.docs.length; i++) {
+      final subjectId = subjects.docs[i].id;
+      for (final chapter in chapterSnapshots[i].docs) {
+        countFutures.add(
+          _api.execute(
+            () => _api
+                .collection(AppFirestoreCollections.chapterFormulas(subjectId, chapter.id))
+                .where('isActive', isEqualTo: true)
+                .count()
+                .get(),
+            tag: AppLogTags.analyticsDataSource,
+          ),
+        );
       }
     }
 
-    final streakDoc = await _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('stats')
-        .doc('streak')
-        .get();
+    final formulaCounts = await Future.wait(countFutures);
+    totalFormulas = formulaCounts.fold<int>(0, (total, s) => total + (s.count ?? 0));
+
+    final streakDoc = await _api.execute(
+      () => _api
+          .doc(AppFirestoreCollections.userStatsStreak(userId))
+          .get(),
+      tag: AppLogTags.analyticsDataSource,
+    );
     final daysStreak = (streakDoc.data()?['currentStreak'] as num?)?.toInt() ?? 0;
 
     final recentList = results.docs.take(5).map((doc) {

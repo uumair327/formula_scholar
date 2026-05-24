@@ -6,9 +6,9 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: SearchDataSourcePort)
 class SearchFirebaseAdapter implements SearchDataSourcePort {
-  SearchFirebaseAdapter(this._firestore);
+  SearchFirebaseAdapter(this._api);
 
-  final FirebaseFirestore _firestore;
+  final FirestoreClientPort _api;
 
   @override
   Future<List<SearchResult>> searchFormulas(
@@ -26,30 +26,30 @@ class SearchFirebaseAdapter implements SearchDataSourcePort {
     final results = <SearchResult>[];
     final seen = <String>{};
 
-    final subjects = await _firestore.collection('subjects').get();
+    final subjects = await _api.execute(
+      () => _api.collection(AppFirestoreCollections.subjects).get(),
+      tag: AppLogTags.searchDataSource,
+    );
 
     for (final subjectDoc in subjects.docs) {
       if (subjectDoc.data()['isActive'] == false) continue;
       final subjectId = subjectDoc.id;
       final subjectName = subjectDoc.data()['name'] as String? ?? subjectId;
 
-      final chapters = await _firestore
-          .collection('subjects')
-          .doc(subjectId)
-          .collection('chapters')
-          .get();
+      final chapters = await _api.execute(
+        () => _api
+            .collection(AppFirestoreCollections.subjectChapters(subjectId))
+            .get(),
+        tag: AppLogTags.searchDataSource,
+      );
 
       for (final chapterDoc in chapters.docs) {
         if (chapterDoc.data()['isActive'] == false) continue;
         final chapterId = chapterDoc.id;
         final chapterName = chapterDoc.data()['name'] as String? ?? chapterId;
 
-        final formulaRef = _firestore
-            .collection('subjects')
-            .doc(subjectId)
-            .collection('chapters')
-            .doc(chapterId)
-            .collection('formulas');
+        final formulaRef = _api
+            .collection(AppFirestoreCollections.chapterFormulas(subjectId, chapterId));
 
         final formulaQuery = curriculumKey != null
             ? formulaRef.where(
@@ -60,7 +60,10 @@ class SearchFirebaseAdapter implements SearchDataSourcePort {
               )
             : formulaRef;
 
-        final formulas = await formulaQuery.limit(50).get();
+        final formulas = await _api.execute(
+          () => formulaQuery.limit(50).get(),
+          tag: AppLogTags.searchDataSource,
+        );
 
         for (final formulaDoc in formulas.docs) {
           final data = formulaDoc.data();

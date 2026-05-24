@@ -7,10 +7,10 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: SavedDataSourcePort)
 class SavedFirebaseAdapter implements SavedDataSourcePort {
-  SavedFirebaseAdapter(this._firestore, this._firebaseAuth);
+  SavedFirebaseAdapter(this._api, this._firebaseAuth);
   static const int _documentIdQueryChunkSize = 30;
 
-  final FirebaseFirestore _firestore;
+  final FirestoreClientPort _api;
   final FirebaseAuth _firebaseAuth;
 
   @override
@@ -29,15 +29,15 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
       return [];
     }
 
-    // Build Firestore query with server-side sorting (golden rule: query authority).
-    final snapshot = await _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('bookmarks')
-        .where('curriculumKey', isEqualTo: curriculumKey)
-        .orderBy(query.sortByField, descending: query.isDescending)
-        .limit(200)
-        .get();
+    final snapshot = await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.userBookmarks(uid))
+          .where('curriculumKey', isEqualTo: curriculumKey)
+          .orderBy(query.sortByField, descending: query.isDescending)
+          .limit(200)
+          .get(),
+      tag: AppLogTags.savedDataSource,
+    );
 
     final bookmarks = snapshot.docs.map((doc) {
       final data = doc.data();
@@ -64,13 +64,12 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
       return const [];
     }
 
-    final subjectDocs = await _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('saved_chapters')
-        .doc(curriculumKey)
-        .collection('subjects')
-        .get();
+    final subjectDocs = await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.savedChapterSubjects(uid, curriculumKey))
+          .get(),
+      tag: AppLogTags.savedDataSource,
+    );
 
     final chapters = <BookmarkedChapter>[];
     final chapterIdsBySubject = <String, Set<String>>{};
@@ -94,13 +93,12 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
       }
     }
 
-    // Legacy fallback: flat docs under users/{uid}/saved_chapters with
-    // {subjectId, subject, chapters, curriculumKey?}.
-    final legacyDocs = await _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('saved_chapters')
-        .get();
+    final legacyDocs = await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.userSavedChapters(uid))
+          .get(),
+      tag: AppLogTags.savedDataSource,
+    );
 
     for (final doc in legacyDocs.docs) {
       if (doc.id == curriculumKey) {
@@ -148,12 +146,13 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
 
       final chaptersById = <String, Map<String, dynamic>>{};
       for (final idChunk in _chunk(chapterIds, _documentIdQueryChunkSize)) {
-        final chapterSnapshot = await _firestore
-            .collection('subjects')
-            .doc(subjectId)
-            .collection('chapters')
-            .where(FieldPath.documentId, whereIn: idChunk)
-            .get();
+        final chapterSnapshot = await _api.execute(
+          () => _api
+              .collection(AppFirestoreCollections.subjectChapters(subjectId))
+              .where(FieldPath.documentId, whereIn: idChunk)
+              .get(),
+          tag: AppLogTags.savedDataSource,
+        );
         for (final chapterDoc in chapterSnapshot.docs) {
           chaptersById[chapterDoc.id] = chapterDoc.data();
         }
@@ -196,15 +195,15 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
       return [];
     }
 
-    // Scope saved_notes under user document for data isolation (security rule requirement).
-    final snapshot = await _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('saved_notes')
-        .where('curriculumKey', isEqualTo: curriculumKey)
-        .orderBy(query.sortByField, descending: query.isDescending)
-        .limit(200)
-        .get();
+    final snapshot = await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.userSavedNotes(uid))
+          .where('curriculumKey', isEqualTo: curriculumKey)
+          .orderBy(query.sortByField, descending: query.isDescending)
+          .limit(200)
+          .get(),
+      tag: AppLogTags.savedDataSource,
+    );
 
     final notes = snapshot.docs.map((doc) {
       final data = doc.data();
@@ -229,12 +228,13 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
         message: 'User must be logged in to remove a bookmark',
       );
     }
-    await _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('bookmarks')
-        .doc(formulaId)
-        .delete();
+    await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.userBookmarks(uid))
+          .doc(formulaId)
+          .delete(),
+      tag: AppLogTags.savedDataSource,
+    );
   }
 
   @override
@@ -250,15 +250,14 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
       );
     }
 
-    final subjectRef = _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('saved_chapters')
-        .doc(curriculumKey)
-        .collection('subjects')
+    final subjectRef = _api
+        .collection(AppFirestoreCollections.savedChapterSubjects(uid, curriculumKey))
         .doc(subjectId);
 
-    final subjectDoc = await subjectRef.get();
+    final subjectDoc = await _api.execute(
+      () => subjectRef.get(),
+      tag: AppLogTags.savedDataSource,
+    );
     final chapters =
         (subjectDoc.data()?['chapters'] as List<dynamic>?)
             ?.whereType<String>()
@@ -268,23 +267,28 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
     if (chapters.contains(chapterId)) {
       final remaining = chapters.where((id) => id != chapterId).toList();
       if (remaining.isEmpty) {
-        await subjectRef.delete();
+        await _api.execute(
+          () => subjectRef.delete(),
+          tag: AppLogTags.savedDataSource,
+        );
       } else {
-        await subjectRef.update({
-          'chapters': remaining,
-          'updatedAt': FieldValue.serverTimestamp(),
-        });
+        await _api.execute(
+          () => subjectRef.update({
+            'chapters': remaining,
+            'updatedAt': FieldValue.serverTimestamp(),
+          }),
+          tag: AppLogTags.savedDataSource,
+        );
       }
     }
 
-    // Legacy fallback: remove chapter from flat documents that may still hold
-    // {subjectId, subject, chapters, curriculumKey?} under saved_chapters.
-    final legacyDocs = await _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('saved_chapters')
-        .where('subjectId', isEqualTo: subjectId)
-        .get();
+    final legacyDocs = await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.userSavedChapters(uid))
+          .where('subjectId', isEqualTo: subjectId)
+          .get(),
+      tag: AppLogTags.savedDataSource,
+    );
 
     for (final legacyDoc in legacyDocs.docs) {
       final data = legacyDoc.data();
@@ -300,12 +304,18 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
 
       final remaining = legacyChapters.where((id) => id != chapterId).toList();
       if (remaining.isEmpty) {
-        await legacyDoc.reference.delete();
+        await _api.execute(
+          () => legacyDoc.reference.delete(),
+          tag: AppLogTags.savedDataSource,
+        );
       } else {
-        await legacyDoc.reference.update({
-          'chapters': remaining,
-          'updatedAt': FieldValue.serverTimestamp(),
-        });
+        await _api.execute(
+          () => legacyDoc.reference.update({
+            'chapters': remaining,
+            'updatedAt': FieldValue.serverTimestamp(),
+          }),
+          tag: AppLogTags.savedDataSource,
+        );
       }
     }
   }
@@ -316,24 +326,25 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
     if (uid == null) {
       throw const CacheException(message: 'User must be logged in to add a note');
     }
-    await _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('saved_notes')
-        .doc(note.id)
-        .set({
-      'id': note.id,
-      'title': note.title,
-      'subject': note.subject,
-      'content': note.content,
-      'curriculumKey': note.curriculumKey,
-      'savedAt': Timestamp.fromDate(note.savedAt),
-      'subjectId': note.subjectId,
-      'chapterId': note.chapterId,
-      'formulaId': note.formulaId,
-      'formulaTitle': note.formulaTitle,
-      'formulaLatex': note.formulaLatex,
-    });
+    await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.userSavedNotes(uid))
+          .doc(note.id)
+          .set({
+        'id': note.id,
+        'title': note.title,
+        'subject': note.subject,
+        'content': note.content,
+        'curriculumKey': note.curriculumKey,
+        'savedAt': Timestamp.fromDate(note.savedAt),
+        'subjectId': note.subjectId,
+        'chapterId': note.chapterId,
+        'formulaId': note.formulaId,
+        'formulaTitle': note.formulaTitle,
+        'formulaLatex': note.formulaLatex,
+      }),
+      tag: AppLogTags.savedDataSource,
+    );
   }
 
   @override
@@ -342,16 +353,17 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
     if (uid == null) {
       throw const CacheException(message: 'User must be logged in to update a note');
     }
-    await _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('saved_notes')
-        .doc(note.id)
-        .update({
-      'title': note.title,
-      'content': note.content,
-      'savedAt': Timestamp.fromDate(note.savedAt),
-    });
+    await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.userSavedNotes(uid))
+          .doc(note.id)
+          .update({
+        'title': note.title,
+        'content': note.content,
+        'savedAt': Timestamp.fromDate(note.savedAt),
+      }),
+      tag: AppLogTags.savedDataSource,
+    );
   }
 
   @override
@@ -360,12 +372,13 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
     if (uid == null) {
       throw const CacheException(message: 'User must be logged in to delete a note');
     }
-    await _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('saved_notes')
-        .doc(noteId)
-        .delete();
+    await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.userSavedNotes(uid))
+          .doc(noteId)
+          .delete(),
+      tag: AppLogTags.savedDataSource,
+    );
   }
 
   Iterable<List<T>> _chunk<T>(List<T> source, int size) sync* {

@@ -147,6 +147,8 @@ abstract final class AppStrings {
 
   // ──────────────────────── Error Messages ───────────────────
   static const String failedToLoadProfile = 'Failed to load profile';
+  static const String noInternetConnection = 'No internet connection';
+  static const String firestoreTimeout = 'The operation timed out. Please try again.';
   static const String failedToLoadDashboard = 'Failed to load dashboard';
   static const String dashboardCurriculumPending =
       'Syncing your board and grade...';
@@ -733,4 +735,36 @@ abstract final class AppStrings {
   static const String legalFooterDesc =
       'We are committed to protecting your personal information '
       'and providing a safe learning environment.';
+
+  // ──────────────────────── Dashboard ─────────────────────────
+  static const String resumeLearning = 'Resume learning';
+  static const String startQuiz = 'Start quiz';
+  static const String featuredAnnouncements = 'Featured Announcements';
+  static const String noSubjectsAvailable = 'No subjects available';
+  static const String goToHome = 'Go to Home';
+  static const String noFormulasAvailable = 'No formulas available yet';
+
+  // ──────────────────────── Search ────────────────────────────
+  static const String searchFormulasTitle = 'Search Formulas';
+  static const String noResultsFound = 'No results found';
+  static const String tryDifferentSearch = 'Try a different search term';
+
+  // ──────────────────────── Flashcards ─────────────────────────
+  static const String flashcardAgain = 'Again';
+  static const String flashcardHard = 'Hard';
+  static const String flashcardGood = 'Good';
+  static const String flashcardEasy = 'Easy';
+
+  // ──────────────────────── Study Planner ─────────────────────
+  static const String noPlansYet = 'No study plans yet';
+  static const String planTitle = 'Plan Title';
+  static const String planTitleHint = 'e.g. Week 1 Revision';
+  static const String planDescription = 'Description';
+  static const String planDescriptionHint = 'e.g. Cover chapters 1-3';
+  static const String numberOfSessions = 'Number of Sessions';
+  static const String durationPerSession = 'Duration per Session (min)';
+
+  // ──────────────────────── Cheat Sheet ───────────────────────
+  static const String printLabel = 'Print';
+  static const String noFormulasLabel = 'No formulas';
 }

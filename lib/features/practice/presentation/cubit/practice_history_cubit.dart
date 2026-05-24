@@ -45,7 +45,7 @@ class PracticeHistoryCubit extends Cubit<PracticeHistoryState>
   final GetRecentQuizResultsUseCase _getRecentQuizResults;
 
   @override
-  String get logTag => AppLogTags.practiceCubit;
+  String get logTag => AppLogTags.practiceHistoryCubit;
 
   Future<void> loadHistory({int limit = 50}) async {
     emit(state.copyWith(status: PracticeHistoryStatus.loading));

@@ -8,9 +8,9 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: PracticeDataSourcePort)
 class PracticeFirebaseAdapter implements PracticeDataSourcePort {
-  PracticeFirebaseAdapter(this._firestore, this._firebaseAuth);
+  PracticeFirebaseAdapter(this._api, this._firebaseAuth);
 
-  final FirebaseFirestore _firestore;
+  final FirestoreClientPort _api;
   final FirebaseAuth _firebaseAuth;
 
   @override
@@ -23,29 +23,33 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
       'getQuestions() fetching from Firestore for board=$boardId, grade=$gradeId, subject=$subjectId',
       tag: AppLogTags.practiceDataSource,
     );
-    
-    var query = _firestore
-        .collection('practice_questions')
+
+    var query = _api
+        .collection(AppFirestoreCollections.practiceQuestions)
         .where('boardId', isEqualTo: boardId)
         .where('gradeId', isEqualTo: gradeId);
-        
+
     if (subjectId != null && subjectId.isNotEmpty) {
       query = query.where('category', isEqualTo: subjectId);
     }
-        
-    var snapshot = await query.get();
 
-    // Backward compatibility for older datasets that don't yet store
-    // boardId/gradeId on each question document.
+    var snapshot = await _api.execute(
+      () => query.get(),
+      tag: AppLogTags.practiceDataSource,
+    );
+
     if (snapshot.docs.isEmpty) {
       AppLogger.warning(
         'No board/grade-scoped practice questions found; falling back to legacy dataset',
         tag: AppLogTags.practiceDataSource,
       );
-      snapshot = await _firestore
-          .collection('practice_questions')
-          .limit(20)
-          .get();
+      snapshot = await _api.execute(
+        () => _api
+            .collection(AppFirestoreCollections.practiceQuestions)
+            .limit(20)
+            .get(),
+        tag: AppLogTags.practiceDataSource,
+      );
     }
 
     return snapshot.docs.map((doc) {
@@ -85,26 +89,29 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
       return;
     }
 
-    final userRef = _firestore.collection('users').doc(uid);
+    await UserStatsAccumulator(_api).addPoints(uid, earnedPoints);
 
-    await UserStatsAccumulator(_firestore).addPoints(uid, earnedPoints);
-
-    final recentStudyRef = userRef.collection('recent_studies').doc('practice');
-    await recentStudyRef.set({
-      'id': 'practice',
-      'subjectId': 'practice',
-      'title': 'Practice Quiz',
-      'subject': 'General Practice',
-      'lastViewed': 'Just now',
-      'iconName': 'brain',
-      'colorValue': 0xFF655781,
-      'backgroundColorValue': 0xFFE9DFFC,
-      'boardId': boardId,
-      'gradeId': gradeId,
-      'answeredQuestions': answeredQuestions,
-      'earnedPoints': earnedPoints,
-      'viewedAt': FieldValue.serverTimestamp(),
-    }, SetOptions(merge: true));
+    final recentStudyRef = _api
+        .collection(AppFirestoreCollections.userRecentStudies(uid))
+        .doc('practice');
+    await _api.execute(
+      () => recentStudyRef.set({
+        'id': 'practice',
+        'subjectId': 'practice',
+        'title': 'Practice Quiz',
+        'subject': 'General Practice',
+        'lastViewed': 'Just now',
+        'iconName': 'brain',
+        'colorValue': 0xFF655781,
+        'backgroundColorValue': 0xFFE9DFFC,
+        'boardId': boardId,
+        'gradeId': gradeId,
+        'answeredQuestions': answeredQuestions,
+        'earnedPoints': earnedPoints,
+        'viewedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true)),
+      tag: AppLogTags.practiceDataSource,
+    );
 
     AppLogger.info(
       'Persisted quiz completion for uid=$uid (points=$earnedPoints, questions=$answeredQuestions)',
@@ -117,11 +124,9 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
     final uid = _firebaseAuth.currentUser?.uid;
     if (uid == null || records.isEmpty) return;
 
-    final batch = _firestore.batch();
-    final answersRef = _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('quiz_answers');
+    final batch = _api.batch();
+    final answersRef = _api
+        .collection(AppFirestoreCollections.userQuizAnswers(uid));
 
     for (final record in records) {
       final docRef = answersRef.doc();
@@ -131,7 +136,10 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
       });
     }
 
-    await batch.commit();
+    await _api.execute(
+      () => batch.commit(),
+      tag: AppLogTags.practiceDataSource,
+    );
     AppLogger.info(
       'Saved ${records.length} answer records for uid=$uid',
       tag: AppLogTags.practiceDataSource,
@@ -143,16 +151,17 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
     final uid = _firebaseAuth.currentUser?.uid;
     if (uid == null) return;
 
-    final docRef = _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('quiz_results')
+    final docRef = _api
+        .collection(AppFirestoreCollections.userQuizResults(uid))
         .doc(result.id);
 
-    await docRef.set({
-      ...result.toJson(),
-      'createdAt': FieldValue.serverTimestamp(),
-    });
+    await _api.execute(
+      () => docRef.set({
+        ...result.toJson(),
+        'createdAt': FieldValue.serverTimestamp(),
+      }),
+      tag: AppLogTags.practiceDataSource,
+    );
 
     AppLogger.info(
       'Saved quiz result ${result.id} for uid=$uid (${result.correctCount}/${result.totalQuestions})',
@@ -165,13 +174,14 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
     final uid = _firebaseAuth.currentUser?.uid;
     if (uid == null) return const [];
 
-    final snapshot = await _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('quiz_results')
-        .orderBy('createdAt', descending: true)
-        .limit(limit)
-        .get();
+    final snapshot = await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.userQuizResults(uid))
+          .orderBy('createdAt', descending: true)
+          .limit(limit)
+          .get(),
+      tag: AppLogTags.practiceDataSource,
+    );
 
     return snapshot.docs.map((doc) {
       return QuizResult.fromJson(doc.data());

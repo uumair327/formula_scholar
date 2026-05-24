@@ -7,8 +7,8 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: ProfileDataSourcePort)
 class ProfileFirebaseAdapter implements ProfileDataSourcePort {
-  ProfileFirebaseAdapter(this._firestore, this._firebaseAuth);
-  final FirebaseFirestore _firestore;
+  ProfileFirebaseAdapter(this._api, this._firebaseAuth);
+  final FirestoreClientPort _api;
   final FirebaseAuth _firebaseAuth;
 
   String _readString(
@@ -51,37 +51,13 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
   ) {
     final defaults = _notificationDefaults();
     return NotificationPreferences(
-      studyReminders: _readBool(
-        map,
-        'studyReminders',
-        fallback: defaults.studyReminders,
-      ),
-      streakAlerts: _readBool(
-        map,
-        'streakAlerts',
-        fallback: defaults.streakAlerts,
-      ),
+      studyReminders: _readBool(map, 'studyReminders', fallback: defaults.studyReminders),
+      streakAlerts: _readBool(map, 'streakAlerts', fallback: defaults.streakAlerts),
       newContent: _readBool(map, 'newContent', fallback: defaults.newContent),
-      achievements: _readBool(
-        map,
-        'achievements',
-        fallback: defaults.achievements,
-      ),
-      weeklyReport: _readBool(
-        map,
-        'weeklyReport',
-        fallback: defaults.weeklyReport,
-      ),
-      pushNotifications: _readBool(
-        map,
-        'pushNotifications',
-        fallback: defaults.pushNotifications,
-      ),
-      emailNotifications: _readBool(
-        map,
-        'emailNotifications',
-        fallback: defaults.emailNotifications,
-      ),
+      achievements: _readBool(map, 'achievements', fallback: defaults.achievements),
+      weeklyReport: _readBool(map, 'weeklyReport', fallback: defaults.weeklyReport),
+      pushNotifications: _readBool(map, 'pushNotifications', fallback: defaults.pushNotifications),
+      emailNotifications: _readBool(map, 'emailNotifications', fallback: defaults.emailNotifications),
     );
   }
 
@@ -99,13 +75,9 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
     };
   }
 
-  /// Upgrades Google profile photo URLs from the default 96px thumbnail
-  /// to a 400px version for crisp rendering on high-density displays.
   String _upgradeGooglePhotoUrl(String url) {
     if (url.isEmpty) return url;
-    // Google user photos: replace =s96-c (or similar) with =s400-c
     final upgraded = url.replaceAll(RegExp(r'=s\d+-c'), '=s400-c');
-    // If no size param was present, append one
     if (upgraded == url && url.contains('googleusercontent.com')) {
       return '$url=s400-c';
     }
@@ -131,7 +103,6 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
       );
     }
 
-    // Firebase Auth is the source of truth for identity fields.
     final authName = currentUser.displayName ?? '';
     final authEmail = currentUser.email ?? '';
     final authPhoto = _upgradeGooglePhotoUrl(currentUser.photoURL ?? '');
@@ -141,12 +112,13 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
       tag: AppLogTags.profileDataSource,
     );
 
-    // Merge with Firestore user doc for app-specific fields (grade, board, isPro).
-    final docRef = _firestore.collection('users').doc(currentUser.uid);
-    final docSnapshot = await docRef.get();
+    final docRef = _api.doc(AppFirestoreCollections.userDoc(currentUser.uid));
+    final docSnapshot = await _api.execute(
+      () => docRef.get(),
+      tag: AppLogTags.profileDataSource,
+    );
 
     if (!docSnapshot.exists) {
-      // Seed a baseline user doc for first-time users.
       final seedData = {
         'name': authName,
         'email': authEmail,
@@ -154,7 +126,10 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
         'grade': AppStrings.profileGrade,
         'isPro': false,
       };
-      await docRef.set(seedData);
+      await _api.execute(
+        () => docRef.set(seedData),
+        tag: AppLogTags.profileDataSource,
+      );
 
       return UserProfile(
         name: authName.isNotEmpty ? authName : 'Scholar',
@@ -180,23 +155,29 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
     final fsAvatarUrl = _readString(data, 'avatarUrl');
     final fsIsPro = _readBool(data, 'isPro', fallback: false);
 
-    // Always prefer the live Firebase Auth photo over a stale/empty
-    // Firestore value. This ensures Google profile changes propagate.
     final resolvedAvatar = authPhoto.isNotEmpty
         ? authPhoto
         : (fsAvatarUrl.isNotEmpty
               ? fsAvatarUrl
               : AppAssets.profileHeroAvatarUrl);
 
-    // Sync Firestore with the latest auth identity so it stays current.
     if (authPhoto.isNotEmpty && authPhoto != fsAvatarUrl) {
-      await docRef.set({'avatarUrl': authPhoto}, SetOptions(merge: true));
+      await _api.execute(
+        () => docRef.set({'avatarUrl': authPhoto}, SetOptions(merge: true)),
+        tag: AppLogTags.profileDataSource,
+      );
     }
     if (authName.isNotEmpty && authName != fsName) {
-      await docRef.set({'name': authName}, SetOptions(merge: true));
+      await _api.execute(
+        () => docRef.set({'name': authName}, SetOptions(merge: true)),
+        tag: AppLogTags.profileDataSource,
+      );
     }
     if (authEmail.isNotEmpty && authEmail != fsEmail) {
-      await docRef.set({'email': authEmail}, SetOptions(merge: true));
+      await _api.execute(
+        () => docRef.set({'email': authEmail}, SetOptions(merge: true)),
+        tag: AppLogTags.profileDataSource,
+      );
     }
 
     return UserProfile(
@@ -223,20 +204,16 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
       return _zeroStats();
     }
 
-    // Read the stats accumulator doc.
-    final statsSnapshot = await _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('stats')
-        .doc('current')
-        .get();
+    final statsSnapshot = await _api.execute(
+      () => _api
+          .doc(AppFirestoreCollections.userStatsCurrent(uid))
+          .get(),
+      tag: AppLogTags.profileDataSource,
+    );
 
     final statsData = statsSnapshot.data() ?? const <String, dynamic>{};
 
-    // Formulas count comes from the stats accumulator (updated on mastery toggle).
     final formulasCount = (statsData['formulas'] as num?)?.toInt() ?? 0;
-
-    // Streak and points also come from the accumulator.
     final streak = (statsData['streak'] as num?)?.toInt() ?? 0;
     final points = (statsData['points'] as num?)?.toInt() ?? 0;
 
@@ -262,7 +239,6 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
     ];
   }
 
-  /// Formats large numbers for display (e.g. 1500 → "1.5K").
   String _formatStatValue(int value) {
     if (value >= 1000) {
       final k = value / 1000;
@@ -273,82 +249,25 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
     return value.toString();
   }
 
-  /// Returns zero-state stats for unauthenticated or brand-new users.
   List<ProfileStat> _zeroStats() {
     return const [
-      ProfileStat(
-        id: 'formulas',
-        label: AppStrings.formulasMastered,
-        value: '0',
-        iconName: 'functions',
-      ),
-      ProfileStat(
-        id: 'streak',
-        label: AppStrings.daysStreak,
-        value: '0',
-        iconName: 'fire',
-      ),
-      ProfileStat(
-        id: 'points',
-        label: AppStrings.totalPoints,
-        value: '0',
-        iconName: 'stars',
-      ),
+      ProfileStat(id: 'formulas', label: AppStrings.formulasMastered, value: '0', iconName: 'functions'),
+      ProfileStat(id: 'streak', label: AppStrings.daysStreak, value: '0', iconName: 'fire'),
+      ProfileStat(id: 'points', label: AppStrings.totalPoints, value: '0', iconName: 'stars'),
     ];
   }
 
   @override
   Future<List<SettingsItem>> getSettingsItems() async {
-    AppLogger.trace(
-      'getSettingsItems() returning static client data',
-      tag: AppLogTags.profileDataSource,
-    );
     return const [
-      SettingsItem(
-        id: 'account',
-        label: AppStrings.accountInformation,
-        iconName: 'person_outline',
-      ),
-      SettingsItem(
-        id: 'bookmarks',
-        label: AppStrings.myBookmarks,
-        iconName: 'bookmark_outline',
-      ),
-      SettingsItem(
-        id: 'study_planner',
-        label: AppStrings.studyPlanner,
-        subtitle: AppStrings.studyPlannerSubtitle,
-        iconName: 'calendar_today',
-      ),
-      SettingsItem(
-        id: 'achievements',
-        label: AppStrings.achievementsTitle,
-        subtitle: AppStrings.achievementsSubtitle,
-        iconName: 'emoji_events',
-      ),
-      SettingsItem(
-        id: 'notifications',
-        label: AppStrings.notifications,
-        iconName: 'notifications_outlined',
-      ),
-      SettingsItem(
-        id: 'appearance',
-        label: AppStrings.appearance,
-        subtitle: AppStrings.toggleDarkMode,
-        iconName: 'palette_outlined',
-        isToggle: true,
-      ),
-      SettingsItem(
-        id: 'help',
-        label: AppStrings.helpAndSupport,
-        iconName: 'help_outline',
-      ),
-      SettingsItem(
-        id: 'logout',
-        label: AppStrings.logout,
-        iconName: 'logout',
-        isDestructive: true,
-      ),
+      SettingsItem(id: 'account', label: AppStrings.accountInformation, iconName: 'person_outline'),
+      SettingsItem(id: 'bookmarks', label: AppStrings.myBookmarks, iconName: 'bookmark_outline'),
+      SettingsItem(id: 'study_planner', label: AppStrings.studyPlanner, subtitle: AppStrings.studyPlannerSubtitle, iconName: 'calendar_today'),
+      SettingsItem(id: 'achievements', label: AppStrings.achievementsTitle, subtitle: AppStrings.achievementsSubtitle, iconName: 'emoji_events'),
+      SettingsItem(id: 'notifications', label: AppStrings.notifications, iconName: 'notifications_outlined'),
+      SettingsItem(id: 'appearance', label: AppStrings.appearance, subtitle: AppStrings.toggleDarkMode, iconName: 'palette_outlined', isToggle: true),
+      SettingsItem(id: 'help', label: AppStrings.helpAndSupport, iconName: 'help_outline'),
+      SettingsItem(id: 'logout', label: AppStrings.logout, iconName: 'logout', isDestructive: true),
     ];
   }
 
@@ -367,10 +286,13 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
       await currentUser.updatePhotoURL(avatarUrl);
     }
 
-    await _firestore.collection('users').doc(currentUser.uid).set({
-      'name': name,
-      'avatarUrl': avatarUrl,
-    }, SetOptions(merge: true));
+    await _api.execute(
+      () => _api.doc(AppFirestoreCollections.userDoc(currentUser.uid)).set({
+        'name': name,
+        'avatarUrl': avatarUrl,
+      }, SetOptions(merge: true)),
+      tag: AppLogTags.profileDataSource,
+    );
   }
 
   @override
@@ -380,7 +302,10 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
       return _notificationDefaults();
     }
 
-    final docSnapshot = await _firestore.collection('users').doc(uid).get();
+    final docSnapshot = await _api.execute(
+      () => _api.doc(AppFirestoreCollections.userDoc(uid)).get(),
+      tag: AppLogTags.profileDataSource,
+    );
     if (!docSnapshot.exists) {
       return _notificationDefaults();
     }
@@ -405,9 +330,12 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
       throw const ServerException(message: 'User not authenticated');
     }
 
-    await _firestore.collection('users').doc(uid).set({
-      'notificationPreferences': _notificationPreferencesToMap(preferences),
-    }, SetOptions(merge: true));
+    await _api.execute(
+      () => _api.doc(AppFirestoreCollections.userDoc(uid)).set({
+        'notificationPreferences': _notificationPreferencesToMap(preferences),
+      }, SetOptions(merge: true)),
+      tag: AppLogTags.profileDataSource,
+    );
   }
 
   @override
@@ -417,8 +345,11 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
       throw const ServerException(message: 'User not authenticated');
     }
 
-    await _firestore.collection('users').doc(uid).set({
-      'studyGoalId': studyGoalId,
-    }, SetOptions(merge: true));
+    await _api.execute(
+      () => _api.doc(AppFirestoreCollections.userDoc(uid)).set({
+        'studyGoalId': studyGoalId,
+      }, SetOptions(merge: true)),
+      tag: AppLogTags.profileDataSource,
+    );
   }
 }

@@ -5,13 +5,10 @@ import 'package:injectable/injectable.dart';
 import '../../../../core/core.dart';
 import '../../domain/domain.dart';
 
-const _appBannersCollection = 'app_banners';
-const _announcementsCollection = 'announcements';
-
 @LazySingleton(as: DashboardDataSourcePort)
 class DashboardFirebaseAdapter implements DashboardDataSourcePort {
-  DashboardFirebaseAdapter(this._firestore, this._firebaseAuth);
-  final FirebaseFirestore _firestore;
+  DashboardFirebaseAdapter(this._api, this._firebaseAuth);
+  final FirestoreClientPort _api;
   final FirebaseAuth _firebaseAuth;
 
   @override
@@ -23,7 +20,6 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
 
     final uid = _firebaseAuth.currentUser?.uid;
     if (uid == null) {
-      // Unauthenticated users see zero-state, not fake numbers.
       return const StudyProgress(
         masteryPercentage: 0,
         completedChapters: 0,
@@ -31,12 +27,13 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
       );
     }
 
-    final docSnapshot = await _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('progress_summary')
-        .doc('current')
-        .get();
+    final docSnapshot = await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.userProgressSummary(uid))
+          .doc(AppFirestoreCollections.current)
+          .get(),
+      tag: AppLogTags.dashboardDataSource,
+    );
 
     if (!docSnapshot.exists) {
       return _calculateProgressFromCurriculum(uid);
@@ -51,7 +48,10 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
   }
 
   Future<StudyProgress> _calculateProgressFromCurriculum(String uid) async {
-    final userDoc = await _firestore.collection('users').doc(uid).get();
+    final userDoc = await _api.execute(
+      () => _api.doc(AppFirestoreCollections.userDoc(uid)).get(),
+      tag: AppLogTags.dashboardDataSource,
+    );
     final userData = userDoc.data();
     final boardId = userData?['boardId']?.toString();
     final gradeId = userData?['gradeId']?.toString();
@@ -152,14 +152,14 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
       return const [];
     }
 
-    // Query the user's recent activity from Firestore.
-    final snapshot = await _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('recent_studies')
-        .orderBy('viewedAt', descending: true)
-        .limit(5)
-        .get();
+    final snapshot = await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.userRecentStudies(uid))
+          .orderBy('viewedAt', descending: true)
+          .limit(5)
+          .get(),
+      tag: AppLogTags.dashboardDataSource,
+    );
 
     if (snapshot.docs.isEmpty) {
       return _fallbackRecentStudiesFromSubjects(uid);
@@ -183,7 +183,10 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
   Future<List<RecentStudy>> _fallbackRecentStudiesFromSubjects(
     String uid,
   ) async {
-    final userDoc = await _firestore.collection('users').doc(uid).get();
+    final userDoc = await _api.execute(
+      () => _api.doc(AppFirestoreCollections.userDoc(uid)).get(),
+      tag: AppLogTags.dashboardDataSource,
+    );
     final userData = userDoc.data();
     final boardId = userData?['boardId']?.toString();
     final gradeId = userData?['gradeId']?.toString();
@@ -228,25 +231,26 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
     final tokenCountry = 'IN_${boardId}_$gradeId';
     final tokenCountryAlt = 'IN_${boardId}_${_alternateGradeId(gradeId)}';
 
-    // We fetch subjects matching the boardId or specific audiences
-    final snapshot = await _firestore
-        .collection('subjects')
-        .where(
-          Filter.or(
-            Filter('isGeneralContent', isEqualTo: true),
-            Filter('audiences', arrayContainsAny: [
-              token,
-              tokenAlt,
-              tokenCountry,
-              tokenCountryAlt,
-            ]),
-            Filter('boardId', isEqualTo: boardId),
-            Filter('boardId', isEqualTo: 'IN_$boardId'),
-          ),
-        )
-        .get();
+    final snapshot = await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.subjects)
+          .where(
+            Filter.or(
+              Filter('isGeneralContent', isEqualTo: true),
+              Filter('audiences', arrayContainsAny: [
+                token,
+                tokenAlt,
+                tokenCountry,
+                tokenCountryAlt,
+              ]),
+              Filter('boardId', isEqualTo: boardId),
+              Filter('boardId', isEqualTo: 'IN_$boardId'),
+            ),
+          )
+          .get(),
+      tag: AppLogTags.dashboardDataSource,
+    );
 
-    // Client-side filtering to enforce strict grade separation
     final filteredDocs = snapshot.docs.where((doc) {
       final data = doc.data();
       if (data['isActive'] == false) return false;
@@ -256,45 +260,39 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
               .toList() ??
           [];
 
-      // 1. If audiences are explicitly defined, check if they match
       if (aud.isNotEmpty) {
         final matchesGrade = aud.contains(token) ||
             aud.contains(tokenAlt) ||
             aud.contains(tokenCountry) ||
             aud.contains(tokenCountryAlt);
 
-        // Explicitly targeted for this grade
         if (matchesGrade) return true;
 
         final matchesBoardOnly =
             aud.contains(boardId) || aud.contains('IN_$boardId');
         if (!matchesBoardOnly) {
-          return false; // Audiences exist but none match this grade or board
+          return false;
         }
       }
 
-      // 2. Check explicit boardId field if present
       final docBoard = data['boardId']?.toString();
       if (docBoard != null && docBoard.isNotEmpty) {
         if (docBoard != boardId && docBoard != 'IN_$boardId') {
-          return false; // Specifically assigned to a DIFFERENT board
+          return false;
         }
       }
 
-      // 3. Check explicit gradeId field if present
       final docGrade = data['gradeId']?.toString();
       if (docGrade != null && docGrade.isNotEmpty) {
         if (docGrade != gradeId && docGrade != _alternateGradeId(gradeId)) {
-          return false; // Specifically assigned to a DIFFERENT grade
+          return false;
         }
       }
 
-      // 4. Handle General Content (fallback)
       if (data['isGeneralContent'] == true) {
         final badge = data['badgeText']?.toString().toLowerCase() ?? '';
         final currentBoardLower = boardId.toLowerCase();
 
-        // Defensive check: If the badge explicitly names a board, ensure we are on it.
         if ((badge.contains('cbse') && !currentBoardLower.contains('cbse')) ||
             (badge.contains('icse') && !currentBoardLower.contains('icse')) ||
             (badge.contains('msbshse') &&
@@ -302,8 +300,6 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
           return false;
         }
 
-        // Defensive check: If the badge explicitly names a grade, ensure we are on it.
-        // E.g. "CBSE 10 CURATED" -> block for grade 9.
         final gradeStr = gradeId.toString();
         if (badge.contains('10') && !badge.contains('9') && gradeStr == '9') {
           return false;
@@ -315,7 +311,6 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
         return true;
       }
 
-      // 5. If it reaches here, it has no audiences, matching board/grade, and is not general content.
       return true;
     }).toList();
 
@@ -330,11 +325,14 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
       tag: AppLogTags.dashboardDataSource,
     );
 
-    final snapshot = await _firestore
-        .collection(_appBannersCollection)
-        .where('isActive', isEqualTo: true)
-        .orderBy('displayOrder', descending: false)
-        .get();
+    final snapshot = await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.appBanners)
+          .where('isActive', isEqualTo: true)
+          .orderBy('displayOrder', descending: false)
+          .get(),
+      tag: AppLogTags.dashboardDataSource,
+    );
 
     return snapshot.docs.map((doc) => CarouselItem.fromFirestore(doc)).toList();
   }
@@ -346,11 +344,14 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
       tag: AppLogTags.dashboardDataSource,
     );
 
-    final snapshot = await _firestore
-        .collection(_announcementsCollection)
-        .where('status', isEqualTo: 'published')
-        .orderBy('priority')
-        .get();
+    final snapshot = await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.announcements)
+          .where('status', isEqualTo: 'published')
+          .orderBy('priority')
+          .get(),
+      tag: AppLogTags.dashboardDataSource,
+    );
 
     return snapshot.docs.map((doc) => AppAnnouncement.fromFirestore(doc)).toList();
   }
@@ -377,13 +378,14 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
     final uid = _firebaseAuth.currentUser?.uid;
     if (uid == null) return const [];
 
-    final snapshot = await _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('quiz_answers')
-        .orderBy('createdAt', descending: true)
-        .limit(200)
-        .get();
+    final snapshot = await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.userQuizAnswers(uid))
+          .orderBy('createdAt', descending: true)
+          .limit(200)
+          .get(),
+      tag: AppLogTags.dashboardDataSource,
+    );
 
     if (snapshot.docs.isEmpty) return const [];
 

@@ -14,15 +14,19 @@ class FormulasCubit extends Cubit<FormulasState>
   FormulasCubit({
     required GetFormulasUseCase getFormulas,
     required ToggleBookmarkUseCase toggleBookmark,
-    required FormulasRepositoryPort formulasRepository,
-    required ChaptersRepositoryPort chaptersRepository,
+    required ToggleMasteryUseCase toggleMastery,
+    required ToggleChapterBookmarkUseCase toggleChapterBookmark,
+    required MarkChapterStartedUseCase markChapterStarted,
+    required IsChapterBookmarkedUseCase isChapterBookmarked,
     required GetFormulaNoteUseCase getFormulaNote,
     required SaveFormulaNoteUseCase saveFormulaNote,
     required DeleteFormulaNoteUseCase deleteFormulaNote,
   }) : _getFormulas = getFormulas,
        _toggleBookmark = toggleBookmark,
-       _formulasRepository = formulasRepository,
-       _chaptersRepository = chaptersRepository,
+       _toggleMastery = toggleMastery,
+       _toggleChapterBookmark = toggleChapterBookmark,
+       _markChapterStarted = markChapterStarted,
+       _isChapterBookmarked = isChapterBookmarked,
        _getFormulaNote = getFormulaNote,
        _saveFormulaNote = saveFormulaNote,
        _deleteFormulaNote = deleteFormulaNote,
@@ -30,8 +34,10 @@ class FormulasCubit extends Cubit<FormulasState>
 
   final GetFormulasUseCase _getFormulas;
   final ToggleBookmarkUseCase _toggleBookmark;
-  final FormulasRepositoryPort _formulasRepository;
-  final ChaptersRepositoryPort _chaptersRepository;
+  final ToggleMasteryUseCase _toggleMastery;
+  final ToggleChapterBookmarkUseCase _toggleChapterBookmark;
+  final MarkChapterStartedUseCase _markChapterStarted;
+  final IsChapterBookmarkedUseCase _isChapterBookmarked;
   final GetFormulaNoteUseCase _getFormulaNote;
   final SaveFormulaNoteUseCase _saveFormulaNote;
   final DeleteFormulaNoteUseCase _deleteFormulaNote;
@@ -80,16 +86,16 @@ class FormulasCubit extends Cubit<FormulasState>
         emit(state.copyWith(status: FormulasStatus.loaded, formulas: data));
 
         final safeChapterName = chapterName ?? AppStrings.chapterLabel;
-        await _formulasRepository.markChapterStarted(
-          subjectId,
-          chapterId,
+        await _markChapterStarted(
+          subjectId: subjectId,
+          chapterId: chapterId,
           chapterName: safeChapterName,
           totalFormulas: data.length,
         );
 
         if (curriculumKey != null && curriculumKey.isNotEmpty) {
-          final bookmarkResult = await _chaptersRepository.isChapterBookmarked(
-            chapterId,
+          final bookmarkResult = await _isChapterBookmarked(
+            chapterId: chapterId,
             subjectId: subjectId,
             curriculumKey: curriculumKey,
           );
@@ -130,6 +136,7 @@ class FormulasCubit extends Cubit<FormulasState>
   void saveFormulaNote(FormulaNote note) {
     _noteDebounce?.cancel();
     _noteDebounce = Timer(const Duration(milliseconds: 500), () async {
+      if (isClosed) return;
       emit(state.copyWith(formulaNotes: {note.formulaId: note}));
       final result = await _saveFormulaNote(note);
       if (result is Error<void>) {
@@ -176,15 +183,16 @@ class FormulasCubit extends Cubit<FormulasState>
     }).toList();
     emit(state.copyWith(formulas: updatedList));
 
-    final result = await _formulasRepository.toggleFormulaMastery(
-      subjectId,
-      chapterId,
-      formula.id,
+    final result = await _toggleMastery(
+      subjectId: subjectId,
+      chapterId: chapterId,
+      formulaId: formula.id,
       isMastered: newMasteredState,
       totalFormulas: state.formulas.length,
       chapterName: chapterName,
     );
 
+    if (isClosed) return;
     if (result is Error<void>) {
       logFailure('toggleMastery', result.failure);
       final revertedList = state.formulas.map((f) {
@@ -240,6 +248,7 @@ class FormulasCubit extends Cubit<FormulasState>
       subjectName,
       curriculumKey: curriculumKey,
     );
+    if (isClosed) return;
     if (result is Error<void>) {
       logFailure('toggleBookmark', result.failure);
       final revertedList = state.formulas.map((f) {
@@ -292,13 +301,14 @@ class FormulasCubit extends Cubit<FormulasState>
       isSaved: state.isChapterSaved,
     );
 
-    final result = await _chaptersRepository.toggleChapterBookmark(
-      chapter,
-      subjectName,
+    final result = await _toggleChapterBookmark(
+      chapter: chapter,
+      subjectName: subjectName,
       subjectId: state.subjectId!,
       curriculumKey: curriculumKey,
     );
 
+    if (isClosed) return;
     if (result is Error<void>) {
       logFailure('toggleChapterBookmark', result.failure);
       emit(state.copyWith(isChapterSaved: !newSavedState));

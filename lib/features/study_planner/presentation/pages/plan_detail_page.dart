@@ -47,6 +47,7 @@ class _PlanDetailPageState extends State<PlanDetailPage> {
         ],
       ),
       body: BlocBuilder<StudyPlannerCubit, StudyPlannerState>(
+        buildWhen: (p, n) => p.status != n.status || p.plans != n.plans || p.selectedPlan != n.selectedPlan,
         builder: (context, state) {
           if (state.status == StudyPlannerStatus.initial ||
               state.status == StudyPlannerStatus.loading) {

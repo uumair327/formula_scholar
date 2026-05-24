@@ -9,8 +9,8 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: CurriculumDataSourcePort)
 class CurriculumFirebaseAdapter implements CurriculumDataSourcePort {
-  const CurriculumFirebaseAdapter(this._firestore, this._firebaseAuth);
-  final FirebaseFirestore _firestore;
+  const CurriculumFirebaseAdapter(this._api, this._firebaseAuth);
+  final FirestoreClientPort _api;
   final FirebaseAuth _firebaseAuth;
 
   @override
@@ -22,7 +22,10 @@ class CurriculumFirebaseAdapter implements CurriculumDataSourcePort {
     }
 
     AppLogger.trace('loadCurriculum: uid=$uid', tag: AppLogTags.curriculumDataSource);
-    final snapshot = await _firestore.collection('users').doc(uid).get();
+    final snapshot = await _api.execute(
+      () => _api.doc(AppFirestoreCollections.userDoc(uid)).get(),
+      tag: AppLogTags.curriculumDataSource,
+    );
     final curriculum = _mapCurriculum(snapshot.data());
     AppLogger.trace(
       'loadCurriculum: ${curriculum != null ? "found" : "not found"}',
@@ -43,63 +46,67 @@ class CurriculumFirebaseAdapter implements CurriculumDataSourcePort {
       tag: AppLogTags.curriculumDataSource,
     );
 
-    await _firestore.collection('users').doc(uid).set({
-      'boardId': curriculum.boardId,
-      'boardName': curriculum.boardName,
-      'gradeId': curriculum.gradeId,
-      'gradeLabel': _canonicalGradeLabel(
-        curriculum.gradeLabel,
-        curriculum.gradeNumber,
-      ),
-      'gradeNumber': curriculum.gradeNumber,
-      'countryId': curriculum.countryId,
-      'stateId': curriculum.stateId,
-      'countryName': curriculum.countryName,
-      'stateName': curriculum.stateName,
-    }, SetOptions(merge: true));
+    await _api.execute(
+      () => _api.doc(AppFirestoreCollections.userDoc(uid)).set({
+        'boardId': curriculum.boardId,
+        'boardName': curriculum.boardName,
+        'gradeId': curriculum.gradeId,
+        'gradeLabel': _canonicalGradeLabel(
+          curriculum.gradeLabel,
+          curriculum.gradeNumber,
+        ),
+        'gradeNumber': curriculum.gradeNumber,
+        'countryId': curriculum.countryId,
+        'stateId': curriculum.stateId,
+        'countryName': curriculum.countryName,
+        'stateName': curriculum.stateName,
+      }, SetOptions(merge: true)),
+      tag: AppLogTags.curriculumDataSource,
+    );
   }
 
   @override
   Stream<SelectedCurriculum?> watchCurriculum() {
-    return Stream<SelectedCurriculum?>.multi((controller) {
-      StreamSubscription<User?>? authSubscription;
-      StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
-      documentSubscription;
+    return _api.stream(() {
+      return Stream<SelectedCurriculum?>.multi((controller) {
+        StreamSubscription<User?>? authSubscription;
+        StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
+        documentSubscription;
 
-      Future<void> cancelDocumentSubscription() async {
-        await documentSubscription?.cancel();
-        documentSubscription = null;
-      }
+        Future<void> cancelDocumentSubscription() async {
+          await documentSubscription?.cancel();
+          documentSubscription = null;
+        }
 
-      authSubscription = _firebaseAuth.authStateChanges().listen(
-        (user) async {
+        authSubscription = _firebaseAuth.authStateChanges().listen(
+          (user) async {
+            await cancelDocumentSubscription();
+            if (user == null) {
+              controller.add(null);
+              return;
+            }
+
+            documentSubscription = _api
+                .doc(AppFirestoreCollections.userDoc(user.uid))
+                .snapshots()
+                .listen(
+                  (snapshot) => controller.add(_mapCurriculum(snapshot.data())),
+                  onError: controller.addError,
+                );
+          },
+          onError: controller.addError,
+          onDone: () async {
+            await cancelDocumentSubscription();
+            await controller.close();
+          },
+        );
+
+        controller.onCancel = () async {
           await cancelDocumentSubscription();
-          if (user == null) {
-            controller.add(null);
-            return;
-          }
-
-          documentSubscription = _firestore
-              .collection('users')
-              .doc(user.uid)
-              .snapshots()
-              .listen(
-                (snapshot) => controller.add(_mapCurriculum(snapshot.data())),
-                onError: controller.addError,
-              );
-        },
-        onError: controller.addError,
-        onDone: () async {
-          await cancelDocumentSubscription();
-          await controller.close();
-        },
-      );
-
-      controller.onCancel = () async {
-        await cancelDocumentSubscription();
-        await authSubscription?.cancel();
-      };
-    });
+          await authSubscription?.cancel();
+        };
+      });
+    }, tag: AppLogTags.curriculumDataSource);
   }
 
   SelectedCurriculum? _mapCurriculum(Map<String, dynamic>? data) {

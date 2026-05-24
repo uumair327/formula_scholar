@@ -54,6 +54,7 @@ class StudyPlannerCubit extends Cubit<StudyPlannerState>
   }) async {
     emit(state.copyWith(status: StudyPlannerStatus.creating));
     final result = await _createPlan(userId: userId, plan: plan);
+    if (isClosed) return;
     if (result is Error) {
       emit(state.copyWith(
         status: StudyPlannerStatus.error,
@@ -67,6 +68,7 @@ class StudyPlannerCubit extends Cubit<StudyPlannerState>
     required StudyPlan plan,
   }) async {
     final result = await _updatePlan(userId: userId, plan: plan);
+    if (isClosed) return;
     if (result is Error) {
       emit(state.copyWith(
         status: StudyPlannerStatus.error,
@@ -80,6 +82,7 @@ class StudyPlannerCubit extends Cubit<StudyPlannerState>
     required String planId,
   }) async {
     final result = await _deletePlan(userId: userId, planId: planId);
+    if (isClosed) return;
     if (result is Error) {
       emit(state.copyWith(
         status: StudyPlannerStatus.error,
@@ -98,6 +101,7 @@ class StudyPlannerCubit extends Cubit<StudyPlannerState>
       planId: planId,
       sessionId: sessionId,
     );
+    if (isClosed) return;
     if (result is Error) {
       emit(state.copyWith(
         status: StudyPlannerStatus.error,

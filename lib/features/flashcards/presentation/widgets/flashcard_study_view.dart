@@ -185,7 +185,7 @@ class _RatingRow extends StatelessWidget {
           children: [
             Expanded(
               child: FlashcardRatingButton(
-                label: 'Again',
+                label: AppStrings.flashcardAgain,
                 icon: LucideIcons.rotateCcw,
                 color: colorScheme.error,
                 onTap: () => cubit.rateCard(ReviewQuality.again),
@@ -194,7 +194,7 @@ class _RatingRow extends StatelessWidget {
             const SizedBox(width: 6),
             Expanded(
               child: FlashcardRatingButton(
-                label: 'Hard',
+                label: AppStrings.flashcardHard,
                 icon: LucideIcons.batteryLow,
                 color: colorScheme.tertiary,
                 onTap: () => cubit.rateCard(ReviewQuality.hard),
@@ -203,7 +203,7 @@ class _RatingRow extends StatelessWidget {
             const SizedBox(width: 6),
             Expanded(
               child: FlashcardRatingButton(
-                label: 'Good',
+                label: AppStrings.flashcardGood,
                 icon: LucideIcons.batteryMedium,
                 color: colorScheme.secondary,
                 onTap: () => cubit.rateCard(ReviewQuality.good),
@@ -212,7 +212,7 @@ class _RatingRow extends StatelessWidget {
             const SizedBox(width: 6),
             Expanded(
               child: FlashcardRatingButton(
-                label: 'Easy',
+                label: AppStrings.flashcardEasy,
                 icon: LucideIcons.batteryFull,
                 color: colorScheme.primary,
                 onTap: () => cubit.rateCard(ReviewQuality.easy),

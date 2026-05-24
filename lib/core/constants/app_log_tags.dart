@@ -13,6 +13,7 @@ abstract final class AppLogTags {
   static const String router = 'Router';
   static const String bloc = 'Bloc';
   static const String mainShellPage = 'MainShellPage';
+  static const String firestoreClient = 'FirestoreClient';
   static const String subjectSelection = 'SubjectSelection';
   static const String curriculumCubit = 'CurriculumCubit';
   static const String curriculumRepo = 'CurriculumRepo';
@@ -76,6 +77,7 @@ abstract final class AppLogTags {
   // Presentation
   static const String profilePage = 'ProfilePage';
   static const String profileCubit = 'ProfileCubit';
+  static const String notificationsCubit = 'NotificationsCubit';
   static const String settingsListWidget = 'SettingsListWidget';
   static const String profileHeroWidget = 'ProfileHeroWidget';
   static const String progressStatsWidget = 'ProgressStatsWidget';
@@ -89,6 +91,7 @@ abstract final class AppLogTags {
   // Presentation
   static const String practicePage = 'PracticePage';
   static const String practiceCubit = 'PracticeCubit';
+  static const String practiceHistoryCubit = 'PracticeHistoryCubit';
   // Data
   static const String practiceRepo = 'PracticeRepo';
   static const String practiceDataSource = 'PracticeDataSource';

@@ -24,6 +24,7 @@ class AchievementsPage extends StatelessWidget {
         ),
       ),
       body: BlocBuilder<AchievementsCubit, AchievementsState>(
+        buildWhen: (p, n) => p.isLoading != n.isLoading || p.unlocked != n.unlocked || p.locked != n.locked,
         builder: (context, state) {
           if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());

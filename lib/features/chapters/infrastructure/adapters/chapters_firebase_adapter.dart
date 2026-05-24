@@ -7,9 +7,9 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: ChaptersDataSourcePort)
 class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
-  ChaptersFirebaseAdapter(this._firestore, this._firebaseAuth);
+  ChaptersFirebaseAdapter(this._api, this._firebaseAuth);
 
-  final FirebaseFirestore _firestore;
+  final FirestoreClientPort _api;
   final FirebaseAuth _firebaseAuth;
 
   @override
@@ -24,61 +24,53 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
       tag: AppLogTags.chaptersDataSource,
     );
 
-    // 1. Fetch targeted static chapters (Universal Schema Architecture)
-    var snapshot = await _firestore
-        .collection('subjects')
-        .doc(subjectId)
-        .collection('chapters')
-        .where(
-          Filter.or(
-            Filter('isGeneralContent', isEqualTo: true),
-            Filter('canonicalScopeTags', arrayContains: curriculumKey),
-            Filter(
-              'audiences',
-              arrayContains: curriculumKey,
-            ), // Legacy fallback
-          ),
-        )
-        .orderBy(sortBy, descending: sortDesc)
-        .get();
-
-    // Legacy fallback: if strictly tagged chapters don't exist, load all
-    if (snapshot.docs.isEmpty) {
-      snapshot = await _firestore
-          .collection('subjects')
-          .doc(subjectId)
-          .collection('chapters')
+    var snapshot = await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.subjectChapters(subjectId))
+          .where(
+            Filter.or(
+              Filter('isGeneralContent', isEqualTo: true),
+              Filter('canonicalScopeTags', arrayContains: curriculumKey),
+              Filter('audiences', arrayContains: curriculumKey),
+            ),
+          )
           .orderBy(sortBy, descending: sortDesc)
-          .get();
+          .get(),
+      tag: AppLogTags.chaptersDataSource,
+    );
+
+    if (snapshot.docs.isEmpty) {
+      snapshot = await _api.execute(
+        () => _api
+            .collection(AppFirestoreCollections.subjectChapters(subjectId))
+            .orderBy(sortBy, descending: sortDesc)
+            .get(),
+        tag: AppLogTags.chaptersDataSource,
+      );
     }
 
     final uid = _firebaseAuth.currentUser?.uid;
-
-    // 2. Fetch user progress for this subject (if authenticated)
     final progressMap = <String, dynamic>{};
     final savedChapterIds = <String>{};
     if (uid != null) {
-      final progressSnapshot = await _firestore
-          .collection('users')
-          .doc(uid)
-          .collection('progress')
-          .doc(subjectId)
-          .collection('chapters')
-          .get();
+      final progressSnapshot = await _api.execute(
+        () => _api
+            .collection(AppFirestoreCollections.userProgressSubject(uid, subjectId))
+            .get(),
+        tag: AppLogTags.chaptersDataSource,
+      );
 
       for (final doc in progressSnapshot.docs) {
         progressMap[doc.id] = doc.data();
       }
 
-      // Preferred shape: users/{uid}/saved_chapters/{curriculumKey}/subjects/{subjectId}
-      final subjectSavedDoc = await _firestore
-          .collection('users')
-          .doc(uid)
-          .collection('saved_chapters')
-          .doc(curriculumKey)
-          .collection('subjects')
-          .doc(subjectId)
-          .get();
+      final subjectSavedDoc = await _api.execute(
+        () => _api
+            .collection(AppFirestoreCollections.savedChapterSubjects(uid, curriculumKey))
+            .doc(subjectId)
+            .get(),
+        tag: AppLogTags.chaptersDataSource,
+      );
       final subjectSavedChapters =
           (subjectSavedDoc.data()?['chapters'] as List<dynamic>?) ?? const [];
       for (final chapterId in subjectSavedChapters) {
@@ -87,14 +79,13 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
         }
       }
 
-      // Legacy fallback: users/{uid}/saved_chapters/{curriculumKey}
-      // with a direct `chapters` array.
-      final legacySavedDoc = await _firestore
-          .collection('users')
-          .doc(uid)
-          .collection('saved_chapters')
-          .doc(curriculumKey)
-          .get();
+      final legacySavedDoc = await _api.execute(
+        () => _api
+            .collection(AppFirestoreCollections.userSavedChapters(uid))
+            .doc(curriculumKey)
+            .get(),
+        tag: AppLogTags.chaptersDataSource,
+      );
       final legacyChapters =
           (legacySavedDoc.data()?['chapters'] as List<dynamic>?) ?? const [];
       for (final chapterId in legacyChapters) {
@@ -103,19 +94,16 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
         }
       }
 
-      // Extra compatibility: older experiments with subject documents under
-      // every saved_chapters doc.
-      final savedSnapshot = await _firestore
-          .collection('users')
-          .doc(uid)
-          .collection('saved_chapters')
-          .get();
+      final savedSnapshot = await _api.execute(
+        () => _api
+            .collection(AppFirestoreCollections.userSavedChapters(uid))
+            .get(),
+        tag: AppLogTags.chaptersDataSource,
+      );
 
       for (final doc in savedSnapshot.docs) {
         final data = doc.data();
         final docSubjectId = data['subjectId'] as String?;
-
-        // Legacy docs may not have subjectId; skip strict mismatch.
         if (docSubjectId != null && docSubjectId != subjectId) {
           continue;
         }
@@ -129,17 +117,14 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
       }
     }
 
-    // 3. Merge data — always use doc.id as the canonical key
     return snapshot.docs.where((doc) {
       final data = doc.data();
       return data['isActive'] != false;
     }).map((doc) {
       final data = doc.data();
-      // Look up progress by doc.id first, then by data['id'] as fallback
       final progressData = progressMap[doc.id] ?? progressMap[data['id']] ?? {};
       final hasProgress = (progressData as Map).isNotEmpty;
 
-      // Status: prefer progress record, fall back to static chapter data
       final statusStr = hasProgress
           ? progressData['status'] as String?
           : data['status'] as String?;
@@ -147,13 +132,11 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
       if (statusStr == 'inProgress') status = ChapterStatus.inProgress;
       if (statusStr == 'locked') status = ChapterStatus.locked;
 
-      // Completed formulas from progress (static has 0 by default)
       final completedFormulas = hasProgress
           ? (progressData['completedFormulas'] ?? 0)
           : (data['completedFormulas'] ?? 0);
       final totalFormulas = data['totalFormulas'] ?? 1;
 
-      // Calculate progress (0–100)
       double progressPercent;
       if (hasProgress && progressData['progressPercent'] != null) {
         progressPercent = (progressData['progressPercent'] as num).toDouble();
@@ -164,7 +147,6 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
             ? (completedFormulas / totalFormulas) * 100.0
             : 0.0;
       }
-      // Normalise: if stored as 0–1, scale to 0–100
       if (progressPercent > 0 && progressPercent <= 1.0) {
         progressPercent *= 100;
       }
@@ -190,12 +172,13 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
 
   @override
   Future<List<MasteryTool>> getMasteryTools(String subjectId) async {
-    final snapshot = await _firestore
-        .collection('subjects')
-        .doc(subjectId)
-        .collection('mastery_tools')
-        .orderBy('displayOrder')
-        .get();
+    final snapshot = await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.subjectMasteryTools(subjectId))
+          .orderBy('displayOrder')
+          .get(),
+      tag: AppLogTags.chaptersDataSource,
+    );
 
     if (snapshot.docs.isEmpty) {
       return const [
@@ -281,7 +264,6 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
       );
     }).toList();
 
-    // Self-healing: if flashcards or other crucial tools are missing, inject them.
     if (!loadedTools.any((t) => t.id == 'flashcards')) {
       loadedTools.add(const MasteryTool(
         id: 'flashcards',
@@ -337,39 +319,46 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
       tag: AppLogTags.chaptersDataSource,
     );
 
-    final bookmarkRootRef = _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('saved_chapters')
+    final bookmarkRootRef = _api
+        .collection(AppFirestoreCollections.userSavedChapters(uid))
         .doc(curriculumKey);
 
     final bookmarkRef = bookmarkRootRef.collection('subjects').doc(subjectId);
 
-    final doc = await bookmarkRef.get();
+    final doc = await _api.execute(
+      () => bookmarkRef.get(),
+      tag: AppLogTags.chaptersDataSource,
+    );
     final savedChapters = (doc.data()?['chapters'] as List<dynamic>?) ?? [];
 
-    // Toggle bookmark state
     if (savedChapters.contains(chapter.id)) {
-      // Remove from saved
-      await bookmarkRef.update({
-        'chapters': FieldValue.arrayRemove([chapter.id]),
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
+      await _api.execute(
+        () => bookmarkRef.update({
+          'chapters': FieldValue.arrayRemove([chapter.id]),
+          'updatedAt': FieldValue.serverTimestamp(),
+        }),
+        tag: AppLogTags.chaptersDataSource,
+      );
       AppLogger.info(
         'Chapter ${chapter.id} removed from saved',
         tag: AppLogTags.chaptersDataSource,
       );
     } else {
-      // Add to saved
-      await bookmarkRef.set({
-        'subject': subjectName,
-        'subjectId': subjectId,
-        'chapters': FieldValue.arrayUnion([chapter.id]),
-        'updatedAt': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
-      await bookmarkRootRef.set({
-        'updatedAt': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
+      await _api.execute(
+        () => bookmarkRef.set({
+          'subject': subjectName,
+          'subjectId': subjectId,
+          'chapters': FieldValue.arrayUnion([chapter.id]),
+          'updatedAt': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true)),
+        tag: AppLogTags.chaptersDataSource,
+      );
+      await _api.execute(
+        () => bookmarkRootRef.set({
+          'updatedAt': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true)),
+        tag: AppLogTags.chaptersDataSource,
+      );
       AppLogger.info(
         'Chapter ${chapter.id} added to saved',
         tag: AppLogTags.chaptersDataSource,
@@ -388,27 +377,26 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
       return false;
     }
 
-    final subjectDoc = await _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('saved_chapters')
-        .doc(curriculumKey)
-        .collection('subjects')
-        .doc(subjectId)
-        .get();
+    final subjectDoc = await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.savedChapterSubjects(uid, curriculumKey))
+          .doc(subjectId)
+          .get(),
+      tag: AppLogTags.chaptersDataSource,
+    );
     final scopedSavedChapters =
         (subjectDoc.data()?['chapters'] as List<dynamic>?) ?? const [];
     if (scopedSavedChapters.contains(chapterId)) {
       return true;
     }
 
-    // Legacy fallback: chapter ids directly under saved_chapters/{curriculumKey}
-    final legacyDoc = await _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('saved_chapters')
-        .doc(curriculumKey)
-        .get();
+    final legacyDoc = await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.userSavedChapters(uid))
+          .doc(curriculumKey)
+          .get(),
+      tag: AppLogTags.chaptersDataSource,
+    );
 
     final savedChapters =
         (legacyDoc.data()?['chapters'] as List<dynamic>?) ?? const [];

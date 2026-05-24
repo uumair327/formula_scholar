@@ -6,17 +6,12 @@ import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 
-/// Firebase adapter for formula data retrieval.
-///
-/// Reads formulas from `subjects/{subjectId}/chapters/{chapterId}/formulas`.
-/// Returns an empty list if the collection is empty — the caller/UI is
-/// responsible for showing an appropriate empty state.
 @LazySingleton(as: FormulasDataSourcePort)
 class FormulasFirebaseAdapter implements FormulasDataSourcePort {
-  FormulasFirebaseAdapter(this._firestore, this._firebaseAuth)
-      : _statsAccumulator = UserStatsAccumulator(_firestore);
+  FormulasFirebaseAdapter(this._api, this._firebaseAuth)
+      : _statsAccumulator = UserStatsAccumulator(_api);
 
-  final FirebaseFirestore _firestore;
+  final FirestoreClientPort _api;
   final FirebaseAuth _firebaseAuth;
   final UserStatsAccumulator _statsAccumulator;
 
@@ -31,63 +26,54 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
       tag: AppLogTags.formulasDataSource,
     );
 
-    var snapshot = await _firestore
-        .collection('subjects')
-        .doc(subjectId)
-        .collection('chapters')
-        .doc(chapterId)
-        .collection('formulas')
-        .where(
-          Filter.or(
-            Filter('isGeneralContent', isEqualTo: true),
-            Filter('canonicalScopeTags', arrayContains: curriculumKey),
-            Filter(
-              'audiences',
-              arrayContains: curriculumKey,
-            ), // Legacy fallback
-          ),
-        )
-        .get();
+    var snapshot = await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.chapterFormulas(subjectId, chapterId))
+          .where(
+            Filter.or(
+              Filter('isGeneralContent', isEqualTo: true),
+              Filter('canonicalScopeTags', arrayContains: curriculumKey),
+              Filter('audiences', arrayContains: curriculumKey),
+            ),
+          )
+          .get(),
+      tag: AppLogTags.formulasDataSource,
+    );
 
-    // Legacy fallback or fully universal fallback
     if (snapshot.docs.isEmpty) {
-      snapshot = await _firestore
-          .collection('subjects')
-          .doc(subjectId)
-          .collection('chapters')
-          .doc(chapterId)
-          .collection('formulas')
-          .get();
+      snapshot = await _api.execute(
+        () => _api
+            .collection(AppFirestoreCollections.chapterFormulas(subjectId, chapterId))
+            .get(),
+        tag: AppLogTags.formulasDataSource,
+      );
     }
 
     Set<String> bookmarkedIds = {};
     final masteryMap = <String, bool>{};
     final uid = _firebaseAuth.currentUser?.uid;
     if (uid != null) {
-      final bookmarksSnap = await _firestore
-          .collection('users')
-          .doc(uid)
-          .collection('bookmarks')
-          .get();
+      final bookmarksSnap = await _api.execute(
+        () => _api
+            .collection(AppFirestoreCollections.userBookmarks(uid))
+            .get(),
+        tag: AppLogTags.formulasDataSource,
+      );
       bookmarkedIds = bookmarksSnap.docs.map((d) => d.id).toSet();
 
-      final masterySnap = await _firestore
-          .collection('users')
-          .doc(uid)
-          .collection('progress')
-          .doc(subjectId)
-          .collection('chapters')
-          .doc(chapterId)
-          .collection('formulas')
-          .get();
+      final masterySnap = await _api.execute(
+        () => _api
+            .collection(AppFirestoreCollections.userProgressChapterFormulas(
+                uid, subjectId, chapterId))
+            .get(),
+        tag: AppLogTags.formulasDataSource,
+      );
       for (final doc in masterySnap.docs) {
         masteryMap[doc.id] = doc.data()['isMastered'] as bool? ?? false;
       }
     }
 
     if (snapshot.docs.isEmpty) {
-      // No formulas found — return empty list so the UI can show an
-      // appropriate empty state. Content should be added via the Dashboard.
       AppLogger.info(
         'No formulas found for $subjectId/$chapterId',
         tag: AppLogTags.formulasDataSource,
@@ -144,27 +130,31 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
       throw Exception('User must be logged in to bookmark formulas');
     }
 
-    final docRef = _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('bookmarks')
+    final docRef = _api
+        .collection(AppFirestoreCollections.userBookmarks(uid))
         .doc(formula.id);
 
     if (formula.isBookmarked) {
-      await docRef.delete();
+      await _api.execute(
+        () => docRef.delete(),
+        tag: AppLogTags.formulasDataSource,
+      );
       AppLogger.info(
         'Removed bookmark for ${formula.id}',
         tag: AppLogTags.formulasDataSource,
       );
     } else {
-      await docRef.set({
-        'id': formula.id,
-        'title': formula.title,
-        'subject': subjectName,
-        'formula': formula.latex,
-        'curriculumKey': curriculumKey,
-        'savedAt': FieldValue.serverTimestamp(),
-      });
+      await _api.execute(
+        () => docRef.set({
+          'id': formula.id,
+          'title': formula.title,
+          'subject': subjectName,
+          'formula': formula.latex,
+          'curriculumKey': curriculumKey,
+          'savedAt': FieldValue.serverTimestamp(),
+        }),
+        tag: AppLogTags.formulasDataSource,
+      );
       AppLogger.info(
         'Added bookmark for ${formula.id}',
         tag: AppLogTags.formulasDataSource,
@@ -185,7 +175,10 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
     }
 
     final chapterProgressRef = _chapterProgressRef(uid, subjectId, chapterId);
-    final snapshot = await chapterProgressRef.get();
+    final snapshot = await _api.execute(
+      () => chapterProgressRef.get(),
+      tag: AppLogTags.formulasDataSource,
+    );
     final data = snapshot.data() ?? const <String, dynamic>{};
 
     final completedFormulas = (data['completedFormulas'] as num?)?.toInt() ?? 0;
@@ -193,16 +186,19 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
         ? (completedFormulas / totalFormulas) * 100
         : 0.0;
 
-    await chapterProgressRef.set({
-      'chapterId': chapterId,
-      'chapterName': chapterName,
-      'status': completedFormulas > 0 ? 'inProgress' : 'notStarted',
-      'completedFormulas': completedFormulas,
-      'totalFormulas': totalFormulas,
-      'progressPercent': progressPercent,
-      'startedAt': data['startedAt'] ?? FieldValue.serverTimestamp(),
-      'updatedAt': FieldValue.serverTimestamp(),
-    }, SetOptions(merge: true));
+    await _api.execute(
+      () => chapterProgressRef.set({
+        'chapterId': chapterId,
+        'chapterName': chapterName,
+        'status': completedFormulas > 0 ? 'inProgress' : 'notStarted',
+        'completedFormulas': completedFormulas,
+        'totalFormulas': totalFormulas,
+        'progressPercent': progressPercent,
+        'startedAt': data['startedAt'] ?? FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true)),
+      tag: AppLogTags.formulasDataSource,
+    );
 
     await _upsertRecentStudy(
       uid: uid,
@@ -212,7 +208,6 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
       progressPercent: progressPercent,
     );
 
-    // Bump daily streak whenever the user studies a chapter.
     await _statsAccumulator.touchDailyStreak(uid);
   }
 
@@ -232,36 +227,48 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
 
     final chapterProgressRef = _chapterProgressRef(uid, subjectId, chapterId);
     final formulaRef = chapterProgressRef.collection('formulas').doc(formulaId);
-    final previousFormulaSnapshot = await formulaRef.get();
+    final previousFormulaSnapshot = await _api.execute(
+      () => formulaRef.get(),
+      tag: AppLogTags.formulasDataSource,
+    );
     final previousIsMastered =
         previousFormulaSnapshot.data()?['isMastered'] as bool? ?? false;
 
-    await formulaRef.set({
-      'id': formulaId,
-      'uid': uid,
-      'isMastered': isMastered,
-      'updatedAt': FieldValue.serverTimestamp(),
-    }, SetOptions(merge: true));
+    await _api.execute(
+      () => formulaRef.set({
+        'id': formulaId,
+        'uid': uid,
+        'isMastered': isMastered,
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true)),
+      tag: AppLogTags.formulasDataSource,
+    );
 
-    final masteredSnap = await chapterProgressRef
-        .collection('formulas')
-        .where('isMastered', isEqualTo: true)
-        .get();
+    final masteredSnap = await _api.execute(
+      () => chapterProgressRef
+          .collection('formulas')
+          .where('isMastered', isEqualTo: true)
+          .get(),
+      tag: AppLogTags.formulasDataSource,
+    );
 
     final completedFormulas = masteredSnap.docs.length;
     final progressPercent = totalFormulas > 0
         ? (completedFormulas / totalFormulas) * 100
         : 0.0;
 
-    await chapterProgressRef.set({
-      'chapterId': chapterId,
-      'chapterName': chapterName,
-      'status': completedFormulas > 0 ? 'inProgress' : 'notStarted',
-      'completedFormulas': completedFormulas,
-      'totalFormulas': totalFormulas,
-      'progressPercent': progressPercent,
-      'updatedAt': FieldValue.serverTimestamp(),
-    }, SetOptions(merge: true));
+    await _api.execute(
+      () => chapterProgressRef.set({
+        'chapterId': chapterId,
+        'chapterName': chapterName,
+        'status': completedFormulas > 0 ? 'inProgress' : 'notStarted',
+        'completedFormulas': completedFormulas,
+        'totalFormulas': totalFormulas,
+        'progressPercent': progressPercent,
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true)),
+      tag: AppLogTags.formulasDataSource,
+    );
 
     await _upsertRecentStudy(
       uid: uid,
@@ -299,23 +306,24 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
     final metadata = _recentStudyMetadata(subjectId);
     final docId = '${subjectId}_$chapterId';
 
-    await _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('recent_studies')
-        .doc(docId)
-        .set({
-          'id': docId,
-          'subjectId': subjectId,
-          'title': chapterName,
-          'subject': metadata.subject,
-          'lastViewed': 'Just now',
-          'iconName': metadata.iconName,
-          'colorValue': metadata.colorValue,
-          'backgroundColorValue': metadata.backgroundColorValue,
-          'progressPercent': progressPercent,
-          'viewedAt': FieldValue.serverTimestamp(),
-        }, SetOptions(merge: true));
+    await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.userRecentStudies(uid))
+          .doc(docId)
+          .set({
+            'id': docId,
+            'subjectId': subjectId,
+            'title': chapterName,
+            'subject': metadata.subject,
+            'lastViewed': 'Just now',
+            'iconName': metadata.iconName,
+            'colorValue': metadata.colorValue,
+            'backgroundColorValue': metadata.backgroundColorValue,
+            'progressPercent': progressPercent,
+            'viewedAt': FieldValue.serverTimestamp(),
+          }, SetOptions(merge: true)),
+      tag: AppLogTags.formulasDataSource,
+    );
   }
 
   _StudyMetadata _recentStudyMetadata(String subjectId) {
@@ -362,25 +370,22 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
     String subjectId,
     String chapterId,
   ) {
-    return _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('progress')
-        .doc(subjectId)
-        .collection('chapters')
-        .doc(chapterId);
+    return _api.doc(
+      AppFirestoreCollections.userProgressChapter(uid, subjectId, chapterId),
+    );
   }
 
   @override
   Future<FormulaNote?> getFormulaNote(String formulaId) async {
     final user = _firebaseAuth.currentUser;
     if (user == null) return null;
-    final doc = await _firestore
-        .collection('users')
-        .doc(user.uid)
-        .collection('formula_notes')
-        .doc(formulaId)
-        .get();
+    final doc = await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.userFormulaNotes(user.uid))
+          .doc(formulaId)
+          .get(),
+      tag: AppLogTags.formulasDataSource,
+    );
     if (!doc.exists) return null;
     return FormulaNote(
       formulaId: doc.id,
@@ -393,27 +398,29 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
   Future<void> saveFormulaNote(FormulaNote note) async {
     final user = _firebaseAuth.currentUser;
     if (user == null) throw Exception('User not authenticated');
-    await _firestore
-        .collection('users')
-        .doc(user.uid)
-        .collection('formula_notes')
-        .doc(note.formulaId)
-        .set({
-      'content': note.content,
-      'updatedAt': Timestamp.fromDate(note.updatedAt),
-    });
+    await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.userFormulaNotes(user.uid))
+          .doc(note.formulaId)
+          .set({
+        'content': note.content,
+        'updatedAt': Timestamp.fromDate(note.updatedAt),
+      }),
+      tag: AppLogTags.formulasDataSource,
+    );
   }
 
   @override
   Future<void> deleteFormulaNote(String formulaId) async {
     final user = _firebaseAuth.currentUser;
     if (user == null) throw Exception('User not authenticated');
-    await _firestore
-        .collection('users')
-        .doc(user.uid)
-        .collection('formula_notes')
-        .doc(formulaId)
-        .delete();
+    await _api.execute(
+      () => _api
+          .collection(AppFirestoreCollections.userFormulaNotes(user.uid))
+          .doc(formulaId)
+          .delete(),
+      tag: AppLogTags.formulasDataSource,
+    );
   }
 }
 

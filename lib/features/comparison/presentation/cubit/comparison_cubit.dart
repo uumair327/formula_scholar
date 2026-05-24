@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../chapters/domain/entities/formula.dart';
+import '../../../../core/domain/entities/formula.dart';
 import '../../domain/domain.dart';
 import 'comparison_state.dart';
 

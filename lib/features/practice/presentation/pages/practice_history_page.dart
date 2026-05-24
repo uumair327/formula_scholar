@@ -27,6 +27,7 @@ class _PracticeHistoryPageState extends State<PracticeHistoryPage> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PracticeHistoryCubit, PracticeHistoryState>(
+      buildWhen: (p, n) => p.status != n.status || p.results != n.results,
       builder: (context, state) {
         return Scaffold(
           appBar: GlassAppBar(

@@ -16,15 +16,15 @@ class ChaptersCubit extends Cubit<ChaptersState>
   ChaptersCubit({
     required GetChaptersUseCase getChapters,
     required GetMasteryToolsUseCase getMasteryTools,
-    required ChaptersRepositoryPort chaptersRepository,
+    required ToggleChapterBookmarkUseCase toggleChapterBookmark,
   }) : _getChapters = getChapters,
        _getMasteryTools = getMasteryTools,
-       _chaptersRepository = chaptersRepository,
+       _toggleChapterBookmark = toggleChapterBookmark,
        super(const ChaptersState());
 
   final GetChaptersUseCase _getChapters;
   final GetMasteryToolsUseCase _getMasteryTools;
-  final ChaptersRepositoryPort _chaptersRepository;
+  final ToggleChapterBookmarkUseCase _toggleChapterBookmark;
 
   @override
   String get logTag => AppLogTags.chaptersCubit;
@@ -148,13 +148,14 @@ class ChaptersCubit extends Cubit<ChaptersState>
 
     emit(state.copyWith(chapters: updatedList));
 
-    final result = await _chaptersRepository.toggleChapterBookmark(
-      chapter,
-      subjectName,
+    final result = await _toggleChapterBookmark(
+      chapter: chapter,
+      subjectName: subjectName,
       subjectId: subjectId,
       curriculumKey: curriculumKey,
     );
 
+    if (isClosed) return;
     if (result is Error<void>) {
       logFailure('toggleChapterBookmark', result.failure);
       // Revert on failure

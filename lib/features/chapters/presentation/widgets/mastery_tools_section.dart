@@ -11,6 +11,7 @@ import '../../../flashcards/flashcards.dart';
 import '../../../profile/profile.dart';
 import '../../domain/domain.dart';
 import '../cubit/formulas_cubit.dart';
+import 'mastery_tool_grid_tile.dart';
 
 class MasteryToolsSection extends StatelessWidget {
   const MasteryToolsSection({
@@ -71,57 +72,42 @@ class MasteryToolsSection extends StatelessWidget {
             itemCount: tools.length,
             itemBuilder: (context, index) {
               final tool = tools[index];
-              final icon = _iconFor(tool.iconName);
-              final color = _colorFor(tool.iconName);
-              return GestureDetector(
-                onTap: () async {
-                  if (!tool.isEnabled) {
-                    _showUnimplementedSheet(context, tool);
-                    return;
-                  }
-
-                  if (tool.routeName == 'cheatSheet') {
-                    await _handleCheatSheetTap(context);
-                    return;
-                  }
-
-                  if (tool.routeName == 'flashcards') {
-                    await _handleFlashcardsTap(context);
-                    return;
-                  }
-
-                  if (tool.routeName == 'visualizer_3d') {
-                    await _handleVisualizer3dTap(context);
-                    return;
-                  }
-
-                  if (_navigateForRoute(context, tool.routeName)) {
-                    return;
-                  }
-
-                  _showUnimplementedSheet(context, tool);
-                },
-                child: AppCard(
-                  boxShadow: const [AppShadows.subtle],
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(icon, size: AppDimensions.iconXXL, color: color),
-                      const SizedBox(height: AppDimensions.paddingSM),
-                      Text(
-                        tool.label,
-                        style: AppTextStyles.bodySmall.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+              return MasteryToolGridTile(
+                tool: tool,
+                onTap: () => _onToolTap(context, tool),
               );
             },
           ),
       ],
     );
+  }
+
+  void _onToolTap(BuildContext context, MasteryTool tool) {
+    if (!tool.isEnabled) {
+      _showUnimplementedSheet(context, tool);
+      return;
+    }
+
+    if (tool.routeName == 'cheatSheet') {
+      unawaited(_handleCheatSheetTap(context));
+      return;
+    }
+
+    if (tool.routeName == 'flashcards') {
+      unawaited(_handleFlashcardsTap(context));
+      return;
+    }
+
+    if (tool.routeName == 'visualizer_3d') {
+      unawaited(_handleVisualizer3dTap(context));
+      return;
+    }
+
+    if (_navigateForRoute(context, tool.routeName)) {
+      return;
+    }
+
+    _showUnimplementedSheet(context, tool);
   }
 
   // ──────────────────────── Async Subject Formulas Loader ───────────────────────
@@ -175,12 +161,12 @@ class MasteryToolsSection extends StatelessWidget {
       }
 
       if (context.mounted) {
-        Navigator.of(context).pop(); // Dismiss loading
+        Navigator.of(context, rootNavigator: true).pop();
       }
       return allFormulas;
     } catch (e) {
       if (context.mounted) {
-        Navigator.of(context).pop(); // Dismiss loading
+        Navigator.of(context, rootNavigator: true).pop();
       }
       AppLogger.error('Failed to prepare subject formulas', error: e);
       return null;
@@ -287,7 +273,6 @@ class MasteryToolsSection extends StatelessWidget {
     );
   }
 
-  /// Returns context-specific subtitle for each mastery tool.
   String _getToolSubtitle(MasteryTool tool) {
     if (tool.supportSubtitle != null && tool.supportSubtitle!.isNotEmpty) {
       return tool.supportSubtitle!;
@@ -303,7 +288,6 @@ class MasteryToolsSection extends StatelessWidget {
     return 'This feature is not yet available. Contact support for more information.';
   }
 
-  /// Routes to a known shell branch or standalone page for backend-provided route names.
   bool _navigateForRoute(BuildContext context, String? routeName) {
     if (routeName == null || routeName.isEmpty) {
       return false;
@@ -325,40 +309,6 @@ class MasteryToolsSection extends StatelessWidget {
         return true;
       default:
         return false;
-    }
-  }
-
-  IconData _iconFor(String iconName) {
-    switch (iconName) {
-      case 'graduationCap':
-        return LucideIcons.graduationCap;
-      case 'helpCircle':
-        return LucideIcons.helpCircle;
-      case 'fileText':
-        return LucideIcons.fileText;
-      case 'creditCard':
-        return LucideIcons.creditCard;
-      case 'box':
-        return LucideIcons.box;
-      default:
-        return LucideIcons.sparkles;
-    }
-  }
-
-  Color _colorFor(String iconName) {
-    switch (iconName) {
-      case 'graduationCap':
-        return AppColors.primary;
-      case 'helpCircle':
-        return AppColors.secondary;
-      case 'fileText':
-        return AppColors.orange500;
-      case 'creditCard':
-        return AppColors.secondary;
-      case 'box':
-        return AppColors.tertiary;
-      default:
-        return AppColors.primary;
     }
   }
 }

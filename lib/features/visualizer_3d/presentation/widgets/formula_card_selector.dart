@@ -3,7 +3,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
-import '../../../../features/chapters/domain/entities/formula.dart';
+import '../../../../core/domain/entities/formula.dart';
 
 class FormulaCardSelector extends StatelessWidget {
   const FormulaCardSelector({

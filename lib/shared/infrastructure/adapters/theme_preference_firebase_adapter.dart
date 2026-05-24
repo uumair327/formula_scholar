@@ -9,8 +9,8 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: ThemePreferenceDataSourcePort)
 class ThemePreferenceFirebaseAdapter implements ThemePreferenceDataSourcePort {
-  const ThemePreferenceFirebaseAdapter(this._firestore, this._firebaseAuth);
-  final FirebaseFirestore _firestore;
+  const ThemePreferenceFirebaseAdapter(this._api, this._firebaseAuth);
+  final FirestoreClientPort _api;
   final FirebaseAuth _firebaseAuth;
 
   @override
@@ -24,7 +24,10 @@ class ThemePreferenceFirebaseAdapter implements ThemePreferenceDataSourcePort {
       return null;
     }
 
-    final snapshot = await _firestore.collection('users').doc(uid).get();
+    final snapshot = await _api.execute(
+      () => _api.doc(AppFirestoreCollections.userDoc(uid)).get(),
+      tag: AppLogTags.themePreferenceDataSource,
+    );
     return _mapPreference(snapshot.data());
   }
 
@@ -39,9 +42,12 @@ class ThemePreferenceFirebaseAdapter implements ThemePreferenceDataSourcePort {
       throw const ServerException(message: 'No authenticated user found');
     }
 
-    await _firestore.collection('users').doc(uid).set({
-      'isDarkMode': preference.isDarkMode,
-    }, SetOptions(merge: true));
+    await _api.execute(
+      () => _api.doc(AppFirestoreCollections.userDoc(uid)).set({
+        'isDarkMode': preference.isDarkMode,
+      }, SetOptions(merge: true)),
+      tag: AppLogTags.themePreferenceDataSource,
+    );
   }
 
   @override
@@ -50,45 +56,46 @@ class ThemePreferenceFirebaseAdapter implements ThemePreferenceDataSourcePort {
       'watchThemePreference() listening to Firestore + auth stream',
       tag: AppLogTags.themePreferenceDataSource,
     );
-    return Stream<ThemePreference?>.multi((controller) {
-      StreamSubscription<User?>? authSubscription;
-      StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
-      documentSubscription;
+    return _api.stream(() {
+      return Stream<ThemePreference?>.multi((controller) {
+        StreamSubscription<User?>? authSubscription;
+        StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
+        documentSubscription;
 
-      Future<void> cancelDocumentSubscription() async {
-        await documentSubscription?.cancel();
-        documentSubscription = null;
-      }
+        Future<void> cancelDocumentSubscription() async {
+          await documentSubscription?.cancel();
+          documentSubscription = null;
+        }
 
-      authSubscription = _firebaseAuth.authStateChanges().listen(
-        (user) async {
+        authSubscription = _firebaseAuth.authStateChanges().listen(
+          (user) async {
+            await cancelDocumentSubscription();
+            if (user == null) {
+              controller.add(null);
+              return;
+            }
+
+            documentSubscription = _api
+                .doc(AppFirestoreCollections.userDoc(user.uid))
+                .snapshots()
+                .listen(
+                  (snapshot) => controller.add(_mapPreference(snapshot.data())),
+                  onError: controller.addError,
+                );
+          },
+          onError: controller.addError,
+          onDone: () async {
+            await cancelDocumentSubscription();
+            await controller.close();
+          },
+        );
+
+        controller.onCancel = () async {
           await cancelDocumentSubscription();
-          if (user == null) {
-            controller.add(null);
-            return;
-          }
-
-          documentSubscription = _firestore
-              .collection('users')
-              .doc(user.uid)
-              .snapshots()
-              .listen(
-                (snapshot) => controller.add(_mapPreference(snapshot.data())),
-                onError: controller.addError,
-              );
-        },
-        onError: controller.addError,
-        onDone: () async {
-          await cancelDocumentSubscription();
-          await controller.close();
-        },
-      );
-
-      controller.onCancel = () async {
-        await cancelDocumentSubscription();
-        await authSubscription?.cancel();
-      };
-    });
+          await authSubscription?.cancel();
+        };
+      });
+    }, tag: AppLogTags.themePreferenceDataSource);
   }
 
   ThemePreference? _mapPreference(Map<String, dynamic>? data) {

@@ -31,6 +31,7 @@ class DashboardCubit extends Cubit<DashboardState>
        super(const DashboardState()) {
     _watchCurriculumChanges();
     _watchActivityRefreshSignals();
+    _onCurriculumStateChanged(_curriculumCubit.state);
   }
   final GetStudyProgressUseCase _getStudyProgress;
   final GetSubjectsUseCase _getSubjects;
@@ -54,13 +55,15 @@ class DashboardCubit extends Cubit<DashboardState>
   }
 
   void _watchCurriculumChanges() {
-    _curriculumSubscription = _curriculumCubit.stream.distinct().listen((
-      curriculumState,
-    ) {
-      if (!curriculumState.isLoading) {
-        Future.microtask(loadDashboard);
-      }
-    });
+    _curriculumSubscription = _curriculumCubit.stream
+        .distinct()
+        .listen(_onCurriculumStateChanged);
+  }
+
+  void _onCurriculumStateChanged(CurriculumState curriculumState) {
+    if (!curriculumState.isLoading) {
+      Future.microtask(loadDashboard);
+    }
   }
 
   void _watchActivityRefreshSignals() {
@@ -119,6 +122,8 @@ class DashboardCubit extends Cubit<DashboardState>
       _getAnnouncements(),
       _getWeakAreas(),
     ).wait;
+
+    if (isClosed) return;
 
     final progress = switch (progressResult) {
       Success(:final data) => data,

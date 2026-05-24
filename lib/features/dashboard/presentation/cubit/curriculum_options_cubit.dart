@@ -55,6 +55,8 @@ class CurriculumOptionsCubit extends Cubit<CurriculumOptionsState>
       limit: 100,
     );
 
+    if (isClosed) return;
+
     final boards = switch (boardResult) {
       Success(:final data) => data.data,
       Error(:final failure) => logFailure('boards', failure),
@@ -139,6 +141,8 @@ class CurriculumOptionsCubit extends Cubit<CurriculumOptionsState>
     );
 
     final gradesResult = await _getGrades(board.id, limit: 100);
+    if (isClosed) return;
+
     final grades = switch (gradesResult) {
       Success(:final data) => data.data,
       Error(:final failure) => logFailure('grades for board switch', failure),

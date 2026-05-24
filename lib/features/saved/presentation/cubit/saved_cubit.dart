@@ -166,6 +166,7 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
     emit(state.copyWith(bookmarks: updatedList));
 
     final result = await _removeBookmark(formulaId);
+    if (isClosed) return;
     if (result is Error<void>) {
       logFailure('remove bookmark', result.failure);
       emit(
@@ -234,6 +235,7 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
     emit(state.copyWith(notes: updatedList));
 
     final result = await _deleteNote(noteId);
+    if (isClosed) return;
     if (result is Error<void>) {
       logFailure('delete note', result.failure);
       emit(state.copyWith(notes: initialNotes, errorMessage: 'Failed to delete note'));
@@ -263,6 +265,7 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
       chapterId: chapterId,
     );
 
+    if (isClosed) return;
     if (result is Error<void>) {
       logFailure('remove saved chapter', result.failure);
       emit(

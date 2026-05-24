@@ -6,9 +6,9 @@ import '../../domain/domain.dart';
 
 @LazySingleton(as: OnboardingDataSourcePort)
 class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
-  OnboardingFirebaseAdapter(this._firestore);
+  OnboardingFirebaseAdapter(this._api);
 
-  final FirebaseFirestore _firestore;
+  final FirestoreClientPort _api;
 
   @override
   Future<PaginatedResponse<Country>> getCountries({
@@ -21,7 +21,7 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
     );
 
     final snapshot = await _runCollectionQuery(
-      _firestore.collection('countries'),
+      _api.collection(AppFirestoreCollections.countries),
       orderByField: 'name',
       limit: limit,
       startAfterId: startAfterId,
@@ -58,7 +58,7 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
       tag: AppLogTags.onboardingDataSource,
     );
     final snapshot = await _runCollectionQuery(
-      _firestore.collection('countries').doc(countryId).collection('states'),
+      _api.collection(AppFirestoreCollections.countryStates(countryId)),
       orderByField: 'name',
       limit: limit,
       startAfterId: startAfterId,
@@ -96,7 +96,7 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
       tag: AppLogTags.onboardingDataSource,
     );
 
-    final collectionRef = _firestore.collection('boards');
+    final collectionRef = _api.collection(AppFirestoreCollections.boards);
     final snapshot = await _runCollectionQuery(
       collectionRef,
       orderByField: 'name',
@@ -152,9 +152,8 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
       tag: AppLogTags.onboardingDataSource,
     );
 
-    // Prefer the normalized `classes` path, but support legacy `grades` data.
     final classesSnapshot = await _runCollectionQuery(
-      _firestore.collection('boards').doc(boardId).collection('classes'),
+      _api.collection(AppFirestoreCollections.boardClasses(boardId)),
       orderByField: 'classNumber',
       limit: limit,
       startAfterId: startAfterId,
@@ -163,7 +162,7 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
     final snapshot = classesSnapshot.docs.isNotEmpty
         ? classesSnapshot
         : await _runCollectionQuery(
-            _firestore.collection('boards').doc(boardId).collection('grades'),
+            _api.collection(AppFirestoreCollections.boardGrades(boardId)),
             orderByField: 'classNumber',
             limit: limit,
             startAfterId: startAfterId,
@@ -218,10 +217,12 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
         }
       }
     } catch (_) {
-      // If the cursor doc cannot be resolved, fall back to the first page.
     }
 
-    return query.limit(effectiveLimit + 1).get();
+    return _api.execute(
+      () => query.limit(effectiveLimit + 1).get(),
+      tag: AppLogTags.onboardingDataSource,
+    );
   }
 
   List<Grade> _deduplicateAndSortGrades(List<Grade> grades) {

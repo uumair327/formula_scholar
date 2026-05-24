@@ -15,4 +15,6 @@ export 'widgets/profile_hero_widget.dart';
 export 'widgets/profile_insights_sheet.dart';
 export 'widgets/progress_stats_widget.dart';
 export 'widgets/settings_list_widget.dart';
+export 'widgets/notification_status_card.dart';
+export 'widgets/notification_toggle_tile.dart';
 export 'widgets/support_contact_sheet.dart';
