@@ -32,6 +32,8 @@ class SectionHeader extends StatelessWidget {
                 style: AppTextStyles.headlineMedium.copyWith(
                   fontWeight: FontWeight.w800,
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             if (actionLabel != null)
@@ -49,7 +51,9 @@ class SectionHeader extends StatelessWidget {
                     ),
                     const SizedBox(width: AppDimensions.paddingXXS),
                     Icon(
-                      Icons.arrow_forward,
+                      Directionality.of(context) == TextDirection.rtl
+                          ? Icons.arrow_back
+                          : Icons.arrow_forward,
                       size: AppDimensions.iconSM,
                       color: colorScheme.primary,
                     ),

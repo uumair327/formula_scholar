@@ -80,7 +80,8 @@ class CurriculumCard extends StatelessWidget {
             if (isSelected)
               Positioned(
                 top: 0,
-                right: 0,
+                left: Directionality.of(context) == TextDirection.rtl ? 0 : null,
+                right: Directionality.of(context) == TextDirection.ltr ? 0 : null,
                 child: Container(
                   width: AppDimensions.iconMD,
                   height: AppDimensions.iconMD,

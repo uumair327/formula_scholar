@@ -94,7 +94,7 @@ class _SearchPageState extends State<SearchPage> {
       ),
       actions: [
         Container(
-          margin: const EdgeInsets.only(right: AppDimensions.paddingSM),
+            margin: const EdgeInsetsDirectional.only(end: AppDimensions.paddingSM),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surfaceContainerHigh
                 .withValues(alpha: 0.5),
@@ -144,6 +144,7 @@ class _SearchPageState extends State<SearchPage> {
 
   Widget _buildResultsList(BuildContext context, SearchState state) {
     return ListView.builder(
+      addAutomaticKeepAlives: false,
       padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingMD),
       itemCount: state.results.length,
       itemBuilder: (context, index) {

@@ -23,7 +23,7 @@ class _ExpandableDescriptionState extends State<ExpandableDescription> {
     final formula = widget.formula;
     final colorScheme = Theme.of(context).colorScheme;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(
+      padding: const EdgeInsetsDirectional.fromSTEB(
         AppDimensions.paddingXL,
         AppDimensions.paddingMD,
         AppDimensions.paddingXL,

@@ -16,7 +16,7 @@ class FormulaLatexHero extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(
+      padding: const EdgeInsetsDirectional.fromSTEB(
         AppDimensions.paddingXL,
         AppDimensions.paddingLG,
         AppDimensions.paddingXL,

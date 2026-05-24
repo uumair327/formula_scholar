@@ -44,6 +44,8 @@ class ProTipBanner extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                     color: colorScheme.onTertiaryContainer,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: AppDimensions.paddingXS),
                 Text(

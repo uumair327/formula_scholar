@@ -117,7 +117,9 @@ class ContinueStudyingSection extends StatelessWidget {
                           ),
                         ),
                         Icon(
-                          LucideIcons.chevronRight,
+                          Directionality.of(context) == TextDirection.rtl
+                              ? LucideIcons.chevronLeft
+                              : LucideIcons.chevronRight,
                           size: AppDimensions.iconMD,
                           color: colorScheme.outline,
                         ),

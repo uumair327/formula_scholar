@@ -34,7 +34,7 @@ class OnboardingShell extends StatelessWidget {
           _OnboardingProgressBar(progress: currentStep / totalSteps),
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(
+              padding: const EdgeInsetsDirectional.fromSTEB(
                 AppDimensions.paddingXL,
                 AppDimensions.paddingLG,
                 AppDimensions.paddingXL,
@@ -198,7 +198,9 @@ class _OnboardingBottomNav extends StatelessWidget {
                 label: continueLabel,
                 onPressed: isLoading ? null : onContinue,
                 isLoading: isLoading,
-                icon: LucideIcons.chevronRight,
+                icon: Directionality.of(context) == TextDirection.rtl
+                    ? LucideIcons.chevronLeft
+                    : LucideIcons.chevronRight,
               ),
             ),
           ],

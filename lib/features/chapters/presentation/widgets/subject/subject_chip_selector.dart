@@ -22,6 +22,7 @@ class SubjectChipSelector extends StatelessWidget {
         height: AppDimensions.chipContainerHeight,
         padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingXL, vertical: AppDimensions.paddingSM),
         child: ListView.separated(
+          addAutomaticKeepAlives: false,
           scrollDirection: Axis.horizontal,
           itemCount: state.availableSubjects.length,
           separatorBuilder: (context, index) => const SizedBox(width: AppDimensions.paddingMD),

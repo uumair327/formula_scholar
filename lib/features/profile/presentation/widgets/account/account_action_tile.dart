@@ -41,7 +41,13 @@ class AccountActionTile extends StatelessWidget {
           Expanded(
             child: Text(label, style: AppTextStyles.labelLarge.copyWith(color: color, fontWeight: FontWeight.w700)),
           ),
-          Icon(LucideIcons.chevronRight, size: AppDimensions.iconMD, color: color.withValues(alpha: AppDimensions.opacityMedium)),
+          Icon(
+            Directionality.of(context) == TextDirection.rtl
+                ? LucideIcons.chevronLeft
+                : LucideIcons.chevronRight,
+            size: AppDimensions.iconMD,
+            color: color.withValues(alpha: AppDimensions.opacityMedium),
+          ),
         ],
       ),
     );

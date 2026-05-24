@@ -29,7 +29,7 @@ class AccountProfileCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(profile?.name ?? AppStrings.welcomeScholar,
-                  style: AppTextStyles.titleLarge.copyWith(color: colorScheme.onSurface)),
+                  style: AppTextStyles.titleLarge.copyWith(color: colorScheme.onSurface), maxLines: 1, overflow: TextOverflow.ellipsis),
                 const SizedBox(height: AppDimensions.paddingXXS),
                 Text(profile?.email ?? '—',
                   style: AppTextStyles.bodySmall.copyWith(color: colorScheme.onSurfaceVariant)),

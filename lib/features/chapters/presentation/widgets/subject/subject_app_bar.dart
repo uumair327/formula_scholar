@@ -36,7 +36,13 @@ class SubjectChaptersAppBar extends StatelessWidget {
                 Text(AppStrings.breadcrumbHome, style: AppTextStyles.overline.copyWith(
                   color: colorScheme.outline, fontSize: AppDimensions.fontSizeXS,
                 )),
-                Icon(LucideIcons.chevronRight, size: AppDimensions.iconXS, color: colorScheme.outlineVariant),
+                Icon(
+                  Directionality.of(context) == TextDirection.rtl
+                      ? LucideIcons.chevronLeft
+                      : LucideIcons.chevronRight,
+                  size: AppDimensions.iconXS,
+                  color: colorScheme.outlineVariant,
+                ),
                 Text(subject!.name.toUpperCase(), style: AppTextStyles.overline.copyWith(
                   color: AppColors.primary, fontSize: AppDimensions.fontSizeXS,
                 )),

@@ -58,7 +58,7 @@ class LocationFormCard extends StatelessWidget {
                 fontWeight: FontWeight.w700,
               ),
               prefixIcon: Padding(
-                padding: const EdgeInsets.only(left: AppDimensions.paddingMD),
+                padding: const EdgeInsetsDirectional.only(start: AppDimensions.paddingMD),
                 child: Icon(
                   LucideIcons.globe,
                   size: AppDimensions.iconDefault,

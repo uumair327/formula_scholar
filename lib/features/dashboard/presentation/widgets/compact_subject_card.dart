@@ -124,6 +124,8 @@ class CompactSubjectCard extends StatelessWidget {
                   child: Text(
                     subject.subtitle!,
                     style: AppTextStyles.bodySmall.copyWith(color: accentColor),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],

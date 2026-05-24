@@ -43,7 +43,7 @@ class CompactChapterCard extends StatelessWidget {
                           child: Text(chapter.name, style: AppTextStyles.titleLarge, maxLines: 1, overflow: TextOverflow.ellipsis),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: AppDimensions.paddingXS),
+                          padding: const EdgeInsetsDirectional.only(start: AppDimensions.paddingXS),
                           child: _BookmarkButton(chapter: chapter),
                         ),
                       ],

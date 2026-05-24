@@ -44,7 +44,7 @@ class NotificationToggleTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: AppTextStyles.labelLarge),
+                Text(title, style: AppTextStyles.labelLarge, maxLines: 1, overflow: TextOverflow.ellipsis),
                 const SizedBox(height: AppDimensions.paddingXXS),
                 Text(
                   subtitle,

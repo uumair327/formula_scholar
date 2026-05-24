@@ -201,7 +201,8 @@ class _Canvas3D extends StatelessWidget {
                 ],
               ),
               clipBehavior: Clip.antiAlias,
-              child: Stack(
+              child: RepaintBoundary(
+                child: Stack(
                 children: [
                   Positioned.fill(
                     child: CustomPaint(
@@ -223,7 +224,8 @@ class _Canvas3D extends StatelessWidget {
                   ),
                   Positioned(
                     top: AppDimensions.paddingMD,
-                    left: AppDimensions.paddingMD,
+                    left: Directionality.of(context) == TextDirection.ltr ? AppDimensions.paddingMD : null,
+                    right: Directionality.of(context) == TextDirection.rtl ? AppDimensions.paddingMD : null,
                     child: _HologramStat(
                       label: 'ROTATION Y',
                       value:
@@ -232,13 +234,15 @@ class _Canvas3D extends StatelessWidget {
                   ),
                   Positioned(
                     top: AppDimensions.paddingMD,
-                    right: AppDimensions.paddingMD,
+                    right: Directionality.of(context) == TextDirection.ltr ? AppDimensions.paddingMD : null,
+                    left: Directionality.of(context) == TextDirection.rtl ? AppDimensions.paddingMD : null,
                     child: _HologramStat(
                       label: 'VISUALIZER MODE',
                       value: state.visualizerType.name.toUpperCase(),
                     ),
                   ),
                 ],
+              ),
               ),
             ),
           ),

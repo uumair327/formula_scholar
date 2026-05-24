@@ -37,6 +37,8 @@ class _NativeGraphWidgetState extends State<NativeGraphWidget> {
     final double yMinDefault = (viewport['yMin'] ?? -10.0) as double;
     final double yMaxDefault = (viewport['yMax'] ?? 10.0) as double;
 
+    final textDirection = Directionality.of(context);
+
     return GestureDetector(
       onPanUpdate: (details) {
         setState(() {
@@ -48,17 +50,20 @@ class _NativeGraphWidgetState extends State<NativeGraphWidget> {
       child: Container(
         color: Colors.black.withValues(alpha: 0.2),
         child: ClipRect(
-          child: CustomPaint(
-            painter: _GraphPainter(
-              expressions: expressions,
-              parameters: widget.parameters,
-              xMinDefault: xMinDefault,
-              xMaxDefault: xMaxDefault,
-              yMinDefault: yMinDefault,
-              yMaxDefault: yMaxDefault,
-              panX: _viewState.panX,
-              panY: _viewState.panY,
-              colorScheme: colorScheme,
+          child: RepaintBoundary(
+            child: CustomPaint(
+              painter: _GraphPainter(
+                expressions: expressions,
+                parameters: widget.parameters,
+                xMinDefault: xMinDefault,
+                xMaxDefault: xMaxDefault,
+                yMinDefault: yMinDefault,
+                yMaxDefault: yMaxDefault,
+                panX: _viewState.panX,
+                panY: _viewState.panY,
+                colorScheme: colorScheme,
+                textDirection: textDirection,
+              ),
             ),
           ),
         ),
@@ -78,6 +83,7 @@ class _GraphPainter extends CustomPainter {
     required this.panX,
     required this.panY,
     required this.colorScheme,
+    required this.textDirection,
   });
 
   final List<dynamic> expressions;
@@ -89,6 +95,7 @@ class _GraphPainter extends CustomPainter {
   final double panX;
   final double panY;
   final ColorScheme colorScheme;
+  final TextDirection textDirection;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -124,7 +131,7 @@ class _GraphPainter extends CustomPainter {
       ..strokeWidth = 2.0;
 
     final textPainter = TextPainter(
-      textDirection: TextDirection.ltr,
+      textDirection: textDirection,
     );
 
     // Draw vertical grid lines

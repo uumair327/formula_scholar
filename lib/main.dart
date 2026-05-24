@@ -10,6 +10,8 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 import 'core/core.dart';
 import 'features/auth/auth.dart';
 import 'features/dashboard/dashboard.dart';
@@ -172,12 +174,27 @@ class _FormulaScholarAppState extends State<FormulaScholarApp>
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: themeState.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+            locale: _resolveLocale(),
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: AppLocales.supportedLocales,
             routerConfig: AppRouter.router,
           );
         },
       ),
     );
   }
+}
+
+/// Resolves the app locale based on the system locale.
+///
+/// Defaults to English if the system locale is not supported.
+Locale _resolveLocale() {
+  final deviceLocale = PlatformDispatcher.instance.locale;
+  return AppLocales.resolve(deviceLocale.languageCode);
 }
 
 class _FirebaseInitError extends StatelessWidget {
@@ -188,6 +205,12 @@ class _FirebaseInitError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocales.supportedLocales,
       home: Scaffold(
         body: Center(
           child: Padding(

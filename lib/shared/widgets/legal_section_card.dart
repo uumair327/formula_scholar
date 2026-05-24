@@ -41,14 +41,16 @@ class LegalSectionCard extends StatelessWidget {
                   style: AppTextStyles.titleMedium.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
           ),
           const SizedBox(height: AppDimensions.paddingMD),
           Padding(
-            padding: const EdgeInsets.only(
-              left: AppDimensions.avatarSM + AppDimensions.paddingMD,
+            padding: const EdgeInsetsDirectional.only(
+              start: AppDimensions.avatarSM + AppDimensions.paddingMD,
             ),
             child: Text(
               section.content,

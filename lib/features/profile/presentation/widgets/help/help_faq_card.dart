@@ -23,9 +23,9 @@ class HelpFaqCard extends StatelessWidget {
             horizontal: AppDimensions.paddingXL,
             vertical: AppDimensions.paddingXS,
           ),
-          childrenPadding: const EdgeInsets.only(
-            left: AppDimensions.paddingXL,
-            right: AppDimensions.paddingXL,
+          childrenPadding: const EdgeInsetsDirectional.only(
+            start: AppDimensions.paddingXL,
+            end: AppDimensions.paddingXL,
             bottom: AppDimensions.paddingLG,
           ),
           expandedCrossAxisAlignment: CrossAxisAlignment.start,

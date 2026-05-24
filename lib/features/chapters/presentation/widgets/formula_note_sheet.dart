@@ -24,17 +24,30 @@ class FormulaNoteSheet extends StatefulWidget {
 class _FormulaNoteSheetState extends State<FormulaNoteSheet> {
   late final TextEditingController _controller;
   bool _saving = false;
+  bool _isEmpty = true;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
     final note = context.read<FormulasCubit>().state.noteFor(widget.formulaId);
-    if (note != null) _controller.text = note.content;
+    if (note != null) {
+      _controller.text = note.content;
+      _isEmpty = false;
+    }
+    _controller.addListener(_onTextChanged);
+  }
+
+  void _onTextChanged() {
+    final empty = _controller.text.trim().isEmpty;
+    if (empty != _isEmpty) {
+      setState(() => _isEmpty = empty);
+    }
   }
 
   @override
   void dispose() {
+    _controller.removeListener(_onTextChanged);
     _controller.dispose();
     super.dispose();
   }
@@ -77,10 +90,10 @@ class _FormulaNoteSheetState extends State<FormulaNoteSheet> {
     final hasNote = existing != null && !existing.isEmpty;
 
     return Padding(
-      padding: EdgeInsets.only(
+      padding: EdgeInsetsDirectional.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
-        left: AppDimensions.paddingXXL,
-        right: AppDimensions.paddingXXL,
+        start: AppDimensions.paddingXXL,
+        end: AppDimensions.paddingXXL,
         top: AppDimensions.paddingXXL,
       ),
       child: Column(
@@ -108,7 +121,6 @@ class _FormulaNoteSheetState extends State<FormulaNoteSheet> {
             controller: _controller,
             maxLines: 5,
             minLines: 3,
-            onChanged: (_) => setState(() {}),
             decoration: InputDecoration(
               hintText: hasNote ? 'Edit your note...' : 'Write a note about this formula...',
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppDimensions.radiusMD)),
@@ -128,7 +140,7 @@ class _FormulaNoteSheetState extends State<FormulaNoteSheet> {
                 ),
               const SizedBox(width: AppDimensions.paddingSM),
               FilledButton.icon(
-                onPressed: _controller.text.trim().isEmpty ? null : _save,
+                onPressed: _isEmpty ? null : _save,
                 icon: _saving
                     ? SizedBox(
                         width: 16, height: 16,

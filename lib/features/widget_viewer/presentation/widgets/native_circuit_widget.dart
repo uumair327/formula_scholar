@@ -39,6 +39,7 @@ class _NativeCircuitWidgetState extends State<NativeCircuitWidget>
     final colorScheme = Theme.of(context).colorScheme;
 
     // Retrieve parameters: Voltage (V_s / V) and Resistance (R)
+    final textDirection = Directionality.of(context);
     final double v = widget.parameters['V_s'] ?? widget.parameters['V'] ?? 12.0;
     final double r = widget.parameters['R'] ?? 6.0;
 
@@ -61,7 +62,8 @@ class _NativeCircuitWidgetState extends State<NativeCircuitWidget>
       children: [
         // Circuit Diagram Canvas
         Positioned.fill(
-          child: AnimatedBuilder(
+          child: RepaintBoundary(
+            child: AnimatedBuilder(
             animation: _animationController,
             builder: (context, child) {
               return CustomPaint(
@@ -71,9 +73,11 @@ class _NativeCircuitWidgetState extends State<NativeCircuitWidget>
                   i: i,
                   animationValue: _animationController.value,
                   colorScheme: colorScheme,
+                  textDirection: textDirection,
                 ),
               );
             },
+          ),
           ),
         ),
 
@@ -136,6 +140,7 @@ class _CircuitPainter extends CustomPainter {
     required this.i,
     required this.animationValue,
     required this.colorScheme,
+    required this.textDirection,
   });
 
   final double v;
@@ -143,6 +148,7 @@ class _CircuitPainter extends CustomPainter {
   final double i;
   final double animationValue;
   final ColorScheme colorScheme;
+  final TextDirection textDirection;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -221,7 +227,7 @@ class _CircuitPainter extends CustomPainter {
     );
 
     // Text labels (+ and -)
-    final textPainter = TextPainter(textDirection: TextDirection.ltr);
+    final textPainter = TextPainter(textDirection: textDirection);
     textPainter.text = TextSpan(
       text: '+',
       style: TextStyle(color: colorScheme.primary, fontSize: 14, fontWeight: FontWeight.bold),
@@ -260,7 +266,7 @@ class _CircuitPainter extends CustomPainter {
     canvas.drawPath(path, compPaint);
 
     // Label
-    final textPainter = TextPainter(textDirection: TextDirection.ltr);
+    final textPainter = TextPainter(textDirection: textDirection);
     textPainter.text = TextSpan(
       text: '${r.toStringAsFixed(1)} Ω',
       style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 10),

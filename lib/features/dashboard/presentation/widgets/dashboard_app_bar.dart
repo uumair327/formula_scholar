@@ -84,7 +84,7 @@ class DashboardAppBar extends StatelessWidget {
               label: AppStrings.searchFormulas,
               button: true,
               child: Container(
-                margin: const EdgeInsets.only(right: AppDimensions.paddingSM),
+                margin: const EdgeInsetsDirectional.only(end: AppDimensions.paddingSM),
                 decoration: BoxDecoration(
                   color: colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(AppDimensions.radiusMD),

@@ -74,7 +74,8 @@ class _NativeModel3DWidgetState extends State<NativeModel3DWidget>
       },
       child: Container(
         color: Colors.black.withValues(alpha: 0.3),
-        child: Stack(
+        child: RepaintBoundary(
+          child: Stack(
           children: [
             // Holographic grid background
             Positioned.fill(
@@ -123,6 +124,7 @@ class _NativeModel3DWidgetState extends State<NativeModel3DWidget>
               ),
             ),
           ],
+        ),
         ),
       ),
     );

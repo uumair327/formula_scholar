@@ -71,9 +71,9 @@ class _SavedPageState extends State<SavedPage> {
             ),
             body: SafeArea(
               child: SingleChildScrollView(
-                padding: EdgeInsets.only(
-                  left: AppDimensions.paddingXXL,
-                  right: AppDimensions.paddingXXL,
+                padding: EdgeInsetsDirectional.only(
+                  start: AppDimensions.paddingXXL,
+                  end: AppDimensions.paddingXXL,
                   top: AppDimensions.paddingXXL,
                   bottom: AppDimensions.bottomNavPadding,
                 ),

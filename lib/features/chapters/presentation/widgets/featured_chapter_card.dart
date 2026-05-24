@@ -38,7 +38,7 @@ class FeaturedChapterCard extends StatelessWidget {
               Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(right: AppDimensions.paddingSM),
+                    padding: const EdgeInsetsDirectional.only(end: AppDimensions.paddingSM),
                     child: IconButton(
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),

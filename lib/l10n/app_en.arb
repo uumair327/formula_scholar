@@ -1,0 +1,7 @@
+{
+  "@@locale": "en",
+  "appName": "Formula Scholar",
+  "@appName": {
+    "description": "The application name"
+  }
+}

@@ -75,6 +75,7 @@ class _PracticeHistoryPageState extends State<PracticeHistoryPage> {
     return RefreshIndicator(
       onRefresh: () => context.read<PracticeHistoryCubit>().loadHistory(),
       child: ListView.builder(
+        addAutomaticKeepAlives: false,
         padding: const EdgeInsets.all(AppDimensions.paddingXL),
         itemCount: state.results.length,
         itemBuilder: (context, index) {

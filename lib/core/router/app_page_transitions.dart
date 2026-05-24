@@ -79,9 +79,10 @@ abstract final class AppPageTransitions {
         final curved = CurveTween(
           curve: AppDurations.curveDefault,
         ).animate(animation);
+        final isRtl = Directionality.of(context) == TextDirection.rtl;
         return SlideTransition(
           position: Tween<Offset>(
-            begin: const Offset(0.25, 0),
+            begin: Offset(isRtl ? -0.25 : 0.25, 0),
             end: Offset.zero,
           ).animate(curved),
           child: FadeTransition(opacity: curved, child: child),

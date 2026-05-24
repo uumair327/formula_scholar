@@ -117,6 +117,7 @@ class _StudyPlannerPageState extends State<StudyPlannerPage> {
               }
             },
             child: ListView.builder(
+              addAutomaticKeepAlives: false,
               padding: const EdgeInsets.only(
                 top: AppDimensions.paddingMD,
                 bottom: 80,

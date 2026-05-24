@@ -168,7 +168,7 @@ class ProfilePage extends StatelessWidget {
       ),
       actions: [
         Container(
-          margin: const EdgeInsets.only(right: AppDimensions.paddingSM),
+          margin: const EdgeInsetsDirectional.only(end: AppDimensions.paddingSM),
           decoration: BoxDecoration(
             color: colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(AppDimensions.radiusMD),

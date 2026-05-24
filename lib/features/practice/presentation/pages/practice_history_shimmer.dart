@@ -9,6 +9,8 @@ class HistoryShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      addAutomaticKeepAlives: false,
+      itemExtent: AppDimensions.cardMinHeightLG + AppDimensions.paddingMD,
       padding: const EdgeInsets.all(AppDimensions.paddingXL),
       itemCount: 6,
       itemBuilder: (context, index) {

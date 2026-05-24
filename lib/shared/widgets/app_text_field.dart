@@ -62,7 +62,7 @@ class AppTextField extends StatelessWidget {
         ),
         prefixIcon: prefixIcon != null
             ? Padding(
-                padding: const EdgeInsets.only(left: AppDimensions.paddingMD),
+                padding: const EdgeInsetsDirectional.only(start: AppDimensions.paddingMD),
                 child: Icon(
                   prefixIcon,
                   size: AppDimensions.iconDefault,
@@ -75,7 +75,7 @@ class AppTextField extends StatelessWidget {
         ),
         suffixIcon: suffixIcon != null
             ? Padding(
-                padding: const EdgeInsets.only(right: AppDimensions.paddingMD),
+                padding: const EdgeInsetsDirectional.only(end: AppDimensions.paddingMD),
                 child: suffixIcon,
               )
             : null,

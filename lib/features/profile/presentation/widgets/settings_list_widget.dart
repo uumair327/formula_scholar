@@ -121,7 +121,12 @@ class SettingsListWidget extends StatelessWidget {
               Expanded(
                 child: Text(item.label, style: AppTextStyles.labelLarge),
               ),
-              Icon(Icons.chevron_right, color: colorScheme.outlineVariant),
+              Icon(
+                Directionality.of(context) == TextDirection.rtl
+                    ? Icons.chevron_left
+                    : Icons.chevron_right,
+                color: colorScheme.outlineVariant,
+              ),
             ],
           ),
         ),

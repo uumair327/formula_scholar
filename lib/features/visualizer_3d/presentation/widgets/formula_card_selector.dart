@@ -30,7 +30,11 @@ class FormulaCardSelector extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            icon: const Icon(LucideIcons.chevronLeft),
+            icon: Icon(
+              Directionality.of(context) == TextDirection.rtl
+                  ? LucideIcons.chevronRight
+                  : LucideIcons.chevronLeft,
+            ),
             onPressed: index > 0 ? onPrevious : null,
           ),
           Expanded(
@@ -59,7 +63,11 @@ class FormulaCardSelector extends StatelessWidget {
             ),
           ),
           IconButton(
-            icon: const Icon(LucideIcons.chevronRight),
+            icon: Icon(
+              Directionality.of(context) == TextDirection.rtl
+                  ? LucideIcons.chevronLeft
+                  : LucideIcons.chevronRight,
+            ),
             onPressed: index < total - 1 ? onNext : null,
           ),
         ],

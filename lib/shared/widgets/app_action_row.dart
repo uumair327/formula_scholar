@@ -46,7 +46,9 @@ class AppActionRow extends StatelessWidget {
           ),
           const SizedBox(width: AppDimensions.paddingXS),
           Icon(
-            trailingIcon,
+            Directionality.of(context) == TextDirection.rtl
+                ? LucideIcons.chevronLeft
+                : LucideIcons.chevronRight,
             size: AppDimensions.iconMD,
             color: color ?? colorScheme.primary,
           ),

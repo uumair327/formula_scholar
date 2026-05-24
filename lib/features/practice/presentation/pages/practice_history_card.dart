@@ -30,7 +30,7 @@ class HistoryCard extends StatelessWidget {
                     children: [
                       ...List.generate(5, (i) {
                         return Padding(
-                          padding: const EdgeInsets.only(right: 1),
+                          padding: const EdgeInsetsDirectional.only(end: 1),
                           child: Icon(
                             i < stars ? LucideIcons.star : LucideIcons.star,
                             size: AppDimensions.iconSM,

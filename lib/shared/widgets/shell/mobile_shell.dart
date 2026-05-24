@@ -17,9 +17,9 @@ class MobileShell extends StatelessWidget {
       bottomNavigationBar: SafeArea(
         bottom: true,
         child: Padding(
-          padding: const EdgeInsets.only(
-            left: AppDimensions.paddingXL,
-            right: AppDimensions.paddingXL,
+          padding: const EdgeInsetsDirectional.only(
+            start: AppDimensions.paddingXL,
+            end: AppDimensions.paddingXL,
             bottom: AppDimensions.paddingLG,
           ),
           child: GlassBottomNavBar(

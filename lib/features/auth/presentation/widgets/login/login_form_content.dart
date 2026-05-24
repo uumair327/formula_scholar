@@ -58,7 +58,7 @@ class LoginFormContent extends StatelessWidget {
           ),
           const SizedBox(height: AppDimensions.paddingLG),
           Align(
-            alignment: Alignment.centerRight,
+            alignment: AlignmentDirectional.centerEnd,
             child: GestureDetector(
               onTap: () => showForgotPasswordDialog(context, identityController.text),
               child: Text(

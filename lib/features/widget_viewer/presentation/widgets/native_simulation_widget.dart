@@ -70,19 +70,22 @@ class _NativeSimulationWidgetState extends State<NativeSimulationWidget>
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-
+    final textDirection = Directionality.of(context);
     final simulationId = widget.config['simulationId'] as String? ?? 'projectile';
 
     return Stack(
       children: [
         // Simulation painting Canvas
         Positioned.fill(
-          child: CustomPaint(
-            painter: _SimulationPainter(
-              simulationId: simulationId,
-              time: _elapsedSeconds,
-              parameters: widget.parameters,
-              colorScheme: colorScheme,
+          child: RepaintBoundary(
+            child: CustomPaint(
+              painter: _SimulationPainter(
+                simulationId: simulationId,
+                time: _elapsedSeconds,
+                parameters: widget.parameters,
+                colorScheme: colorScheme,
+                textDirection: textDirection,
+              ),
             ),
           ),
         ),
@@ -90,7 +93,8 @@ class _NativeSimulationWidgetState extends State<NativeSimulationWidget>
         // Controls bar: Play/Pause and Reset
         Positioned(
           top: AppDimensions.paddingMD,
-          right: AppDimensions.paddingMD,
+          right: textDirection == TextDirection.ltr ? AppDimensions.paddingMD : null,
+          left: textDirection == TextDirection.rtl ? AppDimensions.paddingMD : null,
           child: Row(
             children: [
               IconButton(
@@ -121,12 +125,14 @@ class _SimulationPainter extends CustomPainter {
     required this.time,
     required this.parameters,
     required this.colorScheme,
+    required this.textDirection,
   });
 
   final String simulationId;
   final double time;
   final Map<String, double> parameters;
   final ColorScheme colorScheme;
+  final TextDirection textDirection;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -236,7 +242,7 @@ class _SimulationPainter extends CustomPainter {
     );
 
     // Draw readout text values
-    final textPainter = TextPainter(textDirection: TextDirection.ltr);
+    final textPainter = TextPainter(textDirection: textDirection);
     textPainter.text = TextSpan(
       text: 'Range = ${(vx0 * flightTime).toStringAsFixed(1)} m\n'
           'Height = ${y.toStringAsFixed(1)} m\n'
@@ -318,7 +324,7 @@ class _SimulationPainter extends CustomPainter {
     canvas.drawCircle(bobPos, 10.0, bobPaint);
 
     // Readout
-    final textPainter = TextPainter(textDirection: TextDirection.ltr);
+    final textPainter = TextPainter(textDirection: textDirection);
     textPainter.text = TextSpan(
       text: 'Angle θ = ${(theta * 180 / math.pi).toStringAsFixed(1)}°\n'
           'Period T = ${(2 * math.pi / omega).toStringAsFixed(2)} s',
@@ -370,7 +376,7 @@ class _SimulationPainter extends CustomPainter {
     }
 
     // Readout
-    final textPainter = TextPainter(textDirection: TextDirection.ltr);
+    final textPainter = TextPainter(textDirection: textDirection);
     textPainter.text = TextSpan(
       text: 'Velocity v = ${(freq * wavelength).toStringAsFixed(1)} m/s\n'
           'Freq f = ${freq.toStringAsFixed(1)} Hz\n'

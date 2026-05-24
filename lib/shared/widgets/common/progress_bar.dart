@@ -35,7 +35,7 @@ class ProgressBar extends StatelessWidget {
         borderRadius: BorderRadius.circular(height),
       ),
       child: AppAnimatedFractionallySizedBox(
-        alignment: Alignment.centerLeft,
+        alignment: AlignmentDirectional.centerStart,
         widthFactor: fillFraction,
         duration: AppDurations.animationSlow,
         curve: AppDurations.curvePremium,

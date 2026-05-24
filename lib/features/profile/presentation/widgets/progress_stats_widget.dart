@@ -49,8 +49,8 @@ class ProgressStatsWidget extends StatelessWidget {
                 children: stats.asMap().entries.map((entry) {
                   return Expanded(
                     child: Padding(
-                      padding: EdgeInsets.only(
-                        left: entry.key > 0 ? AppDimensions.paddingMD : 0,
+                      padding: EdgeInsetsDirectional.only(
+                        start: entry.key > 0 ? AppDimensions.paddingMD : 0,
                       ),
                       child: _buildStatCard(context, entry.value, entry.key),
                     ),

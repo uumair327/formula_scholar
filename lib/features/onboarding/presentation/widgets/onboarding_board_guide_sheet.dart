@@ -219,7 +219,9 @@ class _BoardGuideCard extends StatelessWidget {
               Icon(
                 isSelected
                     ? LucideIcons.checkCircle2
-                    : LucideIcons.chevronRight,
+                    : Directionality.of(context) == TextDirection.rtl
+                        ? LucideIcons.chevronLeft
+                        : LucideIcons.chevronRight,
                 color: isSelected ? accent : colorScheme.outlineVariant,
                 size: AppDimensions.iconMD,
               ),

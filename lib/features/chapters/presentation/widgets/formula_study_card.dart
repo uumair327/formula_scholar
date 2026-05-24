@@ -88,7 +88,7 @@ class FormulaStudyCard extends StatelessWidget {
           ExpandableDescription(formula: formula),
           if (hasVisualizer)
             Padding(
-              padding: const EdgeInsets.fromLTRB(
+              padding: const EdgeInsetsDirectional.fromSTEB(
                 AppDimensions.paddingLG,
                 AppDimensions.paddingLG,
                 AppDimensions.paddingLG,

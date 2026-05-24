@@ -133,7 +133,9 @@ class CurriculumFilterBar extends StatelessWidget {
                         if (selection != null) ...[
                           const SizedBox(width: AppDimensions.paddingSM),
                           Icon(
-                            LucideIcons.chevronRight,
+                            Directionality.of(context) == TextDirection.rtl
+                                ? LucideIcons.chevronLeft
+                                : LucideIcons.chevronRight,
                             size: AppDimensions.iconSM,
                             color: colorScheme.outline,
                           ),

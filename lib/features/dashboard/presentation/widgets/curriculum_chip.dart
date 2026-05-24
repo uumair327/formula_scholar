@@ -62,8 +62,8 @@ class _CurriculumChipState extends State<CurriculumChip> {
             children: [
               if (selected)
                 const Padding(
-                  padding: EdgeInsets.only(
-                    right: AppDimensions.paddingXS,
+                  padding: EdgeInsetsDirectional.only(
+                    end: AppDimensions.paddingXS,
                   ),
                   child: Icon(
                     LucideIcons.check,

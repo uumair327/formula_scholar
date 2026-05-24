@@ -58,7 +58,7 @@ class LoginBrandColumn extends StatelessWidget {
           const LoginFormulaCard(formula: 'e = mc²', rotation: -0.035),
           const SizedBox(height: AppDimensions.paddingMD),
           const Padding(
-            padding: EdgeInsets.only(left: AppDimensions.paddingHero),
+            padding: EdgeInsetsDirectional.only(start: AppDimensions.paddingHero),
             child: LoginFormulaCard(formula: 'a² + b² = c²', rotation: 0.052),
           ),
         ],

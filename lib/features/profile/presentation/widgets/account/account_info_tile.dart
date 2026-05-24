@@ -33,7 +33,7 @@ class AccountInfoTile extends StatelessWidget {
               children: [
                 Text(label, style: AppTextStyles.bodySmall.copyWith(color: colorScheme.outline, fontWeight: FontWeight.w600)),
                 const SizedBox(height: AppDimensions.paddingXXS),
-                Text(value, style: AppTextStyles.labelLarge.copyWith(color: valueColor ?? colorScheme.onSurface)),
+                Text(value, style: AppTextStyles.labelLarge.copyWith(color: valueColor ?? colorScheme.onSurface), maxLines: 1, overflow: TextOverflow.ellipsis),
               ],
             ),
           ),

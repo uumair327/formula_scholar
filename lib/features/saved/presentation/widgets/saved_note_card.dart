@@ -39,6 +39,8 @@ class SavedNoteCard extends StatelessWidget {
                         color: colorScheme.primary,
                         fontWeight: FontWeight.w700,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       'SAVED ${_formatDate(note.savedAt)}',

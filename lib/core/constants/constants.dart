@@ -11,6 +11,7 @@ export 'app_dimensions.dart';
 export 'app_durations.dart';
 export 'app_feature_flags.dart';
 export 'app_firestore_collections.dart';
+export 'app_locales.dart';
 export 'app_log_tags.dart';
 export 'app_routes.dart';
 export 'app_shadows.dart';

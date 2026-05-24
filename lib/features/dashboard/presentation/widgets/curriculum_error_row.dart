@@ -25,6 +25,8 @@ class CurriculumErrorRow extends StatelessWidget {
               style: AppTextStyles.labelSmall.copyWith(
                 color: colorScheme.error,
               ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           TextButton(

@@ -63,8 +63,8 @@ class _EntranceWrapperState extends State<EntranceWrapper>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _fadeAnimation;
-  late final Animation<Offset> _slideAnimation;
   late final Animation<double> _scaleAnimation;
+  late final Offset _rawSlideOffset;
 
   @override
   void initState() {
@@ -74,23 +74,14 @@ class _EntranceWrapperState extends State<EntranceWrapper>
       duration: AppDurations.animationSlow,
     );
 
-    final curve = CurvedAnimation(
-      parent: _controller,
-      curve: AppDurations.curvePremium,
+    _rawSlideOffset = _resolveRawOffset();
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: AppDurations.curvePremium),
     );
-
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(curve);
-
-    final slideOffset = _resolveOffset();
-    _slideAnimation = Tween<Offset>(
-      begin: slideOffset,
-      end: Offset.zero,
-    ).animate(curve);
-
     _scaleAnimation = Tween<double>(
       begin: widget.useScale ? widget.scaleBegin : 1.0,
       end: 1.0,
-    ).animate(curve);
+    ).animate(CurvedAnimation(parent: _controller, curve: AppDurations.curvePremium));
 
     if (widget.delay == Duration.zero) {
       _controller.forward();
@@ -101,7 +92,7 @@ class _EntranceWrapperState extends State<EntranceWrapper>
     }
   }
 
-  Offset _resolveOffset() {
+  Offset _resolveRawOffset() {
     if (widget.direction == null) return widget.offset;
     switch (widget.direction!) {
       case EntranceDirection.up:
@@ -115,6 +106,13 @@ class _EntranceWrapperState extends State<EntranceWrapper>
     }
   }
 
+  /// Resolves the slide offset, flipping horizontally in RTL context.
+  Offset _effectiveSlideOffset(BuildContext context) {
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
+    if (!isRtl || _rawSlideOffset.dx == 0) return _rawSlideOffset;
+    return Offset(-_rawSlideOffset.dx, _rawSlideOffset.dy);
+  }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -123,13 +121,18 @@ class _EntranceWrapperState extends State<EntranceWrapper>
 
   @override
   Widget build(BuildContext context) {
+    final slideOffset = _effectiveSlideOffset(context);
+    final slideTween = Tween<Offset>(begin: slideOffset, end: Offset.zero).animate(
+      CurvedAnimation(parent: _controller, curve: AppDurations.curvePremium),
+    );
+
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
         return Opacity(
           opacity: _fadeAnimation.value,
           child: Transform.translate(
-            offset: _slideAnimation.value,
+            offset: slideTween.value,
             child: Transform.scale(
               scale: _scaleAnimation.value,
               child: child,

@@ -46,6 +46,8 @@ class SavedChapterCard extends StatelessWidget {
                           color: colorScheme.primary,
                           fontWeight: FontWeight.w700,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         'SAVED ${_formatDate(chapter.savedAt)}',

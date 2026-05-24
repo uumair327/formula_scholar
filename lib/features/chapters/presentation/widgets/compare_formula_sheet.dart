@@ -58,6 +58,7 @@ class CompareFormulaSheet extends StatelessWidget {
             SizedBox(
               height: 240,
               child: ListView.separated(
+                addAutomaticKeepAlives: false,
                 itemCount: formulas.length,
                 separatorBuilder: (_, _) =>
                     const Divider(height: 1),
@@ -95,7 +96,9 @@ class CompareFormulaSheet extends StatelessWidget {
                       ),
                     ),
                     trailing: Icon(
-                      LucideIcons.chevronRight,
+                      Directionality.of(context) == TextDirection.rtl
+                          ? LucideIcons.chevronLeft
+                          : LucideIcons.chevronRight,
                       size: AppDimensions.iconSM,
                       color: colorScheme.outline,
                     ),

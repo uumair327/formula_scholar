@@ -51,7 +51,7 @@ class RecentActivityList extends StatelessWidget {
                       backgroundColor: (item.isPositive ? colorScheme.secondary : colorScheme.primary).withValues(alpha: AppDimensions.opacityFaint),
                     ),
                     const SizedBox(width: AppDimensions.paddingSM),
-                    Expanded(child: Text(item.title, style: AppTextStyles.bodyMedium)),
+                    Expanded(child: Text(item.title, style: AppTextStyles.bodyMedium, maxLines: 1, overflow: TextOverflow.ellipsis)),
                     Text(item.timeAgo, style: AppTextStyles.labelSmall.copyWith(
                       color: colorScheme.onSurfaceVariant,
                     )),

@@ -166,7 +166,8 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
                           ],
                         ),
                         clipBehavior: Clip.antiAlias,
-                        child: Stack(
+                        child: RepaintBoundary(
+                          child: Stack(
                           children: [
                             // Starfield or Grid lines background
                             Positioned.fill(
@@ -191,17 +192,20 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
                             // Hologram status indicators
                             Positioned(
                               top: AppDimensions.paddingMD,
-                              left: AppDimensions.paddingMD,
+                              left: Directionality.of(context) == TextDirection.ltr ? AppDimensions.paddingMD : null,
+                              right: Directionality.of(context) == TextDirection.rtl ? AppDimensions.paddingMD : null,
                               child: _buildHologramStat('ROTATION Y',
                                   '${(_angleY * 180 / math.pi).round() % 360}°'),
                             ),
                             Positioned(
                               top: AppDimensions.paddingMD,
-                              right: AppDimensions.paddingMD,
+                              right: Directionality.of(context) == TextDirection.ltr ? AppDimensions.paddingMD : null,
+                              left: Directionality.of(context) == TextDirection.rtl ? AppDimensions.paddingMD : null,
                               child: _buildHologramStat(
                                   'VISUALIZER MODE', type.name.toUpperCase()),
                             ),
                           ],
+                        ),
                         ),
                       ),
                     ),
@@ -285,7 +289,9 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
             child: Row(
               children: [
                 IconButton(
-                  icon: const Icon(LucideIcons.chevronLeft),
+                  icon: Icon(Directionality.of(context) == TextDirection.rtl
+                      ? LucideIcons.chevronRight
+                      : LucideIcons.chevronLeft),
                   onPressed: _selectedFormulaIndex > 0
                       ? () {
                           setState(() {
@@ -322,7 +328,9 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(LucideIcons.chevronRight),
+                  icon: Icon(Directionality.of(context) == TextDirection.rtl
+                      ? LucideIcons.chevronLeft
+                      : LucideIcons.chevronRight),
                   onPressed: _selectedFormulaIndex < _subjectFormulas.length - 1
                       ? () {
                           setState(() {

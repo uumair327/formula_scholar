@@ -73,6 +73,7 @@ class CurriculumChipRow<T> extends StatelessWidget {
           SizedBox(
             height: AppDimensions.chipContainerHeight,
             child: ListView.separated(
+              addAutomaticKeepAlives: false,
               scrollDirection: Axis.horizontal,
               itemCount: items.length,
               separatorBuilder: (_, _) =>
