@@ -8,7 +8,6 @@ import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
 import '../cubit/curriculum_options_cubit.dart';
 import '../cubit/curriculum_options_state.dart';
-import 'curriculum_badge.dart';
 import 'curriculum_selection_bottom_sheet.dart';
 
 class CurriculumFilterBar extends StatelessWidget {
@@ -27,128 +26,103 @@ class CurriculumFilterBar extends StatelessWidget {
         return BlocBuilder<CurriculumOptionsCubit, CurriculumOptionsState>(
           buildWhen: (p, n) => p.status != n.status || p.boards != n.boards || p.grades != n.grades || p.errorMessage != n.errorMessage,
           builder: (context, options) {
-            return Container(
-              padding: const EdgeInsets.all(AppDimensions.paddingLG),
-              decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerLowest.withValues(alpha: 0.5),
-                borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-                border: Border.all(
-                  color: colorScheme.outlineVariant.withValues(alpha: 0.2),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(AppDimensions.paddingXS),
-                            decoration: BoxDecoration(
-                              gradient: AppColors.primaryGradientOf(context),
-                              borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
-                            ),
-                            child: const Icon(
-                              LucideIcons.slidersHorizontal,
-                              size: AppDimensions.iconSM,
-                              color: AppColors.white,
-                            ),
-                          ),
-                          const SizedBox(width: AppDimensions.paddingSM),
-                          Text(
-                            AppStrings.dashboardActiveCurriculum,
-                            style: AppTextStyles.labelMedium.copyWith(
-                              color: colorScheme.onSurface,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
+            return Semantics(
+              label: 'Change Active Curriculum. Currently selected: ${selection?.boardName ?? "None"} ${selection?.gradeLabel ?? ""}',
+              button: true,
+              child: GestureDetector(
+                onTap: () {
+                  HapticsHelper.lightImpact();
+                  showCurriculumSelectionBottomSheet(
+                    context,
+                    optionsCubit: context.read<CurriculumOptionsCubit>(),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(AppDimensions.paddingMD),
+                  decoration: BoxDecoration(
+                    color: colorScheme.surfaceContainerLowest.withValues(alpha: 0.7),
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+                    border: Border.all(
+                      color: colorScheme.outlineVariant.withValues(alpha: 0.3),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: colorScheme.shadow.withValues(alpha: 0.03),
+                        blurRadius: 15,
+                        offset: const Offset(0, 4),
                       ),
-                      Semantics(
-                        label: 'Switch board or grade',
-                        button: true,
-                        child: GestureDetector(
-                          onTap: () {
-                            HapticsHelper.lightImpact();
-                            showCurriculumSelectionBottomSheet(
-                              context,
-                              optionsCubit: context.read<CurriculumOptionsCubit>(),
-                            );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppDimensions.paddingSM,
-                              vertical: AppDimensions.paddingXXS,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
-                              border: Border.all(
-                                color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(AppDimensions.paddingSM),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              colorScheme.primary.withValues(alpha: 0.15),
+                              colorScheme.secondary.withValues(alpha: 0.15),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          LucideIcons.graduationCap,
+                          size: AppDimensions.iconMD,
+                          color: colorScheme.primary,
+                        ),
+                      ),
+                      const SizedBox(width: AppDimensions.paddingMD),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              AppStrings.dashboardActiveCurriculum.toUpperCase(),
+                              style: AppTextStyles.labelSmall.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: 0.8,
+                                fontSize: 10,
                               ),
                             ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  LucideIcons.arrowLeftRight,
-                                  size: AppDimensions.iconSM,
-                                  color: colorScheme.onSurfaceVariant,
+                            const SizedBox(height: AppDimensions.paddingXXS),
+                            AnimatedSwitcher(
+                              duration: AppDurations.animationFast,
+                              child: Text(
+                                selection != null
+                                    ? '${selection.boardName} • ${selection.gradeLabel}'
+                                    : AppStrings.dashboardCurriculumPending,
+                                key: ValueKey('curr_title_${selection?.boardId}_${selection?.gradeId}'),
+                                style: AppTextStyles.titleSmall.copyWith(
+                                  color: colorScheme.onSurface,
+                                  fontWeight: FontWeight.w700,
                                 ),
-                                const SizedBox(width: AppDimensions.paddingXXS),
-                                Text(
-                                  AppStrings.dashboardSwitchBoardGrade,
-                                  style: AppTextStyles.labelSmall.copyWith(
-                                    color: colorScheme.onSurfaceVariant,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: AppDimensions.fontSizeXSPlus,
-                                  ),
-                                ),
-                              ],
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                          ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: AppDimensions.paddingSM),
+                      Container(
+                        padding: const EdgeInsets.all(AppDimensions.paddingXS),
+                        decoration: BoxDecoration(
+                          color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          LucideIcons.chevronRight,
+                          size: AppDimensions.iconSM,
+                          color: colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: AppDimensions.paddingMD),
-                  AnimatedSwitcher(
-                    duration: AppDurations.animationFast,
-                    child: Row(
-                      key: ValueKey(
-                        'badges_${selection?.boardId}_${selection?.gradeId}',
-                      ),
-                      children: [
-                        CurriculumBadge(
-                          icon: LucideIcons.layoutGrid,
-                          iconColor: colorScheme.primary,
-                          label: selection?.boardName ?? AppStrings.dashboardCurriculumPending,
-                          isActive: true,
-                          activeColor: colorScheme.primary,
-                        ),
-                        if (selection != null) ...[
-                          const SizedBox(width: AppDimensions.paddingSM),
-                          Icon(
-                            Directionality.of(context) == TextDirection.rtl
-                                ? LucideIcons.chevronLeft
-                                : LucideIcons.chevronRight,
-                            size: AppDimensions.iconSM,
-                            color: colorScheme.outline,
-                          ),
-                          const SizedBox(width: AppDimensions.paddingSM),
-                        ],
-                        CurriculumBadge(
-                          icon: LucideIcons.graduationCap,
-                          iconColor: colorScheme.secondary,
-                          label: selection?.gradeLabel ?? AppStrings.dashboardCurriculumPending,
-                          isActive: true,
-                          activeColor: colorScheme.secondary,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
             );
           },

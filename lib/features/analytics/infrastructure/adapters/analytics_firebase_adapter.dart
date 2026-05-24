@@ -59,39 +59,60 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
     final accuracy = totalQuestions > 0 ? correctQuestions / totalQuestions : 0.0;
 
     var totalFormulas = 0;
-    final subjects = await _api.execute(
-      () => _api.collection(AppFirestoreCollections.subjects).get(),
-      tag: AppLogTags.analyticsDataSource,
-    );
-
-    final chapterSnapshots = await Future.wait(
-      subjects.docs.map((s) => _api.execute(
+    
+    try {
+      final totalFormulasSnap = await _api.execute(
         () => _api
-            .collection(AppFirestoreCollections.subjectChapters(s.id))
+            .collectionGroup(AppFirestoreCollections.formulas)
+            .where('isActive', isEqualTo: true)
+            .count()
             .get(),
         tag: AppLogTags.analyticsDataSource,
-      )),
-    );
+      );
+      totalFormulas = totalFormulasSnap.count ?? 0;
+    } catch (e) {
+      AppLogger.warning('CollectionGroup query failed for formulas, falling back to chunked queries', tag: AppLogTags.analyticsDataSource);
+      
+      final subjects = await _api.execute(
+        () => _api.collection(AppFirestoreCollections.subjects).get(),
+        tag: AppLogTags.analyticsDataSource,
+      );
 
-    final countFutures = <Future<AggregateQuerySnapshot>>[];
-    for (var i = 0; i < subjects.docs.length; i++) {
-      final subjectId = subjects.docs[i].id;
-      for (final chapter in chapterSnapshots[i].docs) {
-        countFutures.add(
-          _api.execute(
-            () => _api
-                .collection(AppFirestoreCollections.chapterFormulas(subjectId, chapter.id))
-                .where('isActive', isEqualTo: true)
-                .count()
-                .get(),
-            tag: AppLogTags.analyticsDataSource,
-          ),
-        );
+      final chapterSnapshots = await Future.wait(
+        subjects.docs.map((s) => _api.execute(
+          () => _api
+              .collection(AppFirestoreCollections.subjectChapters(s.id))
+              .get(),
+          tag: AppLogTags.analyticsDataSource,
+        )),
+      );
+
+      final countQueryFns = <Future<AggregateQuerySnapshot> Function()>[];
+      for (var i = 0; i < subjects.docs.length; i++) {
+        final subjectId = subjects.docs[i].id;
+        for (final chapter in chapterSnapshots[i].docs) {
+          countQueryFns.add(
+            () => _api.execute(
+              () => _api
+                  .collection(AppFirestoreCollections.chapterFormulas(subjectId, chapter.id))
+                  .where('isActive', isEqualTo: true)
+                  .count()
+                  .get(),
+              tag: AppLogTags.analyticsDataSource,
+            ),
+          );
+        }
+      }
+
+      // Execute in chunks of 10 to prevent connection timeouts
+      for (var i = 0; i < countQueryFns.length; i += 10) {
+        final chunk = countQueryFns.skip(i).take(10).map((f) => f()).toList();
+        final results = await Future.wait(chunk);
+        for (final r in results) {
+          totalFormulas += (r.count ?? 0);
+        }
       }
     }
-
-    final formulaCounts = await Future.wait(countFutures);
-    totalFormulas = formulaCounts.fold<int>(0, (total, s) => total + (s.count ?? 0));
 
     final streakDoc = await _api.execute(
       () => _api
