@@ -44,6 +44,8 @@ StatefulShellBranch _dashboardBranch() {
                   BlocProvider(create: (_) => getIt<DashboardCubit>()),
                   BlocProvider(
                     create: (_) => CurriculumOptionsCubit(
+                      getCountries: getIt<GetCountriesUseCase>(),
+                      getStates: getIt<GetStatesUseCase>(),
                       getBoards: getIt<GetBoardsUseCase>(),
                       getGrades: getIt<GetGradesUseCase>(),
                       curriculumCubit: getIt<CurriculumCubit>(),

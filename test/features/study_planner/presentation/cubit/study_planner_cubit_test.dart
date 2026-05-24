@@ -123,7 +123,7 @@ void main() {
           ]),
         );
 
-        authRepository.emitUser(AuthUser(uid: 'u1'));
+        authRepository.emitUser(const AuthUser(uid: 'u1'));
         await Future<void>.delayed(Duration.zero);
         getPlans.controller.add([plan]);
 

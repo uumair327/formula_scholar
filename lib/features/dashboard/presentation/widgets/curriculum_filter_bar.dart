@@ -2,18 +2,13 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../onboarding/onboarding.dart';
 import '../../../../shared/shared.dart';
 import '../cubit/curriculum_options_cubit.dart';
 import '../cubit/curriculum_options_state.dart';
 import 'curriculum_badge.dart';
-import 'curriculum_chip_row.dart';
-import 'curriculum_error_row.dart';
-import 'filter_shimmer.dart';
 import 'curriculum_selection_bottom_sheet.dart';
 
 class CurriculumFilterBar extends StatelessWidget {
@@ -27,13 +22,11 @@ class CurriculumFilterBar extends StatelessWidget {
       buildWhen: (prev, curr) =>
           prev.curriculum != curr.curriculum ||
           prev.isLoading != curr.isLoading,
-      builder: (context, curriculum) {
-        final selection = curriculum.curriculum;
+      builder: (context, curriculumState) {
+        final selection = curriculumState.curriculum;
         return BlocBuilder<CurriculumOptionsCubit, CurriculumOptionsState>(
           buildWhen: (p, n) => p.status != n.status || p.boards != n.boards || p.grades != n.grades || p.errorMessage != n.errorMessage,
           builder: (context, options) {
-            final isBusy = options.status == CurriculumOptionsStatus.loading;
-
             return Container(
               padding: const EdgeInsets.all(AppDimensions.paddingLG),
               decoration: BoxDecoration(

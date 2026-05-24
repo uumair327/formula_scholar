@@ -73,8 +73,9 @@ class _NativeImageWidgetState extends State<NativeImageWidget>
 
                   // Overlay annotations
                   ...annotations.map((ann) {
-                    if (ann is! Map<String, dynamic>)
+                    if (ann is! Map<String, dynamic>) {
                       return const SizedBox.shrink();
+                    }
                     final x = (ann['x'] ?? 0.5) as double;
                     final y = (ann['y'] ?? 0.5) as double;
 

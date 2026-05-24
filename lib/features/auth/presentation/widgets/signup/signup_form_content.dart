@@ -77,8 +77,9 @@ class SignupFormContent extends StatelessWidget {
                     prefixIcon: LucideIcons.user,
                     controller: nameController,
                     validator: (value) {
-                      if (value == null || value.trim().isEmpty)
+                      if (value == null || value.trim().isEmpty) {
                         return AppStrings.validationRequired;
+                      }
                       return null;
                     },
                   ),
@@ -92,8 +93,9 @@ class SignupFormContent extends StatelessWidget {
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
-                      if (value == null || value.trim().isEmpty)
+                      if (value == null || value.trim().isEmpty) {
                         return AppStrings.validationRequired;
+                      }
                       if (!RegExp(
                         r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
                       ).hasMatch(value.trim())) {
@@ -113,10 +115,12 @@ class SignupFormContent extends StatelessWidget {
               prefixIcon: LucideIcons.lock,
               obscureText: obscurePassword,
               validator: (value) {
-                if (value == null || value.isEmpty)
+                if (value == null || value.isEmpty) {
                   return AppStrings.validationRequired;
-                if (value.length < 6)
+                }
+                if (value.length < 6) {
                   return AppStrings.validationPasswordMinLength;
+                }
                 return null;
               },
               suffixIcon: IconButton(
@@ -139,10 +143,12 @@ class SignupFormContent extends StatelessWidget {
               prefixIcon: LucideIcons.checkSquare,
               obscureText: obscureConfirm,
               validator: (value) {
-                if (value == null || value.isEmpty)
+                if (value == null || value.isEmpty) {
                   return AppStrings.validationRequired;
-                if (value != passwordController.text)
+                }
+                if (value != passwordController.text) {
                   return AppStrings.validationPasswordMismatch;
+                }
                 return null;
               },
               suffixIcon: IconButton(

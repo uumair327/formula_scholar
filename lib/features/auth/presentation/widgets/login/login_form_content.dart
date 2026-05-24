@@ -82,8 +82,9 @@ class LoginFormContent extends StatelessWidget {
             prefixIcon: LucideIcons.lock,
             obscureText: obscurePassword,
             validator: (value) {
-              if (value == null || value.isEmpty)
+              if (value == null || value.isEmpty) {
                 return AppStrings.validationRequired;
+              }
               return null;
             },
             suffixIcon: IconButton(

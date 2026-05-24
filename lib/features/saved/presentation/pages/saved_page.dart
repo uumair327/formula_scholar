@@ -51,7 +51,7 @@ class SavedPage extends StatelessWidget {
             ),
             body: SafeArea(
               child: SingleChildScrollView(
-                padding: EdgeInsetsDirectional.only(
+                padding: const EdgeInsetsDirectional.only(
                   start: AppDimensions.paddingXXL,
                   end: AppDimensions.paddingXXL,
                   top: AppDimensions.paddingXXL,
@@ -59,10 +59,10 @@ class SavedPage extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    EntranceWrapper.stagger(index: 0, child: SizedBox(height: AppDimensions.paddingSection)),
-                    EntranceWrapper.stagger(index: 1, child: EmptyBookmarksState()),
-                    EntranceWrapper.stagger(index: 2, child: SizedBox(height: AppDimensions.paddingSection)),
-                    EntranceWrapper.stagger(index: 3, child: ProTipBanner()),
+                    EntranceWrapper.stagger(index: 0, child: const SizedBox(height: AppDimensions.paddingSection)),
+                    EntranceWrapper.stagger(index: 1, child: const EmptyBookmarksState()),
+                    EntranceWrapper.stagger(index: 2, child: const SizedBox(height: AppDimensions.paddingSection)),
+                    EntranceWrapper.stagger(index: 3, child: const ProTipBanner()),
                   ],
                 ),
               ),

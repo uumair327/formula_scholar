@@ -38,7 +38,7 @@ class SectionHeader extends StatelessWidget {
             ),
             if (actionLabel != null)
               Tooltip(
-                message: actionLabel!,
+                message: actionLabel,
                 child: GestureDetector(
                   onTap: onAction,
                   behavior: HitTestBehavior.opaque,

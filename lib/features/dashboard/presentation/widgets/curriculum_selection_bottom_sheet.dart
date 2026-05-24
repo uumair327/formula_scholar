@@ -33,6 +33,9 @@ class CurriculumSelectionBottomSheet extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.9,
+      ),
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
@@ -72,65 +75,117 @@ class CurriculumSelectionBottomSheet extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppDimensions.paddingLG),
-              BlocBuilder<CurriculumCubit, CurriculumState>(
-                builder: (context, curriculumState) {
-                  final selection = curriculumState.curriculum;
-                  return BlocConsumer<CurriculumOptionsCubit, CurriculumOptionsState>(
-                    listenWhen: (prev, curr) {
-                      // If the grade changed and is not null, auto-close the sheet.
-                      // But wait, what if they just opened the sheet? We only want to close if they manually select a NEW grade.
-                      // We can check if status is loaded and a grade was just selected.
-                      // Actually, it's safer to close when `CurriculumCubit` changes, but grade changes might trigger it.
-                      return false;
-                    },
-                    listener: (context, state) {},
-                    builder: (context, options) {
-                      final isBusy = options.status == CurriculumOptionsStatus.loading;
-
-                      return Column(
+              Expanded(
+                child: BlocBuilder<CurriculumOptionsCubit, CurriculumOptionsState>(
+                  builder: (context, options) {
+                    final isBusy = options.status == CurriculumOptionsStatus.loading;
+                    
+                    return SingleChildScrollView(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (isBusy && options.boards.isEmpty)
+                          if (isBusy && !options.hasCountries)
                             const FilterShimmer()
                           else ...[
-                            CurriculumChipRow<Board>(
-                              label: AppStrings.dashboardAvailableBoards,
-                              items: options.boards,
-                              selectedId: selection?.boardId,
-                              itemId: (board) => board.id,
-                              itemLabel: (board) => board.name,
-                              itemSubtitle: (Board board) => board.type.name,
-                              emptyMessage: AppStrings.dashboardNoBoardsAvailable,
-                              isBusy: isBusy,
-                              onSelected: (board) => context
-                                  .read<CurriculumOptionsCubit>()
-                                  .selectBoard(board),
-                            ),
-                            const SizedBox(height: AppDimensions.paddingLG),
-                            CurriculumChipRow<Grade>(
-                              label: AppStrings.dashboardAvailableClasses,
-                              items: options.grades,
-                              selectedId: selection?.gradeId,
-                              itemId: (grade) => grade.id,
-                              itemLabel: (grade) => grade.displayLabel,
-                              emptyMessage: AppStrings.dashboardNoClassesAvailable,
-                              isBusy: isBusy,
-                              onSelected: (grade) async {
-                                await context.read<CurriculumOptionsCubit>().selectGrade(grade);
-                                // Auto-close when grade is selected
-                                if (context.mounted) Navigator.of(context).pop();
-                              },
-                            ),
+                            if (options.hasCountries)
+                              EntranceWrapper.stagger(
+                                index: 0,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: AppDimensions.paddingLG),
+                                  child: CurriculumChipRow<Country>(
+                                    label: 'Country',
+                                    items: options.countries,
+                                    selectedId: options.draftCountryId,
+                                    itemId: (country) => country.id,
+                                    itemLabel: (country) => country.name,
+                                    emptyMessage: 'No countries available',
+                                    isBusy: isBusy,
+                                    onSelected: (country) async => context
+                                        .read<CurriculumOptionsCubit>()
+                                        .selectCountry(country.id),
+                                  ),
+                                ),
+                              ),
+                            if (options.hasStates)
+                              EntranceWrapper.stagger(
+                                index: 1,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: AppDimensions.paddingLG),
+                                  child: CurriculumChipRow<StateRegion>(
+                                    label: 'State/Region',
+                                    items: options.states,
+                                    selectedId: options.draftStateId,
+                                    itemId: (state) => state.id,
+                                    itemLabel: (state) => state.name,
+                                    emptyMessage: 'No states available',
+                                    isBusy: isBusy,
+                                    onSelected: (state) async => context
+                                        .read<CurriculumOptionsCubit>()
+                                        .selectState(state.id),
+                                  ),
+                                ),
+                              ),
+                            if (options.hasBoards)
+                              EntranceWrapper.stagger(
+                                index: 2,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: AppDimensions.paddingLG),
+                                  child: CurriculumChipRow<Board>(
+                                    label: AppStrings.dashboardAvailableBoards,
+                                    items: options.boards,
+                                    selectedId: options.draftBoardId,
+                                    itemId: (board) => board.id,
+                                    itemLabel: (board) => board.name,
+                                    itemSubtitle: (Board board) => board.type.name,
+                                    emptyMessage: AppStrings.dashboardNoBoardsAvailable,
+                                    isBusy: isBusy,
+                                    onSelected: (board) async => context
+                                        .read<CurriculumOptionsCubit>()
+                                        .selectBoard(board.id),
+                                  ),
+                                ),
+                              ),
+                            if (options.hasGrades)
+                              EntranceWrapper.stagger(
+                                index: 3,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: AppDimensions.paddingLG),
+                                  child: CurriculumChipRow<Grade>(
+                                    label: AppStrings.dashboardAvailableClasses,
+                                    items: options.grades,
+                                    selectedId: options.draftGradeId,
+                                    itemId: (grade) => grade.id,
+                                    itemLabel: (grade) => grade.displayLabel,
+                                    emptyMessage: AppStrings.dashboardNoClassesAvailable,
+                                    isBusy: isBusy,
+                                    onSelected: (grade) async {
+                                      context.read<CurriculumOptionsCubit>().selectGrade(grade.id);
+                                    },
+                                  ),
+                                ),
+                              ),
                           ],
                           if (options.status == CurriculumOptionsStatus.error)
                             CurriculumErrorRow(errorMessage: options.errorMessage),
                         ],
-                      );
-                    },
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: AppDimensions.paddingXL),
+              BlocBuilder<CurriculumOptionsCubit, CurriculumOptionsState>(
+                builder: (context, options) {
+                  return AppGradientButton(
+                    label: 'Apply Curriculum',
+                    onPressed: options.isReadyToApply ? () async {
+                      await context.read<CurriculumOptionsCubit>().applySelection();
+                      if (context.mounted) Navigator.of(context).pop();
+                    } : null,
                   );
                 },
               ),
-              const SizedBox(height: AppDimensions.paddingXL),
+              const SizedBox(height: AppDimensions.paddingLG),
             ],
           ),
         ),

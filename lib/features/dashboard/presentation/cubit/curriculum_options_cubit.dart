@@ -10,10 +10,14 @@ import 'curriculum_options_state.dart';
 class CurriculumOptionsCubit extends Cubit<CurriculumOptionsState>
     with CubitFailureLogger<CurriculumOptionsState> {
   CurriculumOptionsCubit({
+    required GetCountriesUseCase getCountries,
+    required GetStatesUseCase getStates,
     required GetBoardsUseCase getBoards,
     required GetGradesUseCase getGrades,
     required CurriculumCubit curriculumCubit,
-  }) : _getBoards = getBoards,
+  }) : _getCountries = getCountries,
+       _getStates = getStates,
+       _getBoards = getBoards,
        _getGrades = getGrades,
        _curriculumCubit = curriculumCubit,
        super(const CurriculumOptionsState()) {
@@ -23,6 +27,8 @@ class CurriculumOptionsCubit extends Cubit<CurriculumOptionsState>
     Future.microtask(loadOptions);
   }
 
+  final GetCountriesUseCase _getCountries;
+  final GetStatesUseCase _getStates;
   final GetBoardsUseCase _getBoards;
   final GetGradesUseCase _getGrades;
   final CurriculumCubit _curriculumCubit;
@@ -34,27 +40,92 @@ class CurriculumOptionsCubit extends Cubit<CurriculumOptionsState>
   Future<void> loadOptions() async {
     final curriculum = _curriculumCubit.state.curriculum;
     if (curriculum == null) {
-      emit(
-        const CurriculumOptionsState(
-          status: CurriculumOptionsStatus.loaded,
-          boards: [],
-          grades: [],
-        ),
-      );
+      emit(const CurriculumOptionsState(status: CurriculumOptionsStatus.loaded));
       return;
     }
 
-    emit(
-      state.copyWith(status: CurriculumOptionsStatus.loading, clearError: true),
-    );
+    emit(state.copyWith(status: CurriculumOptionsStatus.loading, clearError: true));
 
-    final countryId = curriculum.countryId ?? AppStrings.defaultCountryId;
-    final boardResult = await _getBoards(
-      countryId,
-      stateId: curriculum.stateId,
-      limit: 100,
-    );
+    final countriesResult = await _getCountries(limit: 100);
+    if (isClosed) return;
 
+    final countries = switch (countriesResult) {
+      Success(:final data) => data.data,
+      Error(:final failure) => logFailure('countries', failure),
+    };
+
+    if (countries == null) {
+      emit(state.copyWith(
+        status: CurriculumOptionsStatus.error,
+        errorMessage: AppStrings.dashboardCurriculumOptionsLoadFailed,
+      ));
+      return;
+    }
+
+    final initialCountryId = curriculum.countryId ?? AppStrings.defaultCountryId;
+    final draftCountryId = _firstWhereOrNull<Country>(countries, (c) => c.id == initialCountryId)?.id ?? _firstOrNull(countries)?.id;
+
+    if (draftCountryId == null) {
+      emit(state.copyWith(status: CurriculumOptionsStatus.loaded, countries: countries, clearError: true));
+      return;
+    }
+
+    await _loadStatesAndDownstream(
+      draftCountryId: draftCountryId,
+      countries: countries,
+      targetStateId: curriculum.stateId,
+      targetBoardId: curriculum.boardId,
+      targetGradeId: curriculum.gradeId,
+    );
+  }
+
+  Future<void> _loadStatesAndDownstream({
+    required String draftCountryId,
+    required List<Country> countries,
+    String? targetStateId,
+    String? targetBoardId,
+    String? targetGradeId,
+  }) async {
+    final statesResult = await _getStates(draftCountryId, limit: 100);
+    if (isClosed) return;
+
+    final states = switch (statesResult) {
+      Success(:final data) => data.data,
+      Error(:final failure) => logFailure('states', failure),
+    };
+
+    if (states == null) {
+      emit(state.copyWith(
+        status: CurriculumOptionsStatus.error,
+        errorMessage: AppStrings.dashboardCurriculumOptionsLoadFailed,
+      ));
+      return;
+    }
+
+    String? draftStateId;
+    if (states.isNotEmpty) {
+      draftStateId = _firstWhereOrNull<StateRegion>(states, (s) => s.id == targetStateId)?.id ?? _firstOrNull(states)?.id;
+    }
+
+    await _loadBoardsAndDownstream(
+      draftCountryId: draftCountryId,
+      draftStateId: draftStateId,
+      countries: countries,
+      states: states,
+      targetBoardId: targetBoardId,
+      targetGradeId: targetGradeId,
+    );
+  }
+
+  Future<void> _loadBoardsAndDownstream({
+    required String draftCountryId,
+    required String? draftStateId,
+    required List<Country> countries,
+    required List<StateRegion> states,
+    String? targetBoardId,
+    String? targetGradeId,
+  }) async {
+    final boardResult = await _getBoards(draftCountryId, stateId: draftStateId, limit: 100);
     if (isClosed) return;
 
     final boards = switch (boardResult) {
@@ -63,168 +134,150 @@ class CurriculumOptionsCubit extends Cubit<CurriculumOptionsState>
     };
 
     if (boards == null) {
-      emit(
-        state.copyWith(
-          status: CurriculumOptionsStatus.error,
-          errorMessage: AppStrings.dashboardCurriculumOptionsLoadFailed,
-        ),
-      );
+      emit(state.copyWith(
+        status: CurriculumOptionsStatus.error,
+        errorMessage: AppStrings.dashboardCurriculumOptionsLoadFailed,
+      ));
       return;
     }
 
-    final activeBoard = _firstWhereOrNull<Board>(
-      boards,
-      (board) => board.id == curriculum.boardId,
+    final draftBoardId = _firstWhereOrNull<Board>(boards, (b) => b.id == targetBoardId)?.id ?? _firstOrNull(boards)?.id;
+
+    if (draftBoardId == null) {
+      emit(state.copyWith(
+        status: CurriculumOptionsStatus.loaded,
+        countries: countries,
+        states: states,
+        boards: boards,
+        grades: const [],
+        draftCountryId: draftCountryId,
+        draftStateId: draftStateId,
+        draftBoardId: null,
+        draftGradeId: null,
+        clearError: true,
+      ));
+      return;
+    }
+
+    await _loadGradesAndDownstream(
+      draftCountryId: draftCountryId,
+      draftStateId: draftStateId,
+      draftBoardId: draftBoardId,
+      countries: countries,
+      states: states,
+      boards: boards,
+      targetGradeId: targetGradeId,
     );
+  }
 
-    final boardForGrades = activeBoard ?? _firstOrNull(boards);
+  Future<void> _loadGradesAndDownstream({
+    required String draftCountryId,
+    required String? draftStateId,
+    required String draftBoardId,
+    required List<Country> countries,
+    required List<StateRegion> states,
+    required List<Board> boards,
+    String? targetGradeId,
+  }) async {
+    final gradesResult = await _getGrades(draftBoardId, limit: 100);
+    if (isClosed) return;
 
-    if (boardForGrades == null) {
-      emit(
-        state.copyWith(
-          status: CurriculumOptionsStatus.loaded,
-          boards: boards,
-          grades: const [],
-          clearError: true,
-        ),
-      );
-      return;
-    }
-
-    final gradesResult = await _getGrades(boardForGrades.id, limit: 100);
     final grades = switch (gradesResult) {
       Success(:final data) => data.data,
       Error(:final failure) => logFailure('grades', failure),
     };
 
     if (grades == null) {
-      emit(
-        state.copyWith(
-          status: CurriculumOptionsStatus.error,
-          boards: boards,
-          grades: const [],
-          errorMessage: AppStrings.dashboardCurriculumOptionsLoadFailed,
-        ),
-      );
+      emit(state.copyWith(
+        status: CurriculumOptionsStatus.error,
+        errorMessage: AppStrings.dashboardCurriculumOptionsLoadFailed,
+      ));
       return;
     }
 
-    emit(
-      state.copyWith(
-        status: CurriculumOptionsStatus.loaded,
-        boards: boards,
-        grades: grades,
-        clearError: true,
-      ),
-    );
+    final draftGradeId = _firstWhereOrNull<Grade>(grades, (g) => g.id == targetGradeId)?.id ?? _firstOrNull(grades)?.id;
 
-    final hasCurrentBoard = activeBoard != null;
-    final hasCurrentGrade = grades.any(
-      (grade) => grade.id == curriculum.gradeId,
-    );
-    if (!hasCurrentBoard || !hasCurrentGrade) {
-      final fallbackGrade = _firstOrNull(grades);
-      if (fallbackGrade != null) {
-        await _applySelection(boardForGrades, fallbackGrade);
-      }
-    }
+    emit(state.copyWith(
+      status: CurriculumOptionsStatus.loaded,
+      countries: countries,
+      states: states,
+      boards: boards,
+      grades: grades,
+      draftCountryId: draftCountryId,
+      draftStateId: draftStateId,
+      draftBoardId: draftBoardId,
+      draftGradeId: draftGradeId,
+      clearError: true,
+    ));
   }
 
-  Future<void> selectBoard(Board board) async {
-    final curriculum = _curriculumCubit.state.curriculum;
-    if (curriculum == null) {
-      return;
-    }
-
-    emit(
-      state.copyWith(status: CurriculumOptionsStatus.loading, clearError: true),
+  Future<void> selectCountry(String countryId) async {
+    emit(state.copyWith(status: CurriculumOptionsStatus.loading, clearError: true));
+    await _loadStatesAndDownstream(
+      draftCountryId: countryId,
+      countries: state.countries,
+      targetStateId: null,
+      targetBoardId: null,
+      targetGradeId: null,
     );
-
-    final gradesResult = await _getGrades(board.id, limit: 100);
-    if (isClosed) return;
-
-    final grades = switch (gradesResult) {
-      Success(:final data) => data.data,
-      Error(:final failure) => logFailure('grades for board switch', failure),
-    };
-
-    if (grades == null) {
-      emit(
-        state.copyWith(
-          status: CurriculumOptionsStatus.error,
-          errorMessage: AppStrings.dashboardCurriculumOptionsLoadFailed,
-        ),
-      );
-      return;
-    }
-
-    if (grades.isEmpty) {
-      emit(
-        state.copyWith(
-          status: CurriculumOptionsStatus.loaded,
-          grades: const [],
-          clearError: true,
-        ),
-      );
-      return;
-    }
-
-    final activeGrade = _firstWhereOrNull<Grade>(
-      grades,
-      (grade) => grade.id == curriculum.gradeId,
-    );
-    final targetGrade = activeGrade ?? grades.first;
-
-    emit(
-      state.copyWith(
-        status: CurriculumOptionsStatus.loaded,
-        grades: grades,
-        clearError: true,
-      ),
-    );
-
-    await _applySelection(board, targetGrade);
   }
 
-  Future<void> selectGrade(Grade grade) async {
-    final curriculum = _curriculumCubit.state.curriculum;
-    if (curriculum == null) {
-      return;
-    }
-
-    final board = _firstWhereOrNull<Board>(
-      state.boards,
-      (item) => item.id == curriculum.boardId,
+  Future<void> selectState(String stateId) async {
+    if (state.draftCountryId == null) return;
+    emit(state.copyWith(status: CurriculumOptionsStatus.loading, clearError: true));
+    await _loadBoardsAndDownstream(
+      draftCountryId: state.draftCountryId!,
+      draftStateId: stateId,
+      countries: state.countries,
+      states: state.states,
+      targetBoardId: null,
+      targetGradeId: null,
     );
-    if (board == null) {
-      return;
-    }
-
-    await _applySelection(board, grade);
   }
 
-  Future<void> _applySelection(Board board, Grade grade) async {
+  Future<void> selectBoard(String boardId) async {
+    if (state.draftCountryId == null) return;
+    emit(state.copyWith(status: CurriculumOptionsStatus.loading, clearError: true));
+    await _loadGradesAndDownstream(
+      draftCountryId: state.draftCountryId!,
+      draftStateId: state.draftStateId,
+      draftBoardId: boardId,
+      countries: state.countries,
+      states: state.states,
+      boards: state.boards,
+      targetGradeId: null,
+    );
+  }
+
+  void selectGrade(String gradeId) {
+    emit(state.copyWith(draftGradeId: gradeId));
+  }
+
+  Future<void> applySelection() async {
+    final draftBoardId = state.draftBoardId;
+    final draftGradeId = state.draftGradeId;
+    
+    if (draftBoardId == null || draftGradeId == null) return;
+
+    final board = _firstWhereOrNull<Board>(state.boards, (b) => b.id == draftBoardId);
+    final grade = _firstWhereOrNull<Grade>(state.grades, (g) => g.id == draftGradeId);
+
+    if (board == null || grade == null) return;
+
     final current = _curriculumCubit.state.curriculum;
-    if (current == null) {
-      return;
-    }
-
-    final sameSelection =
-        current.boardId == board.id && current.gradeId == grade.id;
-    if (sameSelection) {
-      return;
-    }
-
+    final countryName = _firstWhereOrNull<Country>(state.countries, (c) => c.id == state.draftCountryId)?.name;
+    final stateName = _firstWhereOrNull<StateRegion>(state.states, (s) => s.id == state.draftStateId)?.name;
+    
     await _curriculumCubit.setCurriculum(
       boardId: board.id,
       boardName: board.name,
       gradeId: grade.id,
       gradeLabel: grade.displayLabel,
       gradeNumber: grade.classNumber,
-      countryId: current.countryId ?? board.countryId,
-      stateId: current.stateId ?? board.stateId,
-      countryName: current.countryName,
-      stateName: current.stateName,
+      countryId: state.draftCountryId ?? current?.countryId ?? board.countryId,
+      stateId: state.draftStateId ?? current?.stateId ?? board.stateId,
+      countryName: countryName ?? current?.countryName,
+      stateName: stateName ?? current?.stateName,
     );
   }
 
@@ -232,7 +285,6 @@ class CurriculumOptionsCubit extends Cubit<CurriculumOptionsState>
     if (items.isEmpty) {
       return null;
     }
-
     return items.first;
   }
 
@@ -242,7 +294,6 @@ class CurriculumOptionsCubit extends Cubit<CurriculumOptionsState>
         return item;
       }
     }
-
     return null;
   }
 
