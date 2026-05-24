@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
-import '../../../auth/auth.dart';
 import '../cubit/practice_cubit.dart';
 import 'practice_pre_filter_header.dart';
 import 'practice_pre_filter_timed_mode.dart';
@@ -26,16 +25,18 @@ class PracticePreFilter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final authState = context.watch<AuthCubit>().state;
-    final photoUrl = authState.user?.photoUrl ?? '';
-    final subjectState = context.watch<SubjectSelectionCubit>().state;
-    final curriculumState = context.watch<CurriculumCubit>().state;
+    final subjectState = context.select<SubjectSelectionCubit, SubjectSelectionState>(
+      (c) => c.state,
+    );
+    final curriculumState = context.select<CurriculumCubit, CurriculumState>(
+      (c) => c.state,
+    );
 
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            PreFilterHeader(photoUrl: photoUrl),
+            const PreFilterHeader(),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(AppDimensions.paddingXXL),

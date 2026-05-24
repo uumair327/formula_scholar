@@ -86,7 +86,9 @@ class _FormulaNoteSheetState extends State<FormulaNoteSheet> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final existing = context.watch<FormulasCubit>().state.noteFor(widget.formulaId);
+    final existing = context.select<FormulasCubit, FormulaNote?>(
+      (c) => c.state.noteFor(widget.formulaId),
+    );
     final hasNote = existing != null && !existing.isEmpty;
 
     return Padding(

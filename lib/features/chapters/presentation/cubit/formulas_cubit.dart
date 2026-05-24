@@ -311,8 +311,10 @@ class FormulasCubit extends Cubit<FormulasState>
     if (isClosed) return;
     if (result is Error<void>) {
       logFailure('toggleChapterBookmark', result.failure);
-      emit(state.copyWith(isChapterSaved: !newSavedState));
-      emit(state.copyWith(errorMessage: 'Failed to bookmark chapter'));
+      emit(state.copyWith(
+        isChapterSaved: !newSavedState,
+        errorMessage: 'Failed to bookmark chapter',
+      ));
     } else {
       AppLogger.info(
         'Chapter ${state.chapterId} bookmark toggled to $newSavedState',

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
 import '../cubit/practice_cubit.dart';
+import '../cubit/practice_state.dart';
 import 'practice_quiz_header.dart';
 import 'practice_quiz_next_button.dart';
 import 'practice_quiz_options_list.dart';
@@ -21,7 +22,8 @@ class PracticeQuizScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<PracticeCubit>().state;
+    return BlocBuilder<PracticeCubit, PracticeState>(
+      builder: (context, state) {
     final colorScheme = Theme.of(context).colorScheme;
     final question = state.currentQuestion;
     if (question == null) return const SizedBox.shrink();
@@ -104,6 +106,8 @@ class PracticeQuizScreen extends StatelessWidget {
             QuizNextButton(state: state),
         ],
       ),
+    );
+    },
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
 import '../cubit/practice_cubit.dart';
+import '../cubit/practice_state.dart';
 import 'practice_completion_category_breakdown.dart';
 import 'practice_completion_score_summary.dart';
 import 'practice_completion_time_info.dart';
@@ -16,7 +17,8 @@ class PracticeCompletionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<PracticeCubit>().state;
+    return BlocBuilder<PracticeCubit, PracticeState>(
+      builder: (context, state) {
     final colorScheme = Theme.of(context).colorScheme;
     final pct = state.scorePercent.round();
     final stars = state.starRating;
@@ -128,6 +130,8 @@ class PracticeCompletionScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+    },
     );
   }
 

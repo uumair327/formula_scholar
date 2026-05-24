@@ -6,6 +6,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../../core/core.dart';
 import '../../../../../shared/shared.dart';
 import '../../cubit/auth_cubit.dart';
+import '../../cubit/auth_state.dart';
 import '../forgot_password_dialog.dart';
 import 'login_social_button.dart';
 

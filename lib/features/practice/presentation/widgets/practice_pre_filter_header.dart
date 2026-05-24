@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
+import '../../../auth/auth.dart';
 
 class PreFilterHeader extends StatelessWidget {
-  const PreFilterHeader({super.key, required this.photoUrl});
-  final String photoUrl;
+  const PreFilterHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final photoUrl = context.select<AuthCubit, String>(
+      (c) => c.state.user?.photoUrl ?? '',
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: AppDimensions.paddingXXL,

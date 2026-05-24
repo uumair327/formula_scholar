@@ -5,6 +5,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../../core/core.dart';
 import '../../../../../shared/shared.dart';
 import '../../cubit/auth_cubit.dart';
+import '../../cubit/auth_state.dart';
 import 'signup_social_section.dart';
 import 'signup_terms_row.dart';
 

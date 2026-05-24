@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
 import '../cubit/auth_cubit.dart';
+import '../cubit/auth_state.dart';
 import '../widgets/signup/signup_background_decor.dart';
 import '../widgets/signup/signup_form_content.dart';
 import '../widgets/signup/signup_wide_layout.dart';
