@@ -9,6 +9,7 @@ import '../di/injection.dart';
 import '../utils/utils.dart';
 import '../../features/auth/auth.dart';
 import '../../shared/shared.dart';
+import '../../features/widget_viewer/presentation/pages/widget_preview_page.dart';
 import 'app_router_observer.dart';
 import 'route_builders/route_builders.dart';
 
@@ -73,7 +74,11 @@ abstract final class AppRouter {
       GlobalKey<NavigatorState>(debugLabel: 'root');
 
   /// Auth pages that unauthenticated users are allowed to access.
-  static const _authPaths = {AppRoutes.loginPath, AppRoutes.signupPath};
+  static const _authPaths = {
+    AppRoutes.loginPath, 
+    AppRoutes.signupPath,
+    AppRoutes.widgetPreviewPath,
+  };
 
   /// Onboarding paths – authenticated users are allowed here even
   /// without a curriculum selection.
@@ -163,6 +168,14 @@ abstract final class AppRouter {
       ...practiceHistoryRoutes(),
       onboardingRoutes(),
       mainShellRoute(),
+      GoRoute(
+        path: AppRoutes.widgetPreviewPath,
+        name: AppRoutes.widgetPreviewName,
+        builder: (context, state) {
+          final configB64 = state.uri.queryParameters['config'];
+          return WidgetPreviewScreen(configB64: configB64);
+        },
+      ),
     ],
   );
 }

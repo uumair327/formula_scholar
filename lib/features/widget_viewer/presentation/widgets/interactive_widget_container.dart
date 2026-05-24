@@ -157,7 +157,9 @@ class _InteractiveWidgetContainerState extends State<InteractiveWidgetContainer>
                   ),
                   const SizedBox(height: AppDimensions.paddingMD),
                   ...slidersList.map((slider) {
-                    if (slider is! Map<String, dynamic>) return const SizedBox.shrink();
+                    if (slider is! Map<String, dynamic>) {
+                      return const SizedBox.shrink();
+                    }
                     final id = (slider['id'] ?? slider['variable'] ?? '').toString();
                     final label = (slider['label'] ?? id).toString();
                     final minVal = (slider['min'] ?? 0.0) as double;

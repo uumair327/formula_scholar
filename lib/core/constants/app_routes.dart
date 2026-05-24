@@ -155,4 +155,8 @@ abstract final class AppRoutes {
   // ──────────────────────── Visualizer 3D ───────────────────────
   static const String visualizer3dPath = '/visualizer-3d';
   static const String visualizer3dName = 'visualizer3d';
+
+  // ──────────────────────── Widget Preview ──────────────────────
+  static const String widgetPreviewPath = '/widget-preview';
+  static const String widgetPreviewName = 'widgetPreview';
 }

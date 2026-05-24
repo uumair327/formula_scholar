@@ -132,17 +132,23 @@ class _FakeStudyPlannerRepository implements StudyPlannerRepositoryPort {
 
   @override
   Future<void> createPlan({required String userId, required StudyPlan plan}) async {
-    if (throwOnCreate) throw const ServerFailure(message: 'create failed');
+    if (throwOnCreate) {
+      throw const ServerFailure(message: 'create failed');
+    }
   }
 
   @override
   Future<void> updatePlan({required String userId, required StudyPlan plan}) async {
-    if (throwOnUpdate) throw const ServerFailure(message: 'update failed');
+    if (throwOnUpdate) {
+      throw const ServerFailure(message: 'update failed');
+    }
   }
 
   @override
   Future<void> deletePlan({required String userId, required String planId}) async {
-    if (throwOnDelete) throw const ServerFailure(message: 'delete failed');
+    if (throwOnDelete) {
+      throw const ServerFailure(message: 'delete failed');
+    }
   }
 
   @override
@@ -152,6 +158,8 @@ class _FakeStudyPlannerRepository implements StudyPlannerRepositoryPort {
     required String sessionId,
     DocumentReference? transactionRef,
   }) async {
-    if (throwOnUpdateSession) throw const ServerFailure(message: 'updateSession failed');
+    if (throwOnUpdateSession) {
+      throw const ServerFailure(message: 'updateSession failed');
+    }
   }
 }
