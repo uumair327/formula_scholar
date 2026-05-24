@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -83,7 +83,18 @@ StatefulShellBranch _chaptersBranch() {
               return AppPageTransitions.fadeTransition(
                 state: state,
                 child: BlocProvider(
-                  create: (_) => getIt<ChaptersCubit>(),
+                  create: (providerContext) {
+                    final cubit = getIt<ChaptersCubit>();
+                    final subjectState = providerContext.read<SubjectSelectionCubit>().state;
+                    final curriculumKey = providerContext.read<CurriculumCubit>().state.curriculum?.curriculumKey;
+                    if (subjectState.hasSelection && curriculumKey != null && curriculumKey.isNotEmpty) {
+                      cubit.loadChapters(
+                        subjectState.subject!.id,
+                        curriculumKey: curriculumKey,
+                      );
+                    }
+                    return cubit;
+                  },
                   child: const SubjectChaptersPage(),
                 ),
               );
