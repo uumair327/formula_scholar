@@ -73,9 +73,25 @@ class FormulaStudyCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final hasVisualizer = formula.widgetConfig != null;
 
-    return AppCard(
-      padding: EdgeInsets.zero,
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
       clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            colorScheme.surfaceContainerHighest.withValues(alpha: isDark ? 0.2 : 0.4),
+            colorScheme.surfaceContainerHighest.withValues(alpha: isDark ? 0.02 : 0.1),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.4),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

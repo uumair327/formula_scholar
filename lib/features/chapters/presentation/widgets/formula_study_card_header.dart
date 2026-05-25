@@ -29,11 +29,11 @@ class FormulaStudyCardHeader extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 28,
-            height: 28,
+            width: 32,
+            height: 32,
             decoration: BoxDecoration(
               color: colorScheme.primaryContainer,
-              borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
+              shape: BoxShape.circle,
             ),
             child: Center(
               child: Text(
@@ -50,8 +50,8 @@ class FormulaStudyCardHeader extends StatelessWidget {
           Expanded(
             child: Text(
               formula.title,
-              style: AppTextStyles.titleMedium.copyWith(
-                fontWeight: FontWeight.w700,
+              style: AppTextStyles.titleLarge.copyWith(
+                fontWeight: FontWeight.w800,
                 color: colorScheme.onSurface,
               ),
               maxLines: 2,

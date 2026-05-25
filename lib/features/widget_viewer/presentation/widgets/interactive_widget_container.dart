@@ -73,13 +73,39 @@ class _InteractiveWidgetContainerState extends State<InteractiveWidgetContainer>
     final title = widget.widgetConfig['title'] as String? ?? '';
     final slidersList = config['sliders'] as List<dynamic>?;
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDark
+              ? [
+                  const Color(0xFF111827),
+                  const Color(0xFF1F2937),
+                ]
+              : [
+                  colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                  colorScheme.surfaceContainerHighest.withValues(alpha: 0.1),
+                ],
+        ),
         borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
         border: Border.all(
-          color: colorScheme.outline.withValues(alpha: 0.1),
+          color: isDark 
+              ? colorScheme.primary.withValues(alpha: 0.3)
+              : colorScheme.primary.withValues(alpha: 0.15),
+          width: AppDimensions.borderWidth,
         ),
+        boxShadow: isDark
+            ? [
+                BoxShadow(
+                  color: colorScheme.primary.withValues(alpha: 0.05),
+                  blurRadius: 15,
+                  spreadRadius: -5,
+                )
+              ]
+            : null,
       ),
       clipBehavior: Clip.antiAlias,
       child: Column(
