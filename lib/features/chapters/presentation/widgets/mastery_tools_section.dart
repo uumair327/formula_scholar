@@ -303,14 +303,6 @@ class MasteryToolsSection extends StatelessWidget {
         shell.goBranch(1);
         return true;
       case 'practice':
-        final curr = context.read<CurriculumCubit>().state.curriculum;
-        if (curr != null) {
-          context.read<PracticeCubit>().loadQuestions(
-                boardId: curr.boardId,
-                gradeId: curr.gradeId,
-                subjectId: subjectId,
-              );
-        }
         shell.goBranch(2);
         return true;
       case 'saved':
