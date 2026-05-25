@@ -32,7 +32,7 @@ class _ToolCardState extends State<ToolCard>
       vsync: this,
       duration: AppDurations.instant,
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.92).animate(
       CurvedAnimation(parent: _controller, curve: AppDurations.curvePremium),
     );
   }
@@ -66,12 +66,26 @@ class _ToolCardState extends State<ToolCard>
         child: Container(
           padding: const EdgeInsets.all(AppDimensions.paddingLG),
           decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerLowest,
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                colorScheme.surfaceContainerLowest,
+                widget.color.withValues(alpha: 0.05),
+              ],
+            ),
             borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
             border: Border.all(
-              color: widget.color.withValues(alpha: 0.15),
+              color: widget.color.withValues(alpha: 0.2),
+              width: 1.5,
             ),
-            boxShadow: const [AppShadows.soft],
+            boxShadow: [
+              BoxShadow(
+                color: widget.color.withValues(alpha: 0.1),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           child: Column(
             children: [

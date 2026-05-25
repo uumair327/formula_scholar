@@ -68,69 +68,80 @@ class ContinueStudyingSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppDimensions.paddingLG),
-        ...recentStudies.asMap().entries.map((entry) {
-          final index = entry.key;
-          final study = entry.value;
-          final iconData = AppIconMapper.resolve(study.iconName);
-          final accentColor = Color(study.colorValue);
-          final bgColor = Color(study.backgroundColorValue);
+        SizedBox(
+          height: 110,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            clipBehavior: Clip.none,
+            itemCount: recentStudies.length,
+            separatorBuilder: (context, index) => const SizedBox(
+              width: AppDimensions.paddingLG,
+            ),
+            itemBuilder: (context, index) {
+              final study = recentStudies[index];
+              final iconData = AppIconMapper.resolve(study.iconName);
+              final accentColor = Color(study.colorValue);
+              final bgColor = Color(study.backgroundColorValue);
 
-          return EntranceWrapper(
-            delay: Duration(milliseconds: index * 60),
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: AppDimensions.paddingMD),
-              child: Material(
-                color: AppColors.transparent,
-                child: InkWell(
-                  onTap: () => _onRecentStudyTap(context, study),
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
-                  child: AppCard(
-                    padding: const EdgeInsets.all(AppDimensions.paddingLG),
-                    child: Row(
-                      children: [
-                        AppIconCircle(
-                          icon: iconData,
-                          size: AppDimensions.avatarLG,
-                          backgroundColor: bgColor,
-                          iconColor: accentColor,
-                          iconSize: AppDimensions.iconLG,
-                        ),
-                        const SizedBox(width: AppDimensions.paddingLG),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                study.title,
-                                style: AppTextStyles.labelLarge,
-                                overflow: TextOverflow.ellipsis,
+              return EntranceWrapper(
+                delay: Duration(milliseconds: index * 60),
+                child: SizedBox(
+                  width: 300,
+                  child: Material(
+                    color: AppColors.transparent,
+                    child: InkWell(
+                      onTap: () => _onRecentStudyTap(context, study),
+                      borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+                      child: AppCard(
+                        padding: const EdgeInsets.all(AppDimensions.paddingLG),
+                        child: Row(
+                          children: [
+                            AppIconCircle(
+                              icon: iconData,
+                              size: AppDimensions.avatarLG,
+                              backgroundColor: bgColor,
+                              iconColor: accentColor,
+                              iconSize: AppDimensions.iconLG,
+                            ),
+                            const SizedBox(width: AppDimensions.paddingLG),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    study.title,
+                                    style: AppTextStyles.labelLarge,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: AppDimensions.paddingXXS),
+                                  Text(
+                                    '${study.subject} • ${study.lastViewed}',
+                                    style: AppTextStyles.bodySmall.copyWith(
+                                      color: colorScheme.onSurfaceVariant,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
                               ),
-                              const SizedBox(height: AppDimensions.paddingXXS),
-                              Text(
-                                '${study.subject} • ${study.lastViewed}',
-                                style: AppTextStyles.bodySmall.copyWith(
-                                  color: colorScheme.onSurfaceVariant,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
+                            ),
+                            Icon(
+                              Directionality.of(context) == TextDirection.rtl
+                                  ? LucideIcons.chevronLeft
+                                  : LucideIcons.chevronRight,
+                              size: AppDimensions.iconMD,
+                              color: colorScheme.outline,
+                            ),
+                          ],
                         ),
-                        Icon(
-                          Directionality.of(context) == TextDirection.rtl
-                              ? LucideIcons.chevronLeft
-                              : LucideIcons.chevronRight,
-                          size: AppDimensions.iconMD,
-                          color: colorScheme.outline,
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
-          );
-        }),
+              );
+            },
+          ),
+        ),
       ],
     );
   }

@@ -104,20 +104,33 @@ class AcademicPathSection extends StatelessWidget {
                   ],
                 );
               }
-              return Column(
-                children: [
-                  ...subjects.map(
-                    (subject) => Padding(
-                      padding: const EdgeInsets.only(bottom: AppDimensions.paddingLG),
+              return SizedBox(
+                height: 300,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  clipBehavior: Clip.none,
+                  itemCount: subjects.length + 1,
+                  separatorBuilder: (context, index) => const SizedBox(
+                    width: AppDimensions.paddingLG,
+                  ),
+                  itemBuilder: (context, index) {
+                    if (index == subjects.length) {
+                      return const SizedBox(
+                        width: 280,
+                        child: QuizCard(),
+                      );
+                    }
+                    final subject = subjects[index];
+                    return SizedBox(
+                      width: 280,
                       child: SubjectCard(
                         subject: subject,
                         onTap: () => onSubjectTap(subject),
                         onLongPress: () => onShowAnalytics(subject),
                       ),
-                    ),
-                  ),
-                  const QuizCard(),
-                ],
+                    );
+                  },
+                ),
               );
             },
           ),

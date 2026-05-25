@@ -76,8 +76,28 @@ class _WeakAreaTile extends StatelessWidget {
     final weakness = area.weaknessScore.round();
     final isWeak = weakness >= 50;
 
-    return AppCard(
+    return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingLG),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            isWeak
+                ? colorScheme.errorContainer.withValues(alpha: 0.1)
+                : colorScheme.tertiaryContainer.withValues(alpha: 0.1),
+            colorScheme.surfaceContainerLowest,
+          ],
+        ),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+        border: Border.all(
+          color: isWeak
+              ? colorScheme.error.withValues(alpha: 0.2)
+              : colorScheme.tertiary.withValues(alpha: 0.2),
+          width: 1.5,
+        ),
+        boxShadow: const [AppShadows.soft],
+      ),
       child: Row(
         children: [
           Container(
@@ -134,7 +154,9 @@ class _WeakAreaTile extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
                   child: LinearProgressIndicator(
                     value: area.weaknessScore / 100,
-                    backgroundColor: colorScheme.surfaceContainerHighest,
+                    backgroundColor: isWeak
+                        ? colorScheme.errorContainer.withValues(alpha: 0.3)
+                        : colorScheme.tertiaryContainer.withValues(alpha: 0.3),
                     color: isWeak ? colorScheme.error : colorScheme.tertiary,
                     minHeight: AppDimensions.progressBarSM,
                   ),

@@ -7,7 +7,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
 
-class HeroStatusCard extends StatelessWidget {
+class HeroStatusCard extends StatefulWidget {
   const HeroStatusCard({
     super.key,
     required this.badge,
@@ -20,6 +20,33 @@ class HeroStatusCard extends StatelessWidget {
   final String title;
   final String description;
   final VoidCallback? onResume;
+
+  @override
+  State<HeroStatusCard> createState() => _HeroStatusCardState();
+}
+
+class _HeroStatusCardState extends State<HeroStatusCard>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _pulseController;
+  late final Animation<double> _pulseAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
+    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +116,7 @@ class HeroStatusCard extends StatelessWidget {
                     ),
                     const SizedBox(width: AppDimensions.paddingSM),
                     Text(
-                      badge,
+                      widget.badge,
                       style: AppTextStyles.labelSmall.copyWith(
                         color: AppColors.white,
                         fontWeight: FontWeight.w700,
@@ -101,7 +128,7 @@ class HeroStatusCard extends StatelessWidget {
               ),
               const SizedBox(height: AppDimensions.paddingLG),
               Text(
-                title,
+                widget.title,
                 style: AppTextStyles.headlineLarge.copyWith(
                   color: AppColors.white,
                   fontWeight: FontWeight.w800,
@@ -110,7 +137,7 @@ class HeroStatusCard extends StatelessWidget {
               ),
               const SizedBox(height: AppDimensions.paddingSM),
               Text(
-                description,
+                widget.description,
                 style: AppTextStyles.bodyMedium.copyWith(
                   color: AppColors.white.withValues(alpha: 0.9),
                 ),
@@ -120,8 +147,16 @@ class HeroStatusCard extends StatelessWidget {
                 label: AppStrings.resumeLearning,
                 button: true,
                 child: GestureDetector(
-                  onTap: onResume,
-                  child: ClipRRect(
+                  onTap: widget.onResume,
+                  child: AnimatedBuilder(
+                    animation: _pulseAnimation,
+                    builder: (context, child) {
+                      return Transform.scale(
+                        scale: _pulseAnimation.value,
+                        child: child,
+                      );
+                    },
+                    child: ClipRRect(
                     borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
@@ -158,6 +193,7 @@ class HeroStatusCard extends StatelessWidget {
                         ),
                       ),
                     ),
+                  ),
                   ),
                 ),
               ),
