@@ -24,22 +24,20 @@ class SubjectHeroCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AppInfoChip(
-                label: subject.name.toUpperCase(),
-                backgroundColor: Colors.white.withValues(alpha: AppDimensions.opacitySubtle),
-                textColor: Colors.white,
-                textStyle: AppTextStyles.overline.copyWith(color: Colors.white),
+              Text(
+                subject.name,
+                style: AppTextStyles.headlineLarge.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -0.5,
+                ),
               ),
-              const SizedBox(height: AppDimensions.paddingLG),
-              Text(subject.name, style: AppTextStyles.displayLarge.copyWith(
-                color: Colors.white, fontWeight: FontWeight.w800,
-              )),
               const SizedBox(height: AppDimensions.paddingSM),
               Text(
                 subject.subtitle.isNotEmpty
                     ? '${subject.subtitle}. ${subject.description}'
                     : subject.description,
-                style: AppTextStyles.bodySmall.copyWith(
+                style: AppTextStyles.bodyMedium.copyWith(
                   color: Colors.white.withValues(alpha: AppDimensions.opacityHigh),
                   height: AppDimensions.lineHeightRelaxed,
                 ),
@@ -47,16 +45,18 @@ class SubjectHeroCard extends StatelessWidget {
             ],
           ),
           Positioned(
-            right: AppDimensions.decorativeOffset,
-            bottom: AppDimensions.decorativeOffset,
+            right: -AppDimensions.paddingLG,
+            bottom: -AppDimensions.paddingLG,
             child: Opacity(
-              opacity: AppDimensions.opacityFaint,
+              opacity: 0.15,
               child: Transform.rotate(
-                angle: AppDimensions.rotationSubtle,
+                angle: -0.2,
                 child: Hero(
                   tag: 'subject_icon_${subject.id}',
-                  child: Icon(AppIconMapper.resolve(subject.iconName),
-                    size: AppDimensions.iconDecorative, color: Colors.white,
+                  child: Icon(
+                    AppIconMapper.resolve(subject.iconName),
+                    size: 160,
+                    color: Colors.white,
                   ),
                 ),
               ),

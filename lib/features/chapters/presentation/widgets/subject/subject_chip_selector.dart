@@ -42,21 +42,17 @@ class SubjectChipSelector extends StatelessWidget {
               },
               child: AnimatedContainer(
                 duration: AppDurations.animationFast,
-                padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingLG),
+                padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingXL),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: isSelected ? colorScheme.primary : colorScheme.surfaceContainerLow,
+                  color: isSelected ? colorScheme.primaryContainer : Colors.transparent,
                   borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
-                  border: Border.all(
-                    color: isSelected ? colorScheme.primary : colorScheme.surfaceContainerHigh,
-                  ),
-                  boxShadow: isSelected ? const [AppShadows.subtle] : null,
                 ),
                 child: Text(
                   subject.name,
                   style: AppTextStyles.labelLarge.copyWith(
-                    color: isSelected ? colorScheme.onPrimary : colorScheme.onSurfaceVariant,
-                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                    color: isSelected ? colorScheme.onPrimaryContainer : colorScheme.onSurfaceVariant,
+                    fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
                   ),
                 ),
               ),

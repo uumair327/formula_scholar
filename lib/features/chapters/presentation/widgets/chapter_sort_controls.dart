@@ -46,70 +46,64 @@ class ChapterSortControls extends StatelessWidget {
       );
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Wrap(
-          spacing: AppDimensions.paddingSM,
-          runSpacing: AppDimensions.paddingSM,
-          children: [
-            ChoiceChip(
-              label: const Text('Name A-Z'),
-              selected: state.sortBy == 'name' && state.sortDesc == false,
-              onSelected: (_) => applySort('name', false),
-              selectedColor: colorScheme.primaryContainer,
-            ),
-            ChoiceChip(
-              label: const Text('Name Z-A'),
-              selected: state.sortBy == 'name' && state.sortDesc == true,
-              onSelected: (_) => applySort('name', true),
-              selectedColor: colorScheme.primaryContainer,
-            ),
-            ChoiceChip(
-              label: const Text('Progress High'),
-              selected:
-                  state.sortBy == 'progressPercent' && state.sortDesc == true,
-              onSelected: (_) => applySort('progressPercent', true),
-              selectedColor: colorScheme.primaryContainer,
-            ),
-            ChoiceChip(
-              label: const Text('Progress Low'),
-              selected:
-                  state.sortBy == 'progressPercent' && state.sortDesc == false,
-              onSelected: (_) => applySort('progressPercent', false),
-              selectedColor: colorScheme.primaryContainer,
-            ),
-            ChoiceChip(
-              label: const Text('Most Formulas'),
-              selected:
-                  state.sortBy == 'totalFormulas' && state.sortDesc == true,
-              onSelected: (_) => applySort('totalFormulas', true),
-              selectedColor: colorScheme.primaryContainer,
-            ),
-            ChoiceChip(
-              label: const Text('Fewest Formulas'),
-              selected:
-                  state.sortBy == 'totalFormulas' && state.sortDesc == false,
-              onSelected: (_) => applySort('totalFormulas', false),
-              selectedColor: colorScheme.primaryContainer,
-            ),
-          ],
+    Widget buildChoiceChip(String label, String sortValue, bool desc) {
+      final isSelected = state.sortBy == sortValue && state.sortDesc == desc;
+      return ChoiceChip(
+        label: Text(label),
+        selected: isSelected,
+        onSelected: (_) => applySort(sortValue, desc),
+        selectedColor: colorScheme.primaryContainer,
+        backgroundColor: colorScheme.surfaceContainerHighest,
+        labelStyle: AppTextStyles.labelMedium.copyWith(
+          color: isSelected ? colorScheme.onPrimaryContainer : colorScheme.onSurfaceVariant,
+          fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
         ),
-        const SizedBox(height: AppDimensions.paddingSM),
-        Tooltip(
-          message: AppStrings.toggleSortDirection,
-          child: IconButton.filled(
-            onPressed: () {
-              final newDesc = !state.sortDesc;
-              applySort(state.sortBy, newDesc);
-            },
-            icon: Icon(directionIcon, size: 20),
-            tooltip: state.sortDesc
-                ? AppStrings.sortDescending
-                : AppStrings.sortAscending,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+        ),
+        showCheckmark: false,
+      );
+    }
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      clipBehavior: Clip.none,
+      child: Row(
+        children: [
+          Tooltip(
+            message: AppStrings.toggleSortDirection,
+            child: IconButton.filledTonal(
+              onPressed: () {
+                final newDesc = !state.sortDesc;
+                applySort(state.sortBy, newDesc);
+              },
+              icon: Icon(directionIcon, size: AppDimensions.iconSM),
+              tooltip: state.sortDesc
+                  ? AppStrings.sortDescending
+                  : AppStrings.sortAscending,
+              style: IconButton.styleFrom(
+                backgroundColor: colorScheme.secondaryContainer,
+                foregroundColor: colorScheme.onSecondaryContainer,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+                ),
+              ),
+            ),
           ),
-        ),
-      ],
+          const SizedBox(width: AppDimensions.paddingMD),
+          buildChoiceChip('Name A-Z', 'name', false),
+          const SizedBox(width: AppDimensions.paddingSM),
+          buildChoiceChip('Name Z-A', 'name', true),
+          const SizedBox(width: AppDimensions.paddingSM),
+          buildChoiceChip('Progress High', 'progressPercent', true),
+          const SizedBox(width: AppDimensions.paddingSM),
+          buildChoiceChip('Progress Low', 'progressPercent', false),
+          const SizedBox(width: AppDimensions.paddingSM),
+          buildChoiceChip('Most Formulas', 'totalFormulas', true),
+          const SizedBox(width: AppDimensions.paddingSM),
+          buildChoiceChip('Fewest Formulas', 'totalFormulas', false),
+        ],
+      ),
     );
   }
 }

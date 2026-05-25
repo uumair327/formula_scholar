@@ -25,8 +25,24 @@ class FeaturedChapterCard extends StatelessWidget {
         ? AppStrings.continueLearning
         : AppStrings.startNow;
 
-    return AppCard(
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingXXL),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            colorScheme.surfaceContainerHighest.withValues(alpha: isDark ? 0.4 : 0.8),
+            colorScheme.surfaceContainerHighest.withValues(alpha: isDark ? 0.1 : 0.4),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -67,10 +83,10 @@ class FeaturedChapterCard extends StatelessWidget {
                     label: AppStrings.percentDone(
                       chapter.progressPercent.toInt(),
                     ),
-                    backgroundColor: colorScheme.secondaryContainer,
-                    textColor: colorScheme.onSecondaryContainer,
+                    backgroundColor: colorScheme.tertiaryContainer,
+                    textColor: colorScheme.onTertiaryContainer,
                     textStyle: AppTextStyles.bodySmall.copyWith(
-                      color: colorScheme.onSecondaryContainer,
+                      color: colorScheme.onTertiaryContainer,
                       fontWeight: FontWeight.w700,
                     ),
                     horizontalPadding: AppDimensions.progressBarLG,
