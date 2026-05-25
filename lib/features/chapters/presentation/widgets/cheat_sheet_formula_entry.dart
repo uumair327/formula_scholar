@@ -31,6 +31,7 @@ class CheatSheetFormulaEntry extends StatelessWidget {
                     formula.title,
                     style: AppTextStyles.titleMedium.copyWith(
                       fontWeight: FontWeight.w700,
+                      color: colorScheme.onSurface,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
 import '../cubit/practice_cubit.dart';
+import '../cubit/practice_state.dart';
 import 'practice_pre_filter_header.dart';
 import 'practice_pre_filter_timed_mode.dart';
 
@@ -25,7 +26,7 @@ class PracticePreFilter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final subjectState = context.select<SubjectSelectionCubit, SubjectSelectionState>(
+    final practiceState = context.select<PracticeCubit, PracticeState>(
       (c) => c.state,
     );
     final curriculumState = context.select<CurriculumCubit, CurriculumState>(
@@ -71,7 +72,7 @@ class PracticePreFilter extends StatelessWidget {
                       EntranceWrapper.stagger(
                         index: 2,
                         child: _SubjectSelector(
-                          subjectState: subjectState,
+                          practiceState: practiceState,
                           curriculumState: curriculumState,
                           onSubjectSelected: (id) => _startQuiz(
                             context,
@@ -119,12 +120,12 @@ class PracticePreFilter extends StatelessWidget {
 
 class _SubjectSelector extends StatelessWidget {
   const _SubjectSelector({
-    required this.subjectState,
+    required this.practiceState,
     required this.curriculumState,
     required this.onSubjectSelected,
   });
 
-  final SubjectSelectionState subjectState;
+  final PracticeState practiceState;
   final CurriculumState curriculumState;
   final ValueChanged<String?> onSubjectSelected;
 
@@ -155,7 +156,7 @@ class _SubjectSelector extends StatelessWidget {
                 mainAxisSpacing: AppDimensions.paddingSM,
                 childAspectRatio: 2.5,
               ),
-              itemCount: subjectState.availableSubjects.length + 1,
+              itemCount: practiceState.availableSubjects.length + 1,
               itemBuilder: (context, index) {
                 if (index == 0) {
                   return _buildSubjectCard(
@@ -166,7 +167,7 @@ class _SubjectSelector extends StatelessWidget {
                     onTap: () => onSubjectSelected(null),
                   );
                 }
-                final subject = subjectState.availableSubjects[index - 1];
+                final subject = practiceState.availableSubjects[index - 1];
                 final colors = [
                   Colors.blue,
                   Colors.red,

@@ -223,10 +223,10 @@ class SubjectChaptersPage extends StatelessWidget {
                 ? FloatingActionButton(
                     onPressed: () =>
                         StatefulNavigationShell.of(context).goBranch(2),
-                    backgroundColor: AppColors.primary,
-                    child: Icon(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                    child: const Icon(
                       LucideIcons.play,
-                      color: Theme.of(context).colorScheme.onPrimary,
                     ),
                   )
                 : null,

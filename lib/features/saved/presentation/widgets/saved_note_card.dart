@@ -58,6 +58,7 @@ class SavedNoteCard extends StatelessWidget {
             note.title,
             style: AppTextStyles.titleLarge.copyWith(
               fontWeight: FontWeight.w700,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: AppDimensions.paddingSM),

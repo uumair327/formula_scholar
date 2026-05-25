@@ -68,14 +68,14 @@ class CompareFormulaSheet extends StatelessWidget {
                     leading: Container(
                       width: 32, height: 32,
                       decoration: BoxDecoration(
-                        color: colorScheme.primaryFixed,
+                        color: colorScheme.primaryContainer,
                         borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
                       ),
                       child: Center(
                         child: Text(
                           '${index + 1}',
                           style: AppTextStyles.labelMedium.copyWith(
-                            color: colorScheme.primary,
+                            color: colorScheme.onPrimaryContainer,
                             fontWeight: FontWeight.w700,
                           ),
                         ),

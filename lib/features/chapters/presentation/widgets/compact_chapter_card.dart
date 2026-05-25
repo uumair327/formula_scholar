@@ -52,7 +52,9 @@ class CompactChapterCard extends StatelessWidget {
                         Expanded(
                           child: Text(
                             chapter.name,
-                            style: AppTextStyles.titleLarge,
+                            style: AppTextStyles.titleLarge.copyWith(
+                              color: colorScheme.onSurface,
+                            ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -171,7 +173,7 @@ class _BookmarkButton extends StatelessWidget {
       icon: Icon(
         chapter.isSaved ? Icons.bookmark : LucideIcons.bookmark,
         size: AppDimensions.iconSM,
-        color: chapter.isSaved ? AppColors.primary : colorScheme.outline,
+        color: chapter.isSaved ? colorScheme.primary : colorScheme.outline,
       ),
       tooltip: chapter.isSaved
           ? AppStrings.removeBookmark

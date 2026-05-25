@@ -53,7 +53,7 @@ class SubjectChaptersAppBar extends StatelessWidget {
                 Text(
                   subject!.name.toUpperCase(),
                   style: AppTextStyles.overline.copyWith(
-                    color: AppColors.primary,
+                    color: colorScheme.primary,
                     fontSize: AppDimensions.fontSizeXS,
                   ),
                 ),
@@ -95,6 +95,8 @@ class _AnalyticsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return IconButton(
       onPressed: () async {
         if (subject == null) {
@@ -140,11 +142,11 @@ class _AnalyticsButton extends StatelessWidget {
               AppStrings.unknownGrade,
         );
       },
-      icon: const AppIconCircle(
+      icon: AppIconCircle(
         icon: LucideIcons.barChart3,
         size: AppDimensions.avatarMD,
-        backgroundColor: AppColors.primaryFixed,
-        iconColor: AppColors.primary,
+        backgroundColor: colorScheme.primaryContainer,
+        iconColor: colorScheme.onPrimaryContainer,
         iconSize: AppDimensions.iconMD,
         borderRadius: AppDimensions.radiusMD,
       ),

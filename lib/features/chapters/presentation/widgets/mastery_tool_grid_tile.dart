@@ -18,7 +18,7 @@ class MasteryToolGridTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final icon = _iconFor(tool.iconName);
-    final color = _colorFor(tool.iconName);
+    final color = _colorFor(tool.iconName, context);
     return GestureDetector(
       onTap: onTap,
       child: AppCard(
@@ -57,20 +57,21 @@ class MasteryToolGridTile extends StatelessWidget {
     }
   }
 
-  static Color _colorFor(String iconName) {
+  static Color _colorFor(String iconName, BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     switch (iconName) {
       case 'graduationCap':
-        return AppColors.primary;
+        return colorScheme.primary;
       case 'helpCircle':
-        return AppColors.secondary;
+        return colorScheme.secondary;
       case 'fileText':
         return AppColors.orange500;
       case 'creditCard':
-        return AppColors.secondary;
+        return colorScheme.secondary;
       case 'box':
-        return AppColors.tertiary;
+        return colorScheme.tertiary;
       default:
-        return AppColors.primary;
+        return colorScheme.primary;
     }
   }
 }

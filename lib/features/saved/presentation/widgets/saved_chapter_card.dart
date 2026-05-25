@@ -67,10 +67,10 @@ class SavedChapterCard extends StatelessWidget {
                         chapterId: chapter.chapterId,
                       );
                     },
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.bookmark,
                       size: AppDimensions.iconMD,
-                      color: AppColors.primary,
+                      color: colorScheme.primary,
                     ),
                     tooltip: AppStrings.removeSavedChapter,
                   ),
@@ -81,6 +81,7 @@ class SavedChapterCard extends StatelessWidget {
                 chapter.chapterName,
                 style: AppTextStyles.titleLarge.copyWith(
                   fontWeight: FontWeight.w700,
+                  color: colorScheme.onSurface,
                 ),
               ),
               if (chapter.chapterSubtitle.isNotEmpty) ...[

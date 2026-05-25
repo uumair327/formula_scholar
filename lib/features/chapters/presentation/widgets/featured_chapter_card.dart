@@ -55,7 +55,7 @@ class FeaturedChapterCard extends StatelessWidget {
                         chapter.isSaved ? Icons.bookmark : LucideIcons.bookmark,
                         size: AppDimensions.iconMD,
                         color: chapter.isSaved
-                            ? AppColors.primary
+                            ? colorScheme.primary
                             : colorScheme.outline,
                       ),
                       tooltip: chapter.isSaved
@@ -81,7 +81,12 @@ class FeaturedChapterCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppDimensions.paddingXL),
-          Text(chapter.name, style: AppTextStyles.headlineMedium),
+          Text(
+            chapter.name,
+            style: AppTextStyles.headlineMedium.copyWith(
+              color: colorScheme.onSurface,
+            ),
+          ),
           const SizedBox(height: AppDimensions.paddingSM),
           Text(
             chapter.subtitle,

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:equatable/equatable.dart';
 
+import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 
 const Object _unset = Object();
@@ -31,6 +32,8 @@ class PracticeState extends Equatable {
     this.quizStartTime,
     this.selectedTimedMode = false,
     this.selectedTimedDurationSeconds,
+    this.availableSubjects = const [],
+    this.isLoadingSubjects = false,
   });
   final PracticeStatus status;
   final List<QuizQuestion> questions;
@@ -50,6 +53,8 @@ class PracticeState extends Equatable {
   final DateTime? quizStartTime;
   final bool selectedTimedMode;
   final int? selectedTimedDurationSeconds;
+  final List<SelectedSubject> availableSubjects;
+  final bool isLoadingSubjects;
 
   QuizQuestion? get currentQuestion =>
       currentIndex < questions.length ? questions[currentIndex] : null;
@@ -130,6 +135,8 @@ class PracticeState extends Equatable {
     Object? quizStartTime = _unset,
     bool? selectedTimedMode,
     Object? selectedTimedDurationSeconds = _unset,
+    List<SelectedSubject>? availableSubjects,
+    bool? isLoadingSubjects,
   }) {
     return PracticeState(
       status: status ?? this.status,
@@ -159,6 +166,8 @@ class PracticeState extends Equatable {
           identical(selectedTimedDurationSeconds, _unset)
           ? this.selectedTimedDurationSeconds
           : selectedTimedDurationSeconds as int?,
+      availableSubjects: availableSubjects ?? this.availableSubjects,
+      isLoadingSubjects: isLoadingSubjects ?? this.isLoadingSubjects,
     );
   }
 
@@ -182,6 +191,8 @@ class PracticeState extends Equatable {
     quizStartTime,
     selectedTimedMode,
     selectedTimedDurationSeconds,
+    availableSubjects,
+    isLoadingSubjects,
   ];
 }
 

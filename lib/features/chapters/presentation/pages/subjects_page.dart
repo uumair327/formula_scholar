@@ -126,7 +126,7 @@ class SubjectsPage extends StatelessWidget {
               return Text(
                 '${curriculum.boardName} • ${curriculum.gradeLabel}',
                 style: AppTextStyles.overline.copyWith(
-                  color: AppColors.primary,
+                  color: colorScheme.primary,
                   fontSize: AppDimensions.fontSizeXS,
                 ),
               );

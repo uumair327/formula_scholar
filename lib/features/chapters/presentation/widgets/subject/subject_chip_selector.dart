@@ -45,10 +45,10 @@ class SubjectChipSelector extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingLG),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: isSelected ? AppColors.primary : colorScheme.surfaceContainerLow,
+                  color: isSelected ? colorScheme.primary : colorScheme.surfaceContainerLow,
                   borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
                   border: Border.all(
-                    color: isSelected ? AppColors.primary : colorScheme.surfaceContainerHigh,
+                    color: isSelected ? colorScheme.primary : colorScheme.surfaceContainerHigh,
                   ),
                   boxShadow: isSelected ? const [AppShadows.subtle] : null,
                 ),

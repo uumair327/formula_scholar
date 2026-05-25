@@ -53,7 +53,6 @@ class FormulasPage extends StatelessWidget {
         }
 
         return Scaffold(
-          backgroundColor: colorScheme.surfaceContainerLowest,
           body: RefreshIndicator(
             onRefresh: () async {
               if (state.subjectId != null && state.chapterId != null) {

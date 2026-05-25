@@ -8,21 +8,44 @@ import '../cubit/practice_state.dart';
 import '../widgets/widgets.dart';
 
 /// Practice page — routes between pre-filter, quiz, and completion states.
-class PracticePage extends StatelessWidget {
+class PracticePage extends StatefulWidget {
   const PracticePage({super.key});
 
   @override
+  State<PracticePage> createState() => _PracticePageState();
+}
+
+class _PracticePageState extends State<PracticePage> {
+  @override
+  void initState() {
+    super.initState();
+    _loadSubjects();
+  }
+
+  void _loadSubjects() {
+    final curr = context.read<CurriculumCubit>().state.curriculum;
+    if (curr != null) {
+      context.read<PracticeCubit>().loadSubjects(curr.boardId, curr.gradeId);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthCubit, AuthState>(
-      buildWhen: (prev, curr) => prev.user != curr.user,
-      builder: (context, authState) {
-        return BlocBuilder<PracticeCubit, PracticeState>(
-          buildWhen: (prev, curr) =>
-              prev.status != curr.status ||
-              prev.currentIndex != curr.currentIndex ||
-              prev.selectedOptionId != curr.selectedOptionId ||
-              prev.showResult != curr.showResult,
-          builder: (context, state) {
+    return BlocListener<CurriculumCubit, CurriculumState>(
+      listenWhen: (prev, curr) => prev.curriculum != curr.curriculum,
+      listener: (context, state) {
+        _loadSubjects();
+      },
+      child: BlocBuilder<AuthCubit, AuthState>(
+        buildWhen: (prev, curr) => prev.user != curr.user,
+        builder: (context, authState) {
+          return BlocBuilder<PracticeCubit, PracticeState>(
+            buildWhen: (prev, curr) =>
+                prev.status != curr.status ||
+                prev.currentIndex != curr.currentIndex ||
+                prev.selectedOptionId != curr.selectedOptionId ||
+                prev.showResult != curr.showResult,
+            builder: (context, state) {
             switch (state.status) {
               case PracticeStatus.initial:
                 return PracticePreFilter(
@@ -68,7 +91,8 @@ class PracticePage extends StatelessWidget {
             }
           },
         );
-      },
+        },
+      ),
     );
   }
 }

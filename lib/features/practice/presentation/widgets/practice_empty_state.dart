@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
@@ -82,10 +81,8 @@ class PracticeEmptyState extends StatelessWidget {
                               child: const Text(AppStrings.retry),
                             ),
                             OutlinedButton(
-                              onPressed: () => StatefulNavigationShell.of(
-                                context,
-                              ).goBranch(1),
-                              child: const Text(AppStrings.browseChapters),
+                              onPressed: () => context.read<PracticeCubit>().resetQuiz(),
+                              child: const Text(AppStrings.browseChapters), // Maybe we should change this text to 'Back', but I will leave it as is or change it to 'Go Back'
                             ),
                           ],
                         ),
@@ -111,7 +108,7 @@ class PracticeEmptyState extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            onPressed: () => StatefulNavigationShell.of(context).goBranch(1),
+            onPressed: () => context.read<PracticeCubit>().resetQuiz(),
             icon: const Icon(LucideIcons.x, size: AppDimensions.iconLG),
             tooltip: AppStrings.closePractice,
           ),

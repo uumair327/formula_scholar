@@ -47,7 +47,7 @@ class FormulaAppBarActions extends StatelessWidget {
                 state.isChapterSaved ? Icons.bookmark : LucideIcons.bookmark,
                 size: AppDimensions.iconMD,
                 color: state.isChapterSaved
-                    ? AppColors.primary
+                    ? colorScheme.primary
                     : colorScheme.outline,
               ),
               tooltip: state.isChapterSaved

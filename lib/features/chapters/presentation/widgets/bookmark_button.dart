@@ -25,7 +25,7 @@ class BookmarkButton extends StatelessWidget {
           : AppStrings.bookmarkChapter,
       child: Material(
         color: isBookmarked
-            ? AppColors.primaryFixed
+            ? colorScheme.primaryContainer
             : colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
         child: InkWell(
@@ -45,7 +45,7 @@ class BookmarkButton extends StatelessWidget {
               isBookmarked ? Icons.bookmark : LucideIcons.bookmark,
               size: AppDimensions.iconMD,
               color: isBookmarked
-                  ? AppColors.primary
+                  ? colorScheme.onPrimaryContainer
                   : colorScheme.onSurfaceVariant,
             ),
           ),

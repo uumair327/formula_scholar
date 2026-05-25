@@ -44,6 +44,7 @@ class CheatSheetHeader extends StatelessWidget {
             chapter,
             style: AppTextStyles.headlineSmall.copyWith(
               fontWeight: FontWeight.w700,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: AppDimensions.paddingSM),

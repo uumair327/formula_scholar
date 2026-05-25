@@ -6,6 +6,7 @@ import 'package:injectable/injectable.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
 import '../../../achievements/domain/domain.dart';
+import '../../../dashboard/domain/domain.dart';
 import '../../domain/domain.dart';
 import 'practice_state.dart';
 
@@ -14,16 +15,19 @@ class PracticeCubit extends Cubit<PracticeState>
     with CubitFailureLogger<PracticeState> {
   PracticeCubit({
     required GetQuestionsUseCase getQuestions,
+    required GetSubjectsUseCase getSubjects,
     required RecordQuizCompletionUseCase recordQuizCompletion,
     required SaveQuizResultUseCase saveQuizResult,
     required ActivityRefreshCubit activityRefreshCubit,
   }) : _getQuestions = getQuestions,
+       _getSubjects = getSubjects,
        _recordQuizCompletion = recordQuizCompletion,
        _saveQuizResult = saveQuizResult,
        _activityRefreshCubit = activityRefreshCubit,
        super(const PracticeState());
 
   final GetQuestionsUseCase _getQuestions;
+  final GetSubjectsUseCase _getSubjects;
   final RecordQuizCompletionUseCase _recordQuizCompletion;
   final SaveQuizResultUseCase _saveQuizResult;
   final ActivityRefreshCubit _activityRefreshCubit;
@@ -40,6 +44,37 @@ class PracticeCubit extends Cubit<PracticeState>
   Future<void> close() {
     _timer?.cancel();
     return super.close();
+  }
+
+  Future<void> loadSubjects(String boardId, String gradeId) async {
+    if (state.isLoadingSubjects) return;
+    
+    emit(state.copyWith(isLoadingSubjects: true));
+    
+    final result = await _getSubjects(boardId, gradeId);
+    
+    switch (result) {
+      case Success(:final data):
+        final subjects = data.map((s) => SelectedSubject(
+          id: s.id,
+          name: s.name,
+          category: s.category,
+          description: s.description,
+          iconName: s.iconName,
+          subtitle: s.subtitle ?? '',
+        )).toList();
+        
+        emit(state.copyWith(
+          availableSubjects: subjects,
+          isLoadingSubjects: false,
+        ));
+      case Error(:final failure):
+        logFailure('loadSubjects', failure);
+        emit(state.copyWith(
+          isLoadingSubjects: false,
+          errorMessage: failure.message,
+        ));
+    }
   }
 
   Future<void> loadQuestions({
@@ -284,7 +319,7 @@ class PracticeCubit extends Cubit<PracticeState>
     final gId = state.gradeId;
     final sId = state.subjectId;
     emit(
-      PracticeState(
+      state.copyWith(
         status: PracticeStatus.initial,
         boardId: bId,
         gradeId: gId,

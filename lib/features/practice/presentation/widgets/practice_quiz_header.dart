@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
+import '../cubit/practice_cubit.dart';
 
 class QuizHeader extends StatelessWidget {
   const QuizHeader({super.key, required this.photoUrl});
@@ -20,7 +21,7 @@ class QuizHeader extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            onPressed: () => StatefulNavigationShell.of(context).goBranch(1),
+            onPressed: () => context.read<PracticeCubit>().resetQuiz(),
             icon: const Icon(LucideIcons.x, size: AppDimensions.iconLG),
             tooltip: AppStrings.closeQuiz,
           ),

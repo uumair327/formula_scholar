@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
@@ -23,11 +22,7 @@ class PreFilterHeader extends StatelessWidget {
       ),
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () => StatefulNavigationShell.of(context).goBranch(1),
-            child: Icon(LucideIcons.x, size: AppDimensions.iconLG,
-                color: colorScheme.onSurface),
-          ),
+          // Removed the 'X' button since Practice is a standalone tab
           const SizedBox(width: AppDimensions.paddingMD),
           Text(
             AppStrings.formulaFlow,

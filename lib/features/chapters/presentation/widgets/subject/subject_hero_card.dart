@@ -26,13 +26,13 @@ class SubjectHeroCard extends StatelessWidget {
             children: [
               AppInfoChip(
                 label: subject.name.toUpperCase(),
-                backgroundColor: colorScheme.onPrimary.withValues(alpha: AppDimensions.opacitySubtle),
-                textColor: colorScheme.onPrimary,
-                textStyle: AppTextStyles.overline.copyWith(color: colorScheme.onPrimary),
+                backgroundColor: Colors.white.withValues(alpha: AppDimensions.opacitySubtle),
+                textColor: Colors.white,
+                textStyle: AppTextStyles.overline.copyWith(color: Colors.white),
               ),
               const SizedBox(height: AppDimensions.paddingLG),
               Text(subject.name, style: AppTextStyles.displayLarge.copyWith(
-                color: colorScheme.onPrimary, fontWeight: FontWeight.w800,
+                color: Colors.white, fontWeight: FontWeight.w800,
               )),
               const SizedBox(height: AppDimensions.paddingSM),
               Text(
@@ -40,7 +40,7 @@ class SubjectHeroCard extends StatelessWidget {
                     ? '${subject.subtitle}. ${subject.description}'
                     : subject.description,
                 style: AppTextStyles.bodySmall.copyWith(
-                  color: colorScheme.onPrimary.withValues(alpha: AppDimensions.opacityHigh),
+                  color: Colors.white.withValues(alpha: AppDimensions.opacityHigh),
                   height: AppDimensions.lineHeightRelaxed,
                 ),
               ),
@@ -56,7 +56,7 @@ class SubjectHeroCard extends StatelessWidget {
                 child: Hero(
                   tag: 'subject_icon_${subject.id}',
                   child: Icon(AppIconMapper.resolve(subject.iconName),
-                    size: AppDimensions.iconDecorative, color: colorScheme.onPrimary,
+                    size: AppDimensions.iconDecorative, color: Colors.white,
                   ),
                 ),
               ),

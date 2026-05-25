@@ -39,15 +39,15 @@ class FormulaMasteryHeader extends StatelessWidget {
             decoration: BoxDecoration(
               color: state.progressPercent == 100
                   ? AppColors.secondaryFixed
-                  : colorScheme.primaryFixed,
+                  : colorScheme.primaryContainer,
               borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
             ),
             child: Text(
               '${state.progressPercent.toInt()}%',
               style: AppTextStyles.overline.copyWith(
                 color: state.progressPercent == 100
-                    ? AppColors.secondary
-                    : colorScheme.primary,
+                    ? AppColors.onSecondaryFixedVariant
+                    : colorScheme.onPrimaryContainer,
                 fontSize: AppDimensions.fontSizeXS,
                 fontWeight: FontWeight.w800,
               ),

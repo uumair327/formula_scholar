@@ -110,6 +110,7 @@ class SavedPage extends StatelessWidget {
                         AppStrings.savedChapters,
                         style: AppTextStyles.titleLarge.copyWith(
                           fontWeight: FontWeight.w700,
+                          color: colorScheme.onSurface,
                         ),
                       ),
                     ),
@@ -134,6 +135,7 @@ class SavedPage extends StatelessWidget {
                         AppStrings.savedFormulas,
                         style: AppTextStyles.titleLarge.copyWith(
                           fontWeight: FontWeight.w700,
+                          color: colorScheme.onSurface,
                         ),
                       ),
                     ),
@@ -158,6 +160,7 @@ class SavedPage extends StatelessWidget {
                         AppStrings.savedNotes,
                         style: AppTextStyles.titleLarge.copyWith(
                           fontWeight: FontWeight.w700,
+                          color: colorScheme.onSurface,
                         ),
                       ),
                     ),

@@ -45,10 +45,10 @@ class BookmarkCard extends StatelessWidget {
               IconButton(
                 onPressed: () =>
                     context.read<SavedCubit>().removeBookmark(bookmark.id),
-                icon: const Icon(
+                icon: Icon(
                   Icons.bookmark,
                   size: AppDimensions.iconMD,
-                  color: AppColors.primary,
+                  color: colorScheme.primary,
                 ),
                 tooltip: AppStrings.removeBookmark,
               ),
@@ -59,6 +59,7 @@ class BookmarkCard extends StatelessWidget {
             bookmark.title,
             style: AppTextStyles.titleLarge.copyWith(
               fontWeight: FontWeight.w700,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: AppDimensions.paddingLG),

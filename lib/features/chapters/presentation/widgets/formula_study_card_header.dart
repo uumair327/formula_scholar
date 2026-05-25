@@ -32,16 +32,14 @@ class FormulaStudyCardHeader extends StatelessWidget {
             width: 28,
             height: 28,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [colorScheme.primary, colorScheme.primaryContainer],
-              ),
+              color: colorScheme.primaryContainer,
               borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
             ),
             child: Center(
               child: Text(
                 '${index + 1}',
                 style: AppTextStyles.labelMedium.copyWith(
-                  color: colorScheme.onPrimary,
+                  color: colorScheme.onPrimaryContainer,
                   fontWeight: FontWeight.w800,
                   fontSize: AppDimensions.fontSizeSM,
                 ),
