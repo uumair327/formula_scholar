@@ -161,7 +161,7 @@ class SubjectsPage extends StatelessWidget {
           maxCrossAxisExtent: 400,
           mainAxisSpacing: AppDimensions.paddingLG,
           crossAxisSpacing: AppDimensions.paddingLG,
-          childAspectRatio: 1.4,
+          mainAxisExtent: 320,
         ),
         delegate: SliverChildBuilderDelegate((context, index) {
           final subject = subjects[index];
