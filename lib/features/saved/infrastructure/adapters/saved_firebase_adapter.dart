@@ -33,8 +33,6 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
       () => _api
           .collection(AppFirestoreCollections.userBookmarks(uid))
           .where('curriculumKey', isEqualTo: curriculumKey)
-          .orderBy(query.sortByField, descending: query.isDescending)
-          .limit(200)
           .get(),
       tag: AppLogTags.savedDataSource,
     );
@@ -199,8 +197,6 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
       () => _api
           .collection(AppFirestoreCollections.userSavedNotes(uid))
           .where('curriculumKey', isEqualTo: curriculumKey)
-          .orderBy(query.sortByField, descending: query.isDescending)
-          .limit(200)
           .get(),
       tag: AppLogTags.savedDataSource,
     );
@@ -397,14 +393,38 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
   }
 
   List<T> _applyQuery<T>(List<T> items, {required SavedQuery query}) {
+    var result = items;
     final search = query.searchQuery.trim().toLowerCase();
-    if (search.isEmpty) {
-      return items;
+    
+    if (search.isNotEmpty) {
+      result = result.where((item) => _matchesSavedSearch(item, search)).toList();
     }
 
-    return items.where((item) {
-      return _matchesSavedSearch(item, search);
-    }).toList();
+    result.sort((a, b) {
+      int comparison = 0;
+      if (query.sortByField == 'title') {
+        comparison = _getTitle(a).compareTo(_getTitle(b));
+      } else {
+        comparison = _getDate(a).compareTo(_getDate(b));
+      }
+      return query.isDescending ? -comparison : comparison;
+    });
+
+    return result;
+  }
+
+  String _getTitle(Object? item) {
+    if (item is BookmarkedFormula) return item.title.toLowerCase();
+    if (item is BookmarkedChapter) return item.chapterName.toLowerCase();
+    if (item is SavedNote) return item.title.toLowerCase();
+    return '';
+  }
+
+  DateTime _getDate(Object? item) {
+    if (item is BookmarkedFormula) return item.savedAt;
+    if (item is BookmarkedChapter) return item.savedAt;
+    if (item is SavedNote) return item.savedAt;
+    return DateTime.fromMillisecondsSinceEpoch(0);
   }
 
   bool _matchesSavedSearch(Object? item, String search) {
