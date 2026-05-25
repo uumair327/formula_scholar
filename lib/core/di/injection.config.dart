@@ -44,6 +44,7 @@ import '../../features/analytics/infrastructure/repositories/analytics_repositor
     as _i461;
 import '../../features/analytics/presentation/cubit/analytics_cubit.dart'
     as _i821;
+import '../../features/auth/auth.dart' as _i430;
 import '../../features/auth/domain/domain.dart' as _i140;
 import '../../features/auth/domain/ports/auth_repository_port.dart' as _i320;
 import '../../features/auth/domain/usecases/delete_account_use_case.dart'
@@ -783,6 +784,16 @@ extension GetItInjectableX on _i174.GetIt {
         repository: gh<_i360.SearchRepositoryPort>(),
       ),
     );
+    gh.lazySingleton<_i454.StudyPlannerCubit>(
+      () => _i454.StudyPlannerCubit(
+        getPlans: gh<_i62.GetPlansUseCase>(),
+        createPlan: gh<_i62.CreatePlanUseCase>(),
+        updatePlan: gh<_i62.UpdatePlanUseCase>(),
+        deletePlan: gh<_i62.DeletePlanUseCase>(),
+        updateSession: gh<_i62.UpdateSessionUseCase>(),
+        authCubit: gh<_i430.AuthCubit>(),
+      ),
+    );
     gh.factory<_i29.LoadReviewsUseCase>(
       () => _i29.LoadReviewsUseCase(
         repository: gh<_i400.FlashcardRepositoryPort>(),
@@ -841,19 +852,6 @@ extension GetItInjectableX on _i174.GetIt {
         toggleChapterBookmark: gh<_i750.ToggleChapterBookmarkUseCase>(),
       ),
     );
-    gh.factory<_i712.SavedCubit>(
-      () => _i712.SavedCubit(
-        getBookmarks: gh<_i385.GetBookmarksUseCase>(),
-        getSavedChapters: gh<_i385.GetSavedChaptersUseCase>(),
-        getSavedNotes: gh<_i385.GetSavedNotesUseCase>(),
-        removeBookmark: gh<_i385.RemoveBookmarkUseCase>(),
-        removeSavedChapter: gh<_i385.RemoveSavedChapterUseCase>(),
-        addNote: gh<_i385.AddNoteUseCase>(),
-        updateNote: gh<_i385.UpdateNoteUseCase>(),
-        deleteNote: gh<_i385.DeleteNoteUseCase>(),
-        curriculumCubit: gh<_i427.CurriculumCubit>(),
-      ),
-    );
     gh.factory<_i883.FormulasCubit>(
       () => _i883.FormulasCubit(
         getFormulas: gh<_i750.GetFormulasUseCase>(),
@@ -867,14 +865,23 @@ extension GetItInjectableX on _i174.GetIt {
         deleteFormulaNote: gh<_i750.DeleteFormulaNoteUseCase>(),
       ),
     );
-    gh.lazySingleton<_i454.StudyPlannerCubit>(
-      () => _i454.StudyPlannerCubit(
-        getPlans: gh<_i62.GetPlansUseCase>(),
-        createPlan: gh<_i62.CreatePlanUseCase>(),
-        updatePlan: gh<_i62.UpdatePlanUseCase>(),
-        deletePlan: gh<_i62.DeletePlanUseCase>(),
-        updateSession: gh<_i62.UpdateSessionUseCase>(),
-        authCubit: gh<_i117.AuthCubit>(),
+    gh.factory<_i712.SavedCubit>(
+      () => _i712.SavedCubit(
+        getBookmarks: gh<_i385.GetBookmarksUseCase>(),
+        getSavedChapters: gh<_i385.GetSavedChaptersUseCase>(),
+        getSavedNotes: gh<_i385.GetSavedNotesUseCase>(),
+        removeBookmark: gh<_i385.RemoveBookmarkUseCase>(),
+        removeSavedChapter: gh<_i385.RemoveSavedChapterUseCase>(),
+        addNote: gh<_i385.AddNoteUseCase>(),
+        updateNote: gh<_i385.UpdateNoteUseCase>(),
+        deleteNote: gh<_i385.DeleteNoteUseCase>(),
+        curriculumCubit: gh<_i914.CurriculumCubit>(),
+      ),
+    );
+    gh.lazySingleton<_i414.SubjectSelectionCubit>(
+      () => _i414.SubjectSelectionCubit(
+        watchCurriculum: gh<_i525.WatchCurriculumUseCase>(),
+        getSubjects: gh<_i95.GetSubjectsUseCase>(),
       ),
     );
     gh.lazySingleton<_i947.ThemeCubit>(
@@ -908,25 +915,20 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i341.SearchCubit(searchFormulas: gh<_i686.SearchFormulasUseCase>()),
     );
-    gh.factory<_i411.PracticeCubit>(
-      () => _i411.PracticeCubit(
-        getQuestions: gh<_i899.GetQuestionsUseCase>(),
-        recordQuizCompletion: gh<_i899.RecordQuizCompletionUseCase>(),
-        saveQuizResult: gh<_i899.SaveQuizResultUseCase>(),
-        activityRefreshCubit: gh<_i914.ActivityRefreshCubit>(),
-      ),
-    );
-    gh.lazySingleton<_i414.SubjectSelectionCubit>(
-      () => _i414.SubjectSelectionCubit(
-        watchCurriculum: gh<_i525.WatchCurriculumUseCase>(),
-        getSubjects: gh<_i95.GetSubjectsUseCase>(),
-      ),
-    );
     gh.factory<_i762.FlashcardsCubit>(
       () => _i762.FlashcardsCubit(
         loadReviews: gh<_i944.LoadReviewsUseCase>(),
         saveReview: gh<_i944.SaveReviewUseCase>(),
         reportAchievement: gh<_i970.ReportAchievementProgressUseCase>(),
+      ),
+    );
+    gh.factory<_i411.PracticeCubit>(
+      () => _i411.PracticeCubit(
+        getQuestions: gh<_i899.GetQuestionsUseCase>(),
+        getSubjects: gh<_i95.GetSubjectsUseCase>(),
+        recordQuizCompletion: gh<_i899.RecordQuizCompletionUseCase>(),
+        saveQuizResult: gh<_i899.SaveQuizResultUseCase>(),
+        activityRefreshCubit: gh<_i914.ActivityRefreshCubit>(),
       ),
     );
     gh.factory<_i821.AnalyticsCubit>(

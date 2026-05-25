@@ -12,6 +12,7 @@ class SavedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return BlocBuilder<SavedCubit, SavedState>(
       buildWhen: (prev, curr) =>
           prev.status != curr.status ||
