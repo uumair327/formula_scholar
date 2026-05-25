@@ -17,12 +17,12 @@ class ProfileHeroWidget extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppDimensions.paddingHero,
-        vertical: AppDimensions.paddingSection,
-      ),
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppDimensions.paddingHero),
       decoration: signatureGlowDecoration(colorScheme),
-      child: Row(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Avatar with Pro badge
           Stack(
@@ -86,75 +86,76 @@ class ProfileHeroWidget extends StatelessWidget {
                 ),
             ],
           ),
-          const SizedBox(width: AppDimensions.paddingXXL),
+          const SizedBox(height: AppDimensions.paddingLG),
           // Name & grade
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          Text(
+            AppStrings.currentGrade,
+            style: AppTextStyles.labelMedium.copyWith(
+              color: colorScheme.onPrimary.withValues(
+                alpha: AppDimensions.opacityHigh,
+              ),
+              letterSpacing: AppDimensions.letterSpacingNormal,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: AppDimensions.paddingXS),
+          Text(
+            profile.name,
+            style: AppTextStyles.headlineLarge.copyWith(
+              color: colorScheme.onPrimary,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          if (profile.email.isNotEmpty) ...[
+            const SizedBox(height: AppDimensions.paddingXXS),
+            Text(
+              profile.email,
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: colorScheme.onPrimary.withValues(
+                  alpha: AppDimensions.opacityHigh,
+                ),
+              ),
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+          const SizedBox(height: AppDimensions.paddingLG),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppDimensions.chipPaddingHorizontal,
+              vertical: AppDimensions.chipPaddingVertical,
+            ),
+            decoration: BoxDecoration(
+              color: colorScheme.onPrimary.withValues(
+                alpha: AppDimensions.opacityFaint,
+              ),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+              border: Border.all(
+                color: colorScheme.onPrimary.withValues(
+                  alpha: AppDimensions.opacityFaint,
+                ),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  AppStrings.currentGrade,
-                  style: AppTextStyles.labelMedium.copyWith(
-                    color: colorScheme.onPrimary.withValues(
-                      alpha: AppDimensions.opacityHigh,
-                    ),
-                    letterSpacing: AppDimensions.letterSpacingNormal,
+                Icon(
+                  Icons.school_outlined,
+                  size: AppDimensions.iconSM,
+                  color: colorScheme.onPrimary.withValues(
+                    alpha: AppDimensions.opacityNearOpaque,
                   ),
                 ),
-                const SizedBox(height: AppDimensions.paddingXS),
-                Text(
-                  profile.name,
-                  style: AppTextStyles.headlineLarge.copyWith(
-                    color: colorScheme.onPrimary,
-                  ),
-                ),
-                if (profile.email.isNotEmpty) ...[
-                  const SizedBox(height: AppDimensions.paddingXXS),
-                  Text(
-                    profile.email,
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: colorScheme.onPrimary.withValues(
-                        alpha: AppDimensions.opacityHigh,
-                      ),
+                const SizedBox(width: AppDimensions.chipPaddingVertical),
+                Flexible(
+                  child: Text(
+                    profile.curriculumLabel,
+                    style: AppTextStyles.labelLarge.copyWith(
+                      color: colorScheme.onPrimary,
                     ),
                     overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-                const SizedBox(height: AppDimensions.paddingSM),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppDimensions.chipPaddingHorizontal,
-                    vertical: AppDimensions.chipPaddingVertical,
-                  ),
-                  decoration: BoxDecoration(
-                    color: colorScheme.onPrimary.withValues(
-                      alpha: AppDimensions.opacityFaint,
-                    ),
-                    borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-                    border: Border.all(
-                      color: colorScheme.onPrimary.withValues(
-                        alpha: AppDimensions.opacityFaint,
-                      ),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.school_outlined,
-                        size: AppDimensions.iconSM,
-                        color: colorScheme.onPrimary.withValues(
-                          alpha: AppDimensions.opacityNearOpaque,
-                        ),
-                      ),
-                      const SizedBox(width: AppDimensions.chipPaddingVertical),
-                      Text(
-                        profile.curriculumLabel,
-                        style: AppTextStyles.labelLarge.copyWith(
-                          color: colorScheme.onPrimary,
-                        ),
-                      ),
-                    ],
                   ),
                 ),
               ],
