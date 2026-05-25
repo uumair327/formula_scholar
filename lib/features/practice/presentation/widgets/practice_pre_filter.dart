@@ -143,18 +143,17 @@ class _SubjectSelector extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppDimensions.paddingMD),
-        LayoutBuilder(
+          LayoutBuilder(
           builder: (context, constraints) {
-            // Determine column count based on available width
-            final crossAxisCount = constraints.maxWidth > 600 ? 3 : 2;
+            final crossAxisCount = constraints.maxWidth > 600 ? 4 : 2;
             return GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: crossAxisCount,
-                crossAxisSpacing: AppDimensions.paddingSM,
-                mainAxisSpacing: AppDimensions.paddingSM,
-                childAspectRatio: 2.5,
+                crossAxisSpacing: AppDimensions.paddingLG,
+                mainAxisSpacing: AppDimensions.paddingLG,
+                childAspectRatio: 1.1,
               ),
               itemCount: practiceState.availableSubjects.length + 1,
               itemBuilder: (context, index) {
@@ -209,45 +208,50 @@ class _SubjectSelector extends StatelessWidget {
           HapticsHelper.lightImpact();
           onTap();
         },
-        borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
         child: Container(
           decoration: BoxDecoration(
-            color: colorScheme.surface,
-            borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                colorScheme.surface,
+                color.withValues(alpha: 0.05),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
             border: Border.all(
-              color: color.withValues(alpha: 0.3),
-              width: 1.5,
+              color: color.withValues(alpha: 0.2),
+              width: 1,
             ),
             boxShadow: [
               BoxShadow(
-                color: color.withValues(alpha: 0.05),
-                blurRadius: 10,
+                color: color.withValues(alpha: 0.08),
+                blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
             ],
           ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.paddingSM,
-            vertical: AppDimensions.paddingXS,
-          ),
-          child: Row(
+          padding: const EdgeInsets.all(AppDimensions.paddingMD),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               AppIconCircle(
                 icon: icon,
-                backgroundColor: color.withValues(alpha: 0.1),
+                backgroundColor: color.withValues(alpha: 0.15),
                 iconColor: color,
-                size: 32,
+                size: 48,
               ),
-              const SizedBox(width: AppDimensions.paddingSM),
-              Expanded(
-                child: Text(
-                  title,
-                  style: AppTextStyles.labelMedium.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+              const SizedBox(height: AppDimensions.paddingSM),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: AppTextStyles.labelLarge.copyWith(
+                  fontWeight: FontWeight.w800,
+                  color: colorScheme.onSurface,
                 ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),

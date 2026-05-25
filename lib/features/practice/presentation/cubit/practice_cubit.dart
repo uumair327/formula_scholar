@@ -317,17 +317,17 @@ class PracticeCubit extends Cubit<PracticeState>
     _timer?.cancel();
     final bId = state.boardId;
     final gId = state.gradeId;
-    final sId = state.subjectId;
+    
+    // Clear subjectId so the user can pick a different subject.
+    // We emit initial but DO NOT call loadQuestions.
+    // This allows PracticePreFilter to be shown again!
     emit(
       state.copyWith(
         status: PracticeStatus.initial,
         boardId: bId,
         gradeId: gId,
-        subjectId: sId,
+        subjectId: null, 
       ),
     );
-    if (bId != null && gId != null) {
-      loadQuestions(boardId: bId, gradeId: gId, subjectId: sId);
-    }
   }
 }

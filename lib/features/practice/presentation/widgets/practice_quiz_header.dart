@@ -21,7 +21,7 @@ class QuizHeader extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            onPressed: () => context.read<PracticeCubit>().resetQuiz(),
+            onPressed: () => _confirmQuit(context),
             icon: const Icon(LucideIcons.x, size: AppDimensions.iconLG),
             tooltip: AppStrings.closeQuiz,
           ),
@@ -47,6 +47,32 @@ class QuizHeader extends StatelessWidget {
                   size: AppDimensions.iconLG,
                   color: colorScheme.primary,
                 ),
+        ],
+      ),
+    );
+  }
+
+  void _confirmQuit(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Quit Practice?'),
+        content: const Text('Are you sure you want to quit? Your progress will be lost.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              context.read<PracticeCubit>().resetQuiz();
+            },
+            child: const Text('Quit'),
+          ),
         ],
       ),
     );
