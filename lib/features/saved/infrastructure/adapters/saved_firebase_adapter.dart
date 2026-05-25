@@ -32,22 +32,30 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
     final snapshot = await _api.execute(
       () => _api
           .collection(AppFirestoreCollections.userBookmarks(uid))
-          .where('curriculumKey', isEqualTo: curriculumKey)
           .get(),
       tag: AppLogTags.savedDataSource,
     );
 
-    final bookmarks = snapshot.docs.map((doc) {
-      final data = doc.data();
-      return BookmarkedFormula(
-        id: data['id'] ?? doc.id,
-        title: data['title'] ?? '',
-        subject: data['subject'] ?? '',
-        formula: data['formula'] ?? '',
-        curriculumKey: data['curriculumKey'] ?? curriculumKey,
-        savedAt: (data['savedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      );
-    }).toList();
+    final bookmarks = snapshot.docs
+        .map((doc) {
+          final data = doc.data();
+          final docCurriculumKey = data['curriculumKey'] as String?;
+          
+          if (docCurriculumKey != null && docCurriculumKey != curriculumKey) {
+            return null;
+          }
+
+          return BookmarkedFormula(
+            id: data['id'] ?? doc.id,
+            title: data['title'] ?? '',
+            subject: data['subject'] ?? '',
+            formula: data['formula'] ?? '',
+            curriculumKey: docCurriculumKey ?? curriculumKey,
+            savedAt: (data['savedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+          );
+        })
+        .whereType<BookmarkedFormula>()
+        .toList();
 
     return _applyQuery(bookmarks, query: query);
   }
@@ -196,22 +204,30 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
     final snapshot = await _api.execute(
       () => _api
           .collection(AppFirestoreCollections.userSavedNotes(uid))
-          .where('curriculumKey', isEqualTo: curriculumKey)
           .get(),
       tag: AppLogTags.savedDataSource,
     );
 
-    final notes = snapshot.docs.map((doc) {
-      final data = doc.data();
-      return SavedNote(
-        id: data['id'] ?? doc.id,
-        title: data['title'] ?? '',
-        subject: data['subject'] ?? '',
-        content: data['content'] ?? '',
-        curriculumKey: data['curriculumKey'] ?? curriculumKey,
-        savedAt: (data['savedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      );
-    }).toList();
+    final notes = snapshot.docs
+        .map((doc) {
+          final data = doc.data();
+          final docCurriculumKey = data['curriculumKey'] as String?;
+          
+          if (docCurriculumKey != null && docCurriculumKey != curriculumKey) {
+            return null;
+          }
+
+          return SavedNote(
+            id: data['id'] ?? doc.id,
+            title: data['title'] ?? '',
+            subject: data['subject'] ?? '',
+            content: data['content'] ?? '',
+            curriculumKey: docCurriculumKey ?? curriculumKey,
+            savedAt: (data['savedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+          );
+        })
+        .whereType<SavedNote>()
+        .toList();
 
     return _applyQuery(notes, query: query);
   }
