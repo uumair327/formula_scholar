@@ -17,7 +17,23 @@ class SavedChapterCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return AppCard(
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            colorScheme.surfaceContainerHighest.withValues(alpha: isDark ? 0.3 : 0.6),
+            colorScheme.surfaceContainerHighest.withValues(alpha: isDark ? 0.05 : 0.2),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+        ),
+      ),
       child: Tooltip(
         message: AppStrings.viewTopics,
         child: InkWell(
@@ -32,9 +48,11 @@ class SavedChapterCard extends StatelessWidget {
               queryParameters: {'name': chapter.chapterName},
             );
           },
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            child: Padding(
+              padding: const EdgeInsets.all(AppDimensions.paddingXL),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -93,7 +111,8 @@ class SavedChapterCard extends StatelessWidget {
                   ),
                 ),
               ],
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -105,6 +105,7 @@ class SavedPage extends StatelessWidget {
                   ),
                 if (!hasSearchQuery || state.hasFilteredResults) ...[
                   if (filteredChapters.isNotEmpty) ...[
+                    const SizedBox(height: AppDimensions.paddingLG),
                     EntranceWrapper.stagger(
                       index: 0,
                       child: Text(
@@ -130,6 +131,7 @@ class SavedPage extends StatelessWidget {
                     const SizedBox(height: AppDimensions.paddingMD),
                   ],
                   if (filteredBookmarks.isNotEmpty) ...[
+                    const SizedBox(height: AppDimensions.paddingLG),
                     EntranceWrapper.stagger(
                       index: filteredChapters.length + 1,
                       child: Text(
@@ -155,6 +157,7 @@ class SavedPage extends StatelessWidget {
                     const SizedBox(height: AppDimensions.paddingMD),
                   ],
                   if (filteredNotes.isNotEmpty) ...[
+                    const SizedBox(height: AppDimensions.paddingLG),
                     EntranceWrapper.stagger(
                       index: filteredChapters.length + filteredBookmarks.length + 2,
                       child: Text(

@@ -24,80 +24,78 @@ class SavedSortControls extends StatelessWidget {
         ? LucideIcons.arrowUp
         : LucideIcons.arrowDown;
 
-    return Row(
-      children: [
-        Expanded(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                _buildChip(
-                  context,
-                  label: 'Newest',
-                  isSelected: state.sortByField == 'savedAt' &&
-                      state.sortDirection == SortDirection.desc,
-                  onSelected: () => context.read<SavedCubit>().updateSort(
-                        sortByField: 'savedAt',
-                        sortDirection: SortDirection.desc,
-                      ),
-                  colorScheme: colorScheme,
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      clipBehavior: Clip.none,
+      child: Row(
+        children: [
+          Tooltip(
+            message: AppStrings.toggleSortDirection,
+            child: IconButton.filledTonal(
+              onPressed: () => context.read<SavedCubit>().toggleSortDirection(),
+              icon: Icon(directionIcon, size: AppDimensions.iconSM),
+              tooltip: state.sortDirection == SortDirection.asc
+                  ? AppStrings.sortAscending
+                  : AppStrings.sortDescending,
+              style: IconButton.styleFrom(
+                backgroundColor: colorScheme.secondaryContainer,
+                foregroundColor: colorScheme.onSecondaryContainer,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
                 ),
-                const SizedBox(width: AppDimensions.paddingSM),
-                _buildChip(
-                  context,
-                  label: 'Oldest',
-                  isSelected: state.sortByField == 'savedAt' &&
-                      state.sortDirection == SortDirection.asc,
-                  onSelected: () => context.read<SavedCubit>().updateSort(
-                        sortByField: 'savedAt',
-                        sortDirection: SortDirection.asc,
-                      ),
-                  colorScheme: colorScheme,
-                ),
-                const SizedBox(width: AppDimensions.paddingSM),
-                _buildChip(
-                  context,
-                  label: 'Title A-Z',
-                  isSelected: state.sortByField == 'title' &&
-                      state.sortDirection == SortDirection.asc,
-                  onSelected: () => context.read<SavedCubit>().updateSort(
-                        sortByField: 'title',
-                        sortDirection: SortDirection.asc,
-                      ),
-                  colorScheme: colorScheme,
-                ),
-                const SizedBox(width: AppDimensions.paddingSM),
-                _buildChip(
-                  context,
-                  label: 'Title Z-A',
-                  isSelected: state.sortByField == 'title' &&
-                      state.sortDirection == SortDirection.desc,
-                  onSelected: () => context.read<SavedCubit>().updateSort(
-                        sortByField: 'title',
-                        sortDirection: SortDirection.desc,
-                      ),
-                  colorScheme: colorScheme,
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-        const SizedBox(width: AppDimensions.paddingSM),
-        Tooltip(
-          message: AppStrings.toggleSortDirection,
-          child: IconButton.filled(
-            onPressed: () => context.read<SavedCubit>().toggleSortDirection(),
-            icon: Icon(directionIcon, size: 20),
-            style: IconButton.styleFrom(
-              backgroundColor: colorScheme.surfaceContainerHigh,
-              foregroundColor: colorScheme.onSurface,
-            ),
-            tooltip: state.sortDirection == SortDirection.asc
-                ? AppStrings.sortAscending
-                : AppStrings.sortDescending,
+          const SizedBox(width: AppDimensions.paddingMD),
+          _buildChip(
+            context,
+            label: 'Newest',
+            isSelected: state.sortByField == 'savedAt' &&
+                state.sortDirection == SortDirection.desc,
+            onSelected: () => context.read<SavedCubit>().updateSort(
+                  sortByField: 'savedAt',
+                  sortDirection: SortDirection.desc,
+                ),
+            colorScheme: colorScheme,
           ),
-        ),
-      ],
+          const SizedBox(width: AppDimensions.paddingSM),
+          _buildChip(
+            context,
+            label: 'Oldest',
+            isSelected: state.sortByField == 'savedAt' &&
+                state.sortDirection == SortDirection.asc,
+            onSelected: () => context.read<SavedCubit>().updateSort(
+                  sortByField: 'savedAt',
+                  sortDirection: SortDirection.asc,
+                ),
+            colorScheme: colorScheme,
+          ),
+          const SizedBox(width: AppDimensions.paddingSM),
+          _buildChip(
+            context,
+            label: 'Title A-Z',
+            isSelected: state.sortByField == 'title' &&
+                state.sortDirection == SortDirection.asc,
+            onSelected: () => context.read<SavedCubit>().updateSort(
+                  sortByField: 'title',
+                  sortDirection: SortDirection.asc,
+                ),
+            colorScheme: colorScheme,
+          ),
+          const SizedBox(width: AppDimensions.paddingSM),
+          _buildChip(
+            context,
+            label: 'Title Z-A',
+            isSelected: state.sortByField == 'title' &&
+                state.sortDirection == SortDirection.desc,
+            onSelected: () => context.read<SavedCubit>().updateSort(
+                  sortByField: 'title',
+                  sortDirection: SortDirection.desc,
+                ),
+            colorScheme: colorScheme,
+          ),
+        ],
+      ),
     );
   }
 
@@ -110,17 +108,16 @@ class SavedSortControls extends StatelessWidget {
   }) {
     return ChoiceChip(
       label: Text(label),
-      labelStyle: AppTextStyles.labelLarge.copyWith(
-        color: isSelected ? colorScheme.onPrimaryContainer : colorScheme.onSurface,
+      labelStyle: AppTextStyles.labelMedium.copyWith(
+        color: isSelected ? colorScheme.onPrimaryContainer : colorScheme.onSurfaceVariant,
         fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
       ),
       selected: isSelected,
       onSelected: (_) => onSelected(),
       selectedColor: colorScheme.primaryContainer,
-      backgroundColor: colorScheme.surfaceContainerHigh,
-      side: BorderSide.none,
+      backgroundColor: colorScheme.surfaceContainerHighest,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
       ),
       showCheckmark: false,
     );
