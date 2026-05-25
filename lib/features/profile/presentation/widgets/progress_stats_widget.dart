@@ -70,7 +70,12 @@ class ProgressStatsWidget extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: AppDimensions.paddingMD),
-                if (stats.length > 2) _buildStatCard(context, stats[2], 2),
+                if (stats.length > 2)
+                  Row(
+                    children: [
+                      Expanded(child: _buildStatCard(context, stats[2], 2)),
+                    ],
+                  ),
               ],
             );
           },

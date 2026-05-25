@@ -19,10 +19,8 @@ class WidgetPreviewScreen extends StatelessWidget {
     Map<String, dynamic>? widgetConfig;
     try {
       // Dart's base64Url.decode pads automatically if length is valid, but let's normalize length
-      String normalized = configB64!;
-      while (normalized.length % 4 != 0) {
-        normalized += '=';
-      }
+      final padding = (4 - configB64!.length % 4) % 4;
+      final normalized = configB64!.padRight(configB64!.length + padding, '=');
       final jsonStr = utf8.decode(base64Url.decode(normalized));
       widgetConfig = jsonDecode(jsonStr) as Map<String, dynamic>;
     } catch (e) {

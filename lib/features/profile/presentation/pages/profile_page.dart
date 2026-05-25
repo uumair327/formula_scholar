@@ -120,52 +120,12 @@ class ProfilePage extends StatelessWidget {
     final avatarUrl = state.profile?.avatarUrl ?? AppAssets.profileAvatarUrl;
 
     return SliverGlassAppBar(
-      titleWidget: Row(
-        children: [
-          // Gradient ring avatar
-          Container(
-            padding: const EdgeInsets.all(2.0),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: isDark
-                  ? AppColors.darkPrimaryGradient
-                  : AppColors.primaryGradient,
-            ),
-            child: Container(
-              width: AppDimensions.avatarMD - 4,
-              height: AppDimensions.avatarMD - 4,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: colorScheme.surface, width: 2.0),
-              ),
-              child: AppAvatar(imageUrl: avatarUrl),
-            ),
-          ),
-          const SizedBox(width: AppDimensions.paddingMD),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  displayName,
-                  style: AppTextStyles.titleMedium.copyWith(
-                    color: colorScheme.onSurface,
-                    fontWeight: FontWeight.w800,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                if (state.profile?.email.isNotEmpty == true)
-                  Text(
-                    state.profile!.email,
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-              ],
-            ),
-          ),
-        ],
+      titleWidget: Text(
+        AppStrings.navProfile,
+        style: AppTextStyles.headlineSmall.copyWith(
+          color: colorScheme.onSurface,
+          fontWeight: FontWeight.w800,
+        ),
       ),
       actions: [
         Container(

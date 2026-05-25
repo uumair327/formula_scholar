@@ -9,7 +9,7 @@ BoxDecoration signatureGlowDecoration(ColorScheme colorScheme) {
       end: Alignment.bottomRight,
       colors: [
         colorScheme.primary,
-        colorScheme.primaryContainer,
+        colorScheme.primary.withValues(alpha: 0.8),
       ],
     ),
     borderRadius: BorderRadius.circular(AppDimensions.radiusLG),

@@ -24,71 +24,105 @@ class SavedSortControls extends StatelessWidget {
         ? LucideIcons.arrowUp
         : LucideIcons.arrowDown;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
       children: [
-        Wrap(
-          spacing: AppDimensions.paddingSM,
-          runSpacing: AppDimensions.paddingSM,
-          children: [
-            ChoiceChip(
-              label: const Text('Newest'),
-              selected:
-                  state.sortByField == 'savedAt' &&
-                  state.sortDirection == SortDirection.desc,
-              onSelected: (_) => context.read<SavedCubit>().updateSort(
-                sortByField: 'savedAt',
-                sortDirection: SortDirection.desc,
-              ),
-              selectedColor: colorScheme.primaryContainer,
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                _buildChip(
+                  context,
+                  label: 'Newest',
+                  isSelected: state.sortByField == 'savedAt' &&
+                      state.sortDirection == SortDirection.desc,
+                  onSelected: () => context.read<SavedCubit>().updateSort(
+                        sortByField: 'savedAt',
+                        sortDirection: SortDirection.desc,
+                      ),
+                  colorScheme: colorScheme,
+                ),
+                const SizedBox(width: AppDimensions.paddingSM),
+                _buildChip(
+                  context,
+                  label: 'Oldest',
+                  isSelected: state.sortByField == 'savedAt' &&
+                      state.sortDirection == SortDirection.asc,
+                  onSelected: () => context.read<SavedCubit>().updateSort(
+                        sortByField: 'savedAt',
+                        sortDirection: SortDirection.asc,
+                      ),
+                  colorScheme: colorScheme,
+                ),
+                const SizedBox(width: AppDimensions.paddingSM),
+                _buildChip(
+                  context,
+                  label: 'Title A-Z',
+                  isSelected: state.sortByField == 'title' &&
+                      state.sortDirection == SortDirection.asc,
+                  onSelected: () => context.read<SavedCubit>().updateSort(
+                        sortByField: 'title',
+                        sortDirection: SortDirection.asc,
+                      ),
+                  colorScheme: colorScheme,
+                ),
+                const SizedBox(width: AppDimensions.paddingSM),
+                _buildChip(
+                  context,
+                  label: 'Title Z-A',
+                  isSelected: state.sortByField == 'title' &&
+                      state.sortDirection == SortDirection.desc,
+                  onSelected: () => context.read<SavedCubit>().updateSort(
+                        sortByField: 'title',
+                        sortDirection: SortDirection.desc,
+                      ),
+                  colorScheme: colorScheme,
+                ),
+              ],
             ),
-            ChoiceChip(
-              label: const Text('Oldest'),
-              selected:
-                  state.sortByField == 'savedAt' &&
-                  state.sortDirection == SortDirection.asc,
-              onSelected: (_) => context.read<SavedCubit>().updateSort(
-                sortByField: 'savedAt',
-                sortDirection: SortDirection.asc,
-              ),
-              selectedColor: colorScheme.primaryContainer,
-            ),
-            ChoiceChip(
-              label: const Text('Title A-Z'),
-              selected:
-                  state.sortByField == 'title' &&
-                  state.sortDirection == SortDirection.asc,
-              onSelected: (_) => context.read<SavedCubit>().updateSort(
-                sortByField: 'title',
-                sortDirection: SortDirection.asc,
-              ),
-              selectedColor: colorScheme.primaryContainer,
-            ),
-            ChoiceChip(
-              label: const Text('Title Z-A'),
-              selected:
-                  state.sortByField == 'title' &&
-                  state.sortDirection == SortDirection.desc,
-              onSelected: (_) => context.read<SavedCubit>().updateSort(
-                sortByField: 'title',
-                sortDirection: SortDirection.desc,
-              ),
-              selectedColor: colorScheme.primaryContainer,
-            ),
-          ],
+          ),
         ),
-        const SizedBox(height: AppDimensions.paddingSM),
+        const SizedBox(width: AppDimensions.paddingSM),
         Tooltip(
           message: AppStrings.toggleSortDirection,
           child: IconButton.filled(
             onPressed: () => context.read<SavedCubit>().toggleSortDirection(),
             icon: Icon(directionIcon, size: 20),
+            style: IconButton.styleFrom(
+              backgroundColor: colorScheme.surfaceContainerHigh,
+              foregroundColor: colorScheme.onSurface,
+            ),
             tooltip: state.sortDirection == SortDirection.asc
                 ? AppStrings.sortAscending
                 : AppStrings.sortDescending,
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildChip(
+    BuildContext context, {
+    required String label,
+    required bool isSelected,
+    required VoidCallback onSelected,
+    required ColorScheme colorScheme,
+  }) {
+    return ChoiceChip(
+      label: Text(label),
+      labelStyle: AppTextStyles.labelLarge.copyWith(
+        color: isSelected ? colorScheme.onPrimaryContainer : colorScheme.onSurface,
+        fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+      ),
+      selected: isSelected,
+      onSelected: (_) => onSelected(),
+      selectedColor: colorScheme.primaryContainer,
+      backgroundColor: colorScheme.surfaceContainerHigh,
+      side: BorderSide.none,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+      ),
+      showCheckmark: false,
     );
   }
 }
