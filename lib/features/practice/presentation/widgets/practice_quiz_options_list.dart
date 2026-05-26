@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
@@ -25,85 +26,92 @@ class QuizOptionsList extends StatelessWidget {
           final showCorrectState = state.showResult && isSelected && isCorrect;
           final showWrongState = state.showResult && isSelected && !isCorrect;
           final showCorrectHint = state.showResult && !state.isCorrect && isCorrect;
+          final hasAnswered = state.selectedOptionId != null;
 
-          return GestureDetector(
-            onTap: () => context.read<PracticeCubit>().selectOption(option.id),
-            child: AnimatedContainer(
-              duration: AppDurations.animationDefault,
-              padding: const EdgeInsets.all(AppDimensions.paddingXXL),
-              decoration: BoxDecoration(
-                color: showCorrectState || showCorrectHint
-                    ? colorScheme.secondaryContainer.withValues(
-                        alpha: AppDimensions.opacitySubtle,
-                      )
-                    : showWrongState
-                    ? colorScheme.error.withValues(
-                        alpha: AppDimensions.opacityFaint,
-                      )
-                    : colorScheme.surfaceContainerLowest,
-                borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-                border: Border.all(
+          return Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: hasAnswered
+                  ? null
+                  : () => context.read<PracticeCubit>().selectOption(option.id),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+              child: AnimatedContainer(
+                duration: AppDurations.animationDefault,
+                padding: const EdgeInsets.all(AppDimensions.paddingXXL),
+                decoration: BoxDecoration(
                   color: showCorrectState || showCorrectHint
-                      ? colorScheme.secondary
+                      ? colorScheme.secondaryContainer.withValues(
+                          alpha: AppDimensions.opacitySubtle,
+                        )
                       : showWrongState
-                      ? colorScheme.error
-                      : Colors.transparent,
-                  width: AppDimensions.borderWidth,
-                ),
-                boxShadow: const [AppShadows.ghost],
-              ),
-              child: Row(
-                children: [
-                  AnimatedContainer(
-                    duration: AppDurations.animationDefault,
-                    width: AppDimensions.avatarLG,
-                    height: AppDimensions.avatarLG,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: showCorrectState || showCorrectHint
-                          ? colorScheme.secondary
-                          : showWrongState
-                          ? colorScheme.error
-                          : colorScheme.surfaceContainerHigh,
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      option.id,
-                      style: AppTextStyles.titleMedium.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: showCorrectState || showCorrectHint
-                            ? colorScheme.onSecondary
-                            : showWrongState
-                            ? colorScheme.onError
-                            : colorScheme.outline,
-                      ),
-                    ),
+                      ? colorScheme.error.withValues(
+                          alpha: AppDimensions.opacityFaint,
+                        )
+                      : colorScheme.surfaceContainerLowest,
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+                  border: Border.all(
+                    color: showCorrectState || showCorrectHint
+                        ? colorScheme.secondary
+                        : showWrongState
+                        ? colorScheme.error
+                        : colorScheme.outlineVariant.withValues(alpha: 0.3),
+                    width: AppDimensions.borderWidth,
                   ),
-                  const SizedBox(width: AppDimensions.paddingLG),
-                  Expanded(
-                    child: Text(
-                      option.text,
-                      style: AppTextStyles.titleMedium.copyWith(
-                        fontWeight: showCorrectState || showWrongState || showCorrectHint
-                            ? FontWeight.w700
-                            : FontWeight.w500,
+                  boxShadow: const [AppShadows.ghost],
+                ),
+                child: Row(
+                  children: [
+                    AnimatedContainer(
+                      duration: AppDurations.animationDefault,
+                      width: AppDimensions.avatarLG,
+                      height: AppDimensions.avatarLG,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
                         color: showCorrectState || showCorrectHint
-                            ? colorScheme.onSecondaryContainer
+                            ? colorScheme.secondary
                             : showWrongState
                             ? colorScheme.error
-                            : null,
+                            : colorScheme.surfaceContainerHigh,
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        option.id,
+                        style: AppTextStyles.titleMedium.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: showCorrectState || showCorrectHint
+                              ? colorScheme.onSecondary
+                              : showWrongState
+                              ? colorScheme.onError
+                              : colorScheme.outline,
+                        ),
                       ),
                     ),
-                  ),
-                  if (showCorrectState || showCorrectHint)
-                    Icon(LucideIcons.checkCircle2,
-                        size: AppDimensions.iconLG,
-                        color: colorScheme.secondary),
-                  if (showWrongState)
-                    Icon(LucideIcons.xCircle,
-                        size: AppDimensions.iconLG,
-                        color: colorScheme.error),
-                ],
+                    const SizedBox(width: AppDimensions.paddingLG),
+                    Expanded(
+                      child: _buildOptionText(
+                        option.text,
+                        AppTextStyles.titleMedium.copyWith(
+                          fontWeight: showCorrectState || showWrongState || showCorrectHint
+                              ? FontWeight.w700
+                              : FontWeight.w500,
+                          color: showCorrectState || showCorrectHint
+                              ? colorScheme.onSecondaryContainer
+                              : showWrongState
+                              ? colorScheme.error
+                              : null,
+                        ),
+                      ),
+                    ),
+                    if (showCorrectState || showCorrectHint)
+                      Icon(LucideIcons.checkCircle2,
+                          size: AppDimensions.iconLG,
+                          color: colorScheme.secondary),
+                    if (showWrongState)
+                      Icon(LucideIcons.xCircle,
+                          size: AppDimensions.iconLG,
+                          color: colorScheme.error),
+                  ],
+                ),
               ),
             ),
           );
@@ -127,5 +135,42 @@ class QuizOptionsList extends StatelessWidget {
         );
       },
     );
+  }
+
+  /// Renders option text that may contain inline LaTeX delimited by `$...$`.
+  static Widget _buildOptionText(String text, TextStyle style) {
+    if (!text.contains('\$')) {
+      return Text(text, style: style);
+    }
+
+    final parts = <InlineSpan>[];
+    final regex = RegExp(r'\$(.+?)\$');
+    int lastEnd = 0;
+
+    for (final match in regex.allMatches(text)) {
+      if (match.start > lastEnd) {
+        parts.add(TextSpan(
+          text: text.substring(lastEnd, match.start),
+          style: style,
+        ));
+      }
+      parts.add(WidgetSpan(
+        alignment: PlaceholderAlignment.middle,
+        child: Math.tex(
+          match.group(1)!,
+          textStyle: style,
+        ),
+      ));
+      lastEnd = match.end;
+    }
+
+    if (lastEnd < text.length) {
+      parts.add(TextSpan(
+        text: text.substring(lastEnd),
+        style: style,
+      ));
+    }
+
+    return Text.rich(TextSpan(children: parts));
   }
 }

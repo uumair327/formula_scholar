@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_math_fork/flutter_math.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
@@ -55,11 +56,12 @@ class QuizQuestionCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppDimensions.paddingLG),
-              Text(
+              _buildRichText(
                 question.questionText,
-                style: AppTextStyles.titleLarge.copyWith(
+                AppTextStyles.titleLarge.copyWith(
                   fontWeight: FontWeight.w600,
                   height: AppDimensions.lineHeightRelaxed,
+                  color: colorScheme.onSurface,
                 ),
               ),
             ],
@@ -67,5 +69,47 @@ class QuizQuestionCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /// Renders text that may contain inline LaTeX delimited by `$...$`.
+  /// Plain segments are rendered as [Text], LaTeX segments as [Math.tex].
+  static Widget _buildRichText(String text, TextStyle style) {
+    // If there are no LaTeX delimiters, return plain text.
+    if (!text.contains('\$')) {
+      return Text(text, style: style);
+    }
+
+    final parts = <InlineSpan>[];
+    final regex = RegExp(r'\$(.+?)\$');
+    int lastEnd = 0;
+
+    for (final match in regex.allMatches(text)) {
+      // Add plain text before the match.
+      if (match.start > lastEnd) {
+        parts.add(TextSpan(
+          text: text.substring(lastEnd, match.start),
+          style: style,
+        ));
+      }
+      // Add the LaTeX as a widget span.
+      parts.add(WidgetSpan(
+        alignment: PlaceholderAlignment.middle,
+        child: Math.tex(
+          match.group(1)!,
+          textStyle: style.copyWith(fontWeight: FontWeight.w700),
+        ),
+      ));
+      lastEnd = match.end;
+    }
+
+    // Add any trailing plain text.
+    if (lastEnd < text.length) {
+      parts.add(TextSpan(
+        text: text.substring(lastEnd),
+        style: style,
+      ));
+    }
+
+    return Text.rich(TextSpan(children: parts));
   }
 }

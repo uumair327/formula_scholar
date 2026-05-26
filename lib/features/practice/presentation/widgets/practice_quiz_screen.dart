@@ -82,6 +82,7 @@ class PracticeQuizScreen extends StatelessWidget {
                         horizontal: AppDimensions.paddingXXL,
                       ),
                       child: Column(
+                        key: ValueKey('quiz_q_${question.id}'),
                         children: [
                           const SizedBox(height: AppDimensions.paddingLG),
                           QuizProgressSection(state: state),
@@ -89,7 +90,10 @@ class PracticeQuizScreen extends StatelessWidget {
                           QuizQuestionCard(question: question),
                           const SizedBox(height: AppDimensions.paddingXXL),
                           QuizOptionsList(state: state, question: question),
-                          const SizedBox(height: AppDimensions.bottomNavPadding),
+                          // Extra padding so the floating Next button doesn't overlap options
+                          SizedBox(height: state.showResult
+                              ? AppDimensions.bottomNavPadding + 80
+                              : AppDimensions.bottomNavPadding),
                         ],
                       ),
                     ),

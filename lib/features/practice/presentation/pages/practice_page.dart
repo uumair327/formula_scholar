@@ -42,6 +42,7 @@ class _PracticePageState extends State<PracticePage> {
           return BlocBuilder<PracticeCubit, PracticeState>(
             buildWhen: (prev, curr) =>
                 prev.status != curr.status ||
+                prev.questions != curr.questions ||
                 prev.currentIndex != curr.currentIndex ||
                 prev.selectedOptionId != curr.selectedOptionId ||
                 prev.showResult != curr.showResult,
