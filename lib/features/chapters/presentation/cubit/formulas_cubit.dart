@@ -176,16 +176,7 @@ class FormulasCubit extends Cubit<FormulasState>
     final newMasteredState = !formula.isMastered;
     final updatedList = state.formulas.map((f) {
       if (f.id == formula.id) {
-        return Formula(
-          id: f.id,
-          title: f.title,
-          latex: f.latex,
-          description: f.description,
-          isMastered: newMasteredState,
-          isBookmarked: f.isBookmarked,
-          audiences: f.audiences,
-          isGeneralContent: f.isGeneralContent,
-        );
+        return f.copyWith(isMastered: newMasteredState);
       }
       return f;
     }).toList();
@@ -205,16 +196,7 @@ class FormulasCubit extends Cubit<FormulasState>
       logFailure('toggleMastery', result.failure);
       final revertedList = state.formulas.map((f) {
         if (f.id == formula.id) {
-          return Formula(
-            id: f.id,
-            title: f.title,
-            latex: f.latex,
-            description: f.description,
-            isMastered: !newMasteredState,
-            isBookmarked: f.isBookmarked,
-            audiences: f.audiences,
-            isGeneralContent: f.isGeneralContent,
-          );
+          return f.copyWith(isMastered: !newMasteredState);
         }
         return f;
       }).toList();
@@ -235,16 +217,7 @@ class FormulasCubit extends Cubit<FormulasState>
     final newBookmarkState = !formula.isBookmarked;
     final updatedList = state.formulas.map((f) {
       if (f.id == formula.id) {
-        return Formula(
-          id: f.id,
-          title: f.title,
-          latex: f.latex,
-          description: f.description,
-          isMastered: f.isMastered,
-          isBookmarked: newBookmarkState,
-          audiences: f.audiences,
-          isGeneralContent: f.isGeneralContent,
-        );
+        return f.copyWith(isBookmarked: newBookmarkState);
       }
       return f;
     }).toList();
@@ -261,16 +234,7 @@ class FormulasCubit extends Cubit<FormulasState>
       logFailure('toggleBookmark', result.failure);
       final revertedList = state.formulas.map((f) {
         if (f.id == formula.id) {
-          return Formula(
-            id: f.id,
-            title: f.title,
-            latex: f.latex,
-            description: f.description,
-            isMastered: f.isMastered,
-            isBookmarked: !newBookmarkState,
-            audiences: f.audiences,
-            isGeneralContent: f.isGeneralContent,
-          );
+          return f.copyWith(isBookmarked: !newBookmarkState);
         }
         return f;
       }).toList();
