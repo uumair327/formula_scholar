@@ -4,6 +4,7 @@ import 'package:logger/logger.dart';
 import '../config/feature_flag.dart';
 import '../config/feature_flag_port.dart';
 import '../di/injection.dart';
+import '../services/services.dart';
 
 /// Application-wide logger utility.
 ///
@@ -21,14 +22,15 @@ class AppLogger {
 
   static Logger? _logger;
   static FeatureFlagPort? _flags;
+  static CrashlyticsServicePort? _crashlytics;
 
   /// Lazily initializes the underlying [Logger] and resolves the
-  /// [FeatureFlagPort] from DI. This avoids ordering issues at startup
-  /// since most log calls happen after `configureDependencies()`.
+  /// [FeatureFlagPort] and [CrashlyticsServicePort] from DI.
   static void _ensureInitialized() {
     if (_logger != null) return;
     try {
       _flags = getIt<FeatureFlagPort>();
+      _crashlytics = getIt<CrashlyticsServicePort>();
     } catch (_) {
       // DI not yet configured — use build-mode defaults.
     }
@@ -50,11 +52,11 @@ class AppLogger {
   /// In release mode, only fatal logs are emitted regardless of flags.
   /// In debug/profile, the [FeatureFlag.loggerEnabled] gate applies.
   static bool _shouldLog(Level level) {
-    if (kReleaseMode && level != Level.fatal) return false;
+    if (kReleaseMode && level != Level.fatal && level != Level.error) return false;
     try {
       _ensureInitialized();
       if (_flags != null && _flags!.isDisabled(FeatureFlag.loggerEnabled)) {
-        return level == Level.fatal;
+        return level == Level.fatal || level == Level.error;
       }
     } catch (_) {
       // Fall through — proceed with logging.
@@ -66,29 +68,46 @@ class AppLogger {
     return tag != null ? '[$tag] $message' : message;
   }
 
+  static void _recordCrashlyticsLog(String formattedMessage) {
+    try {
+      _ensureInitialized();
+      _crashlytics?.log(formattedMessage);
+    } catch (_) {
+      // Ignore DI errors
+    }
+  }
+
   /// Verbose trace logging. Suppressed when [FeatureFlag.loggerEnabled]
   /// is false (except fatal-only release mode).
   static void trace(String message, {String? tag}) {
     if (!_shouldLog(Level.trace)) return;
-    _logger!.t(_format(message, tag));
+    final msg = _format(message, tag);
+    _logger!.t(msg);
+    _recordCrashlyticsLog(msg);
   }
 
   /// Development diagnostics. Respects [FeatureFlag.loggerEnabled].
   static void debug(String message, {String? tag}) {
     if (!_shouldLog(Level.debug)) return;
-    _logger!.d(_format(message, tag));
+    final msg = _format(message, tag);
+    _logger!.d(msg);
+    _recordCrashlyticsLog(msg);
   }
 
   /// Normal operational events. Respects [FeatureFlag.loggerEnabled].
   static void info(String message, {String? tag}) {
     if (!_shouldLog(Level.info)) return;
-    _logger!.i(_format(message, tag));
+    final msg = _format(message, tag);
+    _logger!.i(msg);
+    _recordCrashlyticsLog(msg);
   }
 
   /// Recoverable warnings. Respects [FeatureFlag.loggerEnabled].
   static void warning(String message, {String? tag}) {
     if (!_shouldLog(Level.warning)) return;
-    _logger!.w(_format(message, tag));
+    final msg = _format(message, tag);
+    _logger!.w(msg);
+    _recordCrashlyticsLog(msg);
   }
 
   /// Non-fatal errors. Respects [FeatureFlag.loggerEnabled].
@@ -99,7 +118,13 @@ class AppLogger {
     StackTrace? stackTrace,
   }) {
     if (!_shouldLog(Level.error)) return;
-    _logger!.e(_format(message, tag), error: error, stackTrace: stackTrace);
+    final msg = _format(message, tag);
+    _logger!.e(msg, error: error, stackTrace: stackTrace);
+    
+    try {
+      _ensureInitialized();
+      _crashlytics?.recordError(error ?? msg, stackTrace, reason: msg);
+    } catch (_) {}
   }
 
   /// Critical unrecoverable failures. **Always** logged regardless of flags.
@@ -110,6 +135,11 @@ class AppLogger {
     StackTrace? stackTrace,
   }) {
     _ensureInitialized();
-    _logger!.f(_format(message, tag), error: error, stackTrace: stackTrace);
+    final msg = _format(message, tag);
+    _logger!.f(msg, error: error, stackTrace: stackTrace);
+    
+    try {
+      _crashlytics?.recordFatalError(error ?? msg, stackTrace, reason: msg);
+    } catch (_) {}
   }
 }

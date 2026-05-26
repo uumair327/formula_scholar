@@ -3,11 +3,26 @@ import 'package:flutter/material.dart';
 import '../utils/utils.dart';
 import '../constants/constants.dart';
 
+import '../di/injection.dart';
+import '../services/services.dart';
+
 /// [NavigatorObserver] that logs all route lifecycle events.
 ///
 /// Extracted from [AppRouter] to follow the Single Responsibility Principle.
 /// Registered in [GoRouter.observers] for automatic invocation.
 class AppRouterObserver extends NavigatorObserver {
+  void _trackScreen(Route<dynamic>? route) {
+    if (route != null && route.settings.name != null) {
+      try {
+        getIt<AnalyticsServicePort>().setCurrentScreen(
+          screenName: route.settings.name!,
+        );
+      } catch (_) {
+        // DI not ready or analytics disabled
+      }
+    }
+  }
+
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     AppLogger.info(
@@ -15,6 +30,7 @@ class AppRouterObserver extends NavigatorObserver {
       '(from: ${previousRoute?.settings.name ?? 'none'})',
       tag: AppLogTags.router,
     );
+    _trackScreen(route);
   }
 
   @override
@@ -24,6 +40,7 @@ class AppRouterObserver extends NavigatorObserver {
       '(back to: ${previousRoute?.settings.name ?? 'none'})',
       tag: AppLogTags.router,
     );
+    _trackScreen(previousRoute);
   }
 
   @override
@@ -33,6 +50,7 @@ class AppRouterObserver extends NavigatorObserver {
       '→ ${newRoute?.settings.name ?? 'none'}',
       tag: AppLogTags.router,
     );
+    _trackScreen(newRoute);
   }
 
   @override
@@ -41,5 +59,6 @@ class AppRouterObserver extends NavigatorObserver {
       'Route removed: ${route.settings.name}',
       tag: AppLogTags.router,
     );
+    _trackScreen(previousRoute);
   }
 }

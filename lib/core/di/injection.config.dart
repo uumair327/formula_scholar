@@ -303,6 +303,10 @@ import '../network/connectivity_network_info.dart' as _i105;
 import '../network/firestore_api_client.dart' as _i427;
 import '../network/firestore_client_port.dart' as _i536;
 import '../network/network_info_port.dart' as _i159;
+import '../services/analytics_service_port.dart' as _i940;
+import '../services/crashlytics_service_port.dart' as _i226;
+import '../services/firebase_analytics_adapter.dart' as _i931;
+import '../services/firebase_crashlytics_adapter.dart' as _i199;
 import 'firebase_module.dart' as _i616;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -332,8 +336,14 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i750.ChaptersCachePort>(() => _i927.ChaptersHiveCache());
     gh.lazySingleton<_i385.SavedCachePort>(() => _i827.SavedHiveCache());
+    gh.lazySingleton<_i940.AnalyticsServicePort>(
+      () => _i931.FirebaseAnalyticsAdapter(),
+    );
     gh.lazySingleton<_i970.AchievementCachePort>(
       () => _i848.AchievementHiveCache(),
+    );
+    gh.lazySingleton<_i226.CrashlyticsServicePort>(
+      () => _i199.FirebaseCrashlyticsAdapter(),
     );
     gh.lazySingleton<_i95.DashboardCachePort>(() => _i990.DashboardHiveCache());
     gh.lazySingleton<_i673.FeatureFlagPort>(() => _i59.FeatureFlagService());
