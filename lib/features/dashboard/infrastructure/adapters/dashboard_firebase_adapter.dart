@@ -222,7 +222,29 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
     }).toList();
   }
 
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>? _activeSubjectsFetch;
+  String? _activeSubjectsToken;
+  DateTime? _activeSubjectsTime;
+
   Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> _fetchSubjects(
+    String boardId,
+    String gradeId,
+  ) {
+    final cacheKey = '${boardId}_$gradeId';
+    if (_activeSubjectsFetch != null &&
+        _activeSubjectsToken == cacheKey &&
+        _activeSubjectsTime != null &&
+        DateTime.now().difference(_activeSubjectsTime!).inSeconds < 10) {
+      return _activeSubjectsFetch!;
+    }
+
+    _activeSubjectsToken = cacheKey;
+    _activeSubjectsTime = DateTime.now();
+    _activeSubjectsFetch = _doFetchSubjects(boardId, gradeId);
+    return _activeSubjectsFetch!;
+  }
+
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> _doFetchSubjects(
     String boardId,
     String gradeId,
   ) async {

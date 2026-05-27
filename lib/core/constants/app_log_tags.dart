@@ -133,6 +133,7 @@ abstract final class AppLogTags {
   static const String flashcardsUseCase = 'FlashcardsUseCase';
 
   // ──────────────────────── Analytics ────────────────────────────
+  static const String analytics = 'Analytics';
   static const String analyticsCubit = 'AnalyticsCubit';
   static const String analyticsPage = 'AnalyticsPage';
   static const String analyticsRepo = 'AnalyticsRepo';

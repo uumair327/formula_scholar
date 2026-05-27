@@ -306,8 +306,7 @@ service cloud.firestore {
       // ─── Bookmarks — self-only ───────────────────────────────
       match /bookmarks/{document} {
         allow read: if isOwner(userId);
-        allow create: if isOwner(userId) &&
-          hasRequired(request.resource.data, ['type', 'referenceId']);
+        allow create: if isOwner(userId);
         allow update: if isOwner(userId);
         allow delete: if isOwner(userId);
       }

@@ -122,20 +122,23 @@ class DashboardState extends Equatable {
   }
 
   @override
+  bool get stringify => true;
+
+  @override
   List<Object?> get props => [
-    status,
-    progress,
-    subjects,
-    recentStudies,
-    vaultItems,
-    banners,
-    announcements,
-    weakAreas,
-    errorMessage,
-    selectedBoardName,
-    selectedGradeName,
-    currentBannerIndex,
-    currentAnnouncementIndex,
-    dismissedAnnouncementIds,
-  ];
+        status,
+        progress,
+        subjects,
+        recentStudies,
+        vaultItems,
+        banners,
+        announcements,
+        weakAreas,
+        errorMessage,
+        selectedBoardName,
+        selectedGradeName,
+        currentBannerIndex,
+        currentAnnouncementIndex,
+        dismissedAnnouncementIds,
+      ];
 }

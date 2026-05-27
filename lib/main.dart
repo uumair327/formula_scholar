@@ -18,6 +18,7 @@ import 'features/dashboard/dashboard.dart';
 import 'features/profile/profile.dart';
 import 'firebase_options.dart';
 import 'shared/shared.dart';
+import 'core/analytics/analytics_service.dart';
 
 const String _googleSignInServerClientId = String.fromEnvironment(
   'GOOGLE_SIGN_IN_SERVER_CLIENT_ID',
@@ -89,6 +90,14 @@ void main() {
 
       // Catch Flutter framework errors (rendering, layout, etc.).
       FlutterError.onError = (FlutterErrorDetails details) {
+        if (!kIsWeb) {
+          getIt<AnalyticsService>().recordError(
+            details.exception,
+            details.stack,
+            fatal: true,
+            reason: 'Flutter framework error',
+          );
+        }
         AppLogger.error(
           'FlutterError: ${details.exceptionAsString()}',
           tag: AppLogTags.main,
@@ -97,11 +106,32 @@ void main() {
         );
       };
 
+      if (!kIsWeb) {
+        // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+        PlatformDispatcher.instance.onError = (error, stack) {
+          getIt<AnalyticsService>().recordError(
+            error,
+            stack,
+            fatal: true,
+            reason: 'Platform dispatcher error',
+          );
+          return true;
+        };
+      }
+
       runApp(const FormulaScholarApp());
       AppLogger.info('App started successfully', tag: AppLogTags.main);
     },
     // Catch asynchronous errors that escape the Flutter framework.
     (Object error, StackTrace stackTrace) {
+      if (!kIsWeb) {
+        getIt<AnalyticsService>().recordError(
+          error,
+          stackTrace,
+          fatal: true,
+          reason: 'Uncaught zone error',
+        );
+      }
       AppLogger.fatal(
         'Uncaught zone error',
         tag: AppLogTags.main,

@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:google_sign_in/google_sign_in.dart' as gsi;
 import 'package:injectable/injectable.dart';
-
 /// Injectable module providing external service instances.
 ///
 /// External dependencies (e.g. Firebase SDK singletons, platform plugins)
@@ -29,4 +30,12 @@ abstract class FirebaseModule {
   /// Provides the [Connectivity] plugin instance for network detection.
   @lazySingleton
   Connectivity get connectivity => Connectivity();
+
+  /// Provides the [FirebaseAnalytics] instance.
+  @lazySingleton
+  FirebaseAnalytics get analytics => FirebaseAnalytics.instance;
+
+  /// Provides the [FirebaseCrashlytics] instance.
+  @lazySingleton
+  FirebaseCrashlytics get crashlytics => FirebaseCrashlytics.instance;
 }

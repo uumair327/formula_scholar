@@ -58,6 +58,7 @@ class _FakePracticeRepository implements PracticeRepositoryPort {
     required String boardId,
     required String gradeId,
     String? subjectId,
+    String? categoryId,
   }) async {
     return const Success<List<QuizQuestion>>(<QuizQuestion>[]);
   }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 import '../constants/constants.dart';
 import '../di/injection.dart';
@@ -100,7 +101,10 @@ abstract final class AppRouter {
     navigatorKey: _rootNavigatorKey,
     initialLocation: AppRoutes.dashboardPath,
     debugLogDiagnostics: kDebugMode,
-    observers: [AppRouterObserver()],
+    observers: [
+      AppRouterObserver(),
+      FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
+    ],
     refreshListenable: _authRefreshListenable,
 
     // ───────────── Error / Not-Found ─────────────

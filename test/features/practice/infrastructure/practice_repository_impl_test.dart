@@ -44,6 +44,7 @@ class _FakePracticeDataSource implements PracticeDataSourcePort {
     required String boardId,
     required String gradeId,
     String? subjectId,
+    String? categoryId,
   }) async {
     return const <QuizQuestion>[];
   }
@@ -85,6 +86,7 @@ class _FakePracticeCache implements PracticeCachePort {
     String boardId,
     String gradeId,
     String? subjectId,
+    String? categoryId,
     List<QuizQuestion> questions,
   ) async {}
 
@@ -93,6 +95,7 @@ class _FakePracticeCache implements PracticeCachePort {
     String boardId,
     String gradeId,
     String? subjectId,
+    String? categoryId,
   ) async {
     return const <QuizQuestion>[];
   }
