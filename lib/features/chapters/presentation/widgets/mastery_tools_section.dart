@@ -12,6 +12,7 @@ import '../../../practice/practice.dart';
 import '../../../profile/profile.dart';
 import '../../domain/domain.dart';
 import '../cubit/formulas_cubit.dart';
+import '../cubit/mastery_tools_cubit.dart';
 import 'mastery_tool_grid_tile.dart';
 
 class MasteryToolsSection extends StatelessWidget {
@@ -118,67 +119,72 @@ class MasteryToolsSection extends StatelessWidget {
     String message,
     String? curriculumKey,
   ) async {
-    unawaited(showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext dialogContext) {
-        return PopScope(
-          canPop: false,
-          child: Center(
-            child: AppCard(
-              padding: const EdgeInsets.all(AppDimensions.paddingXL),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const CircularProgressIndicator(),
-                  const SizedBox(height: AppDimensions.paddingLG),
-                  Text(
-                    message,
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      fontWeight: FontWeight.bold,
+    unawaited(
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext dialogContext) {
+          return PopScope(
+            canPop: false,
+            child: Center(
+              child: AppCard(
+                padding: const EdgeInsets.all(AppDimensions.paddingXL),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const CircularProgressIndicator(),
+                    const SizedBox(height: AppDimensions.paddingLG),
+                    Text(
+                      message,
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        );
-      },
-    ));
+          );
+        },
+      ),
+    );
 
     try {
-      final getFormulas = getIt<GetFormulasUseCase>();
-
-      final List<Future<Result<List<Formula>>>> futures = chapters.map((ch) {
-        return getFormulas(subjectId, ch.id, curriculumKey: curriculumKey);
-      }).toList();
-
-      final results = await Future.wait(futures);
-      final List<Formula> allFormulas = [];
-      for (final res in results) {
-        if (res is Success<List<Formula>>) {
-          allFormulas.addAll(res.data);
-        }
-      }
-
+      final cubit = context.read<MasteryToolsCubit>();
+      final allFormulas = await cubit.prepareFormulas(
+        subjectId,
+        chapters,
+        curriculumKey,
+      );
       if (context.mounted) {
         Navigator.of(context, rootNavigator: true).pop();
       }
       return allFormulas;
-    } catch (e) {
+    } catch (e, st) {
       if (context.mounted) {
         Navigator.of(context, rootNavigator: true).pop();
       }
-      AppLogger.error('Failed to prepare subject formulas', error: e);
+      AppLogger.error(
+        'Failed to prepare subject formulas',
+        error: e,
+        stackTrace: st,
+      );
       return null;
     }
   }
 
   Future<void> _handleCheatSheetTap(BuildContext context) async {
-    final curriculumKey =
-        context.read<CurriculumCubit>().state.curriculum?.curriculumKey;
+    final curriculumKey = context
+        .read<CurriculumCubit>()
+        .state
+        .curriculum
+        ?.curriculumKey;
 
-    final formulas = await _prepareFormulas(context, 'Syncing formulas...', curriculumKey);
+    final formulas = await _prepareFormulas(
+      context,
+      'Syncing formulas...',
+      curriculumKey,
+    );
     if (!context.mounted) return;
 
     if (formulas == null || formulas.isEmpty) {
@@ -186,22 +192,29 @@ class MasteryToolsSection extends StatelessWidget {
       return;
     }
 
-    final cubit = getIt<FormulasCubit>();
-    cubit.loadDirectFormulas(
+    final formulasCubit = getIt<FormulasCubit>();
+    formulasCubit.loadDirectFormulas(
       formulas: formulas,
       subjectId: subjectId,
       chapterName: 'Subject Reference',
     );
 
-    await context.pushNamed(AppRoutes.cheatSheetName, extra: cubit);
+    await context.pushNamed(AppRoutes.cheatSheetName, extra: formulasCubit);
   }
 
   Future<void> _handleFlashcardsTap(BuildContext context) async {
-    final curriculumKey =
-        context.read<CurriculumCubit>().state.curriculum?.curriculumKey;
+    final curriculumKey = context
+        .read<CurriculumCubit>()
+        .state
+        .curriculum
+        ?.curriculumKey;
     final userId = context.read<AuthCubit>().state.user?.uid ?? '';
 
-    final formulas = await _prepareFormulas(context, 'Generating flashcards...', curriculumKey);
+    final formulas = await _prepareFormulas(
+      context,
+      'Generating flashcards...',
+      curriculumKey,
+    );
     if (!context.mounted) return;
 
     if (formulas == null || formulas.isEmpty) {
@@ -210,33 +223,39 @@ class MasteryToolsSection extends StatelessWidget {
     }
 
     final cards = formulas
-        .map((f) => Flashcard(
-              id: f.id,
-              title: f.title,
-              latex: f.latex,
-              description: f.description,
-              subjectId: subjectId,
-              subjectName: '',
-              chapterId: '',
-              chapterName: '',
-            ))
+        .map(
+          (f) => Flashcard(
+            id: f.id,
+            title: f.title,
+            latex: f.latex,
+            description: f.description,
+            subjectId: subjectId,
+            subjectName: '',
+            chapterId: '',
+            chapterName: '',
+          ),
+        )
         .toList();
 
-    final cubit = getIt<FlashcardsCubit>();
-    await cubit.startSession(
-      cards: cards,
-      userId: userId,
-    );
+    final flashcardsCubit = getIt<FlashcardsCubit>();
+    await flashcardsCubit.startSession(cards: cards, userId: userId);
 
     if (!context.mounted) return;
-    await context.pushNamed(AppRoutes.flashcardsName, extra: cubit);
+    await context.pushNamed(AppRoutes.flashcardsName, extra: flashcardsCubit);
   }
 
   Future<void> _handleVisualizer3dTap(BuildContext context) async {
-    final curriculumKey =
-        context.read<CurriculumCubit>().state.curriculum?.curriculumKey;
+    final curriculumKey = context
+        .read<CurriculumCubit>()
+        .state
+        .curriculum
+        ?.curriculumKey;
 
-    final formulas = await _prepareFormulas(context, 'Preparing 3D visuals...', curriculumKey);
+    final formulas = await _prepareFormulas(
+      context,
+      'Preparing 3D visuals...',
+      curriculumKey,
+    );
     if (!context.mounted) return;
 
     if (formulas == null || formulas.isEmpty) {
@@ -244,14 +263,14 @@ class MasteryToolsSection extends StatelessWidget {
       return;
     }
 
-    final cubit = getIt<FormulasCubit>();
-    cubit.loadDirectFormulas(
+    final formulasCubit = getIt<FormulasCubit>();
+    formulasCubit.loadDirectFormulas(
       formulas: formulas,
       subjectId: subjectId,
       chapterName: 'Subject Visualizer',
     );
 
-    await context.pushNamed(AppRoutes.visualizer3dName, extra: cubit);
+    await context.pushNamed(AppRoutes.visualizer3dName, extra: formulasCubit);
   }
 
   void _showErrorSnackBar(BuildContext context, String message) {
@@ -270,7 +289,7 @@ class MasteryToolsSection extends StatelessWidget {
       context,
       title: tool.label,
       subtitle: subtitle,
-      email: 'support@formulascholar.app',
+      email: AppStrings.supportEmail,
     );
   }
 

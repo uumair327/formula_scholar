@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
 
+import 'package:formula_scholar/core/config/app_api.dart';
 import '../../core/constants/app_strings.dart';
 import '../../core/error/exceptions.dart';
 import '../../core/utils/app_logger.dart';
@@ -36,8 +37,8 @@ class FirestoreApiClient implements FirestoreClientPort {
   Future<T> execute<T>(
     Future<T> Function() operation, {
     String? tag,
-    Duration timeout = const Duration(seconds: 15),
-    int maxRetries = 2,
+    Duration timeout = AppApiConfig.timeout,
+    int maxRetries = AppApiConfig.maxRetries,
   }) async {
     final uid = _auth.currentUser?.uid ?? 'anonymous';
     final effectiveTag = tag ?? 'Firestore';
@@ -91,8 +92,8 @@ class FirestoreApiClient implements FirestoreClientPort {
   Future<T> runTransaction<T>(
     Future<T> Function(Transaction) handler, {
     String? tag,
-    Duration timeout = const Duration(seconds: 15),
-    int maxRetries = 2,
+    Duration timeout = AppApiConfig.timeout,
+    int maxRetries = AppApiConfig.maxRetries,
   }) async {
     return execute(
       () => _firestore.runTransaction(handler),
@@ -103,10 +104,7 @@ class FirestoreApiClient implements FirestoreClientPort {
   }
 
   @override
-  Stream<T> stream<T>(
-    Stream<T> Function() operation, {
-    String? tag,
-  }) {
+  Stream<T> stream<T>(Stream<T> Function() operation, {String? tag}) {
     final effectiveTag = tag ?? 'Firestore';
     return operation().handleError((Object e, StackTrace st) {
       AppLogger.error(

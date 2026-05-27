@@ -10,6 +10,7 @@ import '../../../../../shared/shared.dart';
 import '../../../../auth/auth.dart';
 import '../../../../profile/domain/domain.dart';
 import '../../cubit/chapters_cubit.dart';
+import '../../cubit/subject_stats_cubit.dart';
 import '../subject_analytics_sheet.dart';
 
 class SubjectChaptersAppBar extends StatelessWidget {
@@ -112,35 +113,27 @@ class _AnalyticsButton extends StatelessWidget {
             builder: (_) => const Center(child: CircularProgressIndicator()),
           ),
         );
-        final statsResult = await getIt<GetProfileStatsUseCase>().call();
-        var currentStreak = 0;
-        if (statsResult is Success<List<ProfileStat>>) {
-          final streakStat = statsResult.data
-              .where((s) => s.id == 'streak')
-              .firstOrNull;
-          currentStreak = int.tryParse(streakStat?.value ?? '0') ?? 0;
-        }
-        if (!context.mounted) return;
-        Navigator.of(context).pop();
-        final chapterState = context.read<ChaptersCubit>().state;
-        var total = 0;
-        var completed = 0;
-        for (var chapter in chapterState.chapters) {
-          total += chapter.totalFormulas;
-          completed += chapter.completedFormulas;
-        }
-        final progress = total > 0 ? ((completed / total) * 100).toInt() : 0;
-        SubjectAnalyticsSheet.show(
-          context,
-          subjectName: subject!.name,
-          progressPercent: progress,
-          completedFormulas: completed,
-          totalFormulas: total,
-          currentStreak: currentStreak,
-          grade:
-              context.read<CurriculumCubit>().state.gradeLabel ??
-              AppStrings.unknownGrade,
+        final cubit = SubjectStatsCubit(
+          getIt<GetProfileStatsUseCase>(),
+          context.read<ChaptersCubit>(),
+          context.read<CurriculumCubit>(),
         );
+        try {
+          final data = await cubit.loadSelected();
+          if (!context.mounted) return;
+          Navigator.of(context).pop();
+          SubjectAnalyticsSheet.show(
+            context,
+            subjectName: subject!.name,
+            progressPercent: data.progressPercent,
+            completedFormulas: data.completedFormulas,
+            totalFormulas: data.totalFormulas,
+            currentStreak: data.currentStreak,
+            grade: data.gradeLabel,
+          );
+        } finally {
+          await cubit.close();
+        }
       },
       icon: AppIconCircle(
         icon: LucideIcons.barChart3,

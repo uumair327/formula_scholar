@@ -116,8 +116,6 @@ class ProfilePage extends StatelessWidget {
     String displayName,
   ) {
     final colorScheme = Theme.of(context).colorScheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final avatarUrl = state.profile?.avatarUrl ?? AppAssets.profileAvatarUrl;
 
     return SliverGlassAppBar(
       titleWidget: Text(
@@ -167,6 +165,9 @@ class ProfilePage extends StatelessWidget {
         return;
       case 'notifications':
         context.push(AppRoutes.notificationsPath);
+        return;
+      case 'language_localization':
+        context.push(AppRoutes.languageLocalizationPath);
         return;
       case 'help':
         context.push(AppRoutes.helpSupportPath);

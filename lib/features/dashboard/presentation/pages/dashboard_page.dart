@@ -6,6 +6,7 @@ import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
 import '../cubit/dashboard_cubit.dart';
 import '../cubit/dashboard_state.dart';
+import '../cubit/daily_challenges_cubit.dart';
 import '../widgets/widgets.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -163,24 +164,27 @@ class DashboardPage extends StatelessWidget {
                             ),
                             EntranceWrapper(
                               delay: const Duration(milliseconds: 100),
-                              child: AcademicPathSection(
-                                subjects: state.subjects,
-                                onSubjectTap: (subject) =>
-                                    onSubjectTap(context, subject),
-                                onShowAnalytics: (subject) =>
-                                    showSubjectAnalytics(
+                              child: BlocProvider(
+                                create: (_) => DailyChallengesCubit(),
+                                child: AcademicPathSection(
+                                  subjects: state.subjects,
+                                  onSubjectTap: (subject) =>
+                                      onSubjectTap(context, subject),
+                                  onShowAnalytics: (subject) =>
+                                      showSubjectAnalytics(
+                                        context,
+                                        state,
+                                        subject,
+                                      ),
+                                  onViewAll: () {
+                                    context
+                                        .read<SubjectSelectionCubit>()
+                                        .clearSelection();
+                                    StatefulNavigationShell.of(
                                       context,
-                                      state,
-                                      subject,
-                                    ),
-                                onViewAll: () {
-                                  context
-                                      .read<SubjectSelectionCubit>()
-                                      .clearSelection();
-                                  StatefulNavigationShell.of(
-                                    context,
-                                  ).goBranch(1);
-                                },
+                                    ).goBranch(1);
+                                  },
+                                ),
                               ),
                             ),
                             const SizedBox(

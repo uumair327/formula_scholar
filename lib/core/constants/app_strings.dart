@@ -403,6 +403,9 @@ abstract final class AppStrings {
   static const String notifications = 'Notifications';
   static const String appearance = 'Appearance';
   static const String toggleDarkMode = 'Toggle Dark Mode';
+  static const String languageAndLocalization = 'Language & Localization';
+  static const String languageAndLocalizationSubtitle =
+      'Control app labels and backend content language independently';
   static const String helpAndSupport = 'Help & Support';
   static const String logout = 'Logout';
   static const String editProfileTitle = 'Edit Profile';
@@ -549,6 +552,39 @@ abstract final class AppStrings {
   static const String notificationsEnabled = 'Notifications Active';
   static const String notificationsEnabledDesc =
       'You\'re all set to receive important updates.';
+
+  // ──────────────────────── Language / Localization ─────────
+  static const String labelsLocalizationTitle = 'App labels & navigation';
+  static const String labelsLocalizationSubtitle =
+      'Choose the language used by app labels, navigation, and system text.';
+  static const String enableLabelsLocalization =
+      'Enable app labels localization';
+  static const String enableLabelsLocalizationDesc =
+      'When off, app labels stay in English for consistent navigation.';
+  static const String useSystemLanguage = 'Use system language';
+  static const String currentSystemLanguage = 'Current system language';
+  static const String appLabelLanguage = 'App label language';
+
+  static const String contentLocalizationTitle = 'Backend content language';
+  static const String contentLocalizationSubtitle =
+      'Choose localized content returned by dashboard-managed backend data.';
+  static const String enableContentLocalization =
+      'Enable backend content localization';
+  static const String enableContentLocalizationDesc =
+      'When off, backend content always falls back to English (India).';
+  static const String contentLanguage = 'Content language';
+  static const String contentLocalizationFallbackInfo =
+      'If a key is unavailable in the selected content language, the app falls back to English content automatically.';
+  static const String localizationEffectiveSummary =
+      'Effective language summary';
+  static const String appLabels = 'App labels';
+  static const String backendContent = 'Backend content';
+
+  static const String languageEnglish = 'English';
+  static const String languageArabic = 'Arabic';
+  static const String languageUrdu = 'Urdu';
+  static const String languageMarathi = 'Marathi';
+  static const String languageEnglishIndia = 'English (India)';
 
   // ──────────────────────── Help & Support ───────────────────
   static const String quickActions = 'Quick Actions';
@@ -707,6 +743,8 @@ abstract final class AppStrings {
       'If you have questions about this Privacy Policy or your data, please '
       'contact us through the Help & Support section in the app, or email us '
       'at support@formulascholar.app.';
+
+  static const String supportEmail = 'support@formulascholar.app';
 
   // Terms of Service sections
   static const String legalAcceptance = 'Acceptance of Terms';

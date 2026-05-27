@@ -2,10 +2,12 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
 import '../../infrastructure/daily_challenges.dart';
+import '../cubit/daily_challenges_cubit.dart';
 import 'daily_challenge_dialog.dart';
 
 class QuizCard extends StatelessWidget {
@@ -16,10 +18,14 @@ class QuizCard extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return AppCard(
-      color: colorScheme.primary.withValues(alpha: AppDimensions.opacityOverlay),
+      color: colorScheme.primary.withValues(
+        alpha: AppDimensions.opacityOverlay,
+      ),
       padding: const EdgeInsets.all(AppDimensions.paddingXXL),
       border: Border.all(
-        color: colorScheme.primary.withValues(alpha: AppDimensions.opacityFaint),
+        color: colorScheme.primary.withValues(
+          alpha: AppDimensions.opacityFaint,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,30 +79,42 @@ class QuizCard extends StatelessWidget {
             child: Semantics(
               label: AppStrings.startQuiz,
               button: true,
-              child: ElevatedButton(
-                onPressed: () {
-                  final challenge = DailyChallenges.random();
-                  DailyChallengeDialog.show(
-                    context: context,
-                    formulaTitle: challenge.formulaTitle,
-                    formulaLatex: challenge.formulaLatex,
-                    question: challenge.question,
-                    options: challenge.options,
-                    correctIndex: challenge.correctIndex,
+              child: BlocBuilder<DailyChallengesCubit, DailyChallengesState>(
+                builder: (context, state) {
+                  final challenge = state.selected;
+                  return ElevatedButton(
+                    onPressed: challenge == null
+                        ? null
+                        : () {
+                            DailyChallengeDialog.show(
+                              context: context,
+                              formulaTitle: challenge.formulaTitle,
+                              formulaLatex: challenge.formulaLatex,
+                              question: challenge.question,
+                              options: challenge.options,
+                              correctIndex: challenge.correctIndex,
+                            );
+                          },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: colorScheme.primary,
+                      foregroundColor: colorScheme.onPrimary,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppDimensions.progressBarMD,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          AppDimensions.radiusXL,
+                        ),
+                      ),
+                      textStyle: AppTextStyles.labelLarge,
+                    ),
+                    child: Text(
+                      challenge == null
+                          ? AppStrings.startNow
+                          : AppStrings.startNow,
+                    ),
                   );
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colorScheme.primary,
-                  foregroundColor: colorScheme.onPrimary,
-                  padding: const EdgeInsets.symmetric(
-                    vertical: AppDimensions.progressBarMD,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-                  ),
-                  textStyle: AppTextStyles.labelLarge,
-                ),
-                child: const Text(AppStrings.startNow),
               ),
             ),
           ),

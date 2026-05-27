@@ -35,6 +35,16 @@ List<GoRoute> profileSubRoutes() {
       },
     ),
     GoRoute(
+      path: AppRoutes.languageLocalizationPath,
+      name: AppRoutes.languageLocalizationName,
+      pageBuilder: (context, state) {
+        return AppPageTransitions.fadeTransition(
+          state: state,
+          child: const LanguageLocalizationPage(),
+        );
+      },
+    ),
+    GoRoute(
       path: AppRoutes.helpSupportPath,
       name: AppRoutes.helpSupportName,
       pageBuilder: (context, state) {
@@ -46,4 +56,3 @@ List<GoRoute> profileSubRoutes() {
     ),
   ];
 }
-

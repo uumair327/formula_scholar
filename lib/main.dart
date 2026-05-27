@@ -17,6 +17,7 @@ import 'features/auth/auth.dart';
 import 'features/dashboard/dashboard.dart';
 import 'features/profile/profile.dart';
 import 'firebase_options.dart';
+import 'l10n/app_localizations.dart';
 import 'shared/shared.dart';
 import 'core/analytics/analytics_service.dart';
 
@@ -55,7 +56,12 @@ void main() {
           error: e,
           stackTrace: st,
         );
-        runApp(const _FirebaseInitError(message: 'Failed to connect to backend. Please check your network and reload.'));
+        runApp(
+          const _FirebaseInitError(
+            message:
+                'Failed to connect to backend. Please check your network and reload.',
+          ),
+        );
         return;
       }
 
@@ -173,7 +179,10 @@ class _FormulaScholarAppState extends State<FormulaScholarApp>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      AppLogger.info('App resumed from background - refreshing data', tag: AppLogTags.main);
+      AppLogger.info(
+        'App resumed from background - refreshing data',
+        tag: AppLogTags.main,
+      );
       // Refresh dashboard data
       try {
         getIt<DashboardCubit>().loadDashboard();
@@ -195,36 +204,41 @@ class _FormulaScholarAppState extends State<FormulaScholarApp>
         BlocProvider(create: (_) => getIt<SubjectSelectionCubit>()),
         BlocProvider(create: (_) => getIt<ThemeCubit>()),
         BlocProvider(create: (_) => getIt<CurriculumCubit>()),
+        BlocProvider(create: (_) => LocalizationCubit()),
       ],
       child: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, themeState) {
-          return MaterialApp.router(
-            title: AppStrings.appName,
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: themeState.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-            locale: _resolveLocale(),
-            localizationsDelegates: const [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: AppLocales.supportedLocales,
-            routerConfig: AppRouter.router,
+          return BlocBuilder<LocalizationCubit, LocalizationState>(
+            builder: (context, localizationState) {
+              final deviceLocale = PlatformDispatcher.instance.locale;
+              final appLocale = localizationState.effectiveAppLocale(
+                deviceLocale,
+              );
+
+              return MaterialApp.router(
+                title: AppStrings.appName,
+                debugShowCheckedModeBanner: false,
+                theme: AppTheme.lightTheme,
+                darkTheme: AppTheme.darkTheme,
+                themeMode: themeState.isDarkMode
+                    ? ThemeMode.dark
+                    : ThemeMode.light,
+                locale: appLocale,
+                localizationsDelegates: const [
+                  AppLocalizations.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                supportedLocales: AppLocales.supportedLocales,
+                routerConfig: AppRouter.router,
+              );
+            },
           );
         },
       ),
     );
   }
-}
-
-/// Resolves the app locale based on the system locale.
-///
-/// Defaults to English if the system locale is not supported.
-Locale _resolveLocale() {
-  final deviceLocale = PlatformDispatcher.instance.locale;
-  return AppLocales.resolve(deviceLocale.languageCode);
 }
 
 class _FirebaseInitError extends StatelessWidget {
@@ -236,6 +250,7 @@ class _FirebaseInitError extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       localizationsDelegates: const [
+        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
@@ -245,10 +260,7 @@ class _FirebaseInitError extends StatelessWidget {
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
-            child: Text(
-              message,
-              textAlign: TextAlign.center,
-            ),
+            child: Text(message, textAlign: TextAlign.center),
           ),
         ),
       ),

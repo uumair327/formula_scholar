@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:formula_scholar/core/config/app_api.dart';
 
 abstract interface class FirestoreClientPort {
   DocumentReference<Map<String, dynamic>> doc(String path);
@@ -9,19 +10,16 @@ abstract interface class FirestoreClientPort {
   Future<T> execute<T>(
     Future<T> Function() operation, {
     String? tag,
-    Duration timeout = const Duration(seconds: 15),
-    int maxRetries = 2,
+    Duration timeout = AppApiConfig.timeout,
+    int maxRetries = AppApiConfig.maxRetries,
   });
 
   Future<T> runTransaction<T>(
     Future<T> Function(Transaction) handler, {
     String? tag,
-    Duration timeout = const Duration(seconds: 15),
-    int maxRetries = 2,
+    Duration timeout = AppApiConfig.timeout,
+    int maxRetries = AppApiConfig.maxRetries,
   });
 
-  Stream<T> stream<T>(
-    Stream<T> Function() operation, {
-    String? tag,
-  });
+  Stream<T> stream<T>(Stream<T> Function() operation, {String? tag});
 }

@@ -7,6 +7,7 @@ export 'cubit/notifications_cubit.dart';
 export 'cubit/notifications_state.dart';
 export 'pages/account_information_page.dart';
 export 'pages/help_support_page.dart';
+export 'pages/language_localization_page.dart';
 export 'pages/notifications_page.dart';
 export 'pages/profile_page.dart';
 export 'widgets/edit_profile_dialog.dart';

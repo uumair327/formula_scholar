@@ -21,6 +21,7 @@ abstract final class AppLogTags {
   static const String curriculumUseCase = 'CurriculumUseCase';
   static const String activityRefreshCubit = 'ActivityRefreshCubit';
   static const String themePreferenceCubit = 'ThemePreferenceCubit';
+  static const String localizationCubit = 'LocalizationCubit';
   static const String themePreferenceRepo = 'ThemePreferenceRepo';
   static const String themePreferenceDataSource = 'ThemePreferenceDataSource';
   static const String themePreferenceUseCase = 'ThemePreferenceUseCase';
@@ -79,6 +80,7 @@ abstract final class AppLogTags {
   static const String profileCubit = 'ProfileCubit';
   static const String notificationsCubit = 'NotificationsCubit';
   static const String settingsListWidget = 'SettingsListWidget';
+  static const String localizationPage = 'LocalizationPage';
   static const String profileHeroWidget = 'ProfileHeroWidget';
   static const String progressStatsWidget = 'ProgressStatsWidget';
   static const String encouragementCardWidget = 'EncouragementCard';

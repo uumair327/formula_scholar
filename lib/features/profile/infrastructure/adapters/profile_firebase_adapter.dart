@@ -51,13 +51,37 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
   ) {
     final defaults = _notificationDefaults();
     return NotificationPreferences(
-      studyReminders: _readBool(map, 'studyReminders', fallback: defaults.studyReminders),
-      streakAlerts: _readBool(map, 'streakAlerts', fallback: defaults.streakAlerts),
+      studyReminders: _readBool(
+        map,
+        'studyReminders',
+        fallback: defaults.studyReminders,
+      ),
+      streakAlerts: _readBool(
+        map,
+        'streakAlerts',
+        fallback: defaults.streakAlerts,
+      ),
       newContent: _readBool(map, 'newContent', fallback: defaults.newContent),
-      achievements: _readBool(map, 'achievements', fallback: defaults.achievements),
-      weeklyReport: _readBool(map, 'weeklyReport', fallback: defaults.weeklyReport),
-      pushNotifications: _readBool(map, 'pushNotifications', fallback: defaults.pushNotifications),
-      emailNotifications: _readBool(map, 'emailNotifications', fallback: defaults.emailNotifications),
+      achievements: _readBool(
+        map,
+        'achievements',
+        fallback: defaults.achievements,
+      ),
+      weeklyReport: _readBool(
+        map,
+        'weeklyReport',
+        fallback: defaults.weeklyReport,
+      ),
+      pushNotifications: _readBool(
+        map,
+        'pushNotifications',
+        fallback: defaults.pushNotifications,
+      ),
+      emailNotifications: _readBool(
+        map,
+        'emailNotifications',
+        fallback: defaults.emailNotifications,
+      ),
     );
   }
 
@@ -205,9 +229,7 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
     }
 
     final statsSnapshot = await _api.execute(
-      () => _api
-          .doc(AppFirestoreCollections.userStatsCurrent(uid))
-          .get(),
+      () => _api.doc(AppFirestoreCollections.userStatsCurrent(uid)).get(),
       tag: AppLogTags.profileDataSource,
     );
 
@@ -251,23 +273,81 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
 
   List<ProfileStat> _zeroStats() {
     return const [
-      ProfileStat(id: 'formulas', label: AppStrings.formulasMastered, value: '0', iconName: 'functions'),
-      ProfileStat(id: 'streak', label: AppStrings.daysStreak, value: '0', iconName: 'fire'),
-      ProfileStat(id: 'points', label: AppStrings.totalPoints, value: '0', iconName: 'stars'),
+      ProfileStat(
+        id: 'formulas',
+        label: AppStrings.formulasMastered,
+        value: '0',
+        iconName: 'functions',
+      ),
+      ProfileStat(
+        id: 'streak',
+        label: AppStrings.daysStreak,
+        value: '0',
+        iconName: 'fire',
+      ),
+      ProfileStat(
+        id: 'points',
+        label: AppStrings.totalPoints,
+        value: '0',
+        iconName: 'stars',
+      ),
     ];
   }
 
   @override
   Future<List<SettingsItem>> getSettingsItems() async {
     return const [
-      SettingsItem(id: 'account', label: AppStrings.accountInformation, iconName: 'person_outline'),
-      SettingsItem(id: 'bookmarks', label: AppStrings.myBookmarks, iconName: 'bookmark_outline'),
-      SettingsItem(id: 'study_planner', label: AppStrings.studyPlanner, subtitle: AppStrings.studyPlannerSubtitle, iconName: 'calendar_today'),
-      SettingsItem(id: 'achievements', label: AppStrings.achievementsTitle, subtitle: AppStrings.achievementsSubtitle, iconName: 'emoji_events'),
-      SettingsItem(id: 'notifications', label: AppStrings.notifications, iconName: 'notifications_outlined'),
-      SettingsItem(id: 'appearance', label: AppStrings.appearance, subtitle: AppStrings.toggleDarkMode, iconName: 'palette_outlined', isToggle: true),
-      SettingsItem(id: 'help', label: AppStrings.helpAndSupport, iconName: 'help_outline'),
-      SettingsItem(id: 'logout', label: AppStrings.logout, iconName: 'logout', isDestructive: true),
+      SettingsItem(
+        id: 'account',
+        label: AppStrings.accountInformation,
+        iconName: 'person_outline',
+      ),
+      SettingsItem(
+        id: 'bookmarks',
+        label: AppStrings.myBookmarks,
+        iconName: 'bookmark_outline',
+      ),
+      SettingsItem(
+        id: 'study_planner',
+        label: AppStrings.studyPlanner,
+        subtitle: AppStrings.studyPlannerSubtitle,
+        iconName: 'calendar_today',
+      ),
+      SettingsItem(
+        id: 'achievements',
+        label: AppStrings.achievementsTitle,
+        subtitle: AppStrings.achievementsSubtitle,
+        iconName: 'emoji_events',
+      ),
+      SettingsItem(
+        id: 'notifications',
+        label: AppStrings.notifications,
+        iconName: 'notifications_outlined',
+      ),
+      SettingsItem(
+        id: 'language_localization',
+        label: AppStrings.languageAndLocalization,
+        subtitle: AppStrings.languageAndLocalizationSubtitle,
+        iconName: 'language',
+      ),
+      SettingsItem(
+        id: 'appearance',
+        label: AppStrings.appearance,
+        subtitle: AppStrings.toggleDarkMode,
+        iconName: 'palette_outlined',
+        isToggle: true,
+      ),
+      SettingsItem(
+        id: 'help',
+        label: AppStrings.helpAndSupport,
+        iconName: 'help_outline',
+      ),
+      SettingsItem(
+        id: 'logout',
+        label: AppStrings.logout,
+        iconName: 'logout',
+        isDestructive: true,
+      ),
     ];
   }
 

@@ -28,6 +28,7 @@ class SettingsListWidget extends StatelessWidget {
       'person_outline' => Icons.person_outline,
       'bookmark_outline' => Icons.bookmark_outline,
       'notifications_outlined' => Icons.notifications_outlined,
+      'language' => Icons.language,
       'palette_outlined' => Icons.palette_outlined,
       'help_outline' => Icons.help_outline,
       'logout' => Icons.logout,

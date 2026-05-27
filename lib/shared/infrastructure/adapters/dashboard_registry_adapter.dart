@@ -54,9 +54,17 @@ class DashboardRegistryAdapter {
     return registry.findNode(key);
   }
 
-  Future<ContentItem?> getContentItem(String key) async {
+  Future<ContentItem?> getContentItem(
+    String key, {
+    String preferredLocale = AppLocales.defaultContentLocaleCode,
+    List<String> fallbackLocales = const [AppLocales.defaultContentLocaleCode],
+  }) async {
     final registry = await fetchContentRegistry();
-    return registry.findItem(key);
+    return registry.findItemForLocale(
+      key,
+      preferredLocale: preferredLocale,
+      fallbackLocales: fallbackLocales,
+    );
   }
 
   Future<bool> isCurriculumNodeWritable(String nodeKey) async {
@@ -65,38 +73,42 @@ class DashboardRegistryAdapter {
   }
 
   Stream<CurriculumRegistry> streamCurriculumRegistry() {
-    return _api
-        .stream(() => _api
-            .collection(AppFirestoreCollections.dashboardCurriculumRegistry)
-            .doc(AppFirestoreCollections.current)
-            .snapshots()
-            .map((doc) {
-              if (!doc.exists) {
-                return const CurriculumRegistry.empty();
-              }
-              return CurriculumRegistry.fromMap(doc.data() as Map<String, dynamic>);
-            })
-            .handleError((_) {
+    return _api.stream(
+      () => _api
+          .collection(AppFirestoreCollections.dashboardCurriculumRegistry)
+          .doc(AppFirestoreCollections.current)
+          .snapshots()
+          .map((doc) {
+            if (!doc.exists) {
               return const CurriculumRegistry.empty();
-            }),
-            tag: 'DashboardRegistry');
+            }
+            return CurriculumRegistry.fromMap(
+              doc.data() as Map<String, dynamic>,
+            );
+          })
+          .handleError((_) {
+            return const CurriculumRegistry.empty();
+          }),
+      tag: 'DashboardRegistry',
+    );
   }
 
   Stream<ContentRegistry> streamContentRegistry() {
-    return _api
-        .stream(() => _api
-            .collection(AppFirestoreCollections.dashboardContentRegistry)
-            .doc(AppFirestoreCollections.current)
-            .snapshots()
-            .map((doc) {
-              if (!doc.exists) {
-                return const ContentRegistry.empty();
-              }
-              return ContentRegistry.fromMap(doc.data() as Map<String, dynamic>);
-            })
-            .handleError((_) {
+    return _api.stream(
+      () => _api
+          .collection(AppFirestoreCollections.dashboardContentRegistry)
+          .doc(AppFirestoreCollections.current)
+          .snapshots()
+          .map((doc) {
+            if (!doc.exists) {
               return const ContentRegistry.empty();
-            }),
-            tag: 'DashboardRegistry');
+            }
+            return ContentRegistry.fromMap(doc.data() as Map<String, dynamic>);
+          })
+          .handleError((_) {
+            return const ContentRegistry.empty();
+          }),
+      tag: 'DashboardRegistry',
+    );
   }
 }

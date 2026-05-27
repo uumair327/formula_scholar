@@ -12,7 +12,6 @@ import '../../domain/domain.dart';
 import '../adapters/dashboard_registry_adapter.dart';
 
 class DashboardRegistryRepository {
-
   DashboardRegistryRepository(this._adapter);
 
   factory DashboardRegistryRepository.create(FirestoreClientPort api) {
@@ -48,8 +47,16 @@ class DashboardRegistryRepository {
   ///
   /// Returns null if item doesn't exist or is not published.
   /// Useful for conditional UI rendering.
-  Future<ContentItem?> getPublishedContentItem(String key) async {
-    final item = await _adapter.getContentItem(key);
+  Future<ContentItem?> getPublishedContentItem(
+    String key, {
+    String preferredLocale = AppLocales.defaultContentLocaleCode,
+    List<String> fallbackLocales = const [AppLocales.defaultContentLocaleCode],
+  }) async {
+    final item = await _adapter.getContentItem(
+      key,
+      preferredLocale: preferredLocale,
+      fallbackLocales: fallbackLocales,
+    );
     return item?.isPublished ?? false ? item : null;
   }
 

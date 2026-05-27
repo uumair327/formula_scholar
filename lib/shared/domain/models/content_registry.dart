@@ -4,8 +4,9 @@
 /// Allows the dashboard to control app content without app redeployment.
 library;
 
-class ContentRegistry {
+import '../../../core/core.dart';
 
+class ContentRegistry {
   const ContentRegistry({
     required this.generatedAt,
     required this.datasetVersion,
@@ -52,6 +53,64 @@ class ContentRegistry {
     }
   }
 
+  ContentItem? findItemForLocale(
+    String key, {
+    required String preferredLocale,
+    List<String> fallbackLocales = const [AppLocales.defaultContentLocaleCode],
+  }) {
+    final keyMatches = items.where((item) => item.key == key).toList();
+    if (keyMatches.isEmpty) {
+      return null;
+    }
+
+    final preferred = _normalizeLocaleCode(preferredLocale);
+    final allFallbacks = {
+      preferred,
+      ...fallbackLocales.map(_normalizeLocaleCode),
+    }.toList(growable: false);
+
+    for (final locale in allFallbacks) {
+      final exact = _findByExactLocale(keyMatches, locale);
+      if (exact != null) {
+        return exact;
+      }
+    }
+
+    // Language-level fallback (for example ur-IN -> ur).
+    final preferredLanguage = _extractLanguageCode(preferred);
+    if (preferredLanguage.isNotEmpty) {
+      for (final item in keyMatches) {
+        if (_extractLanguageCode(item.locale) == preferredLanguage) {
+          return item;
+        }
+      }
+    }
+
+    return keyMatches.first;
+  }
+
+  ContentItem? _findByExactLocale(List<ContentItem> list, String targetLocale) {
+    for (final item in list) {
+      if (_normalizeLocaleCode(item.locale) == targetLocale) {
+        return item;
+      }
+    }
+    return null;
+  }
+
+  String _normalizeLocaleCode(String raw) {
+    return raw.trim().replaceAll('_', '-').toLowerCase();
+  }
+
+  String _extractLanguageCode(String localeCode) {
+    final normalized = _normalizeLocaleCode(localeCode);
+    final split = normalized.split('-');
+    if (split.isEmpty) {
+      return '';
+    }
+    return split.first;
+  }
+
   /// Get only published items (production-ready content)
   List<ContentItem> get publishedItems =>
       items.where((item) => item.isPublished).toList();
@@ -67,7 +126,6 @@ class ContentRegistry {
 
 /// A single content item (e.g., 'home.hero.title', 'subscription.cta.banner')
 class ContentItem {
-
   const ContentItem({
     required this.key,
     required this.locale,

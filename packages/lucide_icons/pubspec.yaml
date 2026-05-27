@@ -1,0 +1,14 @@
+name: lucide_icons
+description: Local compatibility shim for Lucide icon constants used by the app.
+version: 0.257.0
+publish_to: "none"
+
+environment:
+  sdk: ^3.10.7
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

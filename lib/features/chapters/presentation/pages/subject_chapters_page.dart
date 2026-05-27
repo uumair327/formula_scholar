@@ -9,6 +9,7 @@ import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
 import '../cubit/chapters_cubit.dart';
 import '../cubit/chapters_state.dart';
+import '../cubit/mastery_tools_cubit.dart';
 import '../widgets/chapter_search_bar.dart';
 import '../widgets/chapter_sort_controls.dart';
 import '../widgets/mastery_tools_section.dart';
@@ -201,10 +202,13 @@ class SubjectChaptersPage extends StatelessWidget {
                                   const SizedBox(
                                     height: AppDimensions.paddingSection,
                                   ),
-                                  MasteryToolsSection(
-                                    tools: state.masteryTools,
-                                    subjectId: subjectState.subject!.id,
-                                    chapters: state.chapters,
+                                  BlocProvider(
+                                    create: (_) => getIt<MasteryToolsCubit>(),
+                                    child: MasteryToolsSection(
+                                      tools: state.masteryTools,
+                                      subjectId: subjectState.subject!.id,
+                                      chapters: state.chapters,
+                                    ),
                                   ),
                                   const SizedBox(
                                     height: AppDimensions.bottomNavPadding,
@@ -225,9 +229,7 @@ class SubjectChaptersPage extends StatelessWidget {
                         StatefulNavigationShell.of(context).goBranch(2),
                     backgroundColor: Theme.of(context).colorScheme.primary,
                     foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                    child: const Icon(
-                      LucideIcons.play,
-                    ),
+                    child: const Icon(LucideIcons.play),
                   )
                 : null,
           );

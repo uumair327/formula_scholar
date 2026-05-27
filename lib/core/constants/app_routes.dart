@@ -48,7 +48,7 @@ abstract final class AppRoutes {
 
   /// Chapters screen – shows chapters for the selected subject.
   static const String chaptersPath = '/chapters';
-  
+
   /// Sub-route for chapters of a specific subject
   static const String subjectChaptersPath = ':subjectId';
   static const String subjectChaptersName = 'subjectChapters';
@@ -100,6 +100,10 @@ abstract final class AppRoutes {
   /// Notifications settings page.
   static const String notificationsPath = '/profile/notifications';
   static const String notificationsName = 'notifications';
+
+  /// Language and localization preferences page.
+  static const String languageLocalizationPath = '/profile/language';
+  static const String languageLocalizationName = 'languageLocalization';
 
   /// Help & Support page.
   static const String helpSupportPath = '/profile/help';

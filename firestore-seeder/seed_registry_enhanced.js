@@ -361,16 +361,30 @@ async function seedRegistry() {
 
     console.log('Writing Content Registry...');
 
-    const contentItems = [
-        { key: 'home.hero.title', locale: 'en-IN', status: 'Published', lastSyncedAt: generatedAt },
-        { key: 'practice.results.summary', locale: 'en-IN', status: 'Draft', lastSyncedAt: generatedAt },
-        { key: 'formula.editor.hint', locale: 'en-IN', status: 'Published', lastSyncedAt: generatedAt },
-        { key: 'subscription.cta.banner', locale: 'en-IN', status: 'Review', lastSyncedAt: generatedAt },
-        { key: 'curriculum.cbse.10', locale: 'en-IN', status: 'Published', lastSyncedAt: generatedAt },
-        { key: 'curriculum.cbse.11', locale: 'en-IN', status: 'Published', lastSyncedAt: generatedAt },
-        { key: 'curriculum.msbshse.10', locale: 'en-IN', status: 'Published', lastSyncedAt: generatedAt },
-        { key: 'governance.audit.enabled', locale: 'en-IN', status: 'Published', lastSyncedAt: generatedAt }
+    const baseContentItems = [
+        { key: 'home.hero.title', status: 'Published' },
+        { key: 'practice.results.summary', status: 'Draft' },
+        { key: 'formula.editor.hint', status: 'Published' },
+        { key: 'subscription.cta.banner', status: 'Review' },
+        { key: 'curriculum.cbse.10', status: 'Published' },
+        { key: 'curriculum.cbse.11', status: 'Published' },
+        { key: 'curriculum.msbshse.10', status: 'Published' },
+        { key: 'governance.audit.enabled', status: 'Published' }
     ];
+
+    const supportedLocales = ['en-IN', 'ur-IN', 'mr-IN'];
+    const contentItems = [];
+
+    for (const item of baseContentItems) {
+        for (const locale of supportedLocales) {
+            contentItems.push({
+                key: item.key,
+                locale,
+                status: item.status,
+                lastSyncedAt: generatedAt
+            });
+        }
+    }
 
     const contentPayload = {
         generatedAt,
