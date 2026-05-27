@@ -100,10 +100,16 @@ class PracticeCubit extends Cubit<PracticeState>
       ),
     );
 
+    final subject = state.availableSubjects
+        .where((s) => s.id == subjectId)
+        .firstOrNull;
+    final categoryId = subject?.category;
+
     final result = await _getQuestions(
       boardId: boardId,
       gradeId: gradeId,
       subjectId: subjectId,
+      categoryId: categoryId,
     );
 
     switch (result) {
@@ -217,7 +223,6 @@ class PracticeCubit extends Cubit<PracticeState>
       state.copyWith(
         status: PracticeStatus.completed,
         showResult: false,
-        timerStatus: TimerStatus.idle,
       ),
     );
   }
@@ -234,6 +239,8 @@ class PracticeCubit extends Cubit<PracticeState>
   void _startTimer() {
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (state.showResult) return;
+
       if (state.remainingSeconds <= 1) {
         _timer?.cancel();
         onTimerExpired();

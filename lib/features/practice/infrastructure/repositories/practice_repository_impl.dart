@@ -23,6 +23,7 @@ class PracticeRepositoryImpl implements PracticeRepositoryPort {
     required String boardId,
     required String gradeId,
     String? subjectId,
+    String? categoryId,
   }) {
     return safeOperation(
       tag: AppLogTags.practiceRepo,
@@ -32,12 +33,13 @@ class PracticeRepositoryImpl implements PracticeRepositoryPort {
           boardId: boardId,
           gradeId: gradeId,
           subjectId: subjectId,
+          categoryId: categoryId,
         );
-        await _cache.cacheQuestions(boardId, gradeId, subjectId, result);
+        await _cache.cacheQuestions(boardId, gradeId, subjectId, categoryId, result);
         return result;
       },
       fallback: () async {
-        final cached = await _cache.getQuestions(boardId, gradeId, subjectId);
+        final cached = await _cache.getQuestions(boardId, gradeId, subjectId, categoryId);
         return cached.isNotEmpty ? cached : null;
       },
     );

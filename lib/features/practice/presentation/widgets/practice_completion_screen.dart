@@ -44,6 +44,26 @@ class PracticeCompletionScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: AppDimensions.paddingSM),
+                if (state.timerStatus == TimerStatus.expired) ...[
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimensions.paddingMD,
+                      vertical: AppDimensions.paddingXS,
+                    ),
+                    decoration: BoxDecoration(
+                      color: colorScheme.errorContainer,
+                      borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+                    ),
+                    child: Text(
+                      'Time\'s Up!',
+                      style: AppTextStyles.labelMedium.copyWith(
+                        color: colorScheme.onErrorContainer,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppDimensions.paddingMD),
+                ],
                 Text(
                   '$pct% ${AppStrings.scoreLabel}',
                   style: AppTextStyles.headlineMedium.copyWith(

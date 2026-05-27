@@ -18,6 +18,7 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
     required String boardId,
     required String gradeId,
     String? subjectId,
+    String? categoryId,
   }) async {
     AppLogger.trace(
       'getQuestions() fetching from Firestore for board=$boardId, grade=$gradeId, subject=$subjectId',
@@ -29,8 +30,8 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
         .where('boardId', isEqualTo: boardId)
         .where('gradeId', isEqualTo: gradeId);
 
-    if (subjectId != null && subjectId.isNotEmpty) {
-      query = query.where('category', isEqualTo: subjectId);
+    if (categoryId != null && categoryId.isNotEmpty) {
+      query = query.where('category', isEqualTo: categoryId);
     }
 
     var snapshot = await _api.execute(
@@ -43,11 +44,13 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
         'No board/grade-scoped practice questions found; falling back to legacy dataset',
         tag: AppLogTags.practiceDataSource,
       );
+      Query<Map<String, dynamic>> fallbackQuery = _api.collection(AppFirestoreCollections.practiceQuestions);
+      if (categoryId != null && categoryId.isNotEmpty) {
+        fallbackQuery = fallbackQuery.where('category', isEqualTo: categoryId);
+      }
+      
       snapshot = await _api.execute(
-        () => _api
-            .collection(AppFirestoreCollections.practiceQuestions)
-            .limit(20)
-            .get(),
+        () => fallbackQuery.limit(20).get(),
         tag: AppLogTags.practiceDataSource,
       );
     }

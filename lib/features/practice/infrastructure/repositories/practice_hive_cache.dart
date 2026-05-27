@@ -20,6 +20,7 @@ class PracticeHiveCache implements PracticeCachePort {
     String boardId,
     String gradeId,
     String? subjectId,
+    String? categoryId,
     List<QuizQuestion> questions,
   ) async {
     final box = await _box();
@@ -49,6 +50,7 @@ class PracticeHiveCache implements PracticeCachePort {
     String boardId,
     String gradeId,
     String? subjectId,
+    String? categoryId,
   ) async {
     final box = await _box();
     final cached = box.get(_key(boardId, gradeId, subjectId)) as List<dynamic>?;

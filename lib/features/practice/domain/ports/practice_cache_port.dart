@@ -11,6 +11,7 @@ abstract interface class PracticeCachePort {
     String boardId,
     String gradeId,
     String? subjectId,
+    String? categoryId,
     List<QuizQuestion> questions,
   );
 
@@ -19,5 +20,6 @@ abstract interface class PracticeCachePort {
     String boardId,
     String gradeId,
     String? subjectId,
+    String? categoryId,
   );
 }

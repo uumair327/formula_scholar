@@ -8,6 +8,7 @@ abstract interface class PracticeDataSourcePort {
     required String boardId,
     required String gradeId,
     String? subjectId,
+    String? categoryId,
   });
 
   Future<void> recordQuizCompletion({

@@ -16,15 +16,17 @@ class GetQuestionsUseCase {
     required String boardId,
     required String gradeId,
     String? subjectId,
+    String? categoryId,
   }) {
     AppLogger.trace(
-      'GetQuestionsUseCase called (board=$boardId, grade=$gradeId, subject=$subjectId)',
+      'GetQuestionsUseCase called (board=$boardId, grade=$gradeId, subject=$subjectId, category=$categoryId)',
       tag: AppLogTags.practiceUseCase,
     );
     return _repository.getQuestions(
       boardId: boardId,
       gradeId: gradeId,
       subjectId: subjectId,
+      categoryId: categoryId,
     );
   }
 }
