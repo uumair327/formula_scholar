@@ -86,11 +86,18 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
       return data['isActive'] != false;
     })
         .map(
-          (doc) => _docToFormula(
-            doc,
-            bookmarkedIds.contains(doc.id),
-            masteryOverride: masteryMap[doc.id],
-          ),
+          (doc) {
+            // Use the formula's logical ID (data['id'] ?? doc.id) for
+            // bookmark and mastery lookups, because those collections
+            // store documents keyed by this logical ID, NOT by doc.id.
+            final data = doc.data();
+            final formulaId = (data['id'] as String?) ?? doc.id;
+            return _docToFormula(
+              doc,
+              bookmarkedIds.contains(formulaId),
+              masteryOverride: masteryMap[formulaId],
+            );
+          },
         )
         .toList();
   }
