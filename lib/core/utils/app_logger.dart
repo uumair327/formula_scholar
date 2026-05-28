@@ -52,7 +52,9 @@ class AppLogger {
   /// In release mode, only fatal logs are emitted regardless of flags.
   /// In debug/profile, the [FeatureFlag.loggerEnabled] gate applies.
   static bool _shouldLog(Level level) {
-    if (kReleaseMode && level != Level.fatal && level != Level.error) return false;
+    if (kReleaseMode && level != Level.fatal && level != Level.error) {
+      return false;
+    }
     try {
       _ensureInitialized();
       if (_flags != null && _flags!.isDisabled(FeatureFlag.loggerEnabled)) {
