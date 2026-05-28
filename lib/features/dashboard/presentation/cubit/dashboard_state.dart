@@ -22,6 +22,7 @@ class DashboardState extends Equatable {
     this.currentBannerIndex = 0,
     this.currentAnnouncementIndex = 0,
     this.dismissedAnnouncementIds = const [],
+    this.localizedContent = const {},
   });
   final DashboardStatus status;
   final StudyProgress? progress;
@@ -37,8 +38,22 @@ class DashboardState extends Equatable {
   final int currentBannerIndex;
   final int currentAnnouncementIndex;
   final List<String> dismissedAnnouncementIds;
+  final Map<String, String> localizedContent;
+
+  String _localizedValue(String key, String fallback) {
+    final value = localizedContent[key]?.trim();
+    if (value == null || value.isEmpty) {
+      return fallback;
+    }
+    return value;
+  }
 
   String get heroBadge {
+    final localizedBadge = _localizedValue('dashboard.hero.badge', '');
+    if (localizedBadge.isNotEmpty) {
+      return localizedBadge;
+    }
+
     if (selectedBoardName.isEmpty || selectedGradeName.isEmpty) {
       return AppStrings.dashboardCurriculumPending;
     }
@@ -47,6 +62,11 @@ class DashboardState extends Equatable {
   }
 
   String get heroTitle {
+    final localizedTitle = _localizedValue('dashboard.hero.title', '');
+    if (localizedTitle.isNotEmpty) {
+      return localizedTitle;
+    }
+
     final featured = subjects
         .where((s) => s.isFeatured)
         .cast<Subject?>()
@@ -69,6 +89,11 @@ class DashboardState extends Equatable {
 
   String get heroDescription {
     final mastery = progress?.masteryPercentage ?? 0;
+    final template = _localizedValue('dashboard.hero.description', '');
+    if (template.isNotEmpty) {
+      return template.replaceAll('{progress}', mastery.toInt().toString());
+    }
+
     return AppStrings.dashboardHeroDescriptionWithProgress(mastery.toInt());
   }
 
@@ -80,6 +105,48 @@ class DashboardState extends Equatable {
     return AppStrings.dashboardVaultDescWithCounts(
       formulaCount,
       subjects.length,
+    );
+  }
+
+  String get heroResumeLabel {
+    return _localizedValue(
+      'dashboard.hero.resume',
+      AppStrings.dashboardResumeLesson,
+    );
+  }
+
+  String get heroSemanticsLabel {
+    return _localizedValue(
+      'dashboard.hero.resumeSemantic',
+      AppStrings.resumeLearning,
+    );
+  }
+
+  String get quickActionsTitle {
+    return _localizedValue(
+      'dashboard.quickActions.title',
+      AppStrings.exploreTools,
+    );
+  }
+
+  String get studyPlannerLabel {
+    return _localizedValue(
+      'dashboard.quickActions.studyPlanner',
+      AppStrings.studyPlanner,
+    );
+  }
+
+  String get analyticsLabel {
+    return _localizedValue(
+      'dashboard.quickActions.analytics',
+      AppStrings.viewAnalytics,
+    );
+  }
+
+  String get flashcardsLabel {
+    return _localizedValue(
+      'dashboard.quickActions.flashcards',
+      AppStrings.flashcards,
     );
   }
 
@@ -98,6 +165,7 @@ class DashboardState extends Equatable {
     int? currentBannerIndex,
     int? currentAnnouncementIndex,
     List<String>? dismissedAnnouncementIds,
+    Map<String, String>? localizedContent,
   }) {
     return DashboardState(
       status: status ?? this.status,
@@ -118,6 +186,7 @@ class DashboardState extends Equatable {
           currentAnnouncementIndex ?? this.currentAnnouncementIndex,
       dismissedAnnouncementIds:
           dismissedAnnouncementIds ?? this.dismissedAnnouncementIds,
+      localizedContent: localizedContent ?? this.localizedContent,
     );
   }
 
@@ -126,19 +195,20 @@ class DashboardState extends Equatable {
 
   @override
   List<Object?> get props => [
-        status,
-        progress,
-        subjects,
-        recentStudies,
-        vaultItems,
-        banners,
-        announcements,
-        weakAreas,
-        errorMessage,
-        selectedBoardName,
-        selectedGradeName,
-        currentBannerIndex,
-        currentAnnouncementIndex,
-        dismissedAnnouncementIds,
-      ];
+    status,
+    progress,
+    subjects,
+    recentStudies,
+    vaultItems,
+    banners,
+    announcements,
+    weakAreas,
+    errorMessage,
+    selectedBoardName,
+    selectedGradeName,
+    currentBannerIndex,
+    currentAnnouncementIndex,
+    dismissedAnnouncementIds,
+    localizedContent,
+  ];
 }

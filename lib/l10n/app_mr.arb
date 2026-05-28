@@ -1,0 +1,13 @@
+{
+  "@@locale": "mr",
+  "appName": "फॉर्म्यूला स्कॉलर",
+  "dashboardHeroBadge": "CBSE अभ्यासक्रम • इयत्ता 9",
+  "dashboardHeroTitle": "गती आणि\\nबलाच्या नियमांमध्ये पारंगत",
+  "dashboardHeroDescription": "भौतिकशास्त्रामध्ये आपला प्रवास सुरू ठेवा. आपण सध्याच्या प्रकरणाचा {progress}% पूर्ण केला आहे.",
+  "dashboardResumeLesson": "पाठ पुन्हा सुरू करा",
+  "dashboardResumeSemantic": "अभ्यास पुन्हा सुरू करा",
+  "quickActionsTitle": "उपकरणे शोधा",
+  "studyPlanner": "अभ्यास नियोजक",
+  "viewAnalytics": "विश्लेषण पहा",
+  "flashcards": "फ्लॅशकार्ड"
+}

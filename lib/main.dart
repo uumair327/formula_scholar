@@ -83,6 +83,7 @@ void main() {
 
       // Initialize dependency injection (get_it + injectable).
       configureDependencies();
+      registerRuntimeDependencies();
       AppLogger.info('DI configured', tag: AppLogTags.main);
 
       // Register global BlocObserver for all Cubit/Bloc lifecycle logging.
@@ -185,7 +186,12 @@ class _FormulaScholarAppState extends State<FormulaScholarApp>
       );
       // Refresh dashboard data
       try {
-        getIt<DashboardCubit>().loadDashboard();
+        final localizationCubit = context.read<LocalizationCubit>();
+        final dashboardCubit = getIt<DashboardCubit>();
+        dashboardCubit.setContentLocaleCode(
+          localizationCubit.state.effectiveContentLocaleCode,
+        );
+        dashboardCubit.loadDashboard();
       } catch (_) {}
       // Refresh profile data
       try {

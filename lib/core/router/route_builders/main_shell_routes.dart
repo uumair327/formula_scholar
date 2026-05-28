@@ -41,7 +41,18 @@ StatefulShellBranch _dashboardBranch() {
               controller: HeroController(),
               child: MultiBlocProvider(
                 providers: [
-                  BlocProvider(create: (_) => getIt<DashboardCubit>()),
+                  BlocProvider(
+                    create: (providerContext) {
+                      final cubit = getIt<DashboardCubit>();
+                      cubit.setContentLocaleCode(
+                        providerContext
+                            .read<LocalizationCubit>()
+                            .state
+                            .effectiveContentLocaleCode,
+                      );
+                      return cubit;
+                    },
+                  ),
                   BlocProvider(
                     create: (_) => CurriculumOptionsCubit(
                       getCountries: getIt<GetCountriesUseCase>(),
@@ -87,9 +98,17 @@ StatefulShellBranch _chaptersBranch() {
                 child: BlocProvider(
                   create: (providerContext) {
                     final cubit = getIt<ChaptersCubit>();
-                    final subjectState = providerContext.read<SubjectSelectionCubit>().state;
-                    final curriculumKey = providerContext.read<CurriculumCubit>().state.curriculum?.curriculumKey;
-                    if (subjectState.hasSelection && curriculumKey != null && curriculumKey.isNotEmpty) {
+                    final subjectState = providerContext
+                        .read<SubjectSelectionCubit>()
+                        .state;
+                    final curriculumKey = providerContext
+                        .read<CurriculumCubit>()
+                        .state
+                        .curriculum
+                        ?.curriculumKey;
+                    if (subjectState.hasSelection &&
+                        curriculumKey != null &&
+                        curriculumKey.isNotEmpty) {
                       cubit.loadChapters(
                         subjectState.subject!.id,
                         curriculumKey: curriculumKey,

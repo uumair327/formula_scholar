@@ -26,15 +26,20 @@ abstract final class AppFirestoreCollections {
   static const String announcements = 'announcements';
   static const String flashcardReviews = 'flashcard_reviews';
   static const String studyPlans = 'study_plans';
-  static const String dashboardCurriculumRegistry = 'dashboard_curriculum_registry';
+  static const String dashboardCurriculumRegistry =
+      'dashboard_curriculum_registry';
   static const String dashboardContentRegistry = 'dashboard_content_registry';
+  static const String dashboardContentValues = 'dashboard_content_values';
 
   static String userDoc(String uid) => 'users/$uid';
   static String userBookmarks(String uid) => '${userDoc(uid)}/bookmarks';
-  static String userSavedChapters(String uid) => '${userDoc(uid)}/saved_chapters';
+  static String userSavedChapters(String uid) =>
+      '${userDoc(uid)}/saved_chapters';
   static String userProgress(String uid) => '${userDoc(uid)}/progress';
-  static String userProgressSummary(String uid) => '${userDoc(uid)}/progress_summary';
-  static String userRecentStudies(String uid) => '${userDoc(uid)}/recent_studies';
+  static String userProgressSummary(String uid) =>
+      '${userDoc(uid)}/progress_summary';
+  static String userRecentStudies(String uid) =>
+      '${userDoc(uid)}/recent_studies';
   static String userFormulaNotes(String uid) => '${userDoc(uid)}/formula_notes';
   static String userQuizResults(String uid) => '${userDoc(uid)}/quiz_results';
   static String userQuizAnswers(String uid) => '${userDoc(uid)}/quiz_answers';
@@ -42,7 +47,8 @@ abstract final class AppFirestoreCollections {
   static String userStats(String uid) => '${userDoc(uid)}/stats';
   static String userStatsCurrent(String uid) => '${userStats(uid)}/current';
   static String userStatsStreak(String uid) => '${userStats(uid)}/streak';
-  static String userFlashcardReviews(String uid) => '${userDoc(uid)}/flashcard_reviews';
+  static String userFlashcardReviews(String uid) =>
+      '${userDoc(uid)}/flashcard_reviews';
   static String userStudyPlans(String uid) => '${userDoc(uid)}/study_plans';
 
   static String savedChapterSubjects(String uid, String curriculumKey) =>
@@ -50,11 +56,15 @@ abstract final class AppFirestoreCollections {
   static String userProgressSubject(String uid, String subjectId) =>
       '${userProgress(uid)}/$subjectId/chapters';
   static String userProgressChapter(
-          String uid, String subjectId, String chapterId) =>
-      '${userProgressSubject(uid, subjectId)}/$chapterId';
+    String uid,
+    String subjectId,
+    String chapterId,
+  ) => '${userProgressSubject(uid, subjectId)}/$chapterId';
   static String userProgressChapterFormulas(
-          String uid, String subjectId, String chapterId) =>
-      '${userProgressChapter(uid, subjectId, chapterId)}/formulas';
+    String uid,
+    String subjectId,
+    String chapterId,
+  ) => '${userProgressChapter(uid, subjectId, chapterId)}/formulas';
 
   static String subjectChapters(String subjectId) =>
       'subjects/$subjectId/chapters';
@@ -65,8 +75,6 @@ abstract final class AppFirestoreCollections {
 
   static String countryStates(String countryId) =>
       'countries/$countryId/states';
-  static String boardClasses(String boardId) =>
-      'boards/$boardId/classes';
-  static String boardGrades(String boardId) =>
-      'boards/$boardId/grades';
+  static String boardClasses(String boardId) => 'boards/$boardId/classes';
+  static String boardGrades(String boardId) => 'boards/$boardId/grades';
 }

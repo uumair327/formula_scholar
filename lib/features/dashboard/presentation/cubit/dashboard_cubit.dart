@@ -41,6 +41,7 @@ class DashboardCubit extends Cubit<DashboardState>
   final GetWeakAreasUseCase _getWeakAreas;
   final CurriculumCubit _curriculumCubit;
   final ActivityRefreshCubit _activityRefreshCubit;
+  String _contentLocaleCode = AppLocales.defaultContentLocaleCode;
   late final StreamSubscription<CurriculumState> _curriculumSubscription;
   late final StreamSubscription<int> _activityRefreshSubscription;
 
@@ -74,6 +75,19 @@ class DashboardCubit extends Cubit<DashboardState>
 
       Future.microtask(loadDashboard);
     });
+  }
+
+  void setContentLocaleCode(String localeCode) {
+    final normalized = AppLocales.normalizeContentLocaleCode(localeCode);
+    if (_contentLocaleCode == normalized) {
+      return;
+    }
+
+    _contentLocaleCode = normalized;
+    AppLogger.info(
+      'Dashboard content locale set to $_contentLocaleCode',
+      tag: AppLogTags.dashboardCubit,
+    );
   }
 
   Future<void> loadDashboard() async {
@@ -121,6 +135,7 @@ class DashboardCubit extends Cubit<DashboardState>
       bannersResult,
       announcementsResult,
       weakAreasResult,
+      localizedContentResult,
     ) = await (
       _getStudyProgress(),
       _getSubjects(curriculum.boardId, curriculum.gradeId),
@@ -128,6 +143,9 @@ class DashboardCubit extends Cubit<DashboardState>
       _getBanners(),
       _getAnnouncements(),
       _getWeakAreas(),
+      getIt<LocalizedContentRepositoryPort>().getContentBundle(
+        _contentLocaleCode,
+      ),
     ).wait;
 
     if (isClosed) return;
@@ -162,6 +180,13 @@ class DashboardCubit extends Cubit<DashboardState>
       Error(:final failure) => logFailure('weak areas', failure),
     };
 
+    final localizedContent = switch (localizedContentResult) {
+      Success(:final data) => data,
+      Error(:final failure) =>
+        logFailure('localized content', failure) ??
+            const LocalizedContentBundle.empty(),
+    };
+
     if (progress != null && subjects != null && recentStudies != null) {
       final vaultItems = subjects
           .map(
@@ -185,6 +210,7 @@ class DashboardCubit extends Cubit<DashboardState>
           weakAreas: weakAreas ?? const [],
           selectedBoardName: curriculum.boardName,
           selectedGradeName: curriculum.gradeLabel,
+          localizedContent: localizedContent.values,
           errorMessage: null,
         ),
       );

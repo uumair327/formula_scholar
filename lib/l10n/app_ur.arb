@@ -1,4 +1,15 @@
 {
   "@@locale": "ur",
   "appName": "فارمولا اسکالر"
+
+  ,
+  "dashboardHeroBadge": "CBSE نصاب • جماعت 9",
+  "dashboardHeroTitle": "حرکت اور\\nقوانینِ قوت میں مہارت",
+  "dashboardHeroDescription": "فزکس میں اپنا سفر جاری رکھیں۔ آپ اس باب کا {progress}% مکمل کر چکے ہیں۔",
+  "dashboardResumeLesson": "سبق دوبارہ شروع کریں",
+  "dashboardResumeSemantic": "مطالعہ دوبارہ شروع کریں",
+  "quickActionsTitle": "ٹولز دریافت کریں",
+  "studyPlanner": "مطالعہ منصوبہ ساز",
+  "viewAnalytics": "تجزیات دیکھیں",
+  "flashcards": "فلیش کارڈز"
 }

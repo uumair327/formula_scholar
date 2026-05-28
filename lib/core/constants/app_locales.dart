@@ -13,6 +13,7 @@ abstract final class AppLocales {
     Locale('en', 'US'),
     Locale('ar'), // Arabic — RTL
     Locale('ur'), // Urdu — RTL
+    Locale('mr'), // Marathi
   ];
 
   /// MaterialApp uses this list.
@@ -70,5 +71,19 @@ abstract final class AppLocales {
       'mr' => 'mr-IN',
       _ => defaultContentLocaleCode,
     };
+  }
+
+  static List<String> contentLocaleFallbacks(String? localeCode) {
+    final normalized = normalizeContentLocaleCode(localeCode);
+    final languageCode = normalized.split('-').first;
+
+    final fallbacks = <String>[normalized];
+    if (!fallbacks.contains(languageCode)) {
+      fallbacks.add(languageCode);
+    }
+    if (!fallbacks.contains(defaultContentLocaleCode)) {
+      fallbacks.add(defaultContentLocaleCode);
+    }
+    return fallbacks;
   }
 }

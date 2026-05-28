@@ -16,6 +16,21 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
+        BlocListener<LocalizationCubit, LocalizationState>(
+          listenWhen: (prev, curr) =>
+              prev.contentLocalizationEnabled !=
+                  curr.contentLocalizationEnabled ||
+              prev.contentLocaleCode != curr.contentLocaleCode,
+          listener: (context, state) {
+            final dashboardCubit = context.read<DashboardCubit>();
+            dashboardCubit.setContentLocaleCode(
+              state.effectiveContentLocaleCode,
+            );
+            if (dashboardCubit.state.status != DashboardStatus.initial) {
+              Future.microtask(dashboardCubit.loadDashboard);
+            }
+          },
+        ),
         BlocListener<DashboardCubit, DashboardState>(
           listenWhen: (prev, curr) => prev.subjects != curr.subjects,
           listener: (context, state) {
@@ -133,6 +148,8 @@ class DashboardPage extends StatelessWidget {
                                 badge: state.heroBadge,
                                 title: state.heroTitle,
                                 description: state.heroDescription,
+                                resumeLabel: state.heroResumeLabel,
+                                semanticLabel: state.heroSemanticsLabel,
                                 onResume: () => resumeLearning(context, state),
                               ),
                             ),
@@ -155,9 +172,14 @@ class DashboardPage extends StatelessWidget {
                             const SizedBox(
                               height: AppDimensions.paddingSection,
                             ),
-                            const EntranceWrapper(
-                              delay: Duration(milliseconds: 100),
-                              child: QuickActionsSection(),
+                            EntranceWrapper(
+                              delay: const Duration(milliseconds: 100),
+                              child: QuickActionsSection(
+                                sectionTitle: state.quickActionsTitle,
+                                studyPlannerLabel: state.studyPlannerLabel,
+                                analyticsLabel: state.analyticsLabel,
+                                flashcardsLabel: state.flashcardsLabel,
+                              ),
                             ),
                             const SizedBox(
                               height: AppDimensions.paddingSection,

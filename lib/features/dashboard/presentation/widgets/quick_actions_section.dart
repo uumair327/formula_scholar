@@ -9,7 +9,18 @@ import '../../../../shared/shared.dart';
 import 'tool_card.dart';
 
 class QuickActionsSection extends StatelessWidget {
-  const QuickActionsSection({super.key});
+  const QuickActionsSection({
+    super.key,
+    this.sectionTitle = AppStrings.exploreTools,
+    this.studyPlannerLabel = AppStrings.studyPlanner,
+    this.analyticsLabel = AppStrings.viewAnalytics,
+    this.flashcardsLabel = AppStrings.flashcards,
+  });
+
+  final String sectionTitle;
+  final String studyPlannerLabel;
+  final String analyticsLabel;
+  final String flashcardsLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +29,7 @@ class QuickActionsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeader(
-          title: AppStrings.exploreTools,
-          actionLabel: null,
-        ),
+        SectionHeader(title: sectionTitle, actionLabel: null),
         const SizedBox(height: AppDimensions.paddingLG),
         Row(
           children: [
@@ -37,7 +45,7 @@ class QuickActionsSection extends StatelessWidget {
             Expanded(
               child: ToolCard(
                 icon: LucideIcons.calendarCheck,
-                label: 'Study Planner',
+                label: studyPlannerLabel,
                 color: colorScheme.secondary,
                 onTap: () => context.pushNamed(AppRoutes.studyPlannerName),
               ),
@@ -50,7 +58,7 @@ class QuickActionsSection extends StatelessWidget {
             Expanded(
               child: ToolCard(
                 icon: LucideIcons.barChart3,
-                label: 'Analytics',
+                label: analyticsLabel,
                 color: colorScheme.tertiary,
                 onTap: () => context.pushNamed(AppRoutes.analyticsName),
               ),
@@ -59,7 +67,7 @@ class QuickActionsSection extends StatelessWidget {
             Expanded(
               child: ToolCard(
                 icon: LucideIcons.layers,
-                label: 'Flashcards',
+                label: flashcardsLabel,
                 color: colorScheme.primary,
                 onTap: () => context.pushNamed(AppRoutes.flashcardsName),
               ),

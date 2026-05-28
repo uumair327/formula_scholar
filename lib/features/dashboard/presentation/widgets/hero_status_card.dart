@@ -13,12 +13,16 @@ class HeroStatusCard extends StatefulWidget {
     required this.badge,
     required this.title,
     required this.description,
+    required this.resumeLabel,
+    required this.semanticLabel,
     this.onResume,
   });
 
   final String badge;
   final String title;
   final String description;
+  final String resumeLabel;
+  final String semanticLabel;
   final VoidCallback? onResume;
 
   @override
@@ -144,7 +148,7 @@ class _HeroStatusCardState extends State<HeroStatusCard>
               ),
               const SizedBox(height: AppDimensions.paddingXL),
               Semantics(
-                label: AppStrings.resumeLearning,
+                label: widget.semanticLabel,
                 button: true,
                 child: GestureDetector(
                   onTap: widget.onResume,
@@ -157,43 +161,47 @@ class _HeroStatusCardState extends State<HeroStatusCard>
                       );
                     },
                     child: ClipRRect(
-                    borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppDimensions.paddingHero,
-                          vertical: AppDimensions.progressBarLG,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.white.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
-                          border: Border.all(
-                            color: AppColors.white.withValues(alpha: 0.5),
-                            width: 1,
+                      borderRadius: BorderRadius.circular(
+                        AppDimensions.radiusXXL,
+                      ),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppDimensions.paddingHero,
+                            vertical: AppDimensions.progressBarLG,
                           ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              AppStrings.dashboardResumeLesson,
-                              style: AppTextStyles.labelLarge.copyWith(
-                                color: AppColors.white,
-                                fontWeight: FontWeight.w800,
+                          decoration: BoxDecoration(
+                            color: AppColors.white.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(
+                              AppDimensions.radiusXXL,
+                            ),
+                            border: Border.all(
+                              color: AppColors.white.withValues(alpha: 0.5),
+                              width: 1,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                widget.resumeLabel,
+                                style: AppTextStyles.labelLarge.copyWith(
+                                  color: AppColors.white,
+                                  fontWeight: FontWeight.w800,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: AppDimensions.paddingSM),
-                            const Icon(
-                              LucideIcons.arrowRight,
-                              size: AppDimensions.iconSM,
-                              color: AppColors.white,
-                            ),
-                          ],
+                              const SizedBox(width: AppDimensions.paddingSM),
+                              const Icon(
+                                LucideIcons.arrowRight,
+                                size: AppDimensions.iconSM,
+                                color: AppColors.white,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
                   ),
                 ),
               ),

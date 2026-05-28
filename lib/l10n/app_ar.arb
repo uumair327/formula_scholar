@@ -1,4 +1,15 @@
 {
   "@@locale": "ar",
   "appName": "فورمولا سكولار"
+
+  ,
+  "dashboardHeroBadge": "مناهج CBSE • الصف 9",
+  "dashboardHeroTitle": "إتقان الحركة و\\nقوانين القوة",
+  "dashboardHeroDescription": "تابع رحلتك في الفيزياء. أنت {progress}% خلال الفصل الحالي.",
+  "dashboardResumeLesson": "استئناف الدرس",
+  "dashboardResumeSemantic": "استئناف التعلم",
+  "quickActionsTitle": "استكشف الأدوات",
+  "studyPlanner": "مخطط الدراسة",
+  "viewAnalytics": "عرض التحليلات",
+  "flashcards": "بطاقات المراجعة"
 }

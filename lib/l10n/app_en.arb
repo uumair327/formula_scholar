@@ -4,4 +4,15 @@
   "@appName": {
     "description": "The application name"
   }
+
+  ,
+  "dashboardHeroBadge": "CBSE Syllabus • Grade 9",
+  "dashboardHeroTitle": "Mastering Motion &\\nLaws of Forces",
+  "dashboardHeroDescription": "Continue your journey through Physics. You're {progress}% through the current chapter.",
+  "dashboardResumeLesson": "Resume Lesson",
+  "dashboardResumeSemantic": "Resume learning",
+  "quickActionsTitle": "Explore Tools",
+  "studyPlanner": "Study Planner",
+  "viewAnalytics": "View Analytics",
+  "flashcards": "Flashcards"
 }

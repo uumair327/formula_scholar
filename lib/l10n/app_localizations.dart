@@ -7,6 +7,7 @@ import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_ar.dart';
 import 'app_localizations_en.dart';
+import 'app_localizations_mr.dart';
 import 'app_localizations_ur.dart';
 
 // ignore_for_file: type=lint
@@ -97,6 +98,7 @@ abstract class AppLocalizations {
   static const List<Locale> supportedLocales = <Locale>[
     Locale('ar'),
     Locale('en'),
+    Locale('mr'),
     Locale('ur'),
   ];
 
@@ -105,6 +107,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Formula Scholar'**
   String get appName;
+
+  /// No description provided for @dashboardHeroBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'CBSE Syllabus • Grade 9'**
+  String get dashboardHeroBadge;
+
+  /// No description provided for @dashboardHeroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Mastering Motion &\\nLaws of Forces'**
+  String get dashboardHeroTitle;
+
+  /// No description provided for @dashboardHeroDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue your journey through Physics. You\'re {progress}% through the current chapter.'**
+  String dashboardHeroDescription(Object progress);
+
+  /// No description provided for @dashboardResumeLesson.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume Lesson'**
+  String get dashboardResumeLesson;
+
+  /// No description provided for @dashboardResumeSemantic.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume learning'**
+  String get dashboardResumeSemantic;
+
+  /// No description provided for @quickActionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore Tools'**
+  String get quickActionsTitle;
+
+  /// No description provided for @studyPlanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Study Planner'**
+  String get studyPlanner;
+
+  /// No description provided for @viewAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'View Analytics'**
+  String get viewAnalytics;
+
+  /// No description provided for @flashcards.
+  ///
+  /// In en, this message translates to:
+  /// **'Flashcards'**
+  String get flashcards;
 }
 
 class _AppLocalizationsDelegate
@@ -118,7 +174,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['ar', 'en', 'ur'].contains(locale.languageCode);
+      <String>['ar', 'en', 'mr', 'ur'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -131,6 +187,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsAr();
     case 'en':
       return AppLocalizationsEn();
+    case 'mr':
+      return AppLocalizationsMr();
     case 'ur':
       return AppLocalizationsUr();
   }

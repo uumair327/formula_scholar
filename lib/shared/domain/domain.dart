@@ -2,8 +2,11 @@ library;
 
 export 'entities/selected_curriculum.dart';
 export 'entities/theme_preference.dart';
+export 'models/localized_content_bundle.dart';
 export 'models/content_registry.dart';
 export 'models/curriculum_registry.dart';
+export 'ports/localized_content_data_source_port.dart';
+export 'ports/localized_content_repository_port.dart';
 export 'ports/curriculum_data_source_port.dart';
 export 'ports/curriculum_repository_port.dart';
 export 'ports/theme_preference_data_source_port.dart';
