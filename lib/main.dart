@@ -189,6 +189,8 @@ class _FormulaScholarAppState extends State<FormulaScholarApp>
         final dashboardCubit = getIt<DashboardCubit>();
         dashboardCubit.setContentLocaleCode(
           localizationCubit.state.effectiveContentLocaleCode,
+          contentLocalizationEnabled:
+              localizationCubit.state.contentLocalizationEnabled,
         );
         dashboardCubit.loadDashboard();
       } catch (_) {}

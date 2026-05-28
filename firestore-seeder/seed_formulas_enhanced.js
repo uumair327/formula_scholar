@@ -1508,6 +1508,7 @@ async function seedFormulas() {
                 const formulaRef = chapterRef.collection('formulas').doc(formula.id);
                 batch.set(formulaRef, {
                     ...formula,
+                    localized: buildLocalizedFields(formula),
                     createdAt: admin.firestore.FieldValue.serverTimestamp(),
                     updatedAt: admin.firestore.FieldValue.serverTimestamp()
                 });

@@ -41,6 +41,7 @@ class DashboardCubit extends Cubit<DashboardState>
   final CurriculumCubit _curriculumCubit;
   final ActivityRefreshCubit _activityRefreshCubit;
   String _contentLocaleCode = AppLocales.defaultContentLocaleCode;
+  bool _contentLocalizationEnabled = true;
   late final StreamSubscription<CurriculumState> _curriculumSubscription;
   late final StreamSubscription<int> _activityRefreshSubscription;
 
@@ -76,15 +77,24 @@ class DashboardCubit extends Cubit<DashboardState>
     });
   }
 
-  void setContentLocaleCode(String localeCode) {
+  void setContentLocaleCode(
+    String localeCode, {
+    bool? contentLocalizationEnabled,
+  }) {
     final normalized = AppLocales.normalizeContentLocaleCode(localeCode);
-    if (_contentLocaleCode == normalized) {
+    final enabledChanged = contentLocalizationEnabled != null &&
+        contentLocalizationEnabled != _contentLocalizationEnabled;
+
+    if (_contentLocaleCode == normalized && !enabledChanged) {
       return;
     }
 
     _contentLocaleCode = normalized;
+    if (contentLocalizationEnabled != null) {
+      _contentLocalizationEnabled = contentLocalizationEnabled;
+    }
     AppLogger.info(
-      'Dashboard content locale set to $_contentLocaleCode',
+      'Dashboard content locale set to $_contentLocaleCode (enabled=$_contentLocalizationEnabled)',
       tag: AppLogTags.dashboardCubit,
     );
   }
@@ -210,7 +220,9 @@ class DashboardCubit extends Cubit<DashboardState>
           weakAreas: weakAreas ?? const [],
           selectedBoardName: curriculum.boardName,
           selectedGradeName: curriculum.gradeLabel,
-          localizedContent: localizedContent.values,
+          localizedContent: _contentLocalizationEnabled
+              ? localizedContent.values
+              : const {},
           errorMessage: null,
         ),
       );

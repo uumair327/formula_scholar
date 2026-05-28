@@ -44,11 +44,13 @@ StatefulShellBranch _dashboardBranch() {
                   BlocProvider(
                     create: (providerContext) {
                       final cubit = getIt<DashboardCubit>();
+                      final locState = providerContext
+                          .read<LocalizationCubit>()
+                          .state;
                       cubit.setContentLocaleCode(
-                        providerContext
-                            .read<LocalizationCubit>()
-                            .state
-                            .effectiveContentLocaleCode,
+                        locState.effectiveContentLocaleCode,
+                        contentLocalizationEnabled:
+                            locState.contentLocalizationEnabled,
                       );
                       return cubit;
                     },

@@ -114,6 +114,10 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
     final data = doc.data() as Map<String, dynamic>;
     // prefer localized map if available; fall back to top-level fields
     String resolveLocalizedField(String key, String fallback) {
+      // When content localization is disabled, skip backend translations
+      if (!AppLocales.contentLocalizationEnabled) {
+        return fallback;
+      }
       try {
         final loc = data['localized'] as Map<String, dynamic>?;
         if (loc != null) {

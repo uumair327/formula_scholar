@@ -23,6 +23,7 @@ class DashboardPage extends StatelessWidget {
             final dashboardCubit = context.read<DashboardCubit>();
             dashboardCubit.setContentLocaleCode(
               state.effectiveContentLocaleCode,
+              contentLocalizationEnabled: state.contentLocalizationEnabled,
             );
             if (dashboardCubit.state.status != DashboardStatus.initial) {
               Future.microtask(dashboardCubit.loadDashboard);

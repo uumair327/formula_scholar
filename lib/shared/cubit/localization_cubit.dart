@@ -4,7 +4,12 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import '../../core/core.dart';
 
 class LocalizationCubit extends HydratedCubit<LocalizationState> {
-  LocalizationCubit() : super(const LocalizationState());
+  LocalizationCubit() : super(const LocalizationState()) {
+    // Sync AppLocales globals from hydrated (restored) state so adapters
+    // respect the persisted toggle immediately, without user interaction.
+    AppLocales.contentLocalizationEnabled = state.contentLocalizationEnabled;
+    AppLocales.currentLocaleCode = state.effectiveContentLocaleCode;
+  }
 
   void setAppLabelLocalizationEnabled(bool enabled) {
     final nextState = state.copyWith(
@@ -57,6 +62,7 @@ class LocalizationCubit extends HydratedCubit<LocalizationState> {
       ),
     );
     // publish to AppLocales so adapters can read current content locale
+    AppLocales.contentLocalizationEnabled = enabled;
     AppLocales.currentLocaleCode = state
         .copyWith(
           contentLocalizationEnabled: enabled,

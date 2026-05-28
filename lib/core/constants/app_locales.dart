@@ -80,6 +80,11 @@ abstract final class AppLocales {
   /// content language at runtime.
   static String currentLocaleCode = defaultContentLocaleCode;
 
+  /// Whether backend-managed content localization is enabled.
+  /// When `false`, adapters should skip the `localized` map and always
+  /// return the top-level default fields.
+  static bool contentLocalizationEnabled = true;
+
   static List<String> contentLocaleFallbacks(String? localeCode) {
     final normalized = normalizeContentLocaleCode(localeCode);
     final languageCode = normalized.split('-').first;
