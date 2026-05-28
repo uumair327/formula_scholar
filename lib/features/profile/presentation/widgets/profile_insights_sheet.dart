@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
+import '../../../../l10n/l10n.dart';
 import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 
@@ -33,6 +34,7 @@ class ProfileInsightsSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return Container(
       decoration: BoxDecoration(
@@ -81,7 +83,7 @@ class ProfileInsightsSheet extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          AppStrings.profileInsightsTitle,
+                          l10n.profileInsightsTitle,
                           style: AppTextStyles.headlineSmall.copyWith(
                             color: colorScheme.onSurface,
                             fontWeight: FontWeight.w700,
@@ -89,7 +91,7 @@ class ProfileInsightsSheet extends StatelessWidget {
                         ),
                         const SizedBox(height: AppDimensions.paddingXXS),
                         Text(
-                          '${AppStrings.profileInsightsSubtitle} for $displayName',
+                          '${l10n.profileInsightsSubtitle} for $displayName',
                           style: AppTextStyles.bodySmall.copyWith(
                             color: colorScheme.onSurfaceVariant,
                           ),
@@ -101,7 +103,7 @@ class ProfileInsightsSheet extends StatelessWidget {
               ),
               const SizedBox(height: AppDimensions.paddingLG),
               Text(
-                AppStrings.profileInsightsSource,
+                l10n.profileInsightsSource,
                 style: AppTextStyles.labelMedium.copyWith(
                   color: AppColors.primary,
                   fontWeight: FontWeight.w700,
@@ -115,7 +117,7 @@ class ProfileInsightsSheet extends StatelessWidget {
                     alpha: AppDimensions.opacityLight,
                   ),
                   child: Text(
-                    'Your profile stats will appear here once your backend sync completes.',
+                    l10n.profileStatsPending,
                     style: AppTextStyles.bodyMedium.copyWith(
                       color: colorScheme.onSurfaceVariant,
                     ),
@@ -158,7 +160,7 @@ class ProfileInsightsSheet extends StatelessWidget {
                         LucideIcons.playCircle,
                         size: AppDimensions.iconSM,
                       ),
-                      label: const Text(AppStrings.continuePracticing),
+                      label: Text(l10n.continuePracticing),
                     ),
                   ),
                   const SizedBox(width: AppDimensions.paddingMD),
@@ -173,7 +175,7 @@ class ProfileInsightsSheet extends StatelessWidget {
                         LucideIcons.bookOpen,
                         size: AppDimensions.iconSM,
                       ),
-                      label: const Text(AppStrings.browseChapters),
+                      label: Text(l10n.browseChapters),
                     ),
                   ),
                 ],
@@ -184,13 +186,13 @@ class ProfileInsightsSheet extends StatelessWidget {
                 child: TextButton.icon(
                   onPressed: () {
                     Navigator.of(context).pop();
-                    context.pushNamed(
-                      AppRoutes.analyticsName,
-                      extra: stats,
-                    );
+                    context.pushNamed(AppRoutes.analyticsName, extra: stats);
                   },
-                  icon: const Icon(LucideIcons.barChart3, size: AppDimensions.iconSM),
-                  label: const Text('View Full Analytics'),
+                  icon: const Icon(
+                    LucideIcons.barChart3,
+                    size: AppDimensions.iconSM,
+                  ),
+                  label: Text(l10n.viewFullAnalytics),
                 ),
               ),
             ],

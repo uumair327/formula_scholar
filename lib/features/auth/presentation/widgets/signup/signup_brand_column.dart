@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/core.dart';
+import '../../../../../l10n/l10n.dart';
 
 class SignupBrandColumn extends StatelessWidget {
   const SignupBrandColumn({super.key});
@@ -8,6 +9,7 @@ class SignupBrandColumn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = context.l10n;
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingHero),
       decoration: BoxDecoration(
@@ -18,7 +20,7 @@ class SignupBrandColumn extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            AppStrings.signupBrandTitle,
+            l10n.signupBrandTitle,
             style: AppTextStyles.headlineLarge.copyWith(
               color: AppColors.onPrimary,
               fontWeight: FontWeight.w900,
@@ -29,7 +31,7 @@ class SignupBrandColumn extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                AppStrings.signupBrandHeadline,
+                l10n.signupBrandHeadline,
                 style: AppTextStyles.headlineMedium.copyWith(
                   color: AppColors.onPrimary,
                   fontWeight: FontWeight.w900,
@@ -39,9 +41,11 @@ class SignupBrandColumn extends StatelessWidget {
               ),
               const SizedBox(height: AppDimensions.paddingMD),
               Text(
-                AppStrings.signupBrandDesc,
+                l10n.signupBrandDesc,
                 style: AppTextStyles.bodyLarge.copyWith(
-                  color: AppColors.primaryFixed.withValues(alpha: AppDimensions.opacityHigh),
+                  color: AppColors.primaryFixed.withValues(
+                    alpha: AppDimensions.opacityHigh,
+                  ),
                   height: AppDimensions.lineHeightRelaxed,
                 ),
               ),
@@ -57,13 +61,18 @@ class SignupBrandColumn extends StatelessWidget {
 class _TestimonialCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingLG),
       decoration: BoxDecoration(
-        color: AppColors.onPrimary.withValues(alpha: AppDimensions.opacitySubtle),
+        color: AppColors.onPrimary.withValues(
+          alpha: AppDimensions.opacitySubtle,
+        ),
         borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
         border: Border.all(
-          color: AppColors.onPrimary.withValues(alpha: AppDimensions.opacityFaint),
+          color: AppColors.onPrimary.withValues(
+            alpha: AppDimensions.opacityFaint,
+          ),
         ),
       ),
       child: Column(
@@ -74,7 +83,10 @@ class _TestimonialCard extends StatelessWidget {
               Container(
                 width: AppDimensions.avatarMD,
                 height: AppDimensions.avatarMD,
-                decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.primaryFixed),
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.primaryFixed,
+                ),
                 child: Center(
                   child: Text(
                     'IS',
@@ -90,16 +102,18 @@ class _TestimonialCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    AppStrings.signupTestimonialName,
+                    l10n.signupTestimonialName,
                     style: AppTextStyles.labelLarge.copyWith(
                       color: AppColors.onPrimary,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                   Text(
-                    AppStrings.signupTestimonialRole,
+                    l10n.signupTestimonialRole,
                     style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.onPrimary.withValues(alpha: AppDimensions.opacityMedium),
+                      color: AppColors.onPrimary.withValues(
+                        alpha: AppDimensions.opacityMedium,
+                      ),
                     ),
                   ),
                 ],
@@ -108,9 +122,11 @@ class _TestimonialCard extends StatelessWidget {
           ),
           const SizedBox(height: AppDimensions.paddingMD),
           Text(
-            AppStrings.signupTestimonial,
+            l10n.signupTestimonial,
             style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.onPrimary.withValues(alpha: AppDimensions.opacityNearOpaque),
+              color: AppColors.onPrimary.withValues(
+                alpha: AppDimensions.opacityNearOpaque,
+              ),
               fontStyle: FontStyle.italic,
             ),
           ),

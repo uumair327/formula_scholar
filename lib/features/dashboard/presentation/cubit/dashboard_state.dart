@@ -129,6 +129,43 @@ class DashboardState extends Equatable {
     );
   }
 
+  String get liveLabel {
+    return _localizedValue('dashboard.live', AppStrings.dashboardLive);
+  }
+
+  String get boardReadyQuizTitle {
+    return _localizedValue(
+      'dashboard.boardReadyQuiz',
+      AppStrings.dashboardBoardReadyQuiz,
+    );
+  }
+
+  String get boardReadyQuizDescription {
+    return _localizedValue(
+      'dashboard.quizDescription',
+      AppStrings.dashboardQuizDesc,
+    );
+  }
+
+  String get startNowLabel {
+    return _localizedValue('dashboard.startNow', AppStrings.startNow);
+  }
+
+  String get startQuizLabel {
+    return _localizedValue('dashboard.startQuiz', AppStrings.startQuiz);
+  }
+
+  String get academicViewAllLabel {
+    return _localizedValue('dashboard.academic.viewAll', AppStrings.viewAll);
+  }
+
+  String get vaultDescriptionOverride {
+    return _localizedValue(
+      'dashboard.vault.description',
+      AppStrings.dashboardVaultDesc,
+    );
+  }
+
   String get studyPlannerLabel {
     return _localizedValue(
       'dashboard.quickActions.studyPlanner',
@@ -147,6 +184,34 @@ class DashboardState extends Equatable {
     return _localizedValue(
       'dashboard.quickActions.flashcards',
       AppStrings.flashcards,
+    );
+  }
+
+  String get continueStudyingLabel {
+    return _localizedValue(
+      'dashboard.continueStudying',
+      AppStrings.continueStudying,
+    );
+  }
+
+  String get noRecentTitle {
+    return _localizedValue(
+      'dashboard.noRecent.title',
+      AppStrings.dashboardNoRecentTitle,
+    );
+  }
+
+  String get noRecentDescription {
+    return _localizedValue(
+      'dashboard.noRecent.description',
+      AppStrings.dashboardNoRecentDescription,
+    );
+  }
+
+  String get openChaptersLabel {
+    return _localizedValue(
+      'dashboard.openChapters',
+      AppStrings.dashboardOpenChapters,
     );
   }
 

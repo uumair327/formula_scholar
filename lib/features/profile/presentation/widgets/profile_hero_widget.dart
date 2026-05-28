@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
+import '../../../../l10n/l10n.dart';
 import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 
@@ -15,6 +16,7 @@ class ProfileHeroWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return Container(
       width: double.infinity,
@@ -76,7 +78,7 @@ class ProfileHeroWidget extends StatelessWidget {
                       boxShadow: const [AppShadows.medium],
                     ),
                     child: Text(
-                      AppStrings.proBadge,
+                      l10n.proBadge,
                       style: AppTextStyles.overline.copyWith(
                         color: AppColors.onSecondaryFixed,
                         fontWeight: FontWeight.w800,
@@ -89,7 +91,7 @@ class ProfileHeroWidget extends StatelessWidget {
           const SizedBox(height: AppDimensions.paddingLG),
           // Name & grade
           Text(
-            AppStrings.currentGrade,
+            l10n.currentGrade,
             style: AppTextStyles.labelMedium.copyWith(
               color: colorScheme.onPrimary.withValues(
                 alpha: AppDimensions.opacityHigh,

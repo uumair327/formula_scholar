@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../../core/core.dart';
+import '../../../../../l10n/l10n.dart';
 import '../../../../../shared/shared.dart';
 import '../../cubit/auth_cubit.dart';
 import '../../cubit/auth_state.dart';
@@ -31,6 +32,7 @@ class LoginFormContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return Form(
       key: formKey,
@@ -38,7 +40,7 @@ class LoginFormContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            AppStrings.loginTitle,
+            l10n.loginTitle,
             style: AppTextStyles.headlineMedium.copyWith(
               fontWeight: FontWeight.w900,
               letterSpacing: AppDimensions.letterSpacingTight,
@@ -46,7 +48,7 @@ class LoginFormContent extends StatelessWidget {
           ),
           const SizedBox(height: AppDimensions.paddingXS),
           Text(
-            AppStrings.loginSubtitle,
+            l10n.loginSubtitle,
             style: AppTextStyles.bodyMedium.copyWith(
               color: colorScheme.onSurfaceVariant,
             ),
@@ -54,8 +56,8 @@ class LoginFormContent extends StatelessWidget {
           const SizedBox(height: AppDimensions.paddingXXL),
           AppTextField(
             controller: identityController,
-            label: AppStrings.loginEmailLabel,
-            hintText: AppStrings.loginEmailHint,
+            label: l10n.loginEmailLabel,
+            hintText: l10n.loginEmailHint,
             prefixIcon: LucideIcons.user,
             keyboardType: TextInputType.emailAddress,
           ),
@@ -66,7 +68,7 @@ class LoginFormContent extends StatelessWidget {
               onTap: () =>
                   showForgotPasswordDialog(context, identityController.text),
               child: Text(
-                AppStrings.loginForgotPassword,
+                l10n.loginForgotPassword,
                 style: AppTextStyles.labelMedium.copyWith(
                   color: colorScheme.primary,
                   fontWeight: FontWeight.w700,
@@ -77,8 +79,8 @@ class LoginFormContent extends StatelessWidget {
           const SizedBox(height: AppDimensions.paddingXS),
           AppTextField(
             controller: passwordController,
-            label: AppStrings.loginPasswordLabel,
-            hintText: AppStrings.loginPasswordHint,
+            label: l10n.loginPasswordLabel,
+            hintText: l10n.loginPasswordHint,
             prefixIcon: LucideIcons.lock,
             obscureText: obscurePassword,
             validator: (value) {
@@ -94,9 +96,7 @@ class LoginFormContent extends StatelessWidget {
                 size: AppDimensions.iconDefault,
                 color: colorScheme.outline,
               ),
-              tooltip: obscurePassword
-                  ? AppStrings.showPassword
-                  : AppStrings.hidePassword,
+              tooltip: obscurePassword ? l10n.showPassword : l10n.hidePassword,
             ),
           ),
           const SizedBox(height: AppDimensions.paddingXXL),
@@ -105,7 +105,7 @@ class LoginFormContent extends StatelessWidget {
             builder: (context, state) {
               final isLoading = state.status == AuthStatus.loading;
               return AppGradientButton(
-                label: AppStrings.loginSignIn,
+                label: l10n.loginSignIn,
                 onPressed: isLoading ? null : onSignIn,
                 isLoading: isLoading,
                 icon: LucideIcons.logIn,
@@ -121,7 +121,7 @@ class LoginFormContent extends StatelessWidget {
                   horizontal: AppDimensions.paddingMD,
                 ),
                 child: Text(
-                  AppStrings.loginOr,
+                  l10n.loginOr,
                   style: AppTextStyles.labelSmall.copyWith(
                     color: colorScheme.outline,
                     fontWeight: FontWeight.w700,
@@ -137,7 +137,7 @@ class LoginFormContent extends StatelessWidget {
             children: [
               Expanded(
                 child: LoginSocialButton(
-                  label: AppStrings.loginGoogle,
+                  label: l10n.loginGoogle,
                   icon: LucideIcons.globe,
                   onTap: () => context.read<AuthCubit>().signInWithGoogle(),
                 ),
@@ -145,11 +145,11 @@ class LoginFormContent extends StatelessWidget {
               const SizedBox(width: AppDimensions.paddingMD),
               Expanded(
                 child: LoginSocialButton(
-                  label: AppStrings.loginSchoolId,
+                  label: l10n.loginSchoolId,
                   icon: LucideIcons.graduationCap,
                   onTap: () => ComingSoonSheet.show(
                     context,
-                    featureName: AppStrings.loginSchoolId,
+                    featureName: l10n.loginSchoolId,
                   ),
                 ),
               ),
@@ -161,7 +161,7 @@ class LoginFormContent extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  AppStrings.loginNoAccount,
+                  l10n.loginNoAccount,
                   style: AppTextStyles.bodyMedium.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
@@ -170,7 +170,7 @@ class LoginFormContent extends StatelessWidget {
                 GestureDetector(
                   onTap: () => context.go(AppRoutes.signupPath),
                   child: Text(
-                    AppStrings.loginSignUp,
+                    l10n.loginSignUp,
                     style: AppTextStyles.bodyMedium.copyWith(
                       color: colorScheme.primary,
                       fontWeight: FontWeight.w700,

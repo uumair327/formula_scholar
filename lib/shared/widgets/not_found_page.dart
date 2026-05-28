@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../core/core.dart';
+import '../../l10n/l10n.dart';
 
 /// 404 / Not Found page displayed when [GoRouter] cannot match a route.
 ///
@@ -22,6 +23,7 @@ class NotFoundPage extends StatelessWidget {
     );
 
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return Scaffold(
       body: Center(
@@ -47,13 +49,13 @@ class NotFoundPage extends StatelessWidget {
               ),
               const SizedBox(height: AppDimensions.paddingHero),
               Text(
-                AppStrings.pageNotFound,
+                l10n.pageNotFound,
                 style: AppTextStyles.headlineLarge,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: AppDimensions.paddingSM),
               Text(
-                AppStrings.pageNotFoundDescription,
+                l10n.pageNotFoundDescription,
                 style: AppTextStyles.bodyMedium.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),
@@ -74,7 +76,7 @@ class NotFoundPage extends StatelessWidget {
                     LucideIcons.home,
                     size: AppDimensions.iconMD,
                   ),
-                  label: const Text(AppStrings.goHome),
+                  label: Text(l10n.goHome),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: colorScheme.primary,
                     foregroundColor: colorScheme.onPrimary,

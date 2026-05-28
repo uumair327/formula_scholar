@@ -1,10 +1,13 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
+import '../cubit/dashboard_cubit.dart';
+import '../cubit/dashboard_state.dart';
 import 'quiz_card.dart';
 import 'subject_card.dart';
 
@@ -30,10 +33,14 @@ class AcademicPathSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionHeader(
-          title: AppStrings.dashboardAcademicPath,
-          actionLabel: AppStrings.viewAll,
-          onAction: onViewAll,
+        BlocBuilder<DashboardCubit, DashboardState>(
+          builder: (context, state) {
+            return SectionHeader(
+              title: AppStrings.dashboardAcademicPath,
+              actionLabel: state.academicViewAllLabel,
+              onAction: onViewAll,
+            );
+          },
         ),
         const SizedBox(height: AppDimensions.paddingLG),
         AnimatedSwitcher(
@@ -44,7 +51,8 @@ class AcademicPathSection extends StatelessWidget {
           child: LayoutBuilder(
             key: ValueKey('subjects_${subjects.length}_${subjects.hashCode}'),
             builder: (context, constraints) {
-              final isWide = constraints.maxWidth > AppDimensions.breakpointWide;
+              final isWide =
+                  constraints.maxWidth > AppDimensions.breakpointWide;
               if (isWide) {
                 return Column(
                   children: [
@@ -59,7 +67,8 @@ class AcademicPathSection extends StatelessWidget {
                                 child: SubjectCard(
                                   subject: featured.first,
                                   onTap: () => onSubjectTap(featured.first),
-                                  onLongPress: () => onShowAnalytics(featured.first),
+                                  onLongPress: () =>
+                                      onShowAnalytics(featured.first),
                                 ),
                               ),
                             if (featured.isNotEmpty && others.isNotEmpty)
@@ -69,7 +78,8 @@ class AcademicPathSection extends StatelessWidget {
                                 child: SubjectCard(
                                   subject: others.first,
                                   onTap: () => onSubjectTap(others.first),
-                                  onLongPress: () => onShowAnalytics(others.first),
+                                  onLongPress: () =>
+                                      onShowAnalytics(others.first),
                                 ),
                               ),
                           ],
@@ -84,7 +94,10 @@ class AcademicPathSection extends StatelessWidget {
                         alignment: WrapAlignment.start,
                         children: [
                           ...others.skip(1).map((subject) {
-                            final itemWidth = (constraints.maxWidth - AppDimensions.paddingLG) / 2.05;
+                            final itemWidth =
+                                (constraints.maxWidth -
+                                    AppDimensions.paddingLG) /
+                                2.05;
                             return SizedBox(
                               width: itemWidth,
                               child: SubjectCard(
@@ -95,7 +108,10 @@ class AcademicPathSection extends StatelessWidget {
                             );
                           }),
                           SizedBox(
-                            width: (constraints.maxWidth - AppDimensions.paddingLG) / 2.05,
+                            width:
+                                (constraints.maxWidth -
+                                    AppDimensions.paddingLG) /
+                                2.05,
                             child: const QuizCard(),
                           ),
                         ],
@@ -110,15 +126,11 @@ class AcademicPathSection extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   clipBehavior: Clip.none,
                   itemCount: subjects.length + 1,
-                  separatorBuilder: (context, index) => const SizedBox(
-                    width: AppDimensions.paddingLG,
-                  ),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(width: AppDimensions.paddingLG),
                   itemBuilder: (context, index) {
                     if (index == subjects.length) {
-                      return const SizedBox(
-                        width: 280,
-                        child: QuizCard(),
-                      );
+                      return const SizedBox(width: 280, child: QuizCard());
                     }
                     final subject = subjects[index];
                     return SizedBox(

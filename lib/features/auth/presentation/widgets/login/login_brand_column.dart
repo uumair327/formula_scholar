@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/core.dart';
+import '../../../../../l10n/l10n.dart';
 import 'login_formula_card.dart';
 
 class LoginBrandColumn extends StatelessWidget {
@@ -9,6 +10,7 @@ class LoginBrandColumn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = context.l10n;
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingHero),
       decoration: BoxDecoration(
@@ -24,11 +26,13 @@ class LoginBrandColumn extends StatelessWidget {
               vertical: AppDimensions.paddingXS,
             ),
             decoration: BoxDecoration(
-              color: AppColors.onPrimary.withValues(alpha: AppDimensions.opacitySubtle),
+              color: AppColors.onPrimary.withValues(
+                alpha: AppDimensions.opacitySubtle,
+              ),
               borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
             ),
             child: Text(
-              AppStrings.loginStudentPortal,
+              l10n.loginStudentPortal,
               style: AppTextStyles.labelSmall.copyWith(
                 color: AppColors.onPrimary,
                 fontWeight: FontWeight.w700,
@@ -38,7 +42,7 @@ class LoginBrandColumn extends StatelessWidget {
           ),
           const SizedBox(height: AppDimensions.paddingXL),
           Text(
-            AppStrings.loginBrandTagline,
+            l10n.loginBrandTagline,
             style: AppTextStyles.displayLarge.copyWith(
               color: AppColors.onPrimary,
               fontWeight: FontWeight.w900,
@@ -48,9 +52,11 @@ class LoginBrandColumn extends StatelessWidget {
           ),
           const SizedBox(height: AppDimensions.paddingXL),
           Text(
-            AppStrings.loginBrandDesc,
+            l10n.loginBrandDesc,
             style: AppTextStyles.bodyLarge.copyWith(
-              color: AppColors.onPrimary.withValues(alpha: AppDimensions.opacityHigh),
+              color: AppColors.onPrimary.withValues(
+                alpha: AppDimensions.opacityHigh,
+              ),
               height: AppDimensions.lineHeightRelaxed,
             ),
           ),
@@ -58,7 +64,9 @@ class LoginBrandColumn extends StatelessWidget {
           const LoginFormulaCard(formula: 'e = mc²', rotation: -0.035),
           const SizedBox(height: AppDimensions.paddingMD),
           const Padding(
-            padding: EdgeInsetsDirectional.only(start: AppDimensions.paddingHero),
+            padding: EdgeInsetsDirectional.only(
+              start: AppDimensions.paddingHero,
+            ),
             child: LoginFormulaCard(formula: 'a² + b² = c²', rotation: 0.052),
           ),
         ],

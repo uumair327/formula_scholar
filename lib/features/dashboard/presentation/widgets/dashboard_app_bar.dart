@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
+import '../../../../l10n/l10n.dart';
 import '../../../../shared/shared.dart';
 import '../../../auth/auth.dart';
 
@@ -17,6 +18,7 @@ class DashboardAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = context.l10n;
 
     return BlocBuilder<AuthCubit, AuthState>(
       buildWhen: (prev, curr) => prev.user != curr.user,
@@ -69,7 +71,7 @@ class DashboardAppBar extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Welcome back ✨',
+                      l10n.welcomeBack,
                       style: AppTextStyles.bodySmall.copyWith(
                         color: colorScheme.onSurfaceVariant,
                       ),
@@ -81,7 +83,7 @@ class DashboardAppBar extends StatelessWidget {
           ),
           actions: [
             Semantics(
-              label: AppStrings.searchFormulas,
+              label: l10n.searchFormulas,
               button: true,
               child: Container(
                 margin: const EdgeInsetsDirectional.only(
@@ -99,7 +101,7 @@ class DashboardAppBar extends StatelessWidget {
                     LucideIcons.search,
                     color: colorScheme.onSurfaceVariant,
                   ),
-                  tooltip: AppStrings.searchFormulas,
+                  tooltip: l10n.searchFormulas,
                 ),
               ),
             ),

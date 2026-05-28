@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
+import '../../../../l10n/l10n.dart';
 import '../../../../shared/shared.dart';
 
 class LanguageLocalizationPage extends StatelessWidget {
@@ -13,6 +14,7 @@ class LanguageLocalizationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return BlocBuilder<LocalizationCubit, LocalizationState>(
       builder: (context, state) {
         final systemLocale = PlatformDispatcher.instance.locale;
@@ -39,18 +41,14 @@ class LanguageLocalizationPage extends StatelessWidget {
                     EntranceWrapper.stagger(
                       index: 0,
                       child: _SectionCard(
-                        title: AppStrings.labelsLocalizationTitle,
-                        subtitle: AppStrings.labelsLocalizationSubtitle,
+                        title: l10n.labelsLocalizationTitle,
+                        subtitle: l10n.labelsLocalizationSubtitle,
                         child: Column(
                           children: [
                             SwitchListTile.adaptive(
                               contentPadding: EdgeInsets.zero,
-                              title: const Text(
-                                AppStrings.enableLabelsLocalization,
-                              ),
-                              subtitle: const Text(
-                                AppStrings.enableLabelsLocalizationDesc,
-                              ),
+                              title: Text(l10n.enableLabelsLocalization),
+                              subtitle: Text(l10n.enableLabelsLocalizationDesc),
                               value: state.appLabelLocalizationEnabled,
                               onChanged: (v) => context
                                   .read<LocalizationCubit>()
@@ -59,9 +57,9 @@ class LanguageLocalizationPage extends StatelessWidget {
                             const SizedBox(height: AppDimensions.paddingSM),
                             SwitchListTile.adaptive(
                               contentPadding: EdgeInsets.zero,
-                              title: const Text(AppStrings.useSystemLanguage),
+                              title: Text(l10n.useSystemLanguage),
                               subtitle: Text(
-                                '${AppStrings.currentSystemLanguage}: ${_displayLabelLanguageName(systemLocale.languageCode)}',
+                                '${l10n.currentSystemLanguage}: ${_displayLabelLanguageName(context, systemLocale.languageCode)}',
                               ),
                               value:
                                   state.useSystemAppLabelLocale &&
@@ -75,9 +73,9 @@ class LanguageLocalizationPage extends StatelessWidget {
                             const SizedBox(height: AppDimensions.paddingSM),
                             DropdownButtonFormField<String>(
                               initialValue: state.appLabelLanguageCode,
-                              decoration: const InputDecoration(
-                                labelText: AppStrings.appLabelLanguage,
-                                border: OutlineInputBorder(),
+                              decoration: InputDecoration(
+                                labelText: l10n.appLabelLanguage,
+                                border: const OutlineInputBorder(),
                               ),
                               items: AppLocales.appLabelSupportedLocales
                                   .map(
@@ -85,6 +83,7 @@ class LanguageLocalizationPage extends StatelessWidget {
                                       value: locale.languageCode,
                                       child: Text(
                                         _displayLabelLanguageName(
+                                          context,
                                           locale.languageCode,
                                         ),
                                       ),
@@ -110,17 +109,15 @@ class LanguageLocalizationPage extends StatelessWidget {
                     EntranceWrapper.stagger(
                       index: 1,
                       child: _SectionCard(
-                        title: AppStrings.contentLocalizationTitle,
-                        subtitle: AppStrings.contentLocalizationSubtitle,
+                        title: l10n.contentLocalizationTitle,
+                        subtitle: l10n.contentLocalizationSubtitle,
                         child: Column(
                           children: [
                             SwitchListTile.adaptive(
                               contentPadding: EdgeInsets.zero,
-                              title: const Text(
-                                AppStrings.enableContentLocalization,
-                              ),
-                              subtitle: const Text(
-                                AppStrings.enableContentLocalizationDesc,
+                              title: Text(l10n.enableContentLocalization),
+                              subtitle: Text(
+                                l10n.enableContentLocalizationDesc,
                               ),
                               value: state.contentLocalizationEnabled,
                               onChanged: (v) => context
@@ -133,16 +130,19 @@ class LanguageLocalizationPage extends StatelessWidget {
                                   AppLocales.normalizeContentLocaleCode(
                                     state.contentLocaleCode,
                                   ),
-                              decoration: const InputDecoration(
-                                labelText: AppStrings.contentLanguage,
-                                border: OutlineInputBorder(),
+                              decoration: InputDecoration(
+                                labelText: l10n.contentLanguage,
+                                border: const OutlineInputBorder(),
                               ),
                               items: AppLocales.contentSupportedLocaleCodes
                                   .map(
                                     (code) => DropdownMenuItem<String>(
                                       value: code,
                                       child: Text(
-                                        _displayContentLanguageName(code),
+                                        _displayContentLanguageName(
+                                          context,
+                                          code,
+                                        ),
                                       ),
                                     ),
                                   )
@@ -158,7 +158,7 @@ class LanguageLocalizationPage extends StatelessWidget {
                             ),
                             const SizedBox(height: AppDimensions.paddingSM),
                             Text(
-                              AppStrings.contentLocalizationFallbackInfo,
+                              l10n.contentLocalizationFallbackInfo,
                               style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(
                                     color: Theme.of(
@@ -174,9 +174,9 @@ class LanguageLocalizationPage extends StatelessWidget {
                     EntranceWrapper.stagger(
                       index: 2,
                       child: _SectionCard(
-                        title: AppStrings.localizationEffectiveSummary,
+                        title: l10n.localizationEffectiveSummary,
                         subtitle:
-                            '${AppStrings.appLabels}: ${_displayLabelLanguageName(state.effectiveAppLocale(systemLocale).languageCode)}\n${AppStrings.backendContent}: ${_displayContentLanguageName(state.effectiveContentLocaleCode)}',
+                            '${l10n.appLabels}: ${_displayLabelLanguageName(context, state.effectiveAppLocale(systemLocale).languageCode)}\n${l10n.backendContent}: ${_displayContentLanguageName(context, state.effectiveContentLocaleCode)}',
                         child: const SizedBox.shrink(),
                       ),
                     ),
@@ -193,6 +193,7 @@ class LanguageLocalizationPage extends StatelessWidget {
 
   SliverGlassAppBar _buildAppBar(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
     return SliverGlassAppBar(
       leading: IconButton(
         onPressed: () => context.go(AppRoutes.profilePath),
@@ -200,7 +201,7 @@ class LanguageLocalizationPage extends StatelessWidget {
         tooltip: MaterialLocalizations.of(context).backButtonTooltip,
       ),
       titleWidget: Text(
-        AppStrings.languageAndLocalization,
+        l10n.languageAndLocalization,
         style: AppTextStyles.titleMedium.copyWith(
           color: colorScheme.onSurface,
           fontWeight: FontWeight.w800,
@@ -209,21 +210,23 @@ class LanguageLocalizationPage extends StatelessWidget {
     );
   }
 
-  String _displayLabelLanguageName(String code) {
+  String _displayLabelLanguageName(BuildContext context, String code) {
+    final l10n = context.l10n;
     return switch (code) {
-      'en' => AppStrings.languageEnglish,
-      'ar' => AppStrings.languageArabic,
-      'ur' => AppStrings.languageUrdu,
-      _ => AppStrings.languageEnglish,
+      'en' => l10n.languageEnglish,
+      'ar' => l10n.languageArabic,
+      'ur' => l10n.languageUrdu,
+      _ => l10n.languageEnglish,
     };
   }
 
-  String _displayContentLanguageName(String code) {
+  String _displayContentLanguageName(BuildContext context, String code) {
+    final l10n = context.l10n;
     return switch (code) {
-      'en-IN' => AppStrings.languageEnglishIndia,
-      'ur-IN' => AppStrings.languageUrdu,
-      'mr-IN' => AppStrings.languageMarathi,
-      _ => AppStrings.languageEnglishIndia,
+      'en-IN' => l10n.languageEnglishIndia,
+      'ur-IN' => l10n.languageUrdu,
+      'mr-IN' => l10n.languageMarathi,
+      _ => l10n.languageEnglishIndia,
     };
   }
 }

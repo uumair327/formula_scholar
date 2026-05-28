@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../../core/core.dart';
+import '../../../../../l10n/l10n.dart';
 import '../../../../../shared/shared.dart';
 import '../cubit/auth_cubit.dart';
 
@@ -16,17 +17,18 @@ void showForgotPasswordDialog(BuildContext context, String prefillEmail) async {
       builder: (dialogContext) {
         final colorScheme = Theme.of(dialogContext).colorScheme;
 
+        final l10n = dialogContext.l10n;
         return AlertDialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
           ),
-          title: const Text(AppStrings.forgotPasswordTitle),
+          title: Text(l10n.forgotPasswordTitle),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                AppStrings.forgotPasswordDesc,
+                l10n.forgotPasswordDesc,
                 style: AppTextStyles.bodySmall.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),
@@ -34,8 +36,8 @@ void showForgotPasswordDialog(BuildContext context, String prefillEmail) async {
               const SizedBox(height: AppDimensions.paddingLG),
               AppTextField(
                 controller: resetEmailController,
-                label: AppStrings.loginEmailLabel,
-                hintText: AppStrings.loginEmailHint,
+                label: l10n.loginEmailLabel,
+                hintText: l10n.loginEmailHint,
                 prefixIcon: LucideIcons.mail,
                 keyboardType: TextInputType.emailAddress,
               ),
@@ -44,7 +46,7 @@ void showForgotPasswordDialog(BuildContext context, String prefillEmail) async {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text(AppStrings.forgotPasswordCancel),
+              child: Text(l10n.forgotPasswordCancel),
             ),
             FilledButton(
               onPressed: () async {
@@ -62,7 +64,7 @@ void showForgotPasswordDialog(BuildContext context, String prefillEmail) async {
                   SnackBar(
                     content: Text(
                       success
-                          ? AppStrings.forgotPasswordSuccess
+                          ? l10n.forgotPasswordSuccess
                           : context.read<AuthCubit>().state.errorMessage ??
                                 AppStrings.genericError,
                     ),
@@ -71,12 +73,14 @@ void showForgotPasswordDialog(BuildContext context, String prefillEmail) async {
                         : AppColors.error,
                     behavior: SnackBarBehavior.floating,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
+                      borderRadius: BorderRadius.circular(
+                        AppDimensions.radiusSM,
+                      ),
                     ),
                   ),
                 );
               },
-              child: const Text(AppStrings.forgotPasswordSend),
+              child: Text(l10n.forgotPasswordSend),
             ),
           ],
         );

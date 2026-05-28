@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../../core/core.dart';
+import '../../../../../l10n/l10n.dart';
 import '../../../../../shared/shared.dart';
 import '../../cubit/auth_cubit.dart';
 import '../../cubit/auth_state.dart';
@@ -42,6 +43,7 @@ class SignupFormContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(
@@ -54,7 +56,7 @@ class SignupFormContent extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              AppStrings.signupTitle,
+              l10n.signupTitle,
               style: AppTextStyles.headlineMedium.copyWith(
                 fontWeight: FontWeight.w900,
                 letterSpacing: AppDimensions.letterSpacingTight,
@@ -62,7 +64,7 @@ class SignupFormContent extends StatelessWidget {
             ),
             const SizedBox(height: AppDimensions.paddingXS),
             Text(
-              AppStrings.signupSubtitle,
+              l10n.signupSubtitle,
               style: AppTextStyles.bodyMedium.copyWith(
                 color: colorScheme.onSurfaceVariant,
               ),
@@ -72,8 +74,8 @@ class SignupFormContent extends StatelessWidget {
               children: [
                 Expanded(
                   child: AppTextField(
-                    label: AppStrings.signupFullName,
-                    hintText: AppStrings.signupFullNameHint,
+                    label: l10n.signupFullName,
+                    hintText: l10n.signupFullNameHint,
                     prefixIcon: LucideIcons.user,
                     controller: nameController,
                     validator: (value) {
@@ -87,8 +89,8 @@ class SignupFormContent extends StatelessWidget {
                 const SizedBox(width: AppDimensions.paddingLG),
                 Expanded(
                   child: AppTextField(
-                    label: AppStrings.signupEmail,
-                    hintText: AppStrings.signupEmailHint,
+                    label: l10n.signupEmail,
+                    hintText: l10n.signupEmailHint,
                     prefixIcon: LucideIcons.mail,
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
@@ -109,8 +111,8 @@ class SignupFormContent extends StatelessWidget {
             ),
             const SizedBox(height: AppDimensions.paddingLG),
             AppTextField(
-              label: AppStrings.signupPassword,
-              hintText: AppStrings.signupPasswordHint,
+              label: l10n.signupPassword,
+              hintText: l10n.signupPasswordHint,
               controller: passwordController,
               prefixIcon: LucideIcons.lock,
               obscureText: obscurePassword,
@@ -131,14 +133,14 @@ class SignupFormContent extends StatelessWidget {
                   size: AppDimensions.iconDefault,
                 ),
                 tooltip: obscurePassword
-                    ? AppStrings.showPassword
-                    : AppStrings.hidePassword,
+                    ? l10n.showPassword
+                    : l10n.hidePassword,
               ),
             ),
             const SizedBox(height: AppDimensions.paddingLG),
             AppTextField(
-              label: AppStrings.signupConfirmPassword,
-              hintText: AppStrings.signupPasswordHint,
+              label: l10n.signupConfirmPassword,
+              hintText: l10n.signupPasswordHint,
               controller: confirmController,
               prefixIcon: LucideIcons.checkSquare,
               obscureText: obscureConfirm,
@@ -158,9 +160,7 @@ class SignupFormContent extends StatelessWidget {
                   color: colorScheme.onSurfaceVariant,
                   size: AppDimensions.iconDefault,
                 ),
-                tooltip: obscureConfirm
-                    ? AppStrings.showPassword
-                    : AppStrings.hidePassword,
+                tooltip: obscureConfirm ? l10n.showPassword : l10n.hidePassword,
               ),
             ),
             const SizedBox(height: AppDimensions.paddingLG),
@@ -174,7 +174,7 @@ class SignupFormContent extends StatelessWidget {
               builder: (context, state) {
                 final isLoading = state.status == AuthStatus.loading;
                 return AppGradientButton(
-                  label: AppStrings.signupCreateAccount,
+                  label: l10n.signupCreateAccount,
                   onPressed: isLoading ? null : onCreateAccount,
                   isLoading: isLoading,
                   icon: LucideIcons.userPlus,

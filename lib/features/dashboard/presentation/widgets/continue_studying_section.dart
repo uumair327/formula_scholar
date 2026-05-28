@@ -7,6 +7,9 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../cubit/dashboard_cubit.dart';
+import '../cubit/dashboard_state.dart';
 
 class ContinueStudyingSection extends StatelessWidget {
   const ContinueStudyingSection({
@@ -25,47 +28,53 @@ class ContinueStudyingSection extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     if (recentStudies.isEmpty) {
-      return AppCard(
-        padding: const EdgeInsets.all(AppDimensions.paddingXXL),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              AppStrings.continueStudying,
-              style: AppTextStyles.headlineSmall.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
+      return BlocBuilder<DashboardCubit, DashboardState>(
+        builder: (context, state) {
+          return AppCard(
+            padding: const EdgeInsets.all(AppDimensions.paddingXXL),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  state.continueStudyingLabel,
+                  style: AppTextStyles.headlineSmall.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: AppDimensions.paddingMD),
+                Text(state.noRecentTitle, style: AppTextStyles.titleLarge),
+                const SizedBox(height: AppDimensions.paddingXS),
+                Text(
+                  state.noRecentDescription,
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: AppDimensions.paddingLG),
+                ElevatedButton(
+                  onPressed: () =>
+                      StatefulNavigationShell.of(context).goBranch(1),
+                  child: Text(state.openChaptersLabel),
+                ),
+              ],
             ),
-            const SizedBox(height: AppDimensions.paddingMD),
-            Text(
-              AppStrings.dashboardNoRecentTitle,
-              style: AppTextStyles.titleLarge,
-            ),
-            const SizedBox(height: AppDimensions.paddingXS),
-            Text(
-              AppStrings.dashboardNoRecentDescription,
-              style: AppTextStyles.bodySmall.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: AppDimensions.paddingLG),
-            ElevatedButton(
-              onPressed: () => StatefulNavigationShell.of(context).goBranch(1),
-              child: const Text(AppStrings.dashboardOpenChapters),
-            ),
-          ],
-        ),
+          );
+        },
       );
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          AppStrings.continueStudying,
-          style: AppTextStyles.headlineSmall.copyWith(
-            fontWeight: FontWeight.w700,
-          ),
+        BlocBuilder<DashboardCubit, DashboardState>(
+          builder: (context, state) {
+            return Text(
+              state.continueStudyingLabel,
+              style: AppTextStyles.headlineSmall.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            );
+          },
         ),
         const SizedBox(height: AppDimensions.paddingLG),
         SizedBox(
@@ -74,9 +83,8 @@ class ContinueStudyingSection extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             clipBehavior: Clip.none,
             itemCount: recentStudies.length,
-            separatorBuilder: (context, index) => const SizedBox(
-              width: AppDimensions.paddingLG,
-            ),
+            separatorBuilder: (context, index) =>
+                const SizedBox(width: AppDimensions.paddingLG),
             itemBuilder: (context, index) {
               final study = recentStudies[index];
               final iconData = AppIconMapper.resolve(study.iconName);
@@ -91,7 +99,9 @@ class ContinueStudyingSection extends StatelessWidget {
                     color: AppColors.transparent,
                     child: InkWell(
                       onTap: () => _onRecentStudyTap(context, study),
-                      borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+                      borderRadius: BorderRadius.circular(
+                        AppDimensions.radiusLG,
+                      ),
                       child: AppCard(
                         padding: const EdgeInsets.all(AppDimensions.paddingLG),
                         child: Row(
@@ -114,7 +124,9 @@ class ContinueStudyingSection extends StatelessWidget {
                                     style: AppTextStyles.labelLarge,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  const SizedBox(height: AppDimensions.paddingXXS),
+                                  const SizedBox(
+                                    height: AppDimensions.paddingXXS,
+                                  ),
                                   Text(
                                     '${study.subject} • ${study.lastViewed}',
                                     style: AppTextStyles.bodySmall.copyWith(

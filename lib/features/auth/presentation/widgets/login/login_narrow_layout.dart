@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/core.dart';
+import '../../../../../l10n/l10n.dart';
 import 'login_form_content.dart';
 
 class LoginNarrowLayout extends StatelessWidget {
@@ -23,6 +24,7 @@ class LoginNarrowLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(
         horizontal: AppDimensions.paddingXL,
@@ -32,7 +34,7 @@ class LoginNarrowLayout extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            AppStrings.appName,
+            l10n.appName,
             style: AppTextStyles.headlineMedium.copyWith(
               color: AppColors.primary,
               fontWeight: FontWeight.w900,

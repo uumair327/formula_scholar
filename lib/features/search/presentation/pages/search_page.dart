@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
+import '../../../../l10n/l10n.dart';
 import '../../../../shared/shared.dart';
 import '../cubit/search_cubit.dart';
 import '../cubit/search_state.dart';
@@ -13,6 +14,7 @@ class SearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       appBar: _buildAppBar(context),
       body: Column(
@@ -27,19 +29,18 @@ class SearchPage extends StatelessWidget {
               builder: (context, state) {
                 switch (state.status) {
                   case SearchStatus.initial:
-                    return const AppEmptyState(
+                    return AppEmptyState(
                       icon: LucideIcons.search,
-                      title: AppStrings.searchFormulasTitle,
-                      description:
-                          'Type to search across all your subjects and chapters',
+                      title: l10n.searchFormulasTitle,
+                      description: l10n.searchEmptyDescription,
                     );
                   case SearchStatus.loading:
                     return const Center(child: CircularProgressIndicator());
                   case SearchStatus.loaded when state.isEmpty:
-                    return const AppEmptyState(
+                    return AppEmptyState(
                       icon: LucideIcons.searchX,
-                      title: AppStrings.noResultsFound,
-                      description: AppStrings.tryDifferentSearch,
+                      title: l10n.noResultsFound,
+                      description: l10n.tryDifferentSearch,
                     );
                   case SearchStatus.loaded:
                     return _buildResultsList(context, state);
@@ -67,9 +68,10 @@ class SearchPage extends StatelessWidget {
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
+    final l10n = context.l10n;
     return GlassAppBar(
       titleWidget: Text(
-        AppStrings.searchLabel,
+        l10n.searchLabel,
         style: AppTextStyles.titleMedium.copyWith(
           color: Theme.of(context).colorScheme.onSurface,
           fontWeight: FontWeight.w800,
@@ -89,7 +91,7 @@ class SearchPage extends StatelessWidget {
           child: IconButton(
             onPressed: () => context.read<SearchCubit>().clearSearch(),
             icon: const Icon(LucideIcons.x),
-            tooltip: AppStrings.clearSearch,
+            tooltip: l10n.clearSearch,
           ),
         ),
       ],
@@ -98,6 +100,7 @@ class SearchPage extends StatelessWidget {
 
   Widget _buildSearchInput(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return Padding(
       padding: const EdgeInsets.all(AppDimensions.paddingMD),
@@ -114,7 +117,7 @@ class SearchPage extends StatelessWidget {
           );
         },
         decoration: InputDecoration(
-          hintText: AppStrings.searchHint,
+          hintText: l10n.searchFormulas,
           prefixIcon: const Icon(LucideIcons.search),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppDimensions.radiusLG),

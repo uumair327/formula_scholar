@@ -19,30 +19,41 @@ class GlassBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final items = navItems(context);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: AppDimensions.glassBlurSigma, sigmaY: AppDimensions.glassBlurSigma),
+        filter: ImageFilter.blur(
+          sigmaX: AppDimensions.glassBlurSigma,
+          sigmaY: AppDimensions.glassBlurSigma,
+        ),
         child: Container(
           decoration: BoxDecoration(
             color: isDark ? AppColors.glassDark : AppColors.glassLight,
             borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
             border: Border.all(
-              color: isDark ? AppColors.glassBorderDark : AppColors.glassBorderLight,
+              color: isDark
+                  ? AppColors.glassBorderDark
+                  : AppColors.glassBorderLight,
               width: AppDimensions.borderWidth,
             ),
-            boxShadow: [BoxShadow(
-              color: AppColors.primary.withValues(alpha: 0.1),
-              blurRadius: 24,
-              offset: const Offset(0, 8),
-            )],
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.primary.withValues(alpha: 0.1),
+                blurRadius: 24,
+                offset: const Offset(0, 8),
+              ),
+            ],
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingSM, vertical: AppDimensions.paddingSM),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppDimensions.paddingSM,
+              vertical: AppDimensions.paddingSM,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: navItems.asMap().entries.map((entry) {
+              children: items.asMap().entries.map((entry) {
                 return Expanded(
                   child: NavItem(
                     icon: entry.value.icon,
