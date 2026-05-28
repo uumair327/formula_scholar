@@ -10,6 +10,7 @@ if (!admin.apps.length) {
   admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 }
 const db = admin.firestore();
+const { buildLocalizedFields } = require('./seed_locale_helpers');
 
 const AUDIENCE = ['msbshse_10', 'IN_msbshse_10', 'msbshse_class_10'];
 const TAGS_BASE = ['maharashtra-board', '10th'];
@@ -714,6 +715,7 @@ async function seedGeometryFormulas() {
         audiences: AUDIENCE,
         tags: [...TAGS_BASE, ...f.category.split(',').map(t => t.trim())],
         examples: [],
+        localized: buildLocalizedFields(f),
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       });

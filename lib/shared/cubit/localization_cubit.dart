@@ -56,6 +56,13 @@ class LocalizationCubit extends HydratedCubit<LocalizationState> {
         contentLocaleCode: AppLocales.normalizeContentLocaleCode(nextCode),
       ),
     );
+    // publish to AppLocales so adapters can read current content locale
+    AppLocales.currentLocaleCode = state
+        .copyWith(
+          contentLocalizationEnabled: enabled,
+          contentLocaleCode: AppLocales.normalizeContentLocaleCode(nextCode),
+        )
+        .contentLocaleCode;
   }
 
   void setContentLocaleCode(String localeCode) {
@@ -65,6 +72,7 @@ class LocalizationCubit extends HydratedCubit<LocalizationState> {
       tag: AppLogTags.localizationCubit,
     );
     emit(state.copyWith(contentLocaleCode: normalized));
+    AppLocales.currentLocaleCode = normalized;
   }
 
   @override

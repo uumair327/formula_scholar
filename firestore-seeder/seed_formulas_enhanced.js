@@ -16,6 +16,7 @@ if (!admin.apps.length) {
 }
 
 const db = admin.firestore();
+const { buildLocalizedFields } = require('./seed_locale_helpers');
 
 async function seedFormulas() {
     console.log('Seeding Production-Level Formulas...\n');
@@ -32,6 +33,20 @@ async function seedFormulas() {
                             title: 'Quadratic Formula',
                             latex: 'x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}',
                             description: 'Solves quadratic equations ax² + bx + c = 0. The discriminant (b² - 4ac) determines real/complex roots.',
+                            translations: {
+                                'mr-IN': {
+                                    title: 'द्विघात समीकरणाचे सूत्र',
+                                    description: 'द्विघात समीकरण ax² + bx + c = 0 सोडवण्यासाठी वापरले जाते. विसंगती (b² - 4ac) वास्तविक किंवा जटिल मूळ ठरवते.'
+                                },
+                                'ur-IN': {
+                                    title: 'دو درجی مساوات کا فارمولا',
+                                    description: 'دو درجی مساوات ax² + bx + c = 0 کو حل کرنے کے لیے استعمال ہوتا ہے۔ تفریق (b² - 4ac) حقیقی یا مرکب جڑوں کا تعین کرتی ہے۔'
+                                },
+                                'ar-IN': {
+                                    title: 'صيغة المعادلة التربيعية',
+                                    description: 'تُستخدم لحل المعادلات التربيعية ax² + bx + c = 0. المُميّز (b² - 4ac) يحدد الجذور الحقيقية أو المركبة.'
+                                }
+                            },
                             category: 'algebraic',
                             difficulty: 'intermediate',
                             isGeneralContent: true,
@@ -44,6 +59,11 @@ async function seedFormulas() {
                             title: 'Difference of Squares',
                             latex: 'a^2 - b^2 = (a - b)(a + b)',
                             description: 'Fundamental factoring identity for difference of two squares.',
+                            translations: {
+                                'mr-IN': { title: 'चौरसातील फरक', description: 'दोन चौरसांच्या फरकाचे सामान्य घटक विभाजन सूत्र.' },
+                                'ur-IN': { title: 'فروق مربع', description: 'دو مربع کے فرق کے لیے بنیادی عامل شناخت.' },
+                                'ar-IN': { title: 'فرق المربعات', description: 'هوية أساسية لتقسيم الفرق بين مربعين.' }
+                            },
                             category: 'factorization',
                             difficulty: 'easy',
                             isGeneralContent: true,
@@ -56,6 +76,11 @@ async function seedFormulas() {
                             title: 'Perfect Square Trinomial',
                             latex: '(a \\pm b)^2 = a^2 \\pm 2ab + b^2',
                             description: 'Expansion of a binomial squared, useful for completing the square.',
+                            translations: {
+                                'mr-IN': { title: 'संपूर्ण चौकोन त्रिनोमिअल', description: 'दोनपदी वर्गाचा विस्तार — "कम्प्लीटिंग द स्क्वेअर" साठी उपयोगी.' },
+                                'ur-IN': { title: 'مکمل مربع ثلاثی', description: 'دونوں اجزاء کے مربع کے توسیع، مربع مکمل کرنے کے لیے مفید۔' },
+                                'ar-IN': { title: 'ثلاثي المربع الكامل', description: 'توسيع ثنائي الحد بالمربع، مفيد لإكمال المربع.' }
+                            },
                             category: 'expansion',
                             difficulty: 'easy',
                             isGeneralContent: true,
@@ -68,6 +93,11 @@ async function seedFormulas() {
                             title: 'Sum of Cubes',
                             latex: 'a^3 + b^3 = (a + b)(a^2 - ab + b^2)',
                             description: 'Factorization of sum of two perfect cubes.',
+                            translations: {
+                                'mr-IN': { title: 'घनांचा बेरीज सूत्र', description: 'दोन परिपूर्ण घनांच्या बेरीजचे घटक विभाजन.' },
+                                'ur-IN': { title: 'جمع مکعب', description: 'دو مکمل مکعبوں کے مجموعے کا عامل تجزیہ۔' },
+                                'ar-IN': { title: 'مجموع المكعبات', description: 'تجزئة مجموع مكعبين كاملين.' }
+                            },
                             category: 'factorization',
                             difficulty: 'intermediate',
                             isGeneralContent: true,
@@ -80,6 +110,11 @@ async function seedFormulas() {
                             title: 'Difference of Cubes',
                             latex: 'a^3 - b^3 = (a - b)(a^2 + ab + b^2)',
                             description: 'Factorization of difference of two perfect cubes.',
+                            translations: {
+                                'mr-IN': { title: 'घनांचा फरक', description: 'दोन परिपूर्ण घनांच्या फरकाशी संबंधित घटक विभाजन.' },
+                                'ur-IN': { title: 'فرق مکعب', description: 'دو مکمل مکعبوں کے فرق کا عامل تجزیہ۔' },
+                                'ar-IN': { title: 'فرق المكعبات', description: 'تجزئة فرق مكعبين كاملين.' }
+                            },
                             category: 'factorization',
                             difficulty: 'intermediate',
                             isGeneralContent: true,
@@ -92,6 +127,11 @@ async function seedFormulas() {
                             title: 'Cube of Binomial Sum',
                             latex: '(a+b)^3 = a^3 + 3a^2b + 3ab^2 + b^3',
                             description: 'Full expansion of the cube of a binomial sum.',
+                            translations: {
+                                'mr-IN': { title: 'दोनपदी समाकाचा घन', description: 'दोनपदी बेरीजाचा घनाचा पूर्ण विस्तार.' },
+                                'ur-IN': { title: 'مکعب جمع ثنائي', description: 'ثنائی جمع کے مکعب کی مکمل توسیع۔' },
+                                'ar-IN': { title: 'مكعب مجموع ذو حدين', description: 'التوسيع الكامل لمكعب مجموع حدين.' }
+                            },
                             category: 'expansion',
                             difficulty: 'intermediate',
                             isGeneralContent: true,
@@ -104,6 +144,11 @@ async function seedFormulas() {
                             title: 'Cube of Binomial Difference',
                             latex: '(a-b)^3 = a^3 - 3a^2b + 3ab^2 - b^3',
                             description: 'Full expansion of the cube of a binomial difference.',
+                            translations: {
+                                'mr-IN': { title: 'दोनपदी वियोजनेचा घन', description: 'दोनपदी वियोजनेचा घनाचा पूर्ण विस्तार.' },
+                                'ur-IN': { title: 'مکعب فرق ثنائي', description: 'ثنائی فرق کے مکعب کی مکمل توسیع۔' },
+                                'ar-IN': { title: 'مكعب الفرق ذو الحدين', description: 'التوسيع الكامل لمكعب الفرق بين حدين.' }
+                            },
                             category: 'expansion',
                             difficulty: 'intermediate',
                             isGeneralContent: true,
@@ -1501,6 +1546,7 @@ async function seedFormulas() {
             title: entry.title,
             topic: entry.topic,
             published: entry.published,
+            localized: buildLocalizedFields(entry),
             updatedAt: admin.firestore.FieldValue.serverTimestamp()
         }, { merge: true });
     }

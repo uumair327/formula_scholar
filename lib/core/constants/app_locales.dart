@@ -75,6 +75,11 @@ abstract final class AppLocales {
     };
   }
 
+  /// Holds the currently selected content locale code for runtime adapters
+  /// to read. This is updated by `LocalizationCubit` when user switches
+  /// content language at runtime.
+  static String currentLocaleCode = defaultContentLocaleCode;
+
   static List<String> contentLocaleFallbacks(String? localeCode) {
     final normalized = normalizeContentLocaleCode(localeCode);
     final languageCode = normalized.split('-').first;

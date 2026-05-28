@@ -112,11 +112,44 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
     bool? masteryOverride,
   }) {
     final data = doc.data() as Map<String, dynamic>;
+    // prefer localized map if available; fall back to top-level fields
+    String resolveLocalizedField(String key, String fallback) {
+      try {
+        final loc = data['localized'] as Map<String, dynamic>?;
+        if (loc != null) {
+          final localeCode = AppLocales.normalizeContentLocaleCode(
+            AppLocales.currentLocaleCode,
+          );
+          final candidate = loc[localeCode] as Map<String, dynamic>?;
+          if (candidate != null &&
+              candidate[key] != null &&
+              (candidate[key] as String).isNotEmpty) {
+            return candidate[key] as String;
+          }
+          // try fallbacks
+          for (final fb in AppLocales.contentLocaleFallbacks(localeCode)) {
+            final fbCandidate = loc[fb] as Map<String, dynamic>?;
+            if (fbCandidate != null &&
+                fbCandidate[key] != null &&
+                (fbCandidate[key] as String).isNotEmpty) {
+              return fbCandidate[key] as String;
+            }
+          }
+        }
+      } catch (_) {}
+      return fallback;
+    }
+
+    final title = resolveLocalizedField('title', data['title'] ?? '');
+    final description = resolveLocalizedField(
+      'description',
+      data['description'] ?? '',
+    );
     return Formula(
       id: data['id'] ?? doc.id,
-      title: data['title'] ?? '',
+      title: title,
       latex: data['latex'] ?? '',
-      description: data['description'] ?? '',
+      description: description,
       isMastered: masteryOverride ?? (data['isMastered'] ?? false),
       isBookmarked: isBookmarked,
       isGeneralContent: data['isGeneralContent'] ?? false,
