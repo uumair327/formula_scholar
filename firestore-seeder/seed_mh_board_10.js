@@ -83,7 +83,7 @@ async function seedMhBoard10() {
         formulaCount: 6,
         isFeatured: true,
         boardId: 'msbshse',
-        gradeId: '10',
+        gradeId: 'class_10',
         audiences: ['msbshse_10', 'IN_msbshse_10', 'msbshse_class_10'],
         isGeneralContent: false
       },
@@ -110,7 +110,7 @@ async function seedMhBoard10() {
         formulaCount: 7,
         isFeatured: true,
         boardId: 'msbshse',
-        gradeId: '10',
+        gradeId: 'class_10',
         audiences: ['msbshse_10', 'IN_msbshse_10', 'msbshse_class_10'],
         isGeneralContent: false
       },
@@ -138,7 +138,7 @@ async function seedMhBoard10() {
         formulaCount: 10,
         isFeatured: true,
         boardId: 'msbshse',
-        gradeId: '10',
+        gradeId: 'class_10',
         audiences: ['msbshse_10', 'IN_msbshse_10', 'msbshse_class_10'],
         isGeneralContent: false
       },
@@ -169,7 +169,7 @@ async function seedMhBoard10() {
         formulaCount: 10,
         isFeatured: true,
         boardId: 'msbshse',
-        gradeId: '10',
+        gradeId: 'class_10',
         audiences: ['msbshse_10', 'IN_msbshse_10', 'msbshse_class_10'],
         isGeneralContent: false
       },

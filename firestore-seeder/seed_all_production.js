@@ -86,11 +86,6 @@ const scripts = [
         stage: 'Content'
     },
     {
-        name: 'seed_status.js',
-        description: 'Dashboard seed/sync metadata',
-        stage: 'Dashboard'
-    },
-    {
         name: 'seed_dashboard_meta.js',
         description: 'Dashboard metadata (practice settings, runtime, modules, governance)',
         stage: 'Dashboard'
@@ -99,6 +94,16 @@ const scripts = [
         name: 'seed_app_content.js',
         description: 'App content (banners, forum, videos, canonical data)',
         stage: 'Content'
+    },
+    {
+        name: 'seed_dashboard_content_values.js',
+        description: 'Localized dashboard content values for app clients',
+        stage: 'Dashboard'
+    },
+    {
+        name: 'seed_status.js',
+        description: 'Dashboard seed/sync metadata',
+        stage: 'Dashboard'
     }
 ];
 

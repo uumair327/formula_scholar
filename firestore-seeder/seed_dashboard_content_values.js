@@ -24,43 +24,45 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 async function seedContentValues() {
-    console.log('Seeding dashboard_content_values/current with localized strings...');
+    console.log('Seeding dashboard_content_values/current with Maharashtra Board 10th localized strings...');
 
     const generatedAt = new Date().toISOString();
 
     const items = [];
 
-    const keys = [
-        'dashboard.hero.badge',
-        'dashboard.hero.title',
-        'dashboard.hero.description',
-        'dashboard.hero.resume',
-        'dashboard.hero.resumeSemantic',
-        'dashboard.quickActions.title',
-        'dashboard.quickActions.studyPlanner',
-        'dashboard.quickActions.analytics',
-        'dashboard.quickActions.flashcards',
-        // Additional dashboard strings
-        'dashboard.live',
-        'dashboard.boardReadyQuiz',
-        'dashboard.quizDescription',
-        'dashboard.startNow',
-        'dashboard.startQuiz',
-        'dashboard.academic.viewAll',
-        'dashboard.vault.description'
-        ,
-        // Continue studying / no recent
-        'dashboard.continueStudying',
-        'dashboard.noRecent.title',
-        'dashboard.noRecent.description',
-        'dashboard.openChapters'
-    ];
-
-    const values = {
+    const localizedBundles = {
+        'ar-IN': {
+            'dashboard.curriculum.pending': 'للمتابعة اختر الصف العاشر من مجلس ماهاراشترا',
+            'dashboard.hero.badge': 'مجلس ولاية ماهاراشترا • الصف 10',
+            'dashboard.hero.badge.fallback': 'مجلس ولاية ماهاراشترا • الصف 10',
+            'dashboard.hero.title': 'إتقان الصف العاشر\nلمجلس ماهاراشترا',
+            'dashboard.hero.title.forTopic': 'إتقان {topic} لمجلس ماهاراشترا',
+            'dashboard.hero.description': 'واصل رحلتك مع مجلس ماهاراشترا. لقد أنجزت {progress}% من الفصل الحالي.',
+            'dashboard.hero.resume': 'استئناف الدرس',
+            'dashboard.hero.resumeSemantic': 'استئناف التعلم',
+            'dashboard.quickActions.title': 'استكشف الأدوات',
+            'dashboard.quickActions.studyPlanner': 'مخطط الدراسة',
+            'dashboard.quickActions.analytics': 'عرض التحليلات',
+            'dashboard.quickActions.flashcards': 'بطاقات المراجعة',
+            'dashboard.live': 'مباشر',
+            'dashboard.boardReadyQuiz': 'اختبار جاهز لمجلس MH',
+            'dashboard.quizDescription': 'تدرّب على مفاهيم الصف العاشر لمجلس ماهاراشترا.',
+            'dashboard.startNow': 'ابدأ الآن',
+            'dashboard.startQuiz': 'ابدأ الاختبار',
+            'dashboard.academic.viewAll': 'عرض الكل',
+            'dashboard.vault.description': 'جميع القوانين والملاحظات للصف العاشر من مجلس ماهاراشترا',
+            'dashboard.continueStudying': 'تابع الدراسة',
+            'dashboard.noRecent.title': 'لا توجد نشاطات حديثة بعد',
+            'dashboard.noRecent.description': 'ابدأ من تبويب الدروس وستظهر هنا تقدمك.',
+            'dashboard.openChapters': 'فتح الفصول',
+        },
         'en-IN': {
-            'dashboard.hero.badge': 'CBSE Syllabus • Grade 9',
-            'dashboard.hero.title': 'Mastering Motion &\\nLaws of Forces',
-            'dashboard.hero.description': "Continue your journey through Physics. You're {progress}% through the current chapter.",
+            'dashboard.curriculum.pending': 'Select Maharashtra Board Class 10 to continue',
+            'dashboard.hero.badge': 'Maharashtra State Board • Grade 10',
+            'dashboard.hero.badge.fallback': 'Maharashtra State Board • Grade 10',
+            'dashboard.hero.title': 'Mastering Maharashtra Board\nClass 10',
+            'dashboard.hero.title.forTopic': 'Mastering {topic} for Maharashtra Board',
+            'dashboard.hero.description': "Continue your Maharashtra Board journey. You're {progress}% through the current chapter.",
             'dashboard.hero.resume': 'Resume Lesson',
             'dashboard.hero.resumeSemantic': 'Resume learning',
             'dashboard.quickActions.title': 'Explore Tools',
@@ -68,68 +70,73 @@ async function seedContentValues() {
             'dashboard.quickActions.analytics': 'View Analytics',
             'dashboard.quickActions.flashcards': 'Flashcards',
             'dashboard.live': 'LIVE',
-            'dashboard.boardReadyQuiz': 'Board Ready Quiz',
-            'dashboard.quizDescription': 'Test your knowledge on CBSE Chapter 2.',
+            'dashboard.boardReadyQuiz': 'MH Board Ready Quiz',
+            'dashboard.quizDescription': 'Practice Maharashtra Board Class 10 concepts.',
             'dashboard.startNow': 'Start Now',
-            'dashboard.startQuiz': 'Start quiz',
+            'dashboard.startQuiz': 'Start Quiz',
             'dashboard.academic.viewAll': 'View All',
-            'dashboard.vault.description': '42 saved items across 4 subjects'
-            ,
+            'dashboard.vault.description': 'All formulas and notes for Maharashtra Board Class 10',
             'dashboard.continueStudying': 'Continue Studying',
             'dashboard.noRecent.title': 'No recent activity yet',
-            'dashboard.noRecent.description': 'Start learning from the chapters tab and your recent progress will appear here.',
-            'dashboard.openChapters': 'Open Chapters'
-        },
-        'ur-IN': {
-            'dashboard.hero.badge': 'CBSE نصاب • جماعت 9',
-            'dashboard.hero.title': 'حرکت اور\\nقوانینِ قوت میں مہارت',
-            'dashboard.hero.description': 'فزکس میں اپنا سفر جاری رکھیں۔ آپ اس باب کا {progress}% مکمل کر چکے ہیں۔',
-            'dashboard.hero.resume': 'سبق دوبارہ شروع کریں',
-            'dashboard.hero.resumeSemantic': 'مطالعہ دوبارہ شروع کریں',
-            'dashboard.quickActions.title': 'ٹولز دریافت کریں',
-            'dashboard.quickActions.studyPlanner': 'مطالعہ منصوبہ ساز',
-            'dashboard.quickActions.analytics': 'تجزیات دیکھیں',
-            'dashboard.quickActions.flashcards': 'فلیش کارڈز',
-            'dashboard.live': 'LIVE',
-            'dashboard.boardReadyQuiz': 'بورڈ ریڈی کوئز',
-            'dashboard.quizDescription': 'CBSE باب 2 میں اپنی معلومات کی جانچ کریں۔',
-            'dashboard.startNow': 'اب شروع کریں',
-            'dashboard.startQuiz': 'کوئز شروع کریں',
-            'dashboard.academic.viewAll': 'سب دیکھیں',
-            'dashboard.vault.description': '4 مضامین میں 42 محفوظ آئٹمز'
-            ,
-            'dashboard.continueStudying': 'مطالعہ جاری رکھیں',
-            'dashboard.noRecent.title': 'ابھی کوئی حالیہ سرگرمی نہیں',
-            'dashboard.noRecent.description': 'چپٹر ٹیب سے مطالعہ شروع کریں اور آپ کی حالیہ پیشرفت یہاں نظر آئے گی۔',
-            'dashboard.openChapters': 'چیپٹر کھولیں'
+            'dashboard.noRecent.description': 'Start from the chapters tab and your progress will appear here.',
+            'dashboard.openChapters': 'Open Chapters',
         },
         'mr-IN': {
-            'dashboard.hero.badge': 'CBSE अभ्यासक्रम • इयत्ता 9',
-            'dashboard.hero.title': 'गती आणि बलाच्या नियमांमध्ये पारंगत',
-            'dashboard.hero.description': 'भौतिकशास्त्रामध्ये आपला प्रवास सुरू ठेवा. आपण सध्याच्या प्रकरणाचा {progress}% पूर्ण केला आहे.',
+            'dashboard.curriculum.pending': 'सुरू ठेवण्यासाठी महाराष्ट्र बोर्ड इयत्ता 10 निवडा',
+            'dashboard.hero.badge': 'महाराष्ट्र राज्य मंडळ • इयत्ता 10',
+            'dashboard.hero.badge.fallback': 'महाराष्ट्र राज्य मंडळ • इयत्ता 10',
+            'dashboard.hero.title': 'महाराष्ट्र बोर्डासाठी\nइयत्ता 10 मध्ये प्रभुत्व',
+            'dashboard.hero.title.forTopic': 'महाराष्ट्र बोर्डासाठी {topic} मध्ये पारंगत',
+            'dashboard.hero.description': 'महाराष्ट्र बोर्डमधील तुमचा प्रवास सुरू ठेवा. आपण सध्याच्या प्रकरणाचा {progress}% पूर्ण केला आहे.',
             'dashboard.hero.resume': 'पाठ पुन्हा सुरू करा',
             'dashboard.hero.resumeSemantic': 'अभ्यास पुन्हा सुरू करा',
             'dashboard.quickActions.title': 'उपकरणे शोधा',
             'dashboard.quickActions.studyPlanner': 'अभ्यास नियोजक',
             'dashboard.quickActions.analytics': 'विश्लेषण पहा',
             'dashboard.quickActions.flashcards': 'फ्लॅशकार्ड',
-            'dashboard.live': 'LIVE',
-            'dashboard.boardReadyQuiz': 'बोर्ड रेडी क्विझ',
-            'dashboard.quizDescription': 'CBSE अध्याय 2 वरील आपले ज्ञान तपासा.',
+            'dashboard.live': 'थेट',
+            'dashboard.boardReadyQuiz': 'एमएच बोर्ड रेडी क्विझ',
+            'dashboard.quizDescription': 'महाराष्ट्र बोर्ड इयत्ता 10 संकल्पना सराव करा.',
             'dashboard.startNow': 'आता सुरू करा',
             'dashboard.startQuiz': 'क्विझ सुरू करा',
             'dashboard.academic.viewAll': 'सर्व पहा',
-            'dashboard.vault.description': '4 विषयांमध्ये 42 जतन केलेल्या आयटम्स'
-            ,
+            'dashboard.vault.description': 'महाराष्ट्र बोर्ड इयत्ता 10 साठी सर्व सूत्रे आणि नोंदी',
             'dashboard.continueStudying': 'अभ्यास सुरू ठेवा',
-            'dashboard.noRecent.title': 'अद्याप कोणतीही अलीकडील क्रिये नाही',
-            'dashboard.noRecent.description': 'अध्याय टॅबमधून शिका आणि तुमची अलीकडील प्रगती येथे दिसेल.',
-            'dashboard.openChapters': 'अध्याय उघडा'
-        }
+            'dashboard.noRecent.title': 'अद्याप अलीकडील क्रिया नाही',
+            'dashboard.noRecent.description': 'अध्याय टॅबमधून सुरू करा आणि तुमची प्रगती येथे दिसेल.',
+            'dashboard.openChapters': 'अध्याय उघडा',
+        },
+        'ur-IN': {
+            'dashboard.curriculum.pending': 'جاری رکھنے کے لیے مہاراشٹر بورڈ جماعت 10 منتخب کریں',
+            'dashboard.hero.badge': 'مہاراشٹر اسٹیٹ بورڈ • جماعت 10',
+            'dashboard.hero.badge.fallback': 'مہاراشٹر اسٹیٹ بورڈ • جماعت 10',
+            'dashboard.hero.title': 'مہاراشٹر بورڈ کے لیے\nجماعت 10 میں مہارت',
+            'dashboard.hero.title.forTopic': 'مہاراشٹر بورڈ کے لیے {topic} میں مہارت',
+            'dashboard.hero.description': 'مہاراشٹر بورڈ کے ساتھ اپنا سفر جاری رکھیں۔ آپ موجودہ باب کا {progress}% مکمل کر چکے ہیں۔',
+            'dashboard.hero.resume': 'سبق دوبارہ شروع کریں',
+            'dashboard.hero.resumeSemantic': 'مطالعہ دوبارہ شروع کریں',
+            'dashboard.quickActions.title': 'ٹولز دریافت کریں',
+            'dashboard.quickActions.studyPlanner': 'مطالعہ منصوبہ ساز',
+            'dashboard.quickActions.analytics': 'تجزیات دیکھیں',
+            'dashboard.quickActions.flashcards': 'فلیش کارڈز',
+            'dashboard.live': 'براہِ راست',
+            'dashboard.boardReadyQuiz': 'ایم ایچ بورڈ ریڈی کوئز',
+            'dashboard.quizDescription': 'مہاراشٹر بورڈ جماعت 10 کے تصورات کی مشق کریں۔',
+            'dashboard.startNow': 'اب شروع کریں',
+            'dashboard.startQuiz': 'کوئز شروع کریں',
+            'dashboard.academic.viewAll': 'سب دیکھیں',
+            'dashboard.vault.description': 'مہاراشٹر بورڈ جماعت 10 کے تمام فارمولے اور نوٹس',
+            'dashboard.continueStudying': 'مطالعہ جاری رکھیں',
+            'dashboard.noRecent.title': 'ابھی کوئی حالیہ سرگرمی نہیں',
+            'dashboard.noRecent.description': 'ابواب کے ٹیب سے شروع کریں اور آپ کی پیش رفت یہاں نظر آئے گی۔',
+            'dashboard.openChapters': 'ابواب کھولیں',
+        },
     };
 
-    for (const locale of Object.keys(values)) {
-        const bucket = values[locale];
+    const keys = [...new Set(Object.values(localizedBundles).flatMap((bundle) => Object.keys(bundle)))];
+
+    for (const locale of Object.keys(localizedBundles)) {
+        const bucket = localizedBundles[locale];
         for (const key of keys) {
             items.push({
                 key,

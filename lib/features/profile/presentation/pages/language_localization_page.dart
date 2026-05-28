@@ -221,6 +221,7 @@ class LanguageLocalizationPage extends StatelessWidget {
   String _displayContentLanguageName(BuildContext context, String code) {
     final l10n = context.l10n;
     return switch (code) {
+      'ar-IN' => l10n.languageArabic,
       'en-IN' => l10n.languageEnglishIndia,
       'ur-IN' => l10n.languageUrdu,
       'mr-IN' => l10n.languageMarathi,

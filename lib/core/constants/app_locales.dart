@@ -24,6 +24,7 @@ abstract final class AppLocales {
 
   /// Locale codes used for dashboard-driven backend content.
   static const List<String> contentSupportedLocaleCodes = [
+    'ar-IN',
     'en-IN',
     'ur-IN',
     'mr-IN',
@@ -66,6 +67,7 @@ abstract final class AppLocales {
 
     // Allow callers to pass only language code (for example "ur").
     return switch (normalized.toLowerCase()) {
+      'ar' => 'ar-IN',
       'en' => 'en-IN',
       'ur' => 'ur-IN',
       'mr' => 'mr-IN',
