@@ -8,8 +8,6 @@ import '../../domain/domain.dart';
 import '../cubit/onboarding_cubit.dart';
 import '../cubit/onboarding_state.dart';
 import '../widgets/widgets.dart';
-import '../../../../shared/shared.dart';
-
 
 /// Onboarding Step 3 — Grade selection.
 /// Driven dynamically by OnboardingCubit based on the chosen Board.
@@ -39,7 +37,7 @@ class OnboardingStep3Page extends StatelessWidget {
         return OnboardingShell(
           currentStep: 3,
           totalSteps: 4,
-          continueLabel: AppStrings.onboardingContinue,
+          continueLabel: context.l10n.onboardingContinue,
           onBack: () {
             context.read<OnboardingCubit>().goBackToBoards();
             context.go(AppRoutes.onboardingStep2Path);
@@ -50,10 +48,10 @@ class OnboardingStep3Page extends StatelessWidget {
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const OnboardingStepHeading(
-                tag: 'GRADE',
-                title: 'Select Your Class',
-                subtitle: 'Choose your academic year',
+              OnboardingStepHeading(
+                tag: context.l10n.step3Tag,
+                title: context.l10n.step3Title,
+                subtitle: context.l10n.step3Subtitle,
               ),
               const SizedBox(height: AppDimensions.paddingXXL),
 
@@ -196,8 +194,12 @@ class _GradeCard extends StatelessWidget {
             if (isSelected)
               Positioned(
                 top: 0,
-                left: Directionality.of(context) == TextDirection.rtl ? 0 : null,
-                right: Directionality.of(context) == TextDirection.ltr ? 0 : null,
+                left: Directionality.of(context) == TextDirection.rtl
+                    ? 0
+                    : null,
+                right: Directionality.of(context) == TextDirection.ltr
+                    ? 0
+                    : null,
                 child: Container(
                   width: AppDimensions.iconMD,
                   height: AppDimensions.iconMD,

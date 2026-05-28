@@ -197,7 +197,7 @@ class _NativeImageWidgetState extends State<NativeImageWidget>
                         _selectedAnnotation = null;
                       });
                     },
-                    tooltip: AppStrings.closeLabel,
+                    tooltip: context.l10n.closeLabel,
                   ),
                 ],
               ),

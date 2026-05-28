@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../cubit/curriculum_options_cubit.dart';
 import '../cubit/curriculum_options_state.dart';
 import 'curriculum_selection_bottom_sheet.dart';
@@ -24,10 +24,15 @@ class CurriculumFilterBar extends StatelessWidget {
       builder: (context, curriculumState) {
         final selection = curriculumState.curriculum;
         return BlocBuilder<CurriculumOptionsCubit, CurriculumOptionsState>(
-          buildWhen: (p, n) => p.status != n.status || p.boards != n.boards || p.grades != n.grades || p.errorMessage != n.errorMessage,
+          buildWhen: (p, n) =>
+              p.status != n.status ||
+              p.boards != n.boards ||
+              p.grades != n.grades ||
+              p.errorMessage != n.errorMessage,
           builder: (context, options) {
             return Semantics(
-              label: 'Change Active Curriculum. Currently selected: ${selection?.boardName ?? "None"} ${selection?.gradeLabel ?? ""}',
+              label:
+                  'Change Active Curriculum. Currently selected: ${selection?.boardName ?? "None"} ${selection?.gradeLabel ?? ""}',
               button: true,
               child: GestureDetector(
                 onTap: () {
@@ -40,7 +45,9 @@ class CurriculumFilterBar extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(AppDimensions.paddingMD),
                   decoration: BoxDecoration(
-                    color: colorScheme.surfaceContainerLowest.withValues(alpha: 0.7),
+                    color: colorScheme.surfaceContainerLowest.withValues(
+                      alpha: 0.7,
+                    ),
                     borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
                     border: Border.all(
                       color: colorScheme.outlineVariant.withValues(alpha: 0.3),
@@ -80,7 +87,8 @@ class CurriculumFilterBar extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              AppStrings.dashboardActiveCurriculum.toUpperCase(),
+                              context.l10n.dashboardActiveCurriculum
+                                  .toUpperCase(),
                               style: AppTextStyles.labelSmall.copyWith(
                                 color: colorScheme.onSurfaceVariant,
                                 fontWeight: FontWeight.w800,
@@ -94,8 +102,10 @@ class CurriculumFilterBar extends StatelessWidget {
                               child: Text(
                                 selection != null
                                     ? '${selection.boardName} • ${selection.gradeLabel}'
-                                    : AppStrings.dashboardCurriculumPending,
-                                key: ValueKey('curr_title_${selection?.boardId}_${selection?.gradeId}'),
+                                    : context.l10n.dashboardCurriculumPending,
+                                key: ValueKey(
+                                  'curr_title_${selection?.boardId}_${selection?.gradeId}',
+                                ),
                                 style: AppTextStyles.titleSmall.copyWith(
                                   color: colorScheme.onSurface,
                                   fontWeight: FontWeight.w700,
@@ -111,7 +121,9 @@ class CurriculumFilterBar extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(AppDimensions.paddingXS),
                         decoration: BoxDecoration(
-                          color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                          color: colorScheme.surfaceContainerHighest.withValues(
+                            alpha: 0.5,
+                          ),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -130,5 +142,4 @@ class CurriculumFilterBar extends StatelessWidget {
       },
     );
   }
-
 }

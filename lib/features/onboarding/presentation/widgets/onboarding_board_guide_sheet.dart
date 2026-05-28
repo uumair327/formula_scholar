@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-
-import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 /// Bottom sheet that explains available boards and lets the user pick one.
 class OnboardingBoardGuideSheet extends StatelessWidget {
@@ -86,7 +84,7 @@ class OnboardingBoardGuideSheet extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          AppStrings.step2LearnMore,
+                          context.l10n.step2LearnMore,
                           style: AppTextStyles.headlineSmall.copyWith(
                             color: colorScheme.onSurface,
                             fontWeight: FontWeight.w700,
@@ -220,8 +218,8 @@ class _BoardGuideCard extends StatelessWidget {
                 isSelected
                     ? LucideIcons.checkCircle2
                     : Directionality.of(context) == TextDirection.rtl
-                        ? LucideIcons.chevronLeft
-                        : LucideIcons.chevronRight,
+                    ? LucideIcons.chevronLeft
+                    : LucideIcons.chevronRight,
                 color: isSelected ? accent : colorScheme.outlineVariant,
                 size: AppDimensions.iconMD,
               ),

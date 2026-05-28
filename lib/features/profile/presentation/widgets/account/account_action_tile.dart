@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../../core/core.dart';
-import '../../../../../shared/shared.dart';
+
 import '../support_contact_sheet.dart';
 
 class AccountActionTile extends StatelessWidget {
@@ -34,24 +34,36 @@ class AccountActionTile extends StatelessWidget {
               SupportContactSheet.show(
                 context,
                 title: label,
-                subtitle: 'This account action is being expanded. Contact support and we will help you right away.',
+                subtitle:
+                    'This account action is being expanded. Contact support and we will help you right away.',
                 email: 'support@formulascholar.app',
               );
             }
           },
           borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingXL, vertical: AppDimensions.paddingLG),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppDimensions.paddingXL,
+              vertical: AppDimensions.paddingLG,
+            ),
             child: Row(
               children: [
                 AppIconCircle(
                   icon: icon,
-                  backgroundColor: color.withValues(alpha: AppDimensions.opacityFaint),
+                  backgroundColor: color.withValues(
+                    alpha: AppDimensions.opacityFaint,
+                  ),
                   iconColor: color,
                 ),
                 const SizedBox(width: AppDimensions.paddingLG),
                 Expanded(
-                  child: Text(label, style: AppTextStyles.labelLarge.copyWith(color: color, fontWeight: FontWeight.w700)),
+                  child: Text(
+                    label,
+                    style: AppTextStyles.labelLarge.copyWith(
+                      color: color,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                 ),
                 Icon(
                   Directionality.of(context) == TextDirection.rtl

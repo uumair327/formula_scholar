@@ -1,13 +1,14 @@
 import 'dart:math';
-
+import '../../domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
+
 import '../../../auth/auth.dart';
-import '../../domain/domain.dart';
+
 import '../cubit/study_planner_cubit.dart';
 import '../cubit/study_planner_state.dart';
 
@@ -57,9 +58,7 @@ class _CreatePlanPageState extends State<CreatePlanPage> {
     final plan = StudyPlan(
       id: 'plan_${now.millisecondsSinceEpoch}_${Random().nextInt(9999)}',
       title: title,
-      description: _descCtrl.text.trim().isEmpty
-          ? null
-          : _descCtrl.text.trim(),
+      description: _descCtrl.text.trim().isEmpty ? null : _descCtrl.text.trim(),
       sessions: sessions,
       createdAt: now,
       updatedAt: now,
@@ -76,15 +75,18 @@ class _CreatePlanPageState extends State<CreatePlanPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create Study Plan'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Create Study Plan'), centerTitle: true),
       body: BlocListener<StudyPlannerCubit, StudyPlannerState>(
         listenWhen: (prev, curr) => curr.status == StudyPlannerStatus.error,
         listener: (context, state) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.errorMessage ?? 'Failed to create plan')),
+            SnackBar(
+              content: Text(
+                context.localizedError(
+                  fallback: state.errorMessage ?? 'Failed to create plan',
+                ),
+              ),
+            ),
           );
         },
         child: SingleChildScrollView(
@@ -94,10 +96,10 @@ class _CreatePlanPageState extends State<CreatePlanPage> {
             children: [
               TextField(
                 controller: _titleCtrl,
-                decoration: const InputDecoration(
-                  labelText: AppStrings.planTitle,
-                  hintText: AppStrings.planTitleHint,
-                  prefixIcon: Icon(LucideIcons.calendar),
+                decoration: InputDecoration(
+                  labelText: context.l10n.planTitle,
+                  hintText: context.l10n.planTitleHint,
+                  prefixIcon: const Icon(LucideIcons.calendar),
                 ),
               ),
               const SizedBox(height: AppDimensions.paddingMD),
@@ -130,9 +132,11 @@ class _CreatePlanPageState extends State<CreatePlanPage> {
               ),
               const SizedBox(height: AppDimensions.paddingXXL),
               BlocBuilder<StudyPlannerCubit, StudyPlannerState>(
-                buildWhen: (prev, curr) => curr.status == StudyPlannerStatus.creating,
+                buildWhen: (prev, curr) =>
+                    curr.status == StudyPlannerStatus.creating,
                 builder: (context, state) {
-                  final isCreating = state.status == StudyPlannerStatus.creating;
+                  final isCreating =
+                      state.status == StudyPlannerStatus.creating;
                   return FilledButton.icon(
                     onPressed: isCreating ? null : _createPlan,
                     icon: isCreating
@@ -142,7 +146,11 @@ class _CreatePlanPageState extends State<CreatePlanPage> {
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : const Icon(LucideIcons.plus),
-                    label: Text(isCreating ? 'Creating...' : 'Create Plan'),
+                    label: Text(
+                      isCreating
+                          ? context.l10n.creating
+                          : context.l10n.createPlan,
+                    ),
                   );
                 },
               ),

@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../core/core.dart';
-import '../../l10n/l10n.dart';
 
 /// 404 / Not Found page displayed when [GoRouter] cannot match a route.
 ///

@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/dashboard_cubit.dart';

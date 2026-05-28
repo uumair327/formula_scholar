@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 import 'vault_grid.dart';
 
@@ -53,7 +52,7 @@ class FormulaVaultSection extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      AppStrings.dashboardFormulaVault,
+                      context.l10n.dashboardFormulaVault,
                       style: AppTextStyles.titleLarge,
                     ),
                     const SizedBox(height: AppDimensions.paddingXXS),
@@ -86,7 +85,9 @@ class FormulaVaultSection extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: AppDimensions.paddingSection),
+      padding: const EdgeInsets.symmetric(
+        vertical: AppDimensions.paddingSection,
+      ),
       child: Column(
         children: [
           Icon(

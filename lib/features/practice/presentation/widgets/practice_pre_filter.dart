@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../cubit/practice_cubit.dart';
 import '../cubit/practice_state.dart';
 import 'practice_pre_filter_header.dart';
@@ -49,7 +49,7 @@ class PracticePreFilter extends StatelessWidget {
                       EntranceWrapper.stagger(
                         index: 0,
                         child: Text(
-                          AppStrings.practiceReadyTitle,
+                          context.l10n.practiceReadyTitle,
                           textAlign: TextAlign.center,
                           style: AppTextStyles.headlineSmall.copyWith(
                             color: colorScheme.onSurface,
@@ -61,7 +61,7 @@ class PracticePreFilter extends StatelessWidget {
                       EntranceWrapper.stagger(
                         index: 1,
                         child: Text(
-                          AppStrings.practiceReadyDesc,
+                          context.l10n.practiceReadyDesc,
                           textAlign: TextAlign.center,
                           style: AppTextStyles.bodyLarge.copyWith(
                             color: colorScheme.onSurfaceVariant,
@@ -74,11 +74,8 @@ class PracticePreFilter extends StatelessWidget {
                         child: _SubjectSelector(
                           practiceState: practiceState,
                           curriculumState: curriculumState,
-                          onSubjectSelected: (id) => _startQuiz(
-                            context,
-                            curriculumState,
-                            id,
-                          ),
+                          onSubjectSelected: (id) =>
+                              _startQuiz(context, curriculumState, id),
                         ),
                       ),
                       const SizedBox(height: AppDimensions.paddingLG),
@@ -137,13 +134,13 @@ class _SubjectSelector extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          AppStrings.practiceChooseSubject,
+          context.l10n.practiceChooseSubject,
           style: AppTextStyles.titleMedium.copyWith(
             fontWeight: FontWeight.w700,
           ),
         ),
         const SizedBox(height: AppDimensions.paddingMD),
-          LayoutBuilder(
+        LayoutBuilder(
           builder: (context, constraints) {
             final crossAxisCount = constraints.maxWidth > 600 ? 4 : 2;
             return GridView.builder(
@@ -160,7 +157,7 @@ class _SubjectSelector extends StatelessWidget {
                 if (index == 0) {
                   return _buildSubjectCard(
                     context: context,
-                    title: AppStrings.allSubjects,
+                    title: context.l10n.allSubjects,
                     color: colorScheme.primary,
                     icon: Icons.all_inclusive,
                     onTap: () => onSubjectSelected(null),
@@ -175,7 +172,8 @@ class _SubjectSelector extends StatelessWidget {
                   Colors.purple,
                   Colors.teal,
                 ];
-                final subjectColor = colors[subject.id.hashCode % colors.length];
+                final subjectColor =
+                    colors[subject.id.hashCode % colors.length];
 
                 return _buildSubjectCard(
                   context: context,
@@ -200,7 +198,7 @@ class _SubjectSelector extends StatelessWidget {
     required VoidCallback onTap,
   }) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -214,16 +212,10 @@ class _SubjectSelector extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                colorScheme.surface,
-                color.withValues(alpha: 0.05),
-              ],
+              colors: [colorScheme.surface, color.withValues(alpha: 0.05)],
             ),
             borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-            border: Border.all(
-              color: color.withValues(alpha: 0.2),
-              width: 1,
-            ),
+            border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
             boxShadow: [
               BoxShadow(
                 color: color.withValues(alpha: 0.08),

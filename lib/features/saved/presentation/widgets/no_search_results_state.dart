@@ -3,7 +3,6 @@ library;
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 
 class NoSearchResultsState extends StatelessWidget {
   const NoSearchResultsState({required this.onClearSearch, super.key});
@@ -27,14 +26,14 @@ class NoSearchResultsState extends StatelessWidget {
             ),
             const SizedBox(height: AppDimensions.paddingLG),
             Text(
-              AppStrings.noBookmarksFoundTitle,
+              context.l10n.noBookmarksFoundTitle,
               style: AppTextStyles.titleLarge.copyWith(
                 fontWeight: FontWeight.w700,
               ),
             ),
             const SizedBox(height: AppDimensions.paddingSM),
             Text(
-              AppStrings.noBookmarksFoundDesc,
+              context.l10n.noBookmarksFoundDesc,
               textAlign: TextAlign.center,
               style: AppTextStyles.bodyMedium.copyWith(
                 color: colorScheme.onSurfaceVariant,
@@ -43,7 +42,7 @@ class NoSearchResultsState extends StatelessWidget {
             const SizedBox(height: AppDimensions.paddingLG),
             OutlinedButton(
               onPressed: onClearSearch,
-              child: const Text(AppStrings.clearSearch),
+              child: Text(context.l10n.clearSearch),
             ),
           ],
         ),

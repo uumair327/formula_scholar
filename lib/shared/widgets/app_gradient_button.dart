@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../core/core.dart';
-import 'app_text.dart';
 
 /// Premium gradient-filled button with press animation and loading state.
 ///

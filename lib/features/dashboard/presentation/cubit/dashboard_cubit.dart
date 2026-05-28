@@ -2,10 +2,9 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-
-import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
+
 import 'dashboard_state.dart';
 
 @injectable
@@ -112,7 +111,8 @@ class DashboardCubit extends Cubit<DashboardState>
       emit(
         state.copyWith(
           status: DashboardStatus.error,
-          errorMessage: AppStrings.dashboardCurriculumRequired,
+          errorMessage: null,
+          errorKey: 'dashboard.curriculum.required',
           subjects: const [],
           recentStudies: const [],
           vaultItems: const [],
@@ -220,7 +220,8 @@ class DashboardCubit extends Cubit<DashboardState>
     emit(
       state.copyWith(
         status: DashboardStatus.error,
-        errorMessage: AppStrings.failedToLoadDashboard,
+        errorMessage: null,
+        errorKey: 'dashboard.load_failed',
       ),
     );
   }

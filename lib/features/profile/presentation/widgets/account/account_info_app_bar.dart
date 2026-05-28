@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../../core/core.dart';
-import '../../../../../shared/shared.dart';
 
 class AccountInfoAppBar extends StatelessWidget {
   const AccountInfoAppBar({super.key});
@@ -19,7 +18,7 @@ class AccountInfoAppBar extends StatelessWidget {
         tooltip: MaterialLocalizations.of(context).backButtonTooltip,
       ),
       titleWidget: Text(
-        AppStrings.accountInformation,
+        context.l10n.accountInformation,
         style: AppTextStyles.titleMedium.copyWith(
           color: colorScheme.onSurface,
           fontWeight: FontWeight.w800,

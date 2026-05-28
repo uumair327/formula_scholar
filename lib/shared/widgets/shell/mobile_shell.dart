@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/core.dart';
-import 'glass_bottom_nav_bar.dart';
 
 class MobileShell extends StatelessWidget {
   const MobileShell({super.key, required this.navigationShell});

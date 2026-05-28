@@ -5,10 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-
 import '../../../../core/core.dart';
-import '../../../../l10n/l10n.dart';
-import '../../../../shared/shared.dart';
 import '../../../auth/auth.dart';
 
 class DashboardAppBar extends StatelessWidget {
@@ -24,7 +21,7 @@ class DashboardAppBar extends StatelessWidget {
       buildWhen: (prev, curr) => prev.user != curr.user,
       builder: (context, authState) {
         final user = authState.user;
-        final userName = user?.displayName ?? AppStrings.dashboardSanctuary;
+        final userName = user?.displayName ?? l10n.dashboardSanctuary;
         final photoUrl = user?.photoUrl ?? AppAssets.dashboardStudentProfileUrl;
 
         return SliverGlassAppBar(

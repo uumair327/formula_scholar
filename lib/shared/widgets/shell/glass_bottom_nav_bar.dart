@@ -3,8 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import '../../../core/core.dart';
-import 'nav_item.dart';
-import 'shell_nav_data.dart';
 
 class GlassBottomNavBar extends StatelessWidget {
   const GlassBottomNavBar({

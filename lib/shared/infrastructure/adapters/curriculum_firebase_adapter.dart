@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../core/core.dart';
-import '../../domain/domain.dart';
 
 @LazySingleton(as: CurriculumDataSourcePort)
 class CurriculumFirebaseAdapter implements CurriculumDataSourcePort {
@@ -17,11 +16,17 @@ class CurriculumFirebaseAdapter implements CurriculumDataSourcePort {
   Future<SelectedCurriculum?> loadCurriculum() async {
     final uid = _firebaseAuth.currentUser?.uid;
     if (uid == null) {
-      AppLogger.trace('loadCurriculum: no authenticated user', tag: AppLogTags.curriculumDataSource);
+      AppLogger.trace(
+        'loadCurriculum: no authenticated user',
+        tag: AppLogTags.curriculumDataSource,
+      );
       return null;
     }
 
-    AppLogger.trace('loadCurriculum: uid=$uid', tag: AppLogTags.curriculumDataSource);
+    AppLogger.trace(
+      'loadCurriculum: uid=$uid',
+      tag: AppLogTags.curriculumDataSource,
+    );
     final snapshot = await _api.execute(
       () => _api.doc(AppFirestoreCollections.userDoc(uid)).get(),
       tag: AppLogTags.curriculumDataSource,

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 import '../cubit/dashboard_cubit.dart';
 import '../cubit/dashboard_state.dart';
@@ -36,7 +35,7 @@ class AcademicPathSection extends StatelessWidget {
         BlocBuilder<DashboardCubit, DashboardState>(
           builder: (context, state) {
             return SectionHeader(
-              title: AppStrings.dashboardAcademicPath,
+              title: context.l10n.dashboardAcademicPath,
               actionLabel: state.academicViewAllLabel,
               onAction: onViewAll,
             );

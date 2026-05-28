@@ -6,8 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../l10n/l10n.dart';
-import '../../../../shared/shared.dart';
 
 class LanguageLocalizationPage extends StatelessWidget {
   const LanguageLocalizationPage({super.key});

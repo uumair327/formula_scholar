@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../../core/core.dart';
-import '../../../../../shared/shared.dart';
 
 class LocationFormCard extends StatelessWidget {
   const LocationFormCard({
@@ -46,7 +45,7 @@ class LocationFormCard extends StatelessWidget {
                 .map((c) => DropdownMenuItem(value: c, child: Text(c)))
                 .toList(),
             decoration: InputDecoration(
-              labelText: AppStrings.step1CountryLabel,
+              labelText: context.l10n.step1CountryLabel,
               labelStyle: AppTextStyles.bodyMedium.copyWith(
                 color: colorScheme.onSurfaceVariant.withValues(
                   alpha: AppDimensions.opacityMedium,
@@ -58,7 +57,9 @@ class LocationFormCard extends StatelessWidget {
                 fontWeight: FontWeight.w700,
               ),
               prefixIcon: Padding(
-                padding: const EdgeInsetsDirectional.only(start: AppDimensions.paddingMD),
+                padding: const EdgeInsetsDirectional.only(
+                  start: AppDimensions.paddingMD,
+                ),
                 child: Icon(
                   LucideIcons.globe,
                   size: AppDimensions.iconDefault,
@@ -97,8 +98,8 @@ class LocationFormCard extends StatelessWidget {
           AppTextField(
             controller: stateController,
             onChanged: onStateChanged,
-            label: AppStrings.step1StateLabel,
-            hintText: AppStrings.step1StateHint,
+            label: context.l10n.step1StateLabel,
+            hintText: context.l10n.step1StateHint,
             prefixIcon: LucideIcons.mapPin,
             suffixIcon: Icon(
               LucideIcons.search,

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
-
 class ParameterControls extends StatelessWidget {
   const ParameterControls({
     super.key,
@@ -25,31 +23,46 @@ class ParameterControls extends StatelessWidget {
 
   String _labelA() {
     switch (type) {
-      case VisualizerType.frustum: return 'Bottom Radius';
-      case VisualizerType.gravitation: return 'Mass Factor';
-      case VisualizerType.refraction: return 'Beam Angle';
-      case VisualizerType.quadratic: return 'Variable A';
-      default: return 'Radius';
+      case VisualizerType.frustum:
+        return 'Bottom Radius';
+      case VisualizerType.gravitation:
+        return 'Mass Factor';
+      case VisualizerType.refraction:
+        return 'Beam Angle';
+      case VisualizerType.quadratic:
+        return 'Variable A';
+      default:
+        return 'Radius';
     }
   }
 
   String _labelB() {
     switch (type) {
-      case VisualizerType.frustum: return 'Top Radius';
-      case VisualizerType.gravitation: return 'Orbit Distance';
-      case VisualizerType.refraction: return 'Prism Size';
-      case VisualizerType.quadratic: return 'Variable B';
-      default: return 'Height';
+      case VisualizerType.frustum:
+        return 'Top Radius';
+      case VisualizerType.gravitation:
+        return 'Orbit Distance';
+      case VisualizerType.refraction:
+        return 'Prism Size';
+      case VisualizerType.quadratic:
+        return 'Variable B';
+      default:
+        return 'Height';
     }
   }
 
   String _labelC() {
     switch (type) {
-      case VisualizerType.frustum: return 'Height';
-      case VisualizerType.gravitation: return 'Orbital Speed';
-      case VisualizerType.refraction: return 'Refraction Index';
-      case VisualizerType.quadratic: return 'Variable C';
-      default: return 'Rotation';
+      case VisualizerType.frustum:
+        return 'Height';
+      case VisualizerType.gravitation:
+        return 'Orbital Speed';
+      case VisualizerType.refraction:
+        return 'Refraction Index';
+      case VisualizerType.quadratic:
+        return 'Variable C';
+      default:
+        return 'Rotation';
     }
   }
 

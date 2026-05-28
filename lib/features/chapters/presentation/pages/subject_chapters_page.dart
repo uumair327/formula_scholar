@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../cubit/chapters_cubit.dart';
 import '../cubit/chapters_state.dart';
 import '../cubit/mastery_tools_cubit.dart';
@@ -144,7 +144,9 @@ class SubjectChaptersPage extends StatelessWidget {
                             if (state.status == ChaptersStatus.error) {
                               return SliverFillRemaining(
                                 child: AppErrorState(
-                                  message: state.errorMessage,
+                                  message: context.localizedError(
+                                    fallback: state.errorMessage,
+                                  ),
                                   onRetry: () =>
                                       _retryLoadChapters(context, subject!.id),
                                 ),
@@ -154,12 +156,12 @@ class SubjectChaptersPage extends StatelessWidget {
                               return SliverFillRemaining(
                                 hasScrollBody: false,
                                 child: AppEmptyState(
-                                  title: AppStrings.chaptersNoContentTitle,
+                                  title: context.l10n.chaptersNoContentTitle,
                                   description:
-                                      AppStrings.chaptersNoContentDescription,
+                                      context.l10n.chaptersNoContentDescription,
                                   icon: LucideIcons.bookOpen,
                                   actionLabel:
-                                      AppStrings.chaptersBrowseSubjects,
+                                      context.l10n.chaptersBrowseSubjects,
                                   onAction: () {
                                     context
                                         .read<SubjectSelectionCubit>()

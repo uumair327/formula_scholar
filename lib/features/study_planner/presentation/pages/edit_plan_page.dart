@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-
+import '../../domain/domain.dart';
 import '../../../../core/core.dart';
 import '../../../auth/auth.dart';
-import '../../domain/domain.dart';
 import '../cubit/study_planner_cubit.dart';
 import '../cubit/study_planner_state.dart';
 
@@ -59,9 +58,9 @@ class _EditPlanPageState extends State<EditPlanPage> {
     );
 
     await context.read<StudyPlannerCubit>().updatePlan(
-          userId: userId,
-          plan: updatedPlan,
-        );
+      userId: userId,
+      plan: updatedPlan,
+    );
 
     if (mounted) {
       context.pop();
@@ -71,16 +70,18 @@ class _EditPlanPageState extends State<EditPlanPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit Plan'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Edit Plan'), centerTitle: true),
       body: BlocListener<StudyPlannerCubit, StudyPlannerState>(
         listenWhen: (prev, curr) => curr.status == StudyPlannerStatus.error,
         listener: (context, state) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-                content: Text(state.errorMessage ?? 'Failed to update plan')),
+              content: Text(
+                context.localizedError(
+                  fallback: state.errorMessage ?? 'Failed to update plan',
+                ),
+              ),
+            ),
           );
         },
         child: SingleChildScrollView(

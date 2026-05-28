@@ -4,8 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../../core/core.dart';
-import '../../../../../l10n/l10n.dart';
-import '../../../../../shared/shared.dart';
+
 import '../../cubit/auth_cubit.dart';
 
 class SignupSocialSection extends StatelessWidget {

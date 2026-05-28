@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
+
 import 'search_subject_badge.dart';
 
 class SearchResultCard extends StatelessWidget {

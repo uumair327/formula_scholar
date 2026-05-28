@@ -1,6 +1,5 @@
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
-
 import '../../domain/domain.dart';
 
 @LazySingleton(as: AnalyticsCachePort)
@@ -26,13 +25,15 @@ class AnalyticsHiveCache implements AnalyticsCachePort {
         'notStarted': data.masteryDistribution.notStarted,
       },
       'recentActivity': data.recentActivity
-          .map((item) => {
-        'id': item.id,
-        'title': item.title,
-        'timeAgo': item.timeAgo,
-        'iconName': item.iconName,
-        'isPositive': item.isPositive,
-      })
+          .map(
+            (item) => {
+              'id': item.id,
+              'title': item.title,
+              'timeAgo': item.timeAgo,
+              'iconName': item.iconName,
+              'isPositive': item.isPositive,
+            },
+          )
           .toList(),
     });
   }
@@ -50,13 +51,15 @@ class AnalyticsHiveCache implements AnalyticsCachePort {
     final recentActivity =
         (m['recentActivity'] as List<dynamic>?)
             ?.map((item) => Map<String, dynamic>.from(item as Map))
-            .map((item) => RecentActivityItem(
-              id: item['id'] as String? ?? '',
-              title: item['title'] as String? ?? '',
-              timeAgo: item['timeAgo'] as String? ?? '',
-              iconName: item['iconName'] as String? ?? '',
-              isPositive: item['isPositive'] as bool? ?? false,
-            ))
+            .map(
+              (item) => RecentActivityItem(
+                id: item['id'] as String? ?? '',
+                title: item['title'] as String? ?? '',
+                timeAgo: item['timeAgo'] as String? ?? '',
+                iconName: item['iconName'] as String? ?? '',
+                isPositive: item['isPositive'] as bool? ?? false,
+              ),
+            )
             .toList() ??
         [];
 
@@ -67,7 +70,7 @@ class AnalyticsHiveCache implements AnalyticsCachePort {
       weeklyActivity: WeeklyActivity(
         dayLabels:
             (weeklyActivity?['dayLabels'] as List<dynamic>?)?.cast<String>() ??
-                [],
+            [],
         values:
             (weeklyActivity?['values'] as List<dynamic>?)?.cast<int>() ?? [],
       ),

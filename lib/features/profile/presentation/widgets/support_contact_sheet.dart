@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 
 /// Bottom sheet for support contact actions.
 class SupportContactSheet extends StatelessWidget {

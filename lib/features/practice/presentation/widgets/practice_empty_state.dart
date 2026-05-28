@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../cubit/practice_cubit.dart';
 
 /// Empty state shown when no questions are available.
@@ -45,7 +45,7 @@ class PracticeEmptyState extends StatelessWidget {
                         ),
                         const SizedBox(height: AppDimensions.paddingXXL),
                         Text(
-                          AppStrings.practiceNoQuestionsTitle,
+                          context.l10n.practiceNoQuestionsTitle,
                           textAlign: TextAlign.center,
                           style: AppTextStyles.headlineSmall.copyWith(
                             fontWeight: FontWeight.w800,
@@ -53,7 +53,7 @@ class PracticeEmptyState extends StatelessWidget {
                         ),
                         const SizedBox(height: AppDimensions.paddingSM),
                         Text(
-                          AppStrings.practiceNoQuestionsDesc,
+                          context.l10n.practiceNoQuestionsDesc,
                           textAlign: TextAlign.center,
                           style: AppTextStyles.bodyMedium.copyWith(
                             color: colorScheme.onSurfaceVariant,
@@ -78,11 +78,14 @@ class PracticeEmptyState extends StatelessWidget {
                                   );
                                 }
                               },
-                              child: const Text(AppStrings.retry),
+                              child: Text(context.l10n.retry),
                             ),
                             OutlinedButton(
-                              onPressed: () => context.read<PracticeCubit>().resetQuiz(),
-                              child: const Text(AppStrings.browseChapters), // Maybe we should change this text to 'Back', but I will leave it as is or change it to 'Go Back'
+                              onPressed: () =>
+                                  context.read<PracticeCubit>().resetQuiz(),
+                              child: Text(
+                                context.l10n.browseChapters,
+                              ), // Maybe we should change this text to 'Back', but I will leave it as is or change it to 'Go Back'
                             ),
                           ],
                         ),
@@ -110,11 +113,11 @@ class PracticeEmptyState extends StatelessWidget {
           IconButton(
             onPressed: () => context.read<PracticeCubit>().resetQuiz(),
             icon: const Icon(LucideIcons.x, size: AppDimensions.iconLG),
-            tooltip: AppStrings.closePractice,
+            tooltip: context.l10n.closePractice,
           ),
           const SizedBox(width: AppDimensions.paddingMD),
           Text(
-            AppStrings.formulaFlow,
+            context.l10n.formulaFlow,
             style: AppTextStyles.titleLarge.copyWith(
               fontWeight: FontWeight.w800,
               letterSpacing: AppDimensions.letterSpacingTight,

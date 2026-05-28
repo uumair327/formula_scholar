@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../../domain/entities/formula.dart';
 
 class CheatSheetFormulaEntry extends StatelessWidget {
-  const CheatSheetFormulaEntry({
-    super.key,
-    required this.formula,
-  });
+  const CheatSheetFormulaEntry({super.key, required this.formula});
 
   final Formula formula;
 

@@ -18,13 +18,28 @@ class HelpVersionCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Icon(LucideIcons.sparkles, size: AppDimensions.iconLG, color: colorScheme.primary),
+          Icon(
+            LucideIcons.sparkles,
+            size: AppDimensions.iconLG,
+            color: colorScheme.primary,
+          ),
           const SizedBox(height: AppDimensions.paddingSM),
-          Text(AppStrings.appName, style: AppTextStyles.labelLarge.copyWith(color: colorScheme.onSurface)),
+          Text(
+            context.l10n.appName,
+            style: AppTextStyles.labelLarge.copyWith(
+              color: colorScheme.onSurface,
+            ),
+          ),
           const SizedBox(height: AppDimensions.paddingXXS),
-          Text(AppStrings.appVersion, style: AppTextStyles.bodySmall.copyWith(color: colorScheme.outline)),
+          Text(
+            context.l10n.appVersion,
+            style: AppTextStyles.bodySmall.copyWith(color: colorScheme.outline),
+          ),
           const SizedBox(height: AppDimensions.paddingXXS),
-          Text(AppStrings.madeWithLove, style: AppTextStyles.bodySmall.copyWith(color: colorScheme.outline)),
+          Text(
+            context.l10n.madeWithLove,
+            style: AppTextStyles.bodySmall.copyWith(color: colorScheme.outline),
+          ),
         ],
       ),
     );

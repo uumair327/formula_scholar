@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../../../features/widget_viewer/widget_viewer.dart';
 import '../../domain/domain.dart';
 import '../cubit/formulas_cubit.dart';
@@ -83,8 +82,12 @@ class FormulaStudyCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            colorScheme.surfaceContainerHighest.withValues(alpha: isDark ? 0.2 : 0.4),
-            colorScheme.surfaceContainerHighest.withValues(alpha: isDark ? 0.02 : 0.1),
+            colorScheme.surfaceContainerHighest.withValues(
+              alpha: isDark ? 0.2 : 0.4,
+            ),
+            colorScheme.surfaceContainerHighest.withValues(
+              alpha: isDark ? 0.02 : 0.1,
+            ),
           ],
         ),
         borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
@@ -111,7 +114,8 @@ class FormulaStudyCard extends StatelessWidget {
                 0,
               ),
               child: InteractiveWidgetContainer(
-                  widgetConfig: formula.widgetConfig!),
+                widgetConfig: formula.widgetConfig!,
+              ),
             ),
           FormulaActionBar(formula: formula),
         ],

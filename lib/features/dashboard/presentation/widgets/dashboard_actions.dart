@@ -5,9 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
-import '../../../chapters/chapters.dart';
 import '../../domain/domain.dart';
+import '../../../chapters/chapters.dart';
+
 import '../cubit/dashboard_state.dart';
 
 void resumeLearning(BuildContext context, DashboardState state) {
@@ -55,7 +55,7 @@ void showSubjectAnalytics(
 
   final grade = state.selectedGradeName.isNotEmpty
       ? 'Grade ${state.selectedGradeName}'
-      : AppStrings.dashboardCurriculumPending;
+      : context.l10n.dashboardCurriculumPending;
 
   SubjectAnalyticsSheet.show(
     context,

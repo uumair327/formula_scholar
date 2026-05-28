@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/core.dart';
-import '../app_shimmer.dart';
 
 class SavedShimmer extends StatelessWidget {
   const SavedShimmer({super.key});

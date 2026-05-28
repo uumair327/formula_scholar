@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../cubit/notifications_cubit.dart';
 import '../cubit/notifications_state.dart';
 import '../widgets/notification_status_card.dart';
@@ -21,9 +21,16 @@ class NotificationsPage extends StatelessWidget {
           n.errorMessage != null &&
           n.errorMessage!.isNotEmpty,
       listener: (context, state) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              context.localizedError(
+                errorKey: state.errorKey,
+                fallback: state.errorMessage,
+              ),
+            ),
+          ),
+        );
       },
       buildWhen: (p, n) =>
           p.preferences != n.preferences || p.status != n.status,
@@ -66,8 +73,8 @@ class NotificationsPage extends StatelessWidget {
                           const SizedBox(height: AppDimensions.paddingXXL),
                           EntranceWrapper.stagger(
                             index: 1,
-                            child: const AppSectionTitle(
-                              title: AppStrings.studyNotifications,
+                            child: AppSectionTitle(
+                              title: context.l10n.studyNotifications,
                             ),
                           ),
                           const SizedBox(height: AppDimensions.paddingLG),
@@ -75,8 +82,8 @@ class NotificationsPage extends StatelessWidget {
                             index: 2,
                             child: NotificationToggleTile(
                               icon: LucideIcons.clock,
-                              title: AppStrings.studyReminders,
-                              subtitle: AppStrings.studyRemindersDesc,
+                              title: context.l10n.studyReminders,
+                              subtitle: context.l10n.studyRemindersDesc,
                               value: prefs.studyReminders,
                               onChanged: (v) => context
                                   .read<NotificationsCubit>()
@@ -91,8 +98,8 @@ class NotificationsPage extends StatelessWidget {
                             index: 3,
                             child: NotificationToggleTile(
                               icon: LucideIcons.flame,
-                              title: AppStrings.streakAlerts,
-                              subtitle: AppStrings.streakAlertsDesc,
+                              title: context.l10n.streakAlerts,
+                              subtitle: context.l10n.streakAlertsDesc,
                               value: prefs.streakAlerts,
                               onChanged: (v) => context
                                   .read<NotificationsCubit>()
@@ -107,8 +114,8 @@ class NotificationsPage extends StatelessWidget {
                             index: 4,
                             child: NotificationToggleTile(
                               icon: LucideIcons.sparkles,
-                              title: AppStrings.newContent,
-                              subtitle: AppStrings.newContentDesc,
+                              title: context.l10n.newContent,
+                              subtitle: context.l10n.newContentDesc,
                               value: prefs.newContent,
                               onChanged: (v) => context
                                   .read<NotificationsCubit>()
@@ -121,8 +128,8 @@ class NotificationsPage extends StatelessWidget {
                           const SizedBox(height: AppDimensions.paddingXXL),
                           EntranceWrapper.stagger(
                             index: 5,
-                            child: const AppSectionTitle(
-                              title: AppStrings.achievementNotifications,
+                            child: AppSectionTitle(
+                              title: context.l10n.achievementNotifications,
                             ),
                           ),
                           const SizedBox(height: AppDimensions.paddingLG),
@@ -130,8 +137,8 @@ class NotificationsPage extends StatelessWidget {
                             index: 6,
                             child: NotificationToggleTile(
                               icon: LucideIcons.trophy,
-                              title: AppStrings.achievements,
-                              subtitle: AppStrings.achievementsDesc,
+                              title: context.l10n.achievements,
+                              subtitle: context.l10n.achievementsDesc,
                               value: prefs.achievements,
                               onChanged: (v) => context
                                   .read<NotificationsCubit>()
@@ -146,8 +153,8 @@ class NotificationsPage extends StatelessWidget {
                             index: 7,
                             child: NotificationToggleTile(
                               icon: LucideIcons.barChart2,
-                              title: AppStrings.weeklyReport,
-                              subtitle: AppStrings.weeklyReportDesc,
+                              title: context.l10n.weeklyReport,
+                              subtitle: context.l10n.weeklyReportDesc,
                               value: prefs.weeklyReport,
                               onChanged: (v) => context
                                   .read<NotificationsCubit>()
@@ -160,8 +167,8 @@ class NotificationsPage extends StatelessWidget {
                           const SizedBox(height: AppDimensions.paddingXXL),
                           EntranceWrapper.stagger(
                             index: 8,
-                            child: const AppSectionTitle(
-                              title: AppStrings.deliveryChannels,
+                            child: AppSectionTitle(
+                              title: context.l10n.deliveryChannels,
                             ),
                           ),
                           const SizedBox(height: AppDimensions.paddingLG),
@@ -169,8 +176,8 @@ class NotificationsPage extends StatelessWidget {
                             index: 9,
                             child: NotificationToggleTile(
                               icon: LucideIcons.bell,
-                              title: AppStrings.pushNotificationsLabel,
-                              subtitle: AppStrings.pushNotificationsDesc,
+                              title: context.l10n.pushNotificationsLabel,
+                              subtitle: context.l10n.pushNotificationsDesc,
                               value: prefs.pushNotifications,
                               onChanged: (v) => context
                                   .read<NotificationsCubit>()
@@ -185,8 +192,8 @@ class NotificationsPage extends StatelessWidget {
                             index: 10,
                             child: NotificationToggleTile(
                               icon: LucideIcons.mail,
-                              title: AppStrings.emailNotificationsLabel,
-                              subtitle: AppStrings.emailNotificationsDesc,
+                              title: context.l10n.emailNotificationsLabel,
+                              subtitle: context.l10n.emailNotificationsDesc,
                               value: prefs.emailNotifications,
                               onChanged: (v) => context
                                   .read<NotificationsCubit>()
@@ -236,7 +243,7 @@ class NotificationsPage extends StatelessWidget {
         tooltip: MaterialLocalizations.of(context).backButtonTooltip,
       ),
       titleWidget: Text(
-        AppStrings.notifications,
+        context.l10n.notifications,
         style: AppTextStyles.titleMedium.copyWith(
           color: colorScheme.onSurface,
           fontWeight: FontWeight.w800,

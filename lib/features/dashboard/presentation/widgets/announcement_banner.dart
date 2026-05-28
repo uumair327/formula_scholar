@@ -3,9 +3,8 @@ library;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-
-import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 class AnnouncementBanner extends StatelessWidget {
   const AnnouncementBanner({
@@ -125,7 +124,7 @@ class AnnouncementBanner extends StatelessWidget {
                       onPressed: () {
                         onDismiss(announcement.id);
                       },
-                      tooltip: AppStrings.dismissAnnouncement,
+                      tooltip: context.l10n.dismissAnnouncement,
                     ),
                   ),
                 ],

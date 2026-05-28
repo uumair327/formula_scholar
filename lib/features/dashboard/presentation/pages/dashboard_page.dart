@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../cubit/dashboard_cubit.dart';
 import '../cubit/dashboard_state.dart';
 import '../cubit/daily_challenges_cubit.dart';
@@ -61,7 +59,10 @@ class DashboardPage extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                  state.errorMessage ?? 'Failed to refresh dashboard',
+                  context.localizedError(
+                    fallback:
+                        state.errorMessage ?? 'Failed to refresh dashboard',
+                  ),
                 ),
                 behavior: SnackBarBehavior.floating,
               ),
@@ -144,13 +145,75 @@ class DashboardPage extends StatelessWidget {
                               height: AppDimensions.paddingSection,
                             ),
                             EntranceWrapper(
-                              child: HeroStatusCard(
-                                badge: state.heroBadge,
-                                title: state.heroTitle,
-                                description: state.heroDescription,
-                                resumeLabel: state.heroResumeLabel,
-                                semanticLabel: state.heroSemanticsLabel,
-                                onResume: () => resumeLearning(context, state),
+                              child: Builder(
+                                builder: (context) {
+                                  final String heroBadge =
+                                      (state.localizedContent['dashboard.hero.badge']
+                                              ?.trim()
+                                              .isNotEmpty ??
+                                          false)
+                                      ? state
+                                            .localizedContent['dashboard.hero.badge']!
+                                      : context.l10n.dashboardHeroBadge;
+
+                                  final String heroTitle =
+                                      (state.localizedContent['dashboard.hero.title']
+                                              ?.trim()
+                                              .isNotEmpty ??
+                                          false)
+                                      ? state
+                                            .localizedContent['dashboard.hero.title']!
+                                      : context.l10n.dashboardHeroTitle;
+
+                                  final progressVal =
+                                      state.progress?.masteryPercentage
+                                          .toInt() ??
+                                      0;
+                                  String heroDescription;
+                                  if (state
+                                          .localizedContent['dashboard.hero.description']
+                                          ?.trim()
+                                          .isNotEmpty ??
+                                      false) {
+                                    heroDescription = state
+                                        .localizedContent['dashboard.hero.description']!
+                                        .replaceAll(
+                                          '{progress}',
+                                          progressVal.toString(),
+                                        );
+                                  } else {
+                                    heroDescription = context.l10n
+                                        .dashboardHeroDescription(progressVal);
+                                  }
+
+                                  final String resumeLabel =
+                                      (state.localizedContent['dashboard.hero.resume']
+                                              ?.trim()
+                                              .isNotEmpty ??
+                                          false)
+                                      ? state
+                                            .localizedContent['dashboard.hero.resume']!
+                                      : context.l10n.dashboardResumeLesson;
+
+                                  final String semanticLabel =
+                                      (state.localizedContent['dashboard.hero.resumeSemantic']
+                                              ?.trim()
+                                              .isNotEmpty ??
+                                          false)
+                                      ? state
+                                            .localizedContent['dashboard.hero.resumeSemantic']!
+                                      : context.l10n.dashboardResumeSemantic;
+
+                                  return HeroStatusCard(
+                                    badge: heroBadge,
+                                    title: heroTitle,
+                                    description: heroDescription,
+                                    resumeLabel: resumeLabel,
+                                    semanticLabel: semanticLabel,
+                                    onResume: () =>
+                                        resumeLearning(context, state),
+                                  );
+                                },
                               ),
                             ),
                             const SizedBox(
@@ -174,11 +237,51 @@ class DashboardPage extends StatelessWidget {
                             ),
                             EntranceWrapper(
                               delay: const Duration(milliseconds: 100),
-                              child: QuickActionsSection(
-                                sectionTitle: state.quickActionsTitle,
-                                studyPlannerLabel: state.studyPlannerLabel,
-                                analyticsLabel: state.analyticsLabel,
-                                flashcardsLabel: state.flashcardsLabel,
+                              child: Builder(
+                                builder: (context) {
+                                  final sectionTitle =
+                                      (state.localizedContent['dashboard.quickActions.title']
+                                              ?.trim()
+                                              .isNotEmpty ??
+                                          false)
+                                      ? state
+                                            .localizedContent['dashboard.quickActions.title']!
+                                      : context.l10n.quickActionsTitle;
+
+                                  final studyPlannerLabel =
+                                      (state.localizedContent['dashboard.quickActions.studyPlanner']
+                                              ?.trim()
+                                              .isNotEmpty ??
+                                          false)
+                                      ? state
+                                            .localizedContent['dashboard.quickActions.studyPlanner']!
+                                      : context.l10n.studyPlanner;
+
+                                  final analyticsLabel =
+                                      (state.localizedContent['dashboard.quickActions.analytics']
+                                              ?.trim()
+                                              .isNotEmpty ??
+                                          false)
+                                      ? state
+                                            .localizedContent['dashboard.quickActions.analytics']!
+                                      : context.l10n.viewAnalytics;
+
+                                  final flashcardsLabel =
+                                      (state.localizedContent['dashboard.quickActions.flashcards']
+                                              ?.trim()
+                                              .isNotEmpty ??
+                                          false)
+                                      ? state
+                                            .localizedContent['dashboard.quickActions.flashcards']!
+                                      : context.l10n.flashcards;
+
+                                  return QuickActionsSection(
+                                    sectionTitle: sectionTitle,
+                                    studyPlannerLabel: studyPlannerLabel,
+                                    analyticsLabel: analyticsLabel,
+                                    flashcardsLabel: flashcardsLabel,
+                                  );
+                                },
                               ),
                             ),
                             const SizedBox(
@@ -214,12 +317,24 @@ class DashboardPage extends StatelessWidget {
                             ),
                             EntranceWrapper(
                               delay: const Duration(milliseconds: 150),
-                              child: FormulaVaultSection(
-                                description: state.vaultDescription,
-                                vaultItems: state.vaultItems,
-                                subjects: state.subjects,
-                                onSubjectTap: (subject) =>
-                                    onSubjectTap(context, subject),
+                              child: Builder(
+                                builder: (context) {
+                                  final vaultDesc =
+                                      (state.localizedContent['dashboard.vault.description']
+                                              ?.trim()
+                                              .isNotEmpty ??
+                                          false)
+                                      ? state
+                                            .localizedContent['dashboard.vault.description']!
+                                      : state.vaultDescription;
+                                  return FormulaVaultSection(
+                                    description: vaultDesc,
+                                    vaultItems: state.vaultItems,
+                                    subjects: state.subjects,
+                                    onSubjectTap: (subject) =>
+                                        onSubjectTap(context, subject),
+                                  );
+                                },
                               ),
                             ),
                             const SizedBox(height: AppDimensions.paddingLG),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../../../visualizer_3d/visualizer_3d.dart';
 import '../cubit/formulas_cubit.dart';
 import '../cubit/formulas_state.dart';
@@ -62,7 +62,12 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
     return Scaffold(
       backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        title: Text(AppStrings.visualizer3d, style: AppTextStyles.titleMedium.copyWith(color: colorScheme.onSurface)),
+        title: Text(
+          context.l10n.visualizer3d,
+          style: AppTextStyles.titleMedium.copyWith(
+            color: colorScheme.onSurface,
+          ),
+        ),
         centerTitle: true,
         actions: [
           IconButton(
@@ -76,8 +81,8 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
               });
             },
             tooltip: _isAutoRotating
-                ? AppStrings.autoRotatePause
-                : AppStrings.autoRotateStart,
+                ? context.l10n.autoRotatePause
+                : context.l10n.autoRotateStart,
           ),
         ],
       ),
@@ -313,7 +318,7 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
                         ? LucideIcons.chevronRight
                         : LucideIcons.chevronLeft,
                   ),
-                  tooltip: AppStrings.previousFormula,
+                  tooltip: context.l10n.previousFormula,
                   onPressed: _selectedFormulaIndex > 0
                       ? () {
                           setState(() {
@@ -356,7 +361,7 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
                         ? LucideIcons.chevronLeft
                         : LucideIcons.chevronRight,
                   ),
-                  tooltip: AppStrings.nextFormula,
+                  tooltip: context.l10n.nextFormula,
                   onPressed: _selectedFormulaIndex < _subjectFormulas.length - 1
                       ? () {
                           setState(() {

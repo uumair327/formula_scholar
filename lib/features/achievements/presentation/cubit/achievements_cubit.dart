@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
+
 import '../../domain/domain.dart';
 import 'achievements_state.dart';
 
@@ -26,10 +27,9 @@ IconData _achievementIcon(String id) {
 @injectable
 class AchievementsCubit extends Cubit<AchievementsState>
     with CubitFailureLogger<AchievementsState> {
-  AchievementsCubit({
-    required GetAchievementsUseCase getAchievements,
-  }) : _getAchievements = getAchievements,
-        super(const AchievementsState()) {
+  AchievementsCubit({required GetAchievementsUseCase getAchievements})
+    : _getAchievements = getAchievements,
+      super(const AchievementsState()) {
     Future.microtask(loadAchievements);
   }
 

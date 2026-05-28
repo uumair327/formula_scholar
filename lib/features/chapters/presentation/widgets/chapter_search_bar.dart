@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../cubit/chapters_cubit.dart';
 
 class ChapterSearchBar extends StatefulWidget {
@@ -35,45 +35,40 @@ class _ChapterSearchBarState extends State<ChapterSearchBar> {
       child: TextField(
         onChanged: (value) {
           _debounce?.cancel();
-          _debounce = Timer(
-            AppDurations.debounceDefault,
-            () {
-              if (!context.mounted) return;
-              final curriculumKey = context
-                  .read<CurriculumCubit>()
-                  .state
-                  .curriculum
-                  ?.curriculumKey;
-              final subjectId = context
-                  .read<SubjectSelectionCubit>()
-                  .state
-                  .subject
-                  ?.id;
-              if (subjectId == null ||
-                  curriculumKey == null ||
-                  curriculumKey.isEmpty) {
-                return;
-              }
-              final cubitState = context.read<ChaptersCubit>().state;
-              unawaited(
-                context.read<ChaptersCubit>().loadChapters(
-                  subjectId,
-                  curriculumKey: curriculumKey,
-                  searchQuery: value,
-                  sortBy: cubitState.sortBy,
-                  sortDesc: cubitState.sortDesc,
-                ),
-              );
-            },
-          );
+          _debounce = Timer(AppDurations.debounceDefault, () {
+            if (!context.mounted) return;
+            final curriculumKey = context
+                .read<CurriculumCubit>()
+                .state
+                .curriculum
+                ?.curriculumKey;
+            final subjectId = context
+                .read<SubjectSelectionCubit>()
+                .state
+                .subject
+                ?.id;
+            if (subjectId == null ||
+                curriculumKey == null ||
+                curriculumKey.isEmpty) {
+              return;
+            }
+            final cubitState = context.read<ChaptersCubit>().state;
+            unawaited(
+              context.read<ChaptersCubit>().loadChapters(
+                subjectId,
+                curriculumKey: curriculumKey,
+                searchQuery: value,
+                sortBy: cubitState.sortBy,
+                sortDesc: cubitState.sortDesc,
+              ),
+            );
+          });
         },
         decoration: InputDecoration(
-          hintText: AppStrings.searchChaptersHint,
+          hintText: context.l10n.searchChaptersHint,
           prefixIcon: const Icon(LucideIcons.search),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(
-              AppDimensions.radiusLG,
-            ),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
             borderSide: BorderSide.none,
           ),
           filled: true,

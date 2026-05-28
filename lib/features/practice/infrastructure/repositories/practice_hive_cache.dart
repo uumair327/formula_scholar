@@ -1,8 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
-
 import '../../domain/domain.dart';
-
 /// Hive-backed cache for practice/quiz data, enabling offline-first access.
 ///
 /// Follows the same pattern established by [ChaptersHiveCache] and [DashboardHiveCache].
@@ -62,12 +60,15 @@ class PracticeHiveCache implements PracticeCachePort {
         .whereType<Map>()
         .map((item) => Map<String, dynamic>.from(item))
         .map((item) {
-          final optionsData = (item['options'] as List<dynamic>?)
+          final optionsData =
+              (item['options'] as List<dynamic>?)
                   ?.whereType<Map>()
-                  .map((o) => QuizOption(
-                        id: o['id'] as String? ?? '',
-                        text: o['text'] as String? ?? '',
-                      ))
+                  .map(
+                    (o) => QuizOption(
+                      id: o['id'] as String? ?? '',
+                      text: o['text'] as String? ?? '',
+                    ),
+                  )
                   .toList() ??
               const [];
 

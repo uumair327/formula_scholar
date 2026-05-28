@@ -2,7 +2,6 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../../../../core/core.dart';
 import '../../domain/domain.dart';
-
 class Point3D {
   Point3D(this.x, this.y, this.z);
   final double x;
@@ -227,8 +226,14 @@ class ThreeDCanvasPainter extends CustomPainter {
       ..strokeWidth = 2.0;
 
     final pt1 = _project(Point3D(0, -prismSize / 2, 0), prismSize);
-    final pt2 = _project(Point3D(-prismSize / 2, prismSize / 2, prismSize / 2), prismSize);
-    final pt3 = _project(Point3D(prismSize / 2, prismSize / 2, prismSize / 2), prismSize);
+    final pt2 = _project(
+      Point3D(-prismSize / 2, prismSize / 2, prismSize / 2),
+      prismSize,
+    );
+    final pt3 = _project(
+      Point3D(prismSize / 2, prismSize / 2, prismSize / 2),
+      prismSize,
+    );
     final pt4 = _project(Point3D(0, prismSize / 2, -prismSize / 2), prismSize);
 
     final o1 = Offset(center.dx + pt1.x, center.dy + pt1.y);
@@ -243,11 +248,20 @@ class ThreeDCanvasPainter extends CustomPainter {
     canvas.drawLine(o3, o4, strokePaint);
     canvas.drawLine(o4, o2, strokePaint);
 
-    final inputStart = Offset(center.dx - radiusBase * 2, center.dy + radiusBase * 0.5);
-    final inputEnd = Offset(center.dx - prismSize * 0.2, center.dy + prismSize * 0.1);
+    final inputStart = Offset(
+      center.dx - radiusBase * 2,
+      center.dy + radiusBase * 0.5,
+    );
+    final inputEnd = Offset(
+      center.dx - prismSize * 0.2,
+      center.dy + prismSize * 0.1,
+    );
     final n = paramC;
     final deviationAngle = (n - 1) * 0.8;
-    final refractEnd = Offset(center.dx + prismSize * 0.2, center.dy + prismSize * 0.05);
+    final refractEnd = Offset(
+      center.dx + prismSize * 0.2,
+      center.dy + prismSize * 0.05,
+    );
     final dx = refractEnd.dx - inputEnd.dx;
     final dy = refractEnd.dy - inputEnd.dy;
     final exitStart = refractEnd;
@@ -256,9 +270,13 @@ class ThreeDCanvasPainter extends CustomPainter {
       exitStart.dy + dy * 2.0 * math.sin(deviationAngle),
     );
 
-    final laserIn = Paint()..color = Colors.white..strokeWidth = 3.0;
+    final laserIn = Paint()
+      ..color = Colors.white
+      ..strokeWidth = 3.0;
     canvas.drawLine(inputStart, inputEnd, laserIn);
-    final laserRefract = Paint()..color = Colors.cyanAccent..strokeWidth = 2.0;
+    final laserRefract = Paint()
+      ..color = Colors.cyanAccent
+      ..strokeWidth = 2.0;
     canvas.drawLine(inputEnd, refractEnd, laserRefract);
 
     for (int i = 0; i < 7; i++) {
@@ -325,8 +343,12 @@ class ThreeDCanvasPainter extends CustomPainter {
   void _drawDna(Canvas canvas, Offset center, double radiusBase) {
     final helixRadius = radiusBase * 0.7 * paramA;
     final helixLength = radiusBase * 1.8 * paramB;
-    final rPaint = Paint()..color = const Color(0xFF00FFFF)..strokeWidth = 3.0;
-    final gPaint = Paint()..color = const Color(0xFFFF00FF)..strokeWidth = 3.0;
+    final rPaint = Paint()
+      ..color = const Color(0xFF00FFFF)
+      ..strokeWidth = 3.0;
+    final gPaint = Paint()
+      ..color = const Color(0xFFFF00FF)
+      ..strokeWidth = 3.0;
     final strandPaint = Paint()
       ..color = colorScheme.primary.withValues(alpha: 0.4)
       ..strokeWidth = 1.5;

@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-
 import '../../core/core.dart';
-import 'legal_effective_date_badge.dart';
-import 'legal_footer.dart';
-import 'legal_section.dart';
-import 'legal_section_card.dart';
 
 /// Reusable legal document page (Privacy Policy, Terms of Service).
 ///
@@ -18,79 +13,87 @@ class LegalPage extends StatelessWidget {
 
   /// Shows the Privacy Policy page.
   static Widget privacyPolicy() {
-    return const LegalPage(
-      title: AppStrings.privacyPolicyTitle,
-      sections: [
-        LegalSection(
-          title: AppStrings.legalInfoWeCollect,
-          content: AppStrings.legalInfoWeCollectContent,
-        ),
-        LegalSection(
-          title: AppStrings.legalHowWeUse,
-          content: AppStrings.legalHowWeUseContent,
-        ),
-        LegalSection(
-          title: AppStrings.legalDataStorage,
-          content: AppStrings.legalDataStorageContent,
-        ),
-        LegalSection(
-          title: AppStrings.legalThirdParty,
-          content: AppStrings.legalThirdPartyContent,
-        ),
-        LegalSection(
-          title: AppStrings.legalYourRights,
-          content: AppStrings.legalYourRightsContent,
-        ),
-        LegalSection(
-          title: AppStrings.legalChildrenPrivacy,
-          content: AppStrings.legalChildrenPrivacyContent,
-        ),
-        LegalSection(
-          title: AppStrings.legalChanges,
-          content: AppStrings.legalChangesContent,
-        ),
-        LegalSection(
-          title: AppStrings.legalContact,
-          content: AppStrings.legalContactContent,
-        ),
-      ],
+    return Builder(
+      builder: (context) {
+        return LegalPage(
+          title: context.l10n.privacyPolicyTitle,
+          sections: [
+            LegalSection(
+              title: context.l10n.legalInfoWeCollect,
+              content: context.l10n.legalInfoWeCollectContent,
+            ),
+            LegalSection(
+              title: context.l10n.legalHowWeUse,
+              content: context.l10n.legalHowWeUseContent,
+            ),
+            LegalSection(
+              title: context.l10n.legalDataStorage,
+              content: context.l10n.legalDataStorageContent,
+            ),
+            LegalSection(
+              title: context.l10n.legalThirdParty,
+              content: context.l10n.legalThirdPartyContent,
+            ),
+            LegalSection(
+              title: context.l10n.legalYourRights,
+              content: context.l10n.legalYourRightsContent,
+            ),
+            LegalSection(
+              title: context.l10n.legalChildrenPrivacy,
+              content: context.l10n.legalChildrenPrivacyContent,
+            ),
+            LegalSection(
+              title: context.l10n.legalChanges,
+              content: context.l10n.legalChangesContent,
+            ),
+            LegalSection(
+              title: context.l10n.legalContact,
+              content: context.l10n.legalContactContent,
+            ),
+          ],
+        );
+      },
     );
   }
 
   /// Shows the Terms of Service page.
   static Widget termsOfService() {
-    return const LegalPage(
-      title: AppStrings.termsOfServiceTitle,
-      sections: [
-        LegalSection(
-          title: AppStrings.legalAcceptance,
-          content: AppStrings.legalAcceptanceContent,
-        ),
-        LegalSection(
-          title: AppStrings.legalUseOfService,
-          content: AppStrings.legalUseOfServiceContent,
-        ),
-        LegalSection(
-          title: AppStrings.legalUserAccounts,
-          content: AppStrings.legalUserAccountsContent,
-        ),
-        LegalSection(
-          title: AppStrings.legalIntellectualProperty,
-          content: AppStrings.legalIntellectualPropertyContent,
-        ),
-        LegalSection(
-          title: AppStrings.legalTermination,
-          content: AppStrings.legalTerminationContent,
-        ),
-        LegalSection(
-          title: AppStrings.legalDisclaimer,
-          content: AppStrings.legalDisclaimerContent,
-        ),
-        LegalSection(
-          title: AppStrings.legalGoverningLaw,
-          content: AppStrings.legalGoverningLawContent,
-        ),
-      ],
+    return Builder(
+      builder: (context) {
+        return LegalPage(
+          title: context.l10n.termsOfServiceTitle,
+          sections: [
+            LegalSection(
+              title: context.l10n.legalAcceptance,
+              content: context.l10n.legalAcceptanceContent,
+            ),
+            LegalSection(
+              title: context.l10n.legalUseOfService,
+              content: context.l10n.legalUseOfServiceContent,
+            ),
+            LegalSection(
+              title: context.l10n.legalUserAccounts,
+              content: context.l10n.legalUserAccountsContent,
+            ),
+            LegalSection(
+              title: context.l10n.legalIntellectualProperty,
+              content: context.l10n.legalIntellectualPropertyContent,
+            ),
+            LegalSection(
+              title: context.l10n.legalTermination,
+              content: context.l10n.legalTerminationContent,
+            ),
+            LegalSection(
+              title: context.l10n.legalDisclaimer,
+              content: context.l10n.legalDisclaimerContent,
+            ),
+            LegalSection(
+              title: context.l10n.legalGoverningLaw,
+              content: context.l10n.legalGoverningLawContent,
+            ),
+          ],
+        );
+      },
     );
   }
 

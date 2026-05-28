@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../../core/core.dart';
-import '../../../../../shared/shared.dart';
+
 import '../../../domain/domain.dart';
 
 class AccountProfileCard extends StatelessWidget {
@@ -63,17 +63,22 @@ class AccountProfileCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(profile?.name ?? AppStrings.welcomeScholar,
+                  Text(
+                    profile?.name ?? context.l10n.welcomeScholar,
                     style: AppTextStyles.titleLarge.copyWith(
                       color: colorScheme.onSurface,
                       fontWeight: FontWeight.w800,
                     ),
-                    maxLines: 1, 
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: AppDimensions.paddingXXS),
-                  Text(profile?.email ?? '—',
-                    style: AppTextStyles.bodySmall.copyWith(color: colorScheme.onSurfaceVariant)),
+                  Text(
+                    profile?.email ?? '—',
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
                   const SizedBox(height: AppDimensions.paddingSM),
                   Container(
                     padding: const EdgeInsets.symmetric(
@@ -82,19 +87,27 @@ class AccountProfileCard extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: colorScheme.secondaryContainer,
-                      borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+                      borderRadius: BorderRadius.circular(
+                        AppDimensions.radiusXL,
+                      ),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(LucideIcons.checkCircle, size: AppDimensions.iconXS, color: colorScheme.secondary),
+                        Icon(
+                          LucideIcons.checkCircle,
+                          size: AppDimensions.iconXS,
+                          color: colorScheme.secondary,
+                        ),
                         const SizedBox(width: AppDimensions.paddingXS),
-                        Text(AppStrings.verifiedAccount,
+                        Text(
+                          context.l10n.verifiedAccount,
                           style: AppTextStyles.labelSmall.copyWith(
                             color: colorScheme.onSecondaryContainer,
                             letterSpacing: AppDimensions.letterSpacingNarrow,
                             fontWeight: FontWeight.w700,
-                          )),
+                          ),
+                        ),
                       ],
                     ),
                   ),

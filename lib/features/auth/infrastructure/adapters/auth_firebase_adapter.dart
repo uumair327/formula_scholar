@@ -2,9 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart' as gsi;
 import 'package:injectable/injectable.dart';
-
-import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 /// Firebase Authentication implementation of [AuthDataSourcePort].
 ///

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../cubit/practice_cubit.dart';
 
 class QuizHeader extends StatelessWidget {
@@ -23,11 +23,11 @@ class QuizHeader extends StatelessWidget {
           IconButton(
             onPressed: () => _confirmQuit(context),
             icon: const Icon(LucideIcons.x, size: AppDimensions.iconLG),
-            tooltip: AppStrings.closeQuiz,
+            tooltip: context.l10n.closeQuiz,
           ),
           const SizedBox(width: AppDimensions.paddingMD),
           Text(
-            AppStrings.formulaFlow,
+            context.l10n.formulaFlow,
             style: AppTextStyles.titleLarge.copyWith(
               fontWeight: FontWeight.w800,
               letterSpacing: AppDimensions.letterSpacingTight,
@@ -57,7 +57,9 @@ class QuizHeader extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Quit Practice?'),
-        content: const Text('Are you sure you want to quit? Your progress will be lost.'),
+        content: const Text(
+          'Are you sure you want to quit? Your progress will be lost.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),

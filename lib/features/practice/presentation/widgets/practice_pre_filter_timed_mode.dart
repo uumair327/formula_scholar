@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 
 class PreFilterTimedModeCard extends StatelessWidget {
   const PreFilterTimedModeCard({
@@ -42,14 +41,14 @@ class PreFilterTimedModeCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      AppStrings.timedMode,
+                      context.l10n.timedMode,
                       style: AppTextStyles.titleSmall.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     const SizedBox(height: AppDimensions.paddingXXS),
                     Text(
-                      AppStrings.timedModeDesc,
+                      context.l10n.timedModeDesc,
                       style: AppTextStyles.bodySmall.copyWith(
                         color: colorScheme.onSurfaceVariant,
                       ),
@@ -81,7 +80,7 @@ class PreFilterTimedModeCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          AppStrings.duration,
+                          context.l10n.duration,
                           style: AppTextStyles.titleSmall.copyWith(
                             fontWeight: FontWeight.w700,
                           ),
@@ -100,7 +99,8 @@ class PreFilterTimedModeCard extends StatelessWidget {
                                   onDurationChanged(mins * 60);
                                 },
                                 borderRadius: BorderRadius.circular(
-                                    AppDimensions.radiusLG),
+                                  AppDimensions.radiusLG,
+                                ),
                                 child: AnimatedContainer(
                                   duration: AppDurations.animationFast,
                                   padding: const EdgeInsets.symmetric(
@@ -111,9 +111,10 @@ class PreFilterTimedModeCard extends StatelessWidget {
                                     color: isSelected
                                         ? colorScheme.primary
                                         : colorScheme.surfaceContainerHighest
-                                            .withValues(alpha: 0.5),
+                                              .withValues(alpha: 0.5),
                                     borderRadius: BorderRadius.circular(
-                                        AppDimensions.radiusLG),
+                                      AppDimensions.radiusLG,
+                                    ),
                                     border: Border.all(
                                       color: isSelected
                                           ? colorScheme.primary

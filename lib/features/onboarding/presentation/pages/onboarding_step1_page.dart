@@ -63,16 +63,16 @@ class _OnboardingStep1PageState extends State<OnboardingStep1Page> {
         return OnboardingShell(
           currentStep: 1,
           totalSteps: 4,
-          continueLabel: AppStrings.step1Continue,
+          continueLabel: context.l10n.step1Continue,
           // Only allow continue if at least country is selected
           onContinue: state.selectedCountry != null ? _onContinue : null,
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const OnboardingStepHeading(
-                tag: AppStrings.step1Tag,
-                title: AppStrings.step1Title,
-                subtitle: AppStrings.step1Subtitle,
+              OnboardingStepHeading(
+                tag: context.l10n.step1Tag,
+                title: context.l10n.step1Title,
+                subtitle: context.l10n.step1Subtitle,
               ),
               const SizedBox(height: AppDimensions.paddingXXL),
               LayoutBuilder(

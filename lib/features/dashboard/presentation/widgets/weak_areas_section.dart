@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-
-import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 /// Displays weak-area recommendations derived from quiz answer history.
 class WeakAreasSection extends StatelessWidget {
@@ -57,10 +55,12 @@ class WeakAreasSection extends StatelessWidget {
           ],
         ),
         const SizedBox(height: AppDimensions.paddingLG),
-        ...weakAreas.map((area) => Padding(
-          padding: const EdgeInsets.only(bottom: AppDimensions.paddingMD),
-          child: _WeakAreaTile(area: area),
-        )),
+        ...weakAreas.map(
+          (area) => Padding(
+            padding: const EdgeInsets.only(bottom: AppDimensions.paddingMD),
+            child: _WeakAreaTile(area: area),
+          ),
+        ),
       ],
     );
   }
@@ -125,7 +125,9 @@ class _WeakAreaTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  area.subjectName.isNotEmpty ? area.subjectName : area.category,
+                  area.subjectName.isNotEmpty
+                      ? area.subjectName
+                      : area.category,
                   style: AppTextStyles.labelLarge.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
@@ -143,7 +145,9 @@ class _WeakAreaTile extends StatelessWidget {
                     Text(
                       '$weakness%',
                       style: AppTextStyles.labelMedium.copyWith(
-                        color: isWeak ? colorScheme.error : colorScheme.tertiary,
+                        color: isWeak
+                            ? colorScheme.error
+                            : colorScheme.tertiary,
                         fontWeight: FontWeight.w700,
                       ),
                     ),

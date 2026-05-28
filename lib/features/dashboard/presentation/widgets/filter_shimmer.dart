@@ -3,7 +3,6 @@ library;
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 
 class FilterShimmer extends StatelessWidget {
   const FilterShimmer({super.key});

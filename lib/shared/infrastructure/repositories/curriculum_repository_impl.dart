@@ -1,7 +1,6 @@
 import 'package:injectable/injectable.dart';
 
 import '../../../core/core.dart';
-import '../../domain/domain.dart';
 
 @LazySingleton(as: CurriculumRepositoryPort)
 class CurriculumRepositoryImpl implements CurriculumRepositoryPort {

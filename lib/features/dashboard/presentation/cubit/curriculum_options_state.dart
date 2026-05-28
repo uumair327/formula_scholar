@@ -16,6 +16,7 @@ class CurriculumOptionsState extends Equatable {
     this.draftBoardId,
     this.draftGradeId,
     this.errorMessage,
+    this.errorKey,
   });
 
   final CurriculumOptionsStatus status;
@@ -23,13 +24,14 @@ class CurriculumOptionsState extends Equatable {
   final List<StateRegion> states;
   final List<Board> boards;
   final List<Grade> grades;
-  
+
   final String? draftCountryId;
   final String? draftStateId;
   final String? draftBoardId;
   final String? draftGradeId;
-  
+
   final String? errorMessage;
+  final String? errorKey;
 
   bool get hasCountries => countries.isNotEmpty;
   bool get hasStates => states.isNotEmpty;
@@ -49,6 +51,7 @@ class CurriculumOptionsState extends Equatable {
     String? draftBoardId,
     String? draftGradeId,
     String? errorMessage,
+    String? errorKey,
     bool clearError = false,
   }) {
     return CurriculumOptionsState(
@@ -62,20 +65,22 @@ class CurriculumOptionsState extends Equatable {
       draftBoardId: draftBoardId ?? this.draftBoardId,
       draftGradeId: draftGradeId ?? this.draftGradeId,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+      errorKey: clearError ? null : (errorKey ?? this.errorKey),
     );
   }
 
   @override
   List<Object?> get props => [
-        status,
-        countries,
-        states,
-        boards,
-        grades,
-        draftCountryId,
-        draftStateId,
-        draftBoardId,
-        draftGradeId,
-        errorMessage,
-      ];
+    status,
+    countries,
+    states,
+    boards,
+    grades,
+    draftCountryId,
+    draftStateId,
+    draftBoardId,
+    draftGradeId,
+    errorMessage,
+    errorKey,
+  ];
 }

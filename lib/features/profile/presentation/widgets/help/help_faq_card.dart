@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../../core/core.dart';
-import '../../../../../shared/shared.dart';
 
 class HelpFaqCard extends StatelessWidget {
   const HelpFaqCard({super.key, required this.question, required this.answer});
@@ -32,15 +31,30 @@ class HelpFaqCard extends StatelessWidget {
           leading: Container(
             width: AppDimensions.avatarSM,
             height: AppDimensions.avatarSM,
-            decoration: BoxDecoration(color: colorScheme.primaryContainer, shape: BoxShape.circle),
-            child: Icon(LucideIcons.helpCircle, size: AppDimensions.iconSM, color: colorScheme.primary),
+            decoration: BoxDecoration(
+              color: colorScheme.primaryContainer,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              LucideIcons.helpCircle,
+              size: AppDimensions.iconSM,
+              color: colorScheme.primary,
+            ),
           ),
-          title: Text(question, style: AppTextStyles.labelLarge.copyWith(color: colorScheme.onSurface)),
+          title: Text(
+            question,
+            style: AppTextStyles.labelLarge.copyWith(
+              color: colorScheme.onSurface,
+            ),
+          ),
           children: [
-            Text(answer, style: AppTextStyles.bodyMedium.copyWith(
-              color: colorScheme.onSurfaceVariant,
-              height: AppDimensions.lineHeightRelaxed,
-            )),
+            Text(
+              answer,
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: colorScheme.onSurfaceVariant,
+                height: AppDimensions.lineHeightRelaxed,
+              ),
+            ),
           ],
         ),
       ),

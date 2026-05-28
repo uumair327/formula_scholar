@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
+
 import '../cubit/visualizer_cubit.dart';
 import '../cubit/visualizer_state.dart';
 import '../widgets/formula_card_selector.dart';
@@ -53,7 +54,7 @@ class _VisualizerPageState extends State<VisualizerPage>
           return Scaffold(
             appBar: AppBar(
               title: Text(
-                AppStrings.visualizer3d,
+                context.l10n.visualizer3d,
                 style: AppTextStyles.titleMedium,
               ),
             ),
@@ -87,7 +88,7 @@ class _VisualizerPageState extends State<VisualizerPage>
           backgroundColor: colorScheme.surface,
           appBar: AppBar(
             title: Text(
-              AppStrings.visualizer3d,
+              context.l10n.visualizer3d,
               style: AppTextStyles.titleMedium,
             ),
             centerTitle: true,
@@ -100,8 +101,8 @@ class _VisualizerPageState extends State<VisualizerPage>
                 onPressed: () =>
                     context.read<VisualizerCubit>().toggleAutoRotate(),
                 tooltip: state.isAutoRotating
-                    ? AppStrings.autoRotatePause
-                    : AppStrings.autoRotateStart,
+                    ? context.l10n.autoRotatePause
+                    : context.l10n.autoRotateStart,
               ),
             ],
           ),

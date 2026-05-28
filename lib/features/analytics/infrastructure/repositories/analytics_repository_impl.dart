@@ -1,7 +1,6 @@
 import 'package:injectable/injectable.dart';
-
-import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 @LazySingleton(as: AnalyticsRepositoryPort)
 class AnalyticsRepositoryImpl implements AnalyticsRepositoryPort {

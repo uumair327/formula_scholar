@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../cubit/flashcards_cubit.dart';
 import '../cubit/flashcards_state.dart';
 import '../widgets/flashcard_start_view.dart';
@@ -16,7 +15,7 @@ class FlashcardsPage extends StatelessWidget {
     return Scaffold(
       appBar: GlassAppBar(
         titleWidget: Text(
-          AppStrings.flashcardStudy,
+          context.l10n.flashcards,
           style: AppTextStyles.titleMedium.copyWith(
             color: Theme.of(context).colorScheme.onSurface,
             fontWeight: FontWeight.w800,
@@ -28,12 +27,9 @@ class FlashcardsPage extends StatelessWidget {
         builder: (context, state) {
           return switch (state.status) {
             FlashcardsStatus.initial ||
-            FlashcardsStatus.loading =>
-              const FlashcardStartView(),
-            FlashcardsStatus.ready =>
-              FlashcardStudyView(state: state),
-            FlashcardsStatus.finished =>
-              FlashcardCompleteView(state: state),
+            FlashcardsStatus.loading => const FlashcardStartView(),
+            FlashcardsStatus.ready => FlashcardStudyView(state: state),
+            FlashcardsStatus.finished => FlashcardCompleteView(state: state),
           };
         },
       ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/core.dart';
-import '../../../../../l10n/l10n.dart';
 
 class SignupBrandColumn extends StatelessWidget {
   const SignupBrandColumn({super.key});

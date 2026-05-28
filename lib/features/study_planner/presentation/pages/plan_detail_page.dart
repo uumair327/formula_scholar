@@ -29,7 +29,7 @@ class PlanDetailPage extends StatelessWidget {
               AppRoutes.editPlanName,
               pathParameters: {'planId': planId},
             ),
-            tooltip: AppStrings.editPlan,
+            tooltip: context.l10n.editPlan,
           ),
         ],
       ),

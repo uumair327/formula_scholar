@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:injectable/injectable.dart';
-
-import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 @LazySingleton(as: SearchDataSourcePort)
 class SearchFirebaseAdapter implements SearchDataSourcePort {
@@ -48,8 +47,9 @@ class SearchFirebaseAdapter implements SearchDataSourcePort {
         final chapterId = chapterDoc.id;
         final chapterName = chapterDoc.data()['name'] as String? ?? chapterId;
 
-        final formulaRef = _api
-            .collection(AppFirestoreCollections.chapterFormulas(subjectId, chapterId));
+        final formulaRef = _api.collection(
+          AppFirestoreCollections.chapterFormulas(subjectId, chapterId),
+        );
 
         final formulaQuery = curriculumKey != null
             ? formulaRef.where(
@@ -75,16 +75,18 @@ class SearchFirebaseAdapter implements SearchDataSourcePort {
           if (title.contains(lowerQuery) || descLower.contains(lowerQuery)) {
             final formulaId = formulaDoc.id;
             if (seen.add(formulaId)) {
-              results.add(SearchResult(
-                id: formulaId,
-                title: data['title'] as String? ?? '',
-                latex: data['latex'] as String? ?? '',
-                description: description,
-                subjectId: subjectId,
-                subjectName: subjectName,
-                chapterId: chapterId,
-                chapterName: chapterName,
-              ));
+              results.add(
+                SearchResult(
+                  id: formulaId,
+                  title: data['title'] as String? ?? '',
+                  latex: data['latex'] as String? ?? '',
+                  description: description,
+                  subjectId: subjectId,
+                  subjectName: subjectName,
+                  chapterId: chapterId,
+                  chapterName: chapterName,
+                ),
+              );
             }
           }
         }

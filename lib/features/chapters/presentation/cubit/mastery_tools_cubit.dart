@@ -1,8 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-
-import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 @injectable
 class MasteryToolsCubit extends Cubit<void> {

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 import '../../core/core.dart';
-import 'localization_state.dart';
 
 class LocalizationCubit extends HydratedCubit<LocalizationState> {
   LocalizationCubit() : super(const LocalizationState());

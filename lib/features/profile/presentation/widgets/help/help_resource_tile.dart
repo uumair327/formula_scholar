@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../../core/core.dart';
-import '../../../../../shared/shared.dart';
 
 class HelpResourceTile extends StatelessWidget {
   const HelpResourceTile({
@@ -28,7 +27,10 @@ class HelpResourceTile extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
         child: AppCard(
-          padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingXL, vertical: AppDimensions.paddingLG),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppDimensions.paddingXL,
+            vertical: AppDimensions.paddingLG,
+          ),
           child: Row(
             children: [
               AppIconCircle(
@@ -41,9 +43,19 @@ class HelpResourceTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: AppTextStyles.labelLarge, maxLines: 1, overflow: TextOverflow.ellipsis),
+                    Text(
+                      title,
+                      style: AppTextStyles.labelLarge,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     const SizedBox(height: AppDimensions.paddingXXS),
-                    Text(subtitle, style: AppTextStyles.bodySmall.copyWith(color: colorScheme.outline)),
+                    Text(
+                      subtitle,
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: colorScheme.outline,
+                      ),
+                    ),
                   ],
                 ),
               ),

@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
-
 import '../../domain/domain.dart';
-
 enum SearchStatus { initial, loading, loaded, error }
 
 class SearchState extends Equatable {

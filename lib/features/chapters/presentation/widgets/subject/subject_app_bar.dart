@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../../core/core.dart';
-import '../../../../../shared/shared.dart';
+
 import '../../../../auth/auth.dart';
 import '../../../../profile/domain/domain.dart';
 import '../../cubit/chapters_cubit.dart';
@@ -28,7 +28,7 @@ class SubjectChaptersAppBar extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            subject?.name ?? AppStrings.selectSubjectTitle,
+            subject?.name ?? context.l10n.selectSubjectTitle,
             style: AppTextStyles.titleMedium.copyWith(
               color: colorScheme.onSurface,
               fontWeight: FontWeight.w800,
@@ -38,7 +38,7 @@ class SubjectChaptersAppBar extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  AppStrings.breadcrumbHome,
+                  context.l10n.breadcrumbHome,
                   style: AppTextStyles.overline.copyWith(
                     color: colorScheme.outline,
                     fontSize: AppDimensions.fontSizeXS,
@@ -72,7 +72,7 @@ class SubjectChaptersAppBar extends StatelessWidget {
                 authState.user?.photoUrl ??
                 AppAssets.dashboardStudentProfileUrl;
             return Tooltip(
-              message: AppStrings.viewProfile,
+              message: context.l10n.viewProfile,
               child: GestureDetector(
                 onTap: () => context.push(AppRoutes.profilePath),
                 child: AppAvatar(
@@ -102,7 +102,7 @@ class _AnalyticsButton extends StatelessWidget {
       onPressed: () async {
         if (subject == null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text(AppStrings.selectSubjectFirst)),
+            SnackBar(content: Text(context.l10n.selectSubjectFirst)),
           );
           return;
         }
@@ -144,8 +144,8 @@ class _AnalyticsButton extends StatelessWidget {
         borderRadius: AppDimensions.radiusMD,
       ),
       tooltip: subject == null
-          ? AppStrings.selectSubjectFirst
-          : AppStrings.viewAnalytics,
+          ? context.l10n.selectSubjectFirst
+          : context.l10n.viewAnalytics,
     );
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../cubit/achievements_cubit.dart';
 import '../cubit/achievements_state.dart';
 import '../widgets/achievement_progress_card.dart';

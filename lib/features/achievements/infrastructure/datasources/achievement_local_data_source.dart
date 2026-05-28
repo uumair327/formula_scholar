@@ -1,5 +1,4 @@
 import 'package:injectable/injectable.dart';
-
 import '../../domain/domain.dart';
 
 @LazySingleton(as: AchievementDataSourcePort)
@@ -79,13 +78,17 @@ class AchievementLocalDataSource implements AchievementDataSourcePort {
 
   @override
   Future<List<Achievement>> getAchievements() async {
-    return _definitions.map((d) => Achievement(
-      id: d.id,
-      title: d.title,
-      description: d.description,
-      tier: d.tier,
-      target: d.target,
-    )).toList();
+    return _definitions
+        .map(
+          (d) => Achievement(
+            id: d.id,
+            title: d.title,
+            description: d.description,
+            tier: d.tier,
+            target: d.target,
+          ),
+        )
+        .toList();
   }
 
   @override

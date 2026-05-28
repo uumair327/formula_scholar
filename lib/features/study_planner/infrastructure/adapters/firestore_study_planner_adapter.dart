@@ -2,9 +2,8 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:injectable/injectable.dart';
-
-import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 @LazySingleton(as: StudyPlannerPort)
 class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
@@ -17,8 +16,10 @@ class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
 
   @override
   Stream<List<StudyPlan>> watchPlans(String userId) {
-    AppLogger.trace('watchPlans($userId)',
-        tag: AppLogTags.studyPlannerDataSource);
+    AppLogger.trace(
+      'watchPlans($userId)',
+      tag: AppLogTags.studyPlannerDataSource,
+    );
     return _api.stream(
       () => _plansRef(userId)
           .orderBy('updatedAt', descending: true)
@@ -85,9 +86,14 @@ class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
   }
 
   @override
-  Future<void> createPlan({required String userId, required StudyPlan plan}) async {
-    AppLogger.trace('createPlan($userId, ${plan.id})',
-        tag: AppLogTags.studyPlannerDataSource);
+  Future<void> createPlan({
+    required String userId,
+    required StudyPlan plan,
+  }) async {
+    AppLogger.trace(
+      'createPlan($userId, ${plan.id})',
+      tag: AppLogTags.studyPlannerDataSource,
+    );
     await _api.execute(
       () => _plansRef(userId).doc(plan.id).set(_planToMap(plan)),
       tag: AppLogTags.studyPlannerDataSource,
@@ -95,9 +101,14 @@ class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
   }
 
   @override
-  Future<void> updatePlan({required String userId, required StudyPlan plan}) async {
-    AppLogger.trace('updatePlan($userId, ${plan.id})',
-        tag: AppLogTags.studyPlannerDataSource);
+  Future<void> updatePlan({
+    required String userId,
+    required StudyPlan plan,
+  }) async {
+    AppLogger.trace(
+      'updatePlan($userId, ${plan.id})',
+      tag: AppLogTags.studyPlannerDataSource,
+    );
     await _api.execute(
       () => _plansRef(userId).doc(plan.id).update(_planToMap(plan)),
       tag: AppLogTags.studyPlannerDataSource,
@@ -105,9 +116,14 @@ class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
   }
 
   @override
-  Future<void> deletePlan({required String userId, required String planId}) async {
-    AppLogger.trace('deletePlan($userId, $planId)',
-        tag: AppLogTags.studyPlannerDataSource);
+  Future<void> deletePlan({
+    required String userId,
+    required String planId,
+  }) async {
+    AppLogger.trace(
+      'deletePlan($userId, $planId)',
+      tag: AppLogTags.studyPlannerDataSource,
+    );
     await _api.execute(
       () => _plansRef(userId).doc(planId).delete(),
       tag: AppLogTags.studyPlannerDataSource,
@@ -120,8 +136,10 @@ class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
     required String planId,
     required String sessionId,
   }) async {
-    AppLogger.trace('updateSessionStatus($userId, $planId, $sessionId)',
-        tag: AppLogTags.studyPlannerDataSource);
+    AppLogger.trace(
+      'updateSessionStatus($userId, $planId, $sessionId)',
+      tag: AppLogTags.studyPlannerDataSource,
+    );
     final docRef = _plansRef(userId).doc(planId);
     final snap = await _api.execute(
       () => docRef.get(),
@@ -130,8 +148,9 @@ class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
     final data = snap.data() as Map<String, dynamic>?;
     if (data == null) {
       AppLogger.warning(
-          'updateSessionStatus: plan $planId not found',
-          tag: AppLogTags.studyPlannerDataSource);
+        'updateSessionStatus: plan $planId not found',
+        tag: AppLogTags.studyPlannerDataSource,
+      );
       return;
     }
     final sessions = (data['sessions'] as List<dynamic>)
@@ -140,8 +159,9 @@ class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
     final idx = sessions.indexWhere((s) => s['id'] == sessionId);
     if (idx == -1) {
       AppLogger.warning(
-          'updateSessionStatus: session $sessionId not found in plan $planId',
-          tag: AppLogTags.studyPlannerDataSource);
+        'updateSessionStatus: session $sessionId not found in plan $planId',
+        tag: AppLogTags.studyPlannerDataSource,
+      );
       return;
     }
     sessions[idx]['status'] = SessionStatus.completed.name;

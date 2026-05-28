@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/core.dart';
-import '../app_text.dart';
 
 class CategoryChip extends StatelessWidget {
   const CategoryChip({

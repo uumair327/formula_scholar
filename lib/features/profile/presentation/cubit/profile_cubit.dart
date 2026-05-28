@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../../domain/domain.dart';
 import 'profile_state.dart';
 
@@ -98,7 +98,8 @@ class ProfileCubit extends Cubit<ProfileState>
       emit(
         state.copyWith(
           status: ProfileStatus.error,
-          errorMessage: AppStrings.failedToLoadProfile,
+          errorMessage: null,
+          errorKey: 'profile.load_failed',
         ),
       );
     }
@@ -123,6 +124,7 @@ class ProfileCubit extends Cubit<ProfileState>
           state.copyWith(
             status: ProfileStatus.error,
             errorMessage: failure.message,
+            errorKey: failure.code ?? 'profile.update_failed',
           ),
         );
         return false;

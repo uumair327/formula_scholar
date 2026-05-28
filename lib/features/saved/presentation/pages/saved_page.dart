@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../cubit/saved_cubit.dart';
 import '../cubit/saved_state.dart';
 import '../widgets/widgets.dart';
@@ -31,7 +31,7 @@ class SavedPage extends StatelessWidget {
         if (state.status == SavedStatus.error) {
           return Scaffold(
             body: AppErrorState(
-              message: state.errorMessage,
+              message: context.localizedError(fallback: state.errorMessage),
               onRetry: () {
                 final curr = context.read<CurriculumCubit>().state.curriculum;
                 if (curr != null) {
@@ -60,10 +60,26 @@ class SavedPage extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    EntranceWrapper.stagger(index: 0, child: const SizedBox(height: AppDimensions.paddingSection)),
-                    EntranceWrapper.stagger(index: 1, child: const EmptyBookmarksState()),
-                    EntranceWrapper.stagger(index: 2, child: const SizedBox(height: AppDimensions.paddingSection)),
-                    EntranceWrapper.stagger(index: 3, child: const ProTipBanner()),
+                    EntranceWrapper.stagger(
+                      index: 0,
+                      child: const SizedBox(
+                        height: AppDimensions.paddingSection,
+                      ),
+                    ),
+                    EntranceWrapper.stagger(
+                      index: 1,
+                      child: const EmptyBookmarksState(),
+                    ),
+                    EntranceWrapper.stagger(
+                      index: 2,
+                      child: const SizedBox(
+                        height: AppDimensions.paddingSection,
+                      ),
+                    ),
+                    EntranceWrapper.stagger(
+                      index: 3,
+                      child: const ProTipBanner(),
+                    ),
                   ],
                 ),
               ),
@@ -109,7 +125,7 @@ class SavedPage extends StatelessWidget {
                     EntranceWrapper.stagger(
                       index: 0,
                       child: Text(
-                        AppStrings.savedChapters,
+                        context.l10n.savedChapters,
                         style: AppTextStyles.titleLarge.copyWith(
                           fontWeight: FontWeight.w700,
                           color: colorScheme.onSurface,
@@ -135,7 +151,7 @@ class SavedPage extends StatelessWidget {
                     EntranceWrapper.stagger(
                       index: filteredChapters.length + 1,
                       child: Text(
-                        AppStrings.savedFormulas,
+                        context.l10n.savedFormulas,
                         style: AppTextStyles.titleLarge.copyWith(
                           fontWeight: FontWeight.w700,
                           color: colorScheme.onSurface,
@@ -159,9 +175,12 @@ class SavedPage extends StatelessWidget {
                   if (filteredNotes.isNotEmpty) ...[
                     const SizedBox(height: AppDimensions.paddingLG),
                     EntranceWrapper.stagger(
-                      index: filteredChapters.length + filteredBookmarks.length + 2,
+                      index:
+                          filteredChapters.length +
+                          filteredBookmarks.length +
+                          2,
                       child: Text(
-                        AppStrings.savedNotes,
+                        context.l10n.savedNotes,
                         style: AppTextStyles.titleLarge.copyWith(
                           fontWeight: FontWeight.w700,
                           color: colorScheme.onSurface,
@@ -175,7 +194,11 @@ class SavedPage extends StatelessWidget {
                           bottom: AppDimensions.paddingLG,
                         ),
                         child: EntranceWrapper.stagger(
-                          index: filteredChapters.length + filteredBookmarks.length + 3 + entry.key,
+                          index:
+                              filteredChapters.length +
+                              filteredBookmarks.length +
+                              3 +
+                              entry.key,
                           child: SavedNoteCard(note: entry.value),
                         ),
                       ),

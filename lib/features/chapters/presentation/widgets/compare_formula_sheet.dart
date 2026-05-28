@@ -3,9 +3,8 @@ library;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-
-import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 class CompareFormulaSheet extends StatelessWidget {
   const CompareFormulaSheet({
@@ -30,7 +29,8 @@ class CompareFormulaSheet extends StatelessWidget {
           children: [
             Center(
               child: Container(
-                width: 32, height: 4,
+                width: 32,
+                height: 4,
                 decoration: BoxDecoration(
                   color: colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
@@ -40,7 +40,11 @@ class CompareFormulaSheet extends StatelessWidget {
             const SizedBox(height: AppDimensions.paddingLG),
             Row(
               children: [
-                Icon(LucideIcons.gitCompare, color: colorScheme.primary, size: AppDimensions.iconMD),
+                Icon(
+                  LucideIcons.gitCompare,
+                  color: colorScheme.primary,
+                  size: AppDimensions.iconMD,
+                ),
                 const SizedBox(width: AppDimensions.paddingSM),
                 Expanded(
                   child: Text(
@@ -60,16 +64,18 @@ class CompareFormulaSheet extends StatelessWidget {
               child: ListView.separated(
                 addAutomaticKeepAlives: false,
                 itemCount: formulas.length,
-                separatorBuilder: (_, _) =>
-                    const Divider(height: 1),
+                separatorBuilder: (_, _) => const Divider(height: 1),
                 itemBuilder: (context, index) {
                   final f = formulas[index];
                   return ListTile(
                     leading: Container(
-                      width: 32, height: 32,
+                      width: 32,
+                      height: 32,
                       decoration: BoxDecoration(
                         color: colorScheme.primaryContainer,
-                        borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
+                        borderRadius: BorderRadius.circular(
+                          AppDimensions.radiusSM,
+                        ),
                       ),
                       child: Center(
                         child: Text(

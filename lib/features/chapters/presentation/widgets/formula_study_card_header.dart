@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-
-import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 class FormulaStudyCardHeader extends StatelessWidget {
   const FormulaStudyCardHeader({
@@ -88,7 +87,11 @@ class _OverflowMenu extends StatelessWidget {
           value: 'note',
           child: Row(
             children: [
-              Icon(LucideIcons.stickyNote, size: 18, color: colorScheme.onSurface),
+              Icon(
+                LucideIcons.stickyNote,
+                size: 18,
+                color: colorScheme.onSurface,
+              ),
               const SizedBox(width: AppDimensions.paddingMD),
               const Text('Add / Edit Note'),
             ],
@@ -98,7 +101,11 @@ class _OverflowMenu extends StatelessWidget {
           value: 'compare',
           child: Row(
             children: [
-              Icon(LucideIcons.gitCompare, size: 18, color: colorScheme.onSurface),
+              Icon(
+                LucideIcons.gitCompare,
+                size: 18,
+                color: colorScheme.onSurface,
+              ),
               const SizedBox(width: AppDimensions.paddingMD),
               const Text('Compare Formula'),
             ],

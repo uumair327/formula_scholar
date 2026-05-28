@@ -2,17 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 import '../cubit/formulas_cubit.dart';
 import 'bookmark_button.dart';
 import 'mastery_toggle_button.dart';
 
 class FormulaActionBar extends StatelessWidget {
-  const FormulaActionBar({
-    super.key,
-    required this.formula,
-  });
+  const FormulaActionBar({super.key, required this.formula});
 
   final Formula formula;
 
@@ -35,12 +31,8 @@ class FormulaActionBar extends StatelessWidget {
             isBookmarked: formula.isBookmarked,
             onToggle: () {
               final subjectName =
-                  context
-                      .read<SubjectSelectionCubit>()
-                      .state
-                      .subject
-                      ?.name ??
-                  AppStrings.unknownSubject;
+                  context.read<SubjectSelectionCubit>().state.subject?.name ??
+                  context.l10n.unknownSubject;
               final curriculumKey = context
                   .read<CurriculumCubit>()
                   .state

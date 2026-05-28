@@ -7,9 +7,10 @@ import '../../../../core/core.dart';
 import '../cubit/curriculum_options_cubit.dart';
 
 class CurriculumErrorRow extends StatelessWidget {
-  const CurriculumErrorRow({super.key, this.errorMessage});
+  const CurriculumErrorRow({super.key, this.errorMessage, this.errorKey});
 
   final String? errorMessage;
+  final String? errorKey;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,12 @@ class CurriculumErrorRow extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              errorMessage ?? AppStrings.dashboardCurriculumOptionsLoadFailed,
+              context.localizedError(
+                errorKey: errorKey,
+                fallback:
+                    errorMessage ??
+                    context.l10n.dashboardCurriculumOptionsLoadFailed,
+              ),
               style: AppTextStyles.labelSmall.copyWith(
                 color: colorScheme.error,
               ),
@@ -30,8 +36,9 @@ class CurriculumErrorRow extends StatelessWidget {
             ),
           ),
           TextButton(
-            onPressed: () => context.read<CurriculumOptionsCubit>().loadOptions(),
-            child: const Text(AppStrings.dashboardRetryCurriculumOptions),
+            onPressed: () =>
+                context.read<CurriculumOptionsCubit>().loadOptions(),
+            child: Text(context.l10n.dashboardRetryCurriculumOptions),
           ),
         ],
       ),

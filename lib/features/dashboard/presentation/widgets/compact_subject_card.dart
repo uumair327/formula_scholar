@@ -2,10 +2,8 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-
-import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 class CompactSubjectCard extends StatelessWidget {
   const CompactSubjectCard({
@@ -22,8 +20,12 @@ class CompactSubjectCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final accentColor = Color(subject.colorValue);
-    final lightColor = accentColor.withValues(alpha: AppDimensions.opacityLight);
-    final faintColor = accentColor.withValues(alpha: AppDimensions.opacityFaint);
+    final lightColor = accentColor.withValues(
+      alpha: AppDimensions.opacityLight,
+    );
+    final faintColor = accentColor.withValues(
+      alpha: AppDimensions.opacityFaint,
+    );
     final iconData = AppIconMapper.resolve(subject.iconName);
 
     return AppCard(
@@ -57,7 +59,9 @@ class CompactSubjectCard extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: faintColor,
-                    borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
+                    borderRadius: BorderRadius.circular(
+                      AppDimensions.radiusXXL,
+                    ),
                   ),
                   child: Text(
                     subject.badgeText!,
@@ -105,7 +109,11 @@ class CompactSubjectCard extends StatelessWidget {
             const SizedBox(height: AppDimensions.paddingMD),
             Row(
               children: [
-                Icon(LucideIcons.clock, size: AppDimensions.iconSM, color: accentColor),
+                Icon(
+                  LucideIcons.clock,
+                  size: AppDimensions.iconSM,
+                  color: accentColor,
+                ),
                 const SizedBox(width: AppDimensions.paddingSM),
                 Text(
                   'Last viewed ${subject.lastViewed}',
@@ -118,7 +126,11 @@ class CompactSubjectCard extends StatelessWidget {
             const SizedBox(height: AppDimensions.paddingMD),
             Row(
               children: [
-                Icon(LucideIcons.star, size: AppDimensions.iconSM, color: accentColor),
+                Icon(
+                  LucideIcons.star,
+                  size: AppDimensions.iconSM,
+                  color: accentColor,
+                ),
                 const SizedBox(width: AppDimensions.paddingSM),
                 Expanded(
                   child: Text(

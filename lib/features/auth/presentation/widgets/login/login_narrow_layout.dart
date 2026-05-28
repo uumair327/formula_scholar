@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/core.dart';
-import '../../../../../l10n/l10n.dart';
+
 import 'login_form_content.dart';
 
 class LoginNarrowLayout extends StatelessWidget {

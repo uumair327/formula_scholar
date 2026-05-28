@@ -5,10 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../../auth/auth.dart';
 import '../../../flashcards/flashcards.dart';
-import '../../../practice/practice.dart';
 import '../../../profile/profile.dart';
 import '../../domain/domain.dart';
 import '../cubit/formulas_cubit.dart';
@@ -34,8 +32,8 @@ class MasteryToolsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const AppSectionTitle(
-          title: AppStrings.masteryTools,
+        AppSectionTitle(
+          title: context.l10n.masteryTools,
           leadingIcon: LucideIcons.sparkles,
         ),
         const SizedBox(height: AppDimensions.paddingLG),
@@ -52,7 +50,7 @@ class MasteryToolsSection extends StatelessWidget {
                 const SizedBox(width: AppDimensions.paddingMD),
                 Expanded(
                   child: Text(
-                    AppStrings.masteryToolsSyncing,
+                    context.l10n.masteryToolsSyncing,
                     style: AppTextStyles.bodySmall.copyWith(
                       color: colorScheme.onSurfaceVariant,
                     ),
@@ -284,25 +282,25 @@ class MasteryToolsSection extends StatelessWidget {
   }
 
   void _showUnimplementedSheet(BuildContext context, MasteryTool tool) {
-    final subtitle = _getToolSubtitle(tool);
+    final subtitle = _getToolSubtitle(context, tool);
     SupportContactSheet.show(
       context,
       title: tool.label,
       subtitle: subtitle,
-      email: AppStrings.supportEmail,
+      email: context.l10n.supportEmail,
     );
   }
 
-  String _getToolSubtitle(MasteryTool tool) {
+  String _getToolSubtitle(BuildContext context, MasteryTool tool) {
     if (tool.supportSubtitle != null && tool.supportSubtitle!.isNotEmpty) {
       return tool.supportSubtitle!;
     }
 
-    if (tool.label == AppStrings.videoLessons) {
+    if (tool.label == context.l10n.videoLessons) {
       return 'Video Lessons are currently being prepared. Contact support if you need access to guided tutorial content.';
-    } else if (tool.label == AppStrings.cheatSheets) {
+    } else if (tool.label == context.l10n.cheatSheets) {
       return 'Cheat Sheets provide quick formula reference guides. Contact support to request this feature for your curriculum.';
-    } else if (tool.label == AppStrings.visualizer3d) {
+    } else if (tool.label == context.l10n.visualizer3d) {
       return '3D Visualizer helps understand geometric concepts. Contact support to request 3D visualization tools.';
     }
     return 'This feature is not yet available. Contact support for more information.';

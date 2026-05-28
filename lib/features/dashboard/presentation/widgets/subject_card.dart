@@ -1,7 +1,6 @@
 library;
 
 import 'package:flutter/material.dart';
-
 import '../../domain/domain.dart';
 import 'compact_subject_card.dart';
 import 'featured_subject_card.dart';

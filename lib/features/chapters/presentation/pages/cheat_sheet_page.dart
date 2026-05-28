@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../cubit/formulas_cubit.dart';
 import '../cubit/formulas_state.dart';
 import '../widgets/cheat_sheet_formula_entry.dart';
@@ -17,7 +17,7 @@ class CheatSheetPage extends StatelessWidget {
     return Scaffold(
       appBar: GlassAppBar(
         titleWidget: Text(
-          'Cheat Sheet',
+          context.l10n.formulaCheatSheets,
           style: AppTextStyles.titleMedium.copyWith(
             color: Theme.of(context).colorScheme.onSurface,
             fontWeight: FontWeight.w800,
@@ -27,17 +27,18 @@ class CheatSheetPage extends StatelessWidget {
           IconButton(
             onPressed: () => _printCheatSheet(context),
             icon: const Icon(LucideIcons.printer),
-            tooltip: AppStrings.printLabel,
+            tooltip: context.l10n.printLabel,
           ),
         ],
       ),
       body: BlocBuilder<FormulasCubit, FormulasState>(
-        buildWhen: (p, n) => p.formulas != n.formulas || p.chapterName != n.chapterName,
+        buildWhen: (p, n) =>
+            p.formulas != n.formulas || p.chapterName != n.chapterName,
         builder: (context, state) {
           if (state.formulas.isEmpty) {
-            return const AppEmptyState(
+            return AppEmptyState(
               icon: LucideIcons.fileText,
-              title: AppStrings.noFormulasLabel,
+              title: context.l10n.noFormulasLabel,
               description: 'There are no formulas in this chapter yet.',
             );
           }
@@ -88,7 +89,9 @@ class CheatSheetPage extends StatelessWidget {
 
   void _printCheatSheet(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Print ready — use browser Print or screenshot')),
+      const SnackBar(
+        content: Text('Print ready — use browser Print or screenshot'),
+      ),
     );
   }
 }

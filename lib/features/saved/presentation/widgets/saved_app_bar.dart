@@ -6,8 +6,9 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../../../auth/auth.dart';
+
 import '../cubit/saved_cubit.dart';
 
 class SavedAppBar extends StatelessWidget {
@@ -65,7 +66,7 @@ class SavedAppBar extends StatelessWidget {
               ),
               const SizedBox(width: AppDimensions.paddingMD),
               Text(
-                AppStrings.navSaved,
+                context.l10n.navSaved,
                 style: AppTextStyles.titleMedium.copyWith(
                   color: colorScheme.onSurface,
                   fontWeight: FontWeight.w800,
@@ -92,7 +93,7 @@ class SavedAppBar extends StatelessWidget {
                   }
                 },
                 icon: Icon(LucideIcons.refreshCw, color: colorScheme.primary),
-                tooltip: AppStrings.refreshBookmarks,
+                tooltip: context.l10n.refreshBookmarks,
               ),
             ),
           ],

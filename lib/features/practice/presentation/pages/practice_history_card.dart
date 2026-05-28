@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../../domain/entities/quiz_result.dart';
 
 class HistoryCard extends StatelessWidget {
@@ -14,7 +14,7 @@ class HistoryCard extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final pct = result.scorePercent.round();
     final stars = result.starRating;
-    final dateStr = _formatDate(result.completedAt);
+    final dateStr = _formatDate(result.completedAt, context);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppDimensions.paddingMD),
@@ -44,19 +44,19 @@ class HistoryCard extends StatelessWidget {
                   ),
                   const SizedBox(height: AppDimensions.paddingSM),
                   Text(
-                    '$pct% ${AppStrings.scoreLabel}',
+                    '$pct% ${context.l10n.scoreLabel}',
                     style: AppTextStyles.titleLarge.copyWith(
                       fontWeight: FontWeight.w800,
                       color: pct >= 80
                           ? colorScheme.secondary
                           : pct >= 50
-                              ? colorScheme.tertiary
-                              : colorScheme.error,
+                          ? colorScheme.tertiary
+                          : colorScheme.error,
                     ),
                   ),
                   const SizedBox(height: AppDimensions.paddingXS),
                   Text(
-                    '${result.correctCount}/${result.totalQuestions} ${AppStrings.correctLabel}',
+                    '${result.correctCount}/${result.totalQuestions} ${context.l10n.correctLabel}',
                     style: AppTextStyles.bodySmall.copyWith(
                       color: colorScheme.onSurfaceVariant,
                     ),
@@ -75,7 +75,7 @@ class HistoryCard extends StatelessWidget {
                 ),
                 const SizedBox(height: AppDimensions.paddingXS),
                 Text(
-                  '+${result.totalPoints} ${AppStrings.ptsLabel}',
+                  '+${result.totalPoints} ${context.l10n.ptsLabel}',
                   style: AppTextStyles.labelLarge.copyWith(
                     fontWeight: FontWeight.w700,
                     color: colorScheme.primary,
@@ -89,15 +89,25 @@ class HistoryCard extends StatelessWidget {
     );
   }
 
-  static String _formatDate(DateTime? dt) {
+  static String _formatDate(DateTime? dt, BuildContext context) {
     if (dt == null) return '';
     final now = DateTime.now();
     final diff = now.difference(dt);
-    if (diff.inDays == 0) return AppStrings.today;
-    if (diff.inDays == 1) return AppStrings.yesterday;
+    if (diff.inDays == 0) return context.l10n.today;
+    if (diff.inDays == 1) return context.l10n.yesterday;
     final months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return '${dt.day} ${months[dt.month - 1]} ${dt.year}';
   }

@@ -8,9 +8,9 @@ import 'analytics_service_port.dart';
 /// Registered as a LazySingleton via get_it.
 @LazySingleton(as: AnalyticsServicePort)
 class FirebaseAnalyticsAdapter implements AnalyticsServicePort {
-  final FirebaseAnalytics _analytics;
 
   FirebaseAnalyticsAdapter() : _analytics = FirebaseAnalytics.instance;
+  final FirebaseAnalytics _analytics;
 
   @override
   Future<void> logEvent({
@@ -29,7 +29,7 @@ class FirebaseAnalyticsAdapter implements AnalyticsServicePort {
       name: 'screen_view',
       parameters: {
         'firebase_screen': screenName,
-        if (screenClassOverride != null) 'firebase_screen_class': screenClassOverride,
+        'firebase_screen_class': ?screenClassOverride,
       },
     );
   }

@@ -2,8 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
-import '../../../../l10n/l10n.dart';
-import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 
 /// Profile hero card – gradient card with avatar, name, grade, and Pro badge.

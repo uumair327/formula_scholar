@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 
 class EmptyBookmarksState extends StatelessWidget {
   const EmptyBookmarksState({super.key});
@@ -69,14 +68,14 @@ class EmptyBookmarksState extends StatelessWidget {
           ),
           const SizedBox(height: AppDimensions.paddingXXL),
           Text(
-            AppStrings.nothingHereYet,
+            context.l10n.nothingHereYet,
             style: AppTextStyles.headlineSmall.copyWith(
               fontWeight: FontWeight.w800,
             ),
           ),
           const SizedBox(height: AppDimensions.paddingSM),
           Text(
-            AppStrings.emptyBookmarksDesc,
+            context.l10n.emptyBookmarksDesc,
             textAlign: TextAlign.center,
             style: AppTextStyles.bodyMedium.copyWith(
               color: colorScheme.onSurfaceVariant,
@@ -84,7 +83,7 @@ class EmptyBookmarksState extends StatelessWidget {
           ),
           const SizedBox(height: AppDimensions.paddingXXL),
           AppGradientButton(
-            label: AppStrings.browseLessons,
+            label: context.l10n.browseLessons,
             icon: LucideIcons.compass,
             onPressed: () {
               StatefulNavigationShell.of(context).goBranch(1);

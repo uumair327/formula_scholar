@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 import '../cubit/saved_cubit.dart';
 
@@ -64,11 +63,11 @@ class _AddNotePageState extends State<AddNotePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditing ? AppStrings.editNote : AppStrings.addNote),
+        title: Text(_isEditing ? context.l10n.editNote : context.l10n.addNote),
         actions: [
           TextButton(
             onPressed: isSaving ? null : _saveNote,
-            child: const Text('Save'),
+            child: Text(context.l10n.save),
           ),
         ],
       ),
@@ -107,9 +106,9 @@ class _AddNotePageState extends State<AddNotePage> {
             ],
             TextField(
               controller: _titleController,
-              decoration: const InputDecoration(
-                labelText: AppStrings.noteTitleHint,
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: context.l10n.noteTitleHint,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: AppDimensions.paddingMD),
@@ -119,9 +118,9 @@ class _AddNotePageState extends State<AddNotePage> {
                 maxLines: null,
                 expands: true,
                 textAlignVertical: TextAlignVertical.top,
-                decoration: const InputDecoration(
-                  hintText: AppStrings.noteHint,
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  hintText: context.l10n.noteHint,
+                  border: const OutlineInputBorder(),
                   alignLabelWithHint: true,
                 ),
               ),
@@ -148,9 +147,9 @@ class _AddNotePageState extends State<AddNotePage> {
       await cubit.addNote(
         title: title,
         content: content,
-        subject: widget.subject ?? AppStrings.genericError,
+        subject: widget.subject ?? context.l10n.genericError,
         curriculumKey:
-            curriculum?.curriculumKey ?? AppStrings.unknownCurriculum,
+            curriculum?.curriculumKey ?? context.l10n.unknownCurriculum,
         subjectId: widget.subjectId,
         chapterId: widget.chapterId,
         formulaId: widget.formulaId,

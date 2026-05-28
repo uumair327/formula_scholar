@@ -44,14 +44,14 @@ class EncouragementCardWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  AppStrings.readyForMore,
+                  context.l10n.readyForMore,
                   style: AppTextStyles.labelLarge.copyWith(
                     color: AppColors.onTertiaryContainer,
                   ),
                 ),
                 const SizedBox(height: AppDimensions.paddingXXS),
                 Text(
-                  AppStrings.encouragementMessage,
+                  context.l10n.encouragementMessage,
                   style: AppTextStyles.bodySmall.copyWith(
                     color: AppColors.onTertiaryContainer.withValues(
                       alpha: AppDimensions.opacityHigh,

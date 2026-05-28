@@ -1,14 +1,15 @@
 import 'dart:async';
-
+import '../../domain/domain.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
-import '../../domain/domain.dart';
+
 import 'search_state.dart';
 
 @injectable
-class SearchCubit extends Cubit<SearchState> with CubitFailureLogger<SearchState> {
+class SearchCubit extends Cubit<SearchState>
+    with CubitFailureLogger<SearchState> {
   SearchCubit({required SearchFormulasUseCase searchFormulas})
     : _searchFormulas = searchFormulas,
       super(const SearchState());
@@ -36,10 +37,12 @@ class SearchCubit extends Cubit<SearchState> with CubitFailureLogger<SearchState
           emit(state.copyWith(status: SearchStatus.loaded, results: data));
         case Error(:final failure):
           logFailure('search "$query"', failure);
-          emit(state.copyWith(
-            status: SearchStatus.error,
-            errorMessage: failure.message,
-          ));
+          emit(
+            state.copyWith(
+              status: SearchStatus.error,
+              errorMessage: failure.message,
+            ),
+          );
       }
     });
   }

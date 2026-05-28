@@ -13,7 +13,7 @@ class NotificationsCubit extends Cubit<NotificationsState>
     required UpdateNotificationPreferencesUseCase updateNotificationPreferences,
   }) : _getNotificationPreferences = getNotificationPreferences,
        _updateNotificationPreferences = updateNotificationPreferences,
-        super(const NotificationsState()) {
+       super(const NotificationsState()) {
     Future.microtask(loadPreferences);
   }
   final GetNotificationPreferencesUseCase _getNotificationPreferences;

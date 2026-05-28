@@ -56,7 +56,6 @@ class _ComingSoonContent extends StatelessWidget {
             'Stay tuned for updates!';
 
     final colorScheme = Theme.of(context).colorScheme;
-
     return Container(
       margin: const EdgeInsets.all(AppDimensions.paddingLG),
       padding: const EdgeInsets.all(AppDimensions.paddingHero),
@@ -93,7 +92,10 @@ class _ComingSoonContent extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [colorScheme.primaryFixed, colorScheme.primaryFixedDim],
+                  colors: [
+                    colorScheme.primaryFixed,
+                    colorScheme.primaryFixedDim,
+                  ],
                 ),
                 shape: BoxShape.circle,
                 boxShadow: [
@@ -127,7 +129,7 @@ class _ComingSoonContent extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
             ),
             child: Text(
-              AppStrings.comingSoon,
+              context.l10n.comingSoon,
               style: AppTextStyles.labelSmall.copyWith(
                 color: colorScheme.onPrimary,
                 letterSpacing: AppDimensions.letterSpacingWide,
@@ -165,11 +167,20 @@ class _ComingSoonContent extends StatelessWidget {
             runSpacing: AppDimensions.paddingSM,
             alignment: WrapAlignment.center,
             children: [
-              _buildFeatureChip(colorScheme, LucideIcons.zap, AppStrings.comingSoonChip1),
-              _buildFeatureChip(colorScheme, LucideIcons.bell, AppStrings.comingSoonChip2),
               _buildFeatureChip(
-                colorScheme, LucideIcons.sparkles,
-                AppStrings.comingSoonChip3,
+                colorScheme,
+                LucideIcons.zap,
+                context.l10n.comingSoonChip1,
+              ),
+              _buildFeatureChip(
+                colorScheme,
+                LucideIcons.bell,
+                context.l10n.comingSoonChip2,
+              ),
+              _buildFeatureChip(
+                colorScheme,
+                LucideIcons.sparkles,
+                context.l10n.comingSoonChip3,
               ),
             ],
           ),
@@ -190,7 +201,7 @@ class _ComingSoonContent extends StatelessWidget {
                 ),
                 textStyle: AppTextStyles.labelLarge,
               ),
-              child: const Text(AppStrings.gotIt),
+              child: Text(context.l10n.gotIt),
             ),
           ),
         ],
@@ -198,7 +209,11 @@ class _ComingSoonContent extends StatelessWidget {
     );
   }
 
-  Widget _buildFeatureChip(ColorScheme colorScheme, IconData chipIcon, String label) {
+  Widget _buildFeatureChip(
+    ColorScheme colorScheme,
+    IconData chipIcon,
+    String label,
+  ) {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppDimensions.chipPaddingHorizontal,
@@ -211,7 +226,11 @@ class _ComingSoonContent extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(chipIcon, size: AppDimensions.iconSM, color: colorScheme.primary),
+          Icon(
+            chipIcon,
+            size: AppDimensions.iconSM,
+            color: colorScheme.primary,
+          ),
           const SizedBox(width: AppDimensions.paddingXS),
           Text(
             label,

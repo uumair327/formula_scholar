@@ -2,7 +2,6 @@ import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../domain/domain.dart';
-
 @LazySingleton(as: FlashcardCachePort)
 class FlashcardHiveCache implements FlashcardCachePort {
   static const String _boxName = 'flashcard_cache';
@@ -14,10 +13,7 @@ class FlashcardHiveCache implements FlashcardCachePort {
   @override
   Future<void> cacheReviews(String userId, List<Flashcard> cards) async {
     final box = await _box();
-    await box.put(
-      _key(userId),
-      cards.map((c) => c.toJson()).toList(),
-    );
+    await box.put(_key(userId), cards.map((c) => c.toJson()).toList());
   }
 
   @override

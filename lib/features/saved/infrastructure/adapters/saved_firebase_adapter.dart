@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
-
-import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 @LazySingleton(as: SavedDataSourcePort)
 class SavedFirebaseAdapter implements SavedDataSourcePort {
@@ -30,9 +29,7 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
     }
 
     final snapshot = await _api.execute(
-      () => _api
-          .collection(AppFirestoreCollections.userBookmarks(uid))
-          .get(),
+      () => _api.collection(AppFirestoreCollections.userBookmarks(uid)).get(),
       tag: AppLogTags.savedDataSource,
     );
 
@@ -40,7 +37,7 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
         .map((doc) {
           final data = doc.data();
           final docCurriculumKey = data['curriculumKey'] as String?;
-          
+
           if (docCurriculumKey != null && docCurriculumKey != curriculumKey) {
             return null;
           }
@@ -51,7 +48,8 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
             subject: data['subject'] ?? '',
             formula: data['formula'] ?? '',
             curriculumKey: docCurriculumKey ?? curriculumKey,
-            savedAt: (data['savedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+            savedAt:
+                (data['savedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
           );
         })
         .whereType<BookmarkedFormula>()
@@ -72,7 +70,9 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
 
     final subjectDocs = await _api.execute(
       () => _api
-          .collection(AppFirestoreCollections.savedChapterSubjects(uid, curriculumKey))
+          .collection(
+            AppFirestoreCollections.savedChapterSubjects(uid, curriculumKey),
+          )
           .get(),
       tag: AppLogTags.savedDataSource,
     );
@@ -100,9 +100,8 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
     }
 
     final legacyDocs = await _api.execute(
-      () => _api
-          .collection(AppFirestoreCollections.userSavedChapters(uid))
-          .get(),
+      () =>
+          _api.collection(AppFirestoreCollections.userSavedChapters(uid)).get(),
       tag: AppLogTags.savedDataSource,
     );
 
@@ -202,9 +201,7 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
     }
 
     final snapshot = await _api.execute(
-      () => _api
-          .collection(AppFirestoreCollections.userSavedNotes(uid))
-          .get(),
+      () => _api.collection(AppFirestoreCollections.userSavedNotes(uid)).get(),
       tag: AppLogTags.savedDataSource,
     );
 
@@ -212,7 +209,7 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
         .map((doc) {
           final data = doc.data();
           final docCurriculumKey = data['curriculumKey'] as String?;
-          
+
           if (docCurriculumKey != null && docCurriculumKey != curriculumKey) {
             return null;
           }
@@ -223,7 +220,8 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
             subject: data['subject'] ?? '',
             content: data['content'] ?? '',
             curriculumKey: docCurriculumKey ?? curriculumKey,
-            savedAt: (data['savedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+            savedAt:
+                (data['savedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
           );
         })
         .whereType<SavedNote>()
@@ -263,7 +261,9 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
     }
 
     final subjectRef = _api
-        .collection(AppFirestoreCollections.savedChapterSubjects(uid, curriculumKey))
+        .collection(
+          AppFirestoreCollections.savedChapterSubjects(uid, curriculumKey),
+        )
         .doc(subjectId);
 
     final subjectDoc = await _api.execute(
@@ -336,25 +336,27 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
   Future<void> addNote(SavedNote note) async {
     final uid = _firebaseAuth.currentUser?.uid;
     if (uid == null) {
-      throw const CacheException(message: 'User must be logged in to add a note');
+      throw const CacheException(
+        message: 'User must be logged in to add a note',
+      );
     }
     await _api.execute(
       () => _api
           .collection(AppFirestoreCollections.userSavedNotes(uid))
           .doc(note.id)
           .set({
-        'id': note.id,
-        'title': note.title,
-        'subject': note.subject,
-        'content': note.content,
-        'curriculumKey': note.curriculumKey,
-        'savedAt': Timestamp.fromDate(note.savedAt),
-        'subjectId': note.subjectId,
-        'chapterId': note.chapterId,
-        'formulaId': note.formulaId,
-        'formulaTitle': note.formulaTitle,
-        'formulaLatex': note.formulaLatex,
-      }),
+            'id': note.id,
+            'title': note.title,
+            'subject': note.subject,
+            'content': note.content,
+            'curriculumKey': note.curriculumKey,
+            'savedAt': Timestamp.fromDate(note.savedAt),
+            'subjectId': note.subjectId,
+            'chapterId': note.chapterId,
+            'formulaId': note.formulaId,
+            'formulaTitle': note.formulaTitle,
+            'formulaLatex': note.formulaLatex,
+          }),
       tag: AppLogTags.savedDataSource,
     );
   }
@@ -363,17 +365,19 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
   Future<void> updateNote(SavedNote note) async {
     final uid = _firebaseAuth.currentUser?.uid;
     if (uid == null) {
-      throw const CacheException(message: 'User must be logged in to update a note');
+      throw const CacheException(
+        message: 'User must be logged in to update a note',
+      );
     }
     await _api.execute(
       () => _api
           .collection(AppFirestoreCollections.userSavedNotes(uid))
           .doc(note.id)
           .update({
-        'title': note.title,
-        'content': note.content,
-        'savedAt': Timestamp.fromDate(note.savedAt),
-      }),
+            'title': note.title,
+            'content': note.content,
+            'savedAt': Timestamp.fromDate(note.savedAt),
+          }),
       tag: AppLogTags.savedDataSource,
     );
   }
@@ -382,7 +386,9 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
   Future<void> deleteNote(String noteId) async {
     final uid = _firebaseAuth.currentUser?.uid;
     if (uid == null) {
-      throw const CacheException(message: 'User must be logged in to delete a note');
+      throw const CacheException(
+        message: 'User must be logged in to delete a note',
+      );
     }
     await _api.execute(
       () => _api
@@ -411,9 +417,11 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
   List<T> _applyQuery<T>(List<T> items, {required SavedQuery query}) {
     var result = items;
     final search = query.searchQuery.trim().toLowerCase();
-    
+
     if (search.isNotEmpty) {
-      result = result.where((item) => _matchesSavedSearch(item, search)).toList();
+      result = result
+          .where((item) => _matchesSavedSearch(item, search))
+          .toList();
     }
 
     result.sort((a, b) {

@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-
-import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
+
 import 'formulas_state.dart';
 
 /// Cubit managing the formula detail screen's state.
@@ -115,6 +115,7 @@ class FormulasCubit extends Cubit<FormulasState>
           state.copyWith(
             status: FormulasStatus.error,
             errorMessage: failure.message,
+            errorKey: 'chapters.formulas.load_failed',
           ),
         );
     }
@@ -203,7 +204,8 @@ class FormulasCubit extends Cubit<FormulasState>
       emit(
         state.copyWith(
           formulas: revertedList,
-          errorMessage: 'Failed to update mastery progress',
+          errorMessage: null,
+          errorKey: 'chapters.toggle_mastery_failed',
         ),
       );
     }
@@ -241,7 +243,8 @@ class FormulasCubit extends Cubit<FormulasState>
       emit(
         state.copyWith(
           formulas: revertedList,
-          errorMessage: 'Failed to bookmark formula',
+          errorMessage: null,
+          errorKey: 'chapters.toggle_bookmark_failed',
         ),
       );
     }
@@ -286,7 +289,8 @@ class FormulasCubit extends Cubit<FormulasState>
       emit(
         state.copyWith(
           isChapterSaved: !newSavedState,
-          errorMessage: 'Failed to bookmark chapter',
+          errorMessage: null,
+          errorKey: 'chapters.toggle_chapter_bookmark_failed',
         ),
       );
     } else {

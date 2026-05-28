@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 import '../widgets/login/login_background_decor.dart';
@@ -53,10 +53,13 @@ class _LoginPageState extends State<LoginPage> {
                 ? AppRoutes.dashboardPath
                 : AppRoutes.onboardingPath,
           );
-        } else if (state.status == AuthStatus.error && state.errorMessage != null) {
+        } else if (state.status == AuthStatus.error &&
+            state.errorMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(state.errorMessage!),
+              content: Text(
+                context.localizedError(fallback: state.errorMessage),
+              ),
               backgroundColor: AppColors.error,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
@@ -74,7 +77,8 @@ class _LoginPageState extends State<LoginPage> {
             SafeArea(
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  final isWide = constraints.maxWidth > AppDimensions.breakpointTablet;
+                  final isWide =
+                      constraints.maxWidth > AppDimensions.breakpointTablet;
                   return Center(
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 1200),
@@ -84,8 +88,9 @@ class _LoginPageState extends State<LoginPage> {
                               identityController: _identityController,
                               passwordController: _passwordController,
                               obscurePassword: _obscurePassword,
-                              onToggleObscure: () =>
-                                  setState(() => _obscurePassword = !_obscurePassword),
+                              onToggleObscure: () => setState(
+                                () => _obscurePassword = !_obscurePassword,
+                              ),
                               onSignIn: _onSignIn,
                             )
                           : LoginNarrowLayout(
@@ -93,8 +98,9 @@ class _LoginPageState extends State<LoginPage> {
                               identityController: _identityController,
                               passwordController: _passwordController,
                               obscurePassword: _obscurePassword,
-                              onToggleObscure: () =>
-                                  setState(() => _obscurePassword = !_obscurePassword),
+                              onToggleObscure: () => setState(
+                                () => _obscurePassword = !_obscurePassword,
+                              ),
                               onSignIn: _onSignIn,
                             ),
                     ),

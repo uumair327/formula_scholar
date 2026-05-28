@@ -22,7 +22,7 @@ class ComparisonPage extends StatelessWidget {
           IconButton(
             onPressed: () => context.read<ComparisonCubit>().swap(),
             icon: const Icon(LucideIcons.arrowLeftRight),
-            tooltip: AppStrings.swapFormulas,
+            tooltip: context.l10n.swapFormulas,
           ),
         ],
       ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/core.dart';
-import '../../../../../shared/shared.dart';
 
 class SubjectHeroCard extends StatelessWidget {
   const SubjectHeroCard({super.key, required this.subject});
@@ -38,7 +37,9 @@ class SubjectHeroCard extends StatelessWidget {
                     ? '${subject.subtitle}. ${subject.description}'
                     : subject.description,
                 style: AppTextStyles.bodyMedium.copyWith(
-                  color: Colors.white.withValues(alpha: AppDimensions.opacityHigh),
+                  color: Colors.white.withValues(
+                    alpha: AppDimensions.opacityHigh,
+                  ),
                   height: AppDimensions.lineHeightRelaxed,
                 ),
               ),
@@ -70,7 +71,9 @@ class SubjectHeroCard extends StatelessWidget {
               height: AppDimensions.glowCircleSizeSM,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: colorScheme.surface.withValues(alpha: AppDimensions.opacityFaint),
+                color: colorScheme.surface.withValues(
+                  alpha: AppDimensions.opacityFaint,
+                ),
               ),
             ),
           ),

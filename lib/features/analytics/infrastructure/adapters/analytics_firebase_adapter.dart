@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
-
-import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 @LazySingleton(as: AnalyticsDataSourcePort)
 class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
@@ -14,7 +13,10 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
 
   @override
   Future<AnalyticsData> fetchAnalytics() async {
-    AppLogger.trace('fetchAnalytics started', tag: AppLogTags.analyticsDataSource);
+    AppLogger.trace(
+      'fetchAnalytics started',
+      tag: AppLogTags.analyticsDataSource,
+    );
 
     final userId = _auth.currentUser?.uid;
     if (userId == null) {
@@ -56,10 +58,12 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
       totalQuestions += (data['totalQuestions'] as num?)?.toInt() ?? 0;
       correctQuestions += (data['correctCount'] as num?)?.toInt() ?? 0;
     }
-    final accuracy = totalQuestions > 0 ? correctQuestions / totalQuestions : 0.0;
+    final accuracy = totalQuestions > 0
+        ? correctQuestions / totalQuestions
+        : 0.0;
 
     var totalFormulas = 0;
-    
+
     try {
       final totalFormulasSnap = await _api.execute(
         () => _api
@@ -71,20 +75,25 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
       );
       totalFormulas = totalFormulasSnap.count ?? 0;
     } catch (e) {
-      AppLogger.warning('CollectionGroup query failed for formulas, falling back to chunked queries', tag: AppLogTags.analyticsDataSource);
-      
+      AppLogger.warning(
+        'CollectionGroup query failed for formulas, falling back to chunked queries',
+        tag: AppLogTags.analyticsDataSource,
+      );
+
       final subjects = await _api.execute(
         () => _api.collection(AppFirestoreCollections.subjects).get(),
         tag: AppLogTags.analyticsDataSource,
       );
 
       final chapterSnapshots = await Future.wait(
-        subjects.docs.map((s) => _api.execute(
-          () => _api
-              .collection(AppFirestoreCollections.subjectChapters(s.id))
-              .get(),
-          tag: AppLogTags.analyticsDataSource,
-        )),
+        subjects.docs.map(
+          (s) => _api.execute(
+            () => _api
+                .collection(AppFirestoreCollections.subjectChapters(s.id))
+                .get(),
+            tag: AppLogTags.analyticsDataSource,
+          ),
+        ),
       );
 
       final countQueryFns = <Future<AggregateQuerySnapshot> Function()>[];
@@ -94,7 +103,12 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
           countQueryFns.add(
             () => _api.execute(
               () => _api
-                  .collection(AppFirestoreCollections.chapterFormulas(subjectId, chapter.id))
+                  .collection(
+                    AppFirestoreCollections.chapterFormulas(
+                      subjectId,
+                      chapter.id,
+                    ),
+                  )
                   .where('isActive', isEqualTo: true)
                   .count()
                   .get(),
@@ -115,12 +129,11 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
     }
 
     final streakDoc = await _api.execute(
-      () => _api
-          .doc(AppFirestoreCollections.userStatsStreak(userId))
-          .get(),
+      () => _api.doc(AppFirestoreCollections.userStatsStreak(userId)).get(),
       tag: AppLogTags.analyticsDataSource,
     );
-    final daysStreak = (streakDoc.data()?['currentStreak'] as num?)?.toInt() ?? 0;
+    final daysStreak =
+        (streakDoc.data()?['currentStreak'] as num?)?.toInt() ?? 0;
 
     final recentList = results.docs.take(5).map((doc) {
       final data = doc.data();
@@ -129,8 +142,8 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
       final timeAgo = diff.inDays > 1
           ? '${diff.inDays} days ago'
           : diff.inHours > 1
-              ? '${diff.inHours} hours ago'
-              : '${diff.inMinutes} minutes ago';
+          ? '${diff.inHours} hours ago'
+          : '${diff.inMinutes} minutes ago';
       final correct = (data['correctCount'] as num?)?.toInt() ?? 0;
       final total = (data['totalQuestions'] as num?)?.toInt() ?? 0;
       return RecentActivityItem(
@@ -156,7 +169,10 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
       masteryDistribution: MasteryDistribution(
         mastered: (accuracy * totalFormulas).round(),
         inProgress: totalFormulas ~/ 3,
-        notStarted: totalFormulas - (accuracy * totalFormulas).round() - totalFormulas ~/ 3,
+        notStarted:
+            totalFormulas -
+            (accuracy * totalFormulas).round() -
+            totalFormulas ~/ 3,
       ),
       recentActivity: recentList,
     );
@@ -172,7 +188,9 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
         values: [0, 0, 0, 0, 0, 0, 0],
       ),
       masteryDistribution: MasteryDistribution(
-        mastered: 0, inProgress: 0, notStarted: 0,
+        mastered: 0,
+        inProgress: 0,
+        notStarted: 0,
       ),
       recentActivity: [],
     );

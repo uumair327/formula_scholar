@@ -26,14 +26,14 @@ class NoSubjectSelectedState extends StatelessWidget {
             ),
             const SizedBox(height: AppDimensions.paddingXXL),
             Text(
-              AppStrings.selectSubjectTitle,
+              context.l10n.selectSubjectTitle,
               style: AppTextStyles.headlineSmall.copyWith(
                 fontWeight: FontWeight.w700,
               ),
             ),
             const SizedBox(height: AppDimensions.paddingSM),
             Text(
-              AppStrings.selectSubjectDesc,
+              context.l10n.selectSubjectDesc,
               textAlign: TextAlign.center,
               style: AppTextStyles.bodyMedium.copyWith(
                 color: colorScheme.onSurfaceVariant,

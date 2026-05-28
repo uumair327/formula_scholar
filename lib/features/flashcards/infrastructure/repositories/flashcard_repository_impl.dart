@@ -1,7 +1,6 @@
 import 'package:injectable/injectable.dart';
-
-import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 @LazySingleton(as: FlashcardRepositoryPort)
 class FlashcardRepositoryImpl implements FlashcardRepositoryPort {
@@ -23,7 +22,10 @@ class FlashcardRepositoryImpl implements FlashcardRepositoryPort {
       tag: AppLogTags.flashcardsRepo,
       operation: 'loadReviews($userId, ${cards.length} cards)',
       execute: () async {
-        final result = await _dataSource.loadReviews(userId: userId, cards: cards);
+        final result = await _dataSource.loadReviews(
+          userId: userId,
+          cards: cards,
+        );
         await _cache.cacheReviews(userId, result);
         return result;
       },

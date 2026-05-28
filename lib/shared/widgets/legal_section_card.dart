@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../core/core.dart';
-import 'legal_section.dart';
 
 class LegalSectionCard extends StatelessWidget {
   const LegalSectionCard({super.key, required this.index, required this.section});

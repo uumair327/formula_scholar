@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 import '../cubit/chapters_cubit.dart';
 
@@ -22,8 +21,8 @@ class CompactChapterCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final ctaText = chapter.progressPercent > 0
-        ? AppStrings.continueLearning
-        : AppStrings.startNow;
+        ? context.l10n.continueLearning
+        : context.l10n.startNow;
 
     return AppCard(
       child: Column(
@@ -92,7 +91,7 @@ class CompactChapterCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${chapter.completedFormulas}/${chapter.totalFormulas} ${AppStrings.formulasLabel}',
+                '${chapter.completedFormulas}/${chapter.totalFormulas} ${context.l10n.formulasLabel}',
                 style: AppTextStyles.overline.copyWith(
                   color: colorScheme.outline,
                 ),
@@ -157,7 +156,7 @@ class _BookmarkButton extends StatelessWidget {
       onPressed: () {
         final subjectName =
             context.read<SubjectSelectionCubit>().state.subject?.name ??
-            AppStrings.unknownSubject;
+            context.l10n.unknownSubject;
         final curriculumKey = context
             .read<CurriculumCubit>()
             .state
@@ -176,8 +175,8 @@ class _BookmarkButton extends StatelessWidget {
         color: chapter.isSaved ? colorScheme.primary : colorScheme.outline,
       ),
       tooltip: chapter.isSaved
-          ? AppStrings.removeBookmark
-          : AppStrings.bookmarkChapter,
+          ? context.l10n.removeBookmark
+          : context.l10n.bookmarkChapter,
     );
   }
 }

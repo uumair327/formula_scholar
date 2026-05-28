@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 
 class HistoryShimmer extends StatelessWidget {
   const HistoryShimmer({super.key});

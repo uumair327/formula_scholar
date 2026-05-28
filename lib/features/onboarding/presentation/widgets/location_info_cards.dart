@@ -39,7 +39,7 @@ class LocationInfoCards extends StatelessWidget {
               ),
               const SizedBox(height: AppDimensions.paddingMD),
               Text(
-                AppStrings.step1LocalizedTitle,
+                context.l10n.step1LocalizedTitle,
                 style: AppTextStyles.headlineSmall.copyWith(
                   color: AppColors.onPrimaryContainer,
                   fontWeight: FontWeight.w700,
@@ -47,7 +47,7 @@ class LocationInfoCards extends StatelessWidget {
               ),
               const SizedBox(height: AppDimensions.paddingXS),
               Text(
-                AppStrings.step1LocalizedDesc,
+                context.l10n.step1LocalizedDesc,
                 style: AppTextStyles.bodySmall.copyWith(
                   color: AppColors.onPrimaryContainer.withValues(
                     alpha: AppDimensions.opacityHigh,
@@ -77,14 +77,14 @@ class LocationInfoCards extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      AppStrings.step1PrivacyTitle,
+                      context.l10n.step1PrivacyTitle,
                       style: AppTextStyles.labelMedium.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     const SizedBox(height: AppDimensions.paddingXXS),
                     Text(
-                      AppStrings.step1PrivacyDesc,
+                      context.l10n.step1PrivacyDesc,
                       style: AppTextStyles.bodySmall.copyWith(
                         color: colorScheme.onSurfaceVariant,
                       ),

@@ -1,6 +1,5 @@
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
-
 import '../../domain/domain.dart';
 
 @LazySingleton(as: AchievementCachePort)
@@ -37,10 +36,7 @@ class AchievementHiveCache implements AchievementCachePort {
     if (cached == null) return;
     final updated = cached.map((a) {
       if (a.id != id) return a;
-      return a.copyWith(
-        progress: progress,
-        unlockedAt: unlockedAt,
-      );
+      return a.copyWith(progress: progress, unlockedAt: unlockedAt);
     }).toList();
     await cacheAchievements(updated);
   }

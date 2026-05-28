@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../../../core/domain/entities/formula.dart';
 
 class FormulaCardSelector extends StatelessWidget {
@@ -36,7 +35,7 @@ class FormulaCardSelector extends StatelessWidget {
                   : LucideIcons.chevronLeft,
             ),
             onPressed: index > 0 ? onPrevious : null,
-            tooltip: AppStrings.previousFormula,
+            tooltip: context.l10n.previousFormula,
           ),
           Expanded(
             child: Column(
@@ -70,7 +69,7 @@ class FormulaCardSelector extends StatelessWidget {
                   : LucideIcons.chevronRight,
             ),
             onPressed: index < total - 1 ? onNext : null,
-            tooltip: AppStrings.nextFormula,
+            tooltip: context.l10n.nextFormula,
           ),
         ],
       ),

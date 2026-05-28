@@ -96,4 +96,16 @@
   "continuePracticing": "مشق جاری رکھیں",
   "browseChapters": "ابواب براؤز کریں",
   "viewFullAnalytics": "مکمل تجزیات دیکھیں"
+  ,
+  "retry": "Retry",
+  "comingSoon": "COMING SOON",
+  "comingSoonChip1": "In Development",
+  "comingSoonChip2": "Stay Tuned",
+  "comingSoonChip3": "Exciting Updates",
+  "gotIt": "Got it",
+  "legalFooterTitle": "Safe, private, and reliable",
+  "legalFooterDesc": "We prioritize your privacy and security — your data stays private.",
+  "legalEffectiveDate": "Effective: Jan 1, 2026",
+  "chaptersToggleBookmarkFailed": "Failed to bookmark formula",
+  "chaptersToggleChapterBookmarkFailed": "Failed to bookmark chapter"
 }

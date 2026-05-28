@@ -21,8 +21,8 @@ class BookmarkButton extends StatelessWidget {
 
     return Tooltip(
       message: isBookmarked
-          ? AppStrings.removeBookmark
-          : AppStrings.bookmarkChapter,
+          ? context.l10n.removeBookmark
+          : context.l10n.bookmarkChapter,
       child: Material(
         color: isBookmarked
             ? colorScheme.primaryContainer

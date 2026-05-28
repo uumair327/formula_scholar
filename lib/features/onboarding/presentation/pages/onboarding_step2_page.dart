@@ -54,7 +54,7 @@ class OnboardingStep2Page extends StatelessWidget {
         return OnboardingShell(
           currentStep: 2,
           totalSteps: 4,
-          continueLabel: AppStrings.onboardingContinue,
+          continueLabel: context.l10n.onboardingContinue,
           onBack: () {
             context.read<OnboardingCubit>().goBackToLocationSelection();
             context.go(AppRoutes.onboardingPath);
@@ -65,23 +65,30 @@ class OnboardingStep2Page extends StatelessWidget {
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const OnboardingStepHeading(
-                tag: AppStrings.step2Tag,
-                title: AppStrings.step2Title,
+              OnboardingStepHeading(
+                tag: context.l10n.step2Tag,
+                title: context.l10n.step2Title,
               ),
               const SizedBox(height: AppDimensions.paddingXXL),
 
               if (state.status == OnboardingStatus.error)
                 Padding(
-                  padding: const EdgeInsets.only(bottom: AppDimensions.paddingLG),
+                  padding: const EdgeInsets.only(
+                    bottom: AppDimensions.paddingLG,
+                  ),
                   child: Text(
-                    state.errorMessage ?? 'No boards available for this region',
+                    context.localizedError(
+                      fallback:
+                          state.errorMessage ??
+                          'No boards available for this region',
+                    ),
                     style: AppTextStyles.bodyMedium.copyWith(
                       color: colorScheme.error,
                     ),
                   ),
                 )
-              else if (state.boards.isEmpty && state.status != OnboardingStatus.loading)
+              else if (state.boards.isEmpty &&
+                  state.status != OnboardingStatus.loading)
                 Text(
                   'No boards available for this region',
                   style: AppTextStyles.bodyMedium,
@@ -149,14 +156,14 @@ class OnboardingStep2Page extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            AppStrings.step2NotSureTitle,
+                            context.l10n.step2NotSureTitle,
                             style: AppTextStyles.labelLarge.copyWith(
                               fontWeight: FontWeight.w700,
                             ),
                           ),
                           const SizedBox(height: AppDimensions.paddingXXS),
                           Text(
-                            AppStrings.step2NotSureDesc,
+                            context.l10n.step2NotSureDesc,
                             style: AppTextStyles.bodySmall.copyWith(
                               color: colorScheme.onSurfaceVariant,
                             ),
@@ -177,7 +184,7 @@ class OnboardingStep2Page extends StatelessWidget {
                         LucideIcons.arrowRight,
                         size: AppDimensions.iconSM,
                       ),
-                      label: const Text(AppStrings.step2LearnMore),
+                      label: Text(context.l10n.step2LearnMore),
                       style: TextButton.styleFrom(
                         foregroundColor: AppColors.primary,
                         textStyle: AppTextStyles.labelMedium.copyWith(

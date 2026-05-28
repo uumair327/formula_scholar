@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-
-import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 class SessionTile extends StatelessWidget {
-  const SessionTile({
-    super.key,
-    required this.session,
-    this.onComplete,
-  });
+  const SessionTile({super.key, required this.session, this.onComplete});
 
   final ScheduledSession session;
   final VoidCallback? onComplete;
@@ -25,13 +20,13 @@ class SessionTile extends StatelessWidget {
         isCompleted
             ? LucideIcons.checkCircle2
             : isMissed
-                ? LucideIcons.xCircle
-                : LucideIcons.circle,
+            ? LucideIcons.xCircle
+            : LucideIcons.circle,
         color: isCompleted
             ? colorScheme.primary
             : isMissed
-                ? colorScheme.error
-                : colorScheme.outline,
+            ? colorScheme.error
+            : colorScheme.outline,
       ),
       title: Text(
         '${session.durationMinutes} min study',
@@ -46,11 +41,11 @@ class SessionTile extends StatelessWidget {
       trailing: isCompleted
           ? Icon(LucideIcons.check, color: colorScheme.primary)
           : (onComplete != null
-              ? TextButton(
-                  onPressed: onComplete,
-                  child: const Text('Complete'),
-                )
-              : null),
+                ? TextButton(
+                    onPressed: onComplete,
+                    child: const Text('Complete'),
+                  )
+                : null),
     );
   }
 }

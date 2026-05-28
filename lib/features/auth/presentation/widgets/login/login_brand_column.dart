@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/core.dart';
-import '../../../../../l10n/l10n.dart';
+
 import 'login_formula_card.dart';
 
 class LoginBrandColumn extends StatelessWidget {

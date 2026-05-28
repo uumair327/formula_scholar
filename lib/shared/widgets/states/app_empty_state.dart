@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../core/core.dart';
-import '../app_text.dart';
 
 class AppEmptyState extends StatelessWidget {
   const AppEmptyState({

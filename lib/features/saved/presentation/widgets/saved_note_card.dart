@@ -3,7 +3,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../../domain/domain.dart';
 
 class SavedNoteCard extends StatelessWidget {
@@ -24,8 +24,12 @@ class SavedNoteCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            colorScheme.surfaceContainerHighest.withValues(alpha: isDark ? 0.3 : 0.6),
-            colorScheme.surfaceContainerHighest.withValues(alpha: isDark ? 0.05 : 0.2),
+            colorScheme.surfaceContainerHighest.withValues(
+              alpha: isDark ? 0.3 : 0.6,
+            ),
+            colorScheme.surfaceContainerHighest.withValues(
+              alpha: isDark ? 0.05 : 0.2,
+            ),
           ],
         ),
         borderRadius: BorderRadius.circular(AppDimensions.radiusXL),

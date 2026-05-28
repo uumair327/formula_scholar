@@ -1,7 +1,6 @@
 import 'package:injectable/injectable.dart';
-
-import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 /// Concrete implementation of [PracticeRepositoryPort].
 ///
@@ -27,7 +26,8 @@ class PracticeRepositoryImpl implements PracticeRepositoryPort {
   }) {
     return safeOperation(
       tag: AppLogTags.practiceRepo,
-      operation: 'getQuestions(board=$boardId, grade=$gradeId, subject=$subjectId)',
+      operation:
+          'getQuestions(board=$boardId, grade=$gradeId, subject=$subjectId)',
       execute: () async {
         final result = await _dataSource.getQuestions(
           boardId: boardId,
@@ -35,11 +35,22 @@ class PracticeRepositoryImpl implements PracticeRepositoryPort {
           subjectId: subjectId,
           categoryId: categoryId,
         );
-        await _cache.cacheQuestions(boardId, gradeId, subjectId, categoryId, result);
+        await _cache.cacheQuestions(
+          boardId,
+          gradeId,
+          subjectId,
+          categoryId,
+          result,
+        );
         return result;
       },
       fallback: () async {
-        final cached = await _cache.getQuestions(boardId, gradeId, subjectId, categoryId);
+        final cached = await _cache.getQuestions(
+          boardId,
+          gradeId,
+          subjectId,
+          categoryId,
+        );
         return cached.isNotEmpty ? cached : null;
       },
     );
@@ -54,7 +65,8 @@ class PracticeRepositoryImpl implements PracticeRepositoryPort {
   }) {
     return safeOperation(
       tag: AppLogTags.practiceRepo,
-      operation: 'recordQuizCompletion(board=$boardId, grade=$gradeId, points=$earnedPoints)',
+      operation:
+          'recordQuizCompletion(board=$boardId, grade=$gradeId, points=$earnedPoints)',
       execute: () => _dataSource.recordQuizCompletion(
         boardId: boardId,
         gradeId: gradeId,
@@ -63,6 +75,7 @@ class PracticeRepositoryImpl implements PracticeRepositoryPort {
       ),
     );
   }
+
   @override
   Future<Result<void>> saveAnswerRecords(List<QuizAnswerRecord> records) {
     return safeOperation(

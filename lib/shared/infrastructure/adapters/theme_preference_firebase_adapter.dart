@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../core/core.dart';
-import '../../domain/domain.dart';
 
 @LazySingleton(as: ThemePreferenceDataSourcePort)
 class ThemePreferenceFirebaseAdapter implements ThemePreferenceDataSourcePort {

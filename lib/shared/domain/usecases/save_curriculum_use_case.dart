@@ -1,8 +1,6 @@
 import 'package:injectable/injectable.dart';
 
 import '../../../core/core.dart';
-import '../entities/selected_curriculum.dart';
-import '../ports/curriculum_repository_port.dart';
 
 @injectable
 class SaveCurriculumUseCase {

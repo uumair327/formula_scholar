@@ -17,3 +17,9 @@ export 'router/router.dart';
 export 'services/services.dart';
 export 'theme/theme.dart';
 export 'utils/utils.dart';
+// Also expose shared localization helpers
+export '../shared/localized_error_extensions.dart';
+// Re-export l10n so `context.l10n` is available via core imports
+export '../l10n/l10n.dart';
+// Re-export shared UI helpers but hide `ResponsiveContext` to avoid duplicate exports
+export '../shared/shared.dart' hide ResponsiveContext;

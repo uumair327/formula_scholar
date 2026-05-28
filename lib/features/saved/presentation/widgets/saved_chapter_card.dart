@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../../domain/domain.dart';
 import '../cubit/saved_cubit.dart';
 
@@ -25,8 +25,12 @@ class SavedChapterCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            colorScheme.surfaceContainerHighest.withValues(alpha: isDark ? 0.3 : 0.6),
-            colorScheme.surfaceContainerHighest.withValues(alpha: isDark ? 0.05 : 0.2),
+            colorScheme.surfaceContainerHighest.withValues(
+              alpha: isDark ? 0.3 : 0.6,
+            ),
+            colorScheme.surfaceContainerHighest.withValues(
+              alpha: isDark ? 0.05 : 0.2,
+            ),
           ],
         ),
         borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
@@ -35,7 +39,7 @@ class SavedChapterCard extends StatelessWidget {
         ),
       ),
       child: Tooltip(
-        message: AppStrings.viewTopics,
+        message: context.l10n.viewTopics,
         child: InkWell(
           borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
           onTap: () {
@@ -48,69 +52,69 @@ class SavedChapterCard extends StatelessWidget {
               queryParameters: {'name': chapter.chapterName},
             );
           },
-            child: Padding(
-              padding: const EdgeInsets.all(AppDimensions.paddingXL),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          chapter.subjectName,
-                          style: AppTextStyles.overline.copyWith(
-                            color: colorScheme.primary,
-                            fontWeight: FontWeight.w700,
+          child: Padding(
+            padding: const EdgeInsets.all(AppDimensions.paddingXL),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            chapter.subjectName,
+                            style: AppTextStyles.overline.copyWith(
+                              color: colorScheme.primary,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          'SAVED ${_formatDate(chapter.savedAt)}',
-                          style: AppTextStyles.overline.copyWith(
-                            color: colorScheme.outline,
+                          Text(
+                            'SAVED ${_formatDate(chapter.savedAt)}',
+                            style: AppTextStyles.overline.copyWith(
+                              color: colorScheme.outline,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
+                    IconButton(
+                      onPressed: () {
+                        context.read<SavedCubit>().removeSavedChapter(
+                          subjectId: chapter.subjectId,
+                          chapterId: chapter.chapterId,
+                        );
+                      },
+                      icon: Icon(
+                        Icons.bookmark,
+                        size: AppDimensions.iconMD,
+                        color: colorScheme.primary,
+                      ),
+                      tooltip: context.l10n.removeSavedChapter,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppDimensions.paddingSM),
+                Text(
+                  chapter.chapterName,
+                  style: AppTextStyles.titleLarge.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: colorScheme.onSurface,
                   ),
-                  IconButton(
-                    onPressed: () {
-                      context.read<SavedCubit>().removeSavedChapter(
-                        subjectId: chapter.subjectId,
-                        chapterId: chapter.chapterId,
-                      );
-                    },
-                    icon: Icon(
-                      Icons.bookmark,
-                      size: AppDimensions.iconMD,
-                      color: colorScheme.primary,
+                ),
+                if (chapter.chapterSubtitle.isNotEmpty) ...[
+                  const SizedBox(height: AppDimensions.paddingXS),
+                  Text(
+                    chapter.chapterSubtitle,
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: colorScheme.onSurfaceVariant,
                     ),
-                    tooltip: AppStrings.removeSavedChapter,
                   ),
                 ],
-              ),
-              const SizedBox(height: AppDimensions.paddingSM),
-              Text(
-                chapter.chapterName,
-                style: AppTextStyles.titleLarge.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: colorScheme.onSurface,
-                ),
-              ),
-              if (chapter.chapterSubtitle.isNotEmpty) ...[
-                const SizedBox(height: AppDimensions.paddingXS),
-                Text(
-                  chapter.chapterSubtitle,
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
               ],
             ),
           ),

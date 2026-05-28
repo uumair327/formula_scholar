@@ -5,8 +5,6 @@ import 'package:formula_scholar/core/core.dart';
 import 'package:formula_scholar/features/chapters/presentation/cubit/subjects_cubit.dart';
 import 'package:formula_scholar/features/chapters/presentation/cubit/subjects_state.dart';
 import 'package:formula_scholar/features/dashboard/domain/domain.dart';
-import 'package:formula_scholar/shared/cubit/curriculum_cubit.dart';
-import 'package:formula_scholar/shared/domain/domain.dart';
 
 void main() {
   group('SubjectsCubit', () {

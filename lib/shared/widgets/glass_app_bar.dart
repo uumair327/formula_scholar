@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import '../../core/core.dart';
-import 'app_text.dart';
 
 /// Reusable frosted-glass app bar for a consistent premium look.
 ///

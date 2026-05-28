@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
-
-import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 @LazySingleton(as: ChaptersDataSourcePort)
 class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
@@ -55,7 +54,9 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
     if (uid != null) {
       final progressSnapshot = await _api.execute(
         () => _api
-            .collection(AppFirestoreCollections.userProgressSubject(uid, subjectId))
+            .collection(
+              AppFirestoreCollections.userProgressSubject(uid, subjectId),
+            )
             .get(),
         tag: AppLogTags.chaptersDataSource,
       );
@@ -66,7 +67,9 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
 
       final subjectSavedDoc = await _api.execute(
         () => _api
-            .collection(AppFirestoreCollections.savedChapterSubjects(uid, curriculumKey))
+            .collection(
+              AppFirestoreCollections.savedChapterSubjects(uid, curriculumKey),
+            )
             .doc(subjectId)
             .get(),
         tag: AppLogTags.chaptersDataSource,
@@ -117,57 +120,62 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
       }
     }
 
-    return snapshot.docs.where((doc) {
-      final data = doc.data();
-      return data['isActive'] != false;
-    }).map((doc) {
-      final data = doc.data();
-      final progressData = progressMap[doc.id] ?? progressMap[data['id']] ?? {};
-      final hasProgress = (progressData as Map).isNotEmpty;
+    return snapshot.docs
+        .where((doc) {
+          final data = doc.data();
+          return data['isActive'] != false;
+        })
+        .map((doc) {
+          final data = doc.data();
+          final progressData =
+              progressMap[doc.id] ?? progressMap[data['id']] ?? {};
+          final hasProgress = (progressData as Map).isNotEmpty;
 
-      final statusStr = hasProgress
-          ? progressData['status'] as String?
-          : data['status'] as String?;
-      ChapterStatus status = ChapterStatus.notStarted;
-      if (statusStr == 'inProgress') status = ChapterStatus.inProgress;
-      if (statusStr == 'locked') status = ChapterStatus.locked;
+          final statusStr = hasProgress
+              ? progressData['status'] as String?
+              : data['status'] as String?;
+          ChapterStatus status = ChapterStatus.notStarted;
+          if (statusStr == 'inProgress') status = ChapterStatus.inProgress;
+          if (statusStr == 'locked') status = ChapterStatus.locked;
 
-      final completedFormulas = hasProgress
-          ? (progressData['completedFormulas'] ?? 0)
-          : (data['completedFormulas'] ?? 0);
-      final totalFormulas = data['totalFormulas'] ?? 1;
+          final completedFormulas = hasProgress
+              ? (progressData['completedFormulas'] ?? 0)
+              : (data['completedFormulas'] ?? 0);
+          final totalFormulas = data['totalFormulas'] ?? 1;
 
-      double progressPercent;
-      if (hasProgress && progressData['progressPercent'] != null) {
-        progressPercent = (progressData['progressPercent'] as num).toDouble();
-      } else if (data['progressPercent'] != null) {
-        progressPercent = (data['progressPercent'] as num).toDouble();
-      } else {
-        progressPercent = totalFormulas > 0
-            ? (completedFormulas / totalFormulas) * 100.0
-            : 0.0;
-      }
-      if (progressPercent > 0 && progressPercent <= 1.0) {
-        progressPercent *= 100;
-      }
+          double progressPercent;
+          if (hasProgress && progressData['progressPercent'] != null) {
+            progressPercent = (progressData['progressPercent'] as num)
+                .toDouble();
+          } else if (data['progressPercent'] != null) {
+            progressPercent = (data['progressPercent'] as num).toDouble();
+          } else {
+            progressPercent = totalFormulas > 0
+                ? (completedFormulas / totalFormulas) * 100.0
+                : 0.0;
+          }
+          if (progressPercent > 0 && progressPercent <= 1.0) {
+            progressPercent *= 100;
+          }
 
-      return Chapter(
-        id: data['id'] ?? doc.id,
-        name: data['name'] ?? '',
-        subtitle: data['subtitle'] ?? '',
-        completedFormulas: completedFormulas,
-        totalFormulas: totalFormulas,
-        progressPercent: progressPercent,
-        status: status,
-        isSaved: savedChapterIds.contains((data['id'] ?? doc.id) as String),
-        isGeneralContent: data['isGeneralContent'] ?? false,
-        audiences:
-            (data['audiences'] as List<dynamic>?)
-                ?.map((e) => e.toString())
-                .toList() ??
-            const [],
-      );
-    }).toList();
+          return Chapter(
+            id: data['id'] ?? doc.id,
+            name: data['name'] ?? '',
+            subtitle: data['subtitle'] ?? '',
+            completedFormulas: completedFormulas,
+            totalFormulas: totalFormulas,
+            progressPercent: progressPercent,
+            status: status,
+            isSaved: savedChapterIds.contains((data['id'] ?? doc.id) as String),
+            isGeneralContent: data['isGeneralContent'] ?? false,
+            audiences:
+                (data['audiences'] as List<dynamic>?)
+                    ?.map((e) => e.toString())
+                    .toList() ??
+                const [],
+          );
+        })
+        .toList();
   }
 
   @override
@@ -231,71 +239,80 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
       ];
     }
 
-    final loadedTools = snapshot.docs.where((doc) {
-      final data = doc.data();
-      return data['isEnabled'] != false;
-    }).map((doc) {
-      final data = doc.data();
-      final id = data['id'] as String? ?? doc.id;
-      final label = data['label'] as String? ?? doc.id;
-      final iconName = data['iconName'] as String? ?? 'helpCircle';
-      final category = data['category'] as String? ?? 'general';
+    final loadedTools = snapshot.docs
+        .where((doc) {
+          final data = doc.data();
+          return data['isEnabled'] != false;
+        })
+        .map((doc) {
+          final data = doc.data();
+          final id = data['id'] as String? ?? doc.id;
+          final label = data['label'] as String? ?? doc.id;
+          final iconName = data['iconName'] as String? ?? 'helpCircle';
+          final category = data['category'] as String? ?? 'general';
 
-      final bool isEnabled = data['isEnabled'] as bool? ?? true;
-      String? routeName = data['routeName'] as String?;
+          final bool isEnabled = data['isEnabled'] as bool? ?? true;
+          String? routeName = data['routeName'] as String?;
 
-      if (id == 'cheat_sheets' || id == 'cheat_sheet') {
-        routeName = 'cheatSheet';
-      } else if (id == 'visualizer_3d') {
-        routeName = 'visualizer_3d';
-      } else if (id == 'flashcards') {
-        routeName = 'flashcards';
-      }
+          if (id == 'cheat_sheets' || id == 'cheat_sheet') {
+            routeName = 'cheatSheet';
+          } else if (id == 'visualizer_3d') {
+            routeName = 'visualizer_3d';
+          } else if (id == 'flashcards') {
+            routeName = 'flashcards';
+          }
 
-      return MasteryTool(
-        id: id,
-        label: label,
-        iconName: iconName,
-        category: category,
-        isEnabled: isEnabled,
-        supportSubtitle: data['supportSubtitle'] as String?,
-        displayOrder: data['displayOrder'] as int? ?? 0,
-        routeName: routeName,
-      );
-    }).toList();
+          return MasteryTool(
+            id: id,
+            label: label,
+            iconName: iconName,
+            category: category,
+            isEnabled: isEnabled,
+            supportSubtitle: data['supportSubtitle'] as String?,
+            displayOrder: data['displayOrder'] as int? ?? 0,
+            routeName: routeName,
+          );
+        })
+        .toList();
 
     if (!loadedTools.any((t) => t.id == 'flashcards')) {
-      loadedTools.add(const MasteryTool(
-        id: 'flashcards',
-        label: 'Flashcards',
-        iconName: 'creditCard',
-        category: 'quick_reference',
-        isEnabled: true,
-        displayOrder: 5,
-        routeName: 'flashcards',
-      ));
+      loadedTools.add(
+        const MasteryTool(
+          id: 'flashcards',
+          label: 'Flashcards',
+          iconName: 'creditCard',
+          category: 'quick_reference',
+          isEnabled: true,
+          displayOrder: 5,
+          routeName: 'flashcards',
+        ),
+      );
     }
     if (!loadedTools.any((t) => t.id == 'cheat_sheets')) {
-      loadedTools.add(const MasteryTool(
-        id: 'cheat_sheets',
-        label: 'Cheat Sheets',
-        iconName: 'fileText',
-        category: 'quick_reference',
-        isEnabled: true,
-        displayOrder: 3,
-        routeName: 'cheatSheet',
-      ));
+      loadedTools.add(
+        const MasteryTool(
+          id: 'cheat_sheets',
+          label: 'Cheat Sheets',
+          iconName: 'fileText',
+          category: 'quick_reference',
+          isEnabled: true,
+          displayOrder: 3,
+          routeName: 'cheatSheet',
+        ),
+      );
     }
     if (!loadedTools.any((t) => t.id == 'visualizer_3d')) {
-      loadedTools.add(const MasteryTool(
-        id: 'visualizer_3d',
-        label: 'Visualizer 3D',
-        iconName: 'box',
-        category: 'visual_learning',
-        isEnabled: true,
-        displayOrder: 4,
-        routeName: 'visualizer_3d',
-      ));
+      loadedTools.add(
+        const MasteryTool(
+          id: 'visualizer_3d',
+          label: 'Visualizer 3D',
+          iconName: 'box',
+          category: 'visual_learning',
+          isEnabled: true,
+          displayOrder: 4,
+          routeName: 'visualizer_3d',
+        ),
+      );
     }
 
     loadedTools.sort((a, b) => a.displayOrder.compareTo(b.displayOrder));
@@ -379,7 +396,9 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
 
     final subjectDoc = await _api.execute(
       () => _api
-          .collection(AppFirestoreCollections.savedChapterSubjects(uid, curriculumKey))
+          .collection(
+            AppFirestoreCollections.savedChapterSubjects(uid, curriculumKey),
+          )
           .doc(subjectId)
           .get(),
       tag: AppLogTags.chaptersDataSource,

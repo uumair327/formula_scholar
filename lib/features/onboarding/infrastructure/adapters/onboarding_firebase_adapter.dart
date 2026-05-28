@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:injectable/injectable.dart';
-
-import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 @LazySingleton(as: OnboardingDataSourcePort)
 class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
@@ -27,18 +26,21 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
       startAfterId: startAfterId,
     );
 
-    final data = snapshot.docs.where((doc) {
-      final map = doc.data();
-      return map['isActive'] != false;
-    }).map((doc) {
-      final map = doc.data();
-      return Country(
-        id: doc.id,
-        name: map['name'] ?? '',
-        isoCode: map['isoCode'] ?? doc.id,
-        flagUrl: map['flagUrl'] ?? '',
-      );
-    }).toList();
+    final data = snapshot.docs
+        .where((doc) {
+          final map = doc.data();
+          return map['isActive'] != false;
+        })
+        .map((doc) {
+          final map = doc.data();
+          return Country(
+            id: doc.id,
+            name: map['name'] ?? '',
+            isoCode: map['isoCode'] ?? doc.id,
+            flagUrl: map['flagUrl'] ?? '',
+          );
+        })
+        .toList();
 
     return PaginatedResponse(
       data: data,
@@ -64,18 +66,21 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
       startAfterId: startAfterId,
     );
 
-    final data = snapshot.docs.where((doc) {
-      final map = doc.data();
-      return map['isActive'] != false;
-    }).map((doc) {
-      final map = doc.data();
-      return StateRegion(
-        id: doc.id,
-        countryId: countryId,
-        name: map['name'] ?? '',
-        stateCode: map['stateCode'] ?? doc.id,
-      );
-    }).toList();
+    final data = snapshot.docs
+        .where((doc) {
+          final map = doc.data();
+          return map['isActive'] != false;
+        })
+        .map((doc) {
+          final map = doc.data();
+          return StateRegion(
+            id: doc.id,
+            countryId: countryId,
+            name: map['name'] ?? '',
+            stateCode: map['stateCode'] ?? doc.id,
+          );
+        })
+        .toList();
 
     return PaginatedResponse(
       data: data,
@@ -104,27 +109,30 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
       startAfterId: startAfterId,
       baseQuery: collectionRef.where('countryId', isEqualTo: countryId),
     );
-    var data = snapshot.docs.where((doc) {
-      final map = doc.data();
-      return map['isActive'] != false;
-    }).map((doc) {
-      final map = doc.data();
+    var data = snapshot.docs
+        .where((doc) {
+          final map = doc.data();
+          return map['isActive'] != false;
+        })
+        .map((doc) {
+          final map = doc.data();
 
-      final typeStr = map['type'] as String? ?? 'state';
-      BoardType type = BoardType.state;
-      if (typeStr == 'national') type = BoardType.national;
-      if (typeStr == 'private') type = BoardType.private;
-      if (typeStr == 'examination') type = BoardType.examination;
+          final typeStr = map['type'] as String? ?? 'state';
+          BoardType type = BoardType.state;
+          if (typeStr == 'national') type = BoardType.national;
+          if (typeStr == 'private') type = BoardType.private;
+          if (typeStr == 'examination') type = BoardType.examination;
 
-      return Board(
-        id: doc.id,
-        countryId: map['countryId'] ?? countryId,
-        stateId: map['stateId'],
-        type: type,
-        name: map['name'] ?? '',
-        description: map['description'] ?? '',
-      );
-    }).toList();
+          return Board(
+            id: doc.id,
+            countryId: map['countryId'] ?? countryId,
+            stateId: map['stateId'],
+            type: type,
+            name: map['name'] ?? '',
+            description: map['description'] ?? '',
+          );
+        })
+        .toList();
 
     if (stateId != null) {
       data = data.where((b) {
@@ -168,26 +176,29 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
             startAfterId: startAfterId,
           );
 
-    final parsedGrades = snapshot.docs.where((doc) {
-      final map = doc.data();
-      return map['isActive'] != false;
-    }).map((doc) {
-      final map = doc.data();
-      final rawLabel = (map['label'] ?? '').toString();
-      final classNumber = _resolveClassNumber(
-        rawClassNumber: map['classNumber'],
-        gradeId: doc.id,
-        gradeLabel: rawLabel,
-      );
+    final parsedGrades = snapshot.docs
+        .where((doc) {
+          final map = doc.data();
+          return map['isActive'] != false;
+        })
+        .map((doc) {
+          final map = doc.data();
+          final rawLabel = (map['label'] ?? '').toString();
+          final classNumber = _resolveClassNumber(
+            rawClassNumber: map['classNumber'],
+            gradeId: doc.id,
+            gradeLabel: rawLabel,
+          );
 
-      return Grade(
-        id: doc.id,
-        label: _canonicalGradeLabel(classNumber, rawLabel),
-        classNumber: classNumber,
-        subtitle: map['subtitle']?.toString(),
-        isPopular: map['isPopular'] == true,
-      );
-    }).toList();
+          return Grade(
+            id: doc.id,
+            label: _canonicalGradeLabel(classNumber, rawLabel),
+            classNumber: classNumber,
+            subtitle: map['subtitle']?.toString(),
+            isPopular: map['isPopular'] == true,
+          );
+        })
+        .toList();
 
     final data = _deduplicateAndSortGrades(parsedGrades);
 
@@ -216,8 +227,7 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
           query = query.startAfterDocument(cursorSnapshot);
         }
       }
-    } catch (_) {
-    }
+    } catch (_) {}
 
     return _api.execute(
       () => query.limit(effectiveLimit + 1).get(),

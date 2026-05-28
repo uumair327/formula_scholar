@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
-
-import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 @LazySingleton(as: DashboardDataSourcePort)
 class DashboardFirebaseAdapter implements DashboardDataSourcePort {
@@ -222,7 +221,8 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
     }).toList();
   }
 
-  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>? _activeSubjectsFetch;
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>?
+  _activeSubjectsFetch;
   String? _activeSubjectsToken;
   DateTime? _activeSubjectsTime;
 
@@ -259,12 +259,15 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
           .where(
             Filter.or(
               Filter('isGeneralContent', isEqualTo: true),
-              Filter('audiences', arrayContainsAny: [
-                token,
-                tokenAlt,
-                tokenCountry,
-                tokenCountryAlt,
-              ]),
+              Filter(
+                'audiences',
+                arrayContainsAny: [
+                  token,
+                  tokenAlt,
+                  tokenCountry,
+                  tokenCountryAlt,
+                ],
+              ),
               Filter('boardId', isEqualTo: boardId),
               Filter('boardId', isEqualTo: 'IN_$boardId'),
             ),
@@ -277,13 +280,15 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
       final data = doc.data();
       if (data['isActive'] == false) return false;
 
-      final aud = (data['audiences'] as List<dynamic>?)
+      final aud =
+          (data['audiences'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           [];
 
       if (aud.isNotEmpty) {
-        final matchesGrade = aud.contains(token) ||
+        final matchesGrade =
+            aud.contains(token) ||
             aud.contains(tokenAlt) ||
             aud.contains(tokenCountry) ||
             aud.contains(tokenCountryAlt);
@@ -339,7 +344,6 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
     return filteredDocs;
   }
 
-
   @override
   Future<List<CarouselItem>> getBanners() async {
     AppLogger.trace(
@@ -375,7 +379,9 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
       tag: AppLogTags.dashboardDataSource,
     );
 
-    return snapshot.docs.map((doc) => AppAnnouncement.fromFirestore(doc)).toList();
+    return snapshot.docs
+        .map((doc) => AppAnnouncement.fromFirestore(doc))
+        .toList();
   }
 
   String? _alternateGradeId(String gradeId) {
@@ -425,11 +431,13 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
     final List<WeakArea> results = [];
     for (final entry in statsMap.entries) {
       if (entry.value.total < 2) continue;
-      results.add(WeakArea(
-        category: entry.key,
-        totalAttempts: entry.value.total,
-        correctAttempts: entry.value.correct,
-      ));
+      results.add(
+        WeakArea(
+          category: entry.key,
+          totalAttempts: entry.value.total,
+          correctAttempts: entry.value.correct,
+        ),
+      );
     }
 
     results.sort((a, b) => b.weaknessScore.compareTo(a.weaknessScore));

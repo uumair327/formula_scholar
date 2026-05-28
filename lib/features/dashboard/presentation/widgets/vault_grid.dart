@@ -3,9 +3,8 @@ library;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-
-import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 class VaultGrid extends StatelessWidget {
   const VaultGrid({
@@ -56,7 +55,9 @@ class VaultGrid extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       color: colorScheme.surfaceContainerLowest,
-                      borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+                      borderRadius: BorderRadius.circular(
+                        AppDimensions.radiusXL,
+                      ),
                       border: Border.all(
                         color: colorScheme.surfaceContainerHighest,
                         width: AppDimensions.borderWidth,

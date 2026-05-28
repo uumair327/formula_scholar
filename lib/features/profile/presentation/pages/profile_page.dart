@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../../../auth/auth.dart';
 import '../cubit/profile_cubit.dart';
 import '../cubit/profile_state.dart';
@@ -22,7 +22,7 @@ class ProfilePage extends StatelessWidget {
     return BlocBuilder<ProfileCubit, ProfileState>(
       buildWhen: (prev, curr) => prev.status != curr.status,
       builder: (context, state) {
-        final displayName = state.profile?.name ?? AppStrings.welcomeScholar;
+        final displayName = state.profile?.name ?? context.l10n.welcomeScholar;
 
         if (state.status == ProfileStatus.loading ||
             state.status == ProfileStatus.initial) {
@@ -32,7 +32,10 @@ class ProfilePage extends StatelessWidget {
         if (state.status == ProfileStatus.error) {
           return Scaffold(
             body: AppErrorState(
-              message: state.errorMessage,
+              message: context.localizedError(
+                errorKey: state.errorKey,
+                fallback: state.errorMessage,
+              ),
               onRetry: () => context.read<ProfileCubit>().loadProfile(),
             ),
           );
@@ -119,7 +122,7 @@ class ProfilePage extends StatelessWidget {
 
     return SliverGlassAppBar(
       titleWidget: Text(
-        AppStrings.navProfile,
+        context.l10n.navProfile,
         style: AppTextStyles.headlineSmall.copyWith(
           color: colorScheme.onSurface,
           fontWeight: FontWeight.w800,
@@ -137,11 +140,11 @@ class ProfilePage extends StatelessWidget {
           child: IconButton(
             onPressed: () => ProfileInsightsSheet.show(
               context,
-              displayName: state.profile?.name ?? AppStrings.welcomeScholar,
+              displayName: state.profile?.name ?? context.l10n.welcomeScholar,
               stats: state.stats,
             ),
             icon: Icon(LucideIcons.barChart2, color: colorScheme.primary),
-            tooltip: AppStrings.viewInsights,
+            tooltip: context.l10n.viewInsights,
           ),
         ),
       ],

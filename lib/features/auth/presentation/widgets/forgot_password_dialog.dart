@@ -3,8 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../../core/core.dart';
-import '../../../../../l10n/l10n.dart';
-import '../../../../../shared/shared.dart';
+
 import '../cubit/auth_cubit.dart';
 
 /// Shared password reset dialog used from login and profile flows.
@@ -65,8 +64,14 @@ void showForgotPasswordDialog(BuildContext context, String prefillEmail) async {
                     content: Text(
                       success
                           ? l10n.forgotPasswordSuccess
-                          : context.read<AuthCubit>().state.errorMessage ??
-                                AppStrings.genericError,
+                          : context.localizedError(
+                              fallback:
+                                  context
+                                      .read<AuthCubit>()
+                                      .state
+                                      .errorMessage ??
+                                  l10n.somethingWentWrong,
+                            ),
                     ),
                     backgroundColor: success
                         ? AppColors.secondary

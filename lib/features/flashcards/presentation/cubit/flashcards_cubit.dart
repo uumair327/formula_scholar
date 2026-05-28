@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-
+import '../../domain/domain.dart';
 import '../../../../core/core.dart';
 import '../../../achievements/domain/domain.dart';
-import '../../domain/domain.dart';
+
 import 'flashcards_state.dart';
 
 @injectable
@@ -43,20 +43,24 @@ class FlashcardsCubit extends Cubit<FlashcardsState>
       case Success(:final data):
         final due = _srs.dueCards(data);
         final sessionCards = due.isEmpty ? data : due;
-        emit(FlashcardsState(
-          status: FlashcardsStatus.ready,
-          session: FlashcardSession(cards: sessionCards),
-          totalCardCount: data.length,
-        ));
+        emit(
+          FlashcardsState(
+            status: FlashcardsStatus.ready,
+            session: FlashcardSession(cards: sessionCards),
+            totalCardCount: data.length,
+          ),
+        );
       case Error(:final failure):
         logFailure('loadReviews', failure);
     }
   }
 
   void flipCard() {
-    emit(state.copyWith(
-      session: state.session.copyWith(isFlipped: !state.session.isFlipped),
-    ));
+    emit(
+      state.copyWith(
+        session: state.session.copyWith(isFlipped: !state.session.isFlipped),
+      ),
+    );
   }
 
   Future<void> rateCard(ReviewQuality quality) async {
@@ -64,8 +68,8 @@ class FlashcardsCubit extends Cubit<FlashcardsState>
     if (current == null) return;
 
     final updatedCard = _srs.rateCard(current, quality);
-    final isGraduated = quality == ReviewQuality.good ||
-        quality == ReviewQuality.easy;
+    final isGraduated =
+        quality == ReviewQuality.good || quality == ReviewQuality.easy;
     final newIndex = state.session.currentIndex + 1;
     final newMastered = updatedCard.isMastered
         ? [...state.session.masteredIds, current.id]
@@ -82,23 +86,22 @@ class FlashcardsCubit extends Cubit<FlashcardsState>
       return c;
     }).toList();
 
-    emit(state.copyWith(
-      session: state.session.copyWith(
-        currentIndex: newIndex,
-        cards: updatedCards,
-        masteredIds: newMastered,
-        reviewIds: newReview,
-        graduatedIds: newGraduated,
-        isFlipped: false,
+    emit(
+      state.copyWith(
+        session: state.session.copyWith(
+          currentIndex: newIndex,
+          cards: updatedCards,
+          masteredIds: newMastered,
+          reviewIds: newReview,
+          graduatedIds: newGraduated,
+          isFlipped: false,
+        ),
       ),
-    ));
+    );
 
     final uid = _userId;
     if (uid != null) {
-      final saveResult = await _saveReview(
-        userId: uid,
-        card: updatedCard,
-      );
+      final saveResult = await _saveReview(userId: uid, card: updatedCard);
       if (saveResult is Error<void>) {
         logFailure('saveReview', saveResult.failure);
       }
@@ -110,14 +113,16 @@ class FlashcardsCubit extends Cubit<FlashcardsState>
   void _checkComplete() {
     final session = state.session;
     if (session.graduatedIds.length >= session.cards.length) {
-      emit(state.copyWith(
-        status: FlashcardsStatus.finished,
-        reviewSummary: ReviewSummary(
-          totalCards: session.totalCards,
-          graduated: session.graduatedIds.length,
-          mastered: session.masteredIds.length,
+      emit(
+        state.copyWith(
+          status: FlashcardsStatus.finished,
+          reviewSummary: ReviewSummary(
+            totalCards: session.totalCards,
+            graduated: session.graduatedIds.length,
+            mastered: session.masteredIds.length,
+          ),
         ),
-      ));
+      );
       _reportAchievementProgress();
     }
   }

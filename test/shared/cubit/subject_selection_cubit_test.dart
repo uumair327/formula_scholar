@@ -5,7 +5,6 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 import 'package:formula_scholar/core/core.dart';
 import 'package:formula_scholar/features/dashboard/domain/domain.dart';
-import 'package:formula_scholar/shared/shared.dart';
 
 void main() {
   group('SubjectSelectionCubit', () {

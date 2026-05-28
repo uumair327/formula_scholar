@@ -12,10 +12,18 @@ import 'package:equatable/equatable.dart';
 /// }
 /// ```
 sealed class Failure extends Equatable {
-  const Failure({required this.message, this.originalError, this.stackTrace});
+  const Failure({
+    required this.message,
+    this.code,
+    this.originalError,
+    this.stackTrace,
+  });
 
   /// Human-readable description of what went wrong.
   final String message;
+
+  /// Optional machine-readable error code used for localization mapping.
+  final String? code;
 
   /// Original error object for debugging (not exposed to UI).
   final Object? originalError;
@@ -24,7 +32,7 @@ sealed class Failure extends Equatable {
   final StackTrace? stackTrace;
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [message, code];
 }
 
 /// Server/network related failures (API errors, timeouts, etc.).

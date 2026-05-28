@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../../../../core/core.dart';
+
 import '../../../visualizer_3d/domain/domain.dart';
 import '../../../visualizer_3d/presentation/widgets/three_d_canvas_painter.dart';
 import '../../../visualizer_3d/presentation/widgets/grid_background_painter.dart';
@@ -125,8 +126,8 @@ class _NativeModel3DWidgetState extends State<NativeModel3DWidget>
                     });
                   },
                   tooltip: _isAutoRotating
-                      ? AppStrings.autoRotatePause
-                      : AppStrings.autoRotateStart,
+                      ? context.l10n.autoRotatePause
+                      : context.l10n.autoRotateStart,
                 ),
               ),
             ],

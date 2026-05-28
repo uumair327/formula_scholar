@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../../core/core.dart';
-import '../../../../../shared/shared.dart';
 
 class HelpAppBar extends StatelessWidget {
   const HelpAppBar({super.key});
@@ -19,7 +18,7 @@ class HelpAppBar extends StatelessWidget {
         tooltip: MaterialLocalizations.of(context).backButtonTooltip,
       ),
       titleWidget: Text(
-        AppStrings.helpAndSupport,
+        context.l10n.helpAndSupport,
         style: AppTextStyles.titleMedium.copyWith(
           color: colorScheme.onSurface,
           fontWeight: FontWeight.w800,

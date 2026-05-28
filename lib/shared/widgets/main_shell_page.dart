@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/core.dart';
-import 'shell/desktop_shell.dart';
-import 'shell/mobile_shell.dart';
 
 class MainShellPage extends StatelessWidget {
   const MainShellPage({super.key, required this.navigationShell});

@@ -54,21 +54,17 @@ class DailyChallengeDialog extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                LucideIcons.zap,
-                size: 40,
-                color: colorScheme.primary,
-              ),
+              Icon(LucideIcons.zap, size: 40, color: colorScheme.primary),
               const SizedBox(height: AppDimensions.paddingMD),
               Text(
-                AppStrings.dailyChallenge,
+                context.l10n.dailyChallenge,
                 style: AppTextStyles.headlineSmall.copyWith(
                   fontWeight: FontWeight.w700,
                 ),
               ),
               const SizedBox(height: AppDimensions.paddingSM),
               Text(
-                AppStrings.dailyChallengeDesc,
+                context.l10n.dailyChallengeDesc,
                 style: AppTextStyles.bodySmall.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),
@@ -113,7 +109,9 @@ class DailyChallengeDialog extends StatelessWidget {
               const SizedBox(height: AppDimensions.paddingMD),
               ...List.generate(options.length, (index) {
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: AppDimensions.paddingSM),
+                  padding: const EdgeInsets.only(
+                    bottom: AppDimensions.paddingSM,
+                  ),
                   child: SizedBox(
                     width: double.infinity,
                     child: OutlinedButton(
@@ -174,7 +172,7 @@ class DailyChallengeDialog extends StatelessWidget {
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(dialogContext).pop(),
-                child: const Text(AppStrings.gotIt),
+                child: Text(dialogContext.l10n.gotIt),
               ),
             ],
           );

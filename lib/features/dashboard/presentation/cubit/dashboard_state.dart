@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
-
-import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 enum DashboardStatus { initial, loading, loaded, error }
 
@@ -17,6 +16,7 @@ class DashboardState extends Equatable {
     this.announcements = const [],
     this.weakAreas = const [],
     this.errorMessage,
+    this.errorKey,
     this.selectedBoardName = '',
     this.selectedGradeName = '',
     this.currentBannerIndex = 0,
@@ -33,6 +33,7 @@ class DashboardState extends Equatable {
   final List<AppAnnouncement> announcements;
   final List<WeakArea> weakAreas;
   final String? errorMessage;
+  final String? errorKey;
   final String selectedBoardName;
   final String selectedGradeName;
   final int currentBannerIndex;
@@ -55,10 +56,14 @@ class DashboardState extends Equatable {
     }
 
     if (selectedBoardName.isEmpty || selectedGradeName.isEmpty) {
-      return AppStrings.dashboardCurriculumPending;
+      return _localizedValue(
+        'dashboard.curriculum.pending',
+        AppStrings.dashboardCurriculumPending,
+      );
     }
 
-    return '$selectedBoardName Syllabus • Grade $selectedGradeName';
+    final fallback = '$selectedBoardName Syllabus • Grade $selectedGradeName';
+    return _localizedValue('dashboard.hero.badge.fallback', fallback);
   }
 
   String get heroTitle {
@@ -76,12 +81,24 @@ class DashboardState extends Equatable {
         );
 
     if (featured == null) {
-      return AppStrings.dashboardHeroTitle;
+      return _localizedValue(
+        'dashboard.hero.title',
+        AppStrings.dashboardHeroTitle,
+      );
     }
 
     final headline = featured.subtitle?.trim();
     if (headline != null && headline.isNotEmpty) {
+      final tpl = _localizedValue('dashboard.hero.title.forTopic', '');
+      if (tpl.isNotEmpty) {
+        return tpl.replaceAll('{topic}', headline);
+      }
       return AppStrings.dashboardHeroTitleForTopic(headline);
+    }
+
+    final tpl = _localizedValue('dashboard.hero.title.forTopic', '');
+    if (tpl.isNotEmpty) {
+      return tpl.replaceAll('{topic}', featured.name);
     }
 
     return AppStrings.dashboardHeroTitleForTopic(featured.name);
@@ -102,10 +119,11 @@ class DashboardState extends Equatable {
       0,
       (sum, subject) => sum + subject.formulaCount,
     );
-    return AppStrings.dashboardVaultDescWithCounts(
+    final fallback = AppStrings.dashboardVaultDescWithCounts(
       formulaCount,
       subjects.length,
     );
+    return _localizedValue('dashboard.vault.description', fallback);
   }
 
   String get heroResumeLabel {
@@ -225,6 +243,7 @@ class DashboardState extends Equatable {
     List<AppAnnouncement>? announcements,
     List<WeakArea>? weakAreas,
     Object? errorMessage = unset,
+    String? errorKey,
     String? selectedBoardName,
     String? selectedGradeName,
     int? currentBannerIndex,
@@ -244,6 +263,7 @@ class DashboardState extends Equatable {
       errorMessage: identical(errorMessage, unset)
           ? this.errorMessage
           : errorMessage as String?,
+      errorKey: errorKey ?? this.errorKey,
       selectedBoardName: selectedBoardName ?? this.selectedBoardName,
       selectedGradeName: selectedGradeName ?? this.selectedGradeName,
       currentBannerIndex: currentBannerIndex ?? this.currentBannerIndex,
@@ -269,6 +289,7 @@ class DashboardState extends Equatable {
     announcements,
     weakAreas,
     errorMessage,
+    errorKey,
     selectedBoardName,
     selectedGradeName,
     currentBannerIndex,

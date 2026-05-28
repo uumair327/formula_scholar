@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 
 /// A premium, polished bottom sheet presenting subject-specific analytics.
 class SubjectAnalyticsSheet extends StatelessWidget {

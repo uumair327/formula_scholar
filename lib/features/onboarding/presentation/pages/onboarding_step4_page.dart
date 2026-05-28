@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../cubit/onboarding_cubit.dart';
 import '../widgets/widgets.dart';
 
@@ -18,26 +17,7 @@ import '../widgets/widgets.dart';
 class OnboardingStep4Page extends StatelessWidget {
   const OnboardingStep4Page({super.key});
 
-  static const List<_GoalOption> _goals = [
-    _GoalOption(
-      id: 'casual',
-      icon: LucideIcons.target,
-      title: AppStrings.step4Casual,
-      subtitle: AppStrings.step4CasualDesc,
-    ),
-    _GoalOption(
-      id: 'regular',
-      icon: LucideIcons.flame,
-      title: AppStrings.step4Regular,
-      subtitle: AppStrings.step4RegularDesc,
-    ),
-    _GoalOption(
-      id: 'intensive',
-      icon: LucideIcons.zap,
-      title: AppStrings.step4Intensive,
-      subtitle: AppStrings.step4IntensiveDesc,
-    ),
-  ];
+  // Goals are built at runtime to allow localized labels via `context.l10n`.
 
   Future<void> _onFinish(BuildContext context) async {
     final onboardingCubit = context.read<OnboardingCubit>();
@@ -54,10 +34,32 @@ class OnboardingStep4Page extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final goals = [
+      _GoalOption(
+        id: 'casual',
+        icon: LucideIcons.target,
+        title: l10n.step4Casual,
+        subtitle: l10n.step4CasualDesc,
+      ),
+      _GoalOption(
+        id: 'regular',
+        icon: LucideIcons.flame,
+        title: l10n.step4Regular,
+        subtitle: l10n.step4RegularDesc,
+      ),
+      _GoalOption(
+        id: 'intensive',
+        icon: LucideIcons.zap,
+        title: l10n.step4Intensive,
+        subtitle: l10n.step4IntensiveDesc,
+      ),
+    ];
+
     return OnboardingShell(
       currentStep: 4,
       totalSteps: 4,
-      continueLabel: AppStrings.step4EnterSanctuary,
+      continueLabel: context.l10n.step4EnterSanctuary,
       onBack: () => context.go(AppRoutes.onboardingStep3Path),
       onContinue: () {
         _onFinish(context);
@@ -65,14 +67,14 @@ class OnboardingStep4Page extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const OnboardingStepHeading(
-            tag: AppStrings.step4Tag,
-            title: AppStrings.step4Title,
-            subtitle: AppStrings.step4Subtitle,
+          OnboardingStepHeading(
+            tag: context.l10n.step4Tag,
+            title: context.l10n.step4Title,
+            subtitle: context.l10n.step4Subtitle,
           ),
           const SizedBox(height: AppDimensions.paddingXXL),
           Column(
-            children: _goals.map((goal) {
+            children: goals.map((goal) {
               return Padding(
                 padding: const EdgeInsets.only(bottom: AppDimensions.paddingMD),
                 child: _GoalCard(

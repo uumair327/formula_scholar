@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../cubit/practice_state.dart';
 
 class ScoreSummaryCard extends StatelessWidget {
@@ -21,7 +21,7 @@ class ScoreSummaryCard extends StatelessWidget {
           _ScoreStat(
             icon: LucideIcons.checkCircle2,
             value: '${state.correctCount}',
-            label: AppStrings.correctLabel,
+            label: context.l10n.correctLabel,
             color: colorScheme.secondary,
           ),
           Container(
@@ -32,7 +32,7 @@ class ScoreSummaryCard extends StatelessWidget {
           _ScoreStat(
             icon: LucideIcons.xCircle,
             value: '${state.incorrectCount}',
-            label: AppStrings.incorrectLabel,
+            label: context.l10n.incorrectLabel,
             color: colorScheme.error,
           ),
           Container(
@@ -43,7 +43,7 @@ class ScoreSummaryCard extends StatelessWidget {
           _ScoreStat(
             icon: LucideIcons.star,
             value: '${state.totalPoints}',
-            label: AppStrings.ptsLabel,
+            label: context.l10n.ptsLabel,
             color: colorScheme.primary,
           ),
         ],

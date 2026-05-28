@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../../core/core.dart';
-import '../../../../../shared/shared.dart';
 
 class NotificationStatusCard extends StatelessWidget {
   const NotificationStatusCard({super.key});
@@ -37,14 +36,14 @@ class NotificationStatusCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  AppStrings.notificationsEnabled,
+                  context.l10n.notificationsEnabled,
                   style: AppTextStyles.labelLarge.copyWith(
                     color: colorScheme.onPrimary,
                   ),
                 ),
                 const SizedBox(height: AppDimensions.paddingXXS),
                 Text(
-                  AppStrings.notificationsEnabledDesc,
+                  context.l10n.notificationsEnabledDesc,
                   style: AppTextStyles.bodySmall.copyWith(
                     color: colorScheme.onPrimary.withValues(
                       alpha: AppDimensions.opacityHigh,

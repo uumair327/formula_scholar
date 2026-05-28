@@ -4,8 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../core/core.dart';
-import '../domain/domain.dart';
-import 'curriculum_state.dart';
 
 /// Global cubit holding the user's selected curriculum (board + grade).
 ///

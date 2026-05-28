@@ -3,8 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../l10n/l10n.dart';
-import '../../../../shared/shared.dart';
+
 import '../cubit/search_cubit.dart';
 import '../cubit/search_state.dart';
 import '../widgets/search_result_card.dart';
@@ -46,7 +45,9 @@ class SearchPage extends StatelessWidget {
                     return _buildResultsList(context, state);
                   case SearchStatus.error:
                     return AppErrorState(
-                      message: state.errorMessage,
+                      message: context.localizedError(
+                        fallback: state.errorMessage,
+                      ),
                       onRetry: () {
                         context.read<SearchCubit>().search(
                           state.query,

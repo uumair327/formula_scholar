@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
-
-import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 @LazySingleton(as: PracticeDataSourcePort)
 class PracticeFirebaseAdapter implements PracticeDataSourcePort {
@@ -44,11 +42,13 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
         'No board/grade-scoped practice questions found; falling back to legacy dataset',
         tag: AppLogTags.practiceDataSource,
       );
-      Query<Map<String, dynamic>> fallbackQuery = _api.collection(AppFirestoreCollections.practiceQuestions);
+      Query<Map<String, dynamic>> fallbackQuery = _api.collection(
+        AppFirestoreCollections.practiceQuestions,
+      );
       if (categoryId != null && categoryId.isNotEmpty) {
         fallbackQuery = fallbackQuery.where('category', isEqualTo: categoryId);
       }
-      
+
       snapshot = await _api.execute(
         () => fallbackQuery.limit(20).get(),
         tag: AppLogTags.practiceDataSource,
@@ -128,8 +128,9 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
     if (uid == null || records.isEmpty) return;
 
     final batch = _api.batch();
-    final answersRef = _api
-        .collection(AppFirestoreCollections.userQuizAnswers(uid));
+    final answersRef = _api.collection(
+      AppFirestoreCollections.userQuizAnswers(uid),
+    );
 
     for (final record in records) {
       final docRef = answersRef.doc();

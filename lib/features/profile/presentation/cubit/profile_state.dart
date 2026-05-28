@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
-
 import '../../domain/domain.dart';
-
 const Object _unset = Object();
 
 enum ProfileStatus { initial, loading, loaded, error }
@@ -14,12 +12,14 @@ class ProfileState extends Equatable {
     this.stats = const [],
     this.settingsItems = const [],
     this.errorMessage,
+    this.errorKey,
   });
   final ProfileStatus status;
   final UserProfile? profile;
   final List<ProfileStat> stats;
   final List<SettingsItem> settingsItems;
   final String? errorMessage;
+  final String? errorKey;
 
   ProfileState copyWith({
     ProfileStatus? status,
@@ -27,6 +27,7 @@ class ProfileState extends Equatable {
     List<ProfileStat>? stats,
     List<SettingsItem>? settingsItems,
     Object? errorMessage = _unset,
+    String? errorKey,
   }) {
     return ProfileState(
       status: status ?? this.status,
@@ -36,6 +37,7 @@ class ProfileState extends Equatable {
       errorMessage: identical(errorMessage, _unset)
           ? this.errorMessage
           : errorMessage as String?,
+      errorKey: errorKey ?? this.errorKey,
     );
   }
 
@@ -49,5 +51,6 @@ class ProfileState extends Equatable {
     stats,
     settingsItems,
     errorMessage,
+    errorKey,
   ];
 }

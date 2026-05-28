@@ -24,7 +24,7 @@ class FlashcardStartView extends StatelessWidget {
           ),
           const SizedBox(height: AppDimensions.paddingXL),
           Text(
-            AppStrings.flashcardStudy,
+            context.l10n.flashcardStudy,
             style: AppTextStyles.headlineSmall.copyWith(
               fontWeight: FontWeight.w700,
             ),
@@ -40,7 +40,7 @@ class FlashcardStartView extends StatelessWidget {
           FilledButton.icon(
             onPressed: () => Navigator.of(context).pop(),
             icon: const Icon(LucideIcons.arrowLeft),
-            label: const Text('Go back'),
+            label: Text(context.l10n.goBack),
           ),
         ],
       ),
@@ -73,14 +73,14 @@ class FlashcardCompleteView extends StatelessWidget {
             ),
             const SizedBox(height: AppDimensions.paddingXL),
             Text(
-              AppStrings.flashcardSessionComplete,
+              context.l10n.flashcardSessionComplete,
               style: AppTextStyles.headlineSmall.copyWith(
                 fontWeight: FontWeight.w700,
               ),
             ),
             const SizedBox(height: AppDimensions.paddingMD),
             Text(
-              AppStrings.flashcardSessionDesc,
+              context.l10n.flashcardSessionDesc,
               textAlign: TextAlign.center,
               style: AppTextStyles.bodyMedium.copyWith(
                 color: colorScheme.onSurfaceVariant,
@@ -106,12 +106,12 @@ class FlashcardCompleteView extends StatelessWidget {
             FilledButton.icon(
               onPressed: () => context.read<FlashcardsCubit>().restart(),
               icon: const Icon(LucideIcons.refreshCw),
-              label: const Text('Study Again'),
+              label: Text(context.l10n.studyAgain),
             ),
             const SizedBox(height: AppDimensions.paddingMD),
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Done'),
+              child: Text(context.l10n.done),
             ),
           ],
         ),

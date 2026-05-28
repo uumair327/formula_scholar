@@ -5,8 +5,6 @@ import 'package:injectable/injectable.dart';
 
 import '../../core/core.dart';
 import '../../features/dashboard/domain/domain.dart';
-import '../domain/domain.dart';
-import 'subject_selection_state.dart';
 
 /// Global cubit holding the currently selected subject.
 ///

@@ -1,6 +1,15 @@
 import '../../../core/constants/app_locales.dart';
 
 class LocalizedContentItem {
+
+  factory LocalizedContentItem.fromMap(Map<String, dynamic> map) {
+    return LocalizedContentItem(
+      key: map['key']?.toString().trim() ?? '',
+      locale: AppLocales.normalizeContentLocaleCode(map['locale']?.toString()),
+      value: map['value']?.toString() ?? '',
+      status: map['status']?.toString().trim() ?? 'Draft',
+    );
+  }
   const LocalizedContentItem({
     required this.key,
     required this.locale,
@@ -13,32 +22,10 @@ class LocalizedContentItem {
   final String value;
   final String status;
 
-  factory LocalizedContentItem.fromMap(Map<String, dynamic> map) {
-    return LocalizedContentItem(
-      key: map['key']?.toString().trim() ?? '',
-      locale: AppLocales.normalizeContentLocaleCode(map['locale']?.toString()),
-      value: map['value']?.toString() ?? '',
-      status: map['status']?.toString().trim() ?? 'Draft',
-    );
-  }
-
   bool get isPublished => status.toLowerCase() == 'published';
 }
 
 class LocalizedContentBundle {
-  const LocalizedContentBundle({
-    required this.localeCode,
-    required this.items,
-    required this.values,
-  });
-
-  const LocalizedContentBundle.empty({
-    String localeCode = AppLocales.defaultContentLocaleCode,
-  }) : this(localeCode: localeCode, items: const [], values: const {});
-
-  final String localeCode;
-  final List<LocalizedContentItem> items;
-  final Map<String, String> values;
 
   factory LocalizedContentBundle.fromItems(
     Iterable<LocalizedContentItem> items, {
@@ -63,6 +50,19 @@ class LocalizedContentBundle {
       values: resolved,
     );
   }
+  const LocalizedContentBundle({
+    required this.localeCode,
+    required this.items,
+    required this.values,
+  });
+
+  const LocalizedContentBundle.empty({
+    String localeCode = AppLocales.defaultContentLocaleCode,
+  }) : this(localeCode: localeCode, items: const [], values: const {});
+
+  final String localeCode;
+  final List<LocalizedContentItem> items;
+  final Map<String, String> values;
 
   String resolve(String key, {String fallback = ''}) {
     return values[key] ?? fallback;

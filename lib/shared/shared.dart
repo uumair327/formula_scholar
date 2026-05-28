@@ -19,3 +19,6 @@ export 'infrastructure/adapters/localized_content_firebase_adapter.dart';
 export 'infrastructure/repositories/localized_content_repository_impl.dart';
 export 'infrastructure/user_stats_accumulator.dart';
 export 'widgets/widgets.dart';
+// Re-export localization helpers so common imports include `context.l10n`
+export '../l10n/l10n.dart';
+export 'localized_error_extensions.dart';

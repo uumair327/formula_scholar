@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../cubit/practice_state.dart';
 
 class CategoryBreakdown extends StatelessWidget {
@@ -25,7 +25,7 @@ class CategoryBreakdown extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            AppStrings.perCategory,
+            context.l10n.perCategory,
             style: AppTextStyles.titleMedium.copyWith(
               fontWeight: FontWeight.w700,
             ),
@@ -52,15 +52,17 @@ class CategoryBreakdown extends StatelessWidget {
                   Expanded(
                     flex: 3,
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
+                      borderRadius: BorderRadius.circular(
+                        AppDimensions.radiusSM,
+                      ),
                       child: LinearProgressIndicator(
                         value: pct / 100,
                         backgroundColor: colorScheme.surfaceContainerHighest,
                         color: pct >= 80
                             ? colorScheme.secondary
                             : pct >= 50
-                                ? colorScheme.tertiary
-                                : colorScheme.error,
+                            ? colorScheme.tertiary
+                            : colorScheme.error,
                         minHeight: AppDimensions.progressBarSM,
                       ),
                     ),

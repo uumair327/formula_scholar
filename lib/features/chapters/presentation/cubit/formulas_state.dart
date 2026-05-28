@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
-
 import '../../domain/domain.dart';
-
 const Object _unset = Object();
 
 enum FormulasStatus { initial, loading, loaded, error }
@@ -18,6 +16,7 @@ class FormulasState extends Equatable {
     this.errorMessage,
     this.formulaNotes = const {},
     this.isSavingNote = false,
+    this.errorKey,
   });
   final FormulasStatus status;
   final String? subjectId;
@@ -28,6 +27,7 @@ class FormulasState extends Equatable {
   final String? errorMessage;
   final Map<String, FormulaNote?> formulaNotes;
   final bool isSavingNote;
+  final String? errorKey;
 
   int get masteredCount => formulas.where((f) => f.isMastered).toList().length;
   int get totalCount => formulas.length;
@@ -45,6 +45,7 @@ class FormulasState extends Equatable {
     List<Formula>? formulas,
     bool? isChapterSaved,
     Object? errorMessage = _unset,
+    String? errorKey,
     Map<String, FormulaNote?>? formulaNotes,
     bool? isSavingNote,
   }) {
@@ -58,6 +59,7 @@ class FormulasState extends Equatable {
       errorMessage: identical(errorMessage, _unset)
           ? this.errorMessage
           : errorMessage as String?,
+      errorKey: errorKey ?? this.errorKey,
       formulaNotes: formulaNotes ?? this.formulaNotes,
       isSavingNote: isSavingNote ?? this.isSavingNote,
     );
@@ -72,6 +74,7 @@ class FormulasState extends Equatable {
     formulas,
     isChapterSaved,
     errorMessage,
+    errorKey,
     formulaNotes,
     isSavingNote,
   ];

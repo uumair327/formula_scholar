@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../../core/core.dart';
-import '../../../../../shared/shared.dart';
 
 class HelpHeroCard extends StatelessWidget {
   const HelpHeroCard({super.key});
@@ -20,22 +19,32 @@ class HelpHeroCard extends StatelessWidget {
             width: AppDimensions.avatarHero,
             height: AppDimensions.avatarHero,
             decoration: BoxDecoration(
-              color: colorScheme.surface.withValues(alpha: AppDimensions.opacitySubtle),
+              color: colorScheme.surface.withValues(
+                alpha: AppDimensions.opacitySubtle,
+              ),
               shape: BoxShape.circle,
             ),
-            child: Icon(LucideIcons.helpCircle, size: AppDimensions.iconXXL, color: colorScheme.onPrimary),
+            child: Icon(
+              LucideIcons.helpCircle,
+              size: AppDimensions.iconXXL,
+              color: colorScheme.onPrimary,
+            ),
           ),
           const SizedBox(height: AppDimensions.paddingLG),
           Text(
-            AppStrings.helpHeroTitle,
-            style: AppTextStyles.headlineSmall.copyWith(color: colorScheme.onPrimary),
+            context.l10n.helpHeroTitle,
+            style: AppTextStyles.headlineSmall.copyWith(
+              color: colorScheme.onPrimary,
+            ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppDimensions.paddingSM),
           Text(
-            AppStrings.helpHeroSubtitle,
+            context.l10n.helpHeroSubtitle,
             style: AppTextStyles.bodySmall.copyWith(
-              color: colorScheme.onPrimary.withValues(alpha: AppDimensions.opacityHigh),
+              color: colorScheme.onPrimary.withValues(
+                alpha: AppDimensions.opacityHigh,
+              ),
             ),
             textAlign: TextAlign.center,
           ),

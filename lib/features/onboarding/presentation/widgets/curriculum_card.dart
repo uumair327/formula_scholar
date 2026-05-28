@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../core/core.dart';
 import '../../domain/domain.dart';
-
 class CurriculumCard extends StatelessWidget {
   const CurriculumCard({
     super.key,
@@ -32,7 +31,9 @@ class CurriculumCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
           border: Border.all(
             color: isSelected
-                ? AppColors.primary.withValues(alpha: AppDimensions.opacityMedium)
+                ? AppColors.primary.withValues(
+                    alpha: AppDimensions.opacityMedium,
+                  )
                 : AppColors.transparent,
             width: isSelected
                 ? AppDimensions.borderWidthThick
@@ -80,8 +81,12 @@ class CurriculumCard extends StatelessWidget {
             if (isSelected)
               Positioned(
                 top: 0,
-                left: Directionality.of(context) == TextDirection.rtl ? 0 : null,
-                right: Directionality.of(context) == TextDirection.ltr ? 0 : null,
+                left: Directionality.of(context) == TextDirection.rtl
+                    ? 0
+                    : null,
+                right: Directionality.of(context) == TextDirection.ltr
+                    ? 0
+                    : null,
                 child: Container(
                   width: AppDimensions.iconMD,
                   height: AppDimensions.iconMD,

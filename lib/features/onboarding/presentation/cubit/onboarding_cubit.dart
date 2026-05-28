@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/domain/domain.dart';
 import '../../domain/domain.dart';
 import '../../../profile/domain/domain.dart';
 import 'onboarding_state.dart';

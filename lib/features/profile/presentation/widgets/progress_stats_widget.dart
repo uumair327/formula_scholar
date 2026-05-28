@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-
-import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
-import 'profile_insights_sheet.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
+
+import 'profile_insights_sheet.dart';
 
 /// Progress stats grid – displays stat cards.
 ///
@@ -12,7 +11,7 @@ class ProgressStatsWidget extends StatelessWidget {
   const ProgressStatsWidget({
     super.key,
     required this.stats,
-    this.displayName = AppStrings.welcomeScholar,
+    this.displayName = '',
   });
   final List<ProfileStat> stats;
   final String displayName;
@@ -24,8 +23,8 @@ class ProgressStatsWidget extends StatelessWidget {
       children: [
         // Section header
         AppSectionTitle(
-          title: AppStrings.myProgress,
-          actionLabel: AppStrings.viewHistory,
+          title: context.l10n.myProgress,
+          actionLabel: context.l10n.viewHistory,
           onAction: () {
             AppLogger.debug(
               'View History tapped',

@@ -5,16 +5,16 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import 'tool_card.dart';
 
 class QuickActionsSection extends StatelessWidget {
   const QuickActionsSection({
     super.key,
-    this.sectionTitle = AppStrings.exploreTools,
-    this.studyPlannerLabel = AppStrings.studyPlanner,
-    this.analyticsLabel = AppStrings.viewAnalytics,
-    this.flashcardsLabel = AppStrings.flashcards,
+    this.sectionTitle = '',
+    this.studyPlannerLabel = '',
+    this.analyticsLabel = '',
+    this.flashcardsLabel = '',
   });
 
   final String sectionTitle;
@@ -29,14 +29,19 @@ class QuickActionsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionHeader(title: sectionTitle, actionLabel: null),
+        SectionHeader(
+          title: sectionTitle.isNotEmpty
+              ? sectionTitle
+              : context.l10n.exploreTools,
+          actionLabel: null,
+        ),
         const SizedBox(height: AppDimensions.paddingLG),
         Row(
           children: [
             Expanded(
               child: ToolCard(
                 icon: LucideIcons.box,
-                label: AppStrings.visualizer3d,
+                label: context.l10n.visualizer3d,
                 color: colorScheme.primary,
                 onTap: () => context.pushNamed(AppRoutes.visualizer3dName),
               ),
@@ -45,7 +50,9 @@ class QuickActionsSection extends StatelessWidget {
             Expanded(
               child: ToolCard(
                 icon: LucideIcons.calendarCheck,
-                label: studyPlannerLabel,
+                label: studyPlannerLabel.isNotEmpty
+                    ? studyPlannerLabel
+                    : context.l10n.studyPlanner,
                 color: colorScheme.secondary,
                 onTap: () => context.pushNamed(AppRoutes.studyPlannerName),
               ),
@@ -58,7 +65,9 @@ class QuickActionsSection extends StatelessWidget {
             Expanded(
               child: ToolCard(
                 icon: LucideIcons.barChart3,
-                label: analyticsLabel,
+                label: analyticsLabel.isNotEmpty
+                    ? analyticsLabel
+                    : context.l10n.viewAnalytics,
                 color: colorScheme.tertiary,
                 onTap: () => context.pushNamed(AppRoutes.analyticsName),
               ),
@@ -67,7 +76,9 @@ class QuickActionsSection extends StatelessWidget {
             Expanded(
               child: ToolCard(
                 icon: LucideIcons.layers,
-                label: flashcardsLabel,
+                label: flashcardsLabel.isNotEmpty
+                    ? flashcardsLabel
+                    : context.l10n.flashcards,
                 color: colorScheme.primary,
                 onTap: () => context.pushNamed(AppRoutes.flashcardsName),
               ),

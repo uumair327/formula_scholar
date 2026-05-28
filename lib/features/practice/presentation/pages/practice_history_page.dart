@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../cubit/practice_history_cubit.dart';
 import 'practice_history_card.dart';
 import 'practice_history_shimmer.dart';
@@ -19,7 +19,7 @@ class PracticeHistoryPage extends StatelessWidget {
         return Scaffold(
           appBar: GlassAppBar(
             titleWidget: Text(
-              AppStrings.practiceHistory,
+              context.l10n.practiceHistory,
               style: AppTextStyles.titleLarge.copyWith(
                 fontWeight: FontWeight.w800,
                 color: Theme.of(context).colorScheme.onSurface,
@@ -39,7 +39,9 @@ class PracticeHistoryPage extends StatelessWidget {
         return const HistoryShimmer();
       case PracticeHistoryStatus.error:
         return AppErrorState(
-          message: state.errorMessage ?? AppStrings.somethingWentWrong,
+          message: context.localizedError(
+            fallback: state.errorMessage ?? context.l10n.somethingWentWrong,
+          ),
           onRetry: () => context.read<PracticeHistoryCubit>().loadHistory(),
         );
       case PracticeHistoryStatus.loaded:
@@ -51,10 +53,10 @@ class PracticeHistoryPage extends StatelessWidget {
   }
 
   Widget _buildEmptyState(BuildContext context) {
-    return const AppEmptyState(
+    return AppEmptyState(
       icon: LucideIcons.clipboardList,
-      title: AppStrings.noPracticeHistory,
-      description: AppStrings.noPracticeHistoryDesc,
+      title: context.l10n.noPracticeHistory,
+      description: context.l10n.noPracticeHistoryDesc,
     );
   }
 

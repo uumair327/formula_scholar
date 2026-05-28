@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import '../../../../core/domain/entities/formula.dart';
 import '../../domain/domain.dart';
-
 class VisualizerState extends Equatable {
   const VisualizerState({
     required this.formulas,

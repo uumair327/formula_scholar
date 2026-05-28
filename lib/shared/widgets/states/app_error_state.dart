@@ -2,20 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../core/core.dart';
-import '../app_text.dart';
 
 class AppErrorState extends StatelessWidget {
   const AppErrorState({
     super.key,
     this.message,
     required this.onRetry,
-    this.retryLabel = AppStrings.retry,
+    this.retryLabel,
     this.icon = LucideIcons.alertTriangle,
   });
 
   final String? message;
   final VoidCallback onRetry;
-  final String retryLabel;
+  final String? retryLabel;
   final IconData icon;
 
   @override
@@ -56,7 +55,7 @@ class AppErrorState extends StatelessWidget {
             ),
             const SizedBox(height: AppDimensions.paddingXXL),
             AppText(
-              'Something went wrong',
+              context.l10n.somethingWentWrong,
               style: AppTextStyles.titleLarge.copyWith(
                 fontWeight: FontWeight.w800,
               ),
@@ -65,7 +64,7 @@ class AppErrorState extends StatelessWidget {
             ),
             const SizedBox(height: AppDimensions.paddingSM),
             AppText(
-              message ?? AppStrings.somethingWentWrong,
+              message ?? context.l10n.somethingWentWrong,
               textAlign: TextAlign.center,
               style: AppTextStyles.bodyMedium.copyWith(
                 color: colorScheme.onSurfaceVariant,
@@ -79,7 +78,11 @@ class AppErrorState extends StatelessWidget {
               child: FilledButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(LucideIcons.refreshCw, size: 18),
-                label: AppText(retryLabel, maxLines: 1, softWrap: false),
+                label: AppText(
+                  retryLabel ?? context.l10n.retry,
+                  maxLines: 1,
+                  softWrap: false,
+                ),
                 style: FilledButton.styleFrom(
                   backgroundColor: isDark
                       ? AppColors.darkPrimary

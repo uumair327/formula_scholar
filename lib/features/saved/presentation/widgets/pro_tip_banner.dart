@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 
 class ProTipBanner extends StatelessWidget {
   const ProTipBanner({super.key});
@@ -44,17 +43,19 @@ class ProTipBanner extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    AppStrings.proTip,
+                    context.l10n.proTip,
                     style: AppTextStyles.labelLarge.copyWith(
                       fontWeight: FontWeight.w800,
-                      color: isDark ? colorScheme.tertiary : colorScheme.onTertiaryContainer,
+                      color: isDark
+                          ? colorScheme.tertiary
+                          : colorScheme.onTertiaryContainer,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: AppDimensions.paddingXS),
                   Text(
-                    AppStrings.proTipContent,
+                    context.l10n.proTipContent,
                     style: AppTextStyles.bodySmall.copyWith(
                       color: colorScheme.onSurfaceVariant,
                       height: AppDimensions.lineHeightDefault,

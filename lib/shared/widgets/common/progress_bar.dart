@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/core.dart';
-import 'animated_fractionally_sized_box.dart' show AppAnimatedFractionallySizedBox;
 
 
 class ProgressBar extends StatelessWidget {

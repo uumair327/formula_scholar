@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../cubit/profile_cubit.dart';
 
 Future<void> showEditProfileDialog(BuildContext context) async {
@@ -22,14 +22,14 @@ Future<void> showEditProfileDialog(BuildContext context) async {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
           ),
-          title: const Text(AppStrings.editProfileTitle),
+          title: Text(context.l10n.editProfileTitle),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  AppStrings.editProfileSubtitle,
+                  context.l10n.editProfileSubtitle,
                   style: AppTextStyles.bodySmall.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
@@ -37,12 +37,12 @@ Future<void> showEditProfileDialog(BuildContext context) async {
                 const SizedBox(height: AppDimensions.paddingLG),
                 AppTextField(
                   controller: nameController,
-                  label: AppStrings.profileNameLabel,
+                  label: context.l10n.profileNameLabel,
                 ),
                 const SizedBox(height: AppDimensions.paddingLG),
                 AppTextField(
                   controller: avatarController,
-                  label: AppStrings.profileAvatarUrlLabel,
+                  label: context.l10n.profileAvatarUrlLabel,
                   hintText: 'https://...',
                   keyboardType: TextInputType.url,
                 ),
@@ -52,14 +52,14 @@ Future<void> showEditProfileDialog(BuildContext context) async {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text(AppStrings.cancelLabel),
+              child: Text(context.l10n.cancelLabel),
             ),
             FilledButton(
               onPressed: () async {
                 final name = nameController.text.trim();
                 if (name.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text(AppStrings.profileNameRequired)),
+                    SnackBar(content: Text(context.l10n.profileNameRequired)),
                   );
                   return;
                 }
@@ -67,12 +67,14 @@ Future<void> showEditProfileDialog(BuildContext context) async {
                 final avatarUrl = avatarController.text.trim();
                 Navigator.of(dialogContext).pop();
 
-                final success = await context.read<ProfileCubit>().updateProfile(
-                  name: name,
-                  avatarUrl: avatarUrl.isNotEmpty
-                      ? avatarUrl
-                      : profile?.avatarUrl ?? '',
-                );
+                final success = await context
+                    .read<ProfileCubit>()
+                    .updateProfile(
+                      name: name,
+                      avatarUrl: avatarUrl.isNotEmpty
+                          ? avatarUrl
+                          : profile?.avatarUrl ?? '',
+                    );
 
                 if (!context.mounted) return;
 
@@ -80,9 +82,19 @@ Future<void> showEditProfileDialog(BuildContext context) async {
                   SnackBar(
                     content: Text(
                       success
-                          ? AppStrings.profileUpdatedSuccess
-                          : context.read<ProfileCubit>().state.errorMessage ??
-                                AppStrings.failedToUpdateProfile,
+                          ? context.l10n.profileUpdatedSuccess
+                          : context.localizedError(
+                              errorKey: context
+                                  .read<ProfileCubit>()
+                                  .state
+                                  .errorKey,
+                              fallback:
+                                  context
+                                      .read<ProfileCubit>()
+                                      .state
+                                      .errorMessage ??
+                                  context.l10n.failedToUpdateProfile,
+                            ),
                     ),
                     backgroundColor: success
                         ? AppColors.secondary
@@ -90,7 +102,7 @@ Future<void> showEditProfileDialog(BuildContext context) async {
                   ),
                 );
               },
-              child: const Text(AppStrings.saveChanges),
+              child: Text(context.l10n.saveChanges),
             ),
           ],
         );

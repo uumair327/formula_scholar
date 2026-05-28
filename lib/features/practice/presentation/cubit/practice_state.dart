@@ -1,8 +1,6 @@
 import 'dart:math';
-
-import 'package:equatable/equatable.dart';
-
 import '../../../../shared/shared.dart';
+import 'package:equatable/equatable.dart';
 import '../../domain/domain.dart';
 
 const Object _unset = Object();

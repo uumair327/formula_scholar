@@ -4,8 +4,6 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../core/core.dart';
-import '../domain/domain.dart';
-import 'theme_state.dart';
 
 @lazySingleton
 class ThemeCubit extends HydratedCubit<ThemeState> {

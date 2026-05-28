@@ -3,9 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../core/core.dart';
-import '../../../l10n/l10n.dart';
 import 'desktop_nav_item.dart';
-import 'shell_nav_data.dart';
 
 class DesktopShell extends StatelessWidget {
   const DesktopShell({super.key, required this.navigationShell});

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../cubit/practice_state.dart';
 
 class TimeInfo extends StatelessWidget {
@@ -22,8 +22,11 @@ class TimeInfo extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(LucideIcons.clock, size: AppDimensions.iconMD,
-              color: colorScheme.outline),
+          Icon(
+            LucideIcons.clock,
+            size: AppDimensions.iconMD,
+            color: colorScheme.outline,
+          ),
           const SizedBox(width: AppDimensions.paddingSM),
           Text(
             '$mins:$secs',
@@ -34,7 +37,7 @@ class TimeInfo extends StatelessWidget {
           ),
           const SizedBox(width: AppDimensions.paddingXS),
           Text(
-            AppStrings.timeTaken,
+            context.l10n.timeTaken,
             style: AppTextStyles.bodySmall.copyWith(
               color: colorScheme.onSurfaceVariant,
             ),

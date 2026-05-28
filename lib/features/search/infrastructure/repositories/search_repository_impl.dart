@@ -1,7 +1,6 @@
 import 'package:injectable/injectable.dart';
-
-import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 @LazySingleton(as: SearchRepositoryPort)
 class SearchRepositoryImpl implements SearchRepositoryPort {
@@ -17,7 +16,8 @@ class SearchRepositoryImpl implements SearchRepositoryPort {
     return safeOperation(
       tag: AppLogTags.searchRepo,
       operation: 'searchFormulas("$query")',
-      execute: () => _dataSource.searchFormulas(query, curriculumKey: curriculumKey),
+      execute: () =>
+          _dataSource.searchFormulas(query, curriculumKey: curriculumKey),
     );
   }
 }

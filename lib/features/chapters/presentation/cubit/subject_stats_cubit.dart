@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formula_scholar/core/core.dart';
 import 'package:formula_scholar/features/profile/domain/domain.dart';
 import 'package:formula_scholar/features/chapters/presentation/cubit/chapters_cubit.dart';
-import 'package:formula_scholar/shared/cubit/curriculum_cubit.dart';
 
 class SubjectStatsData {
   SubjectStatsData({

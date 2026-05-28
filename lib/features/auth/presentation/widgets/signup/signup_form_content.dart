@@ -3,8 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../../core/core.dart';
-import '../../../../../l10n/l10n.dart';
-import '../../../../../shared/shared.dart';
+
 import '../../cubit/auth_cubit.dart';
 import '../../cubit/auth_state.dart';
 import 'signup_social_section.dart';
@@ -80,7 +79,7 @@ class SignupFormContent extends StatelessWidget {
                     controller: nameController,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return AppStrings.validationRequired;
+                        return l10n.validationRequired;
                       }
                       return null;
                     },
@@ -96,12 +95,12 @@ class SignupFormContent extends StatelessWidget {
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return AppStrings.validationRequired;
+                        return l10n.validationRequired;
                       }
                       if (!RegExp(
                         r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
                       ).hasMatch(value.trim())) {
-                        return AppStrings.validationInvalidEmail;
+                        return l10n.validationInvalidEmail;
                       }
                       return null;
                     },
@@ -118,10 +117,10 @@ class SignupFormContent extends StatelessWidget {
               obscureText: obscurePassword,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return AppStrings.validationRequired;
+                  return l10n.validationRequired;
                 }
                 if (value.length < 6) {
-                  return AppStrings.validationPasswordMinLength;
+                  return l10n.validationPasswordMinLength;
                 }
                 return null;
               },
@@ -146,10 +145,10 @@ class SignupFormContent extends StatelessWidget {
               obscureText: obscureConfirm,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return AppStrings.validationRequired;
+                  return l10n.validationRequired;
                 }
                 if (value != passwordController.text) {
-                  return AppStrings.validationPasswordMismatch;
+                  return l10n.validationPasswordMismatch;
                 }
                 return null;
               },

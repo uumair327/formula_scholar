@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 /// Settings list widget – account options with icons, toggles, and destructive actions.
 ///
@@ -44,7 +42,7 @@ class SettingsListWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const AppSectionTitle(title: AppStrings.settings),
+        AppSectionTitle(title: context.l10n.settings),
         const SizedBox(height: AppDimensions.paddingLG),
         Container(
           decoration: BoxDecoration(
@@ -177,7 +175,7 @@ class SettingsListWidget extends StatelessWidget {
                   ),
                 ),
                 Semantics(
-                  label: AppStrings.toggleDarkMode,
+                  label: context.l10n.toggleDarkMode,
                   toggled: isDarkMode,
                   child: Switch.adaptive(
                     value: isDarkMode,

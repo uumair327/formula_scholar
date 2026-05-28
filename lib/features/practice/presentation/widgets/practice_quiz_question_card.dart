@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../../domain/entities/quiz_question.dart';
 
 class QuizQuestionCard extends StatelessWidget {
@@ -20,7 +20,8 @@ class QuizQuestionCard extends StatelessWidget {
       child: Stack(
         children: [
           Positioned(
-            top: 0, right: 0,
+            top: 0,
+            right: 0,
             width: AppDimensions.imageXL,
             height: AppDimensions.imageXL,
             child: Opacity(
@@ -86,28 +87,26 @@ class QuizQuestionCard extends StatelessWidget {
     for (final match in regex.allMatches(text)) {
       // Add plain text before the match.
       if (match.start > lastEnd) {
-        parts.add(TextSpan(
-          text: text.substring(lastEnd, match.start),
-          style: style,
-        ));
+        parts.add(
+          TextSpan(text: text.substring(lastEnd, match.start), style: style),
+        );
       }
       // Add the LaTeX as a widget span.
-      parts.add(WidgetSpan(
-        alignment: PlaceholderAlignment.middle,
-        child: Math.tex(
-          match.group(1)!,
-          textStyle: style.copyWith(fontWeight: FontWeight.w700),
+      parts.add(
+        WidgetSpan(
+          alignment: PlaceholderAlignment.middle,
+          child: Math.tex(
+            match.group(1)!,
+            textStyle: style.copyWith(fontWeight: FontWeight.w700),
+          ),
         ),
-      ));
+      );
       lastEnd = match.end;
     }
 
     // Add any trailing plain text.
     if (lastEnd < text.length) {
-      parts.add(TextSpan(
-        text: text.substring(lastEnd),
-        style: style,
-      ));
+      parts.add(TextSpan(text: text.substring(lastEnd), style: style));
     }
 
     return Text.rich(TextSpan(children: parts));

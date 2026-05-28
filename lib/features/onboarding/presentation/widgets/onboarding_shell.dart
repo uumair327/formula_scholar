@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 
 class OnboardingShell extends StatelessWidget {
   const OnboardingShell({
@@ -74,15 +73,23 @@ class _OnboardingAppBar extends StatelessWidget {
           horizontal: AppDimensions.paddingXL,
           vertical: AppDimensions.paddingMD,
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              context.l10n.onboardingAppBrand,
+              style: AppTextStyles.headlineSmall.copyWith(
+                color: colorScheme.onSurface,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: AppDimensions.paddingXS),
             ShaderMask(
               shaderCallback: (bounds) => const LinearGradient(
                 colors: [AppColors.primary, AppColors.primaryContainer],
               ).createShader(bounds),
               child: Text(
-                AppStrings.onboardingAppBrand,
+                AppStrings.onboardingStepOf(currentStep, totalSteps),
                 style: AppTextStyles.headlineSmall.copyWith(
                   fontWeight: FontWeight.w900,
                   color: colorScheme.onPrimary,
@@ -133,7 +140,9 @@ class _OnboardingProgressBar extends StatelessWidget {
                     gradient: isDark
                         ? AppColors.darkPrimaryGradient
                         : AppColors.primaryGradient,
-                    borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
+                    borderRadius: BorderRadius.circular(
+                      AppDimensions.radiusXXL,
+                    ),
                   ),
                 ),
               ),
@@ -183,7 +192,7 @@ class _OnboardingBottomNav extends StatelessWidget {
                     side: BorderSide.none,
                   ),
                   child: Text(
-                    AppStrings.onboardingBack,
+                    context.l10n.onboardingBack,
                     style: AppTextStyles.labelLarge.copyWith(
                       fontWeight: FontWeight.w700,
                     ),

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
+
 import '../cubit/practice_cubit.dart';
 import '../cubit/practice_state.dart';
 import 'practice_completion_category_breakdown.dart';
@@ -19,139 +20,141 @@ class PracticeCompletionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<PracticeCubit, PracticeState>(
       builder: (context, state) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final pct = state.scorePercent.round();
-    final stars = state.starRating;
-    final hasIncorrect = state.incorrectCount > 0;
+        final colorScheme = Theme.of(context).colorScheme;
+        final pct = state.scorePercent.round();
+        final stars = state.starRating;
+        final hasIncorrect = state.incorrectCount > 0;
 
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(AppDimensions.paddingHero),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildTrophyIcon(context),
-                const SizedBox(height: AppDimensions.paddingXL),
-                _buildStarRating(context, stars),
-                const SizedBox(height: AppDimensions.paddingSM),
-                Text(
-                  AppStrings.quizCompleteTitle,
-                  style: AppTextStyles.headlineLarge.copyWith(
-                    fontWeight: FontWeight.w900,
-                    color: colorScheme.onSurface,
-                  ),
-                ),
-                const SizedBox(height: AppDimensions.paddingSM),
-                if (state.timerStatus == TimerStatus.expired) ...[
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppDimensions.paddingMD,
-                      vertical: AppDimensions.paddingXS,
-                    ),
-                    decoration: BoxDecoration(
-                      color: colorScheme.errorContainer,
-                      borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
-                    ),
-                    child: Text(
-                      'Time\'s Up!',
-                      style: AppTextStyles.labelMedium.copyWith(
-                        color: colorScheme.onErrorContainer,
-                        fontWeight: FontWeight.bold,
+        return Scaffold(
+          body: SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(AppDimensions.paddingHero),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildTrophyIcon(context),
+                    const SizedBox(height: AppDimensions.paddingXL),
+                    _buildStarRating(context, stars),
+                    const SizedBox(height: AppDimensions.paddingSM),
+                    Text(
+                      context.l10n.quizCompleteTitle,
+                      style: AppTextStyles.headlineLarge.copyWith(
+                        fontWeight: FontWeight.w900,
+                        color: colorScheme.onSurface,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: AppDimensions.paddingMD),
-                ],
-                Text(
-                  '$pct% ${AppStrings.scoreLabel}',
-                  style: AppTextStyles.headlineMedium.copyWith(
-                    fontWeight: FontWeight.w800,
-                    color: pct >= 80
-                        ? colorScheme.secondary
-                        : pct >= 50
+                    const SizedBox(height: AppDimensions.paddingSM),
+                    if (state.timerStatus == TimerStatus.expired) ...[
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppDimensions.paddingMD,
+                          vertical: AppDimensions.paddingXS,
+                        ),
+                        decoration: BoxDecoration(
+                          color: colorScheme.errorContainer,
+                          borderRadius: BorderRadius.circular(
+                            AppDimensions.radiusLG,
+                          ),
+                        ),
+                        child: Text(
+                          'Time\'s Up!',
+                          style: AppTextStyles.labelMedium.copyWith(
+                            color: colorScheme.onErrorContainer,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: AppDimensions.paddingMD),
+                    ],
+                    Text(
+                      '$pct% ${context.l10n.scoreLabel}',
+                      style: AppTextStyles.headlineMedium.copyWith(
+                        fontWeight: FontWeight.w800,
+                        color: pct >= 80
+                            ? colorScheme.secondary
+                            : pct >= 50
                             ? colorScheme.tertiary
                             : colorScheme.error,
-                  ),
-                ),
-                const SizedBox(height: AppDimensions.paddingMD),
-                Text(
-                  AppStrings.quizCompleteDesc,
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.bodyLarge.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: AppDimensions.paddingXL),
-                ScoreSummaryCard(state: state),
-                const SizedBox(height: AppDimensions.paddingLG),
-                if (state.answerRecords.isNotEmpty)
-                  CategoryBreakdown(state: state),
-                const SizedBox(height: AppDimensions.paddingLG),
-                if (state.timedMode)
-                  TimeInfo(state: state),
-                const SizedBox(height: AppDimensions.paddingXL),
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton.icon(
-                    onPressed: () => context.read<PracticeCubit>().resetQuiz(),
-                    icon: const Icon(LucideIcons.refreshCw),
-                    label: Text(
-                      AppStrings.playAgain,
-                      style: AppTextStyles.labelLarge.copyWith(
-                        fontWeight: FontWeight.w700,
                       ),
                     ),
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: AppDimensions.paddingLG,
+                    const SizedBox(height: AppDimensions.paddingMD),
+                    Text(
+                      context.l10n.quizCompleteDesc,
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.bodyLarge.copyWith(
+                        color: colorScheme.onSurfaceVariant,
                       ),
-                      shape: const StadiumBorder(),
                     ),
-                  ),
-                ),
-                if (hasIncorrect) ...[
-                  const SizedBox(height: AppDimensions.paddingMD),
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
+                    const SizedBox(height: AppDimensions.paddingXL),
+                    ScoreSummaryCard(state: state),
+                    const SizedBox(height: AppDimensions.paddingLG),
+                    if (state.answerRecords.isNotEmpty)
+                      CategoryBreakdown(state: state),
+                    const SizedBox(height: AppDimensions.paddingLG),
+                    if (state.timedMode) TimeInfo(state: state),
+                    const SizedBox(height: AppDimensions.paddingXL),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton.icon(
+                        onPressed: () =>
+                            context.read<PracticeCubit>().resetQuiz(),
+                        icon: const Icon(LucideIcons.refreshCw),
+                        label: Text(
+                          context.l10n.playAgain,
+                          style: AppTextStyles.labelLarge.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        style: FilledButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: AppDimensions.paddingLG,
+                          ),
+                          shape: const StadiumBorder(),
+                        ),
+                      ),
+                    ),
+                    if (hasIncorrect) ...[
+                      const SizedBox(height: AppDimensions.paddingMD),
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(
+                          onPressed: () =>
+                              context.read<PracticeCubit>().retryIncorrect(),
+                          icon: const Icon(LucideIcons.refreshCcw),
+                          label: Text(
+                            context.l10n.retryIncorrect,
+                            style: AppTextStyles.labelLarge.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: AppDimensions.paddingLG,
+                            ),
+                            shape: const StadiumBorder(),
+                          ),
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: AppDimensions.paddingMD),
+                    TextButton(
                       onPressed: () =>
-                          context.read<PracticeCubit>().retryIncorrect(),
-                      icon: const Icon(LucideIcons.refreshCcw),
-                      label: Text(
-                        AppStrings.retryIncorrect,
+                          StatefulNavigationShell.of(context).goBranch(0),
+                      child: Text(
+                        context.l10n.backToDashboard,
                         style: AppTextStyles.labelLarge.copyWith(
-                          fontWeight: FontWeight.w700,
+                          color: colorScheme.outline,
                         ),
                       ),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: AppDimensions.paddingLG,
-                        ),
-                        shape: const StadiumBorder(),
-                      ),
                     ),
-                  ),
-                ],
-                const SizedBox(height: AppDimensions.paddingMD),
-                TextButton(
-                  onPressed: () =>
-                      StatefulNavigationShell.of(context).goBranch(0),
-                  child: Text(
-                    AppStrings.backToDashboard,
-                    style: AppTextStyles.labelLarge.copyWith(
-                      color: colorScheme.outline,
-                    ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
-    );
-    },
+        );
+      },
     );
   }
 
@@ -182,7 +185,9 @@ class PracticeCompletionScreen extends StatelessWidget {
           child: Icon(
             i < stars ? LucideIcons.star : LucideIcons.star,
             size: AppDimensions.iconLG,
-            color: i < stars ? colorScheme.secondary : colorScheme.outlineVariant,
+            color: i < stars
+                ? colorScheme.secondary
+                : colorScheme.outlineVariant,
           ),
         );
       }),

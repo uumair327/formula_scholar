@@ -4,8 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../../core/core.dart';
-import '../../../../../l10n/l10n.dart';
-import '../../../../../shared/shared.dart';
+
 import '../../cubit/auth_cubit.dart';
 import '../../cubit/auth_state.dart';
 import '../forgot_password_dialog.dart';
@@ -85,7 +84,7 @@ class LoginFormContent extends StatelessWidget {
             obscureText: obscurePassword,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return AppStrings.validationRequired;
+                return l10n.validationRequired;
               }
               return null;
             },

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/core.dart';
-import '../../../../../shared/shared.dart';
 
 class AccountInfoTile extends StatelessWidget {
   const AccountInfoTile({
@@ -30,12 +29,17 @@ class AccountInfoTile extends StatelessWidget {
           },
           borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingXL, vertical: AppDimensions.paddingLG),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppDimensions.paddingXL,
+              vertical: AppDimensions.paddingLG,
+            ),
             child: Row(
               children: [
                 AppIconCircle(
-                  icon: icon, 
-                  backgroundColor: colorScheme.surfaceContainerHigh.withValues(alpha: 0.5), 
+                  icon: icon,
+                  backgroundColor: colorScheme.surfaceContainerHigh.withValues(
+                    alpha: 0.5,
+                  ),
                   iconColor: colorScheme.outline,
                 ),
                 const SizedBox(width: AppDimensions.paddingLG),
@@ -43,9 +47,23 @@ class AccountInfoTile extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(label, style: AppTextStyles.bodySmall.copyWith(color: colorScheme.outline, fontWeight: FontWeight.w600)),
+                      Text(
+                        label,
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: colorScheme.outline,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                       const SizedBox(height: AppDimensions.paddingXXS),
-                      Text(value, style: AppTextStyles.labelLarge.copyWith(color: valueColor ?? colorScheme.onSurface, fontWeight: FontWeight.w700), maxLines: 1, overflow: TextOverflow.ellipsis),
+                      Text(
+                        value,
+                        style: AppTextStyles.labelLarge.copyWith(
+                          color: valueColor ?? colorScheme.onSurface,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ],
                   ),
                 ),

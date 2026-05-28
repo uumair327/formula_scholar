@@ -1,7 +1,6 @@
 import 'package:injectable/injectable.dart';
 import '../../../../core/core.dart';
 import '../../domain/domain.dart';
-
 @LazySingleton(as: OnboardingRepositoryPort)
 class OnboardingRepositoryImpl implements OnboardingRepositoryPort {
   OnboardingRepositoryImpl(this._dataSource);

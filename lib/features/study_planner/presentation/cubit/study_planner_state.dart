@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
-
 import '../../domain/domain.dart';
-
 enum StudyPlannerStatus { initial, loading, loaded, error, creating }
 
 class StudyPlannerState extends Equatable {

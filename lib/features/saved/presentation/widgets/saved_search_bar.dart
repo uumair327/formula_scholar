@@ -57,7 +57,7 @@ class _SavedSearchBarState extends State<SavedSearchBar> {
             );
           },
           decoration: InputDecoration(
-            hintText: AppStrings.searchBookmarks,
+            hintText: context.l10n.searchBookmarks,
             prefixIcon: const Icon(LucideIcons.search),
             suffixIcon: state.searchQuery.isEmpty
                 ? null
@@ -67,7 +67,7 @@ class _SavedSearchBarState extends State<SavedSearchBar> {
                       context.read<SavedCubit>().updateSearchQuery('');
                     },
                     icon: const Icon(LucideIcons.x),
-                    tooltip: AppStrings.clearSearch,
+                    tooltip: context.l10n.clearSearch,
                   ),
           ),
         );

@@ -1,10 +1,8 @@
 library;
 
 import 'package:flutter/material.dart';
-
-import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 class FeaturedSubjectCard extends StatelessWidget {
   const FeaturedSubjectCard({
@@ -21,7 +19,9 @@ class FeaturedSubjectCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final accentColor = Color(subject.colorValue);
-    final lightColor = accentColor.withValues(alpha: AppDimensions.opacityLight);
+    final lightColor = accentColor.withValues(
+      alpha: AppDimensions.opacityLight,
+    );
     final iconData = AppIconMapper.resolve(subject.iconName);
     final colorScheme = Theme.of(context).colorScheme;
 
@@ -77,7 +77,9 @@ class FeaturedSubjectCard extends StatelessWidget {
                                 alpha: AppDimensions.opacityLight,
                               ),
                             ),
-                            borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
+                            borderRadius: BorderRadius.circular(
+                              AppDimensions.radiusXXL,
+                            ),
                           ),
                           child: Text(
                             subject.badgeText!,
@@ -120,8 +122,12 @@ class FeaturedSubjectCard extends StatelessWidget {
                           vertical: AppDimensions.chipPaddingVerticalLG,
                         ),
                         decoration: BoxDecoration(
-                          color: accentColor.withValues(alpha: AppDimensions.opacitySubtle),
-                          borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+                          color: accentColor.withValues(
+                            alpha: AppDimensions.opacitySubtle,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            AppDimensions.radiusXL,
+                          ),
                           border: Border.all(
                             color: accentColor.withValues(alpha: 0.3),
                           ),
@@ -129,15 +135,13 @@ class FeaturedSubjectCard extends StatelessWidget {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
-                              Icons.functions,
-                              size: 16,
-                              color: accentColor,
-                            ),
+                            Icon(Icons.functions, size: 16, color: accentColor),
                             const SizedBox(width: AppDimensions.paddingXS),
                             Text(
                               '${subject.formulaCount} Formulas',
-                              style: AppTextStyles.labelLarge.copyWith(color: accentColor),
+                              style: AppTextStyles.labelLarge.copyWith(
+                                color: accentColor,
+                              ),
                             ),
                           ],
                         ),

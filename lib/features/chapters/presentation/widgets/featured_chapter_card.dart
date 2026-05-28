@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 import '../cubit/chapters_cubit.dart';
 
@@ -22,8 +21,8 @@ class FeaturedChapterCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final ctaText = chapter.progressPercent > 0
-        ? AppStrings.continueLearning
-        : AppStrings.startNow;
+        ? context.l10n.continueLearning
+        : context.l10n.startNow;
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -34,8 +33,12 @@ class FeaturedChapterCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            colorScheme.surfaceContainerHighest.withValues(alpha: isDark ? 0.4 : 0.8),
-            colorScheme.surfaceContainerHighest.withValues(alpha: isDark ? 0.1 : 0.4),
+            colorScheme.surfaceContainerHighest.withValues(
+              alpha: isDark ? 0.4 : 0.8,
+            ),
+            colorScheme.surfaceContainerHighest.withValues(
+              alpha: isDark ? 0.1 : 0.4,
+            ),
           ],
         ),
         borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
@@ -75,12 +78,12 @@ class FeaturedChapterCard extends StatelessWidget {
                             : colorScheme.outline,
                       ),
                       tooltip: chapter.isSaved
-                          ? AppStrings.removeBookmark
-                          : AppStrings.bookmarkChapter,
+                          ? context.l10n.removeBookmark
+                          : context.l10n.bookmarkChapter,
                     ),
                   ),
                   AppInfoChip(
-                    label: AppStrings.percentDone(
+                    label: context.l10n.percentDone(
                       chapter.progressPercent.toInt(),
                     ),
                     backgroundColor: colorScheme.tertiaryContainer,
@@ -116,7 +119,7 @@ class FeaturedChapterCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                AppStrings.completedOfFormulas(
+                context.l10n.completedOfFormulas(
                   chapter.completedFormulas,
                   chapter.totalFormulas,
                 ),
@@ -127,10 +130,10 @@ class FeaturedChapterCard extends StatelessWidget {
               ),
               Text(
                 chapter.progressPercent > 70
-                    ? AppStrings.nearlyThere
+                    ? context.l10n.nearlyThere
                     : chapter.progressPercent > 30
-                    ? AppStrings.keepGoing
-                    : AppStrings.justStarted,
+                    ? context.l10n.keepGoing
+                    : context.l10n.justStarted,
                 style: AppTextStyles.bodySmall.copyWith(
                   color: colorScheme.primary,
                   fontWeight: FontWeight.w700,
@@ -177,7 +180,7 @@ class FeaturedChapterCard extends StatelessWidget {
   VoidCallback _toggleBookmark(BuildContext context) => () {
     final subjectName =
         context.read<SubjectSelectionCubit>().state.subject?.name ??
-        AppStrings.unknownSubject;
+        context.l10n.unknownSubject;
     final curriculumKey = context
         .read<CurriculumCubit>()
         .state

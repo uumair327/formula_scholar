@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/core.dart';
-import '../../../../../shared/shared.dart';
 
 class NotificationToggleTile extends StatelessWidget {
   const NotificationToggleTile({
@@ -44,7 +43,12 @@ class NotificationToggleTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: AppTextStyles.labelLarge, maxLines: 1, overflow: TextOverflow.ellipsis),
+                Text(
+                  title,
+                  style: AppTextStyles.labelLarge,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 const SizedBox(height: AppDimensions.paddingXXS),
                 Text(
                   subtitle,
@@ -74,7 +78,7 @@ class _CustomSwitch extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Semantics(
-      label: AppStrings.notifications,
+      label: context.l10n.notifications,
       toggled: value,
       child: Switch.adaptive(
         value: value,

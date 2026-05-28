@@ -47,14 +47,14 @@ class QuizSuccessToast extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '${AppStrings.correct} ${AppStrings.plusPointsTemplate}',
+                    '${context.l10n.correct} ${context.l10n.plusPointsTemplate}',
                     style: AppTextStyles.labelLarge.copyWith(
                       color: colorScheme.onSecondary,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                   Text(
-                    AppStrings.masteryLevelIncreasing,
+                    context.l10n.masteryLevelIncreasing,
                     style: AppTextStyles.labelSmall.copyWith(
                       color: colorScheme.onSecondary.withValues(
                         alpha: AppDimensions.opacityHigh,
@@ -118,14 +118,14 @@ class QuizWrongAnswerToast extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    AppStrings.wrongAnswer,
+                    context.l10n.wrongAnswer,
                     style: AppTextStyles.labelLarge.copyWith(
                       color: colorScheme.onError,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                   Text(
-                    AppStrings.tryNextTime,
+                    context.l10n.tryNextTime,
                     style: AppTextStyles.labelSmall.copyWith(
                       color: colorScheme.onError.withValues(
                         alpha: AppDimensions.opacityHigh,

@@ -89,7 +89,7 @@ class _FlashcardFront extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: AppDimensions.paddingLG),
-              const Text(AppStrings.flashcardFlip),
+              Text(context.l10n.flashcardFlip),
             ],
           ),
         ),
@@ -185,7 +185,7 @@ class _RatingRow extends StatelessWidget {
           children: [
             Expanded(
               child: FlashcardRatingButton(
-                label: AppStrings.flashcardAgain,
+                label: context.l10n.flashcardAgain,
                 icon: LucideIcons.rotateCcw,
                 color: colorScheme.error,
                 onTap: () => cubit.rateCard(ReviewQuality.again),
@@ -194,7 +194,7 @@ class _RatingRow extends StatelessWidget {
             const SizedBox(width: 6),
             Expanded(
               child: FlashcardRatingButton(
-                label: AppStrings.flashcardHard,
+                label: context.l10n.flashcardHard,
                 icon: LucideIcons.batteryLow,
                 color: colorScheme.tertiary,
                 onTap: () => cubit.rateCard(ReviewQuality.hard),
@@ -203,7 +203,7 @@ class _RatingRow extends StatelessWidget {
             const SizedBox(width: 6),
             Expanded(
               child: FlashcardRatingButton(
-                label: AppStrings.flashcardGood,
+                label: context.l10n.flashcardGood,
                 icon: LucideIcons.batteryMedium,
                 color: colorScheme.secondary,
                 onTap: () => cubit.rateCard(ReviewQuality.good),
@@ -212,7 +212,7 @@ class _RatingRow extends StatelessWidget {
             const SizedBox(width: 6),
             Expanded(
               child: FlashcardRatingButton(
-                label: AppStrings.flashcardEasy,
+                label: context.l10n.flashcardEasy,
                 icon: LucideIcons.batteryFull,
                 color: colorScheme.primary,
                 onTap: () => cubit.rateCard(ReviewQuality.easy),

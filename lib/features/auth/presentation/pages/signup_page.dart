@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 import '../widgets/signup/signup_background_decor.dart';
@@ -61,10 +61,13 @@ class _SignupPageState extends State<SignupPage> {
                 ? AppRoutes.dashboardPath
                 : AppRoutes.onboardingPath,
           );
-        } else if (state.status == AuthStatus.error && state.errorMessage != null) {
+        } else if (state.status == AuthStatus.error &&
+            state.errorMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(state.errorMessage!),
+              content: Text(
+                context.localizedError(fallback: state.errorMessage),
+              ),
               backgroundColor: AppColors.error,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
@@ -82,7 +85,8 @@ class _SignupPageState extends State<SignupPage> {
             SafeArea(
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  final isWide = constraints.maxWidth > AppDimensions.breakpointTablet;
+                  final isWide =
+                      constraints.maxWidth > AppDimensions.breakpointTablet;
                   return Center(
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 1200),
@@ -96,9 +100,14 @@ class _SignupPageState extends State<SignupPage> {
                               obscurePassword: _obscurePassword,
                               obscureConfirm: _obscureConfirm,
                               agreedToTerms: _agreedToTerms,
-                              onTogglePassword: () => setState(() => _obscurePassword = !_obscurePassword),
-                              onToggleConfirm: () => setState(() => _obscureConfirm = !_obscureConfirm),
-                              onTermsChanged: (val) => setState(() => _agreedToTerms = val ?? false),
+                              onTogglePassword: () => setState(
+                                () => _obscurePassword = !_obscurePassword,
+                              ),
+                              onToggleConfirm: () => setState(
+                                () => _obscureConfirm = !_obscureConfirm,
+                              ),
+                              onTermsChanged: (val) =>
+                                  setState(() => _agreedToTerms = val ?? false),
                               onCreateAccount: _onCreateAccount,
                             )
                           : SignupFormContent(
@@ -110,9 +119,14 @@ class _SignupPageState extends State<SignupPage> {
                               obscurePassword: _obscurePassword,
                               obscureConfirm: _obscureConfirm,
                               agreedToTerms: _agreedToTerms,
-                              onTogglePassword: () => setState(() => _obscurePassword = !_obscurePassword),
-                              onToggleConfirm: () => setState(() => _obscureConfirm = !_obscureConfirm),
-                              onTermsChanged: (val) => setState(() => _agreedToTerms = val ?? false),
+                              onTogglePassword: () => setState(
+                                () => _obscurePassword = !_obscurePassword,
+                              ),
+                              onToggleConfirm: () => setState(
+                                () => _obscureConfirm = !_obscureConfirm,
+                              ),
+                              onTermsChanged: (val) =>
+                                  setState(() => _agreedToTerms = val ?? false),
                               onCreateAccount: _onCreateAccount,
                             ),
                     ),

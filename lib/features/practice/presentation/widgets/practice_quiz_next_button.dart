@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
+
 import '../cubit/practice_cubit.dart';
 import '../cubit/practice_state.dart';
 
@@ -26,8 +27,8 @@ class QuizNextButton extends StatelessWidget {
           ),
           child: Text(
             state.isLastQuestion
-                ? AppStrings.quizCompleteTitle
-                : AppStrings.nextQuestion,
+                ? context.l10n.quizCompleteTitle
+                : context.l10n.nextQuestion,
             style: AppTextStyles.labelLarge.copyWith(
               fontWeight: FontWeight.w700,
             ),

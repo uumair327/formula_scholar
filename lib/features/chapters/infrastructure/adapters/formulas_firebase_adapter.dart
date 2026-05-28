@@ -1,15 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
-
-import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 @LazySingleton(as: FormulasDataSourcePort)
 class FormulasFirebaseAdapter implements FormulasDataSourcePort {
   FormulasFirebaseAdapter(this._api, this._firebaseAuth)
-      : _statsAccumulator = UserStatsAccumulator(_api);
+    : _statsAccumulator = UserStatsAccumulator(_api);
 
   final FirestoreClientPort _api;
   final FirebaseAuth _firebaseAuth;
@@ -28,7 +26,9 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
 
     var snapshot = await _api.execute(
       () => _api
-          .collection(AppFirestoreCollections.chapterFormulas(subjectId, chapterId))
+          .collection(
+            AppFirestoreCollections.chapterFormulas(subjectId, chapterId),
+          )
           .where(
             Filter.or(
               Filter('isGeneralContent', isEqualTo: true),
@@ -43,7 +43,9 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
     if (snapshot.docs.isEmpty) {
       snapshot = await _api.execute(
         () => _api
-            .collection(AppFirestoreCollections.chapterFormulas(subjectId, chapterId))
+            .collection(
+              AppFirestoreCollections.chapterFormulas(subjectId, chapterId),
+            )
             .get(),
         tag: AppLogTags.formulasDataSource,
       );
@@ -54,17 +56,20 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
     final uid = _firebaseAuth.currentUser?.uid;
     if (uid != null) {
       final bookmarksSnap = await _api.execute(
-        () => _api
-            .collection(AppFirestoreCollections.userBookmarks(uid))
-            .get(),
+        () => _api.collection(AppFirestoreCollections.userBookmarks(uid)).get(),
         tag: AppLogTags.formulasDataSource,
       );
       bookmarkedIds = bookmarksSnap.docs.map((d) => d.id).toSet();
 
       final masterySnap = await _api.execute(
         () => _api
-            .collection(AppFirestoreCollections.userProgressChapterFormulas(
-                uid, subjectId, chapterId))
+            .collection(
+              AppFirestoreCollections.userProgressChapterFormulas(
+                uid,
+                subjectId,
+                chapterId,
+              ),
+            )
             .get(),
         tag: AppLogTags.formulasDataSource,
       );
@@ -81,24 +86,23 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
       return [];
     }
 
-    return snapshot.docs.where((doc) {
-      final data = doc.data();
-      return data['isActive'] != false;
-    })
-        .map(
-          (doc) {
-            // Use the formula's logical ID (data['id'] ?? doc.id) for
-            // bookmark and mastery lookups, because those collections
-            // store documents keyed by this logical ID, NOT by doc.id.
-            final data = doc.data();
-            final formulaId = (data['id'] as String?) ?? doc.id;
-            return _docToFormula(
-              doc,
-              bookmarkedIds.contains(formulaId),
-              masteryOverride: masteryMap[formulaId],
-            );
-          },
-        )
+    return snapshot.docs
+        .where((doc) {
+          final data = doc.data();
+          return data['isActive'] != false;
+        })
+        .map((doc) {
+          // Use the formula's logical ID (data['id'] ?? doc.id) for
+          // bookmark and mastery lookups, because those collections
+          // store documents keyed by this logical ID, NOT by doc.id.
+          final data = doc.data();
+          final formulaId = (data['id'] as String?) ?? doc.id;
+          return _docToFormula(
+            doc,
+            bookmarkedIds.contains(formulaId),
+            masteryOverride: masteryMap[formulaId],
+          );
+        })
         .toList();
   }
 
@@ -397,7 +401,8 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
     return FormulaNote(
       formulaId: doc.id,
       content: doc.data()!['content'] as String? ?? '',
-      updatedAt: (doc.data()!['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      updatedAt:
+          (doc.data()!['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
 
@@ -410,9 +415,9 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
           .collection(AppFirestoreCollections.userFormulaNotes(user.uid))
           .doc(note.formulaId)
           .set({
-        'content': note.content,
-        'updatedAt': Timestamp.fromDate(note.updatedAt),
-      }),
+            'content': note.content,
+            'updatedAt': Timestamp.fromDate(note.updatedAt),
+          }),
       tag: AppLogTags.formulasDataSource,
     );
   }
@@ -430,7 +435,6 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
     );
   }
 }
-
 
 class _StudyMetadata {
   const _StudyMetadata({

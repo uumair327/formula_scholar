@@ -17,7 +17,7 @@ class LegalEffectiveDateBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
       ),
       child: Text(
-        AppStrings.legalEffectiveDate,
+        context.l10n.legalEffectiveDate,
         style: AppTextStyles.labelSmall.copyWith(
           color: AppColors.primary,
           fontWeight: FontWeight.w700,

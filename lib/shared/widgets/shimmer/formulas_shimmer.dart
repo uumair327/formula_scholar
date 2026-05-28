@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/core.dart';
-import '../app_shimmer.dart';
 
 class FormulasShimmer extends StatelessWidget {
   const FormulasShimmer({super.key});
@@ -16,7 +15,11 @@ class FormulasShimmer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (int i = 0; i < 5; i++) ...[
-              const ShimmerBox(width: double.infinity, height: 120, borderRadius: AppDimensions.radiusLG),
+              const ShimmerBox(
+                width: double.infinity,
+                height: 120,
+                borderRadius: AppDimensions.radiusLG,
+              ),
               const SizedBox(height: AppDimensions.paddingMD),
             ],
           ],

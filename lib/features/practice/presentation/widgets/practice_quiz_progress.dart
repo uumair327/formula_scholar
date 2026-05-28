@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../cubit/practice_state.dart';
 
 class QuizProgressSection extends StatelessWidget {
@@ -27,7 +27,7 @@ class QuizProgressSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${AppStrings.practiceQuestionLabel} ${state.currentIndex + 1} ${AppStrings.ofLabel} ${state.totalQuestions}',
+                  '${context.l10n.practiceQuestionLabel} ${state.currentIndex + 1} ${context.l10n.ofLabel} ${state.totalQuestions}',
                   style: AppTextStyles.labelMedium.copyWith(
                     color: colorScheme.primary,
                     fontWeight: FontWeight.w700,
@@ -50,8 +50,8 @@ class QuizProgressSection extends StatelessWidget {
                     state.timerStatus == TimerStatus.expired
                         ? LucideIcons.clock
                         : state.isTimerWarning
-                            ? LucideIcons.alertTriangle
-                            : LucideIcons.timer,
+                        ? LucideIcons.alertTriangle
+                        : LucideIcons.timer,
                     size: AppDimensions.iconSM,
                     color: timerColor,
                   ),
@@ -73,7 +73,7 @@ class QuizProgressSection extends StatelessWidget {
                 ),
                 const SizedBox(width: AppDimensions.paddingXS),
                 Text(
-                  '${state.totalPoints} ${AppStrings.ptsLabel}',
+                  '${state.totalPoints} ${context.l10n.ptsLabel}',
                   style: AppTextStyles.labelLarge.copyWith(
                     color: colorScheme.secondary,
                     fontWeight: FontWeight.w700,

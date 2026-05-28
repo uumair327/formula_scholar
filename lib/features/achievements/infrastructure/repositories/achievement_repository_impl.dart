@@ -41,10 +41,7 @@ class AchievementRepositoryImpl implements AchievementRepositoryPort {
           if (a.id != achievementId || a.isUnlocked) return a;
           final newProgress = a.progress + increment;
           if (newProgress >= a.target) {
-            return a.copyWith(
-              progress: a.target,
-              unlockedAt: DateTime.now(),
-            );
+            return a.copyWith(progress: a.target, unlockedAt: DateTime.now());
           }
           return a.copyWith(progress: newProgress);
         }).toList();

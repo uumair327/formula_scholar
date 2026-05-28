@@ -5,10 +5,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 class CarouselBanners extends StatelessWidget {
   const CarouselBanners({
@@ -30,7 +28,7 @@ class CarouselBanners extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionHeader(
-          title: AppStrings.featuredAnnouncements,
+          title: context.l10n.featuredAnnouncements,
           actionLabel: '',
           onAction: () {},
         ),

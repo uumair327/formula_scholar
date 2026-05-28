@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../../../auth/auth.dart';
 import '../cubit/profile_cubit.dart';
 import '../cubit/profile_state.dart';
@@ -28,10 +28,13 @@ class AccountInformationPage extends StatelessWidget {
         return Scaffold(
           body: LayoutBuilder(
             builder: (context, constraints) {
-              final isDesktop = constraints.maxWidth >= AppDimensions.breakpointDesktop;
+              final isDesktop =
+                  constraints.maxWidth >= AppDimensions.breakpointDesktop;
               final hp = isDesktop
-                  ? ((constraints.maxWidth - AppDimensions.breakpointMaxContent) / 2).clamp(
-                      AppDimensions.paddingSectionLG, double.infinity)
+                  ? ((constraints.maxWidth -
+                                AppDimensions.breakpointMaxContent) /
+                            2)
+                        .clamp(AppDimensions.paddingSectionLG, double.infinity)
                   : AppDimensions.paddingXL;
               return CustomScrollView(
                 slivers: [
@@ -41,39 +44,105 @@ class AccountInformationPage extends StatelessWidget {
                     sliver: SliverList(
                       delegate: SliverChildListDelegate([
                         const SizedBox(height: AppDimensions.paddingXXL),
-                        EntranceWrapper.stagger(index: 0, child: AccountProfileCard(profile: profile)),
+                        EntranceWrapper.stagger(
+                          index: 0,
+                          child: AccountProfileCard(profile: profile),
+                        ),
                         const SizedBox(height: AppDimensions.paddingXXL),
-                        EntranceWrapper.stagger(index: 1, child: const AppSectionTitle(title: AppStrings.personalInfo)),
+                        EntranceWrapper.stagger(
+                          index: 1,
+                          child: AppSectionTitle(
+                            title: context.l10n.personalInfo,
+                          ),
+                        ),
                         const SizedBox(height: AppDimensions.paddingLG),
-                        EntranceWrapper.stagger(index: 2, child: AccountInfoTile(
-                          icon: LucideIcons.user, label: AppStrings.fullName, value: profile?.name ?? AppStrings.welcomeScholar)),
+                        EntranceWrapper.stagger(
+                          index: 2,
+                          child: AccountInfoTile(
+                            icon: LucideIcons.user,
+                            label: context.l10n.fullName,
+                            value: profile?.name ?? context.l10n.welcomeScholar,
+                          ),
+                        ),
                         const SizedBox(height: AppDimensions.paddingMD),
-                        EntranceWrapper.stagger(index: 3, child: AccountInfoTile(
-                          icon: LucideIcons.mail, label: AppStrings.emailAddress, value: profile?.email ?? '—')),
+                        EntranceWrapper.stagger(
+                          index: 3,
+                          child: AccountInfoTile(
+                            icon: LucideIcons.mail,
+                            label: context.l10n.emailAddress,
+                            value: profile?.email ?? '—',
+                          ),
+                        ),
                         const SizedBox(height: AppDimensions.paddingXXL),
-                        EntranceWrapper.stagger(index: 4, child: const AppSectionTitle(title: AppStrings.academicInfo)),
+                        EntranceWrapper.stagger(
+                          index: 4,
+                          child: AppSectionTitle(
+                            title: context.l10n.academicInfo,
+                          ),
+                        ),
                         const SizedBox(height: AppDimensions.paddingLG),
-                        EntranceWrapper.stagger(index: 5, child: AccountInfoTile(
-                          icon: LucideIcons.graduationCap, label: AppStrings.currentGrade, value: profile?.grade ?? '—')),
+                        EntranceWrapper.stagger(
+                          index: 5,
+                          child: AccountInfoTile(
+                            icon: LucideIcons.graduationCap,
+                            label: context.l10n.currentGrade,
+                            value: profile?.grade ?? '—',
+                          ),
+                        ),
                         const SizedBox(height: AppDimensions.paddingMD),
-                        EntranceWrapper.stagger(index: 6, child: AccountInfoTile(
-                          icon: LucideIcons.award, label: AppStrings.accountType,
-                          value: profile?.isPro == true ? AppStrings.proBadge : AppStrings.freeAccount,
-                          valueColor: profile?.isPro == true ? AppColors.secondary : colorScheme.outline)),
+                        EntranceWrapper.stagger(
+                          index: 6,
+                          child: AccountInfoTile(
+                            icon: LucideIcons.award,
+                            label: context.l10n.accountType,
+                            value: profile?.isPro == true
+                                ? context.l10n.proBadge
+                                : context.l10n.freeAccount,
+                            valueColor: profile?.isPro == true
+                                ? AppColors.secondary
+                                : colorScheme.outline,
+                          ),
+                        ),
                         const SizedBox(height: AppDimensions.paddingXXL),
-                        EntranceWrapper.stagger(index: 7, child: const AppSectionTitle(title: AppStrings.accountActions)),
+                        EntranceWrapper.stagger(
+                          index: 7,
+                          child: AppSectionTitle(
+                            title: context.l10n.accountActions,
+                          ),
+                        ),
                         const SizedBox(height: AppDimensions.paddingLG),
-                        EntranceWrapper.stagger(index: 8, child: AccountActionTile(
-                          icon: LucideIcons.edit3, label: AppStrings.editProfile, color: AppColors.primary,
-                          onTap: () => showEditProfileDialog(context))),
+                        EntranceWrapper.stagger(
+                          index: 8,
+                          child: AccountActionTile(
+                            icon: LucideIcons.edit3,
+                            label: context.l10n.editProfile,
+                            color: AppColors.primary,
+                            onTap: () => showEditProfileDialog(context),
+                          ),
+                        ),
                         const SizedBox(height: AppDimensions.paddingMD),
-                        EntranceWrapper.stagger(index: 9, child: AccountActionTile(
-                          icon: LucideIcons.lock, label: AppStrings.changePassword, color: AppColors.primary,
-                          onTap: () => showForgotPasswordDialog(context, profile?.email ?? ''))),
+                        EntranceWrapper.stagger(
+                          index: 9,
+                          child: AccountActionTile(
+                            icon: LucideIcons.lock,
+                            label: context.l10n.changePassword,
+                            color: AppColors.primary,
+                            onTap: () => showForgotPasswordDialog(
+                              context,
+                              profile?.email ?? '',
+                            ),
+                          ),
+                        ),
                         const SizedBox(height: AppDimensions.paddingMD),
-                        EntranceWrapper.stagger(index: 10, child: AccountActionTile(
-                          icon: LucideIcons.trash2, label: AppStrings.deleteAccount, color: AppColors.error,
-                          onTap: () => DeleteAccountDialog.show(context))),
+                        EntranceWrapper.stagger(
+                          index: 10,
+                          child: AccountActionTile(
+                            icon: LucideIcons.trash2,
+                            label: context.l10n.deleteAccount,
+                            color: AppColors.error,
+                            onTap: () => DeleteAccountDialog.show(context),
+                          ),
+                        ),
                         const SizedBox(height: AppDimensions.bottomNavPadding),
                       ]),
                     ),

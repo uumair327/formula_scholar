@@ -1,7 +1,6 @@
 library;
 
 import '../../../core/core.dart';
-import '../../domain/domain.dart';
 
 class DashboardRegistryAdapter {
   DashboardRegistryAdapter(this._api);

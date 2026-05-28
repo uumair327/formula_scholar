@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../../core/core.dart';
-import '../../../../../l10n/l10n.dart';
 
 class SignupTermsRow extends StatelessWidget {
   const SignupTermsRow({

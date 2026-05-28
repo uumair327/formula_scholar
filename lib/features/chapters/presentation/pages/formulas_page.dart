@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../cubit/formulas_cubit.dart';
 import '../cubit/formulas_state.dart';
 import '../widgets/formula_app_bar_actions.dart';
@@ -32,7 +32,7 @@ class FormulasPage extends StatelessWidget {
         if (state.status == FormulasStatus.error) {
           return Scaffold(
             body: AppErrorState(
-              message: state.errorMessage,
+              message: context.localizedError(fallback: state.errorMessage),
               onRetry: () {
                 if (state.subjectId != null && state.chapterId != null) {
                   final curriculumKey = context
@@ -99,7 +99,7 @@ class FormulasPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            state.chapterName ?? AppStrings.formulasTitle,
+                            state.chapterName ?? context.l10n.formulasTitle,
                             style: AppTextStyles.titleLarge.copyWith(
                               color: colorScheme.onSurface,
                               fontWeight: FontWeight.w800,
@@ -119,13 +119,13 @@ class FormulasPage extends StatelessWidget {
                         delegate: SliverChildListDelegate([
                           const SizedBox(height: AppDimensions.paddingMD),
                           if (state.formulas.isEmpty)
-                            const Padding(
-                              padding: EdgeInsets.symmetric(
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
                                 vertical: AppDimensions.paddingXXL,
                               ),
                               child: AppEmptyState(
                                 icon: LucideIcons.fileQuestion,
-                                title: AppStrings.noFormulasAvailable,
+                                title: context.l10n.noFormulasAvailable,
                                 description:
                                     'Content for this chapter is being prepared. Check back later!',
                               ),

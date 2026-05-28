@@ -18,8 +18,6 @@ import 'features/dashboard/dashboard.dart';
 import 'features/profile/profile.dart';
 import 'firebase_options.dart';
 import 'l10n/app_localizations.dart';
-import 'l10n/l10n.dart';
-import 'shared/shared.dart';
 import 'core/analytics/analytics_service.dart';
 
 const String _googleSignInServerClientId = String.fromEnvironment(
@@ -223,7 +221,7 @@ class _FormulaScholarAppState extends State<FormulaScholarApp>
               );
 
               return MaterialApp.router(
-                title: context.l10n.appName,
+                title: 'Formula Scholar',
                 debugShowCheckedModeBanner: false,
                 theme: AppTheme.lightTheme,
                 darkTheme: AppTheme.darkTheme,

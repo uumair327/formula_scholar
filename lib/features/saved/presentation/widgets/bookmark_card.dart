@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../domain/domain.dart';
 import '../cubit/saved_cubit.dart';
 
@@ -26,8 +25,12 @@ class BookmarkCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            colorScheme.surfaceContainerHighest.withValues(alpha: isDark ? 0.3 : 0.6),
-            colorScheme.surfaceContainerHighest.withValues(alpha: isDark ? 0.05 : 0.2),
+            colorScheme.surfaceContainerHighest.withValues(
+              alpha: isDark ? 0.3 : 0.6,
+            ),
+            colorScheme.surfaceContainerHighest.withValues(
+              alpha: isDark ? 0.05 : 0.2,
+            ),
           ],
         ),
         borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
@@ -67,7 +70,7 @@ class BookmarkCard extends StatelessWidget {
                   size: AppDimensions.iconMD,
                   color: colorScheme.primary,
                 ),
-                tooltip: AppStrings.removeBookmark,
+                tooltip: context.l10n.removeBookmark,
               ),
             ],
           ),

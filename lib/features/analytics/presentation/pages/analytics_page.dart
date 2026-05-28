@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../cubit/analytics_cubit.dart';
 import '../cubit/analytics_state.dart';
 import '../widgets/mastery_distribution_chart.dart';
@@ -35,7 +34,9 @@ class AnalyticsPage extends StatelessWidget {
               child: CircularProgressIndicator(),
             ),
             AnalyticsStatus.error => AppErrorState(
-              message: state.errorMessage ?? 'Failed to load analytics',
+              message: context.localizedError(
+                fallback: state.errorMessage ?? 'Failed to load analytics',
+              ),
               onRetry: cubit.load,
             ),
             AnalyticsStatus.loaded => _buildContent(

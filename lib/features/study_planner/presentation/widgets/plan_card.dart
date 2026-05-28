@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-
-import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 class PlanCard extends StatelessWidget {
   const PlanCard({super.key, required this.plan, this.onTap, this.onDelete});
@@ -53,7 +52,7 @@ class PlanCard extends StatelessWidget {
                         color: colorScheme.error,
                       ),
                       onPressed: onDelete,
-                      tooltip: AppStrings.deletePlan,
+                      tooltip: context.l10n.deletePlan,
                     ),
                 ],
               ),

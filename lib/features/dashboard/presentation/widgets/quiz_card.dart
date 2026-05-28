@@ -5,7 +5,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../cubit/daily_challenges_cubit.dart';
 import '../cubit/dashboard_cubit.dart';
 import '../cubit/dashboard_state.dart';
@@ -38,7 +38,6 @@ class QuizCard extends StatelessWidget {
                 icon: LucideIcons.helpCircle,
                 size: AppDimensions.avatarMD,
                 backgroundColor: colorScheme.primaryContainer,
-                iconColor: colorScheme.primary,
                 iconSize: AppDimensions.iconLG,
                 borderRadius: AppDimensions.radiusXL,
               ),
@@ -52,7 +51,7 @@ class QuizCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
                 ),
                 child: Text(
-                  AppStrings.dashboardLive,
+                  context.l10n.dashboardLive,
                   style: AppTextStyles.labelSmall.copyWith(
                     color: colorScheme.onError,
                     fontSize: AppDimensions.fontSizeXXSPlus,
@@ -87,7 +86,7 @@ class QuizCard extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: Semantics(
-              label: AppStrings.startQuiz,
+              label: context.l10n.startQuiz,
               button: true,
               child: BlocBuilder<DailyChallengesCubit, DailyChallengesState>(
                 builder: (context, challengeState) {

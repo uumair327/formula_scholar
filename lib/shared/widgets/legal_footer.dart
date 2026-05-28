@@ -23,7 +23,7 @@ class LegalFooter extends StatelessWidget {
           ),
           const SizedBox(height: AppDimensions.paddingMD),
           Text(
-            AppStrings.legalFooterTitle,
+            context.l10n.legalFooterTitle,
             style: AppTextStyles.titleMedium.copyWith(
               fontWeight: FontWeight.w700,
             ),
@@ -31,7 +31,7 @@ class LegalFooter extends StatelessWidget {
           ),
           const SizedBox(height: AppDimensions.paddingSM),
           Text(
-            AppStrings.legalFooterDesc,
+            context.l10n.legalFooterDesc,
             style: AppTextStyles.bodySmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),

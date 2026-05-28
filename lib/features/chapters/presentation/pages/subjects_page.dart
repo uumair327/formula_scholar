@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../../../dashboard/domain/domain.dart';
 import '../../../dashboard/presentation/widgets/widgets.dart';
 import '../cubit/subjects_cubit.dart';
@@ -63,7 +63,9 @@ class SubjectsPage extends StatelessWidget {
                         return SliverFillRemaining(
                           hasScrollBody: false,
                           child: AppErrorState(
-                            message: state.errorMessage,
+                            message: context.localizedError(
+                              fallback: state.errorMessage,
+                            ),
                             onRetry: () {
                               final curriculum = context
                                   .read<CurriculumCubit>()
@@ -112,7 +114,7 @@ class SubjectsPage extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            AppStrings.navSubjects,
+            context.l10n.navSubjects,
             style: AppTextStyles.headlineSmall.copyWith(
               color: colorScheme.onSurface,
               fontWeight: FontWeight.w800,
@@ -146,7 +148,7 @@ class SubjectsPage extends StatelessWidget {
           child: IconButton(
             onPressed: () => context.pushNamed(AppRoutes.searchName),
             icon: Icon(LucideIcons.search, color: colorScheme.onSurfaceVariant),
-            tooltip: AppStrings.searchLabel,
+            tooltip: context.l10n.searchLabel,
           ),
         ),
       ],
@@ -183,11 +185,11 @@ class SubjectsPage extends StatelessWidget {
       padding: const EdgeInsets.all(AppDimensions.paddingXXL),
       child: Center(
         child: AppEmptyState(
-          title: AppStrings.noSubjectsAvailable,
+          title: context.l10n.noSubjectsAvailable,
           description:
               'Set your board and grade on the Home tab to discover available subjects.',
           icon: LucideIcons.layers,
-          actionLabel: AppStrings.goToHome,
+          actionLabel: context.l10n.goHome,
           onAction: () {
             StatefulNavigationShell.of(context).goBranch(0);
           },

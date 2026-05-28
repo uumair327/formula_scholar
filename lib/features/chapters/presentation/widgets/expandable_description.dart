@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-
-import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 class ExpandableDescription extends StatefulWidget {
-  const ExpandableDescription({
-    super.key,
-    required this.formula,
-  });
+  const ExpandableDescription({super.key, required this.formula});
 
   final Formula formula;
 

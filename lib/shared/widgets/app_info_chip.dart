@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../core/core.dart';
-import 'app_text.dart';
 
 /// Reusable pill-shaped info chip with solid background.
 ///

@@ -1,8 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
-
 import '../../domain/domain.dart';
-
 /// Hive-backed cache for profile data, enabling offline-first access.
 @LazySingleton(as: ProfileCachePort)
 class ProfileHiveCache implements ProfileCachePort {

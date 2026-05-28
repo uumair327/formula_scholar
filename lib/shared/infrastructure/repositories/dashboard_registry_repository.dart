@@ -8,7 +8,7 @@
 library;
 
 import '../../../core/core.dart';
-import '../../domain/domain.dart';
+
 import '../adapters/dashboard_registry_adapter.dart';
 
 class DashboardRegistryRepository {

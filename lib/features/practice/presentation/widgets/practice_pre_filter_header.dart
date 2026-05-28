@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../../../auth/auth.dart';
 
 class PreFilterHeader extends StatelessWidget {
@@ -25,7 +25,7 @@ class PreFilterHeader extends StatelessWidget {
           // Removed the 'X' button since Practice is a standalone tab
           const SizedBox(width: AppDimensions.paddingMD),
           Text(
-            AppStrings.formulaFlow,
+            context.l10n.formulaFlow,
             style: AppTextStyles.titleLarge.copyWith(
               fontWeight: FontWeight.w800,
               letterSpacing: AppDimensions.letterSpacingTight,

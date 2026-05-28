@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../../auth/auth.dart';
 import '../../domain/domain.dart';
 import '../cubit/study_planner_cubit.dart';
@@ -21,7 +20,7 @@ class StudyPlannerPage extends StatelessWidget {
     return Scaffold(
       appBar: GlassAppBar(
         titleWidget: Text(
-          'Study Planner',
+          context.l10n.studyPlanner,
           style: AppTextStyles.titleMedium.copyWith(
             color: colorScheme.onSurface,
             fontWeight: FontWeight.w800,
@@ -64,7 +63,11 @@ class StudyPlannerPage extends StatelessWidget {
                     color: colorScheme.error,
                   ),
                   const SizedBox(height: 16),
-                  Text(state.errorMessage ?? 'Failed to load plans'),
+                  Text(
+                    context.localizedError(
+                      fallback: state.errorMessage ?? 'Failed to load plans',
+                    ),
+                  ),
                 ],
               ),
             );
@@ -75,9 +78,9 @@ class StudyPlannerPage extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const AppEmptyState(
+                  AppEmptyState(
                     icon: LucideIcons.calendar,
-                    title: AppStrings.noPlansYet,
+                    title: context.l10n.noPlansYet,
                     description: 'Create your first study plan to get started',
                   ),
                   const SizedBox(height: AppDimensions.paddingXL),
@@ -86,7 +89,7 @@ class StudyPlannerPage extends StatelessWidget {
                       horizontal: AppDimensions.paddingXL,
                     ),
                     child: AppGradientButton(
-                      label: AppStrings.createPlan,
+                      label: context.l10n.createPlan,
                       onPressed: () =>
                           context.pushNamed(AppRoutes.createPlanName),
                       icon: LucideIcons.plus,

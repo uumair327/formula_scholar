@@ -2,7 +2,6 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
 import '../../domain/domain.dart';
-
 /// Concrete implementation of [SavedRepositoryPort].
 ///
 /// Uses [safeOperation] for DRY error handling and [SavedCachePort]

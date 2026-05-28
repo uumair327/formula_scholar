@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/core.dart';
-import '../../../../../shared/shared.dart';
 
 class SubjectChipSelector extends StatelessWidget {
   const SubjectChipSelector({super.key, required this.state});
@@ -20,12 +19,16 @@ class SubjectChipSelector extends StatelessWidget {
     return SliverToBoxAdapter(
       child: Container(
         height: AppDimensions.chipContainerHeight,
-        padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingXL, vertical: AppDimensions.paddingSM),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppDimensions.paddingXL,
+          vertical: AppDimensions.paddingSM,
+        ),
         child: ListView.separated(
           addAutomaticKeepAlives: false,
           scrollDirection: Axis.horizontal,
           itemCount: state.availableSubjects.length,
-          separatorBuilder: (context, index) => const SizedBox(width: AppDimensions.paddingMD),
+          separatorBuilder: (context, index) =>
+              const SizedBox(width: AppDimensions.paddingMD),
           itemBuilder: (context, index) {
             final subject = state.availableSubjects[index];
             final isSelected = state.subject?.id == subject.id;
@@ -42,16 +45,22 @@ class SubjectChipSelector extends StatelessWidget {
               },
               child: AnimatedContainer(
                 duration: AppDurations.animationFast,
-                padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingXL),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppDimensions.paddingXL,
+                ),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: isSelected ? colorScheme.primaryContainer : Colors.transparent,
+                  color: isSelected
+                      ? colorScheme.primaryContainer
+                      : Colors.transparent,
                   borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
                 ),
                 child: Text(
                   subject.name,
                   style: AppTextStyles.labelLarge.copyWith(
-                    color: isSelected ? colorScheme.onPrimaryContainer : colorScheme.onSurfaceVariant,
+                    color: isSelected
+                        ? colorScheme.onPrimaryContainer
+                        : colorScheme.onSurfaceVariant,
                     fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
                   ),
                 ),

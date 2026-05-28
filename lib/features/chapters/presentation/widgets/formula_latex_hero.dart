@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
-
-import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../../../core/core.dart';
 
 class FormulaLatexHero extends StatelessWidget {
-  const FormulaLatexHero({
-    super.key,
-    required this.formula,
-  });
+  const FormulaLatexHero({super.key, required this.formula});
 
   final Formula formula;
 
@@ -46,7 +42,7 @@ class FormulaLatexHero extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
           border: Border.all(
-            color: isDark 
+            color: isDark
                 ? colorScheme.primary.withValues(alpha: 0.3)
                 : colorScheme.primary.withValues(alpha: 0.15),
             width: AppDimensions.borderWidth,
@@ -57,7 +53,7 @@ class FormulaLatexHero extends StatelessWidget {
                     color: colorScheme.primary.withValues(alpha: 0.1),
                     blurRadius: 20,
                     spreadRadius: -5,
-                  )
+                  ),
                 ]
               : null,
         ),

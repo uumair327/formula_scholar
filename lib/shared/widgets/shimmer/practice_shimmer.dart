@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/core.dart';
-import '../app_shimmer.dart';
 
 class PracticeShimmer extends StatelessWidget {
   const PracticeShimmer({super.key});

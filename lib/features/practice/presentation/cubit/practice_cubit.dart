@@ -2,12 +2,10 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-
+import '../../domain/domain.dart';
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../../achievements/domain/domain.dart';
 import '../../../dashboard/domain/domain.dart';
-import '../../domain/domain.dart';
 import 'practice_state.dart';
 
 @injectable
@@ -48,32 +46,37 @@ class PracticeCubit extends Cubit<PracticeState>
 
   Future<void> loadSubjects(String boardId, String gradeId) async {
     if (state.isLoadingSubjects) return;
-    
+
     emit(state.copyWith(isLoadingSubjects: true));
-    
+
     final result = await _getSubjects(boardId, gradeId);
-    
+
     switch (result) {
       case Success(:final data):
-        final subjects = data.map((s) => SelectedSubject(
-          id: s.id,
-          name: s.name,
-          category: s.category,
-          description: s.description,
-          iconName: s.iconName,
-          subtitle: s.subtitle ?? '',
-        )).toList();
-        
-        emit(state.copyWith(
-          availableSubjects: subjects,
-          isLoadingSubjects: false,
-        ));
+        final subjects = data
+            .map(
+              (s) => SelectedSubject(
+                id: s.id,
+                name: s.name,
+                category: s.category,
+                description: s.description,
+                iconName: s.iconName,
+                subtitle: s.subtitle ?? '',
+              ),
+            )
+            .toList();
+
+        emit(
+          state.copyWith(availableSubjects: subjects, isLoadingSubjects: false),
+        );
       case Error(:final failure):
         logFailure('loadSubjects', failure);
-        emit(state.copyWith(
-          isLoadingSubjects: false,
-          errorMessage: failure.message,
-        ));
+        emit(
+          state.copyWith(
+            isLoadingSubjects: false,
+            errorMessage: failure.message,
+          ),
+        );
     }
   }
 
@@ -219,12 +222,7 @@ class PracticeCubit extends Cubit<PracticeState>
       'Quiz completed — ${state.totalPoints} points, ${state.correctCount}/${state.totalQuestions} correct',
       tag: AppLogTags.practiceCubit,
     );
-    emit(
-      state.copyWith(
-        status: PracticeStatus.completed,
-        showResult: false,
-      ),
-    );
+    emit(state.copyWith(status: PracticeStatus.completed, showResult: false));
   }
 
   void onTimerExpired() {
@@ -324,7 +322,7 @@ class PracticeCubit extends Cubit<PracticeState>
     _timer?.cancel();
     final bId = state.boardId;
     final gId = state.gradeId;
-    
+
     // Clear subjectId so the user can pick a different subject.
     // We emit initial but DO NOT call loadQuestions.
     // This allows PracticePreFilter to be shown again!
@@ -333,7 +331,7 @@ class PracticeCubit extends Cubit<PracticeState>
         status: PracticeStatus.initial,
         boardId: bId,
         gradeId: gId,
-        subjectId: null, 
+        subjectId: null,
       ),
     );
   }

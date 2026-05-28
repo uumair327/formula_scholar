@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 import '../../../auth/auth.dart';
 import '../../../flashcards/flashcards.dart';
 import '../cubit/formulas_cubit.dart';
@@ -26,7 +24,7 @@ class FormulaAppBarActions extends StatelessWidget {
               onPressed: () {
                 final subjectName =
                     context.read<SubjectSelectionCubit>().state.subject?.name ??
-                    AppStrings.unknownSubject;
+                    context.l10n.unknownSubject;
                 final curriculumKey = context
                     .read<CurriculumCubit>()
                     .state
@@ -38,7 +36,7 @@ class FormulaAppBarActions extends StatelessWidget {
                 }
 
                 context.read<FormulasCubit>().toggleChapterBookmark(
-                  state.chapterName ?? AppStrings.chapterLabel,
+                  state.chapterName ?? context.l10n.chapterLabel,
                   subjectName,
                   curriculumKey: curriculumKey,
                 );
@@ -51,13 +49,13 @@ class FormulaAppBarActions extends StatelessWidget {
                     : colorScheme.outline,
               ),
               tooltip: state.isChapterSaved
-                  ? AppStrings.removeSavedChapter
-                  : AppStrings.bookmarkChapter,
+                  ? context.l10n.removeSavedChapter
+                  : context.l10n.bookmarkChapter,
             );
           },
         ),
         Tooltip(
-          message: AppStrings.generateCheatSheet,
+          message: context.l10n.generateCheatSheet,
           child: IconButton(
             onPressed: () {
               context.pushNamed(
@@ -69,7 +67,7 @@ class FormulaAppBarActions extends StatelessWidget {
           ),
         ),
         Tooltip(
-          message: AppStrings.studyAsFlashcards,
+          message: context.l10n.studyAsFlashcards,
           child: IconButton(
             onPressed: () {
               final allFormulas = context.read<FormulasCubit>().state.formulas;

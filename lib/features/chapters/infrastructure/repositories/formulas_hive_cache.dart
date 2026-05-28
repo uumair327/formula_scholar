@@ -1,8 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
-
 import '../../domain/domain.dart';
-
 /// Hive-backed cache for formulas data, enabling offline-first access.
 ///
 /// Follows the same pattern established by [ChaptersHiveCache].
@@ -51,7 +49,8 @@ class FormulasHiveCache implements FormulasCachePort {
     String curriculumKey,
   ) async {
     final box = await _box();
-    final cached = box.get(_key(subjectId, chapterId, curriculumKey)) as List<dynamic>?;
+    final cached =
+        box.get(_key(subjectId, chapterId, curriculumKey)) as List<dynamic>?;
     if (cached == null) {
       return const [];
     }
@@ -59,23 +58,26 @@ class FormulasHiveCache implements FormulasCachePort {
     return cached
         .whereType<Map>()
         .map((item) => Map<String, dynamic>.from(item))
-        .map((item) => Formula(
-              id: item['id'] as String? ?? '',
-              title: item['title'] as String? ?? '',
-              latex: item['latex'] as String? ?? '',
-              description: item['description'] as String? ?? '',
-              isMastered: item['isMastered'] as bool? ?? false,
-              isBookmarked: item['isBookmarked'] as bool? ?? false,
-              audiences: (item['audiences'] as List<dynamic>?)
-                      ?.whereType<String>()
-                      .toList() ??
-                  const [],
-              isGeneralContent: item['isGeneralContent'] as bool? ?? false,
-              canonicalFormulaId: item['canonicalFormulaId'] as String?,
-              widgetConfig: item['widgetConfig'] != null
-                  ? Map<String, dynamic>.from(item['widgetConfig'] as Map)
-                  : null,
-            ))
+        .map(
+          (item) => Formula(
+            id: item['id'] as String? ?? '',
+            title: item['title'] as String? ?? '',
+            latex: item['latex'] as String? ?? '',
+            description: item['description'] as String? ?? '',
+            isMastered: item['isMastered'] as bool? ?? false,
+            isBookmarked: item['isBookmarked'] as bool? ?? false,
+            audiences:
+                (item['audiences'] as List<dynamic>?)
+                    ?.whereType<String>()
+                    .toList() ??
+                const [],
+            isGeneralContent: item['isGeneralContent'] as bool? ?? false,
+            canonicalFormulaId: item['canonicalFormulaId'] as String?,
+            widgetConfig: item['widgetConfig'] != null
+                ? Map<String, dynamic>.from(item['widgetConfig'] as Map)
+                : null,
+          ),
+        )
         .toList();
   }
 }

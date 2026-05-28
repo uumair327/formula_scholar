@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
+
 import '../cubit/chapters_cubit.dart';
 import '../cubit/chapters_state.dart';
 
@@ -55,7 +55,9 @@ class ChapterSortControls extends StatelessWidget {
         selectedColor: colorScheme.primaryContainer,
         backgroundColor: colorScheme.surfaceContainerHighest,
         labelStyle: AppTextStyles.labelMedium.copyWith(
-          color: isSelected ? colorScheme.onPrimaryContainer : colorScheme.onSurfaceVariant,
+          color: isSelected
+              ? colorScheme.onPrimaryContainer
+              : colorScheme.onSurfaceVariant,
           fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
         ),
         shape: RoundedRectangleBorder(
@@ -71,7 +73,7 @@ class ChapterSortControls extends StatelessWidget {
       child: Row(
         children: [
           Tooltip(
-            message: AppStrings.toggleSortDirection,
+            message: context.l10n.toggleSortDirection,
             child: IconButton.filledTonal(
               onPressed: () {
                 final newDesc = !state.sortDesc;
@@ -79,8 +81,8 @@ class ChapterSortControls extends StatelessWidget {
               },
               icon: Icon(directionIcon, size: AppDimensions.iconSM),
               tooltip: state.sortDesc
-                  ? AppStrings.sortDescending
-                  : AppStrings.sortAscending,
+                  ? context.l10n.sortDescending
+                  : context.l10n.sortAscending,
               style: IconButton.styleFrom(
                 backgroundColor: colorScheme.secondaryContainer,
                 foregroundColor: colorScheme.onSecondaryContainer,

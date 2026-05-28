@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-
 import '../../../../core/core.dart';
-import '../../../../shared/shared.dart';
 
 class SubjectsCurriculumBar extends StatelessWidget {
   const SubjectsCurriculumBar({super.key});
