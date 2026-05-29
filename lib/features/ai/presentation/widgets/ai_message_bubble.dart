@@ -17,13 +17,48 @@ class AiMessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isUser = message.role == AiMessageRole.user;
-    final backgroundColor = isUser
-        ? colorScheme.primary
-        : colorScheme.surfaceContainerHighest;
-    final foregroundColor = isUser
-        ? colorScheme.onPrimary
-        : colorScheme.onSurface;
+
+    final bubbleDecoration = BoxDecoration(
+      gradient: isUser
+          ? LinearGradient(
+              colors: [
+                colorScheme.primary,
+                colorScheme.primary.withValues(alpha: 0.85),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            )
+          : null,
+      color: isUser ? null : colorScheme.surfaceContainerLow,
+      borderRadius: BorderRadius.only(
+        topLeft: const Radius.circular(AppDimensions.radiusLG),
+        topRight: const Radius.circular(AppDimensions.radiusLG),
+        bottomLeft: Radius.circular(
+          isUser ? AppDimensions.radiusLG : AppDimensions.radiusXS,
+        ),
+        bottomRight: Radius.circular(
+          isUser ? AppDimensions.radiusXS : AppDimensions.radiusLG,
+        ),
+      ),
+      border: isUser
+          ? null
+          : Border.all(
+              color: colorScheme.outlineVariant.withValues(alpha: 0.15),
+            ),
+      boxShadow: [
+        isUser
+            ? BoxShadow(
+                color: colorScheme.primary.withValues(alpha: 0.15),
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              )
+            : AppShadows.subtle,
+      ],
+    );
+
+    final foregroundColor = isUser ? AppColors.white : colorScheme.onSurface;
 
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
@@ -32,19 +67,7 @@ class AiMessageBubble extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: AppDimensions.paddingXS),
           padding: const EdgeInsets.all(AppDimensions.paddingMD),
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.only(
-              topLeft: const Radius.circular(AppDimensions.radiusLG),
-              topRight: const Radius.circular(AppDimensions.radiusLG),
-              bottomLeft: Radius.circular(
-                isUser ? AppDimensions.radiusLG : AppDimensions.radiusSM,
-              ),
-              bottomRight: Radius.circular(
-                isUser ? AppDimensions.radiusSM : AppDimensions.radiusLG,
-              ),
-            ),
-          ),
+          decoration: bubbleDecoration,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -61,18 +84,28 @@ class AiMessageBubble extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    IconButton(
-                      constraints: const BoxConstraints(
-                        minWidth: 32,
-                        minHeight: 32,
+                    Container(
+                      decoration: BoxDecoration(
+                        color: colorScheme.primaryContainer.withValues(
+                          alpha: 0.1,
+                        ),
+                        borderRadius: BorderRadius.circular(
+                          AppDimensions.radiusMD,
+                        ),
                       ),
-                      padding: EdgeInsets.zero,
-                      tooltip: 'Read aloud',
-                      onPressed: () => onSpeak(message.content),
-                      icon: Icon(
-                        LucideIcons.playCircle,
-                        size: AppDimensions.iconMD,
-                        color: colorScheme.primary,
+                      child: IconButton(
+                        constraints: const BoxConstraints(
+                          minWidth: 36,
+                          minHeight: 36,
+                        ),
+                        padding: EdgeInsets.zero,
+                        tooltip: 'Read aloud',
+                        onPressed: () => onSpeak(message.content),
+                        icon: Icon(
+                          Icons.volume_up,
+                          size: AppDimensions.iconSM,
+                          color: colorScheme.primary,
+                        ),
                       ),
                     ),
                     if (message.actionRequest != null)
@@ -80,13 +113,43 @@ class AiMessageBubble extends StatelessWidget {
                         padding: const EdgeInsetsDirectional.only(
                           start: AppDimensions.paddingSM,
                         ),
-                        child: Chip(
-                          visualDensity: VisualDensity.compact,
-                          avatar: const Icon(
-                            LucideIcons.checkCircle2,
-                            size: AppDimensions.iconSM,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppDimensions.paddingMD,
+                            vertical: AppDimensions.paddingXS,
                           ),
-                          label: Text(message.actionRequest!.action),
+                          decoration: BoxDecoration(
+                            color: colorScheme.secondaryContainer.withValues(
+                              alpha: isDark ? 0.3 : 0.8,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              AppDimensions.radiusXL,
+                            ),
+                            border: Border.all(
+                              color: colorScheme.secondary.withValues(
+                                alpha: 0.2,
+                              ),
+                              width: 1,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                LucideIcons.checkCircle,
+                                size: AppDimensions.iconXS,
+                                color: colorScheme.secondary,
+                              ),
+                              const SizedBox(width: AppDimensions.paddingXS),
+                              Text(
+                                message.actionRequest!.action,
+                                style: AppTextStyles.labelSmall.copyWith(
+                                  color: colorScheme.onSecondaryContainer,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                   ],

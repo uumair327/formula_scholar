@@ -49,13 +49,34 @@ class _AiChatPageState extends State<AiChatPage> {
         _scrollToBottom();
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('AI Assistant'),
+        appBar: GlassAppBar(
+          titleWidget: Text(
+            'AI Assistant',
+            style: AppTextStyles.headlineSmall.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
           actions: [
-            IconButton(
-              tooltip: 'AI settings',
-              onPressed: () => context.pushNamed(AppRoutes.aiSettingsName),
-              icon: const Icon(LucideIcons.settings),
+            Container(
+              margin: const EdgeInsetsDirectional.only(
+                end: AppDimensions.paddingSM,
+              ),
+              decoration: BoxDecoration(
+                color: Theme.of(context)
+                    .colorScheme
+                    .surfaceContainerHigh
+                    .withValues(alpha: 0.5),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+              ),
+              child: IconButton(
+                tooltip: 'AI settings',
+                onPressed: () => context.pushNamed(AppRoutes.aiSettingsName),
+                icon: Icon(
+                  LucideIcons.settings,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
             ),
           ],
         ),
@@ -150,29 +171,57 @@ class _EmptyAssistantState extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                width: 72,
-                height: 72,
-                decoration: BoxDecoration(
-                  gradient: AppColors.primaryGradientOf(context),
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
-                ),
-                child: const Icon(
-                  LucideIcons.sparkles,
-                  color: AppColors.white,
-                  size: AppDimensions.iconXXL,
+              EntranceWrapper(
+                useScale: true,
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    gradient: AppColors.primaryGradientOf(context),
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+                    boxShadow: [
+                      BoxShadow(
+                        color: colorScheme.primary.withValues(alpha: 0.3),
+                        blurRadius: 20,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    LucideIcons.sparkles,
+                    color: AppColors.white,
+                    size: AppDimensions.iconXXL,
+                  ),
                 ),
               ),
-              const SizedBox(height: AppDimensions.paddingLG),
-              Text(
-                'Ask me to navigate, explain, or help with a study workflow.',
-                textAlign: TextAlign.center,
-                style: AppTextStyles.titleMedium.copyWith(
-                  color: colorScheme.onSurface,
+              const SizedBox(height: AppDimensions.paddingXL),
+              EntranceWrapper.stagger(
+                index: 0,
+                child: Text(
+                  'How can I help you study today?',
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.headlineSmall.copyWith(
+                    color: colorScheme.onSurface,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
               ),
-              const SizedBox(height: AppDimensions.paddingLG),
-              AiSuggestionChips(onSelected: onSuggestion),
+              const SizedBox(height: AppDimensions.paddingSM),
+              EntranceWrapper.stagger(
+                index: 1,
+                child: Text(
+                  'Ask me to navigate, explain formulas, or help with your study plans.',
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+              const SizedBox(height: AppDimensions.paddingXXL),
+              EntranceWrapper.stagger(
+                index: 2,
+                child: AiSuggestionChips(onSelected: onSuggestion),
+              ),
             ],
           ),
         ),
@@ -181,11 +230,36 @@ class _EmptyAssistantState extends StatelessWidget {
   }
 }
 
-class _TypingIndicator extends StatelessWidget {
+class _TypingIndicator extends StatefulWidget {
   const _TypingIndicator();
 
   @override
+  State<_TypingIndicator> createState() => _TypingIndicatorState();
+}
+
+class _TypingIndicatorState extends State<_TypingIndicator>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
@@ -195,14 +269,38 @@ class _TypingIndicator extends StatelessWidget {
           vertical: AppDimensions.paddingSM,
         ),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+          color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
-        ),
-        child: Text(
-          'Thinking...',
-          style: AppTextStyles.bodySmall.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          border: Border.all(
+            color: colorScheme.outlineVariant.withValues(alpha: 0.15),
           ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: List.generate(3, (index) {
+            return AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                final double progress = _controller.value;
+                final double offset = index * 0.2;
+                final double value = (progress - offset) % 1.0;
+                final double fade = value < 0.5
+                    ? (value * 2)
+                    : (1.0 - (value - 0.5) * 2);
+                final double alphaValue = 0.3 + 0.7 * fade;
+
+                return Container(
+                  width: 7,
+                  height: 7,
+                  margin: const EdgeInsets.symmetric(horizontal: 2.5),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: colorScheme.primary.withValues(alpha: alphaValue),
+                  ),
+                );
+              },
+            );
+          }),
         ),
       ),
     );
@@ -225,28 +323,44 @@ class _ChatInputBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return SafeArea(
       top: false,
       child: Container(
-        padding: const EdgeInsets.all(AppDimensions.paddingLG),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppDimensions.paddingLG,
+          vertical: AppDimensions.paddingMD,
+        ),
         decoration: BoxDecoration(
           color: colorScheme.surface,
           border: Border(
             top: BorderSide(
-              color: colorScheme.outlineVariant.withValues(alpha: 0.35),
+              color: colorScheme.outlineVariant.withValues(alpha: 0.15),
             ),
           ),
         ),
         child: Row(
           children: [
-            IconButton(
-              tooltip: state.isListening ? 'Stop voice input' : 'Voice input',
-              onPressed: state.isBusy ? null : onMicPressed,
-              icon: Icon(
-                state.isListening ? LucideIcons.pause : LucideIcons.mic,
+            Container(
+              decoration: BoxDecoration(
+                color: state.isListening
+                    ? colorScheme.errorContainer.withValues(alpha: 0.3)
+                    : colorScheme.primaryContainer.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: IconButton(
+                tooltip: state.isListening ? 'Stop voice input' : 'Voice input',
+                onPressed: state.isBusy ? null : onMicPressed,
+                icon: Icon(
+                  state.isListening ? Icons.stop : LucideIcons.mic,
+                  color: state.isListening
+                      ? colorScheme.error
+                      : colorScheme.primary,
+                ),
               ),
             ),
-            const SizedBox(width: AppDimensions.paddingSM),
+            const SizedBox(width: AppDimensions.paddingMD),
             Expanded(
               child: TextField(
                 controller: controller,
@@ -255,17 +369,51 @@ class _ChatInputBar extends StatelessWidget {
                 maxLines: 4,
                 textInputAction: TextInputAction.send,
                 onSubmitted: (_) => onSend(),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'Ask Formula Scholar...',
-                  border: OutlineInputBorder(),
+                  hintStyle: AppTextStyles.bodyMedium.copyWith(
+                    color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: AppDimensions.paddingXL,
+                    vertical: AppDimensions.paddingMD,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+                    borderSide: BorderSide(
+                      color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+                    borderSide: BorderSide(
+                      color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+                    borderSide: BorderSide(
+                      color: colorScheme.primary,
+                      width: 1.5,
+                    ),
+                  ),
+                  filled: true,
+                  fillColor: isDark
+                      ? colorScheme.surfaceContainerLow
+                      : colorScheme.surfaceContainerLowest,
                 ),
               ),
             ),
-            const SizedBox(width: AppDimensions.paddingSM),
+            const SizedBox(width: AppDimensions.paddingMD),
             IconButton.filled(
               tooltip: 'Send',
               onPressed: state.isBusy ? null : onSend,
-              icon: const Icon(LucideIcons.arrowRight),
+              icon: const Icon(LucideIcons.arrowUp),
+              style: IconButton.styleFrom(
+                backgroundColor: colorScheme.primary,
+                foregroundColor: colorScheme.onPrimary,
+                padding: const EdgeInsets.all(AppDimensions.paddingMD),
+              ),
             ),
           ],
         ),
