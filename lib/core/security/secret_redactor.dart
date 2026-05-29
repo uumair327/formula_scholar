@@ -1,12 +1,12 @@
 abstract final class SecretRedactor {
   static final RegExp _apiKeyPattern = RegExp(
-    r'(?i)(api[_-]?key|token|secret|authorization)\s*[:=]\s*["'
-    ']?[^,\s"'
-    '}]+',
+    r"""(api[_-]?key|token|secret|authorization)\s*[:=]\s*["']?[^,\s"'}]+""",
+    caseSensitive: false,
   );
 
   static final RegExp _bearerPattern = RegExp(
-    r'(?i)bearer\s+[a-z0-9._\-]{12,}',
+    r'bearer\s+[a-z0-9._-]{12,}',
+    caseSensitive: false,
   );
 
   static String redact(String value) {

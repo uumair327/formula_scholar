@@ -8,12 +8,8 @@ import 'package:speech_to_text/speech_to_text.dart';
 import '../../features/ai/ai.dart';
 import '../../features/auth/auth.dart';
 import '../../shared/shared.dart';
-import '../../shared/domain/ports/localized_content_repository_port.dart';
-import '../../shared/infrastructure/adapters/localized_content_firebase_adapter.dart';
-import '../../shared/infrastructure/repositories/localized_content_repository_impl.dart';
 import '../network/firestore_client_port.dart';
 import '../router/app_router.dart';
-import '../../shared/infrastructure/dashboard_command_listener.dart';
 import 'injection.config.dart';
 
 /// Global [GetIt] service locator instance.
@@ -59,7 +55,6 @@ void _registerAiRuntimeDependencies() {
   if (!getIt.isRegistered<FlutterSecureStorage>()) {
     getIt.registerLazySingleton<FlutterSecureStorage>(
       () => const FlutterSecureStorage(
-        aOptions: AndroidOptions(encryptedSharedPreferences: true),
         iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
       ),
     );

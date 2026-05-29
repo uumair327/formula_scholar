@@ -64,7 +64,7 @@ class _AiSettingsPageState extends State<AiSettingsPage> {
               _SecurityBanner(settings: state.settings),
               const SizedBox(height: AppDimensions.paddingXL),
               DropdownButtonFormField<AiProviderType>(
-                value: state.settings.provider,
+                initialValue: state.settings.provider,
                 decoration: const InputDecoration(
                   labelText: 'AI Provider',
                   border: OutlineInputBorder(),

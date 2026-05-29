@@ -29,10 +29,10 @@ class FlutterAiVoiceService implements AiVoiceServicePort {
     final available = await initializeSpeech();
     if (!available) return;
     await _speechToText.listen(
-      localeId: localeId,
       onResult: (result) {
         onResult(result.recognizedWords, isFinal: result.finalResult);
       },
+      listenOptions: SpeechListenOptions(localeId: localeId),
     );
   }
 
