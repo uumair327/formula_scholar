@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
 
@@ -30,7 +31,7 @@ class PreFilterTimedModeCard extends StatelessWidget {
           child: Row(
             children: [
               AppIconCircle(
-                icon: Icons.timer_outlined,
+                icon: LucideIcons.timer,
                 backgroundColor: colorScheme.primaryContainer,
                 iconColor: colorScheme.primary,
                 size: 40,
@@ -91,47 +92,35 @@ class PreFilterTimedModeCard extends StatelessWidget {
                           runSpacing: AppDimensions.paddingSM,
                           children: [5, 10, 15, 30, 60].map((mins) {
                             final isSelected = timedDuration == mins * 60;
-                            return Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                onTap: () {
-                                  HapticsHelper.selectionClick();
-                                  onDurationChanged(mins * 60);
-                                },
-                                borderRadius: BorderRadius.circular(
-                                  AppDimensions.radiusLG,
-                                ),
-                                child: AnimatedContainer(
-                                  duration: AppDurations.animationFast,
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: AppDimensions.paddingMD,
-                                    vertical: AppDimensions.paddingSM,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: isSelected
-                                        ? colorScheme.primary
-                                        : colorScheme.surfaceContainerHighest
-                                              .withValues(alpha: 0.5),
-                                    borderRadius: BorderRadius.circular(
-                                      AppDimensions.radiusLG,
-                                    ),
-                                    border: Border.all(
-                                      color: isSelected
-                                          ? colorScheme.primary
-                                          : Colors.transparent,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    '$mins min',
-                                    style: AppTextStyles.labelLarge.copyWith(
-                                      color: isSelected
-                                          ? colorScheme.onPrimary
-                                          : colorScheme.onSurface,
-                                      fontWeight: isSelected
-                                          ? FontWeight.w700
-                                          : FontWeight.w500,
-                                    ),
-                                  ),
+                            return AppCard(
+                              onTap: () {
+                                HapticsHelper.selectionClick();
+                                onDurationChanged(mins * 60);
+                              },
+                              borderRadius: AppDimensions.radiusLG,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppDimensions.paddingMD,
+                                vertical: AppDimensions.paddingSM,
+                              ),
+                              color: isSelected
+                                  ? colorScheme.primary
+                                  : colorScheme.surfaceContainerHighest
+                                        .withValues(alpha: 0.5),
+                              boxShadow: const [],
+                              border: Border.all(
+                                color: isSelected
+                                    ? colorScheme.primary
+                                    : Colors.transparent,
+                              ),
+                              child: Text(
+                                '$mins min',
+                                style: AppTextStyles.labelLarge.copyWith(
+                                  color: isSelected
+                                      ? colorScheme.onPrimary
+                                      : colorScheme.onSurface,
+                                  fontWeight: isSelected
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
                                 ),
                               ),
                             );
@@ -146,3 +135,4 @@ class PreFilterTimedModeCard extends StatelessWidget {
     );
   }
 }
+
