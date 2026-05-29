@@ -43,6 +43,7 @@ class DashboardPage extends StatelessWidget {
                       description: s.description,
                       iconName: s.iconName,
                       subtitle: s.subtitle ?? '',
+                      colorValue: s.colorValue,
                     ),
                   )
                   .toList();

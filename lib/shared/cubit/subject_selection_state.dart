@@ -14,6 +14,7 @@ class SelectedSubject extends Equatable {
     required this.description,
     required this.iconName,
     this.subtitle = '',
+    this.colorValue,
   });
   final String id;
   final String name;
@@ -21,6 +22,7 @@ class SelectedSubject extends Equatable {
   final String description;
   final String subtitle;
   final String iconName;
+  final int? colorValue;
 
   @override
   List<Object?> get props => [
@@ -30,6 +32,7 @@ class SelectedSubject extends Equatable {
     description,
     subtitle,
     iconName,
+    colorValue,
   ];
 }
 

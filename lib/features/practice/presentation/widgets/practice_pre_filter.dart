@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
 
@@ -159,27 +160,21 @@ class _SubjectSelector extends StatelessWidget {
                     context: context,
                     title: context.l10n.allSubjects,
                     color: colorScheme.primary,
-                    icon: Icons.all_inclusive,
+                    icon: LucideIcons.layers,
                     onTap: () => onSubjectSelected(null),
                   );
                 }
                 final subject = practiceState.availableSubjects[index - 1];
-                final colors = [
-                  Colors.blue,
-                  Colors.red,
-                  Colors.green,
-                  Colors.orange,
-                  Colors.purple,
-                  Colors.teal,
-                ];
-                final subjectColor =
-                    colors[subject.id.hashCode % colors.length];
+                final subjectColor = subject.colorValue != null
+                    ? Color(subject.colorValue!)
+                    : colorScheme.primary;
+                final subjectIcon = AppIconMapper.resolve(subject.iconName);
 
                 return _buildSubjectCard(
                   context: context,
                   title: subject.name,
                   color: subjectColor,
-                  icon: Icons.book_outlined,
+                  icon: subjectIcon,
                   onTap: () => onSubjectSelected(subject.id),
                 );
               },

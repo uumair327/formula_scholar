@@ -120,6 +120,7 @@ void main() {
           description: 'Core mathematics',
           iconName: 'sigma',
           subtitle: 'Numbers and equations',
+          colorValue: 0xFFE67E22,
         ),
         const SelectedSubject(
           id: 'science',
@@ -127,6 +128,7 @@ void main() {
           category: 'science',
           description: 'Core science',
           iconName: 'flaskConical',
+          colorValue: 0xFF7B68EE,
         ),
       ]);
 

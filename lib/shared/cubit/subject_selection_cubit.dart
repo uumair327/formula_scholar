@@ -32,6 +32,7 @@ class SubjectSelectionCubit extends HydratedCubit<SubjectSelectionState> {
     required String description,
     required String iconName,
     String subtitle = '',
+    int? colorValue,
   }) {
     AppLogger.info(
       'Subject selected: $name (id=$id)',
@@ -45,6 +46,7 @@ class SubjectSelectionCubit extends HydratedCubit<SubjectSelectionState> {
         description: description,
         iconName: iconName,
         subtitle: subtitle,
+        colorValue: colorValue,
       ),
       curriculumKey: _activeCurriculumKey,
     );
@@ -159,6 +161,7 @@ class SubjectSelectionCubit extends HydratedCubit<SubjectSelectionState> {
                   description: subject.description,
                   iconName: subject.iconName,
                   subtitle: subject.subtitle ?? '',
+                  colorValue: subject.colorValue,
                 ),
               )
               .toList(),
@@ -195,6 +198,7 @@ class SubjectSelectionCubit extends HydratedCubit<SubjectSelectionState> {
               description: subjectMap['description'] as String,
               iconName: subjectMap['iconName'] as String? ?? 'book',
               subtitle: subjectMap['subtitle'] as String? ?? '',
+              colorValue: subjectMap['colorValue'] as int?,
             ),
       curriculumKey: json['curriculumKey'] as String?,
     );
@@ -214,6 +218,7 @@ class SubjectSelectionCubit extends HydratedCubit<SubjectSelectionState> {
               'description': subject.description,
               'iconName': subject.iconName,
               'subtitle': subject.subtitle,
+              'colorValue': subject.colorValue,
             },
     };
   }
