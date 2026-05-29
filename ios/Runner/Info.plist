@@ -45,5 +45,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Formula Scholar uses microphone access for AI voice commands.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Formula Scholar uses speech recognition to turn voice commands into text.</string>
 </dict>
 </plist>

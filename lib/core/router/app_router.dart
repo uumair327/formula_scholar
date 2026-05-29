@@ -76,7 +76,7 @@ abstract final class AppRouter {
 
   /// Auth pages that unauthenticated users are allowed to access.
   static const _authPaths = {
-    AppRoutes.loginPath, 
+    AppRoutes.loginPath,
     AppRoutes.signupPath,
     AppRoutes.widgetPreviewPath,
   };
@@ -159,6 +159,7 @@ abstract final class AppRouter {
     // ───────────── Route Tree (delegated to RouteBuilders) ───────
     routes: [
       ...authRoutes(),
+      ...aiRoutes(),
       ...profileSubRoutes(),
       ...searchRoutes(),
       ...analyticsRoutes(),

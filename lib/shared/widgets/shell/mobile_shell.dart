@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/core.dart';
+import '../../../features/ai/ai.dart';
 
 class MobileShell extends StatelessWidget {
   const MobileShell({super.key, required this.navigationShell});
@@ -11,7 +12,10 @@ class MobileShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: navigationShell,
+      body: AiAssistantOverlay(
+        bottomOffset: AppDimensions.bottomNavPadding,
+        child: navigationShell,
+      ),
       extendBody: true,
       bottomNavigationBar: SafeArea(
         bottom: true,
@@ -25,7 +29,10 @@ class MobileShell extends StatelessWidget {
             currentIndex: navigationShell.currentIndex,
             onTap: (index) {
               HapticsHelper.lightImpact();
-              navigationShell.goBranch(index, initialLocation: index == navigationShell.currentIndex);
+              navigationShell.goBranch(
+                index,
+                initialLocation: index == navigationShell.currentIndex,
+              );
             },
           ),
         ),

@@ -65,6 +65,10 @@ dependencies:
   universal_html: ^2.3.0
   firebase_analytics: ^12.4.1
   firebase_crashlytics: ^5.2.2
+  http: ^1.6.0
+  flutter_secure_storage: ^10.3.1
+  speech_to_text: ^7.4.0
+  flutter_tts: ^4.2.5
 
 dependency_overrides:
   lucide_icons:

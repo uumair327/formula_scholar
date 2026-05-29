@@ -1,6 +1,7 @@
-﻿library;
+library;
 
 export 'achievements_routes.dart';
+export 'ai_routes.dart';
 export 'analytics_routes.dart';
 export 'auth_routes.dart';
 export 'cheat_sheet_routes.dart';
@@ -14,4 +15,3 @@ export 'profile_routes.dart';
 export 'search_routes.dart';
 export 'study_planner_routes.dart';
 export 'visualizer3d_routes.dart';
-

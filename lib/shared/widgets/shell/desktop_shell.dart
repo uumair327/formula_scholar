@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../core/core.dart';
+import '../../../features/ai/ai.dart';
 import 'desktop_nav_item.dart';
 
 class DesktopShell extends StatelessWidget {
@@ -90,7 +91,12 @@ class DesktopShell extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(child: navigationShell),
+          Expanded(
+            child: AiAssistantOverlay(
+              bottomOffset: AppDimensions.paddingXXL,
+              child: navigationShell,
+            ),
+          ),
         ],
       ),
     );

@@ -25,6 +25,8 @@ abstract final class AppLogTags {
   static const String themePreferenceRepo = 'ThemePreferenceRepo';
   static const String themePreferenceDataSource = 'ThemePreferenceDataSource';
   static const String themePreferenceUseCase = 'ThemePreferenceUseCase';
+  static const String aiAssistant = 'AiAssistant';
+  static const String aiSettings = 'AiSettings';
 
   // ──────────────────────── Auth ──────────────────────────────
   static const String loginPage = 'LoginPage';

@@ -109,6 +109,12 @@ abstract final class AppRoutes {
   static const String helpSupportPath = '/profile/help';
   static const String helpSupportName = 'helpSupport';
 
+  // AI Assistant
+  static const String aiChatPath = '/ai/chat';
+  static const String aiChatName = 'aiChat';
+  static const String aiSettingsPath = '/ai/settings';
+  static const String aiSettingsName = 'aiSettings';
+
   // ──────────────────────── Analytics ──────────────────────────
   static const String analyticsPath = '/analytics';
   static const String analyticsName = 'analytics';

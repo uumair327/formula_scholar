@@ -72,6 +72,7 @@ abstract final class LucideIcons {
   static const IconData mapPinOff = Icons.location_off;
   static const IconData megaphone = Icons.campaign;
   static const IconData messageCircle = Icons.message;
+  static const IconData mic = Icons.mic;
   static const IconData microscope = Icons.biotech;
   static const IconData moreVertical = Icons.more_vert;
   static const IconData music = Icons.music_note;
@@ -94,6 +95,7 @@ abstract final class LucideIcons {
   static const IconData school = Icons.school;
   static const IconData search = Icons.search;
   static const IconData searchX = Icons.manage_search;
+  static const IconData settings = Icons.settings;
   static const IconData shield = Icons.shield;
   static const IconData shieldCheck = Icons.verified_user;
   static const IconData sigma = Icons.functions;
