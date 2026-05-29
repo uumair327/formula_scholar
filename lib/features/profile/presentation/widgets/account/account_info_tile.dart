@@ -21,57 +21,47 @@ class AccountInfoTile extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return AppCard(
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {
-            HapticsHelper.lightImpact();
-          },
-          borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppDimensions.paddingXL,
-              vertical: AppDimensions.paddingLG,
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDimensions.paddingXL,
+        vertical: AppDimensions.paddingLG,
+      ),
+      child: Row(
+        children: [
+          AppIconCircle(
+            icon: icon,
+            backgroundColor: colorScheme.surfaceContainerHigh.withValues(
+              alpha: 0.5,
             ),
-            child: Row(
+            iconColor: colorScheme.outline,
+          ),
+          const SizedBox(width: AppDimensions.paddingLG),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppIconCircle(
-                  icon: icon,
-                  backgroundColor: colorScheme.surfaceContainerHigh.withValues(
-                    alpha: 0.5,
+                Text(
+                  label,
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: colorScheme.outline,
+                    fontWeight: FontWeight.w600,
                   ),
-                  iconColor: colorScheme.outline,
                 ),
-                const SizedBox(width: AppDimensions.paddingLG),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        label,
-                        style: AppTextStyles.bodySmall.copyWith(
-                          color: colorScheme.outline,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: AppDimensions.paddingXXS),
-                      Text(
-                        value,
-                        style: AppTextStyles.labelLarge.copyWith(
-                          color: valueColor ?? colorScheme.onSurface,
-                          fontWeight: FontWeight.w700,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+                const SizedBox(height: AppDimensions.paddingXXS),
+                Text(
+                  value,
+                  style: AppTextStyles.labelLarge.copyWith(
+                    color: valueColor ?? colorScheme.onSurface,
+                    fontWeight: FontWeight.w700,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }
 }
+

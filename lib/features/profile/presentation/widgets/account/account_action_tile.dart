@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../../core/core.dart';
-
 import '../support_contact_sheet.dart';
 
 class AccountActionTile extends StatelessWidget {
@@ -23,60 +22,52 @@ class AccountActionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppCard(
       boxShadow: const [AppShadows.subtle],
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {
-            HapticsHelper.lightImpact();
-            if (onTap != null) {
-              onTap!();
-            } else {
-              SupportContactSheet.show(
-                context,
-                title: label,
-                subtitle:
-                    'This account action is being expanded. Contact support and we will help you right away.',
-                email: 'support@formulascholar.app',
-              );
-            }
-          },
-          borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppDimensions.paddingXL,
-              vertical: AppDimensions.paddingLG,
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDimensions.paddingXL,
+        vertical: AppDimensions.paddingLG,
+      ),
+      onTap: () {
+        if (onTap != null) {
+          onTap!();
+        } else {
+          SupportContactSheet.show(
+            context,
+            title: label,
+            subtitle:
+                'This account action is being expanded. Contact support and we will help you right away.',
+            email: 'support@formulascholar.app',
+          );
+        }
+      },
+      child: Row(
+        children: [
+          AppIconCircle(
+            icon: icon,
+            backgroundColor: color.withValues(
+              alpha: AppDimensions.opacityFaint,
             ),
-            child: Row(
-              children: [
-                AppIconCircle(
-                  icon: icon,
-                  backgroundColor: color.withValues(
-                    alpha: AppDimensions.opacityFaint,
-                  ),
-                  iconColor: color,
-                ),
-                const SizedBox(width: AppDimensions.paddingLG),
-                Expanded(
-                  child: Text(
-                    label,
-                    style: AppTextStyles.labelLarge.copyWith(
-                      color: color,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-                Icon(
-                  Directionality.of(context) == TextDirection.rtl
-                      ? LucideIcons.chevronLeft
-                      : LucideIcons.chevronRight,
-                  size: AppDimensions.iconMD,
-                  color: color.withValues(alpha: AppDimensions.opacityMedium),
-                ),
-              ],
+            iconColor: color,
+          ),
+          const SizedBox(width: AppDimensions.paddingLG),
+          Expanded(
+            child: Text(
+              label,
+              style: AppTextStyles.labelLarge.copyWith(
+                color: color,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
-        ),
+          Icon(
+            Directionality.of(context) == TextDirection.rtl
+                ? LucideIcons.chevronLeft
+                : LucideIcons.chevronRight,
+            size: AppDimensions.iconMD,
+            color: color.withValues(alpha: AppDimensions.opacityMedium),
+          ),
+        ],
       ),
     );
   }
 }
+
