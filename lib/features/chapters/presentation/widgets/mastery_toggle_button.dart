@@ -19,48 +19,43 @@ class MasteryToggleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Material(
+    return AppCard(
+      onTap: () {
+        HapticsHelper.mediumImpact();
+        onToggle();
+      },
       color: isMastered
           ? AppColors.secondaryFixed
           : colorScheme.surfaceContainerHigh,
-      borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-      child: InkWell(
-        onTap: () {
-          HapticsHelper.mediumImpact();
-          onToggle();
-        },
-        borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-        child: AnimatedContainer(
-          duration: AppDurations.animationFast,
-          curve: AppDurations.curveDefault,
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.paddingLG,
-            vertical: AppDimensions.paddingMD,
+      borderRadius: AppDimensions.radiusXL,
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDimensions.paddingLG,
+        vertical: AppDimensions.paddingMD,
+      ),
+      boxShadow: const [],
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            isMastered ? LucideIcons.checkCircle2 : LucideIcons.circle,
+            size: AppDimensions.iconMD,
+            color: isMastered
+                ? AppColors.secondary
+                : colorScheme.onSurfaceVariant,
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                isMastered ? LucideIcons.checkCircle2 : LucideIcons.circle,
-                size: AppDimensions.iconMD,
-                color: isMastered
-                    ? AppColors.secondary
-                    : colorScheme.onSurfaceVariant,
-              ),
-              const SizedBox(width: AppDimensions.paddingSM),
-              Text(
-                isMastered ? 'Mastered' : 'Mark as Mastered',
-                style: AppTextStyles.labelLarge.copyWith(
-                  color: isMastered
-                      ? AppColors.secondary
-                      : colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
+          const SizedBox(width: AppDimensions.paddingSM),
+          Text(
+            isMastered ? 'Mastered' : 'Mark as Mastered',
+            style: AppTextStyles.labelLarge.copyWith(
+              color: isMastered
+                  ? AppColors.secondary
+                  : colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w700,
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
 }
+

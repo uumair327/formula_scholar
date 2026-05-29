@@ -23,34 +23,29 @@ class BookmarkButton extends StatelessWidget {
       message: isBookmarked
           ? context.l10n.removeBookmark
           : context.l10n.bookmarkChapter,
-      child: Material(
+      child: AppCard(
+        onTap: () {
+          HapticsHelper.lightImpact();
+          onToggle();
+        },
         color: isBookmarked
             ? colorScheme.primaryContainer
             : colorScheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-        child: InkWell(
-          onTap: () {
-            HapticsHelper.lightImpact();
-            onToggle();
-          },
-          borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-          child: AnimatedContainer(
-            duration: AppDurations.animationFast,
-            curve: AppDurations.curveDefault,
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppDimensions.paddingLG,
-              vertical: AppDimensions.paddingMD,
-            ),
-            child: Icon(
-              isBookmarked ? Icons.bookmark : LucideIcons.bookmark,
-              size: AppDimensions.iconMD,
-              color: isBookmarked
-                  ? colorScheme.onPrimaryContainer
-                  : colorScheme.onSurfaceVariant,
-            ),
-          ),
+        borderRadius: AppDimensions.radiusXL,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppDimensions.paddingLG,
+          vertical: AppDimensions.paddingMD,
+        ),
+        boxShadow: const [],
+        child: Icon(
+          isBookmarked ? Icons.bookmark : LucideIcons.bookmark,
+          size: AppDimensions.iconMD,
+          color: isBookmarked
+              ? colorScheme.onPrimaryContainer
+              : colorScheme.onSurfaceVariant,
         ),
       ),
     );
   }
 }
+
