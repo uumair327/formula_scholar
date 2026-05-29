@@ -11,6 +11,35 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
   final FirestoreClientPort _api;
   final FirebaseAuth _firebaseAuth;
 
+  String _resolveLocalizedField(Map<String, dynamic> data, String key, String fallback) {
+    if (!AppLocales.contentLocalizationEnabled) {
+      return fallback;
+    }
+    try {
+      final loc = data['localized'] as Map<String, dynamic>?;
+      if (loc != null) {
+        final localeCode = AppLocales.normalizeContentLocaleCode(
+          AppLocales.currentLocaleCode,
+        );
+        final candidate = loc[localeCode] as Map<String, dynamic>?;
+        if (candidate != null &&
+            candidate[key] != null &&
+            (candidate[key] as String).isNotEmpty) {
+          return candidate[key] as String;
+        }
+        for (final fb in AppLocales.contentLocaleFallbacks(localeCode)) {
+          final fbCandidate = loc[fb] as Map<String, dynamic>?;
+          if (fbCandidate != null &&
+              fbCandidate[key] != null &&
+              (fbCandidate[key] as String).isNotEmpty) {
+            return fbCandidate[key] as String;
+          }
+        }
+      }
+    } catch (_) {}
+    return fallback;
+  }
+
   @override
   Future<List<Chapter>> getChapters(
     String subjectId,
@@ -158,10 +187,13 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
             progressPercent *= 100;
           }
 
+          final name = _resolveLocalizedField(data, 'name', data['name'] ?? '');
+          final subtitle = _resolveLocalizedField(data, 'subtitle', data['subtitle'] ?? '');
+
           return Chapter(
             id: data['id'] ?? doc.id,
-            name: data['name'] ?? '',
-            subtitle: data['subtitle'] ?? '',
+            name: name,
+            subtitle: subtitle,
             completedFormulas: completedFormulas,
             totalFormulas: totalFormulas,
             progressPercent: progressPercent,

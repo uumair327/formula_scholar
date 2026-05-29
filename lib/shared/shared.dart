@@ -22,3 +22,5 @@ export 'widgets/widgets.dart';
 // Re-export localization helpers so common imports include `context.l10n`
 export '../l10n/l10n.dart';
 export 'localized_error_extensions.dart';
+export 'infrastructure/dashboard_command_listener.dart';
+

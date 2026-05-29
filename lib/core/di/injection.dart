@@ -5,6 +5,7 @@ import '../../shared/domain/ports/localized_content_repository_port.dart';
 import '../../shared/infrastructure/adapters/localized_content_firebase_adapter.dart';
 import '../../shared/infrastructure/repositories/localized_content_repository_impl.dart';
 import '../network/firestore_client_port.dart';
+import '../../shared/infrastructure/dashboard_command_listener.dart';
 import 'injection.config.dart';
 
 /// Global [GetIt] service locator instance.
@@ -35,4 +36,10 @@ void registerRuntimeDependencies() {
       ),
     );
   }
+  if (!getIt.isRegistered<DashboardCommandListener>()) {
+    getIt.registerLazySingleton<DashboardCommandListener>(
+      () => DashboardCommandListener(getIt<FirestoreClientPort>()),
+    );
+  }
 }
+

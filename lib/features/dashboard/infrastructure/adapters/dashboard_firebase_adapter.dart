@@ -103,6 +103,35 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
     );
   }
 
+  String _resolveLocalizedField(Map<String, dynamic> data, String key, String fallback) {
+    if (!AppLocales.contentLocalizationEnabled) {
+      return fallback;
+    }
+    try {
+      final loc = data['localized'] as Map<String, dynamic>?;
+      if (loc != null) {
+        final localeCode = AppLocales.normalizeContentLocaleCode(
+          AppLocales.currentLocaleCode,
+        );
+        final candidate = loc[localeCode] as Map<String, dynamic>?;
+        if (candidate != null &&
+            candidate[key] != null &&
+            (candidate[key] as String).isNotEmpty) {
+          return candidate[key] as String;
+        }
+        for (final fb in AppLocales.contentLocaleFallbacks(localeCode)) {
+          final fbCandidate = loc[fb] as Map<String, dynamic>?;
+          if (fbCandidate != null &&
+              fbCandidate[key] != null &&
+              (fbCandidate[key] as String).isNotEmpty) {
+            return fbCandidate[key] as String;
+          }
+        }
+      }
+    } catch (_) {}
+    return fallback;
+  }
+
   @override
   Future<List<Subject>> getSubjects(String boardId, String gradeId) async {
     AppLogger.trace(
@@ -112,18 +141,31 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
     final snapshot = await _fetchSubjects(boardId, gradeId);
     return snapshot.map((doc) {
       final data = doc.data();
+      final name = _resolveLocalizedField(data, 'name', data['name'] ?? '');
+      final description = _resolveLocalizedField(data, 'description', data['description'] ?? '');
+      
+      final rawSubtitle = data['subtitle'] as String?;
+      final subtitle = rawSubtitle != null
+          ? _resolveLocalizedField(data, 'subtitle', rawSubtitle)
+          : null;
+          
+      final rawBadgeText = data['badgeText'] as String?;
+      final badgeText = rawBadgeText != null
+          ? _resolveLocalizedField(data, 'badgeText', rawBadgeText)
+          : null;
+
       return Subject(
         id: data['id'] ?? doc.id,
-        name: data['name'] ?? '',
-        description: data['description'] ?? '',
+        name: name,
+        description: description,
         category: data['category'] ?? '',
         imageUrl: data['imageUrl'] ?? '',
         unitCount: data['unitCount'] ?? 0,
         formulaCount: data['formulaCount'] ?? 0,
         iconName: data['iconName'] ?? 'book-open',
         colorValue: data['colorValue'] ?? 0xFF00639A,
-        badgeText: data['badgeText'],
-        subtitle: data['subtitle'],
+        badgeText: badgeText,
+        subtitle: subtitle,
         masteryPercentage: data['masteryPercentage'] != null
             ? (data['masteryPercentage'] as num).toDouble()
             : null,
@@ -206,8 +248,11 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
 
     return docs.take(5).map((doc) {
       final data = doc.data();
-      final name = data['name'] as String? ?? '';
-      final subtitle = data['subtitle'] as String? ?? name;
+      final name = _resolveLocalizedField(data, 'name', data['name'] as String? ?? '');
+      final rawSubtitle = data['subtitle'] as String?;
+      final subtitle = rawSubtitle != null
+          ? _resolveLocalizedField(data, 'subtitle', rawSubtitle)
+          : name;
       return RecentStudy(
         id: doc.id,
         subjectId: data['id'] as String? ?? doc.id,
@@ -360,7 +405,19 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
       tag: AppLogTags.dashboardDataSource,
     );
 
-    return snapshot.docs.map((doc) => CarouselItem.fromFirestore(doc)).toList();
+    return snapshot.docs.map((doc) {
+      final data = doc.data();
+      final title = _resolveLocalizedField(data, 'title', data['title'] ?? '');
+      return CarouselItem(
+        id: doc.id,
+        title: title,
+        imageUrl: data['imageUrl'] as String? ?? '',
+        link: data['link'] as String? ?? '',
+        isActive: data['isActive'] as bool? ?? false,
+        displayOrder: data['displayOrder'] as int?,
+        bgColor: data['bgColor'] as String?,
+      );
+    }).toList();
   }
 
   @override
@@ -379,9 +436,20 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
       tag: AppLogTags.dashboardDataSource,
     );
 
-    return snapshot.docs
-        .map((doc) => AppAnnouncement.fromFirestore(doc))
-        .toList();
+    return snapshot.docs.map((doc) {
+      final data = doc.data();
+      final title = _resolveLocalizedField(data, 'title', data['title'] ?? '');
+      final message = _resolveLocalizedField(data, 'message', data['message'] ?? '');
+      return AppAnnouncement(
+        id: doc.id,
+        title: title,
+        message: message,
+        priority: data['priority'] as String? ?? 'normal',
+        status: data['status'] as String? ?? 'draft',
+        publishAt: data['publishAt'] as String?,
+        expiresAt: data['expiresAt'] as String?,
+      );
+    }).toList();
   }
 
   String? _alternateGradeId(String gradeId) {

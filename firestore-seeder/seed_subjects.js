@@ -18,6 +18,7 @@ if (!admin.apps.length) {
 }
 
 const db = admin.firestore();
+const { buildLocalizedSubjectFields, buildLocalizedChapterFields } = require('./seed_locale_helpers');
 
 async function seedSubjects() {
   console.log('Seeding Subjects, Chapters and Mastery Tools...');
@@ -79,147 +80,102 @@ async function seedSubjects() {
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  // ──── 1. Mathematics ──────────────────────────────────────────
-  // ═══════════════════════════════════════════════════════════════
-  const mathRef = db.collection('subjects').doc('math_001');
-  batch.set(mathRef, {
-    name: 'Mathematics',
-    description: 'Polynomials & Geometrical Proofs. Detailed CBSE compliant formula sheets for algebraic identities and theorems.',
-    category: 'Mathematics',
-    iconName: 'calculator',
-    colorValue: 0xFF3B82F6,
-    badgeText: 'CBSE CURATED',
-    subtitle: 'Algebra, Geometry, Trigonometry & more.',
-    unitCount: 7,
-    formulaCount: 14,
-    isFeatured: true
-  });
+  const subjectsData = {
+    math_001: {
+      name: 'Mathematics',
+      description: 'Polynomials & Geometrical Proofs. Detailed CBSE compliant formula sheets for algebraic identities and theorems.',
+      category: 'Mathematics',
+      iconName: 'calculator',
+      colorValue: 0xFF3B82F6,
+      badgeText: 'CBSE CURATED',
+      subtitle: 'Algebra, Geometry, Trigonometry & more.',
+      unitCount: 7,
+      formulaCount: 14,
+      isFeatured: true,
+      chapters: [
+        { id: 'chap_01', name: 'Polynomials & Algebra', subtitle: 'Algebraic Identities & Factoring' },
+        { id: 'chap_02', name: 'Trigonometry', subtitle: 'Ratios, Identities & Equations' },
+        { id: 'chap_03', name: 'Triangles', subtitle: 'Geometry & Theorems' },
+        { id: 'chap_04', name: 'Quadratic Equations', subtitle: 'Roots & Discriminant' },
+        { id: 'chap_05', name: 'Coordinate Geometry', subtitle: 'Distance & Section Formula' },
+        { id: 'chap_06', name: 'Statistics', subtitle: 'Mean, Median & Mode' },
+        { id: 'chap_07', name: 'Probability', subtitle: 'Random Experiments & Events' },
+      ]
+    },
+    physics_001: {
+      name: 'Physics',
+      description: 'Mastering Motion & Laws of Forces',
+      category: 'Science',
+      iconName: 'rocket',
+      colorValue: 0xFF059669,
+      subtitle: 'Mechanics, properties of matter, and the fundamental laws of motion.',
+      unitCount: 5,
+      formulaCount: 11,
+      isFeatured: false,
+      chapters: [
+        { id: 'chap_01', name: 'Motion & Kinematics', subtitle: 'Equations of Motion' },
+        { id: 'chap_02', name: "Forces & Newton's Laws", subtitle: 'Dynamics & Momentum' },
+        { id: 'chap_03', name: 'Gravitation', subtitle: 'Universal Law & Free Fall' },
+        { id: 'chap_04', name: 'Work, Energy & Power', subtitle: 'Conservation Laws' },
+        { id: 'chap_05', name: 'Sound', subtitle: 'Waves, Frequency & Resonance' },
+      ]
+    },
+    biology_001: {
+      name: 'Biology',
+      description: 'Cell: The Fundamental Unit',
+      category: 'Science',
+      iconName: 'microscope',
+      colorValue: 0xFF9333EA,
+      subtitle: 'Explore cell structures, genetics, and life processes.',
+      unitCount: 4,
+      formulaCount: 5,
+      isFeatured: false,
+      chapters: [
+        { id: 'chap_01', name: 'Cell Biology & Genetics', subtitle: 'Cell Division & Heredity' },
+        { id: 'chap_02', name: 'Tissues', subtitle: 'Plant & Animal Tissues' },
+        { id: 'chap_03', name: 'Life Processes', subtitle: 'Nutrition, Respiration & Transport' },
+        { id: 'chap_04', name: 'Heredity & Evolution', subtitle: 'Genetics & Natural Selection' },
+      ]
+    },
+    chemistry_001: {
+      name: 'Chemistry',
+      description: 'Structure of Atom',
+      category: 'Science',
+      iconName: 'flask-conical',
+      colorValue: 0xFFEA580C,
+      subtitle: 'Atomic models, valency, and isotopes combined.',
+      unitCount: 5,
+      formulaCount: 5,
+      isFeatured: false,
+      chapters: [
+        { id: 'chap_01', name: 'Atomic Structure & Quantum', subtitle: 'Bohr Model & Photon Energy' },
+        { id: 'chap_02', name: 'Chemical Bonding', subtitle: 'Ionic & Covalent Bonds' },
+        { id: 'chap_03', name: 'Periodic Table', subtitle: 'Groups, Periods & Trends' },
+        { id: 'chap_04', name: 'Chemical Reactions & Stoichiometry', subtitle: 'Moles & Equations' },
+        { id: 'chap_05', name: 'Acids, Bases & Salts', subtitle: 'pH Scale & Neutralization' },
+      ]
+    }
+  };
 
-  // Chapters
-  const mathChapters = [
-    { id: 'chap_01', name: 'Polynomials & Algebra', subtitle: 'Algebraic Identities & Factoring' },
-    { id: 'chap_02', name: 'Trigonometry', subtitle: 'Ratios, Identities & Equations' },
-    { id: 'chap_03', name: 'Triangles', subtitle: 'Geometry & Theorems' },
-    { id: 'chap_04', name: 'Quadratic Equations', subtitle: 'Roots & Discriminant' },
-    { id: 'chap_05', name: 'Coordinate Geometry', subtitle: 'Distance & Section Formula' },
-    { id: 'chap_06', name: 'Statistics', subtitle: 'Mean, Median & Mode' },
-    { id: 'chap_07', name: 'Probability', subtitle: 'Random Experiments & Events' },
-  ];
-
-  for (const ch of mathChapters) {
-    const ref = mathRef.collection('chapters').doc(ch.id);
-    batch.set(ref, {
-      name: ch.name,
-      subtitle: ch.subtitle,
+  for (const [subId, sub] of Object.entries(subjectsData)) {
+    const subjectRef = db.collection('subjects').doc(subId);
+    const { chapters, ...subjectDoc } = sub;
+    batch.set(subjectRef, {
+      ...subjectDoc,
+      localized: buildLocalizedSubjectFields(subjectDoc)
     });
+
+    for (const ch of chapters) {
+      const ref = subjectRef.collection('chapters').doc(ch.id);
+      batch.set(ref, {
+        name: ch.name,
+        subtitle: ch.subtitle,
+        localized: buildLocalizedChapterFields(ch)
+      });
+    }
+
+    seedMasteryTools(subjectRef);
   }
-
-  seedMasteryTools(mathRef);
-
-
-  // ═══════════════════════════════════════════════════════════════
-  // ──── 2. Physics ──────────────────────────────────────────────
-  // ═══════════════════════════════════════════════════════════════
-  const physicsRef = db.collection('subjects').doc('physics_001');
-  batch.set(physicsRef, {
-    name: 'Physics',
-    description: 'Mastering Motion & Laws of Forces',
-    category: 'Science',
-    iconName: 'rocket',
-    colorValue: 0xFF059669,
-    subtitle: 'Mechanics, properties of matter, and the fundamental laws of motion.',
-    unitCount: 5,
-    formulaCount: 11,
-    isFeatured: false
-  });
-
-  const physicsChapters = [
-    { id: 'chap_01', name: 'Motion & Kinematics', subtitle: 'Equations of Motion' },
-    { id: 'chap_02', name: "Forces & Newton's Laws", subtitle: 'Dynamics & Momentum' },
-    { id: 'chap_03', name: 'Gravitation', subtitle: 'Universal Law & Free Fall' },
-    { id: 'chap_04', name: 'Work, Energy & Power', subtitle: 'Conservation Laws' },
-    { id: 'chap_05', name: 'Sound', subtitle: 'Waves, Frequency & Resonance' },
-  ];
-
-  for (const ch of physicsChapters) {
-    const ref = physicsRef.collection('chapters').doc(ch.id);
-    batch.set(ref, {
-      name: ch.name,
-      subtitle: ch.subtitle,
-    });
-  }
-
-  seedMasteryTools(physicsRef);
-
-
-  // ═══════════════════════════════════════════════════════════════
-  // ──── 3. Biology ──────────────────────────────────────────────
-  // ═══════════════════════════════════════════════════════════════
-  const biologyRef = db.collection('subjects').doc('biology_001');
-  batch.set(biologyRef, {
-    name: 'Biology',
-    description: 'Cell: The Fundamental Unit',
-    category: 'Science',
-    iconName: 'microscope',
-    colorValue: 0xFF9333EA,
-    subtitle: 'Explore cell structures, genetics, and life processes.',
-    unitCount: 4,
-    formulaCount: 5,
-    isFeatured: false
-  });
-
-  const bioChapters = [
-    { id: 'chap_01', name: 'Cell Biology & Genetics', subtitle: 'Cell Division & Heredity' },
-    { id: 'chap_02', name: 'Tissues', subtitle: 'Plant & Animal Tissues' },
-    { id: 'chap_03', name: 'Life Processes', subtitle: 'Nutrition, Respiration & Transport' },
-    { id: 'chap_04', name: 'Heredity & Evolution', subtitle: 'Genetics & Natural Selection' },
-  ];
-
-  for (const ch of bioChapters) {
-    const ref = biologyRef.collection('chapters').doc(ch.id);
-    batch.set(ref, {
-      name: ch.name,
-      subtitle: ch.subtitle,
-    });
-  }
-
-  seedMasteryTools(biologyRef);
-
-
-  // ═══════════════════════════════════════════════════════════════
-  // ──── 4. Chemistry ────────────────────────────────────────────
-  // ═══════════════════════════════════════════════════════════════
-  const chemRef = db.collection('subjects').doc('chemistry_001');
-  batch.set(chemRef, {
-    name: 'Chemistry',
-    description: 'Structure of Atom',
-    category: 'Science',
-    iconName: 'flask-conical',
-    colorValue: 0xFFEA580C,
-    subtitle: 'Atomic models, valency, and isotopes combined.',
-    unitCount: 5,
-    formulaCount: 5,
-    isFeatured: false
-  });
-
-  const chemChapters = [
-    { id: 'chap_01', name: 'Atomic Structure & Quantum', subtitle: 'Bohr Model & Photon Energy' },
-    { id: 'chap_02', name: 'Chemical Bonding', subtitle: 'Ionic & Covalent Bonds' },
-    { id: 'chap_03', name: 'Periodic Table', subtitle: 'Groups, Periods & Trends' },
-    { id: 'chap_04', name: 'Chemical Reactions & Stoichiometry', subtitle: 'Moles & Equations' },
-    { id: 'chap_05', name: 'Acids, Bases & Salts', subtitle: 'pH Scale & Neutralization' },
-  ];
-
-  for (const ch of chemChapters) {
-    const ref = chemRef.collection('chapters').doc(ch.id);
-    batch.set(ref, {
-      name: ch.name,
-      subtitle: ch.subtitle,
-    });
-  }
-
-  seedMasteryTools(chemRef);
 
 
   await batch.commit();

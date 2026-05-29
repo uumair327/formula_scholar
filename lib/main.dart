@@ -13,12 +13,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/core.dart';
+import 'shared/shared.dart';
 import 'features/auth/auth.dart';
 import 'features/dashboard/dashboard.dart';
 import 'features/profile/profile.dart';
 import 'firebase_options.dart';
 import 'l10n/app_localizations.dart';
 import 'core/analytics/analytics_service.dart';
+
 
 const String _googleSignInServerClientId = String.fromEnvironment(
   'GOOGLE_SIGN_IN_SERVER_CLIENT_ID',
@@ -85,8 +87,21 @@ void main() {
       registerRuntimeDependencies();
       AppLogger.info('DI configured', tag: AppLogTags.main);
 
+      // Start listening for dashboard command synchronization events.
+      try {
+        getIt<DashboardCommandListener>().startListening();
+      } catch (e, st) {
+        AppLogger.error(
+          'Failed to start dashboard command listener',
+          tag: AppLogTags.main,
+          error: e,
+          stackTrace: st,
+        );
+      }
+
       // Register global BlocObserver for all Cubit/Bloc lifecycle logging.
       Bloc.observer = AppBlocObserver();
+
 
       AppLogger.info('App starting', tag: AppLogTags.main);
       AppLogger.info(

@@ -32,6 +32,7 @@ if (!admin.apps.length) {
 }
 
 const db = admin.firestore();
+const { buildLocalizedBannerFields } = require('./seed_locale_helpers');
 
 async function seedAppContent() {
     console.log('Seeding app content collections...\n');
@@ -39,12 +40,52 @@ async function seedAppContent() {
     // 1. app_banners
     console.log('  → app_banners');
     const banners = [
-        { title: 'Welcome to Formula Scholar', imageUrl: '/assets/banners/welcome.png', link: '/chapters', isActive: true, displayOrder: 1, bgColor: '#4F46E5' },
-        { title: 'Master New Topics', imageUrl: '/assets/banners/practice.png', link: '/practice', isActive: true, displayOrder: 2, bgColor: '#059669' },
-        { title: 'Track Your Progress', imageUrl: '/assets/banners/progress.png', link: '/profile', isActive: true, displayOrder: 3, bgColor: '#DC2626' }
+        {
+            title: 'Welcome to Formula Scholar',
+            imageUrl: '/assets/banners/welcome.png',
+            link: '/chapters',
+            isActive: true,
+            displayOrder: 1,
+            bgColor: '#4F46E5',
+            translations: {
+                'mr-IN': { title: 'फॉर्म्युला स्कॉलरमध्ये आपले स्वागत आहे' },
+                'ur-IN': { title: 'فارمولا اسکالر میں خوش آمدید' },
+                'ar-IN': { title: 'مرحبًا بك في فورمولا سكولار' }
+            }
+        },
+        {
+            title: 'Master New Topics',
+            imageUrl: '/assets/banners/practice.png',
+            link: '/practice',
+            isActive: true,
+            displayOrder: 2,
+            bgColor: '#059669',
+            translations: {
+                'mr-IN': { title: 'नवीन विषयांवर प्रभुत्व मिळवा' },
+                'ur-IN': { title: 'نئے موضوعات پر عبور حاصل کریں' },
+                'ar-IN': { title: 'إتقان المواضيع الجديدة' }
+            }
+        },
+        {
+            title: 'Track Your Progress',
+            imageUrl: '/assets/banners/progress.png',
+            link: '/profile',
+            isActive: true,
+            displayOrder: 3,
+            bgColor: '#DC2626',
+            translations: {
+                'mr-IN': { title: 'तुमच्या प्रगतीचा मागोवा घ्या' },
+                'ur-IN': { title: 'اپنی کارکردگی پر نظر رکھیں' },
+                'ar-IN': { title: 'تتبع تقدمك' }
+            }
+        }
     ];
     for (const banner of banners) {
-        await db.collection('app_banners').add(banner);
+        const { translations, ...bannerDoc } = banner;
+        await db.collection('app_banners').add({
+            ...bannerDoc,
+            localized: buildLocalizedBannerFields(banner)
+        });
     }
 
     // 2. forum_posts (seed a sample welcome post)
