@@ -96,22 +96,11 @@ class PracticeCompletionScreen extends StatelessWidget {
                     const SizedBox(height: AppDimensions.paddingXL),
                     SizedBox(
                       width: double.infinity,
-                      child: FilledButton.icon(
+                      child: AppGradientButton(
                         onPressed: () =>
                             context.read<PracticeCubit>().resetQuiz(),
-                        icon: const Icon(LucideIcons.refreshCw),
-                        label: Text(
-                          context.l10n.playAgain,
-                          style: AppTextStyles.labelLarge.copyWith(
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        style: FilledButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: AppDimensions.paddingLG,
-                          ),
-                          shape: const StadiumBorder(),
-                        ),
+                        icon: LucideIcons.refreshCw,
+                        label: context.l10n.playAgain,
                       ),
                     ),
                     if (hasIncorrect) ...[

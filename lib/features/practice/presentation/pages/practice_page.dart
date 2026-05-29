@@ -33,7 +33,11 @@ class _PracticePageState extends State<PracticePage> {
     return BlocListener<CurriculumCubit, CurriculumState>(
       listenWhen: (prev, curr) => prev.curriculum != curr.curriculum,
       listener: (context, state) {
-        _loadSubjects();
+        final curr = state.curriculum;
+        if (curr != null) {
+          context.read<PracticeCubit>().loadSubjects(curr.boardId, curr.gradeId);
+          context.read<PracticeCubit>().resetQuizWithCurriculum(curr.boardId, curr.gradeId);
+        }
       },
       child: BlocBuilder<AuthCubit, AuthState>(
         buildWhen: (prev, curr) => prev.user != curr.user,

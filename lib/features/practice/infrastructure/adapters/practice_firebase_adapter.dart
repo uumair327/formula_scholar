@@ -23,13 +23,26 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
       tag: AppLogTags.practiceDataSource,
     );
 
-    var query = _api
+    Query<Map<String, dynamic>> query = _api
         .collection(AppFirestoreCollections.practiceQuestions)
         .where('boardId', isEqualTo: boardId)
         .where('gradeId', isEqualTo: gradeId);
 
-    if (categoryId != null && categoryId.isNotEmpty) {
-      query = query.where('category', isEqualTo: categoryId);
+    if (subjectId != null && subjectId.isNotEmpty) {
+      query = query.where(
+        Filter.or(
+          Filter('subjectId', isEqualTo: subjectId),
+          Filter('category', isEqualTo: subjectId),
+          Filter('categoryId', isEqualTo: subjectId),
+        ),
+      );
+    } else if (categoryId != null && categoryId.isNotEmpty) {
+      query = query.where(
+        Filter.or(
+          Filter('category', isEqualTo: categoryId),
+          Filter('categoryId', isEqualTo: categoryId),
+        ),
+      );
     }
 
     var snapshot = await _api.execute(
@@ -45,8 +58,21 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
       Query<Map<String, dynamic>> fallbackQuery = _api.collection(
         AppFirestoreCollections.practiceQuestions,
       );
-      if (categoryId != null && categoryId.isNotEmpty) {
-        fallbackQuery = fallbackQuery.where('category', isEqualTo: categoryId);
+      if (subjectId != null && subjectId.isNotEmpty) {
+        fallbackQuery = fallbackQuery.where(
+          Filter.or(
+            Filter('subjectId', isEqualTo: subjectId),
+            Filter('category', isEqualTo: subjectId),
+            Filter('categoryId', isEqualTo: subjectId),
+          ),
+        );
+      } else if (categoryId != null && categoryId.isNotEmpty) {
+        fallbackQuery = fallbackQuery.where(
+          Filter.or(
+            Filter('category', isEqualTo: categoryId),
+            Filter('categoryId', isEqualTo: categoryId),
+          ),
+        );
       }
 
       snapshot = await _api.execute(

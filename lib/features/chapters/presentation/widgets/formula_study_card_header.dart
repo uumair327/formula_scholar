@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../domain/domain.dart';
 import '../../../../core/core.dart';
+import '../cubit/formulas_cubit.dart';
 
 class FormulaStudyCardHeader extends StatelessWidget {
   const FormulaStudyCardHeader({
@@ -18,6 +20,10 @@ class FormulaStudyCardHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final hasNote = context.select<FormulasCubit, bool>(
+      (cubit) => cubit.state.noteFor(formula.id)?.content.isNotEmpty ?? false,
+    );
+
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(
         AppDimensions.paddingXL,
@@ -47,14 +53,31 @@ class FormulaStudyCardHeader extends StatelessWidget {
           ),
           const SizedBox(width: AppDimensions.paddingMD),
           Expanded(
-            child: Text(
-              formula.title,
-              style: AppTextStyles.titleLarge.copyWith(
-                fontWeight: FontWeight.w800,
-                color: colorScheme.onSurface,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    formula.title,
+                    style: AppTextStyles.titleLarge.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: colorScheme.onSurface,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                if (hasNote) ...[
+                  const SizedBox(width: AppDimensions.paddingSM),
+                  Tooltip(
+                    message: 'Contains personal note',
+                    child: Icon(
+                      LucideIcons.stickyNote,
+                      size: AppDimensions.iconSM,
+                      color: colorScheme.secondary,
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
           _OverflowMenu(onMenuAction: onMenuAction),

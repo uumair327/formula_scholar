@@ -17,22 +17,11 @@ class QuizNextButton extends StatelessWidget {
       left: AppDimensions.paddingXXL,
       right: AppDimensions.paddingXXL,
       child: SafeArea(
-        child: FilledButton(
+        child: AppGradientButton(
+          label: state.isLastQuestion
+              ? context.l10n.quizCompleteTitle
+              : context.l10n.nextQuestion,
           onPressed: () => context.read<PracticeCubit>().nextQuestion(),
-          style: FilledButton.styleFrom(
-            padding: const EdgeInsets.symmetric(
-              vertical: AppDimensions.paddingLG,
-            ),
-            shape: const StadiumBorder(),
-          ),
-          child: Text(
-            state.isLastQuestion
-                ? context.l10n.quizCompleteTitle
-                : context.l10n.nextQuestion,
-            style: AppTextStyles.labelLarge.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
-          ),
         ),
       ),
     );

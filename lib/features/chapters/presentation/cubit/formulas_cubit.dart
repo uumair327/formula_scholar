@@ -85,6 +85,10 @@ class FormulasCubit extends Cubit<FormulasState>
         );
         emit(state.copyWith(status: FormulasStatus.loaded, formulas: data));
 
+        // Pre-fetch notes for each loaded formula in parallel
+        final noteFutures = data.map((f) => loadFormulaNote(f.id));
+        unawaited(Future.wait(noteFutures));
+
         final safeChapterName = chapterName ?? AppStrings.chapterLabel;
         await _markChapterStarted(
           subjectId: subjectId,

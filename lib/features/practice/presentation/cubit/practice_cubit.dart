@@ -335,4 +335,22 @@ class PracticeCubit extends Cubit<PracticeState>
       ),
     );
   }
+
+  void resetQuizWithCurriculum(String boardId, String gradeId) {
+    _timer?.cancel();
+    emit(
+      state.copyWith(
+        status: PracticeStatus.initial,
+        boardId: boardId,
+        gradeId: gradeId,
+        subjectId: null,
+        questions: const [],
+        currentIndex: 0,
+        selectedOptionId: null,
+        showResult: false,
+        totalPoints: 0,
+        answerRecords: const [],
+      ),
+    );
+  }
 }

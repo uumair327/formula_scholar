@@ -28,91 +28,81 @@ class QuizOptionsList extends StatelessWidget {
           final showCorrectHint = state.showResult && !state.isCorrect && isCorrect;
           final hasAnswered = state.selectedOptionId != null;
 
-          return Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: hasAnswered
-                  ? null
-                  : () => context.read<PracticeCubit>().selectOption(option.id),
-              borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-              child: AnimatedContainer(
-                duration: AppDurations.animationDefault,
-                padding: const EdgeInsets.all(AppDimensions.paddingXXL),
-                decoration: BoxDecoration(
-                  color: showCorrectState || showCorrectHint
-                      ? colorScheme.secondaryContainer.withValues(
-                          alpha: AppDimensions.opacitySubtle,
-                        )
-                      : showWrongState
-                      ? colorScheme.error.withValues(
-                          alpha: AppDimensions.opacityFaint,
-                        )
-                      : colorScheme.surfaceContainerLowest,
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-                  border: Border.all(
+          return AppCard(
+            borderRadius: AppDimensions.radiusMD,
+            onTap: hasAnswered
+                ? null
+                : () => context.read<PracticeCubit>().selectOption(option.id),
+            padding: const EdgeInsets.all(AppDimensions.paddingXXL),
+            color: showCorrectState || showCorrectHint
+                ? colorScheme.secondaryContainer.withValues(
+                    alpha: AppDimensions.opacitySubtle,
+                  )
+                : showWrongState
+                ? colorScheme.error.withValues(
+                    alpha: AppDimensions.opacityFaint,
+                  )
+                : colorScheme.surfaceContainerLowest,
+            border: Border.all(
+              color: showCorrectState || showCorrectHint
+                  ? colorScheme.secondary
+                  : showWrongState
+                  ? colorScheme.error
+                  : colorScheme.outlineVariant.withValues(alpha: 0.3),
+              width: AppDimensions.borderWidth,
+            ),
+            child: Row(
+              children: [
+                AnimatedContainer(
+                  duration: AppDurations.animationDefault,
+                  width: AppDimensions.avatarLG,
+                  height: AppDimensions.avatarLG,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
                     color: showCorrectState || showCorrectHint
                         ? colorScheme.secondary
                         : showWrongState
                         ? colorScheme.error
-                        : colorScheme.outlineVariant.withValues(alpha: 0.3),
-                    width: AppDimensions.borderWidth,
+                        : colorScheme.surfaceContainerHigh,
                   ),
-                  boxShadow: const [AppShadows.ghost],
-                ),
-                child: Row(
-                  children: [
-                    AnimatedContainer(
-                      duration: AppDurations.animationDefault,
-                      width: AppDimensions.avatarLG,
-                      height: AppDimensions.avatarLG,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: showCorrectState || showCorrectHint
-                            ? colorScheme.secondary
-                            : showWrongState
-                            ? colorScheme.error
-                            : colorScheme.surfaceContainerHigh,
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        option.id,
-                        style: AppTextStyles.titleMedium.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: showCorrectState || showCorrectHint
-                              ? colorScheme.onSecondary
-                              : showWrongState
-                              ? colorScheme.onError
-                              : colorScheme.outline,
-                        ),
-                      ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    option.id,
+                    style: AppTextStyles.titleMedium.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: showCorrectState || showCorrectHint
+                          ? colorScheme.onSecondary
+                          : showWrongState
+                          ? colorScheme.onError
+                          : colorScheme.outline,
                     ),
-                    const SizedBox(width: AppDimensions.paddingLG),
-                    Expanded(
-                      child: _buildOptionText(
-                        option.text,
-                        AppTextStyles.titleMedium.copyWith(
-                          fontWeight: showCorrectState || showWrongState || showCorrectHint
-                              ? FontWeight.w700
-                              : FontWeight.w500,
-                          color: showCorrectState || showCorrectHint
-                              ? colorScheme.onSecondaryContainer
-                              : showWrongState
-                              ? colorScheme.error
-                              : null,
-                        ),
-                      ),
-                    ),
-                    if (showCorrectState || showCorrectHint)
-                      Icon(LucideIcons.checkCircle2,
-                          size: AppDimensions.iconLG,
-                          color: colorScheme.secondary),
-                    if (showWrongState)
-                      Icon(LucideIcons.xCircle,
-                          size: AppDimensions.iconLG,
-                          color: colorScheme.error),
-                  ],
+                  ),
                 ),
-              ),
+                const SizedBox(width: AppDimensions.paddingLG),
+                Expanded(
+                  child: _buildOptionText(
+                    option.text,
+                    AppTextStyles.titleMedium.copyWith(
+                      fontWeight: showCorrectState || showWrongState || showCorrectHint
+                          ? FontWeight.w700
+                          : FontWeight.w500,
+                      color: showCorrectState || showCorrectHint
+                          ? colorScheme.onSecondaryContainer
+                          : showWrongState
+                          ? colorScheme.error
+                          : null,
+                    ),
+                  ),
+                ),
+                if (showCorrectState || showCorrectHint)
+                  Icon(LucideIcons.checkCircle2,
+                      size: AppDimensions.iconLG,
+                      color: colorScheme.secondary),
+                if (showWrongState)
+                  Icon(LucideIcons.xCircle,
+                      size: AppDimensions.iconLG,
+                      color: colorScheme.error),
+              ],
             ),
           );
         }).toList();

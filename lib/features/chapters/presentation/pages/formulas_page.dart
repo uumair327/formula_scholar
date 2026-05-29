@@ -16,13 +16,20 @@ class FormulasPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<FormulasCubit, FormulasState>(
-      buildWhen: (prev, curr) =>
-          prev.status != curr.status ||
-          prev.formulas != curr.formulas ||
-          prev.isChapterSaved != curr.isChapterSaved,
-      builder: (context, state) {
-        final colorScheme = Theme.of(context).colorScheme;
+    return BlocListener<SubjectSelectionCubit, SubjectSelectionState>(
+      listenWhen: (prev, curr) => prev.subject != null && curr.subject == null,
+      listener: (context, state) {
+        if (context.mounted) {
+          context.pop();
+        }
+      },
+      child: BlocBuilder<FormulasCubit, FormulasState>(
+        buildWhen: (prev, curr) =>
+            prev.status != curr.status ||
+            prev.formulas != curr.formulas ||
+            prev.isChapterSaved != curr.isChapterSaved,
+        builder: (context, state) {
+          final colorScheme = Theme.of(context).colorScheme;
 
         if (state.status == FormulasStatus.loading ||
             state.status == FormulasStatus.initial) {
@@ -159,6 +166,7 @@ class FormulasPage extends StatelessWidget {
           ),
         );
       },
-    );
-  }
+    ),
+  );
+}
 }
