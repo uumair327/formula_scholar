@@ -69,10 +69,13 @@ class _OnboardingStep1PageState extends State<OnboardingStep1Page> {
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              OnboardingStepHeading(
-                tag: context.l10n.step1Tag,
-                title: context.l10n.step1Title,
-                subtitle: context.l10n.step1Subtitle,
+              EntranceWrapper.stagger(
+                index: 0,
+                child: OnboardingStepHeading(
+                  tag: context.l10n.step1Tag,
+                  title: context.l10n.step1Title,
+                  subtitle: context.l10n.step1Subtitle,
+                ),
               ),
               const SizedBox(height: AppDimensions.paddingXXL),
               LayoutBuilder(
@@ -107,17 +110,23 @@ class _OnboardingStep1PageState extends State<OnboardingStep1Page> {
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(flex: 7, child: formCard),
+                        Expanded(
+                          flex: 7,
+                          child: EntranceWrapper.stagger(index: 1, child: formCard),
+                        ),
                         const SizedBox(width: AppDimensions.paddingXL),
-                        const Expanded(flex: 5, child: LocationInfoCards()),
+                        Expanded(
+                          flex: 5,
+                          child: EntranceWrapper.stagger(index: 2, child: const LocationInfoCards()),
+                        ),
                       ],
                     );
                   }
                   return Column(
                     children: [
-                      formCard,
+                      EntranceWrapper.stagger(index: 1, child: formCard),
                       const SizedBox(height: AppDimensions.paddingLG),
-                      const LocationInfoCards(),
+                      EntranceWrapper.stagger(index: 2, child: const LocationInfoCards()),
                     ],
                   );
                 },

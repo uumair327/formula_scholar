@@ -67,23 +67,31 @@ class OnboardingStep4Page extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          OnboardingStepHeading(
-            tag: context.l10n.step4Tag,
-            title: context.l10n.step4Title,
-            subtitle: context.l10n.step4Subtitle,
+          EntranceWrapper.stagger(
+            index: 0,
+            child: OnboardingStepHeading(
+              tag: context.l10n.step4Tag,
+              title: context.l10n.step4Title,
+              subtitle: context.l10n.step4Subtitle,
+            ),
           ),
           const SizedBox(height: AppDimensions.paddingXXL),
           Column(
-            children: goals.map((goal) {
+            children: goals.asMap().entries.map((entry) {
+              final idx = entry.key;
+              final goal = entry.value;
               return Padding(
                 padding: const EdgeInsets.only(bottom: AppDimensions.paddingMD),
-                child: _GoalCard(
-                  goal: goal,
-                  isSelected: context.select<OnboardingCubit, bool>(
-                    (cubit) => cubit.state.selectedStudyGoalId == goal.id,
+                child: EntranceWrapper.stagger(
+                  index: idx + 1,
+                  child: _GoalCard(
+                    goal: goal,
+                    isSelected: context.select<OnboardingCubit, bool>(
+                      (cubit) => cubit.state.selectedStudyGoalId == goal.id,
+                    ),
+                    onTap: () =>
+                        context.read<OnboardingCubit>().selectStudyGoal(goal.id),
                   ),
-                  onTap: () =>
-                      context.read<OnboardingCubit>().selectStudyGoal(goal.id),
                 ),
               );
             }).toList(),
@@ -94,7 +102,7 @@ class OnboardingStep4Page extends StatelessWidget {
   }
 }
 
-class _GoalCard extends StatelessWidget {
+class _GoalCard extends StatefulWidget {
   const _GoalCard({
     required this.goal,
     required this.isSelected,
@@ -104,8 +112,22 @@ class _GoalCard extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
+  @override
+  State<_GoalCard> createState() => _GoalCardState();
+}
+
+class _GoalCardState extends State<_GoalCard> {
+  bool _isPressed = false;
+
+  void _handleTapDown(TapDownDetails details) => setState(() => _isPressed = true);
+  void _handleTapUp(TapUpDetails details) {
+    setState(() => _isPressed = false);
+    widget.onTap();
+  }
+  void _handleTapCancel() => setState(() => _isPressed = false);
+
   Color _goalAccent(ColorScheme cs) {
-    return switch (goal.id) {
+    return switch (widget.goal.id) {
       'casual' => cs.secondary,
       'regular' => cs.primary,
       'intensive' => cs.tertiary,
@@ -119,23 +141,29 @@ class _GoalCard extends StatelessWidget {
     final accent = _goalAccent(colorScheme);
 
     return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
+      onTapDown: _handleTapDown,
+      onTapUp: _handleTapUp,
+      onTapCancel: _handleTapCancel,
+      child: AnimatedScale(
+        scale: _isPressed ? 0.98 : 1.0,
+        duration: AppDurations.animationFast,
+        curve: Curves.easeOutCubic,
+        child: AnimatedContainer(
         duration: AppDurations.animationFast,
         padding: const EdgeInsets.all(AppDimensions.paddingLG),
-        decoration: BoxDecoration(
-          color: colorScheme.surfaceContainerLowest,
-          borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-          border: Border.all(
-            color: isSelected
-                ? accent.withValues(alpha: AppDimensions.opacityMedium)
-                : AppColors.transparent,
-            width: isSelected
-                ? AppDimensions.borderWidthThick
-                : AppDimensions.borderWidth,
+          decoration: BoxDecoration(
+            color: colorScheme.surfaceContainerLowest,
+            borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+            border: Border.all(
+              color: widget.isSelected
+                  ? accent.withValues(alpha: AppDimensions.opacityMedium)
+                  : AppColors.transparent,
+              width: widget.isSelected
+                  ? AppDimensions.borderWidthThick
+                  : AppDimensions.borderWidth,
+            ),
+            boxShadow: widget.isSelected ? [AppShadows.ghost] : [AppShadows.subtle],
           ),
-          boxShadow: isSelected ? [AppShadows.ghost] : [AppShadows.subtle],
-        ),
         child: Row(
           children: [
             AnimatedContainer(
@@ -144,14 +172,14 @@ class _GoalCard extends StatelessWidget {
               height: AppDimensions.avatarMD,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: isSelected
+                color: widget.isSelected
                     ? accent
                     : accent.withValues(alpha: AppDimensions.opacityFaint),
               ),
               child: Icon(
-                goal.icon,
+                widget.goal.icon,
                 size: AppDimensions.iconDefault,
-                color: isSelected ? colorScheme.onPrimary : accent,
+                color: widget.isSelected ? colorScheme.onPrimary : accent,
               ),
             ),
             const SizedBox(width: AppDimensions.paddingXL),
@@ -160,14 +188,14 @@ class _GoalCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    goal.title,
+                    widget.goal.title,
                     style: AppTextStyles.labelLarge.copyWith(
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                   const SizedBox(height: AppDimensions.paddingXXS),
                   Text(
-                    goal.subtitle,
+                    widget.goal.subtitle,
                     style: AppTextStyles.bodySmall.copyWith(
                       color: colorScheme.onSurfaceVariant,
                     ),
@@ -175,7 +203,7 @@ class _GoalCard extends StatelessWidget {
                 ],
               ),
             ),
-            if (isSelected)
+            if (widget.isSelected)
               Container(
                 width: AppDimensions.iconMD,
                 height: AppDimensions.iconMD,
@@ -191,6 +219,7 @@ class _GoalCard extends StatelessWidget {
               ),
           ],
         ),
+      ),
       ),
     );
   }

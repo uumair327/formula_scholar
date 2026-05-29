@@ -118,7 +118,7 @@ class OnboardingStep3Page extends StatelessWidget {
   }
 }
 
-class _GradeCard extends StatelessWidget {
+class _GradeCard extends StatefulWidget {
   const _GradeCard({
     required this.grade,
     required this.isSelected,
@@ -131,90 +131,111 @@ class _GradeCard extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
+  State<_GradeCard> createState() => _GradeCardState();
+}
+
+class _GradeCardState extends State<_GradeCard> {
+  bool _isPressed = false;
+
+  void _handleTapDown(TapDownDetails details) => setState(() => _isPressed = true);
+  void _handleTapUp(TapUpDetails details) {
+    setState(() => _isPressed = false);
+    widget.onTap();
+  }
+  void _handleTapCancel() => setState(() => _isPressed = false);
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
+      onTapDown: _handleTapDown,
+      onTapUp: _handleTapUp,
+      onTapCancel: _handleTapCancel,
+      child: AnimatedScale(
+        scale: _isPressed ? 0.98 : 1.0,
         duration: AppDurations.animationFast,
-        padding: const EdgeInsets.all(AppDimensions.paddingXXL),
-        decoration: BoxDecoration(
-          color: colorScheme.surfaceContainerLowest,
-          borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-          border: Border.all(
-            color: isSelected
-                ? AppColors.primary.withValues(
-                    alpha: AppDimensions.opacityMedium,
-                  )
-                : AppColors.transparent,
-            width: isSelected
-                ? AppDimensions.borderWidthThick
-                : AppDimensions.borderWidth,
-          ),
-          boxShadow: isSelected ? [AppShadows.ghost] : [AppShadows.subtle],
-        ),
-        child: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AnimatedContainer(
-                  duration: AppDurations.animationFast,
-                  width: AppDimensions.avatarLG,
-                  height: AppDimensions.avatarLG,
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? AppColors.primary
-                        : AppColors.primary.withValues(
-                            alpha: AppDimensions.opacityFaint,
-                          ),
-                    borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-                  ),
-                  child: Icon(
-                    LucideIcons.graduationCap,
-                    size: AppDimensions.iconLG,
-                    color: isSelected ? AppColors.onPrimary : AppColors.primary,
-                  ),
-                ),
-                const SizedBox(height: AppDimensions.paddingXL),
-                Text(
-                  grade.displayLabel,
-                  style: AppTextStyles.headlineSmall.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: AppDimensions.paddingXXS),
-                Text(
-                  'Grade ${grade.classNumber}',
-                  style: AppTextStyles.bodySmall.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
+        curve: Curves.easeOutCubic,
+        child: AnimatedContainer(
+          duration: AppDurations.animationFast,
+          padding: const EdgeInsets.all(AppDimensions.paddingXXL),
+          decoration: BoxDecoration(
+            color: widget.colorScheme.surfaceContainerLowest,
+            borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+            border: Border.all(
+              color: widget.isSelected
+                  ? AppColors.primary.withValues(
+                      alpha: AppDimensions.opacityMedium,
+                    )
+                  : AppColors.transparent,
+              width: widget.isSelected
+                  ? AppDimensions.borderWidthThick
+                  : AppDimensions.borderWidth,
             ),
-            if (isSelected)
-              Positioned(
-                top: 0,
-                left: Directionality.of(context) == TextDirection.rtl
-                    ? 0
-                    : null,
-                right: Directionality.of(context) == TextDirection.ltr
-                    ? 0
-                    : null,
-                child: Container(
-                  width: AppDimensions.iconMD,
-                  height: AppDimensions.iconMD,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.primary,
+            boxShadow: widget.isSelected ? [AppShadows.ghost] : [AppShadows.subtle],
+          ),
+          child: Stack(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AnimatedContainer(
+                    duration: AppDurations.animationFast,
+                    width: AppDimensions.avatarLG,
+                    height: AppDimensions.avatarLG,
+                    decoration: BoxDecoration(
+                      color: widget.isSelected
+                          ? AppColors.primary
+                          : AppColors.primary.withValues(
+                              alpha: AppDimensions.opacityFaint,
+                            ),
+                      borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+                    ),
+                    child: Icon(
+                      LucideIcons.graduationCap,
+                      size: AppDimensions.iconLG,
+                      color: widget.isSelected ? AppColors.onPrimary : AppColors.primary,
+                    ),
                   ),
-                  child: const Icon(
-                    LucideIcons.check,
-                    size: AppDimensions.iconSM,
-                    color: AppColors.onPrimary,
+                  const SizedBox(height: AppDimensions.paddingXL),
+                  Text(
+                    widget.grade.displayLabel,
+                    style: AppTextStyles.headlineSmall.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: AppDimensions.paddingXXS),
+                  Text(
+                    'Grade ${widget.grade.classNumber}',
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: widget.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+              if (widget.isSelected)
+                Positioned(
+                  top: 0,
+                  left: Directionality.of(context) == TextDirection.rtl
+                      ? 0
+                      : null,
+                  right: Directionality.of(context) == TextDirection.ltr
+                      ? 0
+                      : null,
+                  child: Container(
+                    width: AppDimensions.iconMD,
+                    height: AppDimensions.iconMD,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.primary,
+                    ),
+                    child: const Icon(
+                      LucideIcons.check,
+                      size: AppDimensions.iconSM,
+                      color: AppColors.onPrimary,
+                    ),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );

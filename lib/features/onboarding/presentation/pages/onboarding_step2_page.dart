@@ -65,9 +65,12 @@ class OnboardingStep2Page extends StatelessWidget {
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              OnboardingStepHeading(
-                tag: context.l10n.step2Tag,
-                title: context.l10n.step2Title,
+              EntranceWrapper.stagger(
+                index: 0,
+                child: OnboardingStepHeading(
+                  tag: context.l10n.step2Tag,
+                  title: context.l10n.step2Title,
+                ),
               ),
               const SizedBox(height: AppDimensions.paddingXXL),
 
@@ -102,38 +105,48 @@ class OnboardingStep2Page extends StatelessWidget {
                       ? Wrap(
                           spacing: AppDimensions.paddingLG,
                           runSpacing: AppDimensions.paddingLG,
-                          children: state.boards.map((b) {
+                          children: state.boards.asMap().entries.map((entry) {
+                            final idx = entry.key;
+                            final b = entry.value;
                             return SizedBox(
                               width:
                                   (constraints.maxWidth -
                                       AppDimensions.paddingLG) /
                                   2,
-                              child: CurriculumCard(
-                                board: b,
-                                isSelected: state.selectedBoard?.id == b.id,
-                                icon: _getIconForBoardType(b.type),
-                                color: _getColorForBoardType(context, b.type),
-                                onTap: () => context
-                                    .read<OnboardingCubit>()
-                                    .selectBoard(b),
+                              child: EntranceWrapper.stagger(
+                                index: idx + 1,
+                                child: CurriculumCard(
+                                  board: b,
+                                  isSelected: state.selectedBoard?.id == b.id,
+                                  icon: _getIconForBoardType(b.type),
+                                  color: _getColorForBoardType(context, b.type),
+                                  onTap: () => context
+                                      .read<OnboardingCubit>()
+                                      .selectBoard(b),
+                                ),
                               ),
                             );
                           }).toList(),
                         )
                       : Column(
-                          children: state.boards.map((b) {
+                          children: state.boards.asMap().entries.map((entry) {
+                            final idx = entry.key;
+                            final b = entry.value;
                             return Padding(
                               padding: const EdgeInsets.only(
                                 bottom: AppDimensions.paddingLG,
                               ),
-                              child: CurriculumCard(
-                                board: b,
-                                isSelected: state.selectedBoard?.id == b.id,
-                                icon: _getIconForBoardType(b.type),
-                                color: _getColorForBoardType(context, b.type),
-                                onTap: () => context
-                                    .read<OnboardingCubit>()
-                                    .selectBoard(b),
+                              child: EntranceWrapper.stagger(
+                                index: idx + 1,
+                                child: CurriculumCard(
+                                  board: b,
+                                  isSelected: state.selectedBoard?.id == b.id,
+                                  icon: _getIconForBoardType(b.type),
+                                  color: _getColorForBoardType(context, b.type),
+                                  onTap: () => context
+                                      .read<OnboardingCubit>()
+                                      .selectBoard(b),
+                                ),
                               ),
                             );
                           }).toList(),
@@ -143,56 +156,59 @@ class OnboardingStep2Page extends StatelessWidget {
               const SizedBox(height: AppDimensions.paddingXL),
 
               // "Not sure" hint card
-              Container(
-                padding: const EdgeInsets.all(AppDimensions.paddingXL),
-                decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainer,
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            context.l10n.step2NotSureTitle,
-                            style: AppTextStyles.labelLarge.copyWith(
-                              fontWeight: FontWeight.w700,
+              EntranceWrapper.stagger(
+                index: state.boards.length + 1,
+                child: Container(
+                  padding: const EdgeInsets.all(AppDimensions.paddingXL),
+                  decoration: BoxDecoration(
+                    color: colorScheme.surfaceContainer,
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              context.l10n.step2NotSureTitle,
+                              style: AppTextStyles.labelLarge.copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: AppDimensions.paddingXXS),
-                          Text(
-                            context.l10n.step2NotSureDesc,
-                            style: AppTextStyles.bodySmall.copyWith(
-                              color: colorScheme.onSurfaceVariant,
+                            const SizedBox(height: AppDimensions.paddingXXS),
+                            Text(
+                              context.l10n.step2NotSureDesc,
+                              style: AppTextStyles.bodySmall.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: AppDimensions.paddingMD),
-                    TextButton.icon(
-                      onPressed: () => OnboardingBoardGuideSheet.show(
-                        context,
-                        boards: state.boards,
-                        selectedBoardId: state.selectedBoard?.id,
-                        onSelectBoard: (board) =>
-                            context.read<OnboardingCubit>().selectBoard(board),
-                      ),
-                      icon: const Icon(
-                        LucideIcons.arrowRight,
-                        size: AppDimensions.iconSM,
-                      ),
-                      label: Text(context.l10n.step2LearnMore),
-                      style: TextButton.styleFrom(
-                        foregroundColor: AppColors.primary,
-                        textStyle: AppTextStyles.labelMedium.copyWith(
-                          fontWeight: FontWeight.w700,
+                          ],
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: AppDimensions.paddingMD),
+                      TextButton.icon(
+                        onPressed: () => OnboardingBoardGuideSheet.show(
+                          context,
+                          boards: state.boards,
+                          selectedBoardId: state.selectedBoard?.id,
+                          onSelectBoard: (board) =>
+                              context.read<OnboardingCubit>().selectBoard(board),
+                        ),
+                        icon: const Icon(
+                          LucideIcons.arrowRight,
+                          size: AppDimensions.iconSM,
+                        ),
+                        label: Text(context.l10n.step2LearnMore),
+                        style: TextButton.styleFrom(
+                          foregroundColor: AppColors.primary,
+                          textStyle: AppTextStyles.labelMedium.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

@@ -84,23 +84,11 @@ class _OnboardingAppBar extends StatelessWidget {
               ),
             ),
             const SizedBox(height: AppDimensions.paddingXS),
-            ShaderMask(
-              shaderCallback: (bounds) => const LinearGradient(
-                colors: [AppColors.primary, AppColors.primaryContainer],
-              ).createShader(bounds),
-              child: Text(
-                AppStrings.onboardingStepOf(currentStep, totalSteps),
-                style: AppTextStyles.headlineSmall.copyWith(
-                  fontWeight: FontWeight.w900,
-                  color: colorScheme.onPrimary,
-                ),
-              ),
-            ),
             Text(
               AppStrings.onboardingStepOf(currentStep, totalSteps),
-              style: AppTextStyles.labelMedium.copyWith(
-                color: colorScheme.onSurfaceVariant,
-                fontWeight: FontWeight.w600,
+              style: AppTextStyles.labelLarge.copyWith(
+                color: colorScheme.primary,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ],
@@ -133,18 +121,25 @@ class _OnboardingProgressBar extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
                 ),
               ),
-              FractionallySizedBox(
-                widthFactor: progress.clamp(0.0, 1.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: isDark
-                        ? AppColors.darkPrimaryGradient
-                        : AppColors.primaryGradient,
-                    borderRadius: BorderRadius.circular(
-                      AppDimensions.radiusXXL,
+              TweenAnimationBuilder<double>(
+                tween: Tween<double>(begin: 0.0, end: progress.clamp(0.0, 1.0)),
+                duration: AppDurations.animationDefault,
+                curve: Curves.easeInOutCubic,
+                builder: (context, value, child) {
+                  return FractionallySizedBox(
+                    widthFactor: value,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: isDark
+                            ? AppColors.darkPrimaryGradient
+                            : AppColors.primaryGradient,
+                        borderRadius: BorderRadius.circular(
+                          AppDimensions.radiusXXL,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
             ],
           ),

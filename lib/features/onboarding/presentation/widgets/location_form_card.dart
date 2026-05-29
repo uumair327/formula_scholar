@@ -76,10 +76,15 @@ class LocationFormCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
               ),
               focusedBorder: OutlineInputBorder(
+                borderSide: const BorderSide(
+                  color: AppColors.primary,
+                  width: AppDimensions.borderWidthThick,
+                ),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
+              ),
+              enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: AppColors.primary.withValues(
-                    alpha: AppDimensions.opacitySubtle,
-                  ),
+                  color: colorScheme.outlineVariant.withValues(alpha: 0.5),
                   width: AppDimensions.borderWidth,
                 ),
                 borderRadius: BorderRadius.circular(AppDimensions.radiusSM),

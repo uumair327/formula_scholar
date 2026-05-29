@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../core/core.dart';
 
-class OnboardingSelectCard extends StatelessWidget {
+class OnboardingSelectCard extends StatefulWidget {
   const OnboardingSelectCard({
     super.key,
     required this.icon,
@@ -18,78 +18,99 @@ class OnboardingSelectCard extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
+  State<OnboardingSelectCard> createState() => _OnboardingSelectCardState();
+}
+
+class _OnboardingSelectCardState extends State<OnboardingSelectCard> {
+  bool _isPressed = false;
+
+  void _handleTapDown(TapDownDetails details) => setState(() => _isPressed = true);
+  void _handleTapUp(TapUpDetails details) {
+    setState(() => _isPressed = false);
+    widget.onTap();
+  }
+  void _handleTapCancel() => setState(() => _isPressed = false);
+
+  @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
+      onTapDown: _handleTapDown,
+      onTapUp: _handleTapUp,
+      onTapCancel: _handleTapCancel,
+      child: AnimatedScale(
+        scale: _isPressed ? 0.98 : 1.0,
         duration: AppDurations.animationFast,
-        padding: const EdgeInsets.all(AppDimensions.paddingXXL),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? (isDark
-                  ? AppColors.darkPrimary.withValues(alpha: 0.08)
-                  : AppColors.primaryFixed.withValues(alpha: 0.08))
-              : colorScheme.surfaceContainerLowest,
-          borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-          border: Border.all(
-            color: isSelected
-                ? AppColors.primary.withValues(alpha: AppDimensions.opacityMedium)
-                : colorScheme.surfaceContainerHigh.withValues(alpha: AppDimensions.opacitySubtle),
-            width: isSelected
-                ? AppDimensions.borderWidthThick
-                : AppDimensions.borderWidth,
-          ),
-          boxShadow: isSelected
-              ? [AppShadows.glow(AppColors.primary)]
-              : const [AppShadows.subtle],
-        ),
-        child: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                icon,
-                const SizedBox(height: AppDimensions.paddingXL),
-                Text(
-                  title,
-                  style: AppTextStyles.headlineSmall.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: AppDimensions.paddingXXS),
-                Text(
-                  subtitle,
-                  style: AppTextStyles.bodySmall.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
+        curve: Curves.easeOutCubic,
+        child: AnimatedContainer(
+          duration: AppDurations.animationFast,
+          padding: const EdgeInsets.all(AppDimensions.paddingXXL),
+          decoration: BoxDecoration(
+            color: widget.isSelected
+                ? (isDark
+                    ? AppColors.darkPrimary.withValues(alpha: 0.08)
+                    : AppColors.primaryFixed.withValues(alpha: 0.08))
+                : colorScheme.surfaceContainerLowest,
+            borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+            border: Border.all(
+              color: widget.isSelected
+                  ? AppColors.primary.withValues(alpha: AppDimensions.opacityMedium)
+                  : colorScheme.surfaceContainerHigh.withValues(alpha: AppDimensions.opacitySubtle),
+              width: widget.isSelected
+                  ? AppDimensions.borderWidthThick
+                  : AppDimensions.borderWidth,
             ),
-            if (isSelected)
-              Positioned(
-                top: 0,
-                left: Directionality.of(context) == TextDirection.rtl ? 0 : null,
-                right: Directionality.of(context) == TextDirection.ltr ? 0 : null,
-                child: Container(
-                  width: AppDimensions.iconMD,
-                  height: AppDimensions.iconMD,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: isDark
-                        ? AppColors.darkPrimaryGradient
-                        : AppColors.primaryGradient,
+            boxShadow: widget.isSelected
+                ? [AppShadows.glow(AppColors.primary)]
+                : const [AppShadows.subtle],
+          ),
+          child: Stack(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  widget.icon,
+                  const SizedBox(height: AppDimensions.paddingXL),
+                  Text(
+                    widget.title,
+                    style: AppTextStyles.headlineSmall.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
-                  child: const Icon(
-                    LucideIcons.check,
-                    size: AppDimensions.iconSM,
-                    color: AppColors.onPrimary,
+                  const SizedBox(height: AppDimensions.paddingXXS),
+                  Text(
+                    widget.subtitle,
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+              if (widget.isSelected)
+                Positioned(
+                  top: 0,
+                  left: Directionality.of(context) == TextDirection.rtl ? 0 : null,
+                  right: Directionality.of(context) == TextDirection.ltr ? 0 : null,
+                  child: Container(
+                    width: AppDimensions.iconMD,
+                    height: AppDimensions.iconMD,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: isDark
+                          ? AppColors.darkPrimaryGradient
+                          : AppColors.primaryGradient,
+                    ),
+                    child: const Icon(
+                      LucideIcons.check,
+                      size: AppDimensions.iconSM,
+                      color: AppColors.onPrimary,
+                    ),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
