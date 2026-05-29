@@ -12,17 +12,15 @@ class LockedChapterCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Container(
+    return AppCard(
+      animate: false,
       padding: const EdgeInsets.all(AppDimensions.paddingXL),
-      decoration: BoxDecoration(
+      color: colorScheme.tertiaryContainer.withValues(
+        alpha: AppDimensions.opacitySubtle,
+      ),
+      border: Border.all(
         color: colorScheme.tertiaryContainer.withValues(
-          alpha: AppDimensions.opacitySubtle,
-        ),
-        borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
-        border: Border.all(
-          color: colorScheme.tertiaryContainer.withValues(
-            alpha: AppDimensions.opacityLight,
-          ),
+          alpha: AppDimensions.opacityLight,
         ),
       ),
       child: Column(

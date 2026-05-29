@@ -14,9 +14,15 @@ import '../../di/injection.dart';
 import '../app_page_transitions.dart';
 
 StatefulShellRoute mainShellRoute() {
-  return StatefulShellRoute.indexedStack(
+  return StatefulShellRoute(
     builder: (context, state, navigationShell) {
       return MainShellPage(navigationShell: navigationShell);
+    },
+    navigatorContainerBuilder: (context, navigationShell, children) {
+      return _AnimatedBranchContainer(
+        currentIndex: navigationShell.currentIndex,
+        children: children,
+      );
     },
     branches: [
       _dashboardBranch(),
@@ -26,6 +32,38 @@ StatefulShellRoute mainShellRoute() {
       _profileBranch(),
     ],
   );
+}
+
+class _AnimatedBranchContainer extends StatelessWidget {
+  const _AnimatedBranchContainer({
+    required this.currentIndex,
+    required this.children,
+  });
+
+  final int currentIndex;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: children.asMap().entries.map((entry) {
+        final index = entry.key;
+        final child = entry.value;
+        return AnimatedOpacity(
+          opacity: index == currentIndex ? 1.0 : 0.0,
+          duration: AppDurations.animationFast,
+          curve: AppDurations.curvePremium,
+          child: IgnorePointer(
+            ignoring: index != currentIndex,
+            child: TickerMode(
+              enabled: index == currentIndex,
+              child: child,
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
 }
 
 StatefulShellBranch _dashboardBranch() {

@@ -16,27 +16,11 @@ class BookmarkCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
+    return AppCard(
       padding: const EdgeInsets.all(AppDimensions.paddingXL),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            colorScheme.surfaceContainerHighest.withValues(
-              alpha: isDark ? 0.3 : 0.6,
-            ),
-            colorScheme.surfaceContainerHighest.withValues(
-              alpha: isDark ? 0.05 : 0.2,
-            ),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-        border: Border.all(
-          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
-        ),
+      border: Border.all(
+        color: colorScheme.outlineVariant.withValues(alpha: 0.5),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

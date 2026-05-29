@@ -42,8 +42,13 @@ class AppShimmer extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Shimmer.fromColors(
-      baseColor: isDark ? colorScheme.surfaceContainerHighest : colorScheme.surfaceContainerHigh,
-      highlightColor: isDark ? colorScheme.surfaceContainerHigh : colorScheme.surfaceContainerLowest,
+      baseColor: isDark 
+          ? colorScheme.surfaceContainerHighest.withValues(alpha: 0.5) 
+          : colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
+      highlightColor: isDark 
+          ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.8) 
+          : colorScheme.surfaceContainerLowest,
+      period: const Duration(milliseconds: 1500),
       child: child,
     );
   }

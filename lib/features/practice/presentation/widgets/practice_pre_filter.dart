@@ -199,55 +199,31 @@ class _SubjectSelector extends StatelessWidget {
   }) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          HapticsHelper.lightImpact();
-          onTap();
-        },
-        borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [colorScheme.surface, color.withValues(alpha: 0.05)],
+    return AppCard(
+      color: color.withValues(alpha: 0.05),
+      border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
+      onTap: onTap,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          AppIconCircle(
+            icon: icon,
+            backgroundColor: color.withValues(alpha: 0.15),
+            iconColor: color,
+            size: 48,
+          ),
+          const SizedBox(height: AppDimensions.paddingSM),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: AppTextStyles.labelLarge.copyWith(
+              fontWeight: FontWeight.w800,
+              color: colorScheme.onSurface,
             ),
-            borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-            border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
-            boxShadow: [
-              BoxShadow(
-                color: color.withValues(alpha: 0.08),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
-          padding: const EdgeInsets.all(AppDimensions.paddingMD),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              AppIconCircle(
-                icon: icon,
-                backgroundColor: color.withValues(alpha: 0.15),
-                iconColor: color,
-                size: 48,
-              ),
-              const SizedBox(height: AppDimensions.paddingSM),
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                style: AppTextStyles.labelLarge.copyWith(
-                  fontWeight: FontWeight.w800,
-                  color: colorScheme.onSurface,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ),
+        ],
       ),
     );
   }

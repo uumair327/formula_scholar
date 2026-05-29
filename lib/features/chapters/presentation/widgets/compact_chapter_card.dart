@@ -25,6 +25,7 @@ class CompactChapterCard extends StatelessWidget {
         : context.l10n.startNow;
 
     return AppCard(
+      onTap: () => _navigateToFormulas(context, ctaText),
       child: Column(
         children: [
           Row(

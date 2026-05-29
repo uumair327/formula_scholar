@@ -24,27 +24,12 @@ class FeaturedChapterCard extends StatelessWidget {
         ? context.l10n.continueLearning
         : context.l10n.startNow;
 
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
+    return AppCard(
+      onTap: () => _navigateToFormulas(context, ctaText),
       padding: const EdgeInsets.all(AppDimensions.paddingXXL),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            colorScheme.surfaceContainerHighest.withValues(
-              alpha: isDark ? 0.4 : 0.8,
-            ),
-            colorScheme.surfaceContainerHighest.withValues(
-              alpha: isDark ? 0.1 : 0.4,
-            ),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-        border: Border.all(
-          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
-        ),
+      border: Border.all(
+        color: colorScheme.outlineVariant.withValues(alpha: 0.5),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

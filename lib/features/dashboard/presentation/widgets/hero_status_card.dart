@@ -57,14 +57,18 @@ class _HeroStatusCardState extends State<HeroStatusCard>
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
-      padding: const EdgeInsets.all(AppDimensions.paddingHero),
-      decoration: BoxDecoration(
-        gradient: isDark ? AppColors.darkHeroGradient : AppColors.heroGradient,
-        borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-        boxShadow: [AppShadows.glow(colorScheme.primary)],
-      ),
-      child: Stack(
+    return AppCard(
+      padding: EdgeInsets.zero,
+      onTap: widget.onResume,
+      boxShadow: [AppShadows.glow(colorScheme.primary)],
+      borderRadius: AppDimensions.radiusXL,
+      child: Container(
+        padding: const EdgeInsets.all(AppDimensions.paddingHero),
+        decoration: BoxDecoration(
+          gradient: isDark ? AppColors.darkHeroGradient : AppColors.heroGradient,
+          borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+        ),
+        child: Stack(
         children: [
           Positioned(
             top: -20,
@@ -209,6 +213,6 @@ class _HeroStatusCardState extends State<HeroStatusCard>
           ),
         ],
       ),
-    );
+    ));
   }
 }
