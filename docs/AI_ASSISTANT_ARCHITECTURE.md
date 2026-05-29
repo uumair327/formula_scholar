@@ -126,7 +126,9 @@ and registering the client in `registerRuntimeDependencies`.
 ## Security Controls
 
 - API keys are stored with `FlutterSecureStorage`.
-- Android secure storage uses encrypted shared preferences.
+- Android secure storage uses `flutter_secure_storage`'s encrypted backend;
+  current plugin versions migrate away from the deprecated Jetpack
+  `EncryptedSharedPreferences` flag automatically.
 - iOS uses Keychain accessibility after first unlock.
 - API keys and bearer tokens are redacted before logging.
 - The context engine excludes email, names, tokens, and raw profile data.
