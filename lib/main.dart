@@ -13,8 +13,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/core.dart';
-import 'shared/shared.dart';
 import 'features/auth/auth.dart';
+
 import 'features/dashboard/dashboard.dart';
 import 'features/profile/profile.dart';
 import 'firebase_options.dart';
@@ -226,7 +226,7 @@ class _FormulaScholarAppState extends State<FormulaScholarApp>
         BlocProvider(create: (_) => getIt<SubjectSelectionCubit>()),
         BlocProvider(create: (_) => getIt<ThemeCubit>()),
         BlocProvider(create: (_) => getIt<CurriculumCubit>()),
-        BlocProvider(create: (_) => LocalizationCubit()),
+        BlocProvider(create: (_) => LocalizationCubit()..listenToBackendConfig()),
       ],
       child: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, themeState) {

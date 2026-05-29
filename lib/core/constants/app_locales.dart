@@ -1,5 +1,18 @@
 import 'package:flutter/material.dart';
 
+/// Configuration for a content locale dynamically managed via backend.
+class ContentLocaleConfig {
+  const ContentLocaleConfig({
+    required this.code,
+    required this.name,
+    required this.isRtl,
+  });
+
+  final String code;
+  final String name;
+  final bool isRtl;
+}
+
 /// Centralized locale configuration for the application.
 ///
 /// Defines all supported locales for RTL support and localisation.
@@ -22,10 +35,18 @@ abstract final class AppLocales {
   static const String defaultAppLabelLanguageCode = 'en';
   static const Locale defaultAppLabelLocale = Locale('en', 'US');
 
+  /// List of supported content locales with display name and RTL info.
+  static List<ContentLocaleConfig> contentSupportedLocales = [
+    const ContentLocaleConfig(code: 'en-IN', name: 'English (India)', isRtl: false),
+    const ContentLocaleConfig(code: 'ar-IN', name: 'Arabic', isRtl: true),
+    const ContentLocaleConfig(code: 'ur-IN', name: 'Urdu', isRtl: true),
+    const ContentLocaleConfig(code: 'mr-IN', name: 'Marathi', isRtl: false),
+  ];
+
   /// Locale codes used for dashboard-driven backend content.
-  static const List<String> contentSupportedLocaleCodes = [
-    'ar-IN',
+  static List<String> contentSupportedLocaleCodes = [
     'en-IN',
+    'ar-IN',
     'ur-IN',
     'mr-IN',
   ];

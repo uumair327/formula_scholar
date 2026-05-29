@@ -33,10 +33,13 @@ class DashboardCommandListener {
           if (change.type == DocumentChangeType.added) {
             final doc = change.doc;
             final data = doc.data();
+            if (data == null) continue;
 
             final commandId = data['commandId'] as String?;
             final status = data['status'] as String?;
             final docId = doc.id;
+
+
 
             if (_processedCommandIds.contains(docId)) continue;
             _processedCommandIds.add(docId);
