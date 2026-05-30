@@ -20,15 +20,15 @@ class LegalSectionCard extends StatelessWidget {
               Container(
                 width: AppDimensions.avatarSM,
                 height: AppDimensions.avatarSM,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppColors.primaryFixed,
+                  color: Theme.of(context).colorScheme.primaryContainer,
                 ),
                 alignment: Alignment.center,
                 child: Text(
                   '$index',
                   style: AppTextStyles.labelSmall.copyWith(
-                    color: AppColors.primary,
+                    color: Theme.of(context).colorScheme.primary,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -54,7 +54,7 @@ class LegalSectionCard extends StatelessWidget {
             child: Text(
               section.content,
               style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.onSurfaceVariant,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
                 height: AppDimensions.lineHeightRelaxed,
               ),
             ),

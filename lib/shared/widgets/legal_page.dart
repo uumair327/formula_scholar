@@ -100,13 +100,13 @@ class LegalPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.surface,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
             floating: true,
             snap: true,
-            backgroundColor: AppColors.surface,
+            backgroundColor: Theme.of(context).colorScheme.surface,
             surfaceTintColor: AppColors.transparent,
             leading: IconButton(
               onPressed: () => Navigator.of(context).maybePop(),

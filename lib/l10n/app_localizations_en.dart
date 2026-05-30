@@ -435,7 +435,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get legalFooterDesc =>
-      'We prioritize your privacy and security — your data stays private.';
+      'We are committed to protecting your personal information and providing a safe learning environment.';
 
   @override
   String get legalEffectiveDate => 'Effective: April 2026';
@@ -932,92 +932,106 @@ class AppLocalizationsEn extends AppLocalizations {
   String get legalAcceptance => 'Acceptance of Terms';
 
   @override
-  String get legalAcceptanceContent => 'Legal Acceptance Content';
+  String get legalAcceptanceContent =>
+      'By creating an account or using Formula Scholar, you agree to these Terms of Service. If you do not agree, please do not use the service. We may update these terms and will notify you of significant changes.';
 
   @override
   String get legalChanges => 'Changes to This Policy';
 
   @override
-  String get legalChangesContent => 'Legal Changes Content';
+  String get legalChangesContent =>
+      'We may update this Privacy Policy from time to time. We will notify you of any material changes through the app and update the effective date. Your continued use of Formula Scholar after changes indicates acceptance of the updated policy.';
 
   @override
   String get legalChildrenPrivacy => 'Children\'s Privacy';
 
   @override
-  String get legalChildrenPrivacyContent => 'Legal Children Privacy Content';
+  String get legalChildrenPrivacyContent =>
+      'Formula Scholar is designed for students of all ages. For users under 13, we collect only the minimum information necessary for the service. We do not knowingly collect sensitive personal information from children. Parents may contact us to review or delete their child\'s data.';
 
   @override
   String get legalContact => 'Contact Us';
 
   @override
-  String get legalContactContent => 'Legal Contact Content';
+  String get legalContactContent =>
+      'If you have questions about this Privacy Policy or your data, please contact us through the Help & Support section in the app, or email us at support@formulascholar.app.';
 
   @override
   String get legalDataStorage => 'Data Storage & Security';
 
   @override
-  String get legalDataStorageContent => 'Legal Data Storage Content';
+  String get legalDataStorageContent =>
+      'Your data is stored securely on Google Firebase servers with encryption at rest and in transit. We use industry-standard security measures to protect your personal information. You can request data export or deletion at any time through the app settings.';
 
   @override
   String get legalDisclaimer => 'Disclaimer';
 
   @override
-  String get legalDisclaimerContent => 'Legal Disclaimer Content';
+  String get legalDisclaimerContent =>
+      'Formula Scholar is an educational aid and should supplement, not replace, formal education. We strive for accuracy but do not guarantee that all content is error-free. We are not liable for academic outcomes based on use of this application.';
 
   @override
   String get legalGoverningLaw => 'Governing Law';
 
   @override
-  String get legalGoverningLawContent => 'Legal Governing Law Content';
+  String get legalGoverningLawContent =>
+      'These Terms of Service are governed by applicable law. Any disputes arising from these terms will be resolved through appropriate legal channels in the jurisdiction where the service provider is located.';
 
   @override
   String get legalHowWeUse => 'How We Use Your Information';
 
   @override
-  String get legalHowWeUseContent => 'Legal How We Use Content';
+  String get legalHowWeUseContent =>
+      'Your information is used to: personalize your learning dashboard, track your study progress and mastery levels, recommend relevant formulas and chapters, send study reminders (with your consent), and improve our educational content and features.';
 
   @override
   String get legalInfoWeCollect => 'Information We Collect';
 
   @override
-  String get legalInfoWeCollectContent => 'Legal Info We Collect Content';
+  String get legalInfoWeCollectContent =>
+      'We collect information you provide directly, such as your name, email address, and academic preferences (board, grade, subjects) when you create an account. We also collect usage data including formulas viewed, quiz scores, and study progress to personalize your experience.';
 
   @override
   String get legalIntellectualProperty => 'Intellectual Property';
 
   @override
   String get legalIntellectualPropertyContent =>
-      'Legal Intellectual Property Content';
+      'All content, design, and code within Formula Scholar are protected by intellectual property laws. Educational formulas themselves are in the public domain, but our presentation, explanations, and quiz content are proprietary. You may not reproduce or distribute our content without permission.';
 
   @override
   String get legalTermination => 'Termination';
 
   @override
-  String get legalTerminationContent => 'Legal Termination Content';
+  String get legalTerminationContent =>
+      'We may suspend or terminate your access if you violate these terms. You may terminate your account at any time. Upon termination, your right to use the service ceases and your data will be deleted per our retention policy.';
 
   @override
   String get legalThirdParty => 'Third-Party Services';
 
   @override
-  String get legalThirdPartyContent => 'Legal Third Party Content';
+  String get legalThirdPartyContent =>
+      'We use the following third-party services: Firebase (authentication and data storage by Google), Google Sign-In (optional account linking). These services have their own privacy policies which we encourage you to review.';
 
   @override
   String get legalUseOfService => 'Use of Service';
 
   @override
-  String get legalUseOfServiceContent => 'Legal Use Of Service Content';
+  String get legalUseOfServiceContent =>
+      'Formula Scholar provides educational tools for learning mathematical and scientific formulas. The service is provided \"as is\" for personal, non-commercial educational use. You agree not to: share your account credentials, use the service for unauthorized purposes, or attempt to reverse-engineer any part of the application.';
 
   @override
   String get legalUserAccounts => 'User Accounts';
 
   @override
-  String get legalUserAccountsContent => 'Legal User Accounts Content';
+  String get legalUserAccountsContent =>
+      'You are responsible for maintaining the security of your account and password. You must provide accurate information during registration. You may delete your account at any time, which will permanently remove your data from our systems.';
 
   @override
   String get legalYourRights => 'Your Rights';
 
   @override
-  String get legalYourRightsContent => 'Legal Your Rights Content';
+  String get legalYourRightsContent =>
+      'You have the right to: access your personal data, correct inaccurate data, request deletion of your account and data, export your data in a portable format, and opt out of non-essential communications. To exercise these rights, contact us through the Help & Support section.';
 
   @override
   String get newContent => 'New Content';

@@ -32,6 +32,7 @@ class SettingsListWidget extends StatelessWidget {
       'info_outline' => Icons.info_outline,
       'logout' => Icons.logout,
       'emoji_events' => Icons.emoji_events,
+      'calendar_today' => Icons.calendar_today,
       _ => Icons.settings,
     };
   }
@@ -70,6 +71,7 @@ class SettingsListWidget extends StatelessWidget {
       'account' => context.l10n.accountInformation,
       'bookmarks' => context.l10n.myBookmarks,
       'planner' => context.l10n.studyPlanner,
+      'study_planner' => context.l10n.studyPlanner,
       'achievements' => context.l10n.achievements,
       'notifications' => context.l10n.notifications,
       'language' => context.l10n.languageAndLocalization,
@@ -84,6 +86,7 @@ class SettingsListWidget extends StatelessWidget {
   String? _resolveSubtitle(BuildContext context, String id, String? fallback) {
     return switch (id) {
       'planner' => context.l10n.studyPlannerSubtitle,
+      'study_planner' => context.l10n.studyPlannerSubtitle,
       'achievements' => context.l10n.achievementsDesc,
       'language' => context.l10n.languageAndLocalizationSubtitle,
       'appearance' => context.l10n.toggleDarkMode,

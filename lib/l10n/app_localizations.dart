@@ -921,7 +921,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalFooterDesc.
   ///
   /// In en, this message translates to:
-  /// **'We prioritize your privacy and security — your data stays private.'**
+  /// **'We are committed to protecting your personal information and providing a safe learning environment.'**
   String get legalFooterDesc;
 
   /// No description provided for @legalEffectiveDate.
@@ -1869,7 +1869,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalAcceptanceContent.
   ///
   /// In en, this message translates to:
-  /// **'Legal Acceptance Content'**
+  /// **'By creating an account or using Formula Scholar, you agree to these Terms of Service. If you do not agree, please do not use the service. We may update these terms and will notify you of significant changes.'**
   String get legalAcceptanceContent;
 
   /// No description provided for @legalChanges.
@@ -1881,7 +1881,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalChangesContent.
   ///
   /// In en, this message translates to:
-  /// **'Legal Changes Content'**
+  /// **'We may update this Privacy Policy from time to time. We will notify you of any material changes through the app and update the effective date. Your continued use of Formula Scholar after changes indicates acceptance of the updated policy.'**
   String get legalChangesContent;
 
   /// No description provided for @legalChildrenPrivacy.
@@ -1893,7 +1893,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalChildrenPrivacyContent.
   ///
   /// In en, this message translates to:
-  /// **'Legal Children Privacy Content'**
+  /// **'Formula Scholar is designed for students of all ages. For users under 13, we collect only the minimum information necessary for the service. We do not knowingly collect sensitive personal information from children. Parents may contact us to review or delete their child\'s data.'**
   String get legalChildrenPrivacyContent;
 
   /// No description provided for @legalContact.
@@ -1905,7 +1905,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalContactContent.
   ///
   /// In en, this message translates to:
-  /// **'Legal Contact Content'**
+  /// **'If you have questions about this Privacy Policy or your data, please contact us through the Help & Support section in the app, or email us at support@formulascholar.app.'**
   String get legalContactContent;
 
   /// No description provided for @legalDataStorage.
@@ -1917,7 +1917,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalDataStorageContent.
   ///
   /// In en, this message translates to:
-  /// **'Legal Data Storage Content'**
+  /// **'Your data is stored securely on Google Firebase servers with encryption at rest and in transit. We use industry-standard security measures to protect your personal information. You can request data export or deletion at any time through the app settings.'**
   String get legalDataStorageContent;
 
   /// No description provided for @legalDisclaimer.
@@ -1929,7 +1929,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalDisclaimerContent.
   ///
   /// In en, this message translates to:
-  /// **'Legal Disclaimer Content'**
+  /// **'Formula Scholar is an educational aid and should supplement, not replace, formal education. We strive for accuracy but do not guarantee that all content is error-free. We are not liable for academic outcomes based on use of this application.'**
   String get legalDisclaimerContent;
 
   /// No description provided for @legalGoverningLaw.
@@ -1941,7 +1941,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalGoverningLawContent.
   ///
   /// In en, this message translates to:
-  /// **'Legal Governing Law Content'**
+  /// **'These Terms of Service are governed by applicable law. Any disputes arising from these terms will be resolved through appropriate legal channels in the jurisdiction where the service provider is located.'**
   String get legalGoverningLawContent;
 
   /// No description provided for @legalHowWeUse.
@@ -1953,7 +1953,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalHowWeUseContent.
   ///
   /// In en, this message translates to:
-  /// **'Legal How We Use Content'**
+  /// **'Your information is used to: personalize your learning dashboard, track your study progress and mastery levels, recommend relevant formulas and chapters, send study reminders (with your consent), and improve our educational content and features.'**
   String get legalHowWeUseContent;
 
   /// No description provided for @legalInfoWeCollect.
@@ -1965,7 +1965,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalInfoWeCollectContent.
   ///
   /// In en, this message translates to:
-  /// **'Legal Info We Collect Content'**
+  /// **'We collect information you provide directly, such as your name, email address, and academic preferences (board, grade, subjects) when you create an account. We also collect usage data including formulas viewed, quiz scores, and study progress to personalize your experience.'**
   String get legalInfoWeCollectContent;
 
   /// No description provided for @legalIntellectualProperty.
@@ -1977,7 +1977,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalIntellectualPropertyContent.
   ///
   /// In en, this message translates to:
-  /// **'Legal Intellectual Property Content'**
+  /// **'All content, design, and code within Formula Scholar are protected by intellectual property laws. Educational formulas themselves are in the public domain, but our presentation, explanations, and quiz content are proprietary. You may not reproduce or distribute our content without permission.'**
   String get legalIntellectualPropertyContent;
 
   /// No description provided for @legalTermination.
@@ -1989,7 +1989,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalTerminationContent.
   ///
   /// In en, this message translates to:
-  /// **'Legal Termination Content'**
+  /// **'We may suspend or terminate your access if you violate these terms. You may terminate your account at any time. Upon termination, your right to use the service ceases and your data will be deleted per our retention policy.'**
   String get legalTerminationContent;
 
   /// No description provided for @legalThirdParty.
@@ -2001,7 +2001,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalThirdPartyContent.
   ///
   /// In en, this message translates to:
-  /// **'Legal Third Party Content'**
+  /// **'We use the following third-party services: Firebase (authentication and data storage by Google), Google Sign-In (optional account linking). These services have their own privacy policies which we encourage you to review.'**
   String get legalThirdPartyContent;
 
   /// No description provided for @legalUseOfService.
@@ -2013,7 +2013,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalUseOfServiceContent.
   ///
   /// In en, this message translates to:
-  /// **'Legal Use Of Service Content'**
+  /// **'Formula Scholar provides educational tools for learning mathematical and scientific formulas. The service is provided \"as is\" for personal, non-commercial educational use. You agree not to: share your account credentials, use the service for unauthorized purposes, or attempt to reverse-engineer any part of the application.'**
   String get legalUseOfServiceContent;
 
   /// No description provided for @legalUserAccounts.
@@ -2025,7 +2025,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalUserAccountsContent.
   ///
   /// In en, this message translates to:
-  /// **'Legal User Accounts Content'**
+  /// **'You are responsible for maintaining the security of your account and password. You must provide accurate information during registration. You may delete your account at any time, which will permanently remove your data from our systems.'**
   String get legalUserAccountsContent;
 
   /// No description provided for @legalYourRights.
@@ -2037,7 +2037,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalYourRightsContent.
   ///
   /// In en, this message translates to:
-  /// **'Legal Your Rights Content'**
+  /// **'You have the right to: access your personal data, correct inaccurate data, request deletion of your account and data, export your data in a portable format, and opt out of non-essential communications. To exercise these rights, contact us through the Help & Support section.'**
   String get legalYourRightsContent;
 
   /// No description provided for @newContent.
