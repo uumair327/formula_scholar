@@ -169,7 +169,7 @@ class ProfilePage extends StatelessWidget {
       case 'notifications':
         context.push(AppRoutes.notificationsPath);
         return;
-      case 'language_localization':
+      case 'language':
         context.push(AppRoutes.languageLocalizationPath);
         return;
       case 'help':
