@@ -92,7 +92,10 @@ class CompactChapterCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${chapter.completedFormulas}/${chapter.totalFormulas} ${context.l10n.formulasLabel}',
+                context.l10n.completedOfFormulas(
+                  chapter.completedFormulas,
+                  chapter.totalFormulas,
+                ),
                 style: AppTextStyles.overline.copyWith(
                   color: colorScheme.outline,
                 ),

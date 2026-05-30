@@ -1023,7 +1023,7 @@ abstract class AppLocalizations {
   /// No description provided for @formulasLabel.
   ///
   /// In en, this message translates to:
-  /// **'FORMULAS'**
+  /// **'formulas'**
   String get formulasLabel;
 
   /// No description provided for @removeBookmark.
@@ -1065,7 +1065,7 @@ abstract class AppLocalizations {
   /// No description provided for @keepGoing.
   ///
   /// In en, this message translates to:
-  /// **'Keep going!'**
+  /// **'Keep Going'**
   String get keepGoing;
 
   /// No description provided for @justStarted.
@@ -2849,6 +2849,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Privacy Policy'**
   String get privacyPolicy;
+
+  /// No description provided for @doneLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% done'**
+  String doneLabel(Object percent);
+
+  /// No description provided for @formulasCountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{completed}/{total} formulas'**
+  String formulasCountLabel(Object completed, Object total);
+
+  /// No description provided for @sortNameAZ.
+  ///
+  /// In en, this message translates to:
+  /// **'Name A-Z'**
+  String get sortNameAZ;
+
+  /// No description provided for @sortNameZA.
+  ///
+  /// In en, this message translates to:
+  /// **'Name Z-A'**
+  String get sortNameZA;
+
+  /// No description provided for @sortProgressHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress High'**
+  String get sortProgressHigh;
+
+  /// No description provided for @sortProgressLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress Low'**
+  String get sortProgressLow;
+
+  /// No description provided for @sortMostFormulas.
+  ///
+  /// In en, this message translates to:
+  /// **'Most Formulas'**
+  String get sortMostFormulas;
+
+  /// No description provided for @sortFewestFormulas.
+  ///
+  /// In en, this message translates to:
+  /// **'Fewest Formulas'**
+  String get sortFewestFormulas;
 }
 
 class _AppLocalizationsDelegate

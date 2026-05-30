@@ -479,13 +479,13 @@ class AppLocalizationsUr extends AppLocalizations {
   String get sortAscending => 'Sort Ascending';
 
   @override
-  String get continueLearning => 'Continue Learning';
+  String get continueLearning => 'سیکھنا جاری رکھیں';
 
   @override
-  String get startNow => 'Start Now';
+  String get startNow => 'ابھی شروع کریں';
 
   @override
-  String get formulasLabel => 'formulas';
+  String get formulasLabel => 'فارمولے';
 
   @override
   String get removeBookmark => 'Remove Bookmark';
@@ -510,7 +510,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get nearlyThere => 'Nearly There';
 
   @override
-  String get keepGoing => 'Keep Going';
+  String get keepGoing => 'جاری رکھیں';
 
   @override
   String get justStarted => 'Just Started';
@@ -1419,4 +1419,32 @@ class AppLocalizationsUr extends AppLocalizations {
 
   @override
   String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String doneLabel(Object percent) {
+    return '$percent% مکمل';
+  }
+
+  @override
+  String formulasCountLabel(Object completed, Object total) {
+    return '$completed/$total فارمولے';
+  }
+
+  @override
+  String get sortNameAZ => 'نام A-Z';
+
+  @override
+  String get sortNameZA => 'نام Z-A';
+
+  @override
+  String get sortProgressHigh => 'زیادہ پیش رفت';
+
+  @override
+  String get sortProgressLow => 'کم پیش رفت';
+
+  @override
+  String get sortMostFormulas => 'سب سے زیادہ فارمولے';
+
+  @override
+  String get sortFewestFormulas => 'سب سے کم فارمولے';
 }

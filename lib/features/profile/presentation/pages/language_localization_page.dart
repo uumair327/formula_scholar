@@ -41,29 +41,55 @@ class LanguageLocalizationPage extends StatelessWidget {
                       index: 0,
                       child: _SectionCard(
                         title: l10n.languageAndLocalization,
-                        subtitle: "Choose your preferred language for the app interface and content.",
+                        subtitle:
+                            'Choose your preferred language for the app interface and content.',
                         child: DropdownButtonFormField<String>(
-                          value: state.effectiveAppLocale(systemLocale).languageCode,
-                          decoration: InputDecoration(
-                            labelText: "Global Language",
-                            prefixIcon: const Icon(
+                          initialValue: state
+                              .effectiveAppLocale(systemLocale)
+                              .languageCode,
+                          decoration: const InputDecoration(
+                            labelText: 'Global Language',
+                            prefixIcon: Icon(
                               Icons.language,
                               size: AppDimensions.iconMD,
                             ),
                           ),
-                          items: AppLocales.appLabelSupportedLocales.map((locale) {
+                          items: AppLocales.appLabelSupportedLocales.map((
+                            locale,
+                          ) {
                             return DropdownMenuItem<String>(
                               value: locale.languageCode,
                               child: Row(
                                 children: [
-                                  Text(
-                                    _labelLanguageFlag(locale.languageCode),
-                                    style: const TextStyle(fontSize: 18),
+                                  Container(
+                                    width: 28,
+                                    height: 28,
+                                    decoration: BoxDecoration(
+                                      color: colorScheme.secondaryContainer,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      _languageAbbreviation(
+                                        locale.languageCode,
+                                      ),
+                                      style: AppTextStyles.labelSmall.copyWith(
+                                        color: colorScheme.onSecondaryContainer,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ),
-                                  const SizedBox(width: AppDimensions.paddingMD),
+                                  const SizedBox(
+                                    width: AppDimensions.paddingMD,
+                                  ),
                                   Text(
-                                    _displayLabelLanguageName(context, locale.languageCode),
-                                    style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600),
+                                    _displayLabelLanguageName(
+                                      context,
+                                      locale.languageCode,
+                                    ),
+                                    style: AppTextStyles.bodyMedium.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -84,7 +110,7 @@ class LanguageLocalizationPage extends StatelessWidget {
                               'ar' => 'ar-IN',
                               'ur' => 'ur-IN',
                               'en' => 'en-IN',
-                              _ => '${code}-IN', // Fallback
+                              _ => '$code-IN', // Fallback
                             };
                             cubit.setContentLocaleCode(contentCode);
                           },
@@ -96,27 +122,36 @@ class LanguageLocalizationPage extends StatelessWidget {
                       index: 1,
                       child: ExpansionTile(
                         title: Text(
-                          "Advanced Translation Customization",
+                          'Advanced Translation Customization',
                           style: AppTextStyles.titleMedium.copyWith(
                             fontWeight: FontWeight.w700,
                             color: colorScheme.onSurface,
                           ),
                         ),
                         subtitle: Text(
-                          "Granular controls for app labels and content",
+                          'Granular controls for app labels and content',
                           style: AppTextStyles.bodySmall.copyWith(
                             color: colorScheme.onSurfaceVariant,
                           ),
                         ),
                         collapsedShape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+                          borderRadius: BorderRadius.circular(
+                            AppDimensions.radiusLG,
+                          ),
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
+                          borderRadius: BorderRadius.circular(
+                            AppDimensions.radiusLG,
+                          ),
                         ),
-                        backgroundColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-                        collapsedBackgroundColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.1),
-                        childrenPadding: const EdgeInsets.all(AppDimensions.paddingLG),
+                        backgroundColor: colorScheme.surfaceContainerHighest
+                            .withValues(alpha: 0.3),
+                        collapsedBackgroundColor: colorScheme
+                            .surfaceContainerHighest
+                            .withValues(alpha: 0.1),
+                        childrenPadding: const EdgeInsets.all(
+                          AppDimensions.paddingLG,
+                        ),
                         children: [
                           _SectionCard(
                             title: l10n.labelsLocalizationTitle,
@@ -128,47 +163,106 @@ class LanguageLocalizationPage extends StatelessWidget {
                                   contentPadding: EdgeInsets.zero,
                                   title: Text(
                                     l10n.enableLabelsLocalization,
-                                    style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w700),
+                                    style: AppTextStyles.bodyLarge.copyWith(
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
-                                  subtitle: Text(l10n.enableLabelsLocalizationDesc),
+                                  subtitle: Text(
+                                    l10n.enableLabelsLocalizationDesc,
+                                  ),
                                   value: state.appLabelLocalizationEnabled,
-                                  onChanged: (v) => context.read<LocalizationCubit>().setAppLabelLocalizationEnabled(v),
+                                  onChanged: (v) => context
+                                      .read<LocalizationCubit>()
+                                      .setAppLabelLocalizationEnabled(v),
                                 ),
                                 const SizedBox(height: AppDimensions.paddingSM),
                                 SwitchListTile.adaptive(
                                   contentPadding: EdgeInsets.zero,
                                   title: Text(
                                     l10n.useSystemLanguage,
-                                    style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w700),
+                                    style: AppTextStyles.bodyLarge.copyWith(
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
-                                  subtitle: Text('${l10n.currentSystemLanguage}: ${_displayLabelLanguageName(context, systemLocale.languageCode)}'),
-                                  value: state.useSystemAppLabelLocale && isAppLabelControlsEnabled,
+                                  subtitle: Text(
+                                    '${l10n.currentSystemLanguage}: ${_displayLabelLanguageName(context, systemLocale.languageCode)}',
+                                  ),
+                                  value:
+                                      state.useSystemAppLabelLocale &&
+                                      isAppLabelControlsEnabled,
                                   onChanged: isAppLabelControlsEnabled
-                                      ? (v) => context.read<LocalizationCubit>().setUseSystemAppLabelLocale(v)
+                                      ? (v) => context
+                                            .read<LocalizationCubit>()
+                                            .setUseSystemAppLabelLocale(v)
                                       : null,
                                 ),
                                 const SizedBox(height: AppDimensions.paddingLG),
                                 DropdownButtonFormField<String>(
-                                  value: state.appLabelLanguageCode,
+                                  initialValue: state.appLabelLanguageCode,
                                   decoration: InputDecoration(
                                     labelText: l10n.appLabelLanguage,
-                                    prefixIcon: const Icon(Icons.translate, size: AppDimensions.iconMD),
-                                  ),
-                                  items: AppLocales.appLabelSupportedLocales.map((locale) => DropdownMenuItem<String>(
-                                    value: locale.languageCode,
-                                    child: Row(
-                                      children: [
-                                        Text(_labelLanguageFlag(locale.languageCode), style: const TextStyle(fontSize: 18)),
-                                        const SizedBox(width: AppDimensions.paddingMD),
-                                        Text(_displayLabelLanguageName(context, locale.languageCode), style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600)),
-                                      ],
+                                    prefixIcon: const Icon(
+                                      Icons.translate,
+                                      size: AppDimensions.iconMD,
                                     ),
-                                  )).toList(),
-                                  onChanged: (!isAppLabelControlsEnabled || state.useSystemAppLabelLocale)
+                                  ),
+                                  items: AppLocales.appLabelSupportedLocales
+                                      .map(
+                                        (locale) => DropdownMenuItem<String>(
+                                          value: locale.languageCode,
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                width: 28,
+                                                height: 28,
+                                                decoration: BoxDecoration(
+                                                  color: colorScheme
+                                                      .secondaryContainer,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  _languageAbbreviation(
+                                                    locale.languageCode,
+                                                  ),
+                                                  style: AppTextStyles
+                                                      .labelSmall
+                                                      .copyWith(
+                                                        color: colorScheme
+                                                            .onSecondaryContainer,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                width: AppDimensions.paddingMD,
+                                              ),
+                                              Text(
+                                                _displayLabelLanguageName(
+                                                  context,
+                                                  locale.languageCode,
+                                                ),
+                                                style: AppTextStyles.bodyMedium
+                                                    .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                                  onChanged:
+                                      (!isAppLabelControlsEnabled ||
+                                          state.useSystemAppLabelLocale)
                                       ? null
                                       : (code) {
                                           if (code == null) return;
-                                          context.read<LocalizationCubit>().setAppLabelLanguageCode(code);
+                                          context
+                                              .read<LocalizationCubit>()
+                                              .setAppLabelLanguageCode(code);
                                         },
                                 ),
                               ],
@@ -185,56 +279,123 @@ class LanguageLocalizationPage extends StatelessWidget {
                                   contentPadding: EdgeInsets.zero,
                                   title: Text(
                                     l10n.enableContentLocalization,
-                                    style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w700),
+                                    style: AppTextStyles.bodyLarge.copyWith(
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
-                                  subtitle: Text(l10n.enableContentLocalizationDesc),
+                                  subtitle: Text(
+                                    l10n.enableContentLocalizationDesc,
+                                  ),
                                   value: state.contentLocalizationEnabled,
-                                  onChanged: (v) => context.read<LocalizationCubit>().setContentLocalizationEnabled(v),
+                                  onChanged: (v) => context
+                                      .read<LocalizationCubit>()
+                                      .setContentLocalizationEnabled(v),
                                 ),
                                 const SizedBox(height: AppDimensions.paddingLG),
                                 DropdownButtonFormField<String>(
-                                  value: AppLocales.normalizeContentLocaleCode(state.contentLocaleCode),
+                                  initialValue:
+                                      AppLocales.normalizeContentLocaleCode(
+                                        state.contentLocaleCode,
+                                      ),
                                   decoration: InputDecoration(
                                     labelText: l10n.contentLanguage,
-                                    prefixIcon: const Icon(LucideIcons.globe, size: AppDimensions.iconMD),
-                                  ),
-                                  items: AppLocales.contentSupportedLocaleCodes.map((code) => DropdownMenuItem<String>(
-                                    value: code,
-                                    child: Row(
-                                      children: [
-                                        Text(_contentLanguageFlag(code), style: const TextStyle(fontSize: 18)),
-                                        const SizedBox(width: AppDimensions.paddingMD),
-                                        Text(_displayContentLanguageName(context, code), style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600)),
-                                      ],
+                                    prefixIcon: const Icon(
+                                      LucideIcons.globe,
+                                      size: AppDimensions.iconMD,
                                     ),
-                                  )).toList(),
+                                  ),
+                                  items: AppLocales.contentSupportedLocaleCodes
+                                      .map(
+                                        (code) => DropdownMenuItem<String>(
+                                          value: code,
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                width: 28,
+                                                height: 28,
+                                                decoration: BoxDecoration(
+                                                  color: colorScheme
+                                                      .secondaryContainer,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  _languageAbbreviation(code),
+                                                  style: AppTextStyles
+                                                      .labelSmall
+                                                      .copyWith(
+                                                        color: colorScheme
+                                                            .onSecondaryContainer,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                width: AppDimensions.paddingMD,
+                                              ),
+                                              Text(
+                                                _displayContentLanguageName(
+                                                  context,
+                                                  code,
+                                                ),
+                                                style: AppTextStyles.bodyMedium
+                                                    .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
                                   onChanged: !isContentControlsEnabled
                                       ? null
                                       : (code) {
                                           if (code == null) return;
-                                          context.read<LocalizationCubit>().setContentLocaleCode(code);
+                                          context
+                                              .read<LocalizationCubit>()
+                                              .setContentLocaleCode(code);
                                         },
                                 ),
                                 const SizedBox(height: AppDimensions.paddingLG),
                                 Container(
-                                  padding: const EdgeInsets.all(AppDimensions.paddingMD),
+                                  padding: const EdgeInsets.all(
+                                    AppDimensions.paddingMD,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: colorScheme.surfaceContainerHigh.withValues(alpha: 0.3),
-                                    borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-                                    border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.3)),
+                                    color: colorScheme.surfaceContainerHigh
+                                        .withValues(alpha: 0.3),
+                                    borderRadius: BorderRadius.circular(
+                                      AppDimensions.radiusMD,
+                                    ),
+                                    border: Border.all(
+                                      color: colorScheme.outlineVariant
+                                          .withValues(alpha: 0.3),
+                                    ),
                                   ),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Icon(LucideIcons.info, size: AppDimensions.iconSM, color: colorScheme.outline),
-                                      const SizedBox(width: AppDimensions.paddingSM),
+                                      Icon(
+                                        LucideIcons.info,
+                                        size: AppDimensions.iconSM,
+                                        color: colorScheme.outline,
+                                      ),
+                                      const SizedBox(
+                                        width: AppDimensions.paddingSM,
+                                      ),
                                       Expanded(
                                         child: Text(
                                           l10n.contentLocalizationFallbackInfo,
-                                          style: AppTextStyles.bodySmall.copyWith(
-                                            color: colorScheme.onSurfaceVariant,
-                                            height: 1.3,
-                                          ),
+                                          style: AppTextStyles.bodySmall
+                                              .copyWith(
+                                                color: colorScheme
+                                                    .onSurfaceVariant,
+                                                height: 1.3,
+                                              ),
                                         ),
                                       ),
                                     ],
@@ -278,22 +439,36 @@ class LanguageLocalizationPage extends StatelessWidget {
                             _SummaryRow(
                               icon: Icons.translate,
                               label: l10n.appLabels,
-                              flag: _labelLanguageFlag(state.effectiveAppLocale(systemLocale).languageCode),
-                              value: _displayLabelLanguageName(context, state.effectiveAppLocale(systemLocale).languageCode),
+                              symbol: _languageAbbreviation(
+                                state
+                                    .effectiveAppLocale(systemLocale)
+                                    .languageCode,
+                              ),
+                              value: _displayLabelLanguageName(
+                                context,
+                                state
+                                    .effectiveAppLocale(systemLocale)
+                                    .languageCode,
+                              ),
                             ),
                             const SizedBox(height: AppDimensions.paddingMD),
                             _SummaryRow(
                               icon: LucideIcons.globe,
                               label: l10n.backendContent,
-                              flag: _contentLanguageFlag(state.effectiveContentLocaleCode),
-                              value: _displayContentLanguageName(context, state.effectiveContentLocaleCode),
+                              symbol: _languageAbbreviation(
+                                state.effectiveContentLocaleCode,
+                              ),
+                              value: _displayContentLanguageName(
+                                context,
+                                state.effectiveContentLocaleCode,
+                              ),
                             ),
                           ],
                         ),
                       ),
                     ),
                     const SizedBox(height: AppDimensions.bottomNavPadding),
-]),
+                  ]),
                 ),
               ),
             ],
@@ -328,6 +503,7 @@ class LanguageLocalizationPage extends StatelessWidget {
       'en' => l10n.languageEnglish,
       'ar' => l10n.languageArabic,
       'ur' => l10n.languageUrdu,
+      'mr' => l10n.languageMarathi,
       _ => l10n.languageEnglish,
     };
   }
@@ -352,23 +528,9 @@ class LanguageLocalizationPage extends StatelessWidget {
     return code;
   }
 
-  String _labelLanguageFlag(String code) {
-    return switch (code) {
-      'en' => '🇺🇸',
-      'ar' => '🇸🇦',
-      'ur' => '🇵🇰',
-      _ => '🌐',
-    };
-  }
-
-  String _contentLanguageFlag(String code) {
-    return switch (code) {
-      'ar-IN' => '🇸🇦',
-      'en-IN' => '🇮🇳',
-      'ur-IN' => '🇵🇰',
-      'mr-IN' => '🇮🇳',
-      _ => '🌐',
-    };
+  String _languageAbbreviation(String code) {
+    if (code.isEmpty) return '';
+    return code.split('-').first.toUpperCase();
   }
 }
 
@@ -421,13 +583,13 @@ class _SummaryRow extends StatelessWidget {
   const _SummaryRow({
     required this.icon,
     required this.label,
-    required this.flag,
+    required this.symbol,
     required this.value,
   });
 
   final IconData icon;
   final String label;
-  final String flag;
+  final String symbol;
   final String value;
 
   @override
@@ -436,11 +598,7 @@ class _SummaryRow extends StatelessWidget {
 
     return Row(
       children: [
-        Icon(
-          icon,
-          size: AppDimensions.iconSM,
-          color: colorScheme.outline,
-        ),
+        Icon(icon, size: AppDimensions.iconSM, color: colorScheme.outline),
         const SizedBox(width: AppDimensions.paddingMD),
         Text(
           label,
@@ -450,9 +608,22 @@ class _SummaryRow extends StatelessWidget {
           ),
         ),
         const Spacer(),
-        Text(
-          flag,
-          style: const TextStyle(fontSize: 16),
+        Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppDimensions.paddingSM,
+            vertical: AppDimensions.paddingXS,
+          ),
+          decoration: BoxDecoration(
+            color: colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
+          ),
+          child: Text(
+            symbol,
+            style: AppTextStyles.labelSmall.copyWith(
+              color: colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
         ),
         const SizedBox(width: AppDimensions.paddingXS),
         Text(

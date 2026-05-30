@@ -487,7 +487,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get startNow => 'Start Now';
 
   @override
-  String get formulasLabel => 'FORMULAS';
+  String get formulasLabel => 'formulas';
 
   @override
   String get removeBookmark => 'Remove Bookmark';
@@ -512,7 +512,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nearlyThere => 'Nearly there!';
 
   @override
-  String get keepGoing => 'Keep going!';
+  String get keepGoing => 'Keep Going';
 
   @override
   String get justStarted => 'Just getting started';
@@ -1457,4 +1457,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String doneLabel(Object percent) {
+    return '$percent% done';
+  }
+
+  @override
+  String formulasCountLabel(Object completed, Object total) {
+    return '$completed/$total formulas';
+  }
+
+  @override
+  String get sortNameAZ => 'Name A-Z';
+
+  @override
+  String get sortNameZA => 'Name Z-A';
+
+  @override
+  String get sortProgressHigh => 'Progress High';
+
+  @override
+  String get sortProgressLow => 'Progress Low';
+
+  @override
+  String get sortMostFormulas => 'Most Formulas';
+
+  @override
+  String get sortFewestFormulas => 'Fewest Formulas';
 }
