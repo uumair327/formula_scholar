@@ -177,7 +177,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchFormulas.
   ///
   /// In en, this message translates to:
-  /// **'Search formulas'**
+  /// **'Search Formulas'**
   String get searchFormulas;
 
   /// No description provided for @searchFormulasTitle.
@@ -195,7 +195,7 @@ abstract class AppLocalizations {
   /// No description provided for @noResultsFound.
   ///
   /// In en, this message translates to:
-  /// **'No results found'**
+  /// **'No Results Found'**
   String get noResultsFound;
 
   /// No description provided for @tryDifferentSearch.
@@ -207,7 +207,7 @@ abstract class AppLocalizations {
   /// No description provided for @clearSearch.
   ///
   /// In en, this message translates to:
-  /// **'Clear search'**
+  /// **'Clear Search'**
   String get clearSearch;
 
   /// No description provided for @navHome.
@@ -267,19 +267,19 @@ abstract class AppLocalizations {
   /// No description provided for @useSystemLanguage.
   ///
   /// In en, this message translates to:
-  /// **'Use system language'**
+  /// **'Use System Language'**
   String get useSystemLanguage;
 
   /// No description provided for @currentSystemLanguage.
   ///
   /// In en, this message translates to:
-  /// **'Current system language'**
+  /// **'Current System Language'**
   String get currentSystemLanguage;
 
   /// No description provided for @appLabelLanguage.
   ///
   /// In en, this message translates to:
-  /// **'App label language'**
+  /// **'App Label Language'**
   String get appLabelLanguage;
 
   /// No description provided for @contentLocalizationTitle.
@@ -309,7 +309,7 @@ abstract class AppLocalizations {
   /// No description provided for @contentLanguage.
   ///
   /// In en, this message translates to:
-  /// **'Content language'**
+  /// **'Content Language'**
   String get contentLanguage;
 
   /// No description provided for @contentLocalizationFallbackInfo.
@@ -327,13 +327,13 @@ abstract class AppLocalizations {
   /// No description provided for @appLabels.
   ///
   /// In en, this message translates to:
-  /// **'App labels'**
+  /// **'App Labels'**
   String get appLabels;
 
   /// No description provided for @backendContent.
   ///
   /// In en, this message translates to:
-  /// **'Backend content'**
+  /// **'Backend Content'**
   String get backendContent;
 
   /// No description provided for @languageAndLocalization.
@@ -375,7 +375,7 @@ abstract class AppLocalizations {
   /// No description provided for @viewInsights.
   ///
   /// In en, this message translates to:
-  /// **'View insights'**
+  /// **'View Insights'**
   String get viewInsights;
 
   /// No description provided for @loginTitle.
@@ -423,13 +423,13 @@ abstract class AppLocalizations {
   /// No description provided for @showPassword.
   ///
   /// In en, this message translates to:
-  /// **'Show password'**
+  /// **'Show Password'**
   String get showPassword;
 
   /// No description provided for @hidePassword.
   ///
   /// In en, this message translates to:
-  /// **'Hide password'**
+  /// **'Hide Password'**
   String get hidePassword;
 
   /// No description provided for @loginSignIn.
@@ -669,13 +669,13 @@ abstract class AppLocalizations {
   /// No description provided for @deletePlan.
   ///
   /// In en, this message translates to:
-  /// **'Delete plan'**
+  /// **'Delete Plan'**
   String get deletePlan;
 
   /// No description provided for @noPlansYet.
   ///
   /// In en, this message translates to:
-  /// **'No plans yet'**
+  /// **'No Plans Yet'**
   String get noPlansYet;
 
   /// No description provided for @createPlan.
@@ -687,7 +687,7 @@ abstract class AppLocalizations {
   /// No description provided for @planTitle.
   ///
   /// In en, this message translates to:
-  /// **'Plan title'**
+  /// **'Plan Title'**
   String get planTitle;
 
   /// No description provided for @planTitleHint.
@@ -711,7 +711,7 @@ abstract class AppLocalizations {
   /// No description provided for @swapFormulas.
   ///
   /// In en, this message translates to:
-  /// **'Swap formulas'**
+  /// **'Swap Formulas'**
   String get swapFormulas;
 
   /// No description provided for @step1CountryLabel.
@@ -801,37 +801,37 @@ abstract class AppLocalizations {
   /// No description provided for @masteryLevelIncreasing.
   ///
   /// In en, this message translates to:
-  /// **'Mastery level increasing'**
+  /// **'Mastery Level Increasing'**
   String get masteryLevelIncreasing;
 
   /// No description provided for @wrongAnswer.
   ///
   /// In en, this message translates to:
-  /// **'Wrong answer'**
+  /// **'Wrong Answer'**
   String get wrongAnswer;
 
   /// No description provided for @tryNextTime.
   ///
   /// In en, this message translates to:
-  /// **'Try next time'**
+  /// **'Try Next Time'**
   String get tryNextTime;
 
   /// No description provided for @somethingWentWrong.
   ///
   /// In en, this message translates to:
-  /// **'Something went wrong'**
+  /// **'Something Went Wrong'**
   String get somethingWentWrong;
 
   /// No description provided for @failedToLoadProfile.
   ///
   /// In en, this message translates to:
-  /// **'Failed to load profile'**
+  /// **'Failed To Load Profile'**
   String get failedToLoadProfile;
 
   /// No description provided for @failedToUpdateProfile.
   ///
   /// In en, this message translates to:
-  /// **'Failed to update profile'**
+  /// **'Failed To Update Profile'**
   String get failedToUpdateProfile;
 
   /// No description provided for @dashboardCurriculumOptionsLoadFailed.
@@ -873,7 +873,7 @@ abstract class AppLocalizations {
   /// No description provided for @failedToLoadDashboard.
   ///
   /// In en, this message translates to:
-  /// **'Failed to load dashboard'**
+  /// **'Failed To Load Dashboard'**
   String get failedToLoadDashboard;
 
   /// No description provided for @retry.
@@ -885,7 +885,7 @@ abstract class AppLocalizations {
   /// No description provided for @comingSoon.
   ///
   /// In en, this message translates to:
-  /// **'COMING SOON'**
+  /// **'Coming Soon'**
   String get comingSoon;
 
   /// No description provided for @comingSoonChip1.
@@ -909,7 +909,7 @@ abstract class AppLocalizations {
   /// No description provided for @gotIt.
   ///
   /// In en, this message translates to:
-  /// **'Got it'**
+  /// **'Got It'**
   String get gotIt;
 
   /// No description provided for @legalFooterTitle.
@@ -957,7 +957,7 @@ abstract class AppLocalizations {
   /// No description provided for @viewProfile.
   ///
   /// In en, this message translates to:
-  /// **'View profile'**
+  /// **'View Profile'**
   String get viewProfile;
 
   /// No description provided for @chapterLabel.
@@ -969,19 +969,19 @@ abstract class AppLocalizations {
   /// No description provided for @unknownSubject.
   ///
   /// In en, this message translates to:
-  /// **'Unknown subject'**
+  /// **'Unknown Subject'**
   String get unknownSubject;
 
   /// No description provided for @generateCheatSheet.
   ///
   /// In en, this message translates to:
-  /// **'Generate cheat sheet'**
+  /// **'Generate Cheat Sheet'**
   String get generateCheatSheet;
 
   /// No description provided for @studyAsFlashcards.
   ///
   /// In en, this message translates to:
-  /// **'Study as flashcards'**
+  /// **'Study As Flashcards'**
   String get studyAsFlashcards;
 
   /// No description provided for @searchChaptersHint.
@@ -993,31 +993,31 @@ abstract class AppLocalizations {
   /// No description provided for @toggleSortDirection.
   ///
   /// In en, this message translates to:
-  /// **'Toggle sort direction'**
+  /// **'Toggle Sort Direction'**
   String get toggleSortDirection;
 
   /// No description provided for @sortDescending.
   ///
   /// In en, this message translates to:
-  /// **'Sort descending'**
+  /// **'Sort Descending'**
   String get sortDescending;
 
   /// No description provided for @sortAscending.
   ///
   /// In en, this message translates to:
-  /// **'Sort ascending'**
+  /// **'Sort Ascending'**
   String get sortAscending;
 
   /// No description provided for @continueLearning.
   ///
   /// In en, this message translates to:
-  /// **'Continue learning'**
+  /// **'Continue Learning'**
   String get continueLearning;
 
   /// No description provided for @startNow.
   ///
   /// In en, this message translates to:
-  /// **'Start now'**
+  /// **'Start Now'**
   String get startNow;
 
   /// No description provided for @formulasLabel.
@@ -1029,19 +1029,19 @@ abstract class AppLocalizations {
   /// No description provided for @removeBookmark.
   ///
   /// In en, this message translates to:
-  /// **'Remove bookmark'**
+  /// **'Remove Bookmark'**
   String get removeBookmark;
 
   /// No description provided for @bookmarkChapter.
   ///
   /// In en, this message translates to:
-  /// **'Bookmark chapter'**
+  /// **'Bookmark Chapter'**
   String get bookmarkChapter;
 
   /// No description provided for @removeSavedChapter.
   ///
   /// In en, this message translates to:
-  /// **'Remove saved chapter'**
+  /// **'Remove Saved Chapter'**
   String get removeSavedChapter;
 
   /// No description provided for @percentDone.
@@ -1059,19 +1059,19 @@ abstract class AppLocalizations {
   /// No description provided for @nearlyThere.
   ///
   /// In en, this message translates to:
-  /// **'Nearly there'**
+  /// **'Nearly There'**
   String get nearlyThere;
 
   /// No description provided for @keepGoing.
   ///
   /// In en, this message translates to:
-  /// **'Keep going'**
+  /// **'Keep Going'**
   String get keepGoing;
 
   /// No description provided for @justStarted.
   ///
   /// In en, this message translates to:
-  /// **'Just started'**
+  /// **'Just Started'**
   String get justStarted;
 
   /// No description provided for @locked.
@@ -1203,7 +1203,7 @@ abstract class AppLocalizations {
   /// No description provided for @madeWithLove.
   ///
   /// In en, this message translates to:
-  /// **'Made with love'**
+  /// **'Made With Love'**
   String get madeWithLove;
 
   /// No description provided for @deleteAccountFailed.
@@ -1245,7 +1245,7 @@ abstract class AppLocalizations {
   /// No description provided for @startQuiz.
   ///
   /// In en, this message translates to:
-  /// **'Start quiz'**
+  /// **'Start Quiz'**
   String get startQuiz;
 
   /// No description provided for @welcomeScholar.
@@ -1257,19 +1257,19 @@ abstract class AppLocalizations {
   /// No description provided for @myProgress.
   ///
   /// In en, this message translates to:
-  /// **'My progress'**
+  /// **'My Progress'**
   String get myProgress;
 
   /// No description provided for @viewHistory.
   ///
   /// In en, this message translates to:
-  /// **'View history'**
+  /// **'View History'**
   String get viewHistory;
 
   /// No description provided for @noFormulasAvailable.
   ///
   /// In en, this message translates to:
-  /// **'No formulas available'**
+  /// **'No Formulas Available'**
   String get noFormulasAvailable;
 
   /// No description provided for @formulasTitle.
@@ -1365,7 +1365,7 @@ abstract class AppLocalizations {
   /// No description provided for @playAgain.
   ///
   /// In en, this message translates to:
-  /// **'Play again'**
+  /// **'Play Again'**
   String get playAgain;
 
   /// No description provided for @retryIncorrect.
@@ -1377,37 +1377,37 @@ abstract class AppLocalizations {
   /// No description provided for @backToDashboard.
   ///
   /// In en, this message translates to:
-  /// **'Back to dashboard'**
+  /// **'Back To Dashboard'**
   String get backToDashboard;
 
   /// No description provided for @savedChapters.
   ///
   /// In en, this message translates to:
-  /// **'Saved chapters'**
+  /// **'Saved Chapters'**
   String get savedChapters;
 
   /// No description provided for @savedFormulas.
   ///
   /// In en, this message translates to:
-  /// **'Saved formulas'**
+  /// **'Saved Formulas'**
   String get savedFormulas;
 
   /// No description provided for @savedNotes.
   ///
   /// In en, this message translates to:
-  /// **'Saved notes'**
+  /// **'Saved Notes'**
   String get savedNotes;
 
   /// No description provided for @editNote.
   ///
   /// In en, this message translates to:
-  /// **'Edit note'**
+  /// **'Edit Note'**
   String get editNote;
 
   /// No description provided for @addNote.
   ///
   /// In en, this message translates to:
-  /// **'Add note'**
+  /// **'Add Note'**
   String get addNote;
 
   /// No description provided for @save.
@@ -1437,7 +1437,7 @@ abstract class AppLocalizations {
   /// No description provided for @unknownCurriculum.
   ///
   /// In en, this message translates to:
-  /// **'Unknown curriculum'**
+  /// **'Unknown Curriculum'**
   String get unknownCurriculum;
 
   /// No description provided for @creating.
@@ -1467,43 +1467,43 @@ abstract class AppLocalizations {
   /// No description provided for @videoLessons.
   ///
   /// In en, this message translates to:
-  /// **'Video lessons'**
+  /// **'Video Lessons'**
   String get videoLessons;
 
   /// No description provided for @cheatSheets.
   ///
   /// In en, this message translates to:
-  /// **'Cheat sheets'**
+  /// **'Cheat Sheets'**
   String get cheatSheets;
 
   /// No description provided for @academicInfo.
   ///
   /// In en, this message translates to:
-  /// **'Academicinfo'**
+  /// **'Academic Info'**
   String get academicInfo;
 
   /// No description provided for @accountActions.
   ///
   /// In en, this message translates to:
-  /// **'Accountactions'**
+  /// **'Account Actions'**
   String get accountActions;
 
   /// No description provided for @accountInformation.
   ///
   /// In en, this message translates to:
-  /// **'Accountinformation'**
+  /// **'Account Information'**
   String get accountInformation;
 
   /// No description provided for @accountType.
   ///
   /// In en, this message translates to:
-  /// **'Accounttype'**
+  /// **'Account Type'**
   String get accountType;
 
   /// No description provided for @achievementNotifications.
   ///
   /// In en, this message translates to:
-  /// **'Achievementnotifications'**
+  /// **'Achievement Notifications'**
   String get achievementNotifications;
 
   /// No description provided for @achievements.
@@ -1515,61 +1515,61 @@ abstract class AppLocalizations {
   /// No description provided for @achievementsDesc.
   ///
   /// In en, this message translates to:
-  /// **'Achievementsdesc'**
+  /// **'Achievements Desc'**
   String get achievementsDesc;
 
   /// No description provided for @allSubjects.
   ///
   /// In en, this message translates to:
-  /// **'Allsubjects'**
+  /// **'All Subjects'**
   String get allSubjects;
 
   /// No description provided for @browseLessons.
   ///
   /// In en, this message translates to:
-  /// **'Browselessons'**
+  /// **'Browse Lessons'**
   String get browseLessons;
 
   /// No description provided for @changePassword.
   ///
   /// In en, this message translates to:
-  /// **'Changepassword'**
+  /// **'Change Password'**
   String get changePassword;
 
   /// No description provided for @chatWithUs.
   ///
   /// In en, this message translates to:
-  /// **'Chatwithus'**
+  /// **'Chat With Us'**
   String get chatWithUs;
 
   /// No description provided for @closeLabel.
   ///
   /// In en, this message translates to:
-  /// **'Closelabel'**
+  /// **'Close Label'**
   String get closeLabel;
 
   /// No description provided for @closePractice.
   ///
   /// In en, this message translates to:
-  /// **'Closepractice'**
+  /// **'Close Practice'**
   String get closePractice;
 
   /// No description provided for @closeQuiz.
   ///
   /// In en, this message translates to:
-  /// **'Closequiz'**
+  /// **'Close Quiz'**
   String get closeQuiz;
 
   /// No description provided for @dailyChallenge.
   ///
   /// In en, this message translates to:
-  /// **'Dailychallenge'**
+  /// **'Daily Challenge'**
   String get dailyChallenge;
 
   /// No description provided for @dailyChallengeDesc.
   ///
   /// In en, this message translates to:
-  /// **'Dailychallengedesc'**
+  /// **'Daily Challenge Desc'**
   String get dailyChallengeDesc;
 
   /// No description provided for @dashboardAcademicViewAll.
@@ -1587,7 +1587,7 @@ abstract class AppLocalizations {
   /// No description provided for @dashboardAcademicPath.
   ///
   /// In en, this message translates to:
-  /// **'Dashboardacademicpath'**
+  /// **'Dashboard Academic Path'**
   String get dashboardAcademicPath;
 
   /// No description provided for @dashboardAvailableBoards.
@@ -1617,43 +1617,43 @@ abstract class AppLocalizations {
   /// No description provided for @dashboardActiveCurriculum.
   ///
   /// In en, this message translates to:
-  /// **'Dashboardactivecurriculum'**
+  /// **'Dashboard Active Curriculum'**
   String get dashboardActiveCurriculum;
 
   /// No description provided for @dashboardCurriculumPending.
   ///
   /// In en, this message translates to:
-  /// **'Dashboardcurriculumpending'**
+  /// **'Dashboard Curriculum Pending'**
   String get dashboardCurriculumPending;
 
   /// No description provided for @dashboardFormulaVault.
   ///
   /// In en, this message translates to:
-  /// **'Dashboardformulavault'**
+  /// **'Dashboard Formula Vault'**
   String get dashboardFormulaVault;
 
   /// No description provided for @dashboardRetryCurriculumOptions.
   ///
   /// In en, this message translates to:
-  /// **'Dashboardretrycurriculumoptions'**
+  /// **'Dashboard Retry Curriculum Options'**
   String get dashboardRetryCurriculumOptions;
 
   /// No description provided for @deleteAccount.
   ///
   /// In en, this message translates to:
-  /// **'Deleteaccount'**
+  /// **'Delete Account'**
   String get deleteAccount;
 
   /// No description provided for @deliveryChannels.
   ///
   /// In en, this message translates to:
-  /// **'Deliverychannels'**
+  /// **'Delivery Channels'**
   String get deliveryChannels;
 
   /// No description provided for @dismissAnnouncement.
   ///
   /// In en, this message translates to:
-  /// **'Dismissannouncement'**
+  /// **'Dismiss Announcement'**
   String get dismissAnnouncement;
 
   /// No description provided for @done.
@@ -1671,421 +1671,421 @@ abstract class AppLocalizations {
   /// No description provided for @editProfile.
   ///
   /// In en, this message translates to:
-  /// **'Editprofile'**
+  /// **'Edit Profile'**
   String get editProfile;
 
   /// No description provided for @editProfileSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Editprofilesubtitle'**
+  /// **'Edit Profile Subtitle'**
   String get editProfileSubtitle;
 
   /// No description provided for @editProfileTitle.
   ///
   /// In en, this message translates to:
-  /// **'Editprofiletitle'**
+  /// **'Edit Profile Title'**
   String get editProfileTitle;
 
   /// No description provided for @emailAddress.
   ///
   /// In en, this message translates to:
-  /// **'Emailaddress'**
+  /// **'Email Address'**
   String get emailAddress;
 
   /// No description provided for @emailNotificationsDesc.
   ///
   /// In en, this message translates to:
-  /// **'Emailnotificationsdesc'**
+  /// **'Email Notifications Desc'**
   String get emailNotificationsDesc;
 
   /// No description provided for @emailNotificationsLabel.
   ///
   /// In en, this message translates to:
-  /// **'Emailnotificationslabel'**
+  /// **'Email Notifications Label'**
   String get emailNotificationsLabel;
 
   /// No description provided for @emailUs.
   ///
   /// In en, this message translates to:
-  /// **'Emailus'**
+  /// **'Email Us'**
   String get emailUs;
 
   /// No description provided for @emptyBookmarksDesc.
   ///
   /// In en, this message translates to:
-  /// **'Emptybookmarksdesc'**
+  /// **'Empty Bookmarks Desc'**
   String get emptyBookmarksDesc;
 
   /// No description provided for @encouragementMessage.
   ///
   /// In en, this message translates to:
-  /// **'Encouragementmessage'**
+  /// **'Encouragement Message'**
   String get encouragementMessage;
 
   /// No description provided for @exploreTools.
   ///
   /// In en, this message translates to:
-  /// **'Exploretools'**
+  /// **'Explore Tools'**
   String get exploreTools;
 
   /// No description provided for @faq1Answer.
   ///
   /// In en, this message translates to:
-  /// **'Faq1answer'**
+  /// **'Faq1 Answer'**
   String get faq1Answer;
 
   /// No description provided for @faq1Question.
   ///
   /// In en, this message translates to:
-  /// **'Faq1question'**
+  /// **'Faq1 Question'**
   String get faq1Question;
 
   /// No description provided for @faq2Answer.
   ///
   /// In en, this message translates to:
-  /// **'Faq2answer'**
+  /// **'Faq2 Answer'**
   String get faq2Answer;
 
   /// No description provided for @faq2Question.
   ///
   /// In en, this message translates to:
-  /// **'Faq2question'**
+  /// **'Faq2 Question'**
   String get faq2Question;
 
   /// No description provided for @faq3Answer.
   ///
   /// In en, this message translates to:
-  /// **'Faq3answer'**
+  /// **'Faq3 Answer'**
   String get faq3Answer;
 
   /// No description provided for @faq3Question.
   ///
   /// In en, this message translates to:
-  /// **'Faq3question'**
+  /// **'Faq3 Question'**
   String get faq3Question;
 
   /// No description provided for @faq4Answer.
   ///
   /// In en, this message translates to:
-  /// **'Faq4answer'**
+  /// **'Faq4 Answer'**
   String get faq4Answer;
 
   /// No description provided for @faq4Question.
   ///
   /// In en, this message translates to:
-  /// **'Faq4question'**
+  /// **'Faq4 Question'**
   String get faq4Question;
 
   /// No description provided for @faqLabel.
   ///
   /// In en, this message translates to:
-  /// **'Faqlabel'**
+  /// **'Faq Label'**
   String get faqLabel;
 
   /// No description provided for @featuredAnnouncements.
   ///
   /// In en, this message translates to:
-  /// **'Featuredannouncements'**
+  /// **'Featured Announcements'**
   String get featuredAnnouncements;
 
   /// No description provided for @flashcardSessionComplete.
   ///
   /// In en, this message translates to:
-  /// **'Flashcardsessioncomplete'**
+  /// **'Flashcard Session Complete'**
   String get flashcardSessionComplete;
 
   /// No description provided for @flashcardSessionDesc.
   ///
   /// In en, this message translates to:
-  /// **'Flashcardsessiondesc'**
+  /// **'Flashcard Session Desc'**
   String get flashcardSessionDesc;
 
   /// No description provided for @flashcardStudy.
   ///
   /// In en, this message translates to:
-  /// **'Flashcardstudy'**
+  /// **'Flashcard Study'**
   String get flashcardStudy;
 
   /// No description provided for @formulaFlow.
   ///
   /// In en, this message translates to:
-  /// **'Formulaflow'**
+  /// **'Formula Flow'**
   String get formulaFlow;
 
   /// No description provided for @freeAccount.
   ///
   /// In en, this message translates to:
-  /// **'Freeaccount'**
+  /// **'Free Account'**
   String get freeAccount;
 
   /// No description provided for @frequentlyAsked.
   ///
   /// In en, this message translates to:
-  /// **'Frequentlyasked'**
+  /// **'Frequently Asked'**
   String get frequentlyAsked;
 
   /// No description provided for @fullName.
   ///
   /// In en, this message translates to:
-  /// **'Fullname'**
+  /// **'Full Name'**
   String get fullName;
 
   /// No description provided for @goBack.
   ///
   /// In en, this message translates to:
-  /// **'Goback'**
+  /// **'Go Back'**
   String get goBack;
 
   /// No description provided for @helpAndSupport.
   ///
   /// In en, this message translates to:
-  /// **'Helpandsupport'**
+  /// **'Help And Support'**
   String get helpAndSupport;
 
   /// No description provided for @helpHeroSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Helpherosubtitle'**
+  /// **'Help Hero Subtitle'**
   String get helpHeroSubtitle;
 
   /// No description provided for @helpHeroTitle.
   ///
   /// In en, this message translates to:
-  /// **'Helpherotitle'**
+  /// **'Help Hero Title'**
   String get helpHeroTitle;
 
   /// No description provided for @incorrectLabel.
   ///
   /// In en, this message translates to:
-  /// **'Incorrectlabel'**
+  /// **'Incorrect Label'**
   String get incorrectLabel;
 
   /// No description provided for @legalAcceptance.
   ///
   /// In en, this message translates to:
-  /// **'Legalacceptance'**
+  /// **'Legal Acceptance'**
   String get legalAcceptance;
 
   /// No description provided for @legalAcceptanceContent.
   ///
   /// In en, this message translates to:
-  /// **'Legalacceptancecontent'**
+  /// **'Legal Acceptance Content'**
   String get legalAcceptanceContent;
 
   /// No description provided for @legalChanges.
   ///
   /// In en, this message translates to:
-  /// **'Legalchanges'**
+  /// **'Legal Changes'**
   String get legalChanges;
 
   /// No description provided for @legalChangesContent.
   ///
   /// In en, this message translates to:
-  /// **'Legalchangescontent'**
+  /// **'Legal Changes Content'**
   String get legalChangesContent;
 
   /// No description provided for @legalChildrenPrivacy.
   ///
   /// In en, this message translates to:
-  /// **'Legalchildrenprivacy'**
+  /// **'Legal Children Privacy'**
   String get legalChildrenPrivacy;
 
   /// No description provided for @legalChildrenPrivacyContent.
   ///
   /// In en, this message translates to:
-  /// **'Legalchildrenprivacycontent'**
+  /// **'Legal Children Privacy Content'**
   String get legalChildrenPrivacyContent;
 
   /// No description provided for @legalContact.
   ///
   /// In en, this message translates to:
-  /// **'Legalcontact'**
+  /// **'Legal Contact'**
   String get legalContact;
 
   /// No description provided for @legalContactContent.
   ///
   /// In en, this message translates to:
-  /// **'Legalcontactcontent'**
+  /// **'Legal Contact Content'**
   String get legalContactContent;
 
   /// No description provided for @legalDataStorage.
   ///
   /// In en, this message translates to:
-  /// **'Legaldatastorage'**
+  /// **'Legal Data Storage'**
   String get legalDataStorage;
 
   /// No description provided for @legalDataStorageContent.
   ///
   /// In en, this message translates to:
-  /// **'Legaldatastoragecontent'**
+  /// **'Legal Data Storage Content'**
   String get legalDataStorageContent;
 
   /// No description provided for @legalDisclaimer.
   ///
   /// In en, this message translates to:
-  /// **'Legaldisclaimer'**
+  /// **'Legal Disclaimer'**
   String get legalDisclaimer;
 
   /// No description provided for @legalDisclaimerContent.
   ///
   /// In en, this message translates to:
-  /// **'Legaldisclaimercontent'**
+  /// **'Legal Disclaimer Content'**
   String get legalDisclaimerContent;
 
   /// No description provided for @legalGoverningLaw.
   ///
   /// In en, this message translates to:
-  /// **'Legalgoverninglaw'**
+  /// **'Legal Governing Law'**
   String get legalGoverningLaw;
 
   /// No description provided for @legalGoverningLawContent.
   ///
   /// In en, this message translates to:
-  /// **'Legalgoverninglawcontent'**
+  /// **'Legal Governing Law Content'**
   String get legalGoverningLawContent;
 
   /// No description provided for @legalHowWeUse.
   ///
   /// In en, this message translates to:
-  /// **'Legalhowweuse'**
+  /// **'Legal How We Use'**
   String get legalHowWeUse;
 
   /// No description provided for @legalHowWeUseContent.
   ///
   /// In en, this message translates to:
-  /// **'Legalhowweusecontent'**
+  /// **'Legal How We Use Content'**
   String get legalHowWeUseContent;
 
   /// No description provided for @legalInfoWeCollect.
   ///
   /// In en, this message translates to:
-  /// **'Legalinfowecollect'**
+  /// **'Legal Info We Collect'**
   String get legalInfoWeCollect;
 
   /// No description provided for @legalInfoWeCollectContent.
   ///
   /// In en, this message translates to:
-  /// **'Legalinfowecollectcontent'**
+  /// **'Legal Info We Collect Content'**
   String get legalInfoWeCollectContent;
 
   /// No description provided for @legalIntellectualProperty.
   ///
   /// In en, this message translates to:
-  /// **'Legalintellectualproperty'**
+  /// **'Legal Intellectual Property'**
   String get legalIntellectualProperty;
 
   /// No description provided for @legalIntellectualPropertyContent.
   ///
   /// In en, this message translates to:
-  /// **'Legalintellectualpropertycontent'**
+  /// **'Legal Intellectual Property Content'**
   String get legalIntellectualPropertyContent;
 
   /// No description provided for @legalTermination.
   ///
   /// In en, this message translates to:
-  /// **'Legaltermination'**
+  /// **'Legal Termination'**
   String get legalTermination;
 
   /// No description provided for @legalTerminationContent.
   ///
   /// In en, this message translates to:
-  /// **'Legalterminationcontent'**
+  /// **'Legal Termination Content'**
   String get legalTerminationContent;
 
   /// No description provided for @legalThirdParty.
   ///
   /// In en, this message translates to:
-  /// **'Legalthirdparty'**
+  /// **'Legal Third Party'**
   String get legalThirdParty;
 
   /// No description provided for @legalThirdPartyContent.
   ///
   /// In en, this message translates to:
-  /// **'Legalthirdpartycontent'**
+  /// **'Legal Third Party Content'**
   String get legalThirdPartyContent;
 
   /// No description provided for @legalUseOfService.
   ///
   /// In en, this message translates to:
-  /// **'Legaluseofservice'**
+  /// **'Legal Use Of Service'**
   String get legalUseOfService;
 
   /// No description provided for @legalUseOfServiceContent.
   ///
   /// In en, this message translates to:
-  /// **'Legaluseofservicecontent'**
+  /// **'Legal Use Of Service Content'**
   String get legalUseOfServiceContent;
 
   /// No description provided for @legalUserAccounts.
   ///
   /// In en, this message translates to:
-  /// **'Legaluseraccounts'**
+  /// **'Legal User Accounts'**
   String get legalUserAccounts;
 
   /// No description provided for @legalUserAccountsContent.
   ///
   /// In en, this message translates to:
-  /// **'Legaluseraccountscontent'**
+  /// **'Legal User Accounts Content'**
   String get legalUserAccountsContent;
 
   /// No description provided for @legalYourRights.
   ///
   /// In en, this message translates to:
-  /// **'Legalyourrights'**
+  /// **'Legal Your Rights'**
   String get legalYourRights;
 
   /// No description provided for @legalYourRightsContent.
   ///
   /// In en, this message translates to:
-  /// **'Legalyourrightscontent'**
+  /// **'Legal Your Rights Content'**
   String get legalYourRightsContent;
 
   /// No description provided for @newContent.
   ///
   /// In en, this message translates to:
-  /// **'Newcontent'**
+  /// **'New Content'**
   String get newContent;
 
   /// No description provided for @newContentDesc.
   ///
   /// In en, this message translates to:
-  /// **'Newcontentdesc'**
+  /// **'New Content Desc'**
   String get newContentDesc;
 
   /// No description provided for @nextQuestion.
   ///
   /// In en, this message translates to:
-  /// **'Nextquestion'**
+  /// **'Next Question'**
   String get nextQuestion;
 
   /// No description provided for @noBookmarksFoundDesc.
   ///
   /// In en, this message translates to:
-  /// **'Nobookmarksfounddesc'**
+  /// **'No Bookmarks Found Desc'**
   String get noBookmarksFoundDesc;
 
   /// No description provided for @noBookmarksFoundTitle.
   ///
   /// In en, this message translates to:
-  /// **'Nobookmarksfoundtitle'**
+  /// **'No Bookmarks Found Title'**
   String get noBookmarksFoundTitle;
 
   /// No description provided for @noFormulasLabel.
   ///
   /// In en, this message translates to:
-  /// **'Noformulaslabel'**
+  /// **'No Formulas Label'**
   String get noFormulasLabel;
 
   /// No description provided for @noSubjectsAvailable.
   ///
   /// In en, this message translates to:
-  /// **'Nosubjectsavailable'**
+  /// **'No Subjects Available'**
   String get noSubjectsAvailable;
 
   /// No description provided for @nothingHereYet.
   ///
   /// In en, this message translates to:
-  /// **'Nothinghereyet'**
+  /// **'Nothing Here Yet'**
   String get nothingHereYet;
 
   /// No description provided for @notifications.
@@ -2097,31 +2097,31 @@ abstract class AppLocalizations {
   /// No description provided for @notificationsEnabled.
   ///
   /// In en, this message translates to:
-  /// **'Notificationsenabled'**
+  /// **'Notifications Enabled'**
   String get notificationsEnabled;
 
   /// No description provided for @notificationsEnabledDesc.
   ///
   /// In en, this message translates to:
-  /// **'Notificationsenableddesc'**
+  /// **'Notifications Enabled Desc'**
   String get notificationsEnabledDesc;
 
   /// No description provided for @onboardingAppBrand.
   ///
   /// In en, this message translates to:
-  /// **'Onboardingappbrand'**
+  /// **'Onboarding App Brand'**
   String get onboardingAppBrand;
 
   /// No description provided for @onboardingBack.
   ///
   /// In en, this message translates to:
-  /// **'Onboardingback'**
+  /// **'Onboarding Back'**
   String get onboardingBack;
 
   /// No description provided for @onboardingContinue.
   ///
   /// In en, this message translates to:
-  /// **'Onboardingcontinue'**
+  /// **'Onboarding Continue'**
   String get onboardingContinue;
 
   /// No description provided for @onboardingStepOf.
@@ -2139,7 +2139,7 @@ abstract class AppLocalizations {
   /// No description provided for @personalInfo.
   ///
   /// In en, this message translates to:
-  /// **'Personalinfo'**
+  /// **'Personal Info'**
   String get personalInfo;
 
   /// No description provided for @play.
@@ -2151,109 +2151,109 @@ abstract class AppLocalizations {
   /// No description provided for @practiceChooseSubject.
   ///
   /// In en, this message translates to:
-  /// **'Practicechoosesubject'**
+  /// **'Practice Choose Subject'**
   String get practiceChooseSubject;
 
   /// No description provided for @practiceNoQuestionsDesc.
   ///
   /// In en, this message translates to:
-  /// **'Practicenoquestionsdesc'**
+  /// **'Practice No Questions Desc'**
   String get practiceNoQuestionsDesc;
 
   /// No description provided for @practiceNoQuestionsTitle.
   ///
   /// In en, this message translates to:
-  /// **'Practicenoquestionstitle'**
+  /// **'Practice No Questions Title'**
   String get practiceNoQuestionsTitle;
 
   /// No description provided for @practiceReadyDesc.
   ///
   /// In en, this message translates to:
-  /// **'Practicereadydesc'**
+  /// **'Practice Ready Desc'**
   String get practiceReadyDesc;
 
   /// No description provided for @practiceReadyTitle.
   ///
   /// In en, this message translates to:
-  /// **'Practicereadytitle'**
+  /// **'Practice Ready Title'**
   String get practiceReadyTitle;
 
   /// No description provided for @privacyPolicyDesc.
   ///
   /// In en, this message translates to:
-  /// **'Privacypolicydesc'**
+  /// **'Privacy Policy Desc'**
   String get privacyPolicyDesc;
 
   /// No description provided for @privacyPolicyTitle.
   ///
   /// In en, this message translates to:
-  /// **'Privacypolicytitle'**
+  /// **'Privacy Policy Title'**
   String get privacyPolicyTitle;
 
   /// No description provided for @proTip.
   ///
   /// In en, this message translates to:
-  /// **'Protip'**
+  /// **'Pro Tip'**
   String get proTip;
 
   /// No description provided for @proTipContent.
   ///
   /// In en, this message translates to:
-  /// **'Protipcontent'**
+  /// **'Pro Tip Content'**
   String get proTipContent;
 
   /// No description provided for @profileAvatarUrlLabel.
   ///
   /// In en, this message translates to:
-  /// **'Profileavatarurllabel'**
+  /// **'Profile Avatar Url Label'**
   String get profileAvatarUrlLabel;
 
   /// No description provided for @profileNameLabel.
   ///
   /// In en, this message translates to:
-  /// **'Profilenamelabel'**
+  /// **'Profile Name Label'**
   String get profileNameLabel;
 
   /// No description provided for @profileNameRequired.
   ///
   /// In en, this message translates to:
-  /// **'Profilenamerequired'**
+  /// **'Profile Name Required'**
   String get profileNameRequired;
 
   /// No description provided for @profileUpdatedSuccess.
   ///
   /// In en, this message translates to:
-  /// **'Profileupdatedsuccess'**
+  /// **'Profile Updated Success'**
   String get profileUpdatedSuccess;
 
   /// No description provided for @pushNotificationsDesc.
   ///
   /// In en, this message translates to:
-  /// **'Pushnotificationsdesc'**
+  /// **'Push Notifications Desc'**
   String get pushNotificationsDesc;
 
   /// No description provided for @pushNotificationsLabel.
   ///
   /// In en, this message translates to:
-  /// **'Pushnotificationslabel'**
+  /// **'Push Notifications Label'**
   String get pushNotificationsLabel;
 
   /// No description provided for @quickActions.
   ///
   /// In en, this message translates to:
-  /// **'Quickactions'**
+  /// **'Quick Actions'**
   String get quickActions;
 
   /// No description provided for @readyForMore.
   ///
   /// In en, this message translates to:
-  /// **'Readyformore'**
+  /// **'Ready For More'**
   String get readyForMore;
 
   /// No description provided for @refreshBookmarks.
   ///
   /// In en, this message translates to:
-  /// **'Refreshbookmarks'**
+  /// **'Refresh Bookmarks'**
   String get refreshBookmarks;
 
   /// No description provided for @reset.
@@ -2271,13 +2271,13 @@ abstract class AppLocalizations {
   /// No description provided for @saveChanges.
   ///
   /// In en, this message translates to:
-  /// **'Savechanges'**
+  /// **'Save Changes'**
   String get saveChanges;
 
   /// No description provided for @searchBookmarks.
   ///
   /// In en, this message translates to:
-  /// **'Searchbookmarks'**
+  /// **'Search Bookmarks'**
   String get searchBookmarks;
 
   /// No description provided for @settings.
@@ -2289,157 +2289,157 @@ abstract class AppLocalizations {
   /// No description provided for @step3Subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Step3subtitle'**
+  /// **'Step3 Subtitle'**
   String get step3Subtitle;
 
   /// No description provided for @step3Tag.
   ///
   /// In en, this message translates to:
-  /// **'Step3tag'**
+  /// **'Step3 Tag'**
   String get step3Tag;
 
   /// No description provided for @step3Title.
   ///
   /// In en, this message translates to:
-  /// **'Step3title'**
+  /// **'Step3 Title'**
   String get step3Title;
 
   /// No description provided for @step4EnterSanctuary.
   ///
   /// In en, this message translates to:
-  /// **'Step4entersanctuary'**
+  /// **'Step4 Enter Sanctuary'**
   String get step4EnterSanctuary;
 
   /// No description provided for @step4Subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Step4subtitle'**
+  /// **'Step4 Subtitle'**
   String get step4Subtitle;
 
   /// No description provided for @step4Tag.
   ///
   /// In en, this message translates to:
-  /// **'Step4tag'**
+  /// **'Step4 Tag'**
   String get step4Tag;
 
   /// No description provided for @step4Title.
   ///
   /// In en, this message translates to:
-  /// **'Step4title'**
+  /// **'Step4 Title'**
   String get step4Title;
 
   /// No description provided for @streakAlerts.
   ///
   /// In en, this message translates to:
-  /// **'Streakalerts'**
+  /// **'Streak Alerts'**
   String get streakAlerts;
 
   /// No description provided for @streakAlertsDesc.
   ///
   /// In en, this message translates to:
-  /// **'Streakalertsdesc'**
+  /// **'Streak Alerts Desc'**
   String get streakAlertsDesc;
 
   /// No description provided for @studyAgain.
   ///
   /// In en, this message translates to:
-  /// **'Studyagain'**
+  /// **'Study Again'**
   String get studyAgain;
 
   /// No description provided for @studyNotifications.
   ///
   /// In en, this message translates to:
-  /// **'Studynotifications'**
+  /// **'Study Notifications'**
   String get studyNotifications;
 
   /// No description provided for @studyReminders.
   ///
   /// In en, this message translates to:
-  /// **'Studyreminders'**
+  /// **'Study Reminders'**
   String get studyReminders;
 
   /// No description provided for @studyRemindersDesc.
   ///
   /// In en, this message translates to:
-  /// **'Studyremindersdesc'**
+  /// **'Study Reminders Desc'**
   String get studyRemindersDesc;
 
   /// No description provided for @termsOfServiceDesc.
   ///
   /// In en, this message translates to:
-  /// **'Termsofservicedesc'**
+  /// **'Terms Of Service Desc'**
   String get termsOfServiceDesc;
 
   /// No description provided for @termsOfServiceTitle.
   ///
   /// In en, this message translates to:
-  /// **'Termsofservicetitle'**
+  /// **'Terms Of Service Title'**
   String get termsOfServiceTitle;
 
   /// No description provided for @timedMode.
   ///
   /// In en, this message translates to:
-  /// **'Timedmode'**
+  /// **'Timed Mode'**
   String get timedMode;
 
   /// No description provided for @timedModeDesc.
   ///
   /// In en, this message translates to:
-  /// **'Timedmodedesc'**
+  /// **'Timed Mode Desc'**
   String get timedModeDesc;
 
   /// No description provided for @toggleDarkMode.
   ///
   /// In en, this message translates to:
-  /// **'Toggledarkmode'**
+  /// **'Toggle Dark Mode'**
   String get toggleDarkMode;
 
   /// No description provided for @userGuide.
   ///
   /// In en, this message translates to:
-  /// **'Userguide'**
+  /// **'User Guide'**
   String get userGuide;
 
   /// No description provided for @userGuideDesc.
   ///
   /// In en, this message translates to:
-  /// **'Userguidedesc'**
+  /// **'User Guide Desc'**
   String get userGuideDesc;
 
   /// No description provided for @verifiedAccount.
   ///
   /// In en, this message translates to:
-  /// **'Verifiedaccount'**
+  /// **'Verified Account'**
   String get verifiedAccount;
 
   /// No description provided for @videoTutorials.
   ///
   /// In en, this message translates to:
-  /// **'Videotutorials'**
+  /// **'Video Tutorials'**
   String get videoTutorials;
 
   /// No description provided for @videoTutorialsDesc.
   ///
   /// In en, this message translates to:
-  /// **'Videotutorialsdesc'**
+  /// **'Video Tutorials Desc'**
   String get videoTutorialsDesc;
 
   /// No description provided for @viewTopics.
   ///
   /// In en, this message translates to:
-  /// **'Viewtopics'**
+  /// **'View Topics'**
   String get viewTopics;
 
   /// No description provided for @weeklyReport.
   ///
   /// In en, this message translates to:
-  /// **'Weeklyreport'**
+  /// **'Weekly Report'**
   String get weeklyReport;
 
   /// No description provided for @weeklyReportDesc.
   ///
   /// In en, this message translates to:
-  /// **'Weeklyreportdesc'**
+  /// **'Weekly Report Desc'**
   String get weeklyReportDesc;
 
   /// No description provided for @dart.
@@ -2451,133 +2451,133 @@ abstract class AppLocalizations {
   /// No description provided for @dashboardSanctuary.
   ///
   /// In en, this message translates to:
-  /// **'Dashboardsanctuary'**
+  /// **'Dashboard Sanctuary'**
   String get dashboardSanctuary;
 
   /// No description provided for @forgotPasswordCancel.
   ///
   /// In en, this message translates to:
-  /// **'Forgotpasswordcancel'**
+  /// **'Forgot Password Cancel'**
   String get forgotPasswordCancel;
 
   /// No description provided for @forgotPasswordDesc.
   ///
   /// In en, this message translates to:
-  /// **'Forgotpassworddesc'**
+  /// **'Forgot Password Desc'**
   String get forgotPasswordDesc;
 
   /// No description provided for @forgotPasswordSend.
   ///
   /// In en, this message translates to:
-  /// **'Forgotpasswordsend'**
+  /// **'Forgot Password Send'**
   String get forgotPasswordSend;
 
   /// No description provided for @forgotPasswordSuccess.
   ///
   /// In en, this message translates to:
-  /// **'Forgotpasswordsuccess'**
+  /// **'Forgot Password Success'**
   String get forgotPasswordSuccess;
 
   /// No description provided for @forgotPasswordTitle.
   ///
   /// In en, this message translates to:
-  /// **'Forgotpasswordtitle'**
+  /// **'Forgot Password Title'**
   String get forgotPasswordTitle;
 
   /// No description provided for @signupBrandDesc.
   ///
   /// In en, this message translates to:
-  /// **'Signupbranddesc'**
+  /// **'Signup Brand Desc'**
   String get signupBrandDesc;
 
   /// No description provided for @signupBrandHeadline.
   ///
   /// In en, this message translates to:
-  /// **'Signupbrandheadline'**
+  /// **'Signup Brand Headline'**
   String get signupBrandHeadline;
 
   /// No description provided for @signupBrandTitle.
   ///
   /// In en, this message translates to:
-  /// **'Signupbrandtitle'**
+  /// **'Signup Brand Title'**
   String get signupBrandTitle;
 
   /// No description provided for @signupTestimonial.
   ///
   /// In en, this message translates to:
-  /// **'Signuptestimonial'**
+  /// **'Signup Testimonial'**
   String get signupTestimonial;
 
   /// No description provided for @signupTestimonialName.
   ///
   /// In en, this message translates to:
-  /// **'Signuptestimonialname'**
+  /// **'Signup Testimonial Name'**
   String get signupTestimonialName;
 
   /// No description provided for @signupTestimonialRole.
   ///
   /// In en, this message translates to:
-  /// **'Signuptestimonialrole'**
+  /// **'Signup Testimonial Role'**
   String get signupTestimonialRole;
 
   /// No description provided for @step4Casual.
   ///
   /// In en, this message translates to:
-  /// **'Step4casual'**
+  /// **'Step4 Casual'**
   String get step4Casual;
 
   /// No description provided for @step4CasualDesc.
   ///
   /// In en, this message translates to:
-  /// **'Step4casualdesc'**
+  /// **'Step4 Casual Desc'**
   String get step4CasualDesc;
 
   /// No description provided for @step4Intensive.
   ///
   /// In en, this message translates to:
-  /// **'Step4intensive'**
+  /// **'Step4 Intensive'**
   String get step4Intensive;
 
   /// No description provided for @step4IntensiveDesc.
   ///
   /// In en, this message translates to:
-  /// **'Step4intensivedesc'**
+  /// **'Step4 Intensive Desc'**
   String get step4IntensiveDesc;
 
   /// No description provided for @step4Regular.
   ///
   /// In en, this message translates to:
-  /// **'Step4regular'**
+  /// **'Step4 Regular'**
   String get step4Regular;
 
   /// No description provided for @step4RegularDesc.
   ///
   /// In en, this message translates to:
-  /// **'Step4regulardesc'**
+  /// **'Step4 Regular Desc'**
   String get step4RegularDesc;
 
   /// No description provided for @validationInvalidEmail.
   ///
   /// In en, this message translates to:
-  /// **'Validationinvalidemail'**
+  /// **'Validation Invalid Email'**
   String get validationInvalidEmail;
 
   /// No description provided for @validationPasswordMinLength.
   ///
   /// In en, this message translates to:
-  /// **'Validationpasswordminlength'**
+  /// **'Validation Password Min Length'**
   String get validationPasswordMinLength;
 
   /// No description provided for @validationPasswordMismatch.
   ///
   /// In en, this message translates to:
-  /// **'Validationpasswordmismatch'**
+  /// **'Validation Password Mismatch'**
   String get validationPasswordMismatch;
 
   /// No description provided for @validationRequired.
   ///
   /// In en, this message translates to:
-  /// **'Validationrequired'**
+  /// **'Validation Required'**
   String get validationRequired;
 
   /// No description provided for @aboutApp.

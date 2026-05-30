@@ -303,16 +303,16 @@ class AppLocalizationsUr extends AppLocalizations {
   String get viewFullAnalytics => 'مکمل تجزیات دیکھیں';
 
   @override
-  String get deletePlan => 'Delete plan';
+  String get deletePlan => 'Delete Plan';
 
   @override
-  String get noPlansYet => 'No plans yet';
+  String get noPlansYet => 'No Plans Yet';
 
   @override
   String get createPlan => 'Create Plan';
 
   @override
-  String get planTitle => 'Plan title';
+  String get planTitle => 'Plan Title';
 
   @override
   String get planTitleHint => 'e.g. Cover chapters 1-3';
@@ -324,7 +324,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get newPlan => 'New Plan';
 
   @override
-  String get swapFormulas => 'Swap formulas';
+  String get swapFormulas => 'Swap Formulas';
 
   @override
   String get step1CountryLabel => 'Select Country';
@@ -370,22 +370,22 @@ class AppLocalizationsUr extends AppLocalizations {
   String get correct => 'Correct';
 
   @override
-  String get masteryLevelIncreasing => 'Mastery level increasing';
+  String get masteryLevelIncreasing => 'Mastery Level Increasing';
 
   @override
-  String get wrongAnswer => 'Wrong answer';
+  String get wrongAnswer => 'Wrong Answer';
 
   @override
-  String get tryNextTime => 'Try next time';
+  String get tryNextTime => 'Try Next Time';
 
   @override
-  String get somethingWentWrong => 'Something went wrong';
+  String get somethingWentWrong => 'Something Went Wrong';
 
   @override
-  String get failedToLoadProfile => 'Failed to load profile';
+  String get failedToLoadProfile => 'Failed To Load Profile';
 
   @override
-  String get failedToUpdateProfile => 'Failed to update profile';
+  String get failedToUpdateProfile => 'Failed To Update Profile';
 
   @override
   String get dashboardCurriculumOptionsLoadFailed =>
@@ -409,13 +409,13 @@ class AppLocalizationsUr extends AppLocalizations {
       'Select your curriculum to continue';
 
   @override
-  String get failedToLoadDashboard => 'Failed to load dashboard';
+  String get failedToLoadDashboard => 'Failed To Load Dashboard';
 
   @override
   String get retry => 'Retry';
 
   @override
-  String get comingSoon => 'COMING SOON';
+  String get comingSoon => 'Coming Soon';
 
   @override
   String get comingSoonChip1 => 'In Development';
@@ -427,7 +427,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get comingSoonChip3 => 'Exciting Updates';
 
   @override
-  String get gotIt => 'Got it';
+  String get gotIt => 'Got It';
 
   @override
   String get legalFooterTitle => 'Safe, private, and reliable';
@@ -452,49 +452,49 @@ class AppLocalizationsUr extends AppLocalizations {
   String get breadcrumbHome => 'Home';
 
   @override
-  String get viewProfile => 'View profile';
+  String get viewProfile => 'View Profile';
 
   @override
   String get chapterLabel => 'Chapter';
 
   @override
-  String get unknownSubject => 'Unknown subject';
+  String get unknownSubject => 'Unknown Subject';
 
   @override
-  String get generateCheatSheet => 'Generate cheat sheet';
+  String get generateCheatSheet => 'Generate Cheat Sheet';
 
   @override
-  String get studyAsFlashcards => 'Study as flashcards';
+  String get studyAsFlashcards => 'Study As Flashcards';
 
   @override
   String get searchChaptersHint => 'Search chapters';
 
   @override
-  String get toggleSortDirection => 'Toggle sort direction';
+  String get toggleSortDirection => 'Toggle Sort Direction';
 
   @override
-  String get sortDescending => 'Sort descending';
+  String get sortDescending => 'Sort Descending';
 
   @override
-  String get sortAscending => 'Sort ascending';
+  String get sortAscending => 'Sort Ascending';
 
   @override
-  String get continueLearning => 'Continue learning';
+  String get continueLearning => 'Continue Learning';
 
   @override
-  String get startNow => 'Start now';
+  String get startNow => 'Start Now';
 
   @override
   String get formulasLabel => 'formulas';
 
   @override
-  String get removeBookmark => 'Remove bookmark';
+  String get removeBookmark => 'Remove Bookmark';
 
   @override
-  String get bookmarkChapter => 'Bookmark chapter';
+  String get bookmarkChapter => 'Bookmark Chapter';
 
   @override
-  String get removeSavedChapter => 'Remove saved chapter';
+  String get removeSavedChapter => 'Remove Saved Chapter';
 
   @override
   String percentDone(Object percent) {
@@ -507,13 +507,13 @@ class AppLocalizationsUr extends AppLocalizations {
   }
 
   @override
-  String get nearlyThere => 'Nearly there';
+  String get nearlyThere => 'Nearly There';
 
   @override
-  String get keepGoing => 'Keep going';
+  String get keepGoing => 'Keep Going';
 
   @override
-  String get justStarted => 'Just started';
+  String get justStarted => 'Just Started';
 
   @override
   String get locked => 'Locked';
@@ -580,7 +580,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get appVersion => 'Version';
 
   @override
-  String get madeWithLove => 'Made with love';
+  String get madeWithLove => 'Made With Love';
 
   @override
   String get deleteAccountFailed => 'Failed to delete account';
@@ -602,19 +602,19 @@ class AppLocalizationsUr extends AppLocalizations {
   String get dashboardLive => 'Live';
 
   @override
-  String get startQuiz => 'Start quiz';
+  String get startQuiz => 'Start Quiz';
 
   @override
   String get welcomeScholar => 'Welcome Scholar';
 
   @override
-  String get myProgress => 'My progress';
+  String get myProgress => 'My Progress';
 
   @override
-  String get viewHistory => 'View history';
+  String get viewHistory => 'View History';
 
   @override
-  String get noFormulasAvailable => 'No formulas available';
+  String get noFormulasAvailable => 'No Formulas Available';
 
   @override
   String get formulasTitle => 'Formulas';
@@ -663,28 +663,28 @@ class AppLocalizationsUr extends AppLocalizations {
   String get quizCompleteDesc => 'You completed the quiz';
 
   @override
-  String get playAgain => 'Play again';
+  String get playAgain => 'Play Again';
 
   @override
   String get retryIncorrect => 'Retry incorrect questions';
 
   @override
-  String get backToDashboard => 'Back to dashboard';
+  String get backToDashboard => 'Back To Dashboard';
 
   @override
-  String get savedChapters => 'Saved chapters';
+  String get savedChapters => 'Saved Chapters';
 
   @override
-  String get savedFormulas => 'Saved formulas';
+  String get savedFormulas => 'Saved Formulas';
 
   @override
-  String get savedNotes => 'Saved notes';
+  String get savedNotes => 'Saved Notes';
 
   @override
-  String get editNote => 'Edit note';
+  String get editNote => 'Edit Note';
 
   @override
-  String get addNote => 'Add note';
+  String get addNote => 'Add Note';
 
   @override
   String get save => 'Save';
@@ -699,7 +699,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get genericError => 'Something went wrong';
 
   @override
-  String get unknownCurriculum => 'Unknown curriculum';
+  String get unknownCurriculum => 'Unknown Curriculum';
 
   @override
   String get creating => 'Creating...';
@@ -714,58 +714,58 @@ class AppLocalizationsUr extends AppLocalizations {
   String get masteryToolsSyncing => 'Syncing mastery tools...';
 
   @override
-  String get videoLessons => 'Video lessons';
+  String get videoLessons => 'Video Lessons';
 
   @override
-  String get cheatSheets => 'Cheat sheets';
+  String get cheatSheets => 'Cheat Sheets';
 
   @override
-  String get academicInfo => 'Academicinfo';
+  String get academicInfo => 'Academic Info';
 
   @override
-  String get accountActions => 'Accountactions';
+  String get accountActions => 'Account Actions';
 
   @override
-  String get accountInformation => 'Accountinformation';
+  String get accountInformation => 'Account Information';
 
   @override
-  String get accountType => 'Accounttype';
+  String get accountType => 'Account Type';
 
   @override
-  String get achievementNotifications => 'Achievementnotifications';
+  String get achievementNotifications => 'Achievement Notifications';
 
   @override
   String get achievements => 'Achievements';
 
   @override
-  String get achievementsDesc => 'Achievementsdesc';
+  String get achievementsDesc => 'Achievements Desc';
 
   @override
-  String get allSubjects => 'Allsubjects';
+  String get allSubjects => 'All Subjects';
 
   @override
-  String get browseLessons => 'Browselessons';
+  String get browseLessons => 'Browse Lessons';
 
   @override
-  String get changePassword => 'Changepassword';
+  String get changePassword => 'Change Password';
 
   @override
-  String get chatWithUs => 'Chatwithus';
+  String get chatWithUs => 'Chat With Us';
 
   @override
-  String get closeLabel => 'Closelabel';
+  String get closeLabel => 'Close Label';
 
   @override
-  String get closePractice => 'Closepractice';
+  String get closePractice => 'Close Practice';
 
   @override
-  String get closeQuiz => 'Closequiz';
+  String get closeQuiz => 'Close Quiz';
 
   @override
-  String get dailyChallenge => 'Dailychallenge';
+  String get dailyChallenge => 'Daily Challenge';
 
   @override
-  String get dailyChallengeDesc => 'Dailychallengedesc';
+  String get dailyChallengeDesc => 'Daily Challenge Desc';
 
   @override
   String get dashboardAcademicViewAll => 'View All';
@@ -776,7 +776,7 @@ class AppLocalizationsUr extends AppLocalizations {
   }
 
   @override
-  String get dashboardAcademicPath => 'Dashboardacademicpath';
+  String get dashboardAcademicPath => 'Dashboard Academic Path';
 
   @override
   String get dashboardAvailableBoards => 'Boards for your region';
@@ -791,26 +791,26 @@ class AppLocalizationsUr extends AppLocalizations {
   String get dashboardNoClassesAvailable => 'No classes available';
 
   @override
-  String get dashboardActiveCurriculum => 'Dashboardactivecurriculum';
+  String get dashboardActiveCurriculum => 'Dashboard Active Curriculum';
 
   @override
-  String get dashboardCurriculumPending => 'Dashboardcurriculumpending';
+  String get dashboardCurriculumPending => 'Dashboard Curriculum Pending';
 
   @override
-  String get dashboardFormulaVault => 'Dashboardformulavault';
+  String get dashboardFormulaVault => 'Dashboard Formula Vault';
 
   @override
   String get dashboardRetryCurriculumOptions =>
-      'Dashboardretrycurriculumoptions';
+      'Dashboard Retry Curriculum Options';
 
   @override
-  String get deleteAccount => 'Deleteaccount';
+  String get deleteAccount => 'Delete Account';
 
   @override
-  String get deliveryChannels => 'Deliverychannels';
+  String get deliveryChannels => 'Delivery Channels';
 
   @override
-  String get dismissAnnouncement => 'Dismissannouncement';
+  String get dismissAnnouncement => 'Dismiss Announcement';
 
   @override
   String get done => 'Done';
@@ -819,301 +819,301 @@ class AppLocalizationsUr extends AppLocalizations {
   String get duration => 'Duration';
 
   @override
-  String get editProfile => 'Editprofile';
+  String get editProfile => 'Edit Profile';
 
   @override
-  String get editProfileSubtitle => 'Editprofilesubtitle';
+  String get editProfileSubtitle => 'Edit Profile Subtitle';
 
   @override
-  String get editProfileTitle => 'Editprofiletitle';
+  String get editProfileTitle => 'Edit Profile Title';
 
   @override
-  String get emailAddress => 'Emailaddress';
+  String get emailAddress => 'Email Address';
 
   @override
-  String get emailNotificationsDesc => 'Emailnotificationsdesc';
+  String get emailNotificationsDesc => 'Email Notifications Desc';
 
   @override
-  String get emailNotificationsLabel => 'Emailnotificationslabel';
+  String get emailNotificationsLabel => 'Email Notifications Label';
 
   @override
-  String get emailUs => 'Emailus';
+  String get emailUs => 'Email Us';
 
   @override
-  String get emptyBookmarksDesc => 'Emptybookmarksdesc';
+  String get emptyBookmarksDesc => 'Empty Bookmarks Desc';
 
   @override
-  String get encouragementMessage => 'Encouragementmessage';
+  String get encouragementMessage => 'Encouragement Message';
 
   @override
-  String get exploreTools => 'Exploretools';
+  String get exploreTools => 'Explore Tools';
 
   @override
-  String get faq1Answer => 'Faq1answer';
+  String get faq1Answer => 'Faq1 Answer';
 
   @override
-  String get faq1Question => 'Faq1question';
+  String get faq1Question => 'Faq1 Question';
 
   @override
-  String get faq2Answer => 'Faq2answer';
+  String get faq2Answer => 'Faq2 Answer';
 
   @override
-  String get faq2Question => 'Faq2question';
+  String get faq2Question => 'Faq2 Question';
 
   @override
-  String get faq3Answer => 'Faq3answer';
+  String get faq3Answer => 'Faq3 Answer';
 
   @override
-  String get faq3Question => 'Faq3question';
+  String get faq3Question => 'Faq3 Question';
 
   @override
-  String get faq4Answer => 'Faq4answer';
+  String get faq4Answer => 'Faq4 Answer';
 
   @override
-  String get faq4Question => 'Faq4question';
+  String get faq4Question => 'Faq4 Question';
 
   @override
-  String get faqLabel => 'Faqlabel';
+  String get faqLabel => 'Faq Label';
 
   @override
-  String get featuredAnnouncements => 'Featuredannouncements';
+  String get featuredAnnouncements => 'Featured Announcements';
 
   @override
-  String get flashcardSessionComplete => 'Flashcardsessioncomplete';
+  String get flashcardSessionComplete => 'Flashcard Session Complete';
 
   @override
-  String get flashcardSessionDesc => 'Flashcardsessiondesc';
+  String get flashcardSessionDesc => 'Flashcard Session Desc';
 
   @override
-  String get flashcardStudy => 'Flashcardstudy';
+  String get flashcardStudy => 'Flashcard Study';
 
   @override
-  String get formulaFlow => 'Formulaflow';
+  String get formulaFlow => 'Formula Flow';
 
   @override
-  String get freeAccount => 'Freeaccount';
+  String get freeAccount => 'Free Account';
 
   @override
-  String get frequentlyAsked => 'Frequentlyasked';
+  String get frequentlyAsked => 'Frequently Asked';
 
   @override
-  String get fullName => 'Fullname';
+  String get fullName => 'Full Name';
 
   @override
-  String get goBack => 'Goback';
+  String get goBack => 'Go Back';
 
   @override
-  String get helpAndSupport => 'Helpandsupport';
+  String get helpAndSupport => 'Help And Support';
 
   @override
-  String get helpHeroSubtitle => 'Helpherosubtitle';
+  String get helpHeroSubtitle => 'Help Hero Subtitle';
 
   @override
-  String get helpHeroTitle => 'Helpherotitle';
+  String get helpHeroTitle => 'Help Hero Title';
 
   @override
-  String get incorrectLabel => 'Incorrectlabel';
+  String get incorrectLabel => 'Incorrect Label';
 
   @override
-  String get legalAcceptance => 'Legalacceptance';
+  String get legalAcceptance => 'Legal Acceptance';
 
   @override
-  String get legalAcceptanceContent => 'Legalacceptancecontent';
+  String get legalAcceptanceContent => 'Legal Acceptance Content';
 
   @override
-  String get legalChanges => 'Legalchanges';
+  String get legalChanges => 'Legal Changes';
 
   @override
-  String get legalChangesContent => 'Legalchangescontent';
+  String get legalChangesContent => 'Legal Changes Content';
 
   @override
-  String get legalChildrenPrivacy => 'Legalchildrenprivacy';
+  String get legalChildrenPrivacy => 'Legal Children Privacy';
 
   @override
-  String get legalChildrenPrivacyContent => 'Legalchildrenprivacycontent';
+  String get legalChildrenPrivacyContent => 'Legal Children Privacy Content';
 
   @override
-  String get legalContact => 'Legalcontact';
+  String get legalContact => 'Legal Contact';
 
   @override
-  String get legalContactContent => 'Legalcontactcontent';
+  String get legalContactContent => 'Legal Contact Content';
 
   @override
-  String get legalDataStorage => 'Legaldatastorage';
+  String get legalDataStorage => 'Legal Data Storage';
 
   @override
-  String get legalDataStorageContent => 'Legaldatastoragecontent';
+  String get legalDataStorageContent => 'Legal Data Storage Content';
 
   @override
-  String get legalDisclaimer => 'Legaldisclaimer';
+  String get legalDisclaimer => 'Legal Disclaimer';
 
   @override
-  String get legalDisclaimerContent => 'Legaldisclaimercontent';
+  String get legalDisclaimerContent => 'Legal Disclaimer Content';
 
   @override
-  String get legalGoverningLaw => 'Legalgoverninglaw';
+  String get legalGoverningLaw => 'Legal Governing Law';
 
   @override
-  String get legalGoverningLawContent => 'Legalgoverninglawcontent';
+  String get legalGoverningLawContent => 'Legal Governing Law Content';
 
   @override
-  String get legalHowWeUse => 'Legalhowweuse';
+  String get legalHowWeUse => 'Legal How We Use';
 
   @override
-  String get legalHowWeUseContent => 'Legalhowweusecontent';
+  String get legalHowWeUseContent => 'Legal How We Use Content';
 
   @override
-  String get legalInfoWeCollect => 'Legalinfowecollect';
+  String get legalInfoWeCollect => 'Legal Info We Collect';
 
   @override
-  String get legalInfoWeCollectContent => 'Legalinfowecollectcontent';
+  String get legalInfoWeCollectContent => 'Legal Info We Collect Content';
 
   @override
-  String get legalIntellectualProperty => 'Legalintellectualproperty';
+  String get legalIntellectualProperty => 'Legal Intellectual Property';
 
   @override
   String get legalIntellectualPropertyContent =>
-      'Legalintellectualpropertycontent';
+      'Legal Intellectual Property Content';
 
   @override
-  String get legalTermination => 'Legaltermination';
+  String get legalTermination => 'Legal Termination';
 
   @override
-  String get legalTerminationContent => 'Legalterminationcontent';
+  String get legalTerminationContent => 'Legal Termination Content';
 
   @override
-  String get legalThirdParty => 'Legalthirdparty';
+  String get legalThirdParty => 'Legal Third Party';
 
   @override
-  String get legalThirdPartyContent => 'Legalthirdpartycontent';
+  String get legalThirdPartyContent => 'Legal Third Party Content';
 
   @override
-  String get legalUseOfService => 'Legaluseofservice';
+  String get legalUseOfService => 'Legal Use Of Service';
 
   @override
-  String get legalUseOfServiceContent => 'Legaluseofservicecontent';
+  String get legalUseOfServiceContent => 'Legal Use Of Service Content';
 
   @override
-  String get legalUserAccounts => 'Legaluseraccounts';
+  String get legalUserAccounts => 'Legal User Accounts';
 
   @override
-  String get legalUserAccountsContent => 'Legaluseraccountscontent';
+  String get legalUserAccountsContent => 'Legal User Accounts Content';
 
   @override
-  String get legalYourRights => 'Legalyourrights';
+  String get legalYourRights => 'Legal Your Rights';
 
   @override
-  String get legalYourRightsContent => 'Legalyourrightscontent';
+  String get legalYourRightsContent => 'Legal Your Rights Content';
 
   @override
-  String get newContent => 'Newcontent';
+  String get newContent => 'New Content';
 
   @override
-  String get newContentDesc => 'Newcontentdesc';
+  String get newContentDesc => 'New Content Desc';
 
   @override
-  String get nextQuestion => 'Nextquestion';
+  String get nextQuestion => 'Next Question';
 
   @override
-  String get noBookmarksFoundDesc => 'Nobookmarksfounddesc';
+  String get noBookmarksFoundDesc => 'No Bookmarks Found Desc';
 
   @override
-  String get noBookmarksFoundTitle => 'Nobookmarksfoundtitle';
+  String get noBookmarksFoundTitle => 'No Bookmarks Found Title';
 
   @override
-  String get noFormulasLabel => 'Noformulaslabel';
+  String get noFormulasLabel => 'No Formulas Label';
 
   @override
-  String get noSubjectsAvailable => 'Nosubjectsavailable';
+  String get noSubjectsAvailable => 'No Subjects Available';
 
   @override
-  String get nothingHereYet => 'Nothinghereyet';
+  String get nothingHereYet => 'Nothing Here Yet';
 
   @override
   String get notifications => 'Notifications';
 
   @override
-  String get notificationsEnabled => 'Notificationsenabled';
+  String get notificationsEnabled => 'Notifications Enabled';
 
   @override
-  String get notificationsEnabledDesc => 'Notificationsenableddesc';
+  String get notificationsEnabledDesc => 'Notifications Enabled Desc';
 
   @override
-  String get onboardingAppBrand => 'Onboardingappbrand';
+  String get onboardingAppBrand => 'Onboarding App Brand';
 
   @override
-  String get onboardingBack => 'Onboardingback';
+  String get onboardingBack => 'Onboarding Back';
 
   @override
-  String get onboardingContinue => 'Onboardingcontinue';
+  String get onboardingContinue => 'Onboarding Continue';
 
   @override
   String onboardingStepOf(int current, int total) {
-    return 'Onboardingstepof';
+    return 'Onboarding Step Of';
   }
 
   @override
   String get pause => 'Pause';
 
   @override
-  String get personalInfo => 'Personalinfo';
+  String get personalInfo => 'Personal Info';
 
   @override
   String get play => 'Play';
 
   @override
-  String get practiceChooseSubject => 'Practicechoosesubject';
+  String get practiceChooseSubject => 'Practice Choose Subject';
 
   @override
-  String get practiceNoQuestionsDesc => 'Practicenoquestionsdesc';
+  String get practiceNoQuestionsDesc => 'Practice No Questions Desc';
 
   @override
-  String get practiceNoQuestionsTitle => 'Practicenoquestionstitle';
+  String get practiceNoQuestionsTitle => 'Practice No Questions Title';
 
   @override
-  String get practiceReadyDesc => 'Practicereadydesc';
+  String get practiceReadyDesc => 'Practice Ready Desc';
 
   @override
-  String get practiceReadyTitle => 'Practicereadytitle';
+  String get practiceReadyTitle => 'Practice Ready Title';
 
   @override
-  String get privacyPolicyDesc => 'Privacypolicydesc';
+  String get privacyPolicyDesc => 'Privacy Policy Desc';
 
   @override
-  String get privacyPolicyTitle => 'Privacypolicytitle';
+  String get privacyPolicyTitle => 'Privacy Policy Title';
 
   @override
-  String get proTip => 'Protip';
+  String get proTip => 'Pro Tip';
 
   @override
-  String get proTipContent => 'Protipcontent';
+  String get proTipContent => 'Pro Tip Content';
 
   @override
-  String get profileAvatarUrlLabel => 'Profileavatarurllabel';
+  String get profileAvatarUrlLabel => 'Profile Avatar Url Label';
 
   @override
-  String get profileNameLabel => 'Profilenamelabel';
+  String get profileNameLabel => 'Profile Name Label';
 
   @override
-  String get profileNameRequired => 'Profilenamerequired';
+  String get profileNameRequired => 'Profile Name Required';
 
   @override
-  String get profileUpdatedSuccess => 'Profileupdatedsuccess';
+  String get profileUpdatedSuccess => 'Profile Updated Success';
 
   @override
-  String get pushNotificationsDesc => 'Pushnotificationsdesc';
+  String get pushNotificationsDesc => 'Push Notifications Desc';
 
   @override
-  String get pushNotificationsLabel => 'Pushnotificationslabel';
+  String get pushNotificationsLabel => 'Push Notifications Label';
 
   @override
-  String get quickActions => 'Quickactions';
+  String get quickActions => 'Quick Actions';
 
   @override
-  String get readyForMore => 'Readyformore';
+  String get readyForMore => 'Ready For More';
 
   @override
-  String get refreshBookmarks => 'Refreshbookmarks';
+  String get refreshBookmarks => 'Refresh Bookmarks';
 
   @override
   String get reset => 'Reset';
@@ -1122,160 +1122,160 @@ class AppLocalizationsUr extends AppLocalizations {
   String get resources => 'Resources';
 
   @override
-  String get saveChanges => 'Savechanges';
+  String get saveChanges => 'Save Changes';
 
   @override
-  String get searchBookmarks => 'Searchbookmarks';
+  String get searchBookmarks => 'Search Bookmarks';
 
   @override
   String get settings => 'Settings';
 
   @override
-  String get step3Subtitle => 'Step3subtitle';
+  String get step3Subtitle => 'Step3 Subtitle';
 
   @override
-  String get step3Tag => 'Step3tag';
+  String get step3Tag => 'Step3 Tag';
 
   @override
-  String get step3Title => 'Step3title';
+  String get step3Title => 'Step3 Title';
 
   @override
-  String get step4EnterSanctuary => 'Step4entersanctuary';
+  String get step4EnterSanctuary => 'Step4 Enter Sanctuary';
 
   @override
-  String get step4Subtitle => 'Step4subtitle';
+  String get step4Subtitle => 'Step4 Subtitle';
 
   @override
-  String get step4Tag => 'Step4tag';
+  String get step4Tag => 'Step4 Tag';
 
   @override
-  String get step4Title => 'Step4title';
+  String get step4Title => 'Step4 Title';
 
   @override
-  String get streakAlerts => 'Streakalerts';
+  String get streakAlerts => 'Streak Alerts';
 
   @override
-  String get streakAlertsDesc => 'Streakalertsdesc';
+  String get streakAlertsDesc => 'Streak Alerts Desc';
 
   @override
-  String get studyAgain => 'Studyagain';
+  String get studyAgain => 'Study Again';
 
   @override
-  String get studyNotifications => 'Studynotifications';
+  String get studyNotifications => 'Study Notifications';
 
   @override
-  String get studyReminders => 'Studyreminders';
+  String get studyReminders => 'Study Reminders';
 
   @override
-  String get studyRemindersDesc => 'Studyremindersdesc';
+  String get studyRemindersDesc => 'Study Reminders Desc';
 
   @override
-  String get termsOfServiceDesc => 'Termsofservicedesc';
+  String get termsOfServiceDesc => 'Terms Of Service Desc';
 
   @override
-  String get termsOfServiceTitle => 'Termsofservicetitle';
+  String get termsOfServiceTitle => 'Terms Of Service Title';
 
   @override
-  String get timedMode => 'Timedmode';
+  String get timedMode => 'Timed Mode';
 
   @override
-  String get timedModeDesc => 'Timedmodedesc';
+  String get timedModeDesc => 'Timed Mode Desc';
 
   @override
-  String get toggleDarkMode => 'Toggledarkmode';
+  String get toggleDarkMode => 'Toggle Dark Mode';
 
   @override
-  String get userGuide => 'Userguide';
+  String get userGuide => 'User Guide';
 
   @override
-  String get userGuideDesc => 'Userguidedesc';
+  String get userGuideDesc => 'User Guide Desc';
 
   @override
-  String get verifiedAccount => 'Verifiedaccount';
+  String get verifiedAccount => 'Verified Account';
 
   @override
-  String get videoTutorials => 'Videotutorials';
+  String get videoTutorials => 'Video Tutorials';
 
   @override
-  String get videoTutorialsDesc => 'Videotutorialsdesc';
+  String get videoTutorialsDesc => 'Video Tutorials Desc';
 
   @override
-  String get viewTopics => 'Viewtopics';
+  String get viewTopics => 'View Topics';
 
   @override
-  String get weeklyReport => 'Weeklyreport';
+  String get weeklyReport => 'Weekly Report';
 
   @override
-  String get weeklyReportDesc => 'Weeklyreportdesc';
+  String get weeklyReportDesc => 'Weekly Report Desc';
 
   @override
   String get dart => 'Dart';
 
   @override
-  String get dashboardSanctuary => 'Dashboardsanctuary';
+  String get dashboardSanctuary => 'Dashboard Sanctuary';
 
   @override
-  String get forgotPasswordCancel => 'Forgotpasswordcancel';
+  String get forgotPasswordCancel => 'Forgot Password Cancel';
 
   @override
-  String get forgotPasswordDesc => 'Forgotpassworddesc';
+  String get forgotPasswordDesc => 'Forgot Password Desc';
 
   @override
-  String get forgotPasswordSend => 'Forgotpasswordsend';
+  String get forgotPasswordSend => 'Forgot Password Send';
 
   @override
-  String get forgotPasswordSuccess => 'Forgotpasswordsuccess';
+  String get forgotPasswordSuccess => 'Forgot Password Success';
 
   @override
-  String get forgotPasswordTitle => 'Forgotpasswordtitle';
+  String get forgotPasswordTitle => 'Forgot Password Title';
 
   @override
-  String get signupBrandDesc => 'Signupbranddesc';
+  String get signupBrandDesc => 'Signup Brand Desc';
 
   @override
-  String get signupBrandHeadline => 'Signupbrandheadline';
+  String get signupBrandHeadline => 'Signup Brand Headline';
 
   @override
-  String get signupBrandTitle => 'Signupbrandtitle';
+  String get signupBrandTitle => 'Signup Brand Title';
 
   @override
-  String get signupTestimonial => 'Signuptestimonial';
+  String get signupTestimonial => 'Signup Testimonial';
 
   @override
-  String get signupTestimonialName => 'Signuptestimonialname';
+  String get signupTestimonialName => 'Signup Testimonial Name';
 
   @override
-  String get signupTestimonialRole => 'Signuptestimonialrole';
+  String get signupTestimonialRole => 'Signup Testimonial Role';
 
   @override
-  String get step4Casual => 'Step4casual';
+  String get step4Casual => 'Step4 Casual';
 
   @override
-  String get step4CasualDesc => 'Step4casualdesc';
+  String get step4CasualDesc => 'Step4 Casual Desc';
 
   @override
-  String get step4Intensive => 'Step4intensive';
+  String get step4Intensive => 'Step4 Intensive';
 
   @override
-  String get step4IntensiveDesc => 'Step4intensivedesc';
+  String get step4IntensiveDesc => 'Step4 Intensive Desc';
 
   @override
-  String get step4Regular => 'Step4regular';
+  String get step4Regular => 'Step4 Regular';
 
   @override
-  String get step4RegularDesc => 'Step4regulardesc';
+  String get step4RegularDesc => 'Step4 Regular Desc';
 
   @override
-  String get validationInvalidEmail => 'Validationinvalidemail';
+  String get validationInvalidEmail => 'Validation Invalid Email';
 
   @override
-  String get validationPasswordMinLength => 'Validationpasswordminlength';
+  String get validationPasswordMinLength => 'Validation Password Min Length';
 
   @override
-  String get validationPasswordMismatch => 'Validationpasswordmismatch';
+  String get validationPasswordMismatch => 'Validation Password Mismatch';
 
   @override
-  String get validationRequired => 'Validationrequired';
+  String get validationRequired => 'Validation Required';
 
   @override
   String get aboutApp => 'About';
