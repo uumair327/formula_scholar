@@ -1,41 +1,25 @@
-import 'dart:ui';
+import codecs
 
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:lucide_icons/lucide_icons.dart';
-import '../../../../core/core.dart';
+filepath = r"c:\Users\uumai\Downloads\zip\formula_scholar\lib\features\profile\presentation\pages\language_localization_page.dart"
 
-class LanguageLocalizationPage extends StatelessWidget {
-  const LanguageLocalizationPage({super.key});
+with codecs.open(filepath, 'r', encoding='utf-8') as f:
+    content = f.read()
 
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final colorScheme = Theme.of(context).colorScheme;
+# We need to replace the CustomScrollView slivers body to include the unified language selector.
+# We'll find the start of the SliverList delegate: SliverChildListDelegate([
+# and then replace everything up to the end of the SliverList.
 
-    return BlocBuilder<LocalizationCubit, LocalizationState>(
-      builder: (context, state) {
-        final systemLocale = PlatformDispatcher.instance.locale;
-        final isAppLabelControlsEnabled = state.appLabelLocalizationEnabled;
-        final isContentControlsEnabled = state.contentLocalizationEnabled;
+start_marker = "delegate: SliverChildListDelegate(["
+end_marker = "]),\n                ),\n              ),"
 
-        return Scaffold(
-          body: CustomScrollView(
-            slivers: [
-              _buildAppBar(context),
-              SliverPadding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Responsive.value(
-                    context: context,
-                    mobile: AppDimensions.paddingXL,
-                    desktop:
-                        AppDimensions.paddingSectionLG * 2 +
-                        AppDimensions.paddingXL,
-                  ),
-                ),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate([
+start_idx = content.find(start_marker)
+end_idx = content.find(end_marker, start_idx)
+
+if start_idx == -1 or end_idx == -1:
+    print("Could not find markers.")
+    exit(1)
+
+new_slivers = """delegate: SliverChildListDelegate([
                     const SizedBox(height: AppDimensions.paddingXXL),
                     EntranceWrapper.stagger(
                       index: 0,
@@ -293,176 +277,15 @@ class LanguageLocalizationPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: AppDimensions.bottomNavPadding),
-]),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+"""
 
-  SliverGlassAppBar _buildAppBar(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final l10n = context.l10n;
-    return SliverGlassAppBar(
-      leading: IconButton(
-        onPressed: () => context.go(AppRoutes.profilePath),
-        icon: Icon(LucideIcons.arrowLeft, color: colorScheme.onSurface),
-        tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-      ),
-      titleWidget: Text(
-        l10n.languageAndLocalization,
-        style: AppTextStyles.titleMedium.copyWith(
-          color: colorScheme.onSurface,
-          fontWeight: FontWeight.w800,
-        ),
-      ),
-    );
-  }
+new_content = content[:start_idx] + new_slivers + content[end_idx:]
 
-  String _displayLabelLanguageName(BuildContext context, String code) {
-    final l10n = context.l10n;
-    return switch (code) {
-      'en' => l10n.languageEnglish,
-      'ar' => l10n.languageArabic,
-      'ur' => l10n.languageUrdu,
-      _ => l10n.languageEnglish,
-    };
-  }
+# In the DropdownButtonFormField, initialValue causes errors if we also provide value or if it rebuilds.
+# We need to change `initialValue:` to `value:` in the original code snippet which we replaced anyway!
+# Oh, wait! The original code had `initialValue:`! We need to make sure we use `value:` instead, which I did in the python snippet above.
 
-  String _displayContentLanguageName(BuildContext context, String code) {
-    final l10n = context.l10n;
-    final localName = switch (code) {
-      'ar-IN' => l10n.languageArabic,
-      'en-IN' => l10n.languageEnglishIndia,
-      'ur-IN' => l10n.languageUrdu,
-      'mr-IN' => l10n.languageMarathi,
-      _ => null,
-    };
-    if (localName != null) {
-      return localName;
-    }
-    for (final loc in AppLocales.contentSupportedLocales) {
-      if (loc.code == code) {
-        return loc.name;
-      }
-    }
-    return code;
-  }
+with codecs.open(filepath, 'w', encoding='utf-8') as f:
+    f.write(new_content)
 
-  String _labelLanguageFlag(String code) {
-    return switch (code) {
-      'en' => '🇺🇸',
-      'ar' => '🇸🇦',
-      'ur' => '🇵🇰',
-      _ => '🌐',
-    };
-  }
-
-  String _contentLanguageFlag(String code) {
-    return switch (code) {
-      'ar-IN' => '🇸🇦',
-      'en-IN' => '🇮🇳',
-      'ur-IN' => '🇵🇰',
-      'mr-IN' => '🇮🇳',
-      _ => '🌐',
-    };
-  }
-}
-
-class _SectionCard extends StatelessWidget {
-  const _SectionCard({
-    required this.title,
-    required this.subtitle,
-    required this.child,
-  });
-
-  final String title;
-  final String subtitle;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return AppGlassCard(
-      borderRadius: AppDimensions.radiusLG,
-      padding: const EdgeInsets.all(AppDimensions.paddingXL),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: AppTextStyles.titleMedium.copyWith(
-              fontWeight: FontWeight.w800,
-              color: colorScheme.onSurface,
-            ),
-          ),
-          const SizedBox(height: AppDimensions.paddingXS),
-          Text(
-            subtitle,
-            style: AppTextStyles.bodySmall.copyWith(
-              color: colorScheme.onSurfaceVariant,
-              height: 1.3,
-            ),
-          ),
-          if (child is! SizedBox) ...[
-            const SizedBox(height: AppDimensions.paddingXL),
-            child,
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _SummaryRow extends StatelessWidget {
-  const _SummaryRow({
-    required this.icon,
-    required this.label,
-    required this.flag,
-    required this.value,
-  });
-
-  final IconData icon;
-  final String label;
-  final String flag;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Row(
-      children: [
-        Icon(
-          icon,
-          size: AppDimensions.iconSM,
-          color: colorScheme.outline,
-        ),
-        const SizedBox(width: AppDimensions.paddingMD),
-        Text(
-          label,
-          style: AppTextStyles.bodyMedium.copyWith(
-            color: colorScheme.onSurfaceVariant,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const Spacer(),
-        Text(
-          flag,
-          style: const TextStyle(fontSize: 16),
-        ),
-        const SizedBox(width: AppDimensions.paddingXS),
-        Text(
-          value,
-          style: AppTextStyles.labelLarge.copyWith(
-            color: colorScheme.onSurface,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ],
-    );
-  }
-}
+print("Updated successfully.")
