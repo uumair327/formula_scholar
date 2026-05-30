@@ -16,9 +16,12 @@ class FormulaActionBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(AppDimensions.paddingLG),
-      child: Row(
+      child: Wrap(
+        spacing: AppDimensions.paddingMD,
+        runSpacing: AppDimensions.paddingMD,
         children: [
-          Expanded(
+          SizedBox(
+            width: double.infinity,
             child: MasteryToggleButton(
               isMastered: formula.isMastered,
               onToggle: () {
@@ -26,7 +29,6 @@ class FormulaActionBar extends StatelessWidget {
               },
             ),
           ),
-          const SizedBox(width: AppDimensions.paddingMD),
           BookmarkButton(
             isBookmarked: formula.isBookmarked,
             onToggle: () {

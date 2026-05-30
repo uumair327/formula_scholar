@@ -32,10 +32,22 @@ class _NativeGraphWidgetState extends State<NativeGraphWidget> {
     final expressions = widget.config['expressions'] as List<dynamic>? ?? [];
     final viewport = widget.config['viewport'] as Map<String, dynamic>? ?? {};
 
-    final double xMinDefault = (viewport['xMin'] ?? -10.0) as double;
-    final double xMaxDefault = (viewport['xMax'] ?? 10.0) as double;
-    final double yMinDefault = (viewport['yMin'] ?? -10.0) as double;
-    final double yMaxDefault = (viewport['yMax'] ?? 10.0) as double;
+    final double xMinDefault = _asDouble(
+      viewport['xMin'] ?? -10.0,
+      fallback: -10.0,
+    );
+    final double xMaxDefault = _asDouble(
+      viewport['xMax'] ?? 10.0,
+      fallback: 10.0,
+    );
+    final double yMinDefault = _asDouble(
+      viewport['yMin'] ?? -10.0,
+      fallback: -10.0,
+    );
+    final double yMaxDefault = _asDouble(
+      viewport['yMax'] ?? 10.0,
+      fallback: 10.0,
+    );
 
     final textDirection = Directionality.of(context);
 
@@ -69,6 +81,13 @@ class _NativeGraphWidgetState extends State<NativeGraphWidget> {
         ),
       ),
     );
+  }
+
+  double _asDouble(Object? value, {required double fallback}) {
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is num) return value.toDouble();
+    return fallback;
   }
 }
 
@@ -130,9 +149,7 @@ class _GraphPainter extends CustomPainter {
       ..color = colorScheme.onSurface.withValues(alpha: 0.4)
       ..strokeWidth = 2.0;
 
-    final textPainter = TextPainter(
-      textDirection: textDirection,
-    );
+    final textPainter = TextPainter(textDirection: textDirection);
 
     // Draw vertical grid lines
     final stepX = _calculateStep(xMax - xMin);
@@ -151,7 +168,10 @@ class _GraphPainter extends CustomPainter {
           style: TextStyle(color: colorScheme.outline, fontSize: 10),
         );
         textPainter.layout();
-        textPainter.paint(canvas, Offset(p1.dx - textPainter.width / 2, labelY + 2));
+        textPainter.paint(
+          canvas,
+          Offset(p1.dx - textPainter.width / 2, labelY + 2),
+        );
       }
     }
 
@@ -172,7 +192,10 @@ class _GraphPainter extends CustomPainter {
           style: TextStyle(color: colorScheme.outline, fontSize: 10),
         );
         textPainter.layout();
-        textPainter.paint(canvas, Offset(labelX + 4, p1.dy - textPainter.height / 2));
+        textPainter.paint(
+          canvas,
+          Offset(labelX + 4, p1.dy - textPainter.height / 2),
+        );
       }
     }
 
@@ -180,11 +203,19 @@ class _GraphPainter extends CustomPainter {
     final origin = toScreen(0, 0);
     // Y-Axis
     if (origin.dx >= 0 && origin.dx <= size.width) {
-      canvas.drawLine(Offset(origin.dx, 0), Offset(origin.dx, size.height), axisPaint);
+      canvas.drawLine(
+        Offset(origin.dx, 0),
+        Offset(origin.dx, size.height),
+        axisPaint,
+      );
     }
     // X-Axis
     if (origin.dy >= 0 && origin.dy <= size.height) {
-      canvas.drawLine(Offset(0, origin.dy), Offset(size.width, origin.dy), axisPaint);
+      canvas.drawLine(
+        Offset(0, origin.dy),
+        Offset(size.width, origin.dy),
+        axisPaint,
+      );
     }
 
     // Plot Expressions
@@ -192,7 +223,7 @@ class _GraphPainter extends CustomPainter {
       if (expr is! Map<String, dynamic>) continue;
       final colorHex = expr['color'] as String? ?? '#3B82F6';
       final latex = expr['latex'] as String? ?? '';
-      
+
       final graphPaint = Paint()
         ..color = _parseColor(colorHex)
         ..style = PaintingStyle.stroke
@@ -225,7 +256,7 @@ class _GraphPainter extends CustomPainter {
         }
       }
       canvas.drawPath(path, graphPaint);
-      
+
       // Draw Roots / Special Features (if highlighted)
       _drawRoots(canvas, latex, parameters, toScreen, colorScheme);
     }
@@ -259,7 +290,9 @@ class _GraphPainter extends CustomPainter {
     ColorScheme colorScheme,
   ) {
     final lower = latex.toLowerCase().replaceAll(' ', '');
-    if (lower.contains('x^2') && !lower.contains('sin') && !lower.contains('cos')) {
+    if (lower.contains('x^2') &&
+        !lower.contains('sin') &&
+        !lower.contains('cos')) {
       // Draw roots for quadratic y = ax^2 + bx + c
       final double a = params['a'] ?? 1.0;
       final double b = params['b'] ?? 0.0;
@@ -348,7 +381,8 @@ class GraphExpressionEvaluator {
         continue;
       }
       // Numbers (with optional decimal)
-      if (_isDigit(ch) || (ch == '.' && i + 1 < expr.length && _isDigit(expr[i + 1]))) {
+      if (_isDigit(ch) ||
+          (ch == '.' && i + 1 < expr.length && _isDigit(expr[i + 1]))) {
         final sb = StringBuffer();
         while (i < expr.length && (_isDigit(expr[i]) || expr[i] == '.')) {
           sb.write(expr[i]);
@@ -366,7 +400,8 @@ class GraphExpressionEvaluator {
       // Identifiers / functions
       if (_isAlpha(ch)) {
         final sb = StringBuffer();
-        while (i < expr.length && (_isAlpha(expr[i]) || _isDigit(expr[i]) || expr[i] == '_')) {
+        while (i < expr.length &&
+            (_isAlpha(expr[i]) || _isDigit(expr[i]) || expr[i] == '_')) {
           sb.write(expr[i]);
           i++;
         }
@@ -378,7 +413,8 @@ class GraphExpressionEvaluator {
     return tokens;
   }
 
-  static bool _isDigit(String ch) => ch.codeUnitAt(0) >= 48 && ch.codeUnitAt(0) <= 57;
+  static bool _isDigit(String ch) =>
+      ch.codeUnitAt(0) >= 48 && ch.codeUnitAt(0) <= 57;
   static bool _isAlpha(String ch) {
     final c = ch.codeUnitAt(0);
     return (c >= 65 && c <= 90) || (c >= 97 && c <= 122);

@@ -31,6 +31,13 @@ class _NativeImageWidgetState extends State<NativeImageWidget>
     super.dispose();
   }
 
+  double _asDouble(Object? value, {required double fallback}) {
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is num) return value.toDouble();
+    return fallback;
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -76,8 +83,8 @@ class _NativeImageWidgetState extends State<NativeImageWidget>
                     if (ann is! Map<String, dynamic>) {
                       return const SizedBox.shrink();
                     }
-                    final x = (ann['x'] ?? 0.5) as double;
-                    final y = (ann['y'] ?? 0.5) as double;
+                    final x = _asDouble(ann['x'] ?? 0.5, fallback: 0.5);
+                    final y = _asDouble(ann['y'] ?? 0.5, fallback: 0.5);
 
                     return Positioned(
                       left: x * width - 15,

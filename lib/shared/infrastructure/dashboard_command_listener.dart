@@ -25,45 +25,61 @@ class DashboardCommandListener {
     // Listen to changes in the dashboard_commands collection
     _subscription = _api
         .collection('dashboard_commands')
-        .where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(_appStartTime))
+        .where(
+          'createdAt',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(_appStartTime),
+        )
         .snapshots()
         .listen(
-      (snapshot) async {
-        for (final change in snapshot.docChanges) {
-          if (change.type == DocumentChangeType.added) {
-            final doc = change.doc;
-            final data = doc.data();
-            if (data == null) continue;
+          (snapshot) async {
+            for (final change in snapshot.docChanges) {
+              if (change.type == DocumentChangeType.added) {
+                final doc = change.doc;
+                final data = doc.data();
+                if (data == null) continue;
 
-            final commandId = data['commandId'] as String?;
-            final status = data['status'] as String?;
-            final docId = doc.id;
+                final commandId = data['commandId'] as String?;
+                final status = data['status'] as String?;
+                final docId = doc.id;
 
+                if (_processedCommandIds.contains(docId)) continue;
+                _processedCommandIds.add(docId);
 
+                AppLogger.info(
+                  'Received dashboard command: $commandId (docId: $docId, status: $status)',
+                  tag: 'DashboardCommandListener',
+                );
 
-            if (_processedCommandIds.contains(docId)) continue;
-            _processedCommandIds.add(docId);
-
-            AppLogger.info(
-              'Received dashboard command: $commandId (docId: $docId, status: $status)',
-              tag: 'DashboardCommandListener',
-            );
-
-            if (commandId == 'force-refresh') {
-              await _handleForceRefresh();
+                if (commandId == 'force-refresh') {
+                  await _handleForceRefresh();
+                }
+              }
             }
-          }
-        }
-      },
-      onError: (Object error, StackTrace stackTrace) {
-        AppLogger.error(
-          'Error in Dashboard Command Listener stream',
-          tag: 'DashboardCommandListener',
-          error: error,
-          stackTrace: stackTrace,
+          },
+          onError: (Object error, StackTrace stackTrace) {
+            // Treat permission issues as non-fatal: log a warning and stop
+            // listening to avoid repeated noisy errors. Other errors are
+            // logged as errors for debugging.
+            if (error is FirebaseException &&
+                error.code == 'permission-denied') {
+              AppLogger.warning(
+                'Permission denied for Dashboard Command Listener: ${error.message}',
+                tag: 'DashboardCommandListener',
+                // include the original error for context
+              );
+              // Cancel subscription to avoid repeated permission errors
+              _subscription?.cancel();
+              _subscription = null;
+            } else {
+              AppLogger.error(
+                'Error in Dashboard Command Listener stream',
+                tag: 'DashboardCommandListener',
+                error: error,
+                stackTrace: stackTrace,
+              );
+            }
+          },
         );
-      },
-    );
   }
 
   Future<void> _handleForceRefresh() async {
@@ -107,15 +123,24 @@ class DashboardCommandListener {
         await box.clear();
         await box.close();
       }
-      AppLogger.debug('Cleared Hive box: $boxName', tag: 'DashboardCommandListener');
+      AppLogger.debug(
+        'Cleared Hive box: $boxName',
+        tag: 'DashboardCommandListener',
+      );
     } catch (e) {
-      AppLogger.warning('Failed to clear Hive box $boxName: $e', tag: 'DashboardCommandListener');
+      AppLogger.warning(
+        'Failed to clear Hive box $boxName: $e',
+        tag: 'DashboardCommandListener',
+      );
     }
   }
 
   void stopListening() {
     _subscription?.cancel();
     _subscription = null;
-    AppLogger.info('Stopped Dashboard Command Listener', tag: 'DashboardCommandListener');
+    AppLogger.info(
+      'Stopped Dashboard Command Listener',
+      tag: 'DashboardCommandListener',
+    );
   }
 }

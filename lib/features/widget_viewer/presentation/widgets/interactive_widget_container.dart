@@ -9,18 +9,17 @@ import 'native_simulation_widget.dart';
 import 'webview_chemistry_widget.dart';
 
 class InteractiveWidgetContainer extends StatefulWidget {
-  const InteractiveWidgetContainer({
-    super.key,
-    required this.widgetConfig,
-  });
+  const InteractiveWidgetContainer({super.key, required this.widgetConfig});
 
   final Map<String, dynamic> widgetConfig;
 
   @override
-  State<InteractiveWidgetContainer> createState() => _InteractiveWidgetContainerState();
+  State<InteractiveWidgetContainer> createState() =>
+      _InteractiveWidgetContainerState();
 }
 
-class _InteractiveWidgetContainerState extends State<InteractiveWidgetContainer> {
+class _InteractiveWidgetContainerState
+    extends State<InteractiveWidgetContainer> {
   final Map<String, double> _parameters = {};
   bool _initialized = false;
 
@@ -47,15 +46,23 @@ class _InteractiveWidgetContainerState extends State<InteractiveWidgetContainer>
         if (slider is Map<String, dynamic>) {
           final id = (slider['id'] ?? slider['variable'] ?? '').toString();
           if (id.isNotEmpty) {
-            final double defVal = (slider['default'] ?? slider['value'] ?? 1.0) as double;
+            final double defVal = _asDouble(
+              slider['default'] ?? slider['value'] ?? 1.0,
+              fallback: 1.0,
+            );
             _parameters[id] = defVal;
           }
         }
       }
     }
-    setState(() {
+
+    if (mounted) {
+      setState(() {
+        _initialized = true;
+      });
+    } else {
       _initialized = true;
-    });
+    }
   }
 
   @override
@@ -81,10 +88,7 @@ class _InteractiveWidgetContainerState extends State<InteractiveWidgetContainer>
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: isDark
-              ? [
-                  const Color(0xFF111827),
-                  const Color(0xFF1F2937),
-                ]
+              ? [const Color(0xFF111827), const Color(0xFF1F2937)]
               : [
                   colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                   colorScheme.surfaceContainerHighest.withValues(alpha: 0.1),
@@ -92,7 +96,7 @@ class _InteractiveWidgetContainerState extends State<InteractiveWidgetContainer>
         ),
         borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
         border: Border.all(
-          color: isDark 
+          color: isDark
               ? colorScheme.primary.withValues(alpha: 0.3)
               : colorScheme.primary.withValues(alpha: 0.15),
           width: AppDimensions.borderWidth,
@@ -103,7 +107,7 @@ class _InteractiveWidgetContainerState extends State<InteractiveWidgetContainer>
                   color: colorScheme.primary.withValues(alpha: 0.05),
                   blurRadius: 15,
                   spreadRadius: -5,
-                )
+                ),
               ]
             : null,
       ),
@@ -137,7 +141,9 @@ class _InteractiveWidgetContainerState extends State<InteractiveWidgetContainer>
                     ),
                     decoration: BoxDecoration(
                       color: colorScheme.secondary.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
+                      borderRadius: BorderRadius.circular(
+                        AppDimensions.radiusSM,
+                      ),
                     ),
                     child: Text(
                       type.toUpperCase(),
@@ -151,7 +157,7 @@ class _InteractiveWidgetContainerState extends State<InteractiveWidgetContainer>
                 ],
               ),
             ),
-          
+
           // Primary Visualization View
           Container(
             height: 280,
@@ -159,8 +165,12 @@ class _InteractiveWidgetContainerState extends State<InteractiveWidgetContainer>
             decoration: BoxDecoration(
               color: Colors.black.withValues(alpha: 0.15),
               border: Border(
-                top: BorderSide(color: colorScheme.outline.withValues(alpha: 0.05)),
-                bottom: BorderSide(color: colorScheme.outline.withValues(alpha: 0.05)),
+                top: BorderSide(
+                  color: colorScheme.outline.withValues(alpha: 0.05),
+                ),
+                bottom: BorderSide(
+                  color: colorScheme.outline.withValues(alpha: 0.05),
+                ),
               ),
             ),
             child: _buildVisualizationWidget(type, config),
@@ -186,17 +196,29 @@ class _InteractiveWidgetContainerState extends State<InteractiveWidgetContainer>
                     if (slider is! Map<String, dynamic>) {
                       return const SizedBox.shrink();
                     }
-                    final id = (slider['id'] ?? slider['variable'] ?? '').toString();
+                    final id = (slider['id'] ?? slider['variable'] ?? '')
+                        .toString();
                     final label = (slider['label'] ?? id).toString();
-                    final minVal = (slider['min'] ?? 0.0) as double;
-                    final maxVal = (slider['max'] ?? 10.0) as double;
-                    final step = (slider['step'] ?? 0.1) as double;
+                    final minVal = _asDouble(
+                      slider['min'] ?? 0.0,
+                      fallback: 0.0,
+                    );
+                    final maxVal = _asDouble(
+                      slider['max'] ?? 10.0,
+                      fallback: 10.0,
+                    );
+                    final step = _asDouble(
+                      slider['step'] ?? 0.1,
+                      fallback: 0.1,
+                    );
                     final unit = (slider['unit'] ?? '').toString();
 
                     final currentVal = _parameters[id] ?? minVal;
 
                     return Padding(
-                      padding: const EdgeInsets.only(bottom: AppDimensions.paddingSM),
+                      padding: const EdgeInsets.only(
+                        bottom: AppDimensions.paddingSM,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
@@ -222,10 +244,15 @@ class _InteractiveWidgetContainerState extends State<InteractiveWidgetContainer>
                             data: SliderThemeData(
                               trackHeight: 4,
                               activeTrackColor: colorScheme.primary,
-                              inactiveTrackColor: colorScheme.outline.withValues(alpha: 0.2),
+                              inactiveTrackColor: colorScheme.outline
+                                  .withValues(alpha: 0.2),
                               thumbColor: colorScheme.primary,
-                              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
-                              overlayShape: const RoundSliderOverlayShape(overlayRadius: 14),
+                              thumbShape: const RoundSliderThumbShape(
+                                enabledThumbRadius: 6,
+                              ),
+                              overlayShape: const RoundSliderOverlayShape(
+                                overlayRadius: 14,
+                              ),
                             ),
                             child: Slider(
                               value: currentVal,
@@ -288,8 +315,18 @@ class _InteractiveWidgetContainerState extends State<InteractiveWidgetContainer>
         return WebviewChemistryWidget(config: config);
       case 'formula':
       default:
-        final latex = config['latex'] as String? ?? widget.widgetConfig['latex'] as String? ?? '';
+        final latex =
+            config['latex'] as String? ??
+            widget.widgetConfig['latex'] as String? ??
+            '';
         return Center(child: NativeFormulaWidget(latex: latex));
     }
+  }
+
+  double _asDouble(Object? value, {required double fallback}) {
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is num) return value.toDouble();
+    return fallback;
   }
 }

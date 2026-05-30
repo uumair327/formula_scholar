@@ -105,7 +105,8 @@ class LocalizationCubit extends HydratedCubit<LocalizationState> {
     return state.effectiveContentLocaleCode;
   }
 
-  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? _configSubscription;
+  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
+  _configSubscription;
 
   void listenToBackendConfig() {
     _configSubscription?.cancel();
@@ -114,49 +115,65 @@ class LocalizationCubit extends HydratedCubit<LocalizationState> {
         .doc('global')
         .snapshots()
         .listen(
-      (snap) {
-        if (snap.exists) {
-          final data = snap.data();
-          if (data != null) {
-            final enabled = data['contentLocalizationEnabled'] as bool? ?? true;
-            if (enabled != state.contentLocalizationEnabled) {
-              setContentLocalizationEnabled(enabled);
-            }
+          (snap) {
+            if (snap.exists) {
+              final data = snap.data();
+              if (data != null) {
+                final enabled =
+                    data['contentLocalizationEnabled'] as bool? ?? true;
+                if (enabled != state.contentLocalizationEnabled) {
+                  setContentLocalizationEnabled(enabled);
+                }
 
-            final localesRaw = data['supportedLocales'] as List<dynamic>?;
-            if (localesRaw != null) {
-              final List<ContentLocaleConfig> loadedLocales = [];
-              for (final raw in localesRaw) {
-                if (raw is Map) {
-                  final code = raw['code'] as String?;
-                  final name = raw['name'] as String?;
-                  final isRtl = raw['isRtl'] as bool? ?? false;
-                  if (code != null && name != null) {
-                    loadedLocales.add(ContentLocaleConfig(
-                      code: code,
-                      name: name,
-                      isRtl: isRtl,
-                    ));
+                final localesRaw = data['supportedLocales'] as List<dynamic>?;
+                if (localesRaw != null) {
+                  final List<ContentLocaleConfig> loadedLocales = [];
+                  for (final raw in localesRaw) {
+                    if (raw is Map) {
+                      final code = raw['code'] as String?;
+                      final name = raw['name'] as String?;
+                      final isRtl = raw['isRtl'] as bool? ?? false;
+                      if (code != null && name != null) {
+                        loadedLocales.add(
+                          ContentLocaleConfig(
+                            code: code,
+                            name: name,
+                            isRtl: isRtl,
+                          ),
+                        );
+                      }
+                    }
+                  }
+                  if (loadedLocales.isNotEmpty) {
+                    AppLocales.contentSupportedLocales = loadedLocales;
+                    AppLocales.contentSupportedLocaleCodes = loadedLocales
+                        .map((e) => e.code)
+                        .toList();
                   }
                 }
               }
-              if (loadedLocales.isNotEmpty) {
-                AppLocales.contentSupportedLocales = loadedLocales;
-                AppLocales.contentSupportedLocaleCodes =
-                    loadedLocales.map((e) => e.code).toList();
-              }
             }
-          }
-        }
-      },
-      onError: (Object error) {
-        AppLogger.error(
-          'Error listening to localization runtime settings',
-          tag: AppLogTags.localizationCubit,
-          error: error,
+          },
+          onError: (Object error, [StackTrace? stackTrace]) {
+            if (error is FirebaseException &&
+                error.code == 'permission-denied') {
+              AppLogger.warning(
+                'Permission denied while listening to localization runtime settings; keeping defaults',
+                tag: AppLogTags.localizationCubit,
+              );
+              _configSubscription?.cancel();
+              _configSubscription = null;
+              return;
+            }
+
+            AppLogger.error(
+              'Error listening to localization runtime settings',
+              tag: AppLogTags.localizationCubit,
+              error: error,
+              stackTrace: stackTrace,
+            );
+          },
         );
-      },
-    );
   }
 
   @override

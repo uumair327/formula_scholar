@@ -34,6 +34,7 @@ class MasteryToggleButton extends StatelessWidget {
       ),
       boxShadow: const [],
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
@@ -44,13 +45,17 @@ class MasteryToggleButton extends StatelessWidget {
                 : colorScheme.onSurfaceVariant,
           ),
           const SizedBox(width: AppDimensions.paddingSM),
-          Text(
-            isMastered ? 'Mastered' : 'Mark as Mastered',
-            style: AppTextStyles.labelLarge.copyWith(
-              color: isMastered
-                  ? AppColors.secondary
-                  : colorScheme.onSurfaceVariant,
-              fontWeight: FontWeight.w700,
+          Flexible(
+            child: Text(
+              isMastered ? 'Mastered' : 'Mark as Mastered',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.labelLarge.copyWith(
+                color: isMastered
+                    ? AppColors.secondary
+                    : colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
         ],
@@ -58,4 +63,3 @@ class MasteryToggleButton extends StatelessWidget {
     );
   }
 }
-
