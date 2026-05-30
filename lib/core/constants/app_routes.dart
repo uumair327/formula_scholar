@@ -109,6 +109,10 @@ abstract final class AppRoutes {
   static const String helpSupportPath = '/profile/help';
   static const String helpSupportName = 'helpSupport';
 
+  /// About App page (required for Play Store / App Store).
+  static const String aboutAppPath = '/profile/about';
+  static const String aboutAppName = 'aboutApp';
+
   // AI Assistant
   static const String aiChatPath = '/ai/chat';
   static const String aiChatName = 'aiChat';

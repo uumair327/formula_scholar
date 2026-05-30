@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>formula_scholar</string>
+	<string>Formula Scholar</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -49,5 +49,7 @@
 	<string>Formula Scholar uses microphone access for AI voice commands.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Formula Scholar uses speech recognition to turn voice commands into text.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>

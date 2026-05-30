@@ -769,6 +769,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dailyChallengeDesc => 'Dailychallengedesc';
 
   @override
+  String get dashboardAcademicViewAll => 'View All';
+
+  @override
+  String dashboardVaultDescWithCounts(int formulas, int subjects) {
+    return '$formulas formulas across $subjects subjects';
+  }
+
+  @override
   String get dashboardAcademicPath => 'Dashboardacademicpath';
 
   @override
@@ -1041,7 +1049,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingContinue => 'Onboardingcontinue';
 
   @override
-  String get onboardingStepOf => 'Onboardingstepof';
+  String onboardingStepOf(int current, int total) {
+    return 'Step $current of $total';
+  }
 
   @override
   String get pause => 'Pause';
@@ -1267,4 +1277,103 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get validationRequired => 'Validationrequired';
+
+  @override
+  String get aboutApp => 'About';
+
+  @override
+  String get aboutAppSubtitle => 'App info, licenses & legal';
+
+  @override
+  String get aboutAppTitle => 'About Formula Scholar';
+
+  @override
+  String get aboutAppTagline => 'Master every formula with confidence';
+
+  @override
+  String get aboutDeveloperSection => 'Developer';
+
+  @override
+  String get aboutDeveloperName => 'Formula Scholar Team';
+
+  @override
+  String get aboutDeveloperEmail => 'support@formulascholar.app';
+
+  @override
+  String get aboutLegalSection => 'Legal & Compliance';
+
+  @override
+  String get aboutOpenSourceLicenses => 'Open Source Licenses';
+
+  @override
+  String get aboutOpenSourceDesc => 'View third-party software licenses';
+
+  @override
+  String get aboutPrivacyDesc => 'How we handle your data';
+
+  @override
+  String get aboutTermsDesc => 'Rules for using this app';
+
+  @override
+  String get aboutRateApp => 'Rate This App';
+
+  @override
+  String get aboutRateDesc => 'Help us improve with your feedback';
+
+  @override
+  String get aboutShareApp => 'Share Formula Scholar';
+
+  @override
+  String get aboutShareDesc => 'Tell your friends about this app';
+
+  @override
+  String get myBookmarks => 'My Bookmarks';
+
+  @override
+  String get studyPlannerSubtitle => 'Organize your study schedule';
+
+  @override
+  String get appearance => 'Appearance';
+
+  @override
+  String get languageAndLocalizationSubtitle =>
+      'Control app labels and backend content language independently';
+
+  @override
+  String get logout => 'Logout';
+
+  @override
+  String get formulasMastered => 'Formulas Mastered';
+
+  @override
+  String get daysStreak => 'Days Streak';
+
+  @override
+  String get totalPoints => 'Total Points';
+
+  @override
+  String get academicViewAllLabel => 'View All';
+
+  @override
+  String get continueStudyingLabel => 'Continue Studying';
+
+  @override
+  String get noRecentTitle => 'No Recent Studies';
+
+  @override
+  String get noRecentDescription =>
+      'Start exploring chapters to see your history here.';
+
+  @override
+  String get openChaptersLabel => 'Open Chapters';
+
+  @override
+  String get boardReadyQuizTitle => 'Board Ready Quiz';
+
+  @override
+  String get boardReadyQuizDescription =>
+      'Test your knowledge for the upcoming exams';
+
+  @override
+  String get startNowLabel => 'Start Now';
 }

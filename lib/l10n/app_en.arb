@@ -248,6 +248,18 @@
   "closeQuiz": "Closequiz",
   "dailyChallenge": "Dailychallenge",
   "dailyChallengeDesc": "Dailychallengedesc",
+  "dashboardAcademicViewAll": "View All",
+  "dashboardVaultDescWithCounts": "{formulas} formulas across {subjects} subjects",
+  "@dashboardVaultDescWithCounts": {
+    "placeholders": {
+      "formulas": {
+        "type": "int"
+      },
+      "subjects": {
+        "type": "int"
+      }
+    }
+  },
   "dashboardAcademicPath": "Dashboardacademicpath",
   "dashboardAvailableBoards": "Boards for your region",
   "dashboardNoBoardsAvailable": "No boards available",
@@ -338,7 +350,17 @@
   "onboardingAppBrand": "Onboardingappbrand",
   "onboardingBack": "Onboardingback",
   "onboardingContinue": "Onboardingcontinue",
-  "onboardingStepOf": "Onboardingstepof",
+  "onboardingStepOf": "Step {current} of {total}",
+  "@onboardingStepOf": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pause": "Pause",
   "personalInfo": "Personalinfo",
   "play": "Play",
@@ -413,5 +435,39 @@
   "validationInvalidEmail": "Validationinvalidemail",
   "validationPasswordMinLength": "Validationpasswordminlength",
   "validationPasswordMismatch": "Validationpasswordmismatch",
-  "validationRequired": "Validationrequired"
+  "validationRequired": "Validationrequired",
+  "aboutApp": "About",
+  "aboutAppSubtitle": "App info, licenses & legal",
+  "aboutAppTitle": "About Formula Scholar",
+  "aboutAppTagline": "Master every formula with confidence",
+  "aboutDeveloperSection": "Developer",
+  "aboutDeveloperName": "Formula Scholar Team",
+  "aboutDeveloperEmail": "support@formulascholar.app",
+  "aboutLegalSection": "Legal & Compliance",
+  "aboutOpenSourceLicenses": "Open Source Licenses",
+  "aboutOpenSourceDesc": "View third-party software licenses",
+  "aboutPrivacyDesc": "How we handle your data",
+  "aboutTermsDesc": "Rules for using this app",
+  "aboutRateApp": "Rate This App",
+  "aboutRateDesc": "Help us improve with your feedback",
+  "aboutShareApp": "Share Formula Scholar",
+  "aboutShareDesc": "Tell your friends about this app",
+  "myBookmarks": "My Bookmarks",
+  "studyPlanner": "Study Planner",
+  "studyPlannerSubtitle": "Organize your study schedule",
+  "appearance": "Appearance",
+  "languageAndLocalization": "Language & Localization",
+  "languageAndLocalizationSubtitle": "Control app labels and backend content language independently",
+  "logout": "Logout",
+  "formulasMastered": "Formulas Mastered",
+  "daysStreak": "Days Streak",
+  "totalPoints": "Total Points",
+  "academicViewAllLabel": "View All",
+  "continueStudyingLabel": "Continue Studying",
+  "noRecentTitle": "No Recent Studies",
+  "noRecentDescription": "Start exploring chapters to see your history here.",
+  "openChaptersLabel": "Open Chapters",
+  "boardReadyQuizTitle": "Board Ready Quiz",
+  "boardReadyQuizDescription": "Test your knowledge for the upcoming exams",
+  "startNowLabel": "Start Now"
 }

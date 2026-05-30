@@ -133,7 +133,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get backendContent => 'محتوى الواجهة الخلفية';
 
   @override
-  String get languageAndLocalization => 'اللغة والتعريب';
+  String get languageAndLocalization => 'اللغة والترجمة';
 
   @override
   String get languageEnglish => 'الإنجليزية';
@@ -767,6 +767,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dailyChallengeDesc => 'Dailychallengedesc';
 
   @override
+  String get dashboardAcademicViewAll => 'عرض الكل';
+
+  @override
+  String dashboardVaultDescWithCounts(int formulas, int subjects) {
+    return '$formulas معادلة عبر $subjects موضوعات';
+  }
+
+  @override
   String get dashboardAcademicPath => 'Dashboardacademicpath';
 
   @override
@@ -1039,7 +1047,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get onboardingContinue => 'Onboardingcontinue';
 
   @override
-  String get onboardingStepOf => 'Onboardingstepof';
+  String onboardingStepOf(int current, int total) {
+    return 'الخطوة $current من $total';
+  }
 
   @override
   String get pause => 'Pause';
@@ -1265,4 +1275,101 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get validationRequired => 'Validationrequired';
+
+  @override
+  String get aboutApp => 'حول التطبيق';
+
+  @override
+  String get aboutAppSubtitle => 'معلومات التطبيق والتراخيص والقانون';
+
+  @override
+  String get aboutAppTitle => 'حول فورمولا سكولار';
+
+  @override
+  String get aboutAppTagline => 'أتقن كل معادلة بثقة';
+
+  @override
+  String get aboutDeveloperSection => 'المطور';
+
+  @override
+  String get aboutDeveloperName => 'فريق فورمولا سكولار';
+
+  @override
+  String get aboutDeveloperEmail => 'support@formulascholar.app';
+
+  @override
+  String get aboutLegalSection => 'القانون والامتثال';
+
+  @override
+  String get aboutOpenSourceLicenses => 'تراخيص المصادر المفتوحة';
+
+  @override
+  String get aboutOpenSourceDesc => 'عرض تراخيص البرامج الخارجية';
+
+  @override
+  String get aboutPrivacyDesc => 'كيف نتعامل مع بياناتك';
+
+  @override
+  String get aboutTermsDesc => 'قواعد استخدام هذا التطبيق';
+
+  @override
+  String get aboutRateApp => 'قيّم هذا التطبيق';
+
+  @override
+  String get aboutRateDesc => 'ساعدنا في التحسين بملاحظاتك';
+
+  @override
+  String get aboutShareApp => 'مشاركة فورمولا سكولار';
+
+  @override
+  String get aboutShareDesc => 'أخبر أصدقاءك عن هذا التطبيق';
+
+  @override
+  String get myBookmarks => 'إشاراتي المرجعية';
+
+  @override
+  String get studyPlannerSubtitle => 'تنظيم جدول دراستك';
+
+  @override
+  String get appearance => 'المظهر';
+
+  @override
+  String get languageAndLocalizationSubtitle =>
+      'تحكم في لغة واجهة التطبيق ولغة المحتوى بشكل مستقل';
+
+  @override
+  String get logout => 'تسجيل الخروج';
+
+  @override
+  String get formulasMastered => 'الصيغ المتقنة';
+
+  @override
+  String get daysStreak => 'أيام متتالية';
+
+  @override
+  String get totalPoints => 'إجمالي النقاط';
+
+  @override
+  String get academicViewAllLabel => 'عرض الكل';
+
+  @override
+  String get continueStudyingLabel => 'مواصلة الدراسة';
+
+  @override
+  String get noRecentTitle => 'لا توجد دراسات حديثة';
+
+  @override
+  String get noRecentDescription => 'ابدأ في استكشاف الفصول لرؤية تاريخك هنا.';
+
+  @override
+  String get openChaptersLabel => 'فتح الفصول';
+
+  @override
+  String get boardReadyQuizTitle => 'اختبار جاهزية المجلس';
+
+  @override
+  String get boardReadyQuizDescription => 'اختبر معلوماتك للامتحانات القادمة';
+
+  @override
+  String get startNowLabel => 'ابدأ الآن';
 }

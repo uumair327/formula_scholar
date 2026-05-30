@@ -9,6 +9,7 @@ export 'pages/account_information_page.dart';
 export 'pages/help_support_page.dart';
 export 'pages/language_localization_page.dart';
 export 'pages/notifications_page.dart';
+export 'pages/about_app_page.dart';
 export 'pages/profile_page.dart';
 export 'widgets/edit_profile_dialog.dart';
 export 'widgets/encouragement_card_widget.dart';

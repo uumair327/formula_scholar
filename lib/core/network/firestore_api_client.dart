@@ -4,8 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
 
-import 'package:formula_scholar/core/config/app_api.dart';
-import '../../core/constants/app_strings.dart';
+import '../../core/config/app_api.dart';
 import '../../core/error/exceptions.dart';
 import '../../core/utils/app_logger.dart';
 import 'firestore_client_port.dart';
@@ -45,7 +44,7 @@ class FirestoreApiClient implements FirestoreClientPort {
 
     if (!await _networkInfo.isConnected) {
       AppLogger.warning('$effectiveTag: no connectivity', tag: effectiveTag);
-      throw const ServerException(message: AppStrings.noInternetConnection);
+      throw const ServerException(message: 'No internet connection');
     }
 
     var attempts = 0;
@@ -63,7 +62,7 @@ class FirestoreApiClient implements FirestoreClientPort {
           tag: effectiveTag,
         );
         if (attempts >= maxRetries) {
-          throw const ServerException(message: AppStrings.firestoreTimeout);
+          throw const ServerException(message: 'Request timed out');
         }
       } catch (e, st) {
         if (_isNonRetryable(e)) {

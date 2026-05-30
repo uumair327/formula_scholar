@@ -36,7 +36,7 @@ class AcademicPathSection extends StatelessWidget {
           builder: (context, state) {
             return SectionHeader(
               title: context.l10n.dashboardAcademicPath,
-              actionLabel: state.academicViewAllLabel,
+              actionLabel: context.l10n.academicViewAllLabel,
               onAction: onViewAll,
             );
           },

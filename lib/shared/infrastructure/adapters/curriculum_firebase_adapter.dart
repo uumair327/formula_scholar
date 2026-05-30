@@ -156,6 +156,6 @@ class CurriculumFirebaseAdapter implements CurriculumDataSourcePort {
     }
 
     final cleaned = gradeLabel?.trim() ?? '';
-    return cleaned.isEmpty ? AppStrings.unknownGrade : cleaned;
+    return cleaned.isEmpty ? 'Unknown Grade' : cleaned;
   }
 }

@@ -175,6 +175,9 @@ class ProfilePage extends StatelessWidget {
       case 'help':
         context.push(AppRoutes.helpSupportPath);
         return;
+      case 'about':
+        context.push(AppRoutes.aboutAppPath);
+        return;
       case 'logout':
         _handleLogout(context);
         return;

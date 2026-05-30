@@ -35,16 +35,16 @@ class ContinueStudyingSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  state.continueStudyingLabel,
+                  context.l10n.continueStudyingLabel,
                   style: AppTextStyles.headlineSmall.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 const SizedBox(height: AppDimensions.paddingMD),
-                Text(state.noRecentTitle, style: AppTextStyles.titleLarge),
+                Text(context.l10n.noRecentTitle, style: AppTextStyles.titleLarge),
                 const SizedBox(height: AppDimensions.paddingXS),
                 Text(
-                  state.noRecentDescription,
+                  context.l10n.noRecentDescription,
                   style: AppTextStyles.bodySmall.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
@@ -53,7 +53,7 @@ class ContinueStudyingSection extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () =>
                       StatefulNavigationShell.of(context).goBranch(1),
-                  child: Text(state.openChaptersLabel),
+                  child: Text(context.l10n.openChaptersLabel),
                 ),
               ],
             ),
@@ -68,7 +68,7 @@ class ContinueStudyingSection extends StatelessWidget {
         BlocBuilder<DashboardCubit, DashboardState>(
           builder: (context, state) {
             return Text(
-              state.continueStudyingLabel,
+              context.l10n.continueStudyingLabel,
               style: AppTextStyles.headlineSmall.copyWith(
                 fontWeight: FontWeight.w700,
               ),

@@ -68,12 +68,12 @@ class QuizCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    state.boardReadyQuizTitle,
+                    context.l10n.boardReadyQuizTitle,
                     style: AppTextStyles.titleLarge,
                   ),
                   const SizedBox(height: AppDimensions.paddingXS),
                   Text(
-                    state.boardReadyQuizDescription,
+                    context.l10n.boardReadyQuizDescription,
                     style: AppTextStyles.bodySmall.copyWith(
                       color: colorScheme.onSurfaceVariant,
                     ),
@@ -120,9 +120,7 @@ class QuizCard extends StatelessWidget {
                           textStyle: AppTextStyles.labelLarge,
                         ),
                         child: Text(
-                          challenge == null
-                              ? dashState.startNowLabel
-                              : dashState.startNowLabel,
+                          context.l10n.startNowLabel,
                         ),
                       );
                     },

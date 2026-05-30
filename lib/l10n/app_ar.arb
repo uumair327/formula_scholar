@@ -245,6 +245,18 @@
   "closeQuiz": "Closequiz",
   "dailyChallenge": "Dailychallenge",
   "dailyChallengeDesc": "Dailychallengedesc",
+  "dashboardAcademicViewAll": "عرض الكل",
+  "dashboardVaultDescWithCounts": "{formulas} معادلة عبر {subjects} موضوعات",
+  "@dashboardVaultDescWithCounts": {
+    "placeholders": {
+      "formulas": {
+        "type": "int"
+      },
+      "subjects": {
+        "type": "int"
+      }
+    }
+  },
   "dashboardAcademicPath": "Dashboardacademicpath",
   "dashboardAvailableBoards": "Boards for your region",
   "dashboardNoBoardsAvailable": "No boards available",
@@ -335,7 +347,17 @@
   "onboardingAppBrand": "Onboardingappbrand",
   "onboardingBack": "Onboardingback",
   "onboardingContinue": "Onboardingcontinue",
-  "onboardingStepOf": "Onboardingstepof",
+  "onboardingStepOf": "الخطوة {current} من {total}",
+  "@onboardingStepOf": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pause": "Pause",
   "personalInfo": "Personalinfo",
   "play": "Play",
@@ -410,5 +432,39 @@
   "validationInvalidEmail": "Validationinvalidemail",
   "validationPasswordMinLength": "Validationpasswordminlength",
   "validationPasswordMismatch": "Validationpasswordmismatch",
-  "validationRequired": "Validationrequired"
+  "validationRequired": "Validationrequired",
+  "aboutApp": "حول التطبيق",
+  "aboutAppSubtitle": "معلومات التطبيق والتراخيص والقانون",
+  "aboutAppTitle": "حول فورمولا سكولار",
+  "aboutAppTagline": "أتقن كل معادلة بثقة",
+  "aboutDeveloperSection": "المطور",
+  "aboutDeveloperName": "فريق فورمولا سكولار",
+  "aboutDeveloperEmail": "support@formulascholar.app",
+  "aboutLegalSection": "القانون والامتثال",
+  "aboutOpenSourceLicenses": "تراخيص المصادر المفتوحة",
+  "aboutOpenSourceDesc": "عرض تراخيص البرامج الخارجية",
+  "aboutPrivacyDesc": "كيف نتعامل مع بياناتك",
+  "aboutTermsDesc": "قواعد استخدام هذا التطبيق",
+  "aboutRateApp": "قيّم هذا التطبيق",
+  "aboutRateDesc": "ساعدنا في التحسين بملاحظاتك",
+  "aboutShareApp": "مشاركة فورمولا سكولار",
+  "aboutShareDesc": "أخبر أصدقاءك عن هذا التطبيق",
+  "myBookmarks": "إشاراتي المرجعية",
+  "studyPlanner": "مخطط الدراسة",
+  "studyPlannerSubtitle": "تنظيم جدول دراستك",
+  "appearance": "المظهر",
+  "languageAndLocalization": "اللغة والترجمة",
+  "languageAndLocalizationSubtitle": "تحكم في لغة واجهة التطبيق ولغة المحتوى بشكل مستقل",
+  "logout": "تسجيل الخروج",
+  "formulasMastered": "الصيغ المتقنة",
+  "daysStreak": "أيام متتالية",
+  "totalPoints": "إجمالي النقاط",
+  "academicViewAllLabel": "عرض الكل",
+  "continueStudyingLabel": "مواصلة الدراسة",
+  "noRecentTitle": "لا توجد دراسات حديثة",
+  "noRecentDescription": "ابدأ في استكشاف الفصول لرؤية تاريخك هنا.",
+  "openChaptersLabel": "فتح الفصول",
+  "boardReadyQuizTitle": "اختبار جاهزية المجلس",
+  "boardReadyQuizDescription": "اختبر معلوماتك للامتحانات القادمة",
+  "startNowLabel": "ابدأ الآن"
 }

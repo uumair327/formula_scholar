@@ -1572,6 +1572,18 @@ abstract class AppLocalizations {
   /// **'Dailychallengedesc'**
   String get dailyChallengeDesc;
 
+  /// No description provided for @dashboardAcademicViewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View All'**
+  String get dashboardAcademicViewAll;
+
+  /// No description provided for @dashboardVaultDescWithCounts.
+  ///
+  /// In en, this message translates to:
+  /// **'{formulas} formulas across {subjects} subjects'**
+  String dashboardVaultDescWithCounts(int formulas, int subjects);
+
   /// No description provided for @dashboardAcademicPath.
   ///
   /// In en, this message translates to:
@@ -2115,8 +2127,8 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingStepOf.
   ///
   /// In en, this message translates to:
-  /// **'Onboardingstepof'**
-  String get onboardingStepOf;
+  /// **'Step {current} of {total}'**
+  String onboardingStepOf(int current, int total);
 
   /// No description provided for @pause.
   ///
@@ -2567,6 +2579,198 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Validationrequired'**
   String get validationRequired;
+
+  /// No description provided for @aboutApp.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get aboutApp;
+
+  /// No description provided for @aboutAppSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'App info, licenses & legal'**
+  String get aboutAppSubtitle;
+
+  /// No description provided for @aboutAppTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'About Formula Scholar'**
+  String get aboutAppTitle;
+
+  /// No description provided for @aboutAppTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Master every formula with confidence'**
+  String get aboutAppTagline;
+
+  /// No description provided for @aboutDeveloperSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Developer'**
+  String get aboutDeveloperSection;
+
+  /// No description provided for @aboutDeveloperName.
+  ///
+  /// In en, this message translates to:
+  /// **'Formula Scholar Team'**
+  String get aboutDeveloperName;
+
+  /// No description provided for @aboutDeveloperEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'support@formulascholar.app'**
+  String get aboutDeveloperEmail;
+
+  /// No description provided for @aboutLegalSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Legal & Compliance'**
+  String get aboutLegalSection;
+
+  /// No description provided for @aboutOpenSourceLicenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Source Licenses'**
+  String get aboutOpenSourceLicenses;
+
+  /// No description provided for @aboutOpenSourceDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'View third-party software licenses'**
+  String get aboutOpenSourceDesc;
+
+  /// No description provided for @aboutPrivacyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'How we handle your data'**
+  String get aboutPrivacyDesc;
+
+  /// No description provided for @aboutTermsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Rules for using this app'**
+  String get aboutTermsDesc;
+
+  /// No description provided for @aboutRateApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate This App'**
+  String get aboutRateApp;
+
+  /// No description provided for @aboutRateDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Help us improve with your feedback'**
+  String get aboutRateDesc;
+
+  /// No description provided for @aboutShareApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Formula Scholar'**
+  String get aboutShareApp;
+
+  /// No description provided for @aboutShareDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell your friends about this app'**
+  String get aboutShareDesc;
+
+  /// No description provided for @myBookmarks.
+  ///
+  /// In en, this message translates to:
+  /// **'My Bookmarks'**
+  String get myBookmarks;
+
+  /// No description provided for @studyPlannerSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Organize your study schedule'**
+  String get studyPlannerSubtitle;
+
+  /// No description provided for @appearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearance;
+
+  /// No description provided for @languageAndLocalizationSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Control app labels and backend content language independently'**
+  String get languageAndLocalizationSubtitle;
+
+  /// No description provided for @logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logout;
+
+  /// No description provided for @formulasMastered.
+  ///
+  /// In en, this message translates to:
+  /// **'Formulas Mastered'**
+  String get formulasMastered;
+
+  /// No description provided for @daysStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Days Streak'**
+  String get daysStreak;
+
+  /// No description provided for @totalPoints.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Points'**
+  String get totalPoints;
+
+  /// No description provided for @academicViewAllLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'View All'**
+  String get academicViewAllLabel;
+
+  /// No description provided for @continueStudyingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue Studying'**
+  String get continueStudyingLabel;
+
+  /// No description provided for @noRecentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Recent Studies'**
+  String get noRecentTitle;
+
+  /// No description provided for @noRecentDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Start exploring chapters to see your history here.'**
+  String get noRecentDescription;
+
+  /// No description provided for @openChaptersLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Chapters'**
+  String get openChaptersLabel;
+
+  /// No description provided for @boardReadyQuizTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Board Ready Quiz'**
+  String get boardReadyQuizTitle;
+
+  /// No description provided for @boardReadyQuizDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Test your knowledge for the upcoming exams'**
+  String get boardReadyQuizDescription;
+
+  /// No description provided for @startNowLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Now'**
+  String get startNowLabel;
 }
 
 class _AppLocalizationsDelegate

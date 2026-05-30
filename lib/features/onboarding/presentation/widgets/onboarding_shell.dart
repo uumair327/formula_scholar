@@ -85,7 +85,7 @@ class _OnboardingAppBar extends StatelessWidget {
             ),
             const SizedBox(height: AppDimensions.paddingXS),
             Text(
-              AppStrings.onboardingStepOf(currentStep, totalSteps),
+              context.l10n.onboardingStepOf(currentStep, totalSteps),
               style: AppTextStyles.labelLarge.copyWith(
                 color: colorScheme.primary,
                 fontWeight: FontWeight.w700,

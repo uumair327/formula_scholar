@@ -29,6 +29,7 @@ class SettingsListWidget extends StatelessWidget {
       'language' => Icons.language,
       'palette_outlined' => Icons.palette_outlined,
       'help_outline' => Icons.help_outline,
+      'info_outline' => Icons.info_outline,
       'logout' => Icons.logout,
       'emoji_events' => Icons.emoji_events,
       _ => Icons.settings,
@@ -59,9 +60,36 @@ class SettingsListWidget extends StatelessWidget {
       return _buildToggleItem(context, item);
     }
     if (item.isDestructive) {
-      return _buildDestructiveItem(item);
+      return _buildDestructiveItem(context, item);
     }
     return _buildNavigationItem(context, item);
+  }
+
+  String _resolveLabel(BuildContext context, String id, String fallback) {
+    return switch (id) {
+      'account' => context.l10n.accountInformation,
+      'bookmarks' => context.l10n.myBookmarks,
+      'planner' => context.l10n.studyPlanner,
+      'achievements' => context.l10n.achievements,
+      'notifications' => context.l10n.notifications,
+      'language' => context.l10n.languageAndLocalization,
+      'appearance' => context.l10n.appearance,
+      'help' => context.l10n.helpAndSupport,
+      'about' => context.l10n.aboutApp,
+      'logout' => context.l10n.logout,
+      _ => fallback,
+    };
+  }
+
+  String? _resolveSubtitle(BuildContext context, String id, String? fallback) {
+    return switch (id) {
+      'planner' => context.l10n.studyPlannerSubtitle,
+      'achievements' => context.l10n.achievementsDesc,
+      'language' => context.l10n.languageAndLocalizationSubtitle,
+      'appearance' => context.l10n.toggleDarkMode,
+      'about' => context.l10n.aboutAppSubtitle,
+      _ => fallback,
+    };
   }
 
   Widget _buildNavigationItem(BuildContext context, SettingsItem item) {
@@ -88,7 +116,7 @@ class SettingsListWidget extends StatelessWidget {
           ),
           const SizedBox(width: AppDimensions.paddingLG),
           Expanded(
-            child: Text(item.label, style: AppTextStyles.labelLarge),
+            child: Text(_resolveLabel(context, item.id, item.label), style: AppTextStyles.labelLarge),
           ),
           Icon(
             Directionality.of(context) == TextDirection.rtl
@@ -104,11 +132,14 @@ class SettingsListWidget extends StatelessWidget {
   Widget _buildToggleItem(BuildContext context, SettingsItem item) {
     final colorScheme = Theme.of(context).colorScheme;
     final icon = _resolveIcon(item.iconName);
+    
+    final label = _resolveLabel(context, item.id, item.label);
+    final subtitle = _resolveSubtitle(context, item.id, item.subtitle);
+
     return AppCard(
-      onTap: onDarkModeToggle,
       padding: const EdgeInsets.symmetric(
         horizontal: AppDimensions.paddingXL,
-        vertical: AppDimensions.paddingLG,
+        vertical: AppDimensions.paddingMD,
       ),
       child: Row(
         children: [
@@ -122,34 +153,30 @@ class SettingsListWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.label, style: AppTextStyles.labelLarge),
-                if (item.subtitle != null)
+                Text(label, style: AppTextStyles.labelLarge),
+                if (subtitle != null) ...[
+                  const SizedBox(height: AppDimensions.paddingXS),
                   Text(
-                    item.subtitle!,
+                    subtitle,
                     style: AppTextStyles.bodySmall.copyWith(
-                      color: colorScheme.outline,
-                      fontWeight: FontWeight.w500,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ),
+                ],
               ],
             ),
           ),
-          Semantics(
-            label: context.l10n.toggleDarkMode,
-            toggled: isDarkMode,
-            child: Switch.adaptive(
-              value: isDarkMode,
-              onChanged: (_) => onDarkModeToggle(),
-              activeThumbColor: AppColors.primary,
-              activeTrackColor: AppColors.primaryContainer,
-            ),
+          Switch(
+            value: isDarkMode,
+            onChanged: (value) => onDarkModeToggle(),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildDestructiveItem(SettingsItem item) {
+  Widget _buildDestructiveItem(BuildContext context, SettingsItem item) {
+    final colorScheme = Theme.of(context).colorScheme;
     final icon = _resolveIcon(item.iconName);
     return AppCard(
       onTap: () {
@@ -175,9 +202,9 @@ class SettingsListWidget extends StatelessWidget {
           const SizedBox(width: AppDimensions.paddingLG),
           Expanded(
             child: Text(
-              item.label,
+              _resolveLabel(context, item.id, item.label),
               style: AppTextStyles.labelLarge.copyWith(
-                color: AppColors.error,
+                color: colorScheme.error,
               ),
             ),
           ),

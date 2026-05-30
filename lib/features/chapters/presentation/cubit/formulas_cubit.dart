@@ -89,7 +89,7 @@ class FormulasCubit extends Cubit<FormulasState>
         final noteFutures = data.map((f) => loadFormulaNote(f.id));
         unawaited(Future.wait(noteFutures));
 
-        final safeChapterName = chapterName ?? AppStrings.chapterLabel;
+        final safeChapterName = chapterName ?? 'Chapter';
         await _markChapterStarted(
           subjectId: subjectId,
           chapterId: chapterId,

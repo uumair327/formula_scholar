@@ -49,7 +49,7 @@ class SubjectStatsCubit extends Cubit<void> {
       completed += chapter.completedFormulas;
     }
     final progress = total > 0 ? ((completed / total) * 100).toInt() : 0;
-    final grade = _curriculumCubit.state.gradeLabel ?? AppStrings.unknownGrade;
+    final grade = _curriculumCubit.state.gradeLabel ?? 'Unknown Grade';
 
     return SubjectStatsData(
       progressPercent: progress,

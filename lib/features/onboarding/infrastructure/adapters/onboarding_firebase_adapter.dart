@@ -287,7 +287,7 @@ class OnboardingFirebaseAdapter implements OnboardingDataSourcePort {
     }
 
     final cleaned = rawLabel.trim();
-    return cleaned.isEmpty ? AppStrings.unknownGrade : cleaned;
+    return cleaned.isEmpty ? 'Unknown Grade' : cleaned;
   }
 
   int _resolveClassNumber({

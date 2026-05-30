@@ -123,16 +123,24 @@ class ProgressStatsWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppDimensions.paddingXS),
-          Text(
-            stat.label,
-            style: AppTextStyles.bodySmall.copyWith(
-              color: colorScheme.outline,
-              fontWeight: FontWeight.w600,
+          AppText(
+            _resolveStatLabel(context, stat.id, stat.label),
+            style: AppTextStyles.labelSmall.copyWith(
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
         ],
       ),
     );
+  }
+
+  String _resolveStatLabel(BuildContext context, String id, String fallback) {
+    return switch (id) {
+      'formulas' => context.l10n.formulasMastered,
+      'streak' => context.l10n.daysStreak,
+      'points' => context.l10n.totalPoints,
+      _ => fallback,
+    };
   }
 
   IconData _getStatIcon(String iconName) {

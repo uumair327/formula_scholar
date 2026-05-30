@@ -72,7 +72,7 @@ class CurriculumOptionsCubit extends Cubit<CurriculumOptionsState>
     }
 
     final initialCountryId =
-        curriculum.countryId ?? AppStrings.defaultCountryId;
+        curriculum.countryId ?? 'in';
     final draftCountryId =
         _firstWhereOrNull<Country>(
           countries,

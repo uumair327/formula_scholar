@@ -119,7 +119,7 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
       return const UserProfile(
         name: 'Guest',
         email: '',
-        grade: AppStrings.profileGrade,
+        grade: 'Class 10',
         board: '',
         avatarUrl: AppAssets.profileHeroAvatarUrl,
         isPro: false,
@@ -146,7 +146,7 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
         'name': authName,
         'email': authEmail,
         'avatarUrl': authPhoto,
-        'grade': AppStrings.profileGrade,
+        'grade': 'Class 10',
         'isPro': false,
       };
       await _api.execute(
@@ -157,7 +157,7 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
       return UserProfile(
         name: authName.isNotEmpty ? authName : 'Scholar',
         email: authEmail,
-        grade: AppStrings.profileGrade,
+        grade: 'Class 10',
         board: '',
         avatarUrl: authPhoto.isNotEmpty
             ? authPhoto
@@ -172,7 +172,7 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
     final fsGrade = _readString(
       data,
       'gradeLabel',
-      fallback: _readString(data, 'grade', fallback: AppStrings.profileGrade),
+      fallback: _readString(data, 'grade', fallback: 'Class 10'),
     );
     final fsBoard = _readString(data, 'boardName');
     final fsAvatarUrl = _readString(data, 'avatarUrl');
@@ -241,19 +241,19 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
     return [
       ProfileStat(
         id: 'formulas',
-        label: AppStrings.formulasMastered,
+        label: '',
         value: _formatStatValue(formulasCount),
         iconName: 'functions',
       ),
       ProfileStat(
         id: 'streak',
-        label: AppStrings.daysStreak,
+        label: '',
         value: _formatStatValue(streak),
         iconName: 'fire',
       ),
       ProfileStat(
         id: 'points',
-        label: AppStrings.totalPoints,
+        label: '',
         value: _formatStatValue(points),
         iconName: 'stars',
       ),
@@ -274,19 +274,19 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
     return const [
       ProfileStat(
         id: 'formulas',
-        label: AppStrings.formulasMastered,
+        label: '',
         value: '0',
         iconName: 'functions',
       ),
       ProfileStat(
         id: 'streak',
-        label: AppStrings.daysStreak,
+        label: '',
         value: '0',
         iconName: 'fire',
       ),
       ProfileStat(
         id: 'points',
-        label: AppStrings.totalPoints,
+        label: '',
         value: '0',
         iconName: 'stars',
       ),
@@ -298,52 +298,58 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
     return const [
       SettingsItem(
         id: 'account',
-        label: AppStrings.accountInformation,
+        label: '',
         iconName: 'person_outline',
       ),
       SettingsItem(
         id: 'bookmarks',
-        label: AppStrings.myBookmarks,
+        label: '',
         iconName: 'bookmark_outline',
       ),
       SettingsItem(
         id: 'study_planner',
-        label: AppStrings.studyPlanner,
-        subtitle: AppStrings.studyPlannerSubtitle,
+        label: '',
+        subtitle: '',
         iconName: 'calendar_today',
       ),
       SettingsItem(
         id: 'achievements',
-        label: AppStrings.achievementsTitle,
-        subtitle: AppStrings.achievementsSubtitle,
+        label: '',
+        subtitle: '',
         iconName: 'emoji_events',
       ),
       SettingsItem(
         id: 'notifications',
-        label: AppStrings.notifications,
+        label: '',
         iconName: 'notifications_outlined',
       ),
       SettingsItem(
-        id: 'language_localization',
-        label: AppStrings.languageAndLocalization,
-        subtitle: AppStrings.languageAndLocalizationSubtitle,
+        id: 'language',
+        label: '',
+        subtitle: '',
         iconName: 'language',
       ),
       SettingsItem(
         id: 'appearance',
-        label: AppStrings.appearance,
-        subtitle: AppStrings.toggleDarkMode,
+        label: '',
+        subtitle: '',
         iconName: 'palette_outlined',
         isToggle: true,
       ),
       SettingsItem(
         id: 'help',
-        label: AppStrings.helpAndSupport,
+        label: '',
         iconName: 'help_outline',
       ),
       SettingsItem(
+        id: 'about',
+        label: '',
+        subtitle: '',
+        iconName: 'info_outline',
+      ),
+      SettingsItem(
         id: 'logout',
-        label: AppStrings.logout,
+        label: '',
         iconName: 'logout',
         isDestructive: true,
       ),

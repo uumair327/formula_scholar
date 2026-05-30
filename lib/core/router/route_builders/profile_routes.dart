@@ -1,4 +1,4 @@
-﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../features/profile/profile.dart';
@@ -51,6 +51,16 @@ List<GoRoute> profileSubRoutes() {
         return AppPageTransitions.fadeTransition(
           state: state,
           child: const HelpSupportPage(),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.aboutAppPath,
+      name: AppRoutes.aboutAppName,
+      pageBuilder: (context, state) {
+        return AppPageTransitions.fadeTransition(
+          state: state,
+          child: const AboutAppPage(),
         );
       },
     ),
