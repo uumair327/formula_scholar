@@ -52,12 +52,12 @@ class _OnboardingSelectCardState extends State<OnboardingSelectCard> {
                 ? (isDark
                     ? AppColors.darkPrimary.withValues(alpha: 0.08)
                     : AppColors.primaryFixed.withValues(alpha: 0.08))
-                : colorScheme.surfaceContainerLowest,
+                : colorScheme.surfaceContainer,
             borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
             border: Border.all(
               color: widget.isSelected
                   ? AppColors.primary.withValues(alpha: AppDimensions.opacityMedium)
-                  : colorScheme.surfaceContainerHigh.withValues(alpha: AppDimensions.opacitySubtle),
+                  : colorScheme.outlineVariant.withValues(alpha: 0.5),
               width: widget.isSelected
                   ? AppDimensions.borderWidthThick
                   : AppDimensions.borderWidth,

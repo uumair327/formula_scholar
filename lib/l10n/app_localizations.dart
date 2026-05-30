@@ -123,7 +123,7 @@ abstract class AppLocalizations {
   /// No description provided for @dashboardHeroDescription.
   ///
   /// In en, this message translates to:
-  /// **'Continue your journey through Physics. You\'re {progress}% through the current chapter.'**
+  /// **'Continue your journey through Physics. You\'re 65% through the current chapter.'**
   String dashboardHeroDescription(Object progress);
 
   /// No description provided for @dashboardResumeLesson.
@@ -177,7 +177,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchFormulas.
   ///
   /// In en, this message translates to:
-  /// **'Search Formulas'**
+  /// **'Search formulas'**
   String get searchFormulas;
 
   /// No description provided for @searchFormulasTitle.
@@ -579,7 +579,7 @@ abstract class AppLocalizations {
   /// No description provided for @loginBrandTagline.
   ///
   /// In en, this message translates to:
-  /// **'Master every\nformula with\nease.'**
+  /// **'Master every\\nformula with\\nease.'**
   String get loginBrandTagline;
 
   /// No description provided for @loginBrandDesc.
@@ -795,49 +795,49 @@ abstract class AppLocalizations {
   /// No description provided for @correct.
   ///
   /// In en, this message translates to:
-  /// **'Correct'**
+  /// **'Correct!'**
   String get correct;
 
   /// No description provided for @masteryLevelIncreasing.
   ///
   /// In en, this message translates to:
-  /// **'Mastery Level Increasing'**
+  /// **'Mastery level increasing'**
   String get masteryLevelIncreasing;
 
   /// No description provided for @wrongAnswer.
   ///
   /// In en, this message translates to:
-  /// **'Wrong Answer'**
+  /// **'Incorrect'**
   String get wrongAnswer;
 
   /// No description provided for @tryNextTime.
   ///
   /// In en, this message translates to:
-  /// **'Try Next Time'**
+  /// **'Review and try again next time'**
   String get tryNextTime;
 
   /// No description provided for @somethingWentWrong.
   ///
   /// In en, this message translates to:
-  /// **'Something Went Wrong'**
+  /// **'Something went wrong'**
   String get somethingWentWrong;
 
   /// No description provided for @failedToLoadProfile.
   ///
   /// In en, this message translates to:
-  /// **'Failed To Load Profile'**
+  /// **'Failed to load profile'**
   String get failedToLoadProfile;
 
   /// No description provided for @failedToUpdateProfile.
   ///
   /// In en, this message translates to:
-  /// **'Failed To Update Profile'**
+  /// **'Failed to update profile'**
   String get failedToUpdateProfile;
 
   /// No description provided for @dashboardCurriculumOptionsLoadFailed.
   ///
   /// In en, this message translates to:
-  /// **'Failed to load curriculum options'**
+  /// **'Unable to load boards and classes right now.'**
   String get dashboardCurriculumOptionsLoadFailed;
 
   /// No description provided for @chaptersFormulasLoadFailed.
@@ -867,13 +867,13 @@ abstract class AppLocalizations {
   /// No description provided for @dashboardCurriculumRequired.
   ///
   /// In en, this message translates to:
-  /// **'Select your curriculum to continue'**
+  /// **'Select your board and grade to unlock your dashboard.'**
   String get dashboardCurriculumRequired;
 
   /// No description provided for @failedToLoadDashboard.
   ///
   /// In en, this message translates to:
-  /// **'Failed To Load Dashboard'**
+  /// **'Failed to load dashboard'**
   String get failedToLoadDashboard;
 
   /// No description provided for @retry.
@@ -885,7 +885,7 @@ abstract class AppLocalizations {
   /// No description provided for @comingSoon.
   ///
   /// In en, this message translates to:
-  /// **'Coming Soon'**
+  /// **'COMING SOON'**
   String get comingSoon;
 
   /// No description provided for @comingSoonChip1.
@@ -915,7 +915,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalFooterTitle.
   ///
   /// In en, this message translates to:
-  /// **'Safe, private, and reliable'**
+  /// **'Your Privacy & Security Matter to Us'**
   String get legalFooterTitle;
 
   /// No description provided for @legalFooterDesc.
@@ -927,31 +927,31 @@ abstract class AppLocalizations {
   /// No description provided for @legalEffectiveDate.
   ///
   /// In en, this message translates to:
-  /// **'Effective: Jan 1, 2026'**
+  /// **'Effective: April 2026'**
   String get legalEffectiveDate;
 
   /// No description provided for @selectSubjectTitle.
   ///
   /// In en, this message translates to:
-  /// **'Select a subject'**
+  /// **'Select a Subject'**
   String get selectSubjectTitle;
 
   /// No description provided for @selectSubjectDesc.
   ///
   /// In en, this message translates to:
-  /// **'Choose a subject to continue'**
+  /// **'Tap on a subject from the Home tab to start exploring chapters and formulas.'**
   String get selectSubjectDesc;
 
   /// No description provided for @selectSubjectFirst.
   ///
   /// In en, this message translates to:
-  /// **'Select a subject first'**
+  /// **'Please select a subject first'**
   String get selectSubjectFirst;
 
   /// No description provided for @breadcrumbHome.
   ///
   /// In en, this message translates to:
-  /// **'Home'**
+  /// **'HOME'**
   String get breadcrumbHome;
 
   /// No description provided for @viewProfile.
@@ -987,7 +987,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchChaptersHint.
   ///
   /// In en, this message translates to:
-  /// **'Search chapters'**
+  /// **'Search chapters...'**
   String get searchChaptersHint;
 
   /// No description provided for @toggleSortDirection.
@@ -1023,7 +1023,7 @@ abstract class AppLocalizations {
   /// No description provided for @formulasLabel.
   ///
   /// In en, this message translates to:
-  /// **'formulas'**
+  /// **'FORMULAS'**
   String get formulasLabel;
 
   /// No description provided for @removeBookmark.
@@ -1059,79 +1059,79 @@ abstract class AppLocalizations {
   /// No description provided for @nearlyThere.
   ///
   /// In en, this message translates to:
-  /// **'Nearly There'**
+  /// **'Nearly there!'**
   String get nearlyThere;
 
   /// No description provided for @keepGoing.
   ///
   /// In en, this message translates to:
-  /// **'Keep Going'**
+  /// **'Keep going!'**
   String get keepGoing;
 
   /// No description provided for @justStarted.
   ///
   /// In en, this message translates to:
-  /// **'Just Started'**
+  /// **'Just getting started'**
   String get justStarted;
 
   /// No description provided for @locked.
   ///
   /// In en, this message translates to:
-  /// **'Locked'**
+  /// **'LOCKED'**
   String get locked;
 
   /// No description provided for @step1StateHint.
   ///
   /// In en, this message translates to:
-  /// **'State or region'**
+  /// **'Search state (e.g. Maharashtra)'**
   String get step1StateHint;
 
   /// No description provided for @step1LocalizedTitle.
   ///
   /// In en, this message translates to:
-  /// **'Localized content'**
+  /// **'Localized Content'**
   String get step1LocalizedTitle;
 
   /// No description provided for @step1LocalizedDesc.
   ///
   /// In en, this message translates to:
-  /// **'Content localized for your region'**
+  /// **'We automatically sync with CBSE, ICSE, and various State Board syllabi based on your choice.'**
   String get step1LocalizedDesc;
 
   /// No description provided for @step1PrivacyTitle.
   ///
   /// In en, this message translates to:
-  /// **'Privacy'**
+  /// **'Privacy Guaranteed'**
   String get step1PrivacyTitle;
 
   /// No description provided for @step1PrivacyDesc.
   ///
   /// In en, this message translates to:
-  /// **'Privacy details'**
+  /// **'Your location is only used to personalize your curriculum roadmap.'**
   String get step1PrivacyDesc;
 
   /// No description provided for @step2Tag.
   ///
   /// In en, this message translates to:
-  /// **'Step 2'**
+  /// **'Curriculum Selection'**
   String get step2Tag;
 
   /// No description provided for @step2Title.
   ///
   /// In en, this message translates to:
-  /// **'Step 2'**
+  /// **'Select Your Curriculum'**
   String get step2Title;
 
   /// No description provided for @step2NotSureTitle.
   ///
   /// In en, this message translates to:
-  /// **'Not sure?'**
+  /// **'Not sure about your board?'**
   String get step2NotSureTitle;
 
   /// No description provided for @step2NotSureDesc.
   ///
   /// In en, this message translates to:
-  /// **'If you\'re not sure, select the recommended option.'**
+  /// **'Check your school ID card or textbook covers for the official board affiliation.'**
   String get step2NotSureDesc;
 
   /// No description provided for @step2LearnMore.
@@ -1143,31 +1143,31 @@ abstract class AppLocalizations {
   /// No description provided for @step1Continue.
   ///
   /// In en, this message translates to:
-  /// **'Continue'**
+  /// **'Continue to Step 2'**
   String get step1Continue;
 
   /// No description provided for @step1Tag.
   ///
   /// In en, this message translates to:
-  /// **'Step 1'**
+  /// **'Location Preference'**
   String get step1Tag;
 
   /// No description provided for @step1Title.
   ///
   /// In en, this message translates to:
-  /// **'Step 1'**
+  /// **'Where are you studying?'**
   String get step1Title;
 
   /// No description provided for @step1Subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Tell us where you\'re studying'**
+  /// **'We\'ll tailor your formulas and curriculum based on your region\'s educational standards.'**
   String get step1Subtitle;
 
   /// No description provided for @flashcardFlip.
   ///
   /// In en, this message translates to:
-  /// **'Flip'**
+  /// **'Tap to flip'**
   String get flashcardFlip;
 
   /// No description provided for @flashcardAgain.
@@ -1197,13 +1197,13 @@ abstract class AppLocalizations {
   /// No description provided for @appVersion.
   ///
   /// In en, this message translates to:
-  /// **'Version'**
+  /// **'Version 1.0.0 (Beta)'**
   String get appVersion;
 
   /// No description provided for @madeWithLove.
   ///
   /// In en, this message translates to:
-  /// **'Made With Love'**
+  /// **'Made with ❤️ for scholars'**
   String get madeWithLove;
 
   /// No description provided for @deleteAccountFailed.
@@ -1215,7 +1215,7 @@ abstract class AppLocalizations {
   /// No description provided for @deleteAccountTitle.
   ///
   /// In en, this message translates to:
-  /// **'Delete account'**
+  /// **'Delete Account'**
   String get deleteAccountTitle;
 
   /// No description provided for @deleteAccountConfirmation.
@@ -1233,13 +1233,13 @@ abstract class AppLocalizations {
   /// No description provided for @deleteAccountButton.
   ///
   /// In en, this message translates to:
-  /// **'Delete'**
+  /// **'Delete Permanently'**
   String get deleteAccountButton;
 
   /// No description provided for @dashboardLive.
   ///
   /// In en, this message translates to:
-  /// **'Live'**
+  /// **'LIVE'**
   String get dashboardLive;
 
   /// No description provided for @startQuiz.
@@ -1251,7 +1251,7 @@ abstract class AppLocalizations {
   /// No description provided for @welcomeScholar.
   ///
   /// In en, this message translates to:
-  /// **'Welcome Scholar'**
+  /// **'Welcome, Scholar'**
   String get welcomeScholar;
 
   /// No description provided for @myProgress.
@@ -1281,19 +1281,19 @@ abstract class AppLocalizations {
   /// No description provided for @chaptersNoContentTitle.
   ///
   /// In en, this message translates to:
-  /// **'No chapters'**
+  /// **'No chapters available yet'**
   String get chaptersNoContentTitle;
 
   /// No description provided for @chaptersNoContentDescription.
   ///
   /// In en, this message translates to:
-  /// **'No content available in this subject'**
+  /// **'This subject has not been populated with chapters yet. Try another subject or check back after the backend sync finishes.'**
   String get chaptersNoContentDescription;
 
   /// No description provided for @chaptersBrowseSubjects.
   ///
   /// In en, this message translates to:
-  /// **'Browse subjects'**
+  /// **'Browse Subjects'**
   String get chaptersBrowseSubjects;
 
   /// No description provided for @printLabel.
@@ -1341,7 +1341,7 @@ abstract class AppLocalizations {
   /// No description provided for @practiceQuestionLabel.
   ///
   /// In en, this message translates to:
-  /// **'Question'**
+  /// **'QUESTION'**
   String get practiceQuestionLabel;
 
   /// No description provided for @ofLabel.
@@ -1353,13 +1353,13 @@ abstract class AppLocalizations {
   /// No description provided for @quizCompleteTitle.
   ///
   /// In en, this message translates to:
-  /// **'Quiz complete'**
+  /// **'Quiz Complete!'**
   String get quizCompleteTitle;
 
   /// No description provided for @quizCompleteDesc.
   ///
   /// In en, this message translates to:
-  /// **'You completed the quiz'**
+  /// **'Great effort! Review your results below.'**
   String get quizCompleteDesc;
 
   /// No description provided for @playAgain.
@@ -1371,13 +1371,13 @@ abstract class AppLocalizations {
   /// No description provided for @retryIncorrect.
   ///
   /// In en, this message translates to:
-  /// **'Retry incorrect questions'**
+  /// **'Retry Incorrect'**
   String get retryIncorrect;
 
   /// No description provided for @backToDashboard.
   ///
   /// In en, this message translates to:
-  /// **'Back To Dashboard'**
+  /// **'Back to Dashboard'**
   String get backToDashboard;
 
   /// No description provided for @savedChapters.
@@ -1425,19 +1425,19 @@ abstract class AppLocalizations {
   /// No description provided for @noteHint.
   ///
   /// In en, this message translates to:
-  /// **'Write your note here'**
+  /// **'Write your note here...'**
   String get noteHint;
 
   /// No description provided for @genericError.
   ///
   /// In en, this message translates to:
-  /// **'Something went wrong'**
+  /// **'Something went wrong. Please try again.'**
   String get genericError;
 
   /// No description provided for @unknownCurriculum.
   ///
   /// In en, this message translates to:
-  /// **'Unknown Curriculum'**
+  /// **'unknown_curriculum'**
   String get unknownCurriculum;
 
   /// No description provided for @creating.
@@ -1461,7 +1461,7 @@ abstract class AppLocalizations {
   /// No description provided for @masteryToolsSyncing.
   ///
   /// In en, this message translates to:
-  /// **'Syncing mastery tools...'**
+  /// **'Mastery tools are syncing from backend. Please try again in a moment.'**
   String get masteryToolsSyncing;
 
   /// No description provided for @videoLessons.
@@ -1479,7 +1479,7 @@ abstract class AppLocalizations {
   /// No description provided for @academicInfo.
   ///
   /// In en, this message translates to:
-  /// **'Academic Info'**
+  /// **'Academic Information'**
   String get academicInfo;
 
   /// No description provided for @accountActions.
@@ -1503,19 +1503,19 @@ abstract class AppLocalizations {
   /// No description provided for @achievementNotifications.
   ///
   /// In en, this message translates to:
-  /// **'Achievement Notifications'**
+  /// **'Achievements'**
   String get achievementNotifications;
 
   /// No description provided for @achievements.
   ///
   /// In en, this message translates to:
-  /// **'Achievements'**
+  /// **'Milestone Alerts'**
   String get achievements;
 
   /// No description provided for @achievementsDesc.
   ///
   /// In en, this message translates to:
-  /// **'Achievements Desc'**
+  /// **'When you hit learning milestones'**
   String get achievementsDesc;
 
   /// No description provided for @allSubjects.
@@ -1539,7 +1539,7 @@ abstract class AppLocalizations {
   /// No description provided for @chatWithUs.
   ///
   /// In en, this message translates to:
-  /// **'Chat With Us'**
+  /// **'Chat'**
   String get chatWithUs;
 
   /// No description provided for @closeLabel.
@@ -1569,7 +1569,7 @@ abstract class AppLocalizations {
   /// No description provided for @dailyChallengeDesc.
   ///
   /// In en, this message translates to:
-  /// **'Daily Challenge Desc'**
+  /// **'Test your knowledge with 5 quick formulas.'**
   String get dailyChallengeDesc;
 
   /// No description provided for @dashboardAcademicViewAll.
@@ -1587,7 +1587,7 @@ abstract class AppLocalizations {
   /// No description provided for @dashboardAcademicPath.
   ///
   /// In en, this message translates to:
-  /// **'Dashboard Academic Path'**
+  /// **'Academic Path'**
   String get dashboardAcademicPath;
 
   /// No description provided for @dashboardAvailableBoards.
@@ -1599,43 +1599,43 @@ abstract class AppLocalizations {
   /// No description provided for @dashboardNoBoardsAvailable.
   ///
   /// In en, this message translates to:
-  /// **'No boards available'**
+  /// **'No boards available for your region.'**
   String get dashboardNoBoardsAvailable;
 
   /// No description provided for @dashboardAvailableClasses.
   ///
   /// In en, this message translates to:
-  /// **'Classes for your board'**
+  /// **'Classes for selected board'**
   String get dashboardAvailableClasses;
 
   /// No description provided for @dashboardNoClassesAvailable.
   ///
   /// In en, this message translates to:
-  /// **'No classes available'**
+  /// **'No classes available for this board.'**
   String get dashboardNoClassesAvailable;
 
   /// No description provided for @dashboardActiveCurriculum.
   ///
   /// In en, this message translates to:
-  /// **'Dashboard Active Curriculum'**
+  /// **'ACTIVE CURRICULUM'**
   String get dashboardActiveCurriculum;
 
   /// No description provided for @dashboardCurriculumPending.
   ///
   /// In en, this message translates to:
-  /// **'Dashboard Curriculum Pending'**
+  /// **'Syncing your board and grade...'**
   String get dashboardCurriculumPending;
 
   /// No description provided for @dashboardFormulaVault.
   ///
   /// In en, this message translates to:
-  /// **'Dashboard Formula Vault'**
+  /// **'My Formula Vault'**
   String get dashboardFormulaVault;
 
   /// No description provided for @dashboardRetryCurriculumOptions.
   ///
   /// In en, this message translates to:
-  /// **'Dashboard Retry Curriculum Options'**
+  /// **'Retry board/class options'**
   String get dashboardRetryCurriculumOptions;
 
   /// No description provided for @deleteAccount.
@@ -1677,13 +1677,13 @@ abstract class AppLocalizations {
   /// No description provided for @editProfileSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Edit Profile Subtitle'**
+  /// **'Update your display name and avatar from one place.'**
   String get editProfileSubtitle;
 
   /// No description provided for @editProfileTitle.
   ///
   /// In en, this message translates to:
-  /// **'Edit Profile Title'**
+  /// **'Edit Profile'**
   String get editProfileTitle;
 
   /// No description provided for @emailAddress.
@@ -1695,19 +1695,19 @@ abstract class AppLocalizations {
   /// No description provided for @emailNotificationsDesc.
   ///
   /// In en, this message translates to:
-  /// **'Email Notifications Desc'**
+  /// **'Receive updates via email'**
   String get emailNotificationsDesc;
 
   /// No description provided for @emailNotificationsLabel.
   ///
   /// In en, this message translates to:
-  /// **'Email Notifications Label'**
+  /// **'Email Notifications'**
   String get emailNotificationsLabel;
 
   /// No description provided for @emailUs.
   ///
   /// In en, this message translates to:
-  /// **'Email Us'**
+  /// **'Email'**
   String get emailUs;
 
   /// No description provided for @emptyBookmarksDesc.
@@ -1719,7 +1719,7 @@ abstract class AppLocalizations {
   /// No description provided for @encouragementMessage.
   ///
   /// In en, this message translates to:
-  /// **'Encouragement Message'**
+  /// **'You\'re in the top 5% of 9th graders this week. Keep flowing!'**
   String get encouragementMessage;
 
   /// No description provided for @exploreTools.
@@ -1731,55 +1731,55 @@ abstract class AppLocalizations {
   /// No description provided for @faq1Answer.
   ///
   /// In en, this message translates to:
-  /// **'Faq1 Answer'**
+  /// **'Go to Profile → Account Information to update your grade. Your curriculum will automatically adjust to match.'**
   String get faq1Answer;
 
   /// No description provided for @faq1Question.
   ///
   /// In en, this message translates to:
-  /// **'Faq1 Question'**
+  /// **'How do I change my grade?'**
   String get faq1Question;
 
   /// No description provided for @faq2Answer.
   ///
   /// In en, this message translates to:
-  /// **'Faq2 Answer'**
+  /// **'Yes! Previously viewed formulas and chapters are cached for offline access. Bookmarks are always available offline.'**
   String get faq2Answer;
 
   /// No description provided for @faq2Question.
   ///
   /// In en, this message translates to:
-  /// **'Faq2 Question'**
+  /// **'Can I use the app offline?'**
   String get faq2Question;
 
   /// No description provided for @faq3Answer.
   ///
   /// In en, this message translates to:
-  /// **'Faq3 Answer'**
+  /// **'Your streak counts consecutive days with at least 5 minutes of study time. The counter resets at midnight local time.'**
   String get faq3Answer;
 
   /// No description provided for @faq3Question.
   ///
   /// In en, this message translates to:
-  /// **'Faq3 Question'**
+  /// **'How are streaks calculated?'**
   String get faq3Question;
 
   /// No description provided for @faq4Answer.
   ///
   /// In en, this message translates to:
-  /// **'Faq4 Answer'**
+  /// **'Pro unlocks advanced features like 3D visualizers, unlimited practice quizzes, and priority access to new content.'**
   String get faq4Answer;
 
   /// No description provided for @faq4Question.
   ///
   /// In en, this message translates to:
-  /// **'Faq4 Question'**
+  /// **'What is Formula Scholar Pro?'**
   String get faq4Question;
 
   /// No description provided for @faqLabel.
   ///
   /// In en, this message translates to:
-  /// **'Faq Label'**
+  /// **'FAQ'**
   String get faqLabel;
 
   /// No description provided for @featuredAnnouncements.
@@ -1791,31 +1791,31 @@ abstract class AppLocalizations {
   /// No description provided for @flashcardSessionComplete.
   ///
   /// In en, this message translates to:
-  /// **'Flashcard Session Complete'**
+  /// **'Session Complete!'**
   String get flashcardSessionComplete;
 
   /// No description provided for @flashcardSessionDesc.
   ///
   /// In en, this message translates to:
-  /// **'Flashcard Session Desc'**
+  /// **'Great work! Keep practicing to master all formulas.'**
   String get flashcardSessionDesc;
 
   /// No description provided for @flashcardStudy.
   ///
   /// In en, this message translates to:
-  /// **'Flashcard Study'**
+  /// **'Study Mode'**
   String get flashcardStudy;
 
   /// No description provided for @formulaFlow.
   ///
   /// In en, this message translates to:
-  /// **'Formula Flow'**
+  /// **'FormulaFlow'**
   String get formulaFlow;
 
   /// No description provided for @freeAccount.
   ///
   /// In en, this message translates to:
-  /// **'Free Account'**
+  /// **'Free'**
   String get freeAccount;
 
   /// No description provided for @frequentlyAsked.
@@ -1839,31 +1839,31 @@ abstract class AppLocalizations {
   /// No description provided for @helpAndSupport.
   ///
   /// In en, this message translates to:
-  /// **'Help And Support'**
+  /// **'Help & Support'**
   String get helpAndSupport;
 
   /// No description provided for @helpHeroSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Help Hero Subtitle'**
+  /// **'Browse FAQs or contact our support team.'**
   String get helpHeroSubtitle;
 
   /// No description provided for @helpHeroTitle.
   ///
   /// In en, this message translates to:
-  /// **'Help Hero Title'**
+  /// **'How can we help?'**
   String get helpHeroTitle;
 
   /// No description provided for @incorrectLabel.
   ///
   /// In en, this message translates to:
-  /// **'Incorrect Label'**
+  /// **'Incorrect'**
   String get incorrectLabel;
 
   /// No description provided for @legalAcceptance.
   ///
   /// In en, this message translates to:
-  /// **'Legal Acceptance'**
+  /// **'Acceptance of Terms'**
   String get legalAcceptance;
 
   /// No description provided for @legalAcceptanceContent.
@@ -1875,7 +1875,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalChanges.
   ///
   /// In en, this message translates to:
-  /// **'Legal Changes'**
+  /// **'Changes to This Policy'**
   String get legalChanges;
 
   /// No description provided for @legalChangesContent.
@@ -1887,7 +1887,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalChildrenPrivacy.
   ///
   /// In en, this message translates to:
-  /// **'Legal Children Privacy'**
+  /// **'Children\'s Privacy'**
   String get legalChildrenPrivacy;
 
   /// No description provided for @legalChildrenPrivacyContent.
@@ -1899,7 +1899,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalContact.
   ///
   /// In en, this message translates to:
-  /// **'Legal Contact'**
+  /// **'Contact Us'**
   String get legalContact;
 
   /// No description provided for @legalContactContent.
@@ -1911,7 +1911,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalDataStorage.
   ///
   /// In en, this message translates to:
-  /// **'Legal Data Storage'**
+  /// **'Data Storage & Security'**
   String get legalDataStorage;
 
   /// No description provided for @legalDataStorageContent.
@@ -1923,7 +1923,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalDisclaimer.
   ///
   /// In en, this message translates to:
-  /// **'Legal Disclaimer'**
+  /// **'Disclaimer'**
   String get legalDisclaimer;
 
   /// No description provided for @legalDisclaimerContent.
@@ -1935,7 +1935,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalGoverningLaw.
   ///
   /// In en, this message translates to:
-  /// **'Legal Governing Law'**
+  /// **'Governing Law'**
   String get legalGoverningLaw;
 
   /// No description provided for @legalGoverningLawContent.
@@ -1947,7 +1947,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalHowWeUse.
   ///
   /// In en, this message translates to:
-  /// **'Legal How We Use'**
+  /// **'How We Use Your Information'**
   String get legalHowWeUse;
 
   /// No description provided for @legalHowWeUseContent.
@@ -1959,7 +1959,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalInfoWeCollect.
   ///
   /// In en, this message translates to:
-  /// **'Legal Info We Collect'**
+  /// **'Information We Collect'**
   String get legalInfoWeCollect;
 
   /// No description provided for @legalInfoWeCollectContent.
@@ -1971,7 +1971,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalIntellectualProperty.
   ///
   /// In en, this message translates to:
-  /// **'Legal Intellectual Property'**
+  /// **'Intellectual Property'**
   String get legalIntellectualProperty;
 
   /// No description provided for @legalIntellectualPropertyContent.
@@ -1983,7 +1983,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalTermination.
   ///
   /// In en, this message translates to:
-  /// **'Legal Termination'**
+  /// **'Termination'**
   String get legalTermination;
 
   /// No description provided for @legalTerminationContent.
@@ -1995,7 +1995,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalThirdParty.
   ///
   /// In en, this message translates to:
-  /// **'Legal Third Party'**
+  /// **'Third-Party Services'**
   String get legalThirdParty;
 
   /// No description provided for @legalThirdPartyContent.
@@ -2007,7 +2007,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalUseOfService.
   ///
   /// In en, this message translates to:
-  /// **'Legal Use Of Service'**
+  /// **'Use of Service'**
   String get legalUseOfService;
 
   /// No description provided for @legalUseOfServiceContent.
@@ -2019,7 +2019,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalUserAccounts.
   ///
   /// In en, this message translates to:
-  /// **'Legal User Accounts'**
+  /// **'User Accounts'**
   String get legalUserAccounts;
 
   /// No description provided for @legalUserAccountsContent.
@@ -2031,7 +2031,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalYourRights.
   ///
   /// In en, this message translates to:
-  /// **'Legal Your Rights'**
+  /// **'Your Rights'**
   String get legalYourRights;
 
   /// No description provided for @legalYourRightsContent.
@@ -2049,7 +2049,7 @@ abstract class AppLocalizations {
   /// No description provided for @newContentDesc.
   ///
   /// In en, this message translates to:
-  /// **'New Content Desc'**
+  /// **'When new chapters are available'**
   String get newContentDesc;
 
   /// No description provided for @nextQuestion.
@@ -2061,13 +2061,13 @@ abstract class AppLocalizations {
   /// No description provided for @noBookmarksFoundDesc.
   ///
   /// In en, this message translates to:
-  /// **'No Bookmarks Found Desc'**
+  /// **'Try a different search term or clear the filter to see all saved formulas and chapters.'**
   String get noBookmarksFoundDesc;
 
   /// No description provided for @noBookmarksFoundTitle.
   ///
   /// In en, this message translates to:
-  /// **'No Bookmarks Found Title'**
+  /// **'No bookmarks found'**
   String get noBookmarksFoundTitle;
 
   /// No description provided for @noFormulasLabel.
@@ -2085,7 +2085,7 @@ abstract class AppLocalizations {
   /// No description provided for @nothingHereYet.
   ///
   /// In en, this message translates to:
-  /// **'Nothing Here Yet'**
+  /// **'Nothing here yet'**
   String get nothingHereYet;
 
   /// No description provided for @notifications.
@@ -2097,7 +2097,7 @@ abstract class AppLocalizations {
   /// No description provided for @notificationsEnabled.
   ///
   /// In en, this message translates to:
-  /// **'Notifications Enabled'**
+  /// **'Notifications Active'**
   String get notificationsEnabled;
 
   /// No description provided for @notificationsEnabledDesc.
@@ -2109,19 +2109,19 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingAppBrand.
   ///
   /// In en, this message translates to:
-  /// **'Onboarding App Brand'**
+  /// **'Formula Sanctuary'**
   String get onboardingAppBrand;
 
   /// No description provided for @onboardingBack.
   ///
   /// In en, this message translates to:
-  /// **'Onboarding Back'**
+  /// **'Back'**
   String get onboardingBack;
 
   /// No description provided for @onboardingContinue.
   ///
   /// In en, this message translates to:
-  /// **'Onboarding Continue'**
+  /// **'Continue'**
   String get onboardingContinue;
 
   /// No description provided for @onboardingStepOf.
@@ -2139,7 +2139,7 @@ abstract class AppLocalizations {
   /// No description provided for @personalInfo.
   ///
   /// In en, this message translates to:
-  /// **'Personal Info'**
+  /// **'Personal Information'**
   String get personalInfo;
 
   /// No description provided for @play.
@@ -2151,43 +2151,43 @@ abstract class AppLocalizations {
   /// No description provided for @practiceChooseSubject.
   ///
   /// In en, this message translates to:
-  /// **'Practice Choose Subject'**
+  /// **'Choose Subject'**
   String get practiceChooseSubject;
 
   /// No description provided for @practiceNoQuestionsDesc.
   ///
   /// In en, this message translates to:
-  /// **'Practice No Questions Desc'**
+  /// **'Your current curriculum does not have practice questions available yet. Try again soon or open Chapters to keep learning.'**
   String get practiceNoQuestionsDesc;
 
   /// No description provided for @practiceNoQuestionsTitle.
   ///
   /// In en, this message translates to:
-  /// **'Practice No Questions Title'**
+  /// **'No practice questions yet'**
   String get practiceNoQuestionsTitle;
 
   /// No description provided for @practiceReadyDesc.
   ///
   /// In en, this message translates to:
-  /// **'Practice Ready Desc'**
+  /// **'Choose a subject and test your knowledge with practice questions.'**
   String get practiceReadyDesc;
 
   /// No description provided for @practiceReadyTitle.
   ///
   /// In en, this message translates to:
-  /// **'Practice Ready Title'**
+  /// **'Ready to Practice?'**
   String get practiceReadyTitle;
 
   /// No description provided for @privacyPolicyDesc.
   ///
   /// In en, this message translates to:
-  /// **'Privacy Policy Desc'**
+  /// **'How we protect your data'**
   String get privacyPolicyDesc;
 
   /// No description provided for @privacyPolicyTitle.
   ///
   /// In en, this message translates to:
-  /// **'Privacy Policy Title'**
+  /// **'Privacy Policy'**
   String get privacyPolicyTitle;
 
   /// No description provided for @proTip.
@@ -2205,37 +2205,37 @@ abstract class AppLocalizations {
   /// No description provided for @profileAvatarUrlLabel.
   ///
   /// In en, this message translates to:
-  /// **'Profile Avatar Url Label'**
+  /// **'Avatar URL'**
   String get profileAvatarUrlLabel;
 
   /// No description provided for @profileNameLabel.
   ///
   /// In en, this message translates to:
-  /// **'Profile Name Label'**
+  /// **'Display Name'**
   String get profileNameLabel;
 
   /// No description provided for @profileNameRequired.
   ///
   /// In en, this message translates to:
-  /// **'Profile Name Required'**
+  /// **'Display name is required'**
   String get profileNameRequired;
 
   /// No description provided for @profileUpdatedSuccess.
   ///
   /// In en, this message translates to:
-  /// **'Profile Updated Success'**
+  /// **'Profile updated successfully.'**
   String get profileUpdatedSuccess;
 
   /// No description provided for @pushNotificationsDesc.
   ///
   /// In en, this message translates to:
-  /// **'Push Notifications Desc'**
+  /// **'Receive alerts on your device'**
   String get pushNotificationsDesc;
 
   /// No description provided for @pushNotificationsLabel.
   ///
   /// In en, this message translates to:
-  /// **'Push Notifications Label'**
+  /// **'Push Notifications'**
   String get pushNotificationsLabel;
 
   /// No description provided for @quickActions.
@@ -2247,7 +2247,7 @@ abstract class AppLocalizations {
   /// No description provided for @readyForMore.
   ///
   /// In en, this message translates to:
-  /// **'Ready For More'**
+  /// **'Ready for more?'**
   String get readyForMore;
 
   /// No description provided for @refreshBookmarks.
@@ -2289,43 +2289,43 @@ abstract class AppLocalizations {
   /// No description provided for @step3Subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Step3 Subtitle'**
+  /// **'Choose your academic year to tailor formulas and practice sets to your curriculum.'**
   String get step3Subtitle;
 
   /// No description provided for @step3Tag.
   ///
   /// In en, this message translates to:
-  /// **'Step3 Tag'**
+  /// **'Grade Selection'**
   String get step3Tag;
 
   /// No description provided for @step3Title.
   ///
   /// In en, this message translates to:
-  /// **'Step3 Title'**
+  /// **'Select Your Class'**
   String get step3Title;
 
   /// No description provided for @step4EnterSanctuary.
   ///
   /// In en, this message translates to:
-  /// **'Step4 Enter Sanctuary'**
+  /// **'Enter Sanctuary'**
   String get step4EnterSanctuary;
 
   /// No description provided for @step4Subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Step4 Subtitle'**
+  /// **'Consistency is the key to mastery. How much time can you dedicate?'**
   String get step4Subtitle;
 
   /// No description provided for @step4Tag.
   ///
   /// In en, this message translates to:
-  /// **'Step4 Tag'**
+  /// **'Commitment'**
   String get step4Tag;
 
   /// No description provided for @step4Title.
   ///
   /// In en, this message translates to:
-  /// **'Step4 Title'**
+  /// **'Set your weekly goal'**
   String get step4Title;
 
   /// No description provided for @streakAlerts.
@@ -2361,19 +2361,19 @@ abstract class AppLocalizations {
   /// No description provided for @studyRemindersDesc.
   ///
   /// In en, this message translates to:
-  /// **'Study Reminders Desc'**
+  /// **'Daily reminders to keep learning'**
   String get studyRemindersDesc;
 
   /// No description provided for @termsOfServiceDesc.
   ///
   /// In en, this message translates to:
-  /// **'Terms Of Service Desc'**
+  /// **'Rules and guidelines for app usage'**
   String get termsOfServiceDesc;
 
   /// No description provided for @termsOfServiceTitle.
   ///
   /// In en, this message translates to:
-  /// **'Terms Of Service Title'**
+  /// **'Terms of Service'**
   String get termsOfServiceTitle;
 
   /// No description provided for @timedMode.
@@ -2385,7 +2385,7 @@ abstract class AppLocalizations {
   /// No description provided for @timedModeDesc.
   ///
   /// In en, this message translates to:
-  /// **'Timed Mode Desc'**
+  /// **'Set a time limit for this quiz'**
   String get timedModeDesc;
 
   /// No description provided for @toggleDarkMode.
@@ -2403,13 +2403,13 @@ abstract class AppLocalizations {
   /// No description provided for @userGuideDesc.
   ///
   /// In en, this message translates to:
-  /// **'User Guide Desc'**
+  /// **'Learn how to use Formula Scholar'**
   String get userGuideDesc;
 
   /// No description provided for @verifiedAccount.
   ///
   /// In en, this message translates to:
-  /// **'Verified Account'**
+  /// **'VERIFIED'**
   String get verifiedAccount;
 
   /// No description provided for @videoTutorials.
@@ -2421,7 +2421,7 @@ abstract class AppLocalizations {
   /// No description provided for @videoTutorialsDesc.
   ///
   /// In en, this message translates to:
-  /// **'Video Tutorials Desc'**
+  /// **'Watch step-by-step guides'**
   String get videoTutorialsDesc;
 
   /// No description provided for @viewTopics.
@@ -2439,7 +2439,7 @@ abstract class AppLocalizations {
   /// No description provided for @weeklyReportDesc.
   ///
   /// In en, this message translates to:
-  /// **'Weekly Report Desc'**
+  /// **'Summary of your weekly progress'**
   String get weeklyReportDesc;
 
   /// No description provided for @dart.
@@ -2451,133 +2451,133 @@ abstract class AppLocalizations {
   /// No description provided for @dashboardSanctuary.
   ///
   /// In en, this message translates to:
-  /// **'Dashboard Sanctuary'**
+  /// **'Formula Sanctuary'**
   String get dashboardSanctuary;
 
   /// No description provided for @forgotPasswordCancel.
   ///
   /// In en, this message translates to:
-  /// **'Forgot Password Cancel'**
+  /// **'Cancel'**
   String get forgotPasswordCancel;
 
   /// No description provided for @forgotPasswordDesc.
   ///
   /// In en, this message translates to:
-  /// **'Forgot Password Desc'**
+  /// **'Enter your email address and we\'ll send you a link to reset your password.'**
   String get forgotPasswordDesc;
 
   /// No description provided for @forgotPasswordSend.
   ///
   /// In en, this message translates to:
-  /// **'Forgot Password Send'**
+  /// **'Send Reset Link'**
   String get forgotPasswordSend;
 
   /// No description provided for @forgotPasswordSuccess.
   ///
   /// In en, this message translates to:
-  /// **'Forgot Password Success'**
+  /// **'Password reset link sent! Check your email inbox.'**
   String get forgotPasswordSuccess;
 
   /// No description provided for @forgotPasswordTitle.
   ///
   /// In en, this message translates to:
-  /// **'Forgot Password Title'**
+  /// **'Reset Password'**
   String get forgotPasswordTitle;
 
   /// No description provided for @signupBrandDesc.
   ///
   /// In en, this message translates to:
-  /// **'Signup Brand Desc'**
+  /// **'Join a sanctuary designed for focused learning. Transform complex equations into intuitive steps.'**
   String get signupBrandDesc;
 
   /// No description provided for @signupBrandHeadline.
   ///
   /// In en, this message translates to:
-  /// **'Signup Brand Headline'**
+  /// **'Master the Flow of Knowledge.'**
   String get signupBrandHeadline;
 
   /// No description provided for @signupBrandTitle.
   ///
   /// In en, this message translates to:
-  /// **'Signup Brand Title'**
+  /// **'Formula Sanctuary'**
   String get signupBrandTitle;
 
   /// No description provided for @signupTestimonial.
   ///
   /// In en, this message translates to:
-  /// **'Signup Testimonial'**
+  /// **'\"The formulas finally make sense. It doesn\'t feel like studying; it feels like exploring.\"'**
   String get signupTestimonial;
 
   /// No description provided for @signupTestimonialName.
   ///
   /// In en, this message translates to:
-  /// **'Signup Testimonial Name'**
+  /// **'Ishita Sharma'**
   String get signupTestimonialName;
 
   /// No description provided for @signupTestimonialRole.
   ///
   /// In en, this message translates to:
-  /// **'Signup Testimonial Role'**
+  /// **'Class 9 Student'**
   String get signupTestimonialRole;
 
   /// No description provided for @step4Casual.
   ///
   /// In en, this message translates to:
-  /// **'Step4 Casual'**
+  /// **'Casual Learner'**
   String get step4Casual;
 
   /// No description provided for @step4CasualDesc.
   ///
   /// In en, this message translates to:
-  /// **'Step4 Casual Desc'**
+  /// **'15 mins / day'**
   String get step4CasualDesc;
 
   /// No description provided for @step4Intensive.
   ///
   /// In en, this message translates to:
-  /// **'Step4 Intensive'**
+  /// **'Intensive Mastery'**
   String get step4Intensive;
 
   /// No description provided for @step4IntensiveDesc.
   ///
   /// In en, this message translates to:
-  /// **'Step4 Intensive Desc'**
+  /// **'60+ mins / day'**
   String get step4IntensiveDesc;
 
   /// No description provided for @step4Regular.
   ///
   /// In en, this message translates to:
-  /// **'Step4 Regular'**
+  /// **'Regular Scholar'**
   String get step4Regular;
 
   /// No description provided for @step4RegularDesc.
   ///
   /// In en, this message translates to:
-  /// **'Step4 Regular Desc'**
+  /// **'30 mins / day'**
   String get step4RegularDesc;
 
   /// No description provided for @validationInvalidEmail.
   ///
   /// In en, this message translates to:
-  /// **'Validation Invalid Email'**
+  /// **'Please enter a valid email address'**
   String get validationInvalidEmail;
 
   /// No description provided for @validationPasswordMinLength.
   ///
   /// In en, this message translates to:
-  /// **'Validation Password Min Length'**
+  /// **'Password must be at least 6 characters'**
   String get validationPasswordMinLength;
 
   /// No description provided for @validationPasswordMismatch.
   ///
   /// In en, this message translates to:
-  /// **'Validation Password Mismatch'**
+  /// **'Passwords do not match'**
   String get validationPasswordMismatch;
 
   /// No description provided for @validationRequired.
   ///
   /// In en, this message translates to:
-  /// **'Validation Required'**
+  /// **'This field is required'**
   String get validationRequired;
 
   /// No description provided for @aboutApp.
@@ -2685,7 +2685,7 @@ abstract class AppLocalizations {
   /// No description provided for @studyPlannerSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Organize your study schedule'**
+  /// **'Plan and track your study sessions'**
   String get studyPlannerSubtitle;
 
   /// No description provided for @appearance.
@@ -2771,6 +2771,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start Now'**
   String get startNowLabel;
+
+  /// No description provided for @onboardingNeedHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Need Help?'**
+  String get onboardingNeedHelp;
+
+  /// No description provided for @onboardingBoardSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Personalize your journey by selecting your academic board. We\'ll tailor your formulas and practice sets to your specific curriculum.'**
+  String get onboardingBoardSubtitle;
+
+  /// No description provided for @onboardingSelectBoard.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Board'**
+  String get onboardingSelectBoard;
+
+  /// No description provided for @onboardingBoardChangeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected board can be changed later in Profile.'**
+  String get onboardingBoardChangeHint;
+
+  /// No description provided for @onboardingBoardSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'BOARD SELECTED'**
+  String get onboardingBoardSelected;
+
+  /// No description provided for @onboardingJourneyProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Journey Progress'**
+  String get onboardingJourneyProgress;
+
+  /// No description provided for @onboardingGradeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll customize your FormulaFlow experience based on your current curriculum.'**
+  String get onboardingGradeSubtitle;
+
+  /// No description provided for @onboardingMostPopular.
+  ///
+  /// In en, this message translates to:
+  /// **'MOST POPULAR'**
+  String get onboardingMostPopular;
+
+  /// No description provided for @onboardingGradeChangeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'You can always change your grade in Profile settings later.'**
+  String get onboardingGradeChangeHint;
+
+  /// No description provided for @circlesAndAreas.
+  ///
+  /// In en, this message translates to:
+  /// **'Circles & Areas'**
+  String get circlesAndAreas;
+
+  /// No description provided for @geometryBasics.
+  ///
+  /// In en, this message translates to:
+  /// **'GEOMETRY BASICS'**
+  String get geometryBasics;
+
+  /// No description provided for @areaOfCircleQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Which of the following formulas correctly represents the area of a circle with radius r?'**
+  String get areaOfCircleQuestion;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
 }
 
 class _AppLocalizationsDelegate

@@ -47,19 +47,17 @@ class _CurriculumCardState extends State<CurriculumCard> {
           duration: AppDurations.animationFast,
           padding: const EdgeInsets.all(AppDimensions.paddingXXL),
           decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerLowest,
+            color: colorScheme.surfaceContainer,
             borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
             border: Border.all(
               color: widget.isSelected
-                  ? AppColors.primary.withValues(
-                      alpha: AppDimensions.opacityMedium,
-                    )
-                  : AppColors.transparent,
+                  ? AppColors.primary
+                  : colorScheme.outlineVariant.withValues(alpha: 0.5),
               width: widget.isSelected
                   ? AppDimensions.borderWidthThick
                   : AppDimensions.borderWidth,
             ),
-            boxShadow: widget.isSelected ? [AppShadows.ghost] : [AppShadows.subtle],
+            boxShadow: const [AppShadows.subtle],
           ),
           child: Stack(
             children: [

@@ -39,7 +39,7 @@ class OnboardingBoardGuideSheet extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLowest,
+        color: colorScheme.surfaceContainer,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(AppDimensions.radiusXXL),
           topRight: Radius.circular(AppDimensions.radiusXXL),
@@ -171,9 +171,9 @@ class _BoardGuideCard extends StatelessWidget {
         child: AppCard(
           color: isSelected
               ? accent.withValues(alpha: AppDimensions.opacityLight)
-              : colorScheme.surfaceContainerLowest,
+              : colorScheme.surfaceContainer,
           border: Border.all(
-            color: isSelected ? accent : colorScheme.surfaceContainerHigh,
+            color: isSelected ? accent : colorScheme.outlineVariant.withValues(alpha: 0.5),
           ),
           child: Row(
             children: [

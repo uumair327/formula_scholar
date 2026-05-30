@@ -1329,7 +1329,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get myBookmarks => 'My Bookmarks';
 
   @override
-  String get studyPlannerSubtitle => 'Organize your study schedule';
+  String get studyPlannerSubtitle => 'Plan and track your study sessions';
 
   @override
   String get appearance => 'Appearance';
@@ -1375,4 +1375,48 @@ class AppLocalizationsUr extends AppLocalizations {
 
   @override
   String get startNowLabel => 'Start Now';
+
+  @override
+  String get onboardingNeedHelp => 'Need Help?';
+
+  @override
+  String get onboardingBoardSubtitle =>
+      'Personalize your journey by selecting your academic board. We\'ll tailor your formulas and practice sets to your specific curriculum.';
+
+  @override
+  String get onboardingSelectBoard => 'Select Board';
+
+  @override
+  String get onboardingBoardChangeHint =>
+      'Selected board can be changed later in Profile.';
+
+  @override
+  String get onboardingBoardSelected => 'BOARD SELECTED';
+
+  @override
+  String get onboardingJourneyProgress => 'Journey Progress';
+
+  @override
+  String get onboardingGradeSubtitle =>
+      'We\'ll customize your FormulaFlow experience based on your current curriculum.';
+
+  @override
+  String get onboardingMostPopular => 'MOST POPULAR';
+
+  @override
+  String get onboardingGradeChangeHint =>
+      'You can always change your grade in Profile settings later.';
+
+  @override
+  String get circlesAndAreas => 'Circles & Areas';
+
+  @override
+  String get geometryBasics => 'GEOMETRY BASICS';
+
+  @override
+  String get areaOfCircleQuestion =>
+      'Which of the following formulas correctly represents the area of a circle with radius r?';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
 }

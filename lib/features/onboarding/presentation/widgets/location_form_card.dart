@@ -31,9 +31,13 @@ class LocationFormCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppDimensions.paddingXXL),
       decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLowest,
+        color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-        boxShadow: const [AppShadows.ghost],
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+          width: AppDimensions.borderWidth,
+        ),
+        boxShadow: const [AppShadows.subtle],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,24 +127,28 @@ class LocationFormCard extends StatelessWidget {
                 child: AnimatedContainer(
                   duration: AppDurations.animationFast,
                   padding: const EdgeInsets.symmetric(
-                    horizontal: AppDimensions.paddingMD,
-                    vertical: AppDimensions.paddingXS,
+                    horizontal: AppDimensions.paddingLG,
+                    vertical: AppDimensions.paddingSM,
                   ),
                   decoration: BoxDecoration(
                     color: isActive
                         ? AppColors.secondaryContainer
-                        : colorScheme.surfaceContainer,
+                        : colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(
                       AppDimensions.radiusXXL,
+                    ),
+                    border: Border.all(
+                      color: isActive ? AppColors.secondary : colorScheme.outlineVariant,
+                      width: AppDimensions.borderWidth,
                     ),
                   ),
                   child: Text(
                     state,
-                    style: AppTextStyles.labelMedium.copyWith(
+                    style: AppTextStyles.labelLarge.copyWith(
                       color: isActive
                           ? AppColors.onSecondaryContainer
-                          : colorScheme.onSurfaceVariant,
-                      fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+                          : colorScheme.onSurface,
+                      fontWeight: isActive ? FontWeight.w700 : FontWeight.w600,
                     ),
                   ),
                 ),

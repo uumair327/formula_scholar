@@ -19,7 +19,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String dashboardHeroDescription(Object progress) {
-    return 'Continue your journey through Physics. You\'re $progress% through the current chapter.';
+    return 'Continue your journey through Physics. You\'re 65% through the current chapter.';
   }
 
   @override
@@ -47,7 +47,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchLabel => 'Search';
 
   @override
-  String get searchFormulas => 'Search Formulas';
+  String get searchFormulas => 'Search formulas';
 
   @override
   String get searchFormulasTitle => 'Search formulas';
@@ -257,7 +257,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginStudentPortal => 'STUDENT PORTAL';
 
   @override
-  String get loginBrandTagline => 'Master every\nformula with\nease.';
+  String get loginBrandTagline => 'Master every\\nformula with\\nease.';
 
   @override
   String get loginBrandDesc =>
@@ -368,29 +368,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get plusPointsTemplate => '+10 Points';
 
   @override
-  String get correct => 'Correct';
+  String get correct => 'Correct!';
 
   @override
-  String get masteryLevelIncreasing => 'Mastery Level Increasing';
+  String get masteryLevelIncreasing => 'Mastery level increasing';
 
   @override
-  String get wrongAnswer => 'Wrong Answer';
+  String get wrongAnswer => 'Incorrect';
 
   @override
-  String get tryNextTime => 'Try Next Time';
+  String get tryNextTime => 'Review and try again next time';
 
   @override
-  String get somethingWentWrong => 'Something Went Wrong';
+  String get somethingWentWrong => 'Something went wrong';
 
   @override
-  String get failedToLoadProfile => 'Failed To Load Profile';
+  String get failedToLoadProfile => 'Failed to load profile';
 
   @override
-  String get failedToUpdateProfile => 'Failed To Update Profile';
+  String get failedToUpdateProfile => 'Failed to update profile';
 
   @override
   String get dashboardCurriculumOptionsLoadFailed =>
-      'Failed to load curriculum options';
+      'Unable to load boards and classes right now.';
 
   @override
   String get chaptersFormulasLoadFailed => 'Failed to load formulas';
@@ -407,16 +407,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dashboardCurriculumRequired =>
-      'Select your curriculum to continue';
+      'Select your board and grade to unlock your dashboard.';
 
   @override
-  String get failedToLoadDashboard => 'Failed To Load Dashboard';
+  String get failedToLoadDashboard => 'Failed to load dashboard';
 
   @override
   String get retry => 'Retry';
 
   @override
-  String get comingSoon => 'Coming Soon';
+  String get comingSoon => 'COMING SOON';
 
   @override
   String get comingSoonChip1 => 'In Development';
@@ -431,26 +431,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gotIt => 'Got It';
 
   @override
-  String get legalFooterTitle => 'Safe, private, and reliable';
+  String get legalFooterTitle => 'Your Privacy & Security Matter to Us';
 
   @override
   String get legalFooterDesc =>
       'We prioritize your privacy and security — your data stays private.';
 
   @override
-  String get legalEffectiveDate => 'Effective: Jan 1, 2026';
+  String get legalEffectiveDate => 'Effective: April 2026';
 
   @override
-  String get selectSubjectTitle => 'Select a subject';
+  String get selectSubjectTitle => 'Select a Subject';
 
   @override
-  String get selectSubjectDesc => 'Choose a subject to continue';
+  String get selectSubjectDesc =>
+      'Tap on a subject from the Home tab to start exploring chapters and formulas.';
 
   @override
-  String get selectSubjectFirst => 'Select a subject first';
+  String get selectSubjectFirst => 'Please select a subject first';
 
   @override
-  String get breadcrumbHome => 'Home';
+  String get breadcrumbHome => 'HOME';
 
   @override
   String get viewProfile => 'View Profile';
@@ -468,7 +469,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get studyAsFlashcards => 'Study As Flashcards';
 
   @override
-  String get searchChaptersHint => 'Search chapters';
+  String get searchChaptersHint => 'Search chapters...';
 
   @override
   String get toggleSortDirection => 'Toggle Sort Direction';
@@ -486,7 +487,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get startNow => 'Start Now';
 
   @override
-  String get formulasLabel => 'formulas';
+  String get formulasLabel => 'FORMULAS';
 
   @override
   String get removeBookmark => 'Remove Bookmark';
@@ -508,62 +509,65 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get nearlyThere => 'Nearly There';
+  String get nearlyThere => 'Nearly there!';
 
   @override
-  String get keepGoing => 'Keep Going';
+  String get keepGoing => 'Keep going!';
 
   @override
-  String get justStarted => 'Just Started';
+  String get justStarted => 'Just getting started';
 
   @override
-  String get locked => 'Locked';
+  String get locked => 'LOCKED';
 
   @override
-  String get step1StateHint => 'State or region';
+  String get step1StateHint => 'Search state (e.g. Maharashtra)';
 
   @override
-  String get step1LocalizedTitle => 'Localized content';
+  String get step1LocalizedTitle => 'Localized Content';
 
   @override
-  String get step1LocalizedDesc => 'Content localized for your region';
+  String get step1LocalizedDesc =>
+      'We automatically sync with CBSE, ICSE, and various State Board syllabi based on your choice.';
 
   @override
-  String get step1PrivacyTitle => 'Privacy';
+  String get step1PrivacyTitle => 'Privacy Guaranteed';
 
   @override
-  String get step1PrivacyDesc => 'Privacy details';
+  String get step1PrivacyDesc =>
+      'Your location is only used to personalize your curriculum roadmap.';
 
   @override
-  String get step2Tag => 'Step 2';
+  String get step2Tag => 'Curriculum Selection';
 
   @override
-  String get step2Title => 'Step 2';
+  String get step2Title => 'Select Your Curriculum';
 
   @override
-  String get step2NotSureTitle => 'Not sure?';
+  String get step2NotSureTitle => 'Not sure about your board?';
 
   @override
   String get step2NotSureDesc =>
-      'If you\'re not sure, select the recommended option.';
+      'Check your school ID card or textbook covers for the official board affiliation.';
 
   @override
   String get step2LearnMore => 'Learn more';
 
   @override
-  String get step1Continue => 'Continue';
+  String get step1Continue => 'Continue to Step 2';
 
   @override
-  String get step1Tag => 'Step 1';
+  String get step1Tag => 'Location Preference';
 
   @override
-  String get step1Title => 'Step 1';
+  String get step1Title => 'Where are you studying?';
 
   @override
-  String get step1Subtitle => 'Tell us where you\'re studying';
+  String get step1Subtitle =>
+      'We\'ll tailor your formulas and curriculum based on your region\'s educational standards.';
 
   @override
-  String get flashcardFlip => 'Flip';
+  String get flashcardFlip => 'Tap to flip';
 
   @override
   String get flashcardAgain => 'Again';
@@ -578,16 +582,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get flashcardEasy => 'Easy';
 
   @override
-  String get appVersion => 'Version';
+  String get appVersion => 'Version 1.0.0 (Beta)';
 
   @override
-  String get madeWithLove => 'Made With Love';
+  String get madeWithLove => 'Made with ❤️ for scholars';
 
   @override
   String get deleteAccountFailed => 'Failed to delete account';
 
   @override
-  String get deleteAccountTitle => 'Delete account';
+  String get deleteAccountTitle => 'Delete Account';
 
   @override
   String get deleteAccountConfirmation =>
@@ -597,16 +601,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancelLabel => 'Cancel';
 
   @override
-  String get deleteAccountButton => 'Delete';
+  String get deleteAccountButton => 'Delete Permanently';
 
   @override
-  String get dashboardLive => 'Live';
+  String get dashboardLive => 'LIVE';
 
   @override
   String get startQuiz => 'Start Quiz';
 
   @override
-  String get welcomeScholar => 'Welcome Scholar';
+  String get welcomeScholar => 'Welcome, Scholar';
 
   @override
   String get myProgress => 'My Progress';
@@ -621,14 +625,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get formulasTitle => 'Formulas';
 
   @override
-  String get chaptersNoContentTitle => 'No chapters';
+  String get chaptersNoContentTitle => 'No chapters available yet';
 
   @override
   String get chaptersNoContentDescription =>
-      'No content available in this subject';
+      'This subject has not been populated with chapters yet. Try another subject or check back after the backend sync finishes.';
 
   @override
-  String get chaptersBrowseSubjects => 'Browse subjects';
+  String get chaptersBrowseSubjects => 'Browse Subjects';
 
   @override
   String get printLabel => 'Print';
@@ -652,25 +656,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get autoRotateStart => 'Start auto-rotate';
 
   @override
-  String get practiceQuestionLabel => 'Question';
+  String get practiceQuestionLabel => 'QUESTION';
 
   @override
   String get ofLabel => 'of';
 
   @override
-  String get quizCompleteTitle => 'Quiz complete';
+  String get quizCompleteTitle => 'Quiz Complete!';
 
   @override
-  String get quizCompleteDesc => 'You completed the quiz';
+  String get quizCompleteDesc => 'Great effort! Review your results below.';
 
   @override
   String get playAgain => 'Play Again';
 
   @override
-  String get retryIncorrect => 'Retry incorrect questions';
+  String get retryIncorrect => 'Retry Incorrect';
 
   @override
-  String get backToDashboard => 'Back To Dashboard';
+  String get backToDashboard => 'Back to Dashboard';
 
   @override
   String get savedChapters => 'Saved Chapters';
@@ -694,13 +698,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noteTitleHint => 'Note title';
 
   @override
-  String get noteHint => 'Write your note here';
+  String get noteHint => 'Write your note here...';
 
   @override
-  String get genericError => 'Something went wrong';
+  String get genericError => 'Something went wrong. Please try again.';
 
   @override
-  String get unknownCurriculum => 'Unknown Curriculum';
+  String get unknownCurriculum => 'unknown_curriculum';
 
   @override
   String get creating => 'Creating...';
@@ -712,7 +716,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get masteryTools => 'Mastery Tools';
 
   @override
-  String get masteryToolsSyncing => 'Syncing mastery tools...';
+  String get masteryToolsSyncing =>
+      'Mastery tools are syncing from backend. Please try again in a moment.';
 
   @override
   String get videoLessons => 'Video Lessons';
@@ -721,7 +726,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cheatSheets => 'Cheat Sheets';
 
   @override
-  String get academicInfo => 'Academic Info';
+  String get academicInfo => 'Academic Information';
 
   @override
   String get accountActions => 'Account Actions';
@@ -733,13 +738,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accountType => 'Account Type';
 
   @override
-  String get achievementNotifications => 'Achievement Notifications';
+  String get achievementNotifications => 'Achievements';
 
   @override
-  String get achievements => 'Achievements';
+  String get achievements => 'Milestone Alerts';
 
   @override
-  String get achievementsDesc => 'Achievements Desc';
+  String get achievementsDesc => 'When you hit learning milestones';
 
   @override
   String get allSubjects => 'All Subjects';
@@ -751,7 +756,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get changePassword => 'Change Password';
 
   @override
-  String get chatWithUs => 'Chat With Us';
+  String get chatWithUs => 'Chat';
 
   @override
   String get closeLabel => 'Close Label';
@@ -766,7 +771,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dailyChallenge => 'Daily Challenge';
 
   @override
-  String get dailyChallengeDesc => 'Daily Challenge Desc';
+  String get dailyChallengeDesc => 'Test your knowledge with 5 quick formulas.';
 
   @override
   String get dashboardAcademicViewAll => 'View All';
@@ -777,32 +782,33 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get dashboardAcademicPath => 'Dashboard Academic Path';
+  String get dashboardAcademicPath => 'Academic Path';
 
   @override
   String get dashboardAvailableBoards => 'Boards for your region';
 
   @override
-  String get dashboardNoBoardsAvailable => 'No boards available';
+  String get dashboardNoBoardsAvailable =>
+      'No boards available for your region.';
 
   @override
-  String get dashboardAvailableClasses => 'Classes for your board';
+  String get dashboardAvailableClasses => 'Classes for selected board';
 
   @override
-  String get dashboardNoClassesAvailable => 'No classes available';
+  String get dashboardNoClassesAvailable =>
+      'No classes available for this board.';
 
   @override
-  String get dashboardActiveCurriculum => 'Dashboard Active Curriculum';
+  String get dashboardActiveCurriculum => 'ACTIVE CURRICULUM';
 
   @override
-  String get dashboardCurriculumPending => 'Dashboard Curriculum Pending';
+  String get dashboardCurriculumPending => 'Syncing your board and grade...';
 
   @override
-  String get dashboardFormulaVault => 'Dashboard Formula Vault';
+  String get dashboardFormulaVault => 'My Formula Vault';
 
   @override
-  String get dashboardRetryCurriculumOptions =>
-      'Dashboard Retry Curriculum Options';
+  String get dashboardRetryCurriculumOptions => 'Retry board/class options';
 
   @override
   String get deleteAccount => 'Delete Account';
@@ -823,76 +829,83 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editProfile => 'Edit Profile';
 
   @override
-  String get editProfileSubtitle => 'Edit Profile Subtitle';
+  String get editProfileSubtitle =>
+      'Update your display name and avatar from one place.';
 
   @override
-  String get editProfileTitle => 'Edit Profile Title';
+  String get editProfileTitle => 'Edit Profile';
 
   @override
   String get emailAddress => 'Email Address';
 
   @override
-  String get emailNotificationsDesc => 'Email Notifications Desc';
+  String get emailNotificationsDesc => 'Receive updates via email';
 
   @override
-  String get emailNotificationsLabel => 'Email Notifications Label';
+  String get emailNotificationsLabel => 'Email Notifications';
 
   @override
-  String get emailUs => 'Email Us';
+  String get emailUs => 'Email';
 
   @override
   String get emptyBookmarksDesc => 'Empty Bookmarks Desc';
 
   @override
-  String get encouragementMessage => 'Encouragement Message';
+  String get encouragementMessage =>
+      'You\'re in the top 5% of 9th graders this week. Keep flowing!';
 
   @override
   String get exploreTools => 'Explore Tools';
 
   @override
-  String get faq1Answer => 'Faq1 Answer';
+  String get faq1Answer =>
+      'Go to Profile → Account Information to update your grade. Your curriculum will automatically adjust to match.';
 
   @override
-  String get faq1Question => 'Faq1 Question';
+  String get faq1Question => 'How do I change my grade?';
 
   @override
-  String get faq2Answer => 'Faq2 Answer';
+  String get faq2Answer =>
+      'Yes! Previously viewed formulas and chapters are cached for offline access. Bookmarks are always available offline.';
 
   @override
-  String get faq2Question => 'Faq2 Question';
+  String get faq2Question => 'Can I use the app offline?';
 
   @override
-  String get faq3Answer => 'Faq3 Answer';
+  String get faq3Answer =>
+      'Your streak counts consecutive days with at least 5 minutes of study time. The counter resets at midnight local time.';
 
   @override
-  String get faq3Question => 'Faq3 Question';
+  String get faq3Question => 'How are streaks calculated?';
 
   @override
-  String get faq4Answer => 'Faq4 Answer';
+  String get faq4Answer =>
+      'Pro unlocks advanced features like 3D visualizers, unlimited practice quizzes, and priority access to new content.';
 
   @override
-  String get faq4Question => 'Faq4 Question';
+  String get faq4Question => 'What is Formula Scholar Pro?';
 
   @override
-  String get faqLabel => 'Faq Label';
+  String get faqLabel => 'FAQ';
 
   @override
   String get featuredAnnouncements => 'Featured Announcements';
 
   @override
-  String get flashcardSessionComplete => 'Flashcard Session Complete';
+  String get flashcardSessionComplete => 'Session Complete!';
 
   @override
-  String get flashcardSessionDesc => 'Flashcard Session Desc';
+  String get flashcardSessionDesc =>
+      'Great work! Keep practicing to master all formulas.';
 
   @override
-  String get flashcardStudy => 'Flashcard Study';
+  String get flashcardStudy => 'Study Mode';
 
   @override
-  String get formulaFlow => 'Formula Flow';
+  String get formulaFlow => 'FormulaFlow';
 
   @override
-  String get freeAccount => 'Free Account';
+  String get freeAccount => 'Free';
 
   @override
   String get frequentlyAsked => 'Frequently Asked';
@@ -904,104 +917,104 @@ class AppLocalizationsEn extends AppLocalizations {
   String get goBack => 'Go Back';
 
   @override
-  String get helpAndSupport => 'Help And Support';
+  String get helpAndSupport => 'Help & Support';
 
   @override
-  String get helpHeroSubtitle => 'Help Hero Subtitle';
+  String get helpHeroSubtitle => 'Browse FAQs or contact our support team.';
 
   @override
-  String get helpHeroTitle => 'Help Hero Title';
+  String get helpHeroTitle => 'How can we help?';
 
   @override
-  String get incorrectLabel => 'Incorrect Label';
+  String get incorrectLabel => 'Incorrect';
 
   @override
-  String get legalAcceptance => 'Legal Acceptance';
+  String get legalAcceptance => 'Acceptance of Terms';
 
   @override
   String get legalAcceptanceContent => 'Legal Acceptance Content';
 
   @override
-  String get legalChanges => 'Legal Changes';
+  String get legalChanges => 'Changes to This Policy';
 
   @override
   String get legalChangesContent => 'Legal Changes Content';
 
   @override
-  String get legalChildrenPrivacy => 'Legal Children Privacy';
+  String get legalChildrenPrivacy => 'Children\'s Privacy';
 
   @override
   String get legalChildrenPrivacyContent => 'Legal Children Privacy Content';
 
   @override
-  String get legalContact => 'Legal Contact';
+  String get legalContact => 'Contact Us';
 
   @override
   String get legalContactContent => 'Legal Contact Content';
 
   @override
-  String get legalDataStorage => 'Legal Data Storage';
+  String get legalDataStorage => 'Data Storage & Security';
 
   @override
   String get legalDataStorageContent => 'Legal Data Storage Content';
 
   @override
-  String get legalDisclaimer => 'Legal Disclaimer';
+  String get legalDisclaimer => 'Disclaimer';
 
   @override
   String get legalDisclaimerContent => 'Legal Disclaimer Content';
 
   @override
-  String get legalGoverningLaw => 'Legal Governing Law';
+  String get legalGoverningLaw => 'Governing Law';
 
   @override
   String get legalGoverningLawContent => 'Legal Governing Law Content';
 
   @override
-  String get legalHowWeUse => 'Legal How We Use';
+  String get legalHowWeUse => 'How We Use Your Information';
 
   @override
   String get legalHowWeUseContent => 'Legal How We Use Content';
 
   @override
-  String get legalInfoWeCollect => 'Legal Info We Collect';
+  String get legalInfoWeCollect => 'Information We Collect';
 
   @override
   String get legalInfoWeCollectContent => 'Legal Info We Collect Content';
 
   @override
-  String get legalIntellectualProperty => 'Legal Intellectual Property';
+  String get legalIntellectualProperty => 'Intellectual Property';
 
   @override
   String get legalIntellectualPropertyContent =>
       'Legal Intellectual Property Content';
 
   @override
-  String get legalTermination => 'Legal Termination';
+  String get legalTermination => 'Termination';
 
   @override
   String get legalTerminationContent => 'Legal Termination Content';
 
   @override
-  String get legalThirdParty => 'Legal Third Party';
+  String get legalThirdParty => 'Third-Party Services';
 
   @override
   String get legalThirdPartyContent => 'Legal Third Party Content';
 
   @override
-  String get legalUseOfService => 'Legal Use Of Service';
+  String get legalUseOfService => 'Use of Service';
 
   @override
   String get legalUseOfServiceContent => 'Legal Use Of Service Content';
 
   @override
-  String get legalUserAccounts => 'Legal User Accounts';
+  String get legalUserAccounts => 'User Accounts';
 
   @override
   String get legalUserAccountsContent => 'Legal User Accounts Content';
 
   @override
-  String get legalYourRights => 'Legal Your Rights';
+  String get legalYourRights => 'Your Rights';
 
   @override
   String get legalYourRightsContent => 'Legal Your Rights Content';
@@ -1010,16 +1023,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newContent => 'New Content';
 
   @override
-  String get newContentDesc => 'New Content Desc';
+  String get newContentDesc => 'When new chapters are available';
 
   @override
   String get nextQuestion => 'Next Question';
 
   @override
-  String get noBookmarksFoundDesc => 'No Bookmarks Found Desc';
+  String get noBookmarksFoundDesc =>
+      'Try a different search term or clear the filter to see all saved formulas and chapters.';
 
   @override
-  String get noBookmarksFoundTitle => 'No Bookmarks Found Title';
+  String get noBookmarksFoundTitle => 'No bookmarks found';
 
   @override
   String get noFormulasLabel => 'No Formulas Label';
@@ -1028,25 +1042,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noSubjectsAvailable => 'No Subjects Available';
 
   @override
-  String get nothingHereYet => 'Nothing Here Yet';
+  String get nothingHereYet => 'Nothing here yet';
 
   @override
   String get notifications => 'Notifications';
 
   @override
-  String get notificationsEnabled => 'Notifications Enabled';
+  String get notificationsEnabled => 'Notifications Active';
 
   @override
   String get notificationsEnabledDesc => 'Notifications Enabled Desc';
 
   @override
-  String get onboardingAppBrand => 'Onboarding App Brand';
+  String get onboardingAppBrand => 'Formula Sanctuary';
 
   @override
-  String get onboardingBack => 'Onboarding Back';
+  String get onboardingBack => 'Back';
 
   @override
-  String get onboardingContinue => 'Onboarding Continue';
+  String get onboardingContinue => 'Continue';
 
   @override
   String onboardingStepOf(int current, int total) {
@@ -1057,31 +1071,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pause => 'Pause';
 
   @override
-  String get personalInfo => 'Personal Info';
+  String get personalInfo => 'Personal Information';
 
   @override
   String get play => 'Play';
 
   @override
-  String get practiceChooseSubject => 'Practice Choose Subject';
+  String get practiceChooseSubject => 'Choose Subject';
 
   @override
-  String get practiceNoQuestionsDesc => 'Practice No Questions Desc';
+  String get practiceNoQuestionsDesc =>
+      'Your current curriculum does not have practice questions available yet. Try again soon or open Chapters to keep learning.';
 
   @override
-  String get practiceNoQuestionsTitle => 'Practice No Questions Title';
+  String get practiceNoQuestionsTitle => 'No practice questions yet';
 
   @override
-  String get practiceReadyDesc => 'Practice Ready Desc';
+  String get practiceReadyDesc =>
+      'Choose a subject and test your knowledge with practice questions.';
 
   @override
-  String get practiceReadyTitle => 'Practice Ready Title';
+  String get practiceReadyTitle => 'Ready to Practice?';
 
   @override
-  String get privacyPolicyDesc => 'Privacy Policy Desc';
+  String get privacyPolicyDesc => 'How we protect your data';
 
   @override
-  String get privacyPolicyTitle => 'Privacy Policy Title';
+  String get privacyPolicyTitle => 'Privacy Policy';
 
   @override
   String get proTip => 'Pro Tip';
@@ -1090,28 +1106,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get proTipContent => 'Pro Tip Content';
 
   @override
-  String get profileAvatarUrlLabel => 'Profile Avatar Url Label';
+  String get profileAvatarUrlLabel => 'Avatar URL';
 
   @override
-  String get profileNameLabel => 'Profile Name Label';
+  String get profileNameLabel => 'Display Name';
 
   @override
-  String get profileNameRequired => 'Profile Name Required';
+  String get profileNameRequired => 'Display name is required';
 
   @override
-  String get profileUpdatedSuccess => 'Profile Updated Success';
+  String get profileUpdatedSuccess => 'Profile updated successfully.';
 
   @override
-  String get pushNotificationsDesc => 'Push Notifications Desc';
+  String get pushNotificationsDesc => 'Receive alerts on your device';
 
   @override
-  String get pushNotificationsLabel => 'Push Notifications Label';
+  String get pushNotificationsLabel => 'Push Notifications';
 
   @override
   String get quickActions => 'Quick Actions';
 
   @override
-  String get readyForMore => 'Ready For More';
+  String get readyForMore => 'Ready for more?';
 
   @override
   String get refreshBookmarks => 'Refresh Bookmarks';
@@ -1132,25 +1148,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings => 'Settings';
 
   @override
-  String get step3Subtitle => 'Step3 Subtitle';
+  String get step3Subtitle =>
+      'Choose your academic year to tailor formulas and practice sets to your curriculum.';
 
   @override
-  String get step3Tag => 'Step3 Tag';
+  String get step3Tag => 'Grade Selection';
 
   @override
-  String get step3Title => 'Step3 Title';
+  String get step3Title => 'Select Your Class';
 
   @override
-  String get step4EnterSanctuary => 'Step4 Enter Sanctuary';
+  String get step4EnterSanctuary => 'Enter Sanctuary';
 
   @override
-  String get step4Subtitle => 'Step4 Subtitle';
+  String get step4Subtitle =>
+      'Consistency is the key to mastery. How much time can you dedicate?';
 
   @override
-  String get step4Tag => 'Step4 Tag';
+  String get step4Tag => 'Commitment';
 
   @override
-  String get step4Title => 'Step4 Title';
+  String get step4Title => 'Set your weekly goal';
 
   @override
   String get streakAlerts => 'Streak Alerts';
@@ -1168,19 +1186,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get studyReminders => 'Study Reminders';
 
   @override
-  String get studyRemindersDesc => 'Study Reminders Desc';
+  String get studyRemindersDesc => 'Daily reminders to keep learning';
 
   @override
-  String get termsOfServiceDesc => 'Terms Of Service Desc';
+  String get termsOfServiceDesc => 'Rules and guidelines for app usage';
 
   @override
-  String get termsOfServiceTitle => 'Terms Of Service Title';
+  String get termsOfServiceTitle => 'Terms of Service';
 
   @override
   String get timedMode => 'Timed Mode';
 
   @override
-  String get timedModeDesc => 'Timed Mode Desc';
+  String get timedModeDesc => 'Set a time limit for this quiz';
 
   @override
   String get toggleDarkMode => 'Toggle Dark Mode';
@@ -1189,16 +1207,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get userGuide => 'User Guide';
 
   @override
-  String get userGuideDesc => 'User Guide Desc';
+  String get userGuideDesc => 'Learn how to use Formula Scholar';
 
   @override
-  String get verifiedAccount => 'Verified Account';
+  String get verifiedAccount => 'VERIFIED';
 
   @override
   String get videoTutorials => 'Video Tutorials';
 
   @override
-  String get videoTutorialsDesc => 'Video Tutorials Desc';
+  String get videoTutorialsDesc => 'Watch step-by-step guides';
 
   @override
   String get viewTopics => 'View Topics';
@@ -1207,76 +1225,81 @@ class AppLocalizationsEn extends AppLocalizations {
   String get weeklyReport => 'Weekly Report';
 
   @override
-  String get weeklyReportDesc => 'Weekly Report Desc';
+  String get weeklyReportDesc => 'Summary of your weekly progress';
 
   @override
   String get dart => 'Dart';
 
   @override
-  String get dashboardSanctuary => 'Dashboard Sanctuary';
+  String get dashboardSanctuary => 'Formula Sanctuary';
 
   @override
-  String get forgotPasswordCancel => 'Forgot Password Cancel';
+  String get forgotPasswordCancel => 'Cancel';
 
   @override
-  String get forgotPasswordDesc => 'Forgot Password Desc';
+  String get forgotPasswordDesc =>
+      'Enter your email address and we\'ll send you a link to reset your password.';
 
   @override
-  String get forgotPasswordSend => 'Forgot Password Send';
+  String get forgotPasswordSend => 'Send Reset Link';
 
   @override
-  String get forgotPasswordSuccess => 'Forgot Password Success';
+  String get forgotPasswordSuccess =>
+      'Password reset link sent! Check your email inbox.';
 
   @override
-  String get forgotPasswordTitle => 'Forgot Password Title';
+  String get forgotPasswordTitle => 'Reset Password';
 
   @override
-  String get signupBrandDesc => 'Signup Brand Desc';
+  String get signupBrandDesc =>
+      'Join a sanctuary designed for focused learning. Transform complex equations into intuitive steps.';
 
   @override
-  String get signupBrandHeadline => 'Signup Brand Headline';
+  String get signupBrandHeadline => 'Master the Flow of Knowledge.';
 
   @override
-  String get signupBrandTitle => 'Signup Brand Title';
+  String get signupBrandTitle => 'Formula Sanctuary';
 
   @override
-  String get signupTestimonial => 'Signup Testimonial';
+  String get signupTestimonial =>
+      '\"The formulas finally make sense. It doesn\'t feel like studying; it feels like exploring.\"';
 
   @override
-  String get signupTestimonialName => 'Signup Testimonial Name';
+  String get signupTestimonialName => 'Ishita Sharma';
 
   @override
-  String get signupTestimonialRole => 'Signup Testimonial Role';
+  String get signupTestimonialRole => 'Class 9 Student';
 
   @override
-  String get step4Casual => 'Step4 Casual';
+  String get step4Casual => 'Casual Learner';
 
   @override
-  String get step4CasualDesc => 'Step4 Casual Desc';
+  String get step4CasualDesc => '15 mins / day';
 
   @override
-  String get step4Intensive => 'Step4 Intensive';
+  String get step4Intensive => 'Intensive Mastery';
 
   @override
-  String get step4IntensiveDesc => 'Step4 Intensive Desc';
+  String get step4IntensiveDesc => '60+ mins / day';
 
   @override
-  String get step4Regular => 'Step4 Regular';
+  String get step4Regular => 'Regular Scholar';
 
   @override
-  String get step4RegularDesc => 'Step4 Regular Desc';
+  String get step4RegularDesc => '30 mins / day';
 
   @override
-  String get validationInvalidEmail => 'Validation Invalid Email';
+  String get validationInvalidEmail => 'Please enter a valid email address';
 
   @override
-  String get validationPasswordMinLength => 'Validation Password Min Length';
+  String get validationPasswordMinLength =>
+      'Password must be at least 6 characters';
 
   @override
-  String get validationPasswordMismatch => 'Validation Password Mismatch';
+  String get validationPasswordMismatch => 'Passwords do not match';
 
   @override
-  String get validationRequired => 'Validation Required';
+  String get validationRequired => 'This field is required';
 
   @override
   String get aboutApp => 'About';
@@ -1330,7 +1353,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get myBookmarks => 'My Bookmarks';
 
   @override
-  String get studyPlannerSubtitle => 'Organize your study schedule';
+  String get studyPlannerSubtitle => 'Plan and track your study sessions';
 
   @override
   String get appearance => 'Appearance';
@@ -1376,4 +1399,48 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get startNowLabel => 'Start Now';
+
+  @override
+  String get onboardingNeedHelp => 'Need Help?';
+
+  @override
+  String get onboardingBoardSubtitle =>
+      'Personalize your journey by selecting your academic board. We\'ll tailor your formulas and practice sets to your specific curriculum.';
+
+  @override
+  String get onboardingSelectBoard => 'Select Board';
+
+  @override
+  String get onboardingBoardChangeHint =>
+      'Selected board can be changed later in Profile.';
+
+  @override
+  String get onboardingBoardSelected => 'BOARD SELECTED';
+
+  @override
+  String get onboardingJourneyProgress => 'Journey Progress';
+
+  @override
+  String get onboardingGradeSubtitle =>
+      'We\'ll customize your FormulaFlow experience based on your current curriculum.';
+
+  @override
+  String get onboardingMostPopular => 'MOST POPULAR';
+
+  @override
+  String get onboardingGradeChangeHint =>
+      'You can always change your grade in Profile settings later.';
+
+  @override
+  String get circlesAndAreas => 'Circles & Areas';
+
+  @override
+  String get geometryBasics => 'GEOMETRY BASICS';
+
+  @override
+  String get areaOfCircleQuestion =>
+      'Which of the following formulas correctly represents the area of a circle with radius r?';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
 }
