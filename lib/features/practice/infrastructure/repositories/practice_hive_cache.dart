@@ -10,20 +10,19 @@ class PracticeHiveCache implements PracticeCachePort {
 
   Future<Box<dynamic>> _box() => Hive.openBox<dynamic>(_boxName);
 
-  String _key(String boardId, String gradeId, String? subjectId) =>
-      'practice_${boardId}_${gradeId}_${subjectId ?? '_all'}';
+  String _key(String curriculumKey, String? subjectId) =>
+      'practice_${curriculumKey}_${subjectId ?? '_all'}';
 
   @override
   Future<void> cacheQuestions(
-    String boardId,
-    String gradeId,
+    String curriculumKey,
     String? subjectId,
     String? categoryId,
     List<QuizQuestion> questions,
   ) async {
     final box = await _box();
     await box.put(
-      _key(boardId, gradeId, subjectId),
+      _key(curriculumKey, subjectId),
       questions
           .map(
             (q) => {
@@ -45,13 +44,12 @@ class PracticeHiveCache implements PracticeCachePort {
 
   @override
   Future<List<QuizQuestion>> getQuestions(
-    String boardId,
-    String gradeId,
+    String curriculumKey,
     String? subjectId,
     String? categoryId,
   ) async {
     final box = await _box();
-    final cached = box.get(_key(boardId, gradeId, subjectId)) as List<dynamic>?;
+    final cached = box.get(_key(curriculumKey, subjectId)) as List<dynamic>?;
     if (cached == null) {
       return const [];
     }

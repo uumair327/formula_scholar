@@ -73,6 +73,7 @@ class PracticeEmptyState extends StatelessWidget {
                                     .curriculum;
                                 if (curr != null) {
                                   context.read<PracticeCubit>().loadQuestions(
+                                    curriculumKey: curr.curriculumKey,
                                     boardId: curr.boardId,
                                     gradeId: curr.gradeId,
                                   );

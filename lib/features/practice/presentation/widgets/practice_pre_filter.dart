@@ -105,10 +105,12 @@ class PracticePreFilter extends StatelessWidget {
     CurriculumState curriculumState,
     String? subjectId,
   ) {
-    if (!curriculumState.hasSelection) return;
+    final curriculum = curriculumState.curriculum;
+    if (curriculum == null) return;
     context.read<PracticeCubit>().loadQuestions(
-      boardId: curriculumState.boardId!,
-      gradeId: curriculumState.gradeId!,
+      curriculumKey: curriculum.curriculumKey,
+      boardId: curriculum.boardId,
+      gradeId: curriculum.gradeId,
       subjectId: subjectId,
       timedMode: isTimed,
       durationSeconds: timedDuration,

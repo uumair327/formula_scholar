@@ -19,25 +19,22 @@ class PracticeRepositoryImpl implements PracticeRepositoryPort {
 
   @override
   Future<Result<List<QuizQuestion>>> getQuestions({
-    required String boardId,
-    required String gradeId,
+    required String curriculumKey,
     String? subjectId,
     String? categoryId,
   }) {
     return safeOperation(
       tag: AppLogTags.practiceRepo,
       operation:
-          'getQuestions(board=$boardId, grade=$gradeId, subject=$subjectId)',
+          'getQuestions(curriculumKey=$curriculumKey, subject=$subjectId)',
       execute: () async {
         final result = await _dataSource.getQuestions(
-          boardId: boardId,
-          gradeId: gradeId,
+          curriculumKey: curriculumKey,
           subjectId: subjectId,
           categoryId: categoryId,
         );
         await _cache.cacheQuestions(
-          boardId,
-          gradeId,
+          curriculumKey,
           subjectId,
           categoryId,
           result,
@@ -46,8 +43,7 @@ class PracticeRepositoryImpl implements PracticeRepositoryPort {
       },
       fallback: () async {
         final cached = await _cache.getQuestions(
-          boardId,
-          gradeId,
+          curriculumKey,
           subjectId,
           categoryId,
         );
@@ -58,18 +54,16 @@ class PracticeRepositoryImpl implements PracticeRepositoryPort {
 
   @override
   Future<Result<void>> recordQuizCompletion({
-    required String boardId,
-    required String gradeId,
+    required String curriculumKey,
     required int earnedPoints,
     required int answeredQuestions,
   }) {
     return safeOperation(
       tag: AppLogTags.practiceRepo,
       operation:
-          'recordQuizCompletion(board=$boardId, grade=$gradeId, points=$earnedPoints)',
+          'recordQuizCompletion(curriculumKey=$curriculumKey, points=$earnedPoints)',
       execute: () => _dataSource.recordQuizCompletion(
-        boardId: boardId,
-        gradeId: gradeId,
+        curriculumKey: curriculumKey,
         earnedPoints: earnedPoints,
         answeredQuestions: answeredQuestions,
       ),

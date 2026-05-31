@@ -11,16 +11,14 @@ void main() {
       final useCase = RecordQuizCompletionUseCase(repository: repository);
 
       final result = await useCase(
-        boardId: 'cbse',
-        gradeId: 'class_9',
+        curriculumKey: 'cbse_class_9',
         earnedPoints: 30,
         answeredQuestions: 3,
       );
 
       expect(result, isA<Success<void>>());
       expect(repository.recordCallCount, 1);
-      expect(repository.lastBoardId, 'cbse');
-      expect(repository.lastGradeId, 'class_9');
+      expect(repository.lastCurriculumKey, 'cbse_class_9');
       expect(repository.lastEarnedPoints, 30);
       expect(repository.lastAnsweredQuestions, 3);
     });
@@ -33,8 +31,7 @@ void main() {
       final useCase = RecordQuizCompletionUseCase(repository: repository);
 
       final result = await useCase(
-        boardId: 'cbse',
-        gradeId: 'class_9',
+        curriculumKey: 'cbse_class_9',
         earnedPoints: 10,
         answeredQuestions: 1,
       );
@@ -46,8 +43,7 @@ void main() {
 
 class _FakePracticeRepository implements PracticeRepositoryPort {
   int recordCallCount = 0;
-  String? lastBoardId;
-  String? lastGradeId;
+  String? lastCurriculumKey;
   int? lastEarnedPoints;
   int? lastAnsweredQuestions;
 
@@ -55,8 +51,7 @@ class _FakePracticeRepository implements PracticeRepositoryPort {
 
   @override
   Future<Result<List<QuizQuestion>>> getQuestions({
-    required String boardId,
-    required String gradeId,
+    required String curriculumKey,
     String? subjectId,
     String? categoryId,
   }) async {
@@ -65,14 +60,12 @@ class _FakePracticeRepository implements PracticeRepositoryPort {
 
   @override
   Future<Result<void>> recordQuizCompletion({
-    required String boardId,
-    required String gradeId,
+    required String curriculumKey,
     required int earnedPoints,
     required int answeredQuestions,
   }) async {
     recordCallCount += 1;
-    lastBoardId = boardId;
-    lastGradeId = gradeId;
+    lastCurriculumKey = curriculumKey;
     lastEarnedPoints = earnedPoints;
     lastAnsweredQuestions = answeredQuestions;
     return recordResult;

@@ -8,8 +8,7 @@ import '../entities/quiz_question.dart';
 abstract interface class PracticeCachePort {
   /// Persists quiz questions for a specific board/grade into local cache.
   Future<void> cacheQuestions(
-    String boardId,
-    String gradeId,
+    String curriculumKey,
     String? subjectId,
     String? categoryId,
     List<QuizQuestion> questions,
@@ -17,8 +16,7 @@ abstract interface class PracticeCachePort {
 
   /// Retrieves cached quiz questions for a board/grade. Returns empty list if none.
   Future<List<QuizQuestion>> getQuestions(
-    String boardId,
-    String gradeId,
+    String curriculumKey,
     String? subjectId,
     String? categoryId,
   );

@@ -6,15 +6,13 @@ import '../entities/quiz_result.dart';
 /// Port: Defines the contract for practice quiz data access.
 abstract interface class PracticeRepositoryPort {
   Future<Result<List<QuizQuestion>>> getQuestions({
-    required String boardId,
-    required String gradeId,
+    required String curriculumKey,
     String? subjectId,
     String? categoryId,
   });
 
   Future<Result<void>> recordQuizCompletion({
-    required String boardId,
-    required String gradeId,
+    required String curriculumKey,
     required int earnedPoints,
     required int answeredQuestions,
   });

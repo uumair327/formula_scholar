@@ -16,16 +16,14 @@ void main() {
 
     test('forwards quiz completion payload to data source', () async {
       final result = await repository.recordQuizCompletion(
-        boardId: 'cbse',
-        gradeId: 'class_9',
+        curriculumKey: 'cbse_class_9',
         earnedPoints: 20,
         answeredQuestions: 2,
       );
 
       expect(result, isA<Success<void>>());
       expect(dataSource.recordCallCount, 1);
-      expect(dataSource.lastBoardId, 'cbse');
-      expect(dataSource.lastGradeId, 'class_9');
+      expect(dataSource.lastCurriculumKey, 'cbse_class_9');
       expect(dataSource.lastEarnedPoints, 20);
       expect(dataSource.lastAnsweredQuestions, 2);
     });
@@ -34,15 +32,13 @@ void main() {
 
 class _FakePracticeDataSource implements PracticeDataSourcePort {
   int recordCallCount = 0;
-  String? lastBoardId;
-  String? lastGradeId;
+  String? lastCurriculumKey;
   int? lastEarnedPoints;
   int? lastAnsweredQuestions;
 
   @override
   Future<List<QuizQuestion>> getQuestions({
-    required String boardId,
-    required String gradeId,
+    required String curriculumKey,
     String? subjectId,
     String? categoryId,
   }) async {
@@ -51,14 +47,12 @@ class _FakePracticeDataSource implements PracticeDataSourcePort {
 
   @override
   Future<void> recordQuizCompletion({
-    required String boardId,
-    required String gradeId,
+    required String curriculumKey,
     required int earnedPoints,
     required int answeredQuestions,
   }) async {
     recordCallCount += 1;
-    lastBoardId = boardId;
-    lastGradeId = gradeId;
+    lastCurriculumKey = curriculumKey;
     lastEarnedPoints = earnedPoints;
     lastAnsweredQuestions = answeredQuestions;
   }
@@ -83,8 +77,7 @@ class _FakePracticeDataSource implements PracticeDataSourcePort {
 class _FakePracticeCache implements PracticeCachePort {
   @override
   Future<void> cacheQuestions(
-    String boardId,
-    String gradeId,
+    String curriculumKey,
     String? subjectId,
     String? categoryId,
     List<QuizQuestion> questions,
@@ -92,8 +85,7 @@ class _FakePracticeCache implements PracticeCachePort {
 
   @override
   Future<List<QuizQuestion>> getQuestions(
-    String boardId,
-    String gradeId,
+    String curriculumKey,
     String? subjectId,
     String? categoryId,
   ) async {

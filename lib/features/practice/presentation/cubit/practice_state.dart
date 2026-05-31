@@ -19,6 +19,7 @@ class PracticeState extends Equatable {
     this.showResult = false,
     this.totalPoints = 0,
     this.errorMessage,
+    this.curriculumKey,
     this.boardId,
     this.gradeId,
     this.subjectId,
@@ -40,6 +41,7 @@ class PracticeState extends Equatable {
   final bool showResult;
   final int totalPoints;
   final String? errorMessage;
+  final String? curriculumKey;
   final String? boardId;
   final String? gradeId;
   final String? subjectId;
@@ -122,6 +124,7 @@ class PracticeState extends Equatable {
     bool? showResult,
     int? totalPoints,
     Object? errorMessage = _unset,
+    String? curriculumKey,
     String? boardId,
     String? gradeId,
     String? subjectId,
@@ -148,6 +151,7 @@ class PracticeState extends Equatable {
       errorMessage: identical(errorMessage, _unset)
           ? this.errorMessage
           : errorMessage as String?,
+      curriculumKey: curriculumKey ?? this.curriculumKey,
       boardId: boardId ?? this.boardId,
       gradeId: gradeId ?? this.gradeId,
       subjectId: subjectId ?? this.subjectId,
@@ -178,6 +182,7 @@ class PracticeState extends Equatable {
     showResult,
     totalPoints,
     errorMessage,
+    curriculumKey,
     boardId,
     gradeId,
     subjectId,

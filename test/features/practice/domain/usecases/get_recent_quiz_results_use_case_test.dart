@@ -68,8 +68,7 @@ class _FakePracticeRepository implements PracticeRepositoryPort {
 
   @override
   Future<Result<List<QuizQuestion>>> getQuestions({
-    required String boardId,
-    required String gradeId,
+    required String curriculumKey,
     String? subjectId,
     String? categoryId,
   }) async {
@@ -78,8 +77,7 @@ class _FakePracticeRepository implements PracticeRepositoryPort {
 
   @override
   Future<Result<void>> recordQuizCompletion({
-    required String boardId,
-    required String gradeId,
+    required String curriculumKey,
     required int earnedPoints,
     required int answeredQuestions,
   }) async {

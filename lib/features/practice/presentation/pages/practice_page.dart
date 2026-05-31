@@ -36,7 +36,7 @@ class _PracticePageState extends State<PracticePage> {
         final curr = state.curriculum;
         if (curr != null) {
           context.read<PracticeCubit>().loadSubjects(curr.boardId, curr.gradeId);
-          context.read<PracticeCubit>().resetQuizWithCurriculum(curr.boardId, curr.gradeId);
+          context.read<PracticeCubit>().resetQuizWithCurriculum(curr.curriculumKey, curr.boardId, curr.gradeId);
         }
       },
       child: BlocBuilder<AuthCubit, AuthState>(
@@ -75,6 +75,7 @@ class _PracticePageState extends State<PracticePage> {
                             .curriculum;
                         if (curr != null) {
                           context.read<PracticeCubit>().loadQuestions(
+                            curriculumKey: curr.curriculumKey,
                             boardId: curr.boardId,
                             gradeId: curr.gradeId,
                           );

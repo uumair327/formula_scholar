@@ -14,20 +14,18 @@ class RecordQuizCompletionUseCase {
   final PracticeRepositoryPort _repository;
 
   Future<Result<void>> call({
-    required String boardId,
-    required String gradeId,
+    required String curriculumKey,
     required int earnedPoints,
     required int answeredQuestions,
     List<QuizAnswerRecord> answerRecords = const [],
   }) async {
     AppLogger.trace(
-      'RecordQuizCompletionUseCase called (board=$boardId, grade=$gradeId, points=$earnedPoints)',
+      'RecordQuizCompletionUseCase called (curriculumKey=$curriculumKey, points=$earnedPoints)',
       tag: AppLogTags.practiceUseCase,
     );
 
     final completionResult = await _repository.recordQuizCompletion(
-      boardId: boardId,
-      gradeId: gradeId,
+      curriculumKey: curriculumKey,
       earnedPoints: earnedPoints,
       answeredQuestions: answeredQuestions,
     );

@@ -73,6 +73,7 @@ class PracticeQuizScreen extends StatelessWidget {
                               .curriculum;
                           if (curr != null) {
                             await context.read<PracticeCubit>().loadQuestions(
+                              curriculumKey: curr.curriculumKey,
                               boardId: curr.boardId,
                               gradeId: curr.gradeId,
                               subjectId: state.subjectId,

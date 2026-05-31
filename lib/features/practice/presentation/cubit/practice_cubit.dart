@@ -82,6 +82,7 @@ class PracticeCubit extends Cubit<PracticeState>
   }
 
   Future<void> loadQuestions({
+    required String curriculumKey,
     required String boardId,
     required String gradeId,
     String? subjectId,
@@ -94,6 +95,7 @@ class PracticeCubit extends Cubit<PracticeState>
     emit(
       state.copyWith(
         status: PracticeStatus.loading,
+        curriculumKey: curriculumKey,
         boardId: boardId,
         gradeId: gradeId,
         subjectId: subjectId,
@@ -110,8 +112,7 @@ class PracticeCubit extends Cubit<PracticeState>
     final categoryId = subject?.category;
 
     final result = await _getQuestions(
-      boardId: boardId,
-      gradeId: gradeId,
+      curriculumKey: curriculumKey,
       subjectId: subjectId,
       categoryId: categoryId,
     );
@@ -250,15 +251,15 @@ class PracticeCubit extends Cubit<PracticeState>
   }
 
   Future<void> _persistQuiz() async {
+    final curriculumKey = state.curriculumKey;
     final boardId = state.boardId;
     final gradeId = state.gradeId;
-    if (boardId == null || gradeId == null) {
+    if (curriculumKey == null || boardId == null || gradeId == null) {
       return;
     }
 
     await _recordQuizCompletion(
-      boardId: boardId,
-      gradeId: gradeId,
+      curriculumKey: curriculumKey,
       earnedPoints: state.totalPoints,
       answeredQuestions: state.totalQuestions,
       answerRecords: List.of(state.answerRecords),
@@ -306,12 +307,14 @@ class PracticeCubit extends Cubit<PracticeState>
     if (ids.isEmpty) {
       return;
     }
+    final curriculumKey = state.curriculumKey;
     final boardId = state.boardId;
     final gradeId = state.gradeId;
-    if (boardId == null || gradeId == null) {
+    if (curriculumKey == null || boardId == null || gradeId == null) {
       return;
     }
     loadQuestions(
+      curriculumKey: curriculumKey,
       boardId: boardId,
       gradeId: gradeId,
       subjectId: state.subjectId,
@@ -321,6 +324,7 @@ class PracticeCubit extends Cubit<PracticeState>
 
   void resetQuiz() {
     _timer?.cancel();
+    final cKey = state.curriculumKey;
     final bId = state.boardId;
     final gId = state.gradeId;
 
@@ -330,6 +334,7 @@ class PracticeCubit extends Cubit<PracticeState>
     emit(
       state.copyWith(
         status: PracticeStatus.initial,
+        curriculumKey: cKey,
         boardId: bId,
         gradeId: gId,
         subjectId: null,
@@ -337,11 +342,12 @@ class PracticeCubit extends Cubit<PracticeState>
     );
   }
 
-  void resetQuizWithCurriculum(String boardId, String gradeId) {
+  void resetQuizWithCurriculum(String curriculumKey, String boardId, String gradeId) {
     _timer?.cancel();
     emit(
       state.copyWith(
         status: PracticeStatus.initial,
+        curriculumKey: curriculumKey,
         boardId: boardId,
         gradeId: gradeId,
         subjectId: null,

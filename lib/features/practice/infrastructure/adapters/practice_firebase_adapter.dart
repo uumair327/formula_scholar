@@ -11,22 +11,49 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
   final FirestoreClientPort _api;
   final FirebaseAuth _firebaseAuth;
 
+  String _resolveLocalizedField(Map<String, dynamic> data, String key, String fallback) {
+    if (!AppLocales.contentLocalizationEnabled) {
+      return fallback;
+    }
+    try {
+      final loc = data['localized'] as Map<String, dynamic>?;
+      if (loc != null) {
+        final localeCode = AppLocales.normalizeContentLocaleCode(
+          AppLocales.currentLocaleCode,
+        );
+        final candidate = loc[localeCode] as Map<String, dynamic>?;
+        if (candidate != null &&
+            candidate[key] != null &&
+            (candidate[key] as String).isNotEmpty) {
+          return candidate[key] as String;
+        }
+        for (final fb in AppLocales.contentLocaleFallbacks(localeCode)) {
+          final fbCandidate = loc[fb] as Map<String, dynamic>?;
+          if (fbCandidate != null &&
+              fbCandidate[key] != null &&
+              (fbCandidate[key] as String).isNotEmpty) {
+            return fbCandidate[key] as String;
+          }
+        }
+      }
+    } catch (_) {}
+    return fallback;
+  }
+
   @override
   Future<List<QuizQuestion>> getQuestions({
-    required String boardId,
-    required String gradeId,
+    required String curriculumKey,
     String? subjectId,
     String? categoryId,
   }) async {
     AppLogger.trace(
-      'getQuestions() fetching from Firestore for board=$boardId, grade=$gradeId, subject=$subjectId',
+      'getQuestions() fetching from Firestore for curriculum=$curriculumKey, subject=$subjectId',
       tag: AppLogTags.practiceDataSource,
     );
 
     Query<Map<String, dynamic>> query = _api
         .collection(AppFirestoreCollections.practiceQuestions)
-        .where('boardId', isEqualTo: boardId)
-        .where('gradeId', isEqualTo: gradeId);
+        .where('audiences', arrayContains: curriculumKey);
 
     if (subjectId != null && subjectId.isNotEmpty) {
       query = query.where(
@@ -84,16 +111,35 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
     return snapshot.docs.map((doc) {
       final data = doc.data();
       final optionsList = data['options'] as List<dynamic>? ?? [];
+      
+      final localizedMap = data['localized'] as Map<String, dynamic>?;
+      final currentLocale = AppLocales.normalizeContentLocaleCode(AppLocales.currentLocaleCode);
+      final hasLoc = localizedMap != null && localizedMap[currentLocale] != null;
+      final locOptions = hasLoc ? (localizedMap[currentLocale]['options'] as List<dynamic>?) : null;
+      
       final options = optionsList.map((opt) {
         final optMap = opt as Map<String, dynamic>;
-        return QuizOption(id: optMap['id'] ?? '', text: optMap['text'] ?? '');
+        final optId = optMap['id'] as String? ?? '';
+        
+        String optText = optMap['text'] as String? ?? '';
+        if (locOptions != null) {
+          final locOpt = locOptions.firstWhere((lo) => lo['id'] == optId, orElse: () => null);
+          if (locOpt != null && locOpt['text'] != null && (locOpt['text'] as String).isNotEmpty) {
+             optText = locOpt['text'] as String;
+          }
+        }
+        
+        return QuizOption(id: optId, text: optText);
       }).toList();
+
+      final questionText = _resolveLocalizedField(data, 'questionText', data['questionText'] ?? '');
+      final topic = _resolveLocalizedField(data, 'topic', data['topic'] ?? '');
 
       return QuizQuestion(
         id: data['id'] ?? doc.id,
         category: data['category'] ?? '',
-        topic: data['topic'] ?? '',
-        questionText: data['questionText'] ?? '',
+        topic: topic,
+        questionText: questionText,
         imageUrl: data['imageUrl'] ?? '',
         options: options,
         correctOptionId: data['correctOptionId'] ?? '',
@@ -104,8 +150,7 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
 
   @override
   Future<void> recordQuizCompletion({
-    required String boardId,
-    required String gradeId,
+    required String curriculumKey,
     required int earnedPoints,
     required int answeredQuestions,
   }) async {
@@ -133,8 +178,7 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
         'iconName': 'brain',
         'colorValue': 0xFF655781,
         'backgroundColorValue': 0xFFE9DFFC,
-        'boardId': boardId,
-        'gradeId': gradeId,
+        'curriculumKey': curriculumKey,
         'answeredQuestions': answeredQuestions,
         'earnedPoints': earnedPoints,
         'viewedAt': FieldValue.serverTimestamp(),
