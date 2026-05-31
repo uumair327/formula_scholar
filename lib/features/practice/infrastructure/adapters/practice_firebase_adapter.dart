@@ -56,13 +56,25 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
         .where('audiences', arrayContains: curriculumKey);
 
     if (subjectId != null && subjectId.isNotEmpty) {
-      query = query.where(
-        Filter.or(
-          Filter('subjectId', isEqualTo: subjectId),
-          Filter('category', isEqualTo: subjectId),
-          Filter('categoryId', isEqualTo: subjectId),
-        ),
-      );
+      if (categoryId != null && categoryId.isNotEmpty) {
+        query = query.where(
+          Filter.or(
+            Filter('subjectId', isEqualTo: subjectId),
+            Filter('category', isEqualTo: subjectId),
+            Filter('categoryId', isEqualTo: subjectId),
+            Filter('category', isEqualTo: categoryId),
+            Filter('categoryId', isEqualTo: categoryId),
+          ),
+        );
+      } else {
+        query = query.where(
+          Filter.or(
+            Filter('subjectId', isEqualTo: subjectId),
+            Filter('category', isEqualTo: subjectId),
+            Filter('categoryId', isEqualTo: subjectId),
+          ),
+        );
+      }
     } else if (categoryId != null && categoryId.isNotEmpty) {
       query = query.where(
         Filter.or(
@@ -86,13 +98,25 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
         AppFirestoreCollections.practiceQuestions,
       );
       if (subjectId != null && subjectId.isNotEmpty) {
-        fallbackQuery = fallbackQuery.where(
-          Filter.or(
-            Filter('subjectId', isEqualTo: subjectId),
-            Filter('category', isEqualTo: subjectId),
-            Filter('categoryId', isEqualTo: subjectId),
-          ),
-        );
+        if (categoryId != null && categoryId.isNotEmpty) {
+          fallbackQuery = fallbackQuery.where(
+            Filter.or(
+              Filter('subjectId', isEqualTo: subjectId),
+              Filter('category', isEqualTo: subjectId),
+              Filter('categoryId', isEqualTo: subjectId),
+              Filter('category', isEqualTo: categoryId),
+              Filter('categoryId', isEqualTo: categoryId),
+            ),
+          );
+        } else {
+          fallbackQuery = fallbackQuery.where(
+            Filter.or(
+              Filter('subjectId', isEqualTo: subjectId),
+              Filter('category', isEqualTo: subjectId),
+              Filter('categoryId', isEqualTo: subjectId),
+            ),
+          );
+        }
       } else if (categoryId != null && categoryId.isNotEmpty) {
         fallbackQuery = fallbackQuery.where(
           Filter.or(

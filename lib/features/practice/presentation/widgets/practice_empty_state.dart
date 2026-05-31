@@ -76,6 +76,7 @@ class PracticeEmptyState extends StatelessWidget {
                                     curriculumKey: curr.curriculumKey,
                                     boardId: curr.boardId,
                                     gradeId: curr.gradeId,
+                                    subjectId: context.read<PracticeCubit>().state.subjectId,
                                   );
                                 }
                               },
