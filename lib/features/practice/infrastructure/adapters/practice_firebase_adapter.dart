@@ -46,8 +46,8 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
     String? subjectId,
     String? categoryId,
   }) async {
-    AppLogger.trace(
-      'getQuestions() fetching from Firestore for curriculum=$curriculumKey, subject=$subjectId',
+    AppLogger.debug(
+      'getQuestions() fetching from Firestore — curriculumKey=$curriculumKey, subjectId=$subjectId, categoryId=$categoryId',
       tag: AppLogTags.practiceDataSource,
     );
 
@@ -66,9 +66,14 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
       tag: AppLogTags.practiceDataSource,
     );
 
+    AppLogger.debug(
+      'Primary query returned ${snapshot.docs.length} docs (curriculumKey=$curriculumKey, subjectId=$subjectId)',
+      tag: AppLogTags.practiceDataSource,
+    );
+
     if (snapshot.docs.isEmpty) {
       AppLogger.warning(
-        'No board/grade-scoped practice questions found; falling back to legacy dataset',
+        'No board/grade-scoped practice questions found for curriculumKey=$curriculumKey subjectId=$subjectId; falling back to legacy dataset',
         tag: AppLogTags.practiceDataSource,
       );
       Query<Map<String, dynamic>> fallbackQuery = _api.collection(
@@ -115,7 +120,7 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
 
       return QuizQuestion(
         id: data['id'] ?? doc.id,
-        category: data['category'] ?? '',
+        category: data['category'] as String? ?? data['categoryId'] as String? ?? '',
         topic: topic,
         questionText: questionText,
         imageUrl: data['imageUrl'] ?? '',

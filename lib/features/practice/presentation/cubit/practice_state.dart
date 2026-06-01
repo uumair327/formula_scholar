@@ -127,7 +127,7 @@ class PracticeState extends Equatable {
     String? curriculumKey,
     String? boardId,
     String? gradeId,
-    String? subjectId,
+    Object? subjectId = _unset,
     TimerStatus? timerStatus,
     bool? timedMode,
     int? totalSeconds,
@@ -154,7 +154,9 @@ class PracticeState extends Equatable {
       curriculumKey: curriculumKey ?? this.curriculumKey,
       boardId: boardId ?? this.boardId,
       gradeId: gradeId ?? this.gradeId,
-      subjectId: subjectId ?? this.subjectId,
+      subjectId: identical(subjectId, _unset)
+          ? this.subjectId
+          : subjectId as String?,
       timerStatus: timerStatus ?? this.timerStatus,
       timedMode: timedMode ?? this.timedMode,
       totalSeconds: totalSeconds ?? this.totalSeconds,
