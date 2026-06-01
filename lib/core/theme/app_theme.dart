@@ -276,8 +276,9 @@ abstract final class AppTheme {
   static AppBarTheme _buildAppBarTheme({required Color bg, required Color fg}) {
     return AppBarTheme(
       backgroundColor: bg.withValues(alpha: AppDimensions.opacityHigh),
+      surfaceTintColor: Colors.transparent,
       elevation: AppDimensions.elevationNone,
-      scrolledUnderElevation: AppDimensions.elevationSM,
+      scrolledUnderElevation: 0,
       centerTitle: false,
       titleTextStyle: AppTextStyles.headlineSmall.copyWith(color: fg),
     );

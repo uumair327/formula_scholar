@@ -61,14 +61,8 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
-      appBar: AppBar(
-        title: Text(
-          context.l10n.visualizer3d,
-          style: AppTextStyles.titleMedium.copyWith(
-            color: colorScheme.onSurface,
-          ),
-        ),
-        centerTitle: true,
+      appBar: GlassAppBar(
+        title: context.l10n.visualizer3d,
         actions: [
           IconButton(
             icon: Icon(

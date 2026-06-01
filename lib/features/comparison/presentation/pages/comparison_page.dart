@@ -15,9 +15,8 @@ class ComparisonPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Formula Comparison'),
-        centerTitle: true,
+      appBar: GlassAppBar(
+        title: 'Formula Comparison',
         actions: [
           IconButton(
             onPressed: () => context.read<ComparisonCubit>().swap(),

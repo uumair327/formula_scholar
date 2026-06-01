@@ -54,35 +54,34 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return ClipRRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(
-          sigmaX: AppDimensions.glassBlurSigma,
-          sigmaY: AppDimensions.glassBlurSigma,
-        ),
-        child: AppBar(
-          backgroundColor: isDark ? AppColors.glassDark : AppColors.glassLight,
-          surfaceTintColor: AppColors.transparent,
-          elevation: elevation,
-          scrolledUnderElevation: 0,
-          centerTitle: false,
-          automaticallyImplyLeading: automaticallyImplyLeading,
-          toolbarHeight: toolbarHeight,
-          leading: leading,
-          title:
-              titleWidget ??
-              (title != null
-                  ? AppText(
-                      title!,
-                      style: AppTextStyles.headlineSmall.copyWith(
-                        color: colorScheme.onSurface,
-                      ),
-                      maxLines: 1,
-                      softWrap: false,
-                    )
-                  : null),
-          actions: actions,
-          bottom: bottom,
+    return AppBar(
+      backgroundColor: Colors.transparent, // Let flexibleSpace handle the background
+      elevation: elevation,
+      automaticallyImplyLeading: automaticallyImplyLeading,
+      toolbarHeight: toolbarHeight,
+      leading: leading,
+      title: titleWidget ??
+          (title != null
+              ? AppText(
+                  title!,
+                  style: AppTextStyles.headlineSmall.copyWith(
+                    color: colorScheme.onSurface,
+                  ),
+                  maxLines: 1,
+                  softWrap: false,
+                )
+              : null),
+      actions: actions,
+      bottom: bottom,
+      flexibleSpace: ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: AppDimensions.glassBlurSigma,
+            sigmaY: AppDimensions.glassBlurSigma,
+          ),
+          child: Container(
+            color: isDark ? AppColors.glassDark : AppColors.glassLight,
+          ),
         ),
       ),
     );
@@ -129,15 +128,10 @@ class SliverGlassAppBar extends StatelessWidget {
       pinned: pinned,
       expandedHeight: expandedHeight,
       toolbarHeight: toolbarHeight,
-      backgroundColor: isDark ? AppColors.glassDark : AppColors.glassLight,
-      surfaceTintColor: AppColors.transparent,
-      elevation: 0,
-      scrolledUnderElevation: 0,
-      centerTitle: false,
+      backgroundColor: Colors.transparent,
       automaticallyImplyLeading: automaticallyImplyLeading,
       leading: leading,
-      title:
-          titleWidget ??
+      title: titleWidget ??
           (title != null
               ? AppText(
                   title!,
@@ -149,25 +143,18 @@ class SliverGlassAppBar extends StatelessWidget {
                 )
               : null),
       actions: actions,
-      flexibleSpace: flexibleSpace != null
-          ? ClipRRect(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(
-                  sigmaX: AppDimensions.glassBlurSigma,
-                  sigmaY: AppDimensions.glassBlurSigma,
-                ),
-                child: flexibleSpace,
-              ),
-            )
-          : ClipRRect(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(
-                  sigmaX: AppDimensions.glassBlurSigma,
-                  sigmaY: AppDimensions.glassBlurSigma,
-                ),
-                child: Container(color: AppColors.transparent),
-              ),
-            ),
+      flexibleSpace: ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: AppDimensions.glassBlurSigma,
+            sigmaY: AppDimensions.glassBlurSigma,
+          ),
+          child: Container(
+            color: isDark ? AppColors.glassDark : AppColors.glassLight,
+            child: flexibleSpace,
+          ),
+        ),
+      ),
     );
   }
 }
