@@ -6,7 +6,6 @@ import '../../../../core/core.dart';
 
 import '../cubit/practice_cubit.dart';
 import '../cubit/practice_state.dart';
-import 'practice_pre_filter_header.dart';
 import 'practice_pre_filter_timed_mode.dart';
 
 /// Pre-quiz filter screen for selecting subject and timed mode.
@@ -35,10 +34,21 @@ class PracticePreFilter extends StatelessWidget {
     );
 
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: GlassAppBar(
+          titleWidget: Text(
+            context.l10n.navPractice,
+            style: AppTextStyles.headlineSmall.copyWith(
+              color: colorScheme.onSurface,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            const PreFilterHeader(),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(AppDimensions.paddingXXL),
