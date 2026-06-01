@@ -36,3 +36,4 @@ export 'shimmer/formulas_shimmer.dart';
 export 'shimmer/practice_shimmer.dart';
 export 'shimmer/notifications_shimmer.dart';
 export 'staggered_fade_slide.dart';
+export 'user_profile_avatar.dart';

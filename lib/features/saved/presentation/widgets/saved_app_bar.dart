@@ -17,62 +17,17 @@ class SavedAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return BlocBuilder<AuthCubit, AuthState>(
       buildWhen: (prev, curr) => prev.user != curr.user,
       builder: (context, authState) {
-        final user = authState.user;
-        final photoUrl = user?.photoUrl ?? '';
-
         return GlassAppBar(
-          titleWidget: Row(
-            children: [
-              GestureDetector(
-                onTap: () => context.go(AppRoutes.profilePath),
-                behavior: HitTestBehavior.opaque,
-                child: Container(
-                  padding: const EdgeInsets.all(2.0),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: isDark
-                        ? AppColors.darkPrimaryGradient
-                        : AppColors.primaryGradient,
-                  ),
-                  child: Container(
-                    width: AppDimensions.avatarMD - 4,
-                    height: AppDimensions.avatarMD - 4,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: colorScheme.surface,
-                        width: 2.0,
-                      ),
-                    ),
-                    child: photoUrl.isNotEmpty
-                        ? AppAvatar(
-                            imageUrl: photoUrl,
-                            size: AppDimensions.avatarMD - 8,
-                            fallbackIcon: LucideIcons.bookmark,
-                            fallbackIconColor: colorScheme.primary,
-                          )
-                        : Icon(
-                            LucideIcons.bookmark,
-                            color: colorScheme.primary,
-                            size: AppDimensions.iconSM,
-                          ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: AppDimensions.paddingMD),
-              Text(
-                context.l10n.navSaved,
-                style: AppTextStyles.titleMedium.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ],
+          titleWidget: Text(
+            context.l10n.navSaved,
+            style: AppTextStyles.headlineSmall.copyWith(
+              color: colorScheme.onSurface,
+              fontWeight: FontWeight.w800,
+            ),
           ),
           actions: [
             Container(
@@ -96,6 +51,7 @@ class SavedAppBar extends StatelessWidget {
                 tooltip: context.l10n.refreshBookmarks,
               ),
             ),
+            const UserProfileAvatar(),
           ],
         );
       },

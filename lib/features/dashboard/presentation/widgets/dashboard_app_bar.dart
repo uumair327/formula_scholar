@@ -14,7 +14,6 @@ class DashboardAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final l10n = context.l10n;
 
     return BlocBuilder<AuthCubit, AuthState>(
@@ -22,61 +21,29 @@ class DashboardAppBar extends StatelessWidget {
       builder: (context, authState) {
         final user = authState.user;
         final userName = user?.displayName ?? l10n.dashboardSanctuary;
-        final photoUrl = user?.photoUrl ?? AppAssets.dashboardStudentProfileUrl;
 
         return SliverGlassAppBar(
-          titleWidget: GestureDetector(
-            onTap: () => context.go(AppRoutes.profilePath),
-            behavior: HitTestBehavior.opaque,
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(2.0),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: isDark
-                        ? AppColors.darkPrimaryGradient
-                        : AppColors.primaryGradient,
-                  ),
-                  child: Container(
-                    width: AppDimensions.avatarMD - 4,
-                    height: AppDimensions.avatarMD - 4,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: colorScheme.surface,
-                    ),
-                    clipBehavior: Clip.antiAlias,
-                    child: CachedNetworkImage(
-                      imageUrl: photoUrl,
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => const SizedBox(),
-                      errorWidget: (context, url, error) =>
-                          Icon(LucideIcons.user, color: colorScheme.primary),
-                    ),
-                  ),
+          titleWidget: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                userName,
+                style: AppTextStyles.headlineSmall.copyWith(
+                  color: colorScheme.onSurface,
+                  fontWeight: FontWeight.w800,
                 ),
-                const SizedBox(width: AppDimensions.paddingMD),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      userName,
-                      style: AppTextStyles.titleMedium.copyWith(
-                        color: colorScheme.onSurface,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    Text(
-                      l10n.welcomeBack,
-                      style: AppTextStyles.bodySmall.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                l10n.welcomeBack,
+                style: AppTextStyles.overline.copyWith(
+                  color: colorScheme.primary,
+                  fontSize: AppDimensions.fontSizeXS,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           actions: [
             Semantics(
@@ -102,6 +69,7 @@ class DashboardAppBar extends StatelessWidget {
                 ),
               ),
             ),
+            const UserProfileAvatar(),
           ],
         );
       },

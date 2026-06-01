@@ -151,6 +151,7 @@ class SubjectsPage extends StatelessWidget {
             tooltip: context.l10n.searchLabel,
           ),
         ),
+        const UserProfileAvatar(),
       ],
     );
   }

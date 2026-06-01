@@ -147,6 +147,20 @@ class ProfilePage extends StatelessWidget {
             tooltip: context.l10n.viewInsights,
           ),
         ),
+        Container(
+          margin: const EdgeInsetsDirectional.only(
+            end: AppDimensions.paddingSM,
+          ),
+          decoration: BoxDecoration(
+            color: colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+          ),
+          child: IconButton(
+            onPressed: () => context.push(AppRoutes.accountInfoPath),
+            icon: Icon(LucideIcons.settings, color: colorScheme.onSurfaceVariant),
+            tooltip: context.l10n.navProfile,
+          ),
+        ),
       ],
     );
   }

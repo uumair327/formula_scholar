@@ -20,11 +20,14 @@ class PracticeHistoryPage extends StatelessWidget {
           appBar: GlassAppBar(
             titleWidget: Text(
               context.l10n.practiceHistory,
-              style: AppTextStyles.titleLarge.copyWith(
+              style: AppTextStyles.headlineSmall.copyWith(
                 fontWeight: FontWeight.w800,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
+            actions: const [
+              UserProfileAvatar(),
+            ],
           ),
           body: _buildBody(context, state),
         );
