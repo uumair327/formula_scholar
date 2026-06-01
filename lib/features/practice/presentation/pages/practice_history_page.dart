@@ -25,9 +25,6 @@ class PracticeHistoryPage extends StatelessWidget {
                 color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
-            actions: const [
-              UserProfileAvatar(),
-            ],
           ),
           body: _buildBody(context, state),
         );

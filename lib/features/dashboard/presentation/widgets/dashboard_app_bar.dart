@@ -2,8 +2,6 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../core/core.dart';
 import '../../../auth/auth.dart';
 
@@ -44,32 +42,7 @@ class DashboardAppBar extends StatelessWidget {
               ),
             ],
           ),
-          actions: [
-            Semantics(
-              label: l10n.searchFormulas,
-              button: true,
-              child: Container(
-                margin: const EdgeInsetsDirectional.only(
-                  end: AppDimensions.paddingSM,
-                ),
-                decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerHigh.withValues(
-                    alpha: 0.5,
-                  ),
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-                ),
-                child: IconButton(
-                  onPressed: () => context.pushNamed(AppRoutes.searchName),
-                  icon: Icon(
-                    LucideIcons.search,
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                  tooltip: l10n.searchFormulas,
-                ),
-              ),
-            ),
-            const UserProfileAvatar(),
-          ],
+          bottom: const DummySearchPill(),
         );
       },
     );

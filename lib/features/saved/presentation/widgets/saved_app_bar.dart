@@ -50,7 +50,6 @@ class SavedAppBar extends StatelessWidget {
                 tooltip: context.l10n.refreshBookmarks,
               ),
             ),
-            const UserProfileAvatar(),
           ],
         );
       },

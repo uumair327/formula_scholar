@@ -148,6 +148,7 @@ class SliverGlassAppBar extends StatelessWidget {
     this.snap = true,
     this.pinned = false,
     this.expandedHeight,
+    this.bottom,
     this.flexibleSpace,
     this.toolbarHeight = kToolbarHeight,
   });
@@ -161,6 +162,7 @@ class SliverGlassAppBar extends StatelessWidget {
   final bool snap;
   final bool pinned;
   final double? expandedHeight;
+  final PreferredSizeWidget? bottom;
   final Widget? flexibleSpace;
   final double toolbarHeight;
 
@@ -198,6 +200,7 @@ class SliverGlassAppBar extends StatelessWidget {
                 )
               : null),
       actions: _padActions(actions),
+      bottom: bottom,
       flexibleSpace: _buildFlexibleSpace(context, flexibleSpace),
     );
   }

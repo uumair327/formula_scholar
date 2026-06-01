@@ -136,23 +136,7 @@ class SubjectsPage extends StatelessWidget {
           ),
         ],
       ),
-      actions: [
-        Container(
-          margin: const EdgeInsetsDirectional.only(
-            end: AppDimensions.paddingSM,
-          ),
-          decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
-            borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-          ),
-          child: IconButton(
-            onPressed: () => context.pushNamed(AppRoutes.searchName),
-            icon: Icon(LucideIcons.search, color: colorScheme.onSurfaceVariant),
-            tooltip: context.l10n.searchLabel,
-          ),
-        ),
-        const UserProfileAvatar(),
-      ],
+      bottom: const DummySearchPill(),
     );
   }
 
