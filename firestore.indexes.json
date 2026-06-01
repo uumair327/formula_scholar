@@ -24,13 +24,7 @@
         { "fieldPath": "name", "order": "ASCENDING" }
       ]
     },
-    {
-      "collectionGroup": "classes",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "classNumber", "order": "ASCENDING" }
-      ]
-    },
+
     {
       "collectionGroup": "chapters",
       "queryScope": "COLLECTION",
@@ -72,12 +66,22 @@
       ]
     },
     {
-      "collectionGroup": "recent_studies",
+      "collectionGroup": "practice_questions",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "viewedAt", "order": "DESCENDING" }
+        { "fieldPath": "audiences", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "subjectId", "order": "ASCENDING" }
       ]
     },
+    {
+      "collectionGroup": "practice_questions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "audiences", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "categoryId", "order": "ASCENDING" }
+      ]
+    },
+
     {
       "collectionGroup": "subjects",
       "queryScope": "COLLECTION",
