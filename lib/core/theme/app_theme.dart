@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart'; // ignore: unnecessary_import
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 import '../constants/app_dimensions.dart';
 import 'app_colors.dart';
@@ -46,6 +47,7 @@ abstract final class AppTheme {
       appBarTheme: _buildAppBarTheme(
         bg: AppColors.surface,
         fg: AppColors.onPrimaryFixedVariant,
+        isDark: false,
       ),
       cardTheme: _buildCardTheme(AppColors.surfaceContainerLowest),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -134,6 +136,7 @@ abstract final class AppTheme {
       appBarTheme: _buildAppBarTheme(
         bg: AppColors.darkSurface,
         fg: AppColors.darkOnSurface,
+        isDark: true,
       ),
       cardTheme: _buildCardTheme(AppColors.darkSurfaceContainerLow),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -273,7 +276,7 @@ abstract final class AppTheme {
     );
   }
 
-  static AppBarTheme _buildAppBarTheme({required Color bg, required Color fg}) {
+  static AppBarTheme _buildAppBarTheme({required Color bg, required Color fg, required bool isDark}) {
     return AppBarTheme(
       backgroundColor: bg.withValues(alpha: AppDimensions.opacityHigh),
       surfaceTintColor: Colors.transparent,
@@ -281,6 +284,7 @@ abstract final class AppTheme {
       scrolledUnderElevation: 0,
       centerTitle: false,
       titleTextStyle: AppTextStyles.headlineSmall.copyWith(color: fg),
+      systemOverlayStyle: isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
     );
   }
 
