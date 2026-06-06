@@ -21,9 +21,17 @@ class AnalyticsService {
         screenName: screenName,
         screenClass: screenClass ?? screenName,
       );
-      AppLogger.trace('Screen view logged: $screenName', tag: AppLogTags.analytics);
+      AppLogger.trace(
+        'Screen view logged: $screenName',
+        tag: AppLogTags.analytics,
+      );
     } catch (e, st) {
-      AppLogger.error('Failed to log screen view', tag: AppLogTags.analytics, error: e, stackTrace: st);
+      AppLogger.error(
+        'Failed to log screen view',
+        tag: AppLogTags.analytics,
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 
@@ -33,7 +41,12 @@ class AnalyticsService {
       await _analytics.logEvent(name: name, parameters: parameters);
       AppLogger.trace('Event logged: $name', tag: AppLogTags.analytics);
     } catch (e, st) {
-      AppLogger.error('Failed to log event', tag: AppLogTags.analytics, error: e, stackTrace: st);
+      AppLogger.error(
+        'Failed to log event',
+        tag: AppLogTags.analytics,
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 
@@ -44,7 +57,12 @@ class AnalyticsService {
       await _crashlytics.setUserIdentifier(userId ?? '');
       AppLogger.trace('User ID set in Analytics', tag: AppLogTags.analytics);
     } catch (e, st) {
-      AppLogger.error('Failed to set user ID', tag: AppLogTags.analytics, error: e, stackTrace: st);
+      AppLogger.error(
+        'Failed to set user ID',
+        tag: AppLogTags.analytics,
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 
@@ -54,17 +72,40 @@ class AnalyticsService {
       await _analytics.setUserProperty(name: name, value: value);
       AppLogger.trace('User property set: $name', tag: AppLogTags.analytics);
     } catch (e, st) {
-      AppLogger.error('Failed to set user property', tag: AppLogTags.analytics, error: e, stackTrace: st);
+      AppLogger.error(
+        'Failed to set user property',
+        tag: AppLogTags.analytics,
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 
   /// Record an error manually to Crashlytics
-  Future<void> recordError(dynamic error, StackTrace? stackTrace, {bool fatal = false, String? reason}) async {
+  Future<void> recordError(
+    dynamic error,
+    StackTrace? stackTrace, {
+    bool fatal = false,
+    String? reason,
+  }) async {
     try {
-      await _crashlytics.recordError(error, stackTrace, fatal: fatal, reason: reason);
-      AppLogger.trace('Error recorded to Crashlytics', tag: AppLogTags.analytics);
+      await _crashlytics.recordError(
+        error,
+        stackTrace,
+        fatal: fatal,
+        reason: reason,
+      );
+      AppLogger.trace(
+        'Error recorded to Crashlytics',
+        tag: AppLogTags.analytics,
+      );
     } catch (e, st) {
-      AppLogger.error('Failed to record error to Crashlytics', tag: AppLogTags.analytics, error: e, stackTrace: st);
+      AppLogger.error(
+        'Failed to record error to Crashlytics',
+        tag: AppLogTags.analytics,
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 
@@ -73,7 +114,12 @@ class AnalyticsService {
     try {
       await _crashlytics.log(message);
     } catch (e, st) {
-      AppLogger.error('Failed to log message to Crashlytics', tag: AppLogTags.analytics, error: e, stackTrace: st);
+      AppLogger.error(
+        'Failed to log message to Crashlytics',
+        tag: AppLogTags.analytics,
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 }

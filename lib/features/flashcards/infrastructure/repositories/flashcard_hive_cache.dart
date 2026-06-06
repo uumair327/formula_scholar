@@ -2,6 +2,7 @@ import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../domain/domain.dart';
+
 @LazySingleton(as: FlashcardCachePort)
 class FlashcardHiveCache implements FlashcardCachePort {
   static const String _boxName = 'flashcard_cache';

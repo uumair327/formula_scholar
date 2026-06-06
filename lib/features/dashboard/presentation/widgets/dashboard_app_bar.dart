@@ -130,9 +130,7 @@ class _CurriculumButton extends StatelessWidget {
             width: 44,
             height: 42,
             decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerHighest.withValues(
-                alpha: 0.5,
-              ),
+              color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
               border: Border.all(
                 color: colorScheme.outline.withValues(alpha: 0.15),

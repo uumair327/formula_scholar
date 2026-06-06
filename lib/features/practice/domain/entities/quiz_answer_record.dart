@@ -40,10 +40,17 @@ class QuizAnswerRecord extends Equatable {
     'selectedOptionId': selectedOptionId,
     'correctOptionId': correctOptionId,
     'isCorrect': isCorrect,
-    'timestamp': timestamp?.toIso8601String() ?? DateTime.now().toIso8601String(),
+    'timestamp':
+        timestamp?.toIso8601String() ?? DateTime.now().toIso8601String(),
   };
 
   @override
-  List<Object?> get props =>
-      [questionId, category, topic, selectedOptionId, correctOptionId, isCorrect];
+  List<Object?> get props => [
+    questionId,
+    category,
+    topic,
+    selectedOptionId,
+    correctOptionId,
+    isCorrect,
+  ];
 }

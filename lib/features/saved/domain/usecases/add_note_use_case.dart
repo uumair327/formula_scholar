@@ -11,7 +11,10 @@ class AddNoteUseCase {
   final SavedRepositoryPort _repository;
 
   Future<Result<void>> call(SavedNote note) {
-    AppLogger.trace('AddNoteUseCase called: "${note.title}"', tag: AppLogTags.savedUseCase);
+    AppLogger.trace(
+      'AddNoteUseCase called: "${note.title}"',
+      tag: AppLogTags.savedUseCase,
+    );
     return _repository.addNote(note);
   }
 }

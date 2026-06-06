@@ -5,10 +5,7 @@ import '../../../../../core/core.dart';
 import '../../domain/entities/formula_comparison.dart';
 
 class SimilarityBadge extends StatelessWidget {
-  const SimilarityBadge({
-    super.key,
-    this.comparison,
-  });
+  const SimilarityBadge({super.key, this.comparison});
 
   final FormulaComparison? comparison;
 
@@ -21,13 +18,13 @@ class SimilarityBadge extends StatelessWidget {
     final label = score > 0.7
         ? 'High Similarity'
         : score > 0.4
-            ? 'Moderate Similarity'
-            : 'Low Similarity';
+        ? 'Moderate Similarity'
+        : 'Low Similarity';
     final color = score > 0.7
         ? colorScheme.primary
         : score > 0.4
-            ? colorScheme.secondary
-            : colorScheme.error;
+        ? colorScheme.secondary
+        : colorScheme.error;
 
     return Container(
       padding: const EdgeInsets.symmetric(

@@ -138,7 +138,9 @@ class LocationFormCard extends StatelessWidget {
                       AppDimensions.radiusXXL,
                     ),
                     border: Border.all(
-                      color: isActive ? AppColors.secondary : colorScheme.outlineVariant,
+                      color: isActive
+                          ? AppColors.secondary
+                          : colorScheme.outlineVariant,
                       width: AppDimensions.borderWidth,
                     ),
                   ),

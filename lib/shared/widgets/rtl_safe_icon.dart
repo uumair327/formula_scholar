@@ -56,10 +56,7 @@ class RtlSafeIcon extends StatelessWidget {
 ///
 /// Useful for LucideIcons which don't have directional variants.
 class RtlFlip extends StatelessWidget {
-  const RtlFlip({
-    super.key,
-    required this.child,
-  });
+  const RtlFlip({super.key, required this.child});
 
   final Widget child;
 

@@ -10,8 +10,14 @@ class SearchFormulasUseCase {
     : _repository = repository;
   final SearchRepositoryPort _repository;
 
-  Future<Result<List<SearchResult>>> call(String query, {String? curriculumKey}) {
-    AppLogger.trace('SearchFormulasUseCase called: "$query"', tag: AppLogTags.searchUseCase);
+  Future<Result<List<SearchResult>>> call(
+    String query, {
+    String? curriculumKey,
+  }) {
+    AppLogger.trace(
+      'SearchFormulasUseCase called: "$query"',
+      tag: AppLogTags.searchUseCase,
+    );
     return _repository.searchFormulas(query, curriculumKey: curriculumKey);
   }
 }

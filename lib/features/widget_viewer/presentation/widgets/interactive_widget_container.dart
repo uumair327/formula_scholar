@@ -7,6 +7,7 @@ import 'native_model3d_widget.dart';
 import 'native_image_widget.dart';
 import 'native_simulation_widget.dart';
 import 'webview_chemistry_widget.dart';
+import 'webview_html_widget.dart';
 
 class InteractiveWidgetContainer extends StatefulWidget {
   const InteractiveWidgetContainer({super.key, required this.widgetConfig});
@@ -294,6 +295,8 @@ class _InteractiveWidgetContainerState
         return Icon(Icons.play_circle_filled, color: color, size: size);
       case 'chemistry':
         return Icon(Icons.science, color: color, size: size);
+      case 'html':
+        return Icon(Icons.code, color: color, size: size);
       default:
         return Icon(Icons.functions, color: color, size: size);
     }
@@ -313,6 +316,8 @@ class _InteractiveWidgetContainerState
         return NativeSimulationWidget(config: config, parameters: _parameters);
       case 'chemistry':
         return WebviewChemistryWidget(config: config);
+      case 'html':
+        return WebviewHtmlWidget(config: config);
       case 'formula':
       default:
         final latex =

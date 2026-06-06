@@ -325,10 +325,15 @@ class DashboardPage extends StatelessWidget {
                                           false)
                                       ? state
                                             .localizedContent['dashboard.vault.description']!
-                                      : context.l10n.dashboardVaultDescWithCounts(
-                                          state.subjects.fold<int>(0, (sum, s) => sum + s.formulaCount),
-                                          state.subjects.length,
-                                        );
+                                      : context.l10n
+                                            .dashboardVaultDescWithCounts(
+                                              state.subjects.fold<int>(
+                                                0,
+                                                (sum, s) =>
+                                                    sum + s.formulaCount,
+                                              ),
+                                              state.subjects.length,
+                                            );
                                   return FormulaVaultSection(
                                     description: vaultDesc,
                                     vaultItems: state.vaultItems,

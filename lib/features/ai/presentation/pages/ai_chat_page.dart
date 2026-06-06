@@ -63,10 +63,9 @@ class _AiChatPageState extends State<AiChatPage> {
                 end: AppDimensions.paddingSM,
               ),
               decoration: BoxDecoration(
-                color: Theme.of(context)
-                    .colorScheme
-                    .surfaceContainerHigh
-                    .withValues(alpha: 0.5),
+                color: Theme.of(
+                  context,
+                ).colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
               ),
               child: IconButton(

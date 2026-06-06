@@ -1,4 +1,4 @@
-﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../features/chapters/chapters.dart';
@@ -16,10 +16,7 @@ List<GoRoute> cheatSheetRoutes() {
         return AppPageTransitions.fadeTransition(
           state: state,
           child: extra is FormulasCubit
-              ? BlocProvider.value(
-                  value: extra,
-                  child: const CheatSheetPage(),
-                )
+              ? BlocProvider.value(value: extra, child: const CheatSheetPage())
               : BlocProvider(
                   create: (_) => getIt<FormulasCubit>(),
                   child: const CheatSheetPage(),
@@ -29,4 +26,3 @@ List<GoRoute> cheatSheetRoutes() {
     ),
   ];
 }
-

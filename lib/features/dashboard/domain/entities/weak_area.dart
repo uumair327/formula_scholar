@@ -34,12 +34,15 @@ class WeakArea extends Equatable {
 
   /// Weakness score 0–100 (higher = weaker).
   /// 0 means all correct, 100 means all wrong.
-  double get weaknessScore =>
-      totalAttempts > 0
-          ? ((totalAttempts - correctAttempts) / totalAttempts) * 100
-          : 0.0;
+  double get weaknessScore => totalAttempts > 0
+      ? ((totalAttempts - correctAttempts) / totalAttempts) * 100
+      : 0.0;
 
   @override
-  List<Object?> get props =>
-      [category, subjectName, totalAttempts, correctAttempts];
+  List<Object?> get props => [
+    category,
+    subjectName,
+    totalAttempts,
+    correctAttempts,
+  ];
 }

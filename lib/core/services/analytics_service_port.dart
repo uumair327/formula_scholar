@@ -17,8 +17,5 @@ abstract class AnalyticsServicePort {
   });
 
   /// Sets a persistent user property for segmentation.
-  Future<void> setUserProperty({
-    required String name,
-    required String? value,
-  });
+  Future<void> setUserProperty({required String name, required String? value});
 }

@@ -276,7 +276,11 @@ abstract final class AppTheme {
     );
   }
 
-  static AppBarTheme _buildAppBarTheme({required Color bg, required Color fg, required bool isDark}) {
+  static AppBarTheme _buildAppBarTheme({
+    required Color bg,
+    required Color fg,
+    required bool isDark,
+  }) {
     return AppBarTheme(
       backgroundColor: bg.withValues(alpha: AppDimensions.opacityHigh),
       surfaceTintColor: Colors.transparent,
@@ -284,7 +288,9 @@ abstract final class AppTheme {
       scrolledUnderElevation: 0,
       centerTitle: false,
       titleTextStyle: AppTextStyles.headlineSmall.copyWith(color: fg),
-      systemOverlayStyle: isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+      systemOverlayStyle: isDark
+          ? SystemUiOverlayStyle.light
+          : SystemUiOverlayStyle.dark,
     );
   }
 

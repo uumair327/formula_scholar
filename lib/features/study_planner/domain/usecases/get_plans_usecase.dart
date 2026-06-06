@@ -6,10 +6,9 @@ import '../ports/study_planner_repository_port.dart';
 @injectable
 class GetPlansUseCase {
   const GetPlansUseCase({required StudyPlannerRepositoryPort repository})
-      : _repository = repository;
+    : _repository = repository;
 
   final StudyPlannerRepositoryPort _repository;
 
-  Stream<List<StudyPlan>> call(String userId) =>
-      _repository.watchPlans(userId);
+  Stream<List<StudyPlan>> call(String userId) => _repository.watchPlans(userId);
 }

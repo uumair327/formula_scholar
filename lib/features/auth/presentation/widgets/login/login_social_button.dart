@@ -26,11 +26,15 @@ class LoginSocialButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: AppDimensions.paddingMD),
         shape: const StadiumBorder(),
         side: BorderSide(
-          color: colorScheme.outlineVariant.withValues(alpha: AppDimensions.opacitySubtle),
+          color: colorScheme.outlineVariant.withValues(
+            alpha: AppDimensions.opacitySubtle,
+          ),
         ),
         backgroundColor: colorScheme.surfaceContainerLow,
         foregroundColor: colorScheme.onSurface,
-        textStyle: AppTextStyles.labelMedium.copyWith(fontWeight: FontWeight.w600),
+        textStyle: AppTextStyles.labelMedium.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }

@@ -7,10 +7,7 @@ BoxDecoration signatureGlowDecoration(ColorScheme colorScheme) {
     gradient: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [
-        colorScheme.primary,
-        colorScheme.primary.withValues(alpha: 0.8),
-      ],
+      colors: [colorScheme.primary, colorScheme.primary.withValues(alpha: 0.8)],
     ),
     borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
     boxShadow: [AppShadows.glow(colorScheme.primary)],

@@ -12,7 +12,10 @@ class GetAnalyticsDataUseCase {
   final AnalyticsRepositoryPort _repository;
 
   Future<Result<AnalyticsData>> call() {
-    AppLogger.trace('GetAnalyticsDataUseCase called', tag: AppLogTags.analyticsUseCase);
+    AppLogger.trace(
+      'GetAnalyticsDataUseCase called',
+      tag: AppLogTags.analyticsUseCase,
+    );
     return _repository.getAnalytics();
   }
 }

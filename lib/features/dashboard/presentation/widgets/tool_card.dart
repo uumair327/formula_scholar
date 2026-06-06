@@ -58,10 +58,7 @@ class _ToolCardState extends State<ToolCard>
       child: AnimatedBuilder(
         animation: _scaleAnimation,
         builder: (context, child) {
-          return Transform.scale(
-            scale: _scaleAnimation.value,
-            child: child,
-          );
+          return Transform.scale(scale: _scaleAnimation.value, child: child);
         },
         child: Container(
           padding: const EdgeInsets.all(AppDimensions.paddingLG),

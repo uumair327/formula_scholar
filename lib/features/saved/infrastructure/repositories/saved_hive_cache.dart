@@ -1,6 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import '../../domain/domain.dart';
+
 /// Hive-backed cache for bookmarked formulas, enabling offline access.
 @LazySingleton(as: SavedCachePort)
 class SavedHiveCache implements SavedCachePort {

@@ -5,9 +5,8 @@ import '../ports/study_planner_repository_port.dart';
 
 @injectable
 class UpdateSessionUseCase {
-  const UpdateSessionUseCase(
-      {required StudyPlannerRepositoryPort repository})
-      : _repository = repository;
+  const UpdateSessionUseCase({required StudyPlannerRepositoryPort repository})
+    : _repository = repository;
 
   final StudyPlannerRepositoryPort _repository;
 

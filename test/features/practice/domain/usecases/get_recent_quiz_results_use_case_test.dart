@@ -50,7 +50,9 @@ void main() {
 class _FakePracticeRepository implements PracticeRepositoryPort {
   int getCallCount = 0;
   int? lastLimit;
-  Result<List<QuizResult>> getResult = const Success<List<QuizResult>>(<QuizResult>[]);
+  Result<List<QuizResult>> getResult = const Success<List<QuizResult>>(
+    <QuizResult>[],
+  );
 
   @override
   Future<Result<List<QuizResult>>> getQuizResults({int limit = 20}) async {

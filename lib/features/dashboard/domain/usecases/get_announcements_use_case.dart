@@ -22,7 +22,9 @@ class GetAnnouncementsUseCase {
     };
   }
 
-  Success<List<AppAnnouncement>> _filterTimeWindow(List<AppAnnouncement> items) {
+  Success<List<AppAnnouncement>> _filterTimeWindow(
+    List<AppAnnouncement> items,
+  ) {
     final now = DateTime.now();
     final filtered = items.where((a) {
       if (a.publishAt != null) {

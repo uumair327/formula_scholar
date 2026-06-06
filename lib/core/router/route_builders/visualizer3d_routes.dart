@@ -1,4 +1,4 @@
-﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../features/visualizer_3d/visualizer_3d.dart';
@@ -30,4 +30,3 @@ List<GoRoute> visualizer3dRoutes() {
     ),
   ];
 }
-

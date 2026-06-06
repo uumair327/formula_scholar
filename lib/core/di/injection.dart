@@ -189,7 +189,6 @@ void _registerAiRuntimeDependencies() {
         actionExecutor: getIt<AiActionExecutorPort>(),
         providerFactory: getIt<AiProviderFactory>(),
         promptBuilder: getIt<AiPromptBuilder>(),
-        localIntentResolver: getIt<AiLocalIntentResolver>(),
         sanitizer: getIt<AiSanitizer>(),
       ),
     );

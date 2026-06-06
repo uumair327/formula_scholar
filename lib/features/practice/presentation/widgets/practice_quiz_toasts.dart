@@ -152,4 +152,3 @@ class QuizWrongAnswerToast extends StatelessWidget {
     );
   }
 }
-

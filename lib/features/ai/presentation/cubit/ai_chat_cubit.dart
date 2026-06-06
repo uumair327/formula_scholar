@@ -114,6 +114,7 @@ class AiChatCubit extends Cubit<AiChatState> {
             content: '',
             createdAt: createdAt,
             actionRequest: result.actionRequest,
+            widgetConfig: result.widgetConfig,
             isStreaming: true,
           ),
         ],
@@ -130,6 +131,7 @@ class AiChatCubit extends Cubit<AiChatState> {
         content: buffer.toString(),
         isStreaming: true,
         actionRequest: result.actionRequest,
+        widgetConfig: result.widgetConfig,
       );
       await Future<void>.delayed(const Duration(milliseconds: 12));
     }
@@ -139,6 +141,7 @@ class AiChatCubit extends Cubit<AiChatState> {
       content: result.message,
       isStreaming: false,
       actionRequest: result.actionRequest,
+      widgetConfig: result.widgetConfig,
     );
     emit(state.copyWith(status: AiChatStatus.idle));
   }
@@ -148,6 +151,7 @@ class AiChatCubit extends Cubit<AiChatState> {
     required String content,
     required bool isStreaming,
     AiActionRequest? actionRequest,
+    Map<String, dynamic>? widgetConfig,
   }) {
     final updated = state.messages
         .map((message) {
@@ -156,6 +160,7 @@ class AiChatCubit extends Cubit<AiChatState> {
             content: content,
             isStreaming: isStreaming,
             actionRequest: actionRequest,
+            widgetConfig: widgetConfig,
           );
         })
         .toList(growable: false);

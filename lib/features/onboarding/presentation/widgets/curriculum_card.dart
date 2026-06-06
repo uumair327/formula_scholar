@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+
 class CurriculumCard extends StatefulWidget {
   const CurriculumCard({
     super.key,
@@ -24,11 +25,13 @@ class CurriculumCard extends StatefulWidget {
 class _CurriculumCardState extends State<CurriculumCard> {
   bool _isPressed = false;
 
-  void _handleTapDown(TapDownDetails details) => setState(() => _isPressed = true);
+  void _handleTapDown(TapDownDetails details) =>
+      setState(() => _isPressed = true);
   void _handleTapUp(TapUpDetails details) {
     setState(() => _isPressed = false);
     widget.onTap();
   }
+
   void _handleTapCancel() => setState(() => _isPressed = false);
 
   @override
@@ -71,13 +74,19 @@ class _CurriculumCardState extends State<CurriculumCard> {
                     decoration: BoxDecoration(
                       color: widget.isSelected
                           ? widget.color
-                          : widget.color.withValues(alpha: AppDimensions.opacityFaint),
-                      borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+                          : widget.color.withValues(
+                              alpha: AppDimensions.opacityFaint,
+                            ),
+                      borderRadius: BorderRadius.circular(
+                        AppDimensions.radiusMD,
+                      ),
                     ),
                     child: Icon(
                       widget.icon,
                       size: AppDimensions.iconLG,
-                      color: widget.isSelected ? AppColors.onPrimary : widget.color,
+                      color: widget.isSelected
+                          ? AppColors.onPrimary
+                          : widget.color,
                     ),
                   ),
                   const SizedBox(height: AppDimensions.paddingXL),

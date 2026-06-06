@@ -8,7 +8,6 @@ import 'analytics_service_port.dart';
 /// Registered as a LazySingleton via get_it.
 @LazySingleton(as: AnalyticsServicePort)
 class FirebaseAnalyticsAdapter implements AnalyticsServicePort {
-
   FirebaseAnalyticsAdapter() : _analytics = FirebaseAnalytics.instance;
   final FirebaseAnalytics _analytics;
 

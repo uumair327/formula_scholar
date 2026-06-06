@@ -192,8 +192,9 @@ class OnboardingStep2Page extends StatelessWidget {
                           context,
                           boards: state.boards,
                           selectedBoardId: state.selectedBoard?.id,
-                          onSelectBoard: (board) =>
-                              context.read<OnboardingCubit>().selectBoard(board),
+                          onSelectBoard: (board) => context
+                              .read<OnboardingCubit>()
+                              .selectBoard(board),
                         ),
                         icon: const Icon(
                           LucideIcons.arrowRight,

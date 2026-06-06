@@ -37,5 +37,13 @@ class AppAnnouncement extends Equatable {
   bool get isHighPriority => priority == 'high' || priority == 'urgent';
 
   @override
-  List<Object?> get props => [id, title, message, priority, status, publishAt, expiresAt];
+  List<Object?> get props => [
+    id,
+    title,
+    message,
+    priority,
+    status,
+    publishAt,
+    expiresAt,
+  ];
 }

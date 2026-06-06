@@ -9,7 +9,11 @@ import '../cubit/practice_cubit.dart';
 import '../cubit/practice_state.dart';
 
 class QuizOptionsList extends StatelessWidget {
-  const QuizOptionsList({super.key, required this.state, required this.question});
+  const QuizOptionsList({
+    super.key,
+    required this.state,
+    required this.question,
+  });
   final PracticeState state;
   final QuizQuestion question;
 
@@ -25,7 +29,8 @@ class QuizOptionsList extends StatelessWidget {
           final isCorrect = option.id == question.correctOptionId;
           final showCorrectState = state.showResult && isSelected && isCorrect;
           final showWrongState = state.showResult && isSelected && !isCorrect;
-          final showCorrectHint = state.showResult && !state.isCorrect && isCorrect;
+          final showCorrectHint =
+              state.showResult && !state.isCorrect && isCorrect;
           final hasAnswered = state.selectedOptionId != null;
 
           return AppCard(
@@ -83,7 +88,8 @@ class QuizOptionsList extends StatelessWidget {
                   child: _buildOptionText(
                     option.text,
                     AppTextStyles.titleMedium.copyWith(
-                      fontWeight: showCorrectState || showWrongState || showCorrectHint
+                      fontWeight:
+                          showCorrectState || showWrongState || showCorrectHint
                           ? FontWeight.w700
                           : FontWeight.w500,
                       color: showCorrectState || showCorrectHint
@@ -95,13 +101,17 @@ class QuizOptionsList extends StatelessWidget {
                   ),
                 ),
                 if (showCorrectState || showCorrectHint)
-                  Icon(LucideIcons.checkCircle2,
-                      size: AppDimensions.iconLG,
-                      color: colorScheme.secondary),
+                  Icon(
+                    LucideIcons.checkCircle2,
+                    size: AppDimensions.iconLG,
+                    color: colorScheme.secondary,
+                  ),
                 if (showWrongState)
-                  Icon(LucideIcons.xCircle,
-                      size: AppDimensions.iconLG,
-                      color: colorScheme.error),
+                  Icon(
+                    LucideIcons.xCircle,
+                    size: AppDimensions.iconLG,
+                    color: colorScheme.error,
+                  ),
               ],
             ),
           );
@@ -111,17 +121,27 @@ class QuizOptionsList extends StatelessWidget {
           return Wrap(
             spacing: AppDimensions.paddingLG,
             runSpacing: AppDimensions.paddingLG,
-            children: options.map((o) => SizedBox(
-              width: (constraints.maxWidth - AppDimensions.paddingLG) / 2,
-              child: o,
-            )).toList(),
+            children: options
+                .map(
+                  (o) => SizedBox(
+                    width: (constraints.maxWidth - AppDimensions.paddingLG) / 2,
+                    child: o,
+                  ),
+                )
+                .toList(),
           );
         }
         return Column(
-          children: options.map((o) => Padding(
-            padding: const EdgeInsets.only(bottom: AppDimensions.paddingLG),
-            child: o,
-          )).toList(),
+          children: options
+              .map(
+                (o) => Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: AppDimensions.paddingLG,
+                  ),
+                  child: o,
+                ),
+              )
+              .toList(),
         );
       },
     );
@@ -139,26 +159,21 @@ class QuizOptionsList extends StatelessWidget {
 
     for (final match in regex.allMatches(text)) {
       if (match.start > lastEnd) {
-        parts.add(TextSpan(
-          text: text.substring(lastEnd, match.start),
-          style: style,
-        ));
+        parts.add(
+          TextSpan(text: text.substring(lastEnd, match.start), style: style),
+        );
       }
-      parts.add(WidgetSpan(
-        alignment: PlaceholderAlignment.middle,
-        child: Math.tex(
-          match.group(1)!,
-          textStyle: style,
+      parts.add(
+        WidgetSpan(
+          alignment: PlaceholderAlignment.middle,
+          child: Math.tex(match.group(1)!, textStyle: style),
         ),
-      ));
+      );
       lastEnd = match.end;
     }
 
     if (lastEnd < text.length) {
-      parts.add(TextSpan(
-        text: text.substring(lastEnd),
-        style: style,
-      ));
+      parts.add(TextSpan(text: text.substring(lastEnd), style: style));
     }
 
     return Text.rich(TextSpan(children: parts));

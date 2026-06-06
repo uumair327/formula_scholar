@@ -17,8 +17,7 @@ class SpacedRepetitionService {
     final newInterval = _computeInterval(card.interval, q, card.reviewCount);
     final newReviewCount = card.reviewCount + 1;
     final newLapses = q < 3 ? card.lapses + 1 : card.lapses;
-    final newNextReviewAt =
-        DateTime.now().add(Duration(days: newInterval));
+    final newNextReviewAt = DateTime.now().add(Duration(days: newInterval));
 
     return card.copyWith(
       easeFactor: newEaseFactor,

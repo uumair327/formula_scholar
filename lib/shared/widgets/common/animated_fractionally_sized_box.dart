@@ -28,16 +28,20 @@ class _AppAnimatedFractionallySizedBoxState
 
   @override
   void forEachTween(TweenVisitor<dynamic> visitor) {
-    _widthFactor = visitor(
-      _widthFactor,
-      widget.widthFactor ?? 0.0,
-      (value) => Tween<double>(begin: value as double),
-    ) as Tween<double>?;
-    _heightFactor = visitor(
-      _heightFactor,
-      widget.heightFactor ?? 0.0,
-      (value) => Tween<double>(begin: value as double),
-    ) as Tween<double>?;
+    _widthFactor =
+        visitor(
+              _widthFactor,
+              widget.widthFactor ?? 0.0,
+              (value) => Tween<double>(begin: value as double),
+            )
+            as Tween<double>?;
+    _heightFactor =
+        visitor(
+              _heightFactor,
+              widget.heightFactor ?? 0.0,
+              (value) => Tween<double>(begin: value as double),
+            )
+            as Tween<double>?;
   }
 
   @override

@@ -10,8 +10,8 @@ void main(List<String> args) async {
       ? args.first
       : 'formula-scholar-firebase-adminsdk-fbsvc-8b4116cc0e.json';
 
-  final targetUid = Platform.environment['TARGET_USER_UID'] ??
-      '3y6cquvN0KbzhmqayddYABzLWMh2';
+  final targetUid =
+      Platform.environment['TARGET_USER_UID'] ?? '3y6cquvN0KbzhmqayddYABzLWMh2';
 
   final admin = FirebaseAdminApp.initializeApp(
     'formula-scholar',

@@ -1,4 +1,4 @@
-﻿import 'package:go_router/go_router.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../features/auth/auth.dart';
 import '../app_page_transitions.dart';
@@ -28,4 +28,3 @@ List<GoRoute> authRoutes() {
     ),
   ];
 }
-

@@ -17,7 +17,11 @@ class DashboardShimmer extends StatelessWidget {
             children: [
               const Row(
                 children: [
-                  ShimmerBox(width: AppDimensions.avatarMD, height: AppDimensions.avatarMD, borderRadius: AppDimensions.radiusXXL),
+                  ShimmerBox(
+                    width: AppDimensions.avatarMD,
+                    height: AppDimensions.avatarMD,
+                    borderRadius: AppDimensions.radiusXXL,
+                  ),
                   SizedBox(width: AppDimensions.paddingMD),
                   Expanded(
                     child: Column(
@@ -32,30 +36,62 @@ class DashboardShimmer extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: AppDimensions.paddingXXL),
-              const ShimmerBox(width: double.infinity, height: 160, borderRadius: AppDimensions.radiusXL),
+              const ShimmerBox(
+                width: double.infinity,
+                height: 160,
+                borderRadius: AppDimensions.radiusXL,
+              ),
               const SizedBox(height: AppDimensions.paddingSection),
               const ShimmerBox(width: 140, height: 18),
               const SizedBox(height: AppDimensions.paddingLG),
               const Row(
                 children: [
-                  Expanded(child: ShimmerBox(width: double.infinity, height: 100, borderRadius: AppDimensions.radiusLG)),
+                  Expanded(
+                    child: ShimmerBox(
+                      width: double.infinity,
+                      height: 100,
+                      borderRadius: AppDimensions.radiusLG,
+                    ),
+                  ),
                   SizedBox(width: AppDimensions.paddingMD),
-                  Expanded(child: ShimmerBox(width: double.infinity, height: 100, borderRadius: AppDimensions.radiusLG)),
+                  Expanded(
+                    child: ShimmerBox(
+                      width: double.infinity,
+                      height: 100,
+                      borderRadius: AppDimensions.radiusLG,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: AppDimensions.paddingMD),
               const Row(
                 children: [
-                  Expanded(child: ShimmerBox(width: double.infinity, height: 100, borderRadius: AppDimensions.radiusLG)),
+                  Expanded(
+                    child: ShimmerBox(
+                      width: double.infinity,
+                      height: 100,
+                      borderRadius: AppDimensions.radiusLG,
+                    ),
+                  ),
                   SizedBox(width: AppDimensions.paddingMD),
-                  Expanded(child: ShimmerBox(width: double.infinity, height: 100, borderRadius: AppDimensions.radiusLG)),
+                  Expanded(
+                    child: ShimmerBox(
+                      width: double.infinity,
+                      height: 100,
+                      borderRadius: AppDimensions.radiusLG,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: AppDimensions.paddingSection),
               const ShimmerBox(width: 160, height: 18),
               const SizedBox(height: AppDimensions.paddingLG),
               for (int i = 0; i < 3; i++) ...[
-                const ShimmerBox(width: double.infinity, height: 72, borderRadius: AppDimensions.radiusLG),
+                const ShimmerBox(
+                  width: double.infinity,
+                  height: 72,
+                  borderRadius: AppDimensions.radiusLG,
+                ),
                 const SizedBox(height: AppDimensions.paddingMD),
               ],
             ],

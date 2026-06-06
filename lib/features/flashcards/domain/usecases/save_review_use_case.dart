@@ -13,10 +13,7 @@ class SaveReviewUseCase {
 
   final FlashcardRepositoryPort _repository;
 
-  Future<Result<void>> call({
-    required String userId,
-    required Flashcard card,
-  }) {
+  Future<Result<void>> call({required String userId, required Flashcard card}) {
     return _repository.saveReview(userId: userId, card: card);
   }
 }

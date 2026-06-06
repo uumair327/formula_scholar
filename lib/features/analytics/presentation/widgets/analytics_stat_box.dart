@@ -29,8 +29,18 @@ class AnalyticsStatBox extends StatelessWidget {
           children: [
             Icon(icon, color: colorScheme.primary, size: 20),
             const SizedBox(height: 4),
-            Text(value, style: AppTextStyles.titleLarge.copyWith(fontWeight: FontWeight.w800)),
-            Text(label, style: AppTextStyles.labelSmall.copyWith(color: colorScheme.onSurfaceVariant)),
+            Text(
+              value,
+              style: AppTextStyles.titleLarge.copyWith(
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            Text(
+              label,
+              style: AppTextStyles.labelSmall.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
           ],
         ),
       ),

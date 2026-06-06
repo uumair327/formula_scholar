@@ -55,10 +55,7 @@ class _AnimatedBranchContainer extends StatelessWidget {
           curve: AppDurations.curvePremium,
           child: IgnorePointer(
             ignoring: index != currentIndex,
-            child: TickerMode(
-              enabled: index == currentIndex,
-              child: child,
-            ),
+            child: TickerMode(enabled: index == currentIndex, child: child),
           ),
         );
       }).toList(),
@@ -102,9 +99,7 @@ StatefulShellBranch _dashboardBranch() {
                       curriculumCubit: getIt<CurriculumCubit>(),
                     ),
                   ),
-                  BlocProvider(
-                    create: (_) => getIt<ProfileCubit>(),
-                  ),
+                  BlocProvider(create: (_) => getIt<ProfileCubit>()),
                 ],
                 child: const DashboardPage(),
               ),

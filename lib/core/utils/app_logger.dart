@@ -122,7 +122,7 @@ class AppLogger {
     if (!_shouldLog(Level.error)) return;
     final msg = _format(message, tag);
     _logger!.e(msg, error: error, stackTrace: stackTrace);
-    
+
     try {
       _ensureInitialized();
       _crashlytics?.recordError(error ?? msg, stackTrace, reason: msg);
@@ -139,7 +139,7 @@ class AppLogger {
     _ensureInitialized();
     final msg = _format(message, tag);
     _logger!.f(msg, error: error, stackTrace: stackTrace);
-    
+
     try {
       _crashlytics?.recordFatalError(error ?? msg, stackTrace, reason: msg);
     } catch (_) {}

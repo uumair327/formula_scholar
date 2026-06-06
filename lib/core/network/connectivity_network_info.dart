@@ -20,7 +20,9 @@ class ConnectivityNetworkInfo implements NetworkInfoPort {
   @override
   Future<bool> get isConnected async {
     final results = await _connectivity.checkConnectivity();
-    final connected = results.any((result) => result != ConnectivityResult.none);
+    final connected = results.any(
+      (result) => result != ConnectivityResult.none,
+    );
     AppLogger.trace('Connectivity check: $connected', tag: 'Connectivity');
     return connected;
   }

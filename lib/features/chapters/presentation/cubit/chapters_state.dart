@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import '../../domain/domain.dart';
+
 const Object _unset = Object();
 
 enum ChaptersStatus { initial, loading, loaded, error }

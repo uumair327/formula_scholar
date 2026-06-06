@@ -5,10 +5,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'platform_view_registry.dart';
 
 class WebviewChemistryWidget extends StatefulWidget {
-  const WebviewChemistryWidget({
-    super.key,
-    required this.config,
-  });
+  const WebviewChemistryWidget({super.key, required this.config});
 
   final Map<String, dynamic> config;
 
@@ -26,7 +23,7 @@ class _WebviewChemistryWidgetState extends State<WebviewChemistryWidget> {
     super.initState();
     if (kIsWeb) {
       _viewId = 'chemistry-viewer-${DateTime.now().millisecondsSinceEpoch}';
-      
+
       registerViewFactory(_viewId, (int viewId) {
         final iframe = html.IFrameElement()
           ..style.border = 'none'
@@ -58,7 +55,7 @@ class _WebviewChemistryWidgetState extends State<WebviewChemistryWidget> {
     super.didUpdateWidget(oldWidget);
     if (widget.config != oldWidget.config) {
       if (kIsWeb) {
-        // For web, if iframe is used, srcdoc update is harder, 
+        // For web, if iframe is used, srcdoc update is harder,
         // we could just rebuild by changing viewId, but it's simpler to keep it static for now
         // since formulas don't typically change dynamically without a full widget rebuild.
       } else if (_pageLoaded) {
@@ -71,9 +68,9 @@ class _WebviewChemistryWidgetState extends State<WebviewChemistryWidget> {
     if (kIsWeb || _controller == null) return;
     final smiles = widget.config['smiles'] as String? ?? 'CCO';
     final renderMode = widget.config['renderMode'] as String? ?? '2d';
-    
+
     _controller!.runJavaScript(
-      "if (window.renderMolecule) { window.renderMolecule('$renderMode', '$smiles'); }"
+      "if (window.renderMolecule) { window.renderMolecule('$renderMode', '$smiles'); }",
     );
   }
 

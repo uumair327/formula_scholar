@@ -8,12 +8,14 @@ class AiTurnResult extends Equatable {
     required this.message,
     this.actionRequest,
     this.actionResult,
+    this.widgetConfig,
     this.usedLocalFallback = false,
   });
 
   final String message;
   final AiActionRequest? actionRequest;
   final AiActionResult? actionResult;
+  final Map<String, dynamic>? widgetConfig;
   final bool usedLocalFallback;
 
   @override
@@ -21,6 +23,7 @@ class AiTurnResult extends Equatable {
     message,
     actionRequest,
     actionResult,
+    widgetConfig,
     usedLocalFallback,
   ];
 }

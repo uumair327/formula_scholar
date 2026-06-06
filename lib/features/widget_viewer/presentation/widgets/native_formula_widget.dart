@@ -3,11 +3,7 @@ import 'package:flutter_math_fork/flutter_math.dart';
 import '../../../../core/core.dart';
 
 class NativeFormulaWidget extends StatelessWidget {
-  const NativeFormulaWidget({
-    super.key,
-    required this.latex,
-    this.style,
-  });
+  const NativeFormulaWidget({super.key, required this.latex, this.style});
 
   final String latex;
   final TextStyle? style;
@@ -31,7 +27,8 @@ class NativeFormulaWidget extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Math.tex(
             latex,
-            textStyle: style ??
+            textStyle:
+                style ??
                 AppTextStyles.headlineSmall.copyWith(
                   color: colorScheme.onSurface,
                 ),

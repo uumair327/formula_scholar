@@ -1,6 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import '../../domain/domain.dart';
+
 /// Hive-backed cache for formulas data, enabling offline-first access.
 ///
 /// Follows the same pattern established by [ChaptersHiveCache].

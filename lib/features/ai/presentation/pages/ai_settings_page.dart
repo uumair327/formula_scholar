@@ -143,8 +143,8 @@ class _AiSettingsPageState extends State<AiSettingsPage> {
                           prefixIcon: const Icon(LucideIcons.lock),
                           suffixIcon: IconButton(
                             tooltip: _obscureKey ? 'Show key' : 'Hide key',
-                            onPressed:
-                                () => setState(() => _obscureKey = !_obscureKey),
+                            onPressed: () =>
+                                setState(() => _obscureKey = !_obscureKey),
                             icon: Icon(
                               _obscureKey
                                   ? LucideIcons.eye
@@ -189,8 +189,8 @@ class _AiSettingsPageState extends State<AiSettingsPage> {
                             onPressed: isBusy
                                 ? null
                                 : () => context
-                                    .read<AiSettingsCubit>()
-                                    .validate(),
+                                      .read<AiSettingsCubit>()
+                                      .validate(),
                             icon: const Icon(LucideIcons.checkCircle2),
                             label: const Text('Validate Key'),
                           ),
@@ -213,8 +213,8 @@ class _AiSettingsPageState extends State<AiSettingsPage> {
                               onPressed: isBusy
                                   ? null
                                   : () => context
-                                      .read<AiSettingsCubit>()
-                                      .deleteApiKey(),
+                                        .read<AiSettingsCubit>()
+                                        .deleteApiKey(),
                               icon: const Icon(LucideIcons.trash2),
                               label: const Text('Delete Key'),
                             ),

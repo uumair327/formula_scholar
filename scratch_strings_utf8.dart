@@ -1,4 +1,4 @@
-﻿/// Centralized string constants used across the application.
+/// Centralized string constants used across the application.
 ///
 /// Follows the Single Responsibility Principle – all user-facing
 /// and internal string literals live here for easy l10n, consistency,
@@ -508,7 +508,8 @@ abstract final class AppStrings {
   static const String achievementNotifications = 'Achievements';
   static const String achievements = 'Milestone Alerts';
   static const String achievementsTitle = 'Achievements';
-  static const String achievementsSubtitle = 'View your earned badges and trophies';
+  static const String achievementsSubtitle =
+      'View your earned badges and trophies';
   static const String achievementsDesc = 'When you hit learning milestones';
   static const String weeklyReport = 'Weekly Report';
   static const String weeklyReportDesc = 'Summary of your weekly progress';
@@ -561,12 +562,14 @@ abstract final class AppStrings {
   static const String searchLabel = 'Search';
   static const String searchFormulas = 'Search formulas';
   static const String searchNoResults = 'No formulas found';
-  static const String searchNoResultsDesc = 'Try a different search term or browse chapters';
+  static const String searchNoResultsDesc =
+      'Try a different search term or browse chapters';
   static const String searchResultsFor = 'Results for';
 
   // ──────────────────────── Study Planner ──────────────────────
   static const String studyPlanner = 'Study Planner';
-  static const String studyPlannerSubtitle = 'Plan and track your study sessions';
+  static const String studyPlannerSubtitle =
+      'Plan and track your study sessions';
   static const String createPlan = 'Create Plan';
   static const String sessionComplete = 'Session Complete';
 
@@ -577,7 +580,8 @@ abstract final class AppStrings {
   static const String flashcardMastered = 'Mastered';
   static const String flashcardReview = 'Review Again';
   static const String flashcardSessionComplete = 'Session Complete!';
-  static const String flashcardSessionDesc = 'Great work! Keep practicing to master all formulas.';
+  static const String flashcardSessionDesc =
+      'Great work! Keep practicing to master all formulas.';
 
   // ──────────────────────── Notes ──────────────────────────────
   static const String addNote = 'Add Note';
@@ -716,8 +720,10 @@ abstract final class AppStrings {
 
   // ──────────────────────── Form Validation ──────────────────
   static const String validationRequired = 'This field is required';
-  static const String validationInvalidEmail = 'Please enter a valid email address';
-  static const String validationPasswordMinLength = 'Password must be at least 6 characters';
+  static const String validationInvalidEmail =
+      'Please enter a valid email address';
+  static const String validationPasswordMinLength =
+      'Password must be at least 6 characters';
   static const String validationPasswordMismatch = 'Passwords do not match';
 
   // Legal footer

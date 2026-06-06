@@ -23,7 +23,10 @@ class AchievementsPage extends StatelessWidget {
         ),
       ),
       body: BlocBuilder<AchievementsCubit, AchievementsState>(
-        buildWhen: (p, n) => p.isLoading != n.isLoading || p.unlocked != n.unlocked || p.locked != n.locked,
+        buildWhen: (p, n) =>
+            p.isLoading != n.isLoading ||
+            p.unlocked != n.unlocked ||
+            p.locked != n.locked,
         builder: (context, state) {
           if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -62,9 +65,7 @@ class AchievementsPage extends StatelessWidget {
   Widget _sectionHeader(String text) {
     return Text(
       text,
-      style: AppTextStyles.titleMedium.copyWith(
-        fontWeight: FontWeight.w700,
-      ),
+      style: AppTextStyles.titleMedium.copyWith(fontWeight: FontWeight.w700),
     );
   }
 }

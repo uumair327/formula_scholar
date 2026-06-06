@@ -67,28 +67,31 @@ void main() {
       expect(cubit.state.formulaB, isNull);
     });
 
-    test('setFormulas emits loaded state with both formulas and comparison', () {
-      const formulaA = Formula(
-        id: '1',
-        title: 'Newton\'s Law',
-        latex: 'F = ma',
-        description: 'Force equals mass times acceleration',
-      );
-      const formulaB = Formula(
-        id: '2',
-        title: 'Momentum',
-        latex: 'p = mv',
-        description: 'Momentum equals mass times velocity',
-      );
+    test(
+      'setFormulas emits loaded state with both formulas and comparison',
+      () {
+        const formulaA = Formula(
+          id: '1',
+          title: 'Newton\'s Law',
+          latex: 'F = ma',
+          description: 'Force equals mass times acceleration',
+        );
+        const formulaB = Formula(
+          id: '2',
+          title: 'Momentum',
+          latex: 'p = mv',
+          description: 'Momentum equals mass times velocity',
+        );
 
-      cubit.setFormulas(formulaA, formulaB);
+        cubit.setFormulas(formulaA, formulaB);
 
-      expect(cubit.state.status, ComparisonStatus.loaded);
-      expect(cubit.state.formulaA, formulaA);
-      expect(cubit.state.formulaB, formulaB);
-      expect(cubit.state.comparison, isNotNull);
-      expect(cubit.state.comparison!.sharedVariables, contains('m'));
-    });
+        expect(cubit.state.status, ComparisonStatus.loaded);
+        expect(cubit.state.formulaA, formulaA);
+        expect(cubit.state.formulaB, formulaB);
+        expect(cubit.state.comparison, isNotNull);
+        expect(cubit.state.comparison!.sharedVariables, contains('m'));
+      },
+    );
 
     test('swap exchanges formulaA and formulaB and recomputes comparison', () {
       const formulaA = Formula(
@@ -158,9 +161,13 @@ void main() {
       final future = expectLater(
         cubit.stream,
         emitsInOrder(<Matcher>[
-          predicate<ComparisonState>((s) => s.status == ComparisonStatus.loaded),
+          predicate<ComparisonState>(
+            (s) => s.status == ComparisonStatus.loaded,
+          ),
           predicate<ComparisonState>((s) => s.formulaA == formulaB),
-          predicate<ComparisonState>((s) => s.status == ComparisonStatus.initial),
+          predicate<ComparisonState>(
+            (s) => s.status == ComparisonStatus.initial,
+          ),
         ]),
       );
 

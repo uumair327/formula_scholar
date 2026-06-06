@@ -165,7 +165,10 @@ class _HelpSupportPageState extends State<HelpSupportPage> {
                   ),
                 ),
                 const SizedBox(height: AppDimensions.paddingXXL),
-                EntranceWrapper.stagger(index: 13, child: const HelpVersionCard()),
+                EntranceWrapper.stagger(
+                  index: 13,
+                  child: const HelpVersionCard(),
+                ),
                 const SizedBox(height: AppDimensions.bottomNavPadding),
               ]),
             ),

@@ -22,11 +22,5 @@ class SearchResult extends Equatable {
   final String chapterName;
 
   @override
-  List<Object?> get props => [
-    id,
-    title,
-    latex,
-    subjectId,
-    chapterId,
-  ];
+  List<Object?> get props => [id, title, latex, subjectId, chapterId];
 }

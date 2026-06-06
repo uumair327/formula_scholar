@@ -11,7 +11,10 @@ void main() {
 
     setUp(() {
       dataSource = _FakePracticeDataSource();
-      repository = PracticeRepositoryImpl(dataSource: dataSource, cache: _FakePracticeCache());
+      repository = PracticeRepositoryImpl(
+        dataSource: dataSource,
+        cache: _FakePracticeCache(),
+      );
     });
 
     test('forwards quiz completion payload to data source', () async {

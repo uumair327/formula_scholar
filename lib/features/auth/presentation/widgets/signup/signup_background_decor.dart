@@ -11,8 +11,12 @@ class SignupBackgroundDecor extends StatelessWidget {
     return Stack(
       children: [
         Positioned(
-          top: -AppDimensions.decorativeBlurMD * AppDimensions.decorativePositionFraction,
-          right: -AppDimensions.decorativeBlurSM * AppDimensions.decorativePositionFraction,
+          top:
+              -AppDimensions.decorativeBlurMD *
+              AppDimensions.decorativePositionFraction,
+          right:
+              -AppDimensions.decorativeBlurSM *
+              AppDimensions.decorativePositionFraction,
           child: Container(
             width: AppDimensions.decorativeBlurLG,
             height: AppDimensions.decorativeBlurLG,
@@ -20,16 +24,22 @@ class SignupBackgroundDecor extends StatelessWidget {
               shape: BoxShape.circle,
               gradient: RadialGradient(
                 colors: [
-                  (isDark ? AppColors.darkPrimary : AppColors.primaryFixed).withValues(alpha: 0.1),
-                  (isDark ? AppColors.darkPrimary : AppColors.primaryFixed).withValues(alpha: 0.0),
+                  (isDark ? AppColors.darkPrimary : AppColors.primaryFixed)
+                      .withValues(alpha: 0.1),
+                  (isDark ? AppColors.darkPrimary : AppColors.primaryFixed)
+                      .withValues(alpha: 0.0),
                 ],
               ),
             ),
           ),
         ),
         Positioned(
-          bottom: -AppDimensions.decorativeBlurSM * AppDimensions.decorativePositionFraction,
-          left: -AppDimensions.decorativeBlurSM * AppDimensions.decorativePositionFraction,
+          bottom:
+              -AppDimensions.decorativeBlurSM *
+              AppDimensions.decorativePositionFraction,
+          left:
+              -AppDimensions.decorativeBlurSM *
+              AppDimensions.decorativePositionFraction,
           child: Container(
             width: AppDimensions.decorativeBlurMD,
             height: AppDimensions.decorativeBlurMD,
@@ -37,8 +47,14 @@ class SignupBackgroundDecor extends StatelessWidget {
               shape: BoxShape.circle,
               gradient: RadialGradient(
                 colors: [
-                  (isDark ? AppColors.darkTertiary : AppColors.tertiaryContainer).withValues(alpha: 0.08),
-                  (isDark ? AppColors.darkTertiary : AppColors.tertiaryContainer).withValues(alpha: 0.0),
+                  (isDark
+                          ? AppColors.darkTertiary
+                          : AppColors.tertiaryContainer)
+                      .withValues(alpha: 0.08),
+                  (isDark
+                          ? AppColors.darkTertiary
+                          : AppColors.tertiaryContainer)
+                      .withValues(alpha: 0.0),
                 ],
               ),
             ),

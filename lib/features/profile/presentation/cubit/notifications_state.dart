@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import '../../domain/domain.dart';
+
 const Object _unset = Object();
 
 enum NotificationsStatus { initial, loading, loaded, saving, error }

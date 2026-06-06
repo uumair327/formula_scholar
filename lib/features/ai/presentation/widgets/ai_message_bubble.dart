@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
+import '../../../widget_viewer/presentation/widgets/interactive_widget_container.dart';
 import '../../domain/domain.dart';
 
 class AiMessageBubble extends StatelessWidget {
@@ -154,6 +155,10 @@ class AiMessageBubble extends StatelessWidget {
                       ),
                   ],
                 ),
+              ],
+              if (message.widgetConfig != null) ...[
+                const SizedBox(height: AppDimensions.paddingMD),
+                InteractiveWidgetContainer(widgetConfig: message.widgetConfig!),
               ],
             ],
           ),

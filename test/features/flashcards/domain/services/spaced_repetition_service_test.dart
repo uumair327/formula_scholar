@@ -64,10 +64,7 @@ void main() {
       });
 
       test('Card is mastered when interval >= 21', () {
-        final card = baseCard.copyWith(
-          reviewCount: 5,
-          interval: 20,
-        );
+        final card = baseCard.copyWith(reviewCount: 5, interval: 20);
         final result = srs.rateCard(card, ReviewQuality.easy);
         expect(result.isMastered, true);
         expect(result.interval, greaterThanOrEqualTo(21));

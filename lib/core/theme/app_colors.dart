@@ -147,8 +147,8 @@ abstract final class AppColors {
   /// Returns glass border color based on brightness.
   static Color glassBorder(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark
-          ? glassBorderDark
-          : glassBorderLight;
+      ? glassBorderDark
+      : glassBorderLight;
 
   // ──────────────────────── Gradient Presets ─────────────────────
   /// Primary gradient — hero cards, CTAs.
@@ -183,11 +183,7 @@ abstract final class AppColors {
   static const LinearGradient cardShimmer = LinearGradient(
     begin: Alignment(-1.0, -0.3),
     end: Alignment(1.0, 0.3),
-    colors: [
-      Color(0x00FFFFFF),
-      Color(0x0DFFFFFF),
-      Color(0x00FFFFFF),
-    ],
+    colors: [Color(0x00FFFFFF), Color(0x0DFFFFFF), Color(0x00FFFFFF)],
   );
 
   /// Dark mode primary gradient — adjusted for dark surfaces.
@@ -214,18 +210,18 @@ abstract final class AppColors {
   /// Returns the primary gradient for the current brightness.
   static LinearGradient primaryGradientOf(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark
-          ? darkPrimaryGradient
-          : primaryGradient;
+      ? darkPrimaryGradient
+      : primaryGradient;
 
   /// Returns the hero gradient for the current brightness.
   static LinearGradient heroGradientOf(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark
-          ? darkHeroGradient
-          : heroGradient;
+      ? darkHeroGradient
+      : heroGradient;
 
   /// Returns the error gradient for the current brightness.
   static LinearGradient errorGradientOf(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark
-          ? darkErrorGradient
-          : errorGradient;
+      ? darkErrorGradient
+      : errorGradient;
 }

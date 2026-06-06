@@ -1,10 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class WeeklyActivity extends Equatable {
-  const WeeklyActivity({
-    required this.dayLabels,
-    required this.values,
-  });
+  const WeeklyActivity({required this.dayLabels, required this.values});
 
   final List<String> dayLabels;
   final List<int> values;

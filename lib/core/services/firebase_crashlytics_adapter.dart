@@ -9,11 +9,10 @@ import 'crashlytics_service_port.dart';
 /// Registered as a LazySingleton via get_it.
 @LazySingleton(as: CrashlyticsServicePort)
 class FirebaseCrashlyticsAdapter implements CrashlyticsServicePort {
-
   FirebaseCrashlyticsAdapter() : _crashlytics = FirebaseCrashlytics.instance {
     // Automatically catch all uncaught Flutter framework errors
     FlutterError.onError = _crashlytics.recordFlutterFatalError;
-    
+
     // Automatically catch asynchronous errors
     PlatformDispatcher.instance.onError = (error, stack) {
       _crashlytics.recordError(error, stack, fatal: true);

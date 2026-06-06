@@ -119,9 +119,7 @@ class QuizCard extends StatelessWidget {
                           ),
                           textStyle: AppTextStyles.labelLarge,
                         ),
-                        child: Text(
-                          context.l10n.startNowLabel,
-                        ),
+                        child: Text(context.l10n.startNowLabel),
                       );
                     },
                   );

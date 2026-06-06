@@ -78,10 +78,16 @@ class _EntranceWrapperState extends State<EntranceWrapper>
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _controller, curve: AppDurations.curvePremium),
     );
-    _scaleAnimation = Tween<double>(
-      begin: widget.useScale ? widget.scaleBegin : 1.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _controller, curve: AppDurations.curvePremium));
+    _scaleAnimation =
+        Tween<double>(
+          begin: widget.useScale ? widget.scaleBegin : 1.0,
+          end: 1.0,
+        ).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: AppDurations.curvePremium,
+          ),
+        );
 
     if (widget.delay == Duration.zero) {
       _controller.forward();
@@ -122,9 +128,13 @@ class _EntranceWrapperState extends State<EntranceWrapper>
   @override
   Widget build(BuildContext context) {
     final slideOffset = _effectiveSlideOffset(context);
-    final slideTween = Tween<Offset>(begin: slideOffset, end: Offset.zero).animate(
-      CurvedAnimation(parent: _controller, curve: AppDurations.curvePremium),
-    );
+    final slideTween = Tween<Offset>(begin: slideOffset, end: Offset.zero)
+        .animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: AppDurations.curvePremium,
+          ),
+        );
 
     return AnimatedBuilder(
       animation: _controller,
@@ -133,10 +143,7 @@ class _EntranceWrapperState extends State<EntranceWrapper>
           opacity: _fadeAnimation.value,
           child: Transform.translate(
             offset: slideTween.value,
-            child: Transform.scale(
-              scale: _scaleAnimation.value,
-              child: child,
-            ),
+            child: Transform.scale(scale: _scaleAnimation.value, child: child),
           ),
         );
       },

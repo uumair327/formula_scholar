@@ -27,8 +27,9 @@ class StaggeredFadeIn extends StatelessWidget {
       curve: Curves.easeOutCubic,
       builder: (context, value, child) {
         // Calculate the relative progress based on delay
-        final double delayFraction = beginDelay.inMilliseconds / totalDuration.inMilliseconds;
-        
+        final double delayFraction =
+            beginDelay.inMilliseconds / totalDuration.inMilliseconds;
+
         double progress = 0.0;
         if (value > delayFraction) {
           progress = (value - delayFraction) / (1.0 - delayFraction);

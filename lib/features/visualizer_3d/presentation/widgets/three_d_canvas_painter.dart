@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+
 class Point3D {
   Point3D(this.x, this.y, this.z);
   final double x;

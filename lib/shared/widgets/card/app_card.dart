@@ -32,8 +32,7 @@ class AppCard extends StatefulWidget {
   State<AppCard> createState() => _AppCardState();
 }
 
-class _AppCardState extends State<AppCard>
-    with SingleTickerProviderStateMixin {
+class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _scaleAnimation;
   bool _isHovered = false;
@@ -45,12 +44,13 @@ class _AppCardState extends State<AppCard>
       vsync: this,
       duration: AppDurations.instant,
     );
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: AppDimensions.cardPressScale,
-    ).animate(
-      CurvedAnimation(parent: _controller, curve: AppDurations.curvePremium),
-    );
+    _scaleAnimation =
+        Tween<double>(begin: 1.0, end: AppDimensions.cardPressScale).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: AppDurations.curvePremium,
+          ),
+        );
   }
 
   @override
@@ -80,7 +80,8 @@ class _AppCardState extends State<AppCard>
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final cardColor = widget.color ??
+    final cardColor =
+        widget.color ??
         Theme.of(context).cardTheme.color ??
         colorScheme.surfaceContainerLowest;
 
@@ -118,10 +119,7 @@ class _AppCardState extends State<AppCard>
         child: AnimatedBuilder(
           animation: _scaleAnimation,
           builder: (context, child) {
-            return Transform.scale(
-              scale: _scaleAnimation.value,
-              child: child,
-            );
+            return Transform.scale(scale: _scaleAnimation.value, child: child);
           },
           child: card,
         ),

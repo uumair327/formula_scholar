@@ -82,7 +82,8 @@ class DashboardCubit extends Cubit<DashboardState>
     bool? contentLocalizationEnabled,
   }) {
     final normalized = AppLocales.normalizeContentLocaleCode(localeCode);
-    final enabledChanged = contentLocalizationEnabled != null &&
+    final enabledChanged =
+        contentLocalizationEnabled != null &&
         contentLocalizationEnabled != _contentLocalizationEnabled;
 
     if (_contentLocaleCode == normalized && !enabledChanged) {

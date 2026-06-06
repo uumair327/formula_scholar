@@ -5,6 +5,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:google_sign_in/google_sign_in.dart' as gsi;
 import 'package:injectable/injectable.dart';
+
 /// Injectable module providing external service instances.
 ///
 /// External dependencies (e.g. Firebase SDK singletons, platform plugins)

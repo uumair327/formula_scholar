@@ -24,11 +24,13 @@ class OnboardingSelectCard extends StatefulWidget {
 class _OnboardingSelectCardState extends State<OnboardingSelectCard> {
   bool _isPressed = false;
 
-  void _handleTapDown(TapDownDetails details) => setState(() => _isPressed = true);
+  void _handleTapDown(TapDownDetails details) =>
+      setState(() => _isPressed = true);
   void _handleTapUp(TapUpDetails details) {
     setState(() => _isPressed = false);
     widget.onTap();
   }
+
   void _handleTapCancel() => setState(() => _isPressed = false);
 
   @override
@@ -50,13 +52,15 @@ class _OnboardingSelectCardState extends State<OnboardingSelectCard> {
           decoration: BoxDecoration(
             color: widget.isSelected
                 ? (isDark
-                    ? AppColors.darkPrimary.withValues(alpha: 0.08)
-                    : AppColors.primaryFixed.withValues(alpha: 0.08))
+                      ? AppColors.darkPrimary.withValues(alpha: 0.08)
+                      : AppColors.primaryFixed.withValues(alpha: 0.08))
                 : colorScheme.surfaceContainer,
             borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
             border: Border.all(
               color: widget.isSelected
-                  ? AppColors.primary.withValues(alpha: AppDimensions.opacityMedium)
+                  ? AppColors.primary.withValues(
+                      alpha: AppDimensions.opacityMedium,
+                    )
                   : colorScheme.outlineVariant.withValues(alpha: 0.5),
               width: widget.isSelected
                   ? AppDimensions.borderWidthThick
@@ -91,8 +95,12 @@ class _OnboardingSelectCardState extends State<OnboardingSelectCard> {
               if (widget.isSelected)
                 Positioned(
                   top: 0,
-                  left: Directionality.of(context) == TextDirection.rtl ? 0 : null,
-                  right: Directionality.of(context) == TextDirection.ltr ? 0 : null,
+                  left: Directionality.of(context) == TextDirection.rtl
+                      ? 0
+                      : null,
+                  right: Directionality.of(context) == TextDirection.ltr
+                      ? 0
+                      : null,
                   child: Container(
                     width: AppDimensions.iconMD,
                     height: AppDimensions.iconMD,

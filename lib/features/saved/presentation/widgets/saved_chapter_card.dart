@@ -17,7 +17,6 @@ class SavedChapterCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-
     return AppCard(
       padding: const EdgeInsets.all(AppDimensions.paddingXL),
       onTap: () {

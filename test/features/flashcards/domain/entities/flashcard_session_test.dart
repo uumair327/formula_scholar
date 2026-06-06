@@ -49,18 +49,12 @@ void main() {
     });
 
     test('remainingCards decreases with graduated', () {
-      const session = FlashcardSession(
-        cards: cards,
-        graduatedIds: ['a'],
-      );
+      const session = FlashcardSession(cards: cards, graduatedIds: ['a']);
       expect(session.remainingCards, 1);
     });
 
     test('isComplete when all graduated', () {
-      const session = FlashcardSession(
-        cards: cards,
-        graduatedIds: ['a', 'b'],
-      );
+      const session = FlashcardSession(cards: cards, graduatedIds: ['a', 'b']);
       expect(session.isComplete, true);
     });
 
@@ -70,10 +64,7 @@ void main() {
     });
 
     test('progressPercent is 50 when half graduated', () {
-      const session = FlashcardSession(
-        cards: cards,
-        graduatedIds: ['a'],
-      );
+      const session = FlashcardSession(cards: cards, graduatedIds: ['a']);
       expect(session.progressPercent, 50);
     });
 

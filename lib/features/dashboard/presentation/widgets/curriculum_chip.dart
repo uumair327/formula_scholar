@@ -46,7 +46,9 @@ class _CurriculumChipState extends State<CurriculumChip> {
           ),
           decoration: BoxDecoration(
             gradient: selected
-                ? (isDark ? AppColors.darkPrimaryGradient : AppColors.primaryGradient)
+                ? (isDark
+                      ? AppColors.darkPrimaryGradient
+                      : AppColors.primaryGradient)
                 : null,
             color: selected ? null : Colors.transparent,
             borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
@@ -78,9 +80,7 @@ class _CurriculumChipState extends State<CurriculumChip> {
                   Text(
                     widget.label,
                     style: AppTextStyles.labelMedium.copyWith(
-                      color: selected
-                          ? AppColors.white
-                          : colorScheme.onSurface,
+                      color: selected ? AppColors.white : colorScheme.onSurface,
                       fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
                     ),
                   ),

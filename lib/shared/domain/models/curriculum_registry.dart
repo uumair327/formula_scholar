@@ -5,7 +5,6 @@
 library;
 
 class CurriculumRegistry {
-
   const CurriculumRegistry({
     required this.generatedAt,
     required this.datasetVersion,
@@ -63,7 +62,6 @@ class CurriculumRegistry {
 
 /// A single curriculum node (e.g., 'countries', 'subjects', 'chapters')
 class CurriculumNode {
-
   const CurriculumNode({
     required this.key,
     required this.label,

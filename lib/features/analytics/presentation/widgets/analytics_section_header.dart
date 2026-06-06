@@ -19,7 +19,12 @@ class AnalyticsSectionHeader extends StatelessWidget {
       children: [
         Icon(icon, size: 18, color: colorScheme.primary),
         const SizedBox(width: 8),
-        Text(title, style: AppTextStyles.titleMedium.copyWith(fontWeight: FontWeight.w700)),
+        Text(
+          title,
+          style: AppTextStyles.titleMedium.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ],
     );
   }

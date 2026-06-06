@@ -89,11 +89,11 @@ abstract final class AppShadows {
 
   /// Glow shadow — coloured glow for accent elements.
   static BoxShadow glow(Color color) => BoxShadow(
-        color: color.withValues(alpha: 0.3),
-        blurRadius: 20.0,
-        offset: const Offset(0, 4.0),
-        spreadRadius: -4.0,
-      );
+    color: color.withValues(alpha: 0.3),
+    blurRadius: 20.0,
+    offset: const Offset(0, 4.0),
+    spreadRadius: -4.0,
+  );
 
   /// Inner shadow — for inset/pressed effects (simulated).
   static const BoxShadow inner = BoxShadow(
@@ -134,13 +134,11 @@ abstract final class AppShadows {
 
   /// Returns the appropriate elevated shadow for the current theme.
   static BoxShadow elevatedOf(BuildContext context) =>
-      Theme.of(context).brightness == Brightness.dark
-          ? darkElevated
-          : elevated;
+      Theme.of(context).brightness == Brightness.dark ? darkElevated : elevated;
 
   /// Returns the appropriate bottom nav shadow for the current theme.
   static BoxShadow bottomNavOf(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark
-          ? darkBottomNav
-          : bottomNav;
+      ? darkBottomNav
+      : bottomNav;
 }

@@ -70,4 +70,3 @@ class AccountActionTile extends StatelessWidget {
     );
   }
 }
-

@@ -6,9 +6,8 @@ import '../ports/achievement_repository_port.dart';
 
 @injectable
 class GetAchievementsUseCase {
-  const GetAchievementsUseCase({
-    required AchievementRepositoryPort repository,
-  }) : _repository = repository;
+  const GetAchievementsUseCase({required AchievementRepositoryPort repository})
+    : _repository = repository;
 
   final AchievementRepositoryPort _repository;
 

@@ -49,7 +49,9 @@ class CurriculumChipRow<T> extends StatelessWidget {
         const SizedBox(height: AppDimensions.paddingSM),
         if (items.isEmpty)
           Container(
-            padding: const EdgeInsets.symmetric(vertical: AppDimensions.paddingMD),
+            padding: const EdgeInsets.symmetric(
+              vertical: AppDimensions.paddingMD,
+            ),
             child: Row(
               children: [
                 Icon(

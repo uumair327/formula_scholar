@@ -7,9 +7,8 @@ import '../ports/dashboard_repository_port.dart';
 /// Aggregates quiz answer records into weak-area recommendations.
 @injectable
 class GetWeakAreasUseCase {
-  const GetWeakAreasUseCase({
-    required DashboardRepositoryPort repository,
-  }) : _repository = repository;
+  const GetWeakAreasUseCase({required DashboardRepositoryPort repository})
+    : _repository = repository;
 
   final DashboardRepositoryPort _repository;
 

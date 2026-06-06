@@ -7,8 +7,9 @@ import '../ports/practice_repository_port.dart';
 /// Fetches recent quiz results for the practice history view.
 @injectable
 class GetRecentQuizResultsUseCase {
-  const GetRecentQuizResultsUseCase({required PracticeRepositoryPort repository})
-    : _repository = repository;
+  const GetRecentQuizResultsUseCase({
+    required PracticeRepositoryPort repository,
+  }) : _repository = repository;
   final PracticeRepositoryPort _repository;
 
   Future<Result<List<QuizResult>>> call({int limit = 20}) {

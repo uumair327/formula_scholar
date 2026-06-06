@@ -37,7 +37,11 @@ abstract final class AppLocales {
 
   /// List of supported content locales with display name and RTL info.
   static List<ContentLocaleConfig> contentSupportedLocales = [
-    const ContentLocaleConfig(code: 'en-IN', name: 'English (India)', isRtl: false),
+    const ContentLocaleConfig(
+      code: 'en-IN',
+      name: 'English (India)',
+      isRtl: false,
+    ),
     const ContentLocaleConfig(code: 'ar-IN', name: 'Arabic', isRtl: true),
     const ContentLocaleConfig(code: 'ur-IN', name: 'Urdu', isRtl: true),
     const ContentLocaleConfig(code: 'mr-IN', name: 'Marathi', isRtl: false),

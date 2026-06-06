@@ -65,154 +65,159 @@ class _HeroStatusCardState extends State<HeroStatusCard>
       child: Container(
         padding: const EdgeInsets.all(AppDimensions.paddingHero),
         decoration: BoxDecoration(
-          gradient: isDark ? AppColors.darkHeroGradient : AppColors.heroGradient,
+          gradient: isDark
+              ? AppColors.darkHeroGradient
+              : AppColors.heroGradient,
           borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
         ),
         child: Stack(
-        children: [
-          Positioned(
-            top: -20,
-            right: -20,
-            child: Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: RadialGradient(
-                  colors: [
-                    AppColors.white.withValues(alpha: 0.2),
-                    AppColors.white.withValues(alpha: 0.0),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: -40,
-            right: 20,
-            child: Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.white.withValues(alpha: 0.1),
-              ),
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppDimensions.chipPaddingHorizontal,
-                  vertical: AppDimensions.badgePaddingVertical,
-                ),
+          children: [
+            Positioned(
+              top: -20,
+              right: -20,
+              child: Container(
+                width: 120,
+                height: 120,
                 decoration: BoxDecoration(
-                  color: AppColors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      AppColors.white.withValues(alpha: 0.2),
+                      AppColors.white.withValues(alpha: 0.0),
+                    ],
+                  ),
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: AppDimensions.dotIndicatorSize,
-                      height: AppDimensions.dotIndicatorSize,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.successGreen,
-                      ),
+              ),
+            ),
+            Positioned(
+              bottom: -40,
+              right: 20,
+              child: Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.white.withValues(alpha: 0.1),
+                ),
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppDimensions.chipPaddingHorizontal,
+                    vertical: AppDimensions.badgePaddingVertical,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(
+                      AppDimensions.radiusXXL,
                     ),
-                    const SizedBox(width: AppDimensions.paddingSM),
-                    Text(
-                      widget.badge,
-                      style: AppTextStyles.labelSmall.copyWith(
-                        color: AppColors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: AppDimensions.fontSizeXS,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: AppDimensions.dotIndicatorSize,
+                        height: AppDimensions.dotIndicatorSize,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.successGreen,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: AppDimensions.paddingLG),
-              Text(
-                widget.title,
-                style: AppTextStyles.headlineLarge.copyWith(
-                  color: AppColors.white,
-                  fontWeight: FontWeight.w800,
-                  height: AppDimensions.lineHeightCompact,
-                ),
-              ),
-              const SizedBox(height: AppDimensions.paddingSM),
-              Text(
-                widget.description,
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.white.withValues(alpha: 0.9),
-                ),
-              ),
-              const SizedBox(height: AppDimensions.paddingXL),
-              Semantics(
-                label: widget.semanticLabel,
-                button: true,
-                child: GestureDetector(
-                  onTap: widget.onResume,
-                  child: AnimatedBuilder(
-                    animation: _pulseAnimation,
-                    builder: (context, child) {
-                      return Transform.scale(
-                        scale: _pulseAnimation.value,
-                        child: child,
-                      );
-                    },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(
-                        AppDimensions.radiusXXL,
+                      const SizedBox(width: AppDimensions.paddingSM),
+                      Text(
+                        widget.badge,
+                        style: AppTextStyles.labelSmall.copyWith(
+                          color: AppColors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: AppDimensions.fontSizeXS,
+                        ),
                       ),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppDimensions.paddingHero,
-                            vertical: AppDimensions.progressBarLG,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.white.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(
-                              AppDimensions.radiusXXL,
+                    ],
+                  ),
+                ),
+                const SizedBox(height: AppDimensions.paddingLG),
+                Text(
+                  widget.title,
+                  style: AppTextStyles.headlineLarge.copyWith(
+                    color: AppColors.white,
+                    fontWeight: FontWeight.w800,
+                    height: AppDimensions.lineHeightCompact,
+                  ),
+                ),
+                const SizedBox(height: AppDimensions.paddingSM),
+                Text(
+                  widget.description,
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.white.withValues(alpha: 0.9),
+                  ),
+                ),
+                const SizedBox(height: AppDimensions.paddingXL),
+                Semantics(
+                  label: widget.semanticLabel,
+                  button: true,
+                  child: GestureDetector(
+                    onTap: widget.onResume,
+                    child: AnimatedBuilder(
+                      animation: _pulseAnimation,
+                      builder: (context, child) {
+                        return Transform.scale(
+                          scale: _pulseAnimation.value,
+                          child: child,
+                        );
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          AppDimensions.radiusXXL,
+                        ),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppDimensions.paddingHero,
+                              vertical: AppDimensions.progressBarLG,
                             ),
-                            border: Border.all(
-                              color: AppColors.white.withValues(alpha: 0.5),
-                              width: 1,
+                            decoration: BoxDecoration(
+                              color: AppColors.white.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(
+                                AppDimensions.radiusXXL,
+                              ),
+                              border: Border.all(
+                                color: AppColors.white.withValues(alpha: 0.5),
+                                width: 1,
+                              ),
                             ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                widget.resumeLabel,
-                                style: AppTextStyles.labelLarge.copyWith(
-                                  color: AppColors.white,
-                                  fontWeight: FontWeight.w800,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  widget.resumeLabel,
+                                  style: AppTextStyles.labelLarge.copyWith(
+                                    color: AppColors.white,
+                                    fontWeight: FontWeight.w800,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: AppDimensions.paddingSM),
-                              const Icon(
-                                LucideIcons.arrowRight,
-                                size: AppDimensions.iconSM,
-                                color: AppColors.white,
-                              ),
-                            ],
+                                const SizedBox(width: AppDimensions.paddingSM),
+                                const Icon(
+                                  LucideIcons.arrowRight,
+                                  size: AppDimensions.iconSM,
+                                  color: AppColors.white,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
-    ));
+    );
   }
 }

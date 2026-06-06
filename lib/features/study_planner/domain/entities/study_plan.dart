@@ -20,9 +20,11 @@ class StudyPlan extends Equatable {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  int get completedSessions => sessions.where((s) => s.status == SessionStatus.completed).length;
+  int get completedSessions =>
+      sessions.where((s) => s.status == SessionStatus.completed).length;
   int get totalSessions => sessions.length;
-  double get progressPercent => totalSessions > 0 ? completedSessions / totalSessions : 0;
+  double get progressPercent =>
+      totalSessions > 0 ? completedSessions / totalSessions : 0;
 
   StudyPlan copyWith({
     String? id,

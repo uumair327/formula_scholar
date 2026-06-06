@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import '../../core/core.dart';
 
 class LegalSectionCard extends StatelessWidget {
-  const LegalSectionCard({super.key, required this.index, required this.section});
+  const LegalSectionCard({
+    super.key,
+    required this.index,
+    required this.section,
+  });
 
   final int index;
   final LegalSection section;

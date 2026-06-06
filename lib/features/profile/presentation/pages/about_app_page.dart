@@ -19,7 +19,8 @@ class AboutAppPage extends StatelessWidget {
     showLicensePage(
       context: context,
       applicationName: context.l10n.appName,
-      applicationVersion: '1.0.0', // Should ideally come from package_info_plus, but 1.0.0 is fine for now
+      applicationVersion:
+          '1.0.0', // Should ideally come from package_info_plus, but 1.0.0 is fine for now
       applicationIcon: Padding(
         padding: const EdgeInsets.all(AppDimensions.paddingMD),
         child: Icon(
@@ -49,7 +50,9 @@ class AboutAppPage extends StatelessWidget {
               horizontal: Responsive.value(
                 context: context,
                 mobile: AppDimensions.paddingXL,
-                desktop: AppDimensions.paddingSectionLG * 2 + AppDimensions.paddingXL,
+                desktop:
+                    AppDimensions.paddingSectionLG * 2 +
+                    AppDimensions.paddingXL,
               ),
               vertical: AppDimensions.paddingXL,
             ),
@@ -96,7 +99,9 @@ class AboutAppPage extends StatelessWidget {
                 // Developer Section
                 EntranceWrapper.stagger(
                   index: 1,
-                  child: AppSectionTitle(title: context.l10n.aboutDeveloperSection),
+                  child: AppSectionTitle(
+                    title: context.l10n.aboutDeveloperSection,
+                  ),
                 ),
                 const SizedBox(height: AppDimensions.paddingLG),
                 EntranceWrapper.stagger(
@@ -125,7 +130,9 @@ class AboutAppPage extends StatelessWidget {
                               ),
                               const SizedBox(height: AppDimensions.paddingXXS),
                               GestureDetector(
-                                onTap: () => _launchUrl('mailto:${context.l10n.aboutDeveloperEmail}'),
+                                onTap: () => _launchUrl(
+                                  'mailto:${context.l10n.aboutDeveloperEmail}',
+                                ),
                                 child: Text(
                                   context.l10n.aboutDeveloperEmail,
                                   style: AppTextStyles.bodyMedium.copyWith(
@@ -191,7 +198,8 @@ class AboutAppPage extends StatelessWidget {
                 EntranceWrapper.stagger(
                   index: 5,
                   child: AppCard(
-                    onTap: () => context.pushNamed(AppRoutes.termsOfServiceName),
+                    onTap: () =>
+                        context.pushNamed(AppRoutes.termsOfServiceName),
                     padding: const EdgeInsets.all(AppDimensions.paddingLG),
                     child: Row(
                       children: [
@@ -271,7 +279,10 @@ class AboutAppPage extends StatelessWidget {
                   child: AppCard(
                     onTap: () {
                       // Placeholder for actual sharing functionality
-                      ComingSoonSheet.show(context, featureName: context.l10n.aboutShareApp);
+                      ComingSoonSheet.show(
+                        context,
+                        featureName: context.l10n.aboutShareApp,
+                      );
                     },
                     padding: const EdgeInsets.all(AppDimensions.paddingLG),
                     child: Row(
@@ -307,7 +318,10 @@ class AboutAppPage extends StatelessWidget {
                   child: AppCard(
                     onTap: () {
                       // Placeholder for actual rating functionality
-                      ComingSoonSheet.show(context, featureName: context.l10n.aboutRateApp);
+                      ComingSoonSheet.show(
+                        context,
+                        featureName: context.l10n.aboutRateApp,
+                      );
                     },
                     padding: const EdgeInsets.all(AppDimensions.paddingLG),
                     child: Row(

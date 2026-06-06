@@ -23,4 +23,3 @@ export 'widgets/widgets.dart';
 export '../l10n/l10n.dart';
 export 'localized_error_extensions.dart';
 export 'infrastructure/dashboard_command_listener.dart';
-

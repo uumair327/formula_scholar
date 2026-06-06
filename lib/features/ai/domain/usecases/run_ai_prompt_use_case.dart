@@ -10,14 +10,12 @@ class RunAiPromptUseCase {
     required AiActionExecutorPort actionExecutor,
     required AiProviderFactory providerFactory,
     required AiPromptBuilder promptBuilder,
-    required AiLocalIntentResolver localIntentResolver,
     required AiSanitizer sanitizer,
   }) : _settingsRepository = settingsRepository,
        _contextEngine = contextEngine,
        _actionExecutor = actionExecutor,
        _providerFactory = providerFactory,
        _promptBuilder = promptBuilder,
-       _localIntentResolver = localIntentResolver,
        _sanitizer = sanitizer;
 
   final AiSettingsRepositoryPort _settingsRepository;
@@ -25,24 +23,29 @@ class RunAiPromptUseCase {
   final AiActionExecutorPort _actionExecutor;
   final AiProviderFactory _providerFactory;
   final AiPromptBuilder _promptBuilder;
-  final AiLocalIntentResolver _localIntentResolver;
   final AiSanitizer _sanitizer;
 
   Future<AiTurnResult> call({
     required String prompt,
     required List<AiMessage> conversation,
   }) async {
-    final sanitizedPrompt = _sanitizer.sanitizeUserInput(prompt);
     final context = await _contextEngine.buildSnapshot();
     final settings = await _settingsRepository.loadSettings();
     final apiKey = await _settingsRepository.readApiKey(settings.provider);
 
+    AppLogger.debug(
+      'RunAiPromptUseCase: provider=${settings.provider.id}, apiKey=${apiKey != null ? "exists (length: ${apiKey.length})" : "null"}',
+      tag: AppLogTags.aiAssistant,
+    );
+
     AiProviderResponse providerResponse;
-    var usedLocalFallback = false;
+    const usedLocalFallback = false;
 
     if (apiKey == null || apiKey.isEmpty) {
-      providerResponse = _localIntentResolver.resolve(sanitizedPrompt);
-      usedLocalFallback = true;
+      return AiTurnResult(
+        message:
+            'No API key found for ${settings.provider.label}. Please configure it in AI Settings.',
+      );
     } else {
       try {
         final client = _providerFactory.clientFor(settings.provider);
@@ -61,13 +64,15 @@ class RunAiPromptUseCase {
         );
       } catch (error, stackTrace) {
         AppLogger.error(
-          'AI provider unavailable; falling back to local intent resolver',
+          'AI provider unavailable',
           tag: AppLogTags.aiAssistant,
           error: error,
           stackTrace: stackTrace,
         );
-        providerResponse = _localIntentResolver.resolve(sanitizedPrompt);
-        usedLocalFallback = true;
+        return AiTurnResult(
+          message:
+              'Connection failed: $error\nIf you are using OpenAI or Claude on Flutter Web, they may be blocked by the browser (CORS). Please use Gemini, or try the desktop app.',
+        );
       }
     }
 
@@ -91,6 +96,7 @@ class RunAiPromptUseCase {
       message: message,
       actionRequest: actionRequest,
       actionResult: actionResult,
+      widgetConfig: providerResponse.widgetConfig,
       usedLocalFallback: usedLocalFallback,
     );
   }

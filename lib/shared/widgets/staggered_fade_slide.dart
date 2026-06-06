@@ -37,13 +37,13 @@ class _StaggeredFadeSlideState extends State<StaggeredFadeSlide>
       curve: AppDurations.curveDefault,
     );
 
-    _slide = Tween<Offset>(
-      begin: const Offset(0, 0.08),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: AppDurations.curveDefault,
-    ));
+    _slide = Tween<Offset>(begin: const Offset(0, 0.08), end: Offset.zero)
+        .animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: AppDurations.curveDefault,
+          ),
+        );
 
     final delay = Duration(milliseconds: (widget.index * 60).clamp(0, 600));
     Future.delayed(delay, () {
@@ -61,10 +61,7 @@ class _StaggeredFadeSlideState extends State<StaggeredFadeSlide>
   Widget build(BuildContext context) {
     return FadeTransition(
       opacity: _opacity,
-      child: SlideTransition(
-        position: _slide,
-        child: widget.child,
-      ),
+      child: SlideTransition(position: _slide, child: widget.child),
     );
   }
 }

@@ -20,8 +20,7 @@ void main() {
     });
 
     test('returns Error when repository fails', () async {
-      final repository = _FakeAchievementRepository()
-        ..fail = true;
+      final repository = _FakeAchievementRepository()..fail = true;
       final useCase = GetAchievementsUseCase(repository: repository);
 
       final result = await useCase();
@@ -60,7 +59,10 @@ class _FakeAchievementRepository implements AchievementRepositoryPort {
   }
 
   @override
-  Future<Result<void>> reportProgress(String achievementId, int increment) async {
+  Future<Result<void>> reportProgress(
+    String achievementId,
+    int increment,
+  ) async {
     return const Success<void>(null);
   }
 }

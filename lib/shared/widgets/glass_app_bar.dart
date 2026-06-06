@@ -12,7 +12,7 @@ class _PremiumBackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final isRtl = Directionality.of(context) == TextDirection.rtl;
-    
+
     return Center(
       child: Material(
         color: Colors.transparent,
@@ -41,10 +41,7 @@ class _PremiumBackButton extends StatelessWidget {
 
 List<Widget>? _padActions(List<Widget>? actions) {
   if (actions == null || actions.isEmpty) return null;
-  return [
-    ...actions,
-    const SizedBox(width: AppDimensions.paddingMD),
-  ];
+  return [...actions, const SizedBox(width: AppDimensions.paddingMD)];
 }
 
 Widget _buildFlexibleSpace(BuildContext context, Widget? child) {
@@ -60,7 +57,9 @@ Widget _buildFlexibleSpace(BuildContext context, Widget? child) {
           color: isDark ? AppColors.glassDark : AppColors.glassLight,
           border: Border(
             bottom: BorderSide(
-              color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.08),
+              color: Theme.of(
+                context,
+              ).colorScheme.outline.withValues(alpha: 0.08),
               width: 0.5,
             ),
           ),
@@ -114,10 +113,12 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: elevation,
-      automaticallyImplyLeading: false, // We handle it manually for the custom icon
+      automaticallyImplyLeading:
+          false, // We handle it manually for the custom icon
       toolbarHeight: toolbarHeight,
       leading: actualLeading,
-      title: titleWidget ??
+      title:
+          titleWidget ??
           (title != null
               ? AppText(
                   title!,
@@ -188,7 +189,8 @@ class SliverGlassAppBar extends StatelessWidget {
       backgroundColor: Colors.transparent,
       automaticallyImplyLeading: false,
       leading: actualLeading,
-      title: titleWidget ??
+      title:
+          titleWidget ??
           (title != null
               ? AppText(
                   title!,

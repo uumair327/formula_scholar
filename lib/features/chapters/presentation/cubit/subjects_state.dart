@@ -32,9 +32,5 @@ class SubjectsState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [
-    status,
-    subjects,
-    errorMessage,
-  ];
+  List<Object?> get props => [status, subjects, errorMessage];
 }

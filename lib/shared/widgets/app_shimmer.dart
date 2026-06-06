@@ -24,7 +24,9 @@ class ShimmerBox extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: isDark ? colorScheme.surfaceContainerHighest : colorScheme.surfaceContainerLowest,
+        color: isDark
+            ? colorScheme.surfaceContainerHighest
+            : colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(borderRadius),
       ),
     );
@@ -42,11 +44,11 @@ class AppShimmer extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Shimmer.fromColors(
-      baseColor: isDark 
-          ? colorScheme.surfaceContainerHighest.withValues(alpha: 0.5) 
+      baseColor: isDark
+          ? colorScheme.surfaceContainerHighest.withValues(alpha: 0.5)
           : colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
-      highlightColor: isDark 
-          ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.8) 
+      highlightColor: isDark
+          ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.8)
           : colorScheme.surfaceContainerLowest,
       period: const Duration(milliseconds: 1500),
       child: child,

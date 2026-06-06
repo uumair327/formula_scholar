@@ -1,7 +1,7 @@
 enum AiProviderType {
   openai('openai', 'OpenAI', 'gpt-4.1-mini'),
   claude('claude', 'Claude', 'claude-3-5-sonnet-latest'),
-  gemini('gemini', 'Gemini', 'gemini-2.0-flash');
+  gemini('gemini', 'Gemini', 'gemini-flash-latest');
 
   const AiProviderType(this.id, this.label, this.defaultModel);
 

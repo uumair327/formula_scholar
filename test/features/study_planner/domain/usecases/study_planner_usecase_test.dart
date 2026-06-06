@@ -87,11 +87,7 @@ void main() {
       final repo = _FakeStudyPlannerRepository();
       final useCase = UpdateSessionUseCase(repository: repo);
 
-      final result = await useCase(
-        userId: 'u1',
-        planId: 'p1',
-        sessionId: 's1',
-      );
+      final result = await useCase(userId: 'u1', planId: 'p1', sessionId: 's1');
 
       expect(result, isA<Success<void>>());
     });
@@ -100,11 +96,7 @@ void main() {
       final repo = _FakeStudyPlannerRepository()..throwOnUpdateSession = true;
       final useCase = UpdateSessionUseCase(repository: repo);
 
-      final result = await useCase(
-        userId: 'u1',
-        planId: 'p1',
-        sessionId: 's1',
-      );
+      final result = await useCase(userId: 'u1', planId: 'p1', sessionId: 's1');
 
       expect(result, isA<Error<void>>());
     });
@@ -112,11 +104,11 @@ void main() {
 }
 
 StudyPlan _testPlan() => StudyPlan(
-      id: 'p1',
-      title: 'Test Plan',
-      createdAt: DateTime(2024, 1, 1),
-      updatedAt: DateTime(2024, 1, 1),
-    );
+  id: 'p1',
+  title: 'Test Plan',
+  createdAt: DateTime(2024, 1, 1),
+  updatedAt: DateTime(2024, 1, 1),
+);
 
 class _FakeStudyPlannerRepository implements StudyPlannerRepositoryPort {
   bool throwOnCreate = false;
@@ -131,21 +123,30 @@ class _FakeStudyPlannerRepository implements StudyPlannerRepositoryPort {
   Stream<List<StudyPlan>> watchPlans(String userId) => plansController.stream;
 
   @override
-  Future<void> createPlan({required String userId, required StudyPlan plan}) async {
+  Future<void> createPlan({
+    required String userId,
+    required StudyPlan plan,
+  }) async {
     if (throwOnCreate) {
       throw const ServerFailure(message: 'create failed');
     }
   }
 
   @override
-  Future<void> updatePlan({required String userId, required StudyPlan plan}) async {
+  Future<void> updatePlan({
+    required String userId,
+    required StudyPlan plan,
+  }) async {
     if (throwOnUpdate) {
       throw const ServerFailure(message: 'update failed');
     }
   }
 
   @override
-  Future<void> deletePlan({required String userId, required String planId}) async {
+  Future<void> deletePlan({
+    required String userId,
+    required String planId,
+  }) async {
     if (throwOnDelete) {
       throw const ServerFailure(message: 'delete failed');
     }

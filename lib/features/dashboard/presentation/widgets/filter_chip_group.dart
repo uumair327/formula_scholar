@@ -47,7 +47,9 @@ class FilterChipGroup extends StatelessWidget {
           ...List.generate(chips.length, (index) {
             final isActive = index == activeIndex;
             return Padding(
-              padding: const EdgeInsetsDirectional.only(end: AppDimensions.paddingXXS),
+              padding: const EdgeInsetsDirectional.only(
+                end: AppDimensions.paddingXXS,
+              ),
               child: GestureDetector(
                 onTap: () {
                   onChanged?.call(index);

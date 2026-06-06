@@ -1,4 +1,4 @@
-﻿import 'package:go_router/go_router.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../shared/shared.dart';
 import '../app_page_transitions.dart';
@@ -28,4 +28,3 @@ List<GoRoute> legalRoutes() {
     ),
   ];
 }
-

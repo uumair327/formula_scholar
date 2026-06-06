@@ -1,4 +1,4 @@
-﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../features/flashcards/flashcards.dart';
@@ -16,10 +16,7 @@ List<GoRoute> flashcardRoutes() {
         return AppPageTransitions.fadeTransition(
           state: state,
           child: extra is FlashcardsCubit
-              ? BlocProvider.value(
-                  value: extra,
-                  child: const FlashcardsPage(),
-                )
+              ? BlocProvider.value(value: extra, child: const FlashcardsPage())
               : BlocProvider(
                   create: (_) => getIt<FlashcardsCubit>(),
                   child: const FlashcardsPage(),
@@ -29,4 +26,3 @@ List<GoRoute> flashcardRoutes() {
     ),
   ];
 }
-

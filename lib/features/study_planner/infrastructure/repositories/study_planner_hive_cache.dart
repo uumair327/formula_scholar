@@ -1,6 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import '../../domain/domain.dart';
+
 @LazySingleton(as: StudyPlannerCachePort)
 class StudyPlannerHiveCache implements StudyPlannerCachePort {
   static const String _boxName = 'study_planner_cache';

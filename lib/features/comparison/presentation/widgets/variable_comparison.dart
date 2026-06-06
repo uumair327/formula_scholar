@@ -6,10 +6,7 @@ import '../../../../../core/core.dart';
 import '../../domain/entities/formula_comparison.dart';
 
 class VariableComparison extends StatelessWidget {
-  const VariableComparison({
-    super.key,
-    required this.comparison,
-  });
+  const VariableComparison({super.key, required this.comparison});
 
   final FormulaComparison comparison;
 
@@ -25,7 +22,11 @@ class VariableComparison extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(LucideIcons.variable, size: 18, color: colorScheme.primary),
+                Icon(
+                  LucideIcons.variable,
+                  size: 18,
+                  color: colorScheme.primary,
+                ),
                 const SizedBox(width: AppDimensions.paddingXS),
                 Text('Variables', style: AppTextStyles.titleSmall),
               ],

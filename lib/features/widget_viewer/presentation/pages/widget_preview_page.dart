@@ -12,7 +12,12 @@ class WidgetPreviewScreen extends StatelessWidget {
     if (configB64 == null || configB64!.isEmpty) {
       return const Scaffold(
         backgroundColor: Colors.transparent,
-        body: Center(child: Text('No configuration provided.', style: TextStyle(color: Colors.grey))),
+        body: Center(
+          child: Text(
+            'No configuration provided.',
+            style: TextStyle(color: Colors.grey),
+          ),
+        ),
       );
     }
 
@@ -26,16 +31,19 @@ class WidgetPreviewScreen extends StatelessWidget {
     } catch (e) {
       return Scaffold(
         backgroundColor: Colors.transparent,
-        body: Center(child: Text('Invalid configuration: $e', style: const TextStyle(color: Colors.red))),
+        body: Center(
+          child: Text(
+            'Invalid configuration: $e',
+            style: const TextStyle(color: Colors.red),
+          ),
+        ),
       );
     }
 
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Center(
-        child: InteractiveWidgetContainer(
-          widgetConfig: widgetConfig,
-        ),
+        child: InteractiveWidgetContainer(widgetConfig: widgetConfig),
       ),
     );
   }

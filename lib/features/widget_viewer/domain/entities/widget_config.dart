@@ -14,8 +14,8 @@ class WidgetConfig {
 
   factory WidgetConfig.fromMap(Map<String, dynamic> map) {
     final config = (map['config'] as Map<String, dynamic>?) ?? {};
-    final slidersList = (config['sliders'] as List<dynamic>?)
-            ?.cast<Map<String, dynamic>>() ??
+    final slidersList =
+        (config['sliders'] as List<dynamic>?)?.cast<Map<String, dynamic>>() ??
         [];
 
     return WidgetConfig(

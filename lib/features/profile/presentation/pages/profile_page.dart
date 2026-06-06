@@ -157,7 +157,10 @@ class ProfilePage extends StatelessWidget {
           ),
           child: IconButton(
             onPressed: () => context.push(AppRoutes.accountInfoPath),
-            icon: Icon(LucideIcons.settings, color: colorScheme.onSurfaceVariant),
+            icon: Icon(
+              LucideIcons.settings,
+              color: colorScheme.onSurfaceVariant,
+            ),
             tooltip: context.l10n.navProfile,
           ),
         ),

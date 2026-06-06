@@ -103,7 +103,11 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
     );
   }
 
-  String _resolveLocalizedField(Map<String, dynamic> data, String key, String fallback) {
+  String _resolveLocalizedField(
+    Map<String, dynamic> data,
+    String key,
+    String fallback,
+  ) {
     if (!AppLocales.contentLocalizationEnabled) {
       return fallback;
     }
@@ -142,13 +146,17 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
     return snapshot.map((doc) {
       final data = doc.data();
       final name = _resolveLocalizedField(data, 'name', data['name'] ?? '');
-      final description = _resolveLocalizedField(data, 'description', data['description'] ?? '');
-      
+      final description = _resolveLocalizedField(
+        data,
+        'description',
+        data['description'] ?? '',
+      );
+
       final rawSubtitle = data['subtitle'] as String?;
       final subtitle = rawSubtitle != null
           ? _resolveLocalizedField(data, 'subtitle', rawSubtitle)
           : null;
-          
+
       final rawBadgeText = data['badgeText'] as String?;
       final badgeText = rawBadgeText != null
           ? _resolveLocalizedField(data, 'badgeText', rawBadgeText)
@@ -248,7 +256,11 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
 
     return docs.take(5).map((doc) {
       final data = doc.data();
-      final name = _resolveLocalizedField(data, 'name', data['name'] as String? ?? '');
+      final name = _resolveLocalizedField(
+        data,
+        'name',
+        data['name'] as String? ?? '',
+      );
       final rawSubtitle = data['subtitle'] as String?;
       final subtitle = rawSubtitle != null
           ? _resolveLocalizedField(data, 'subtitle', rawSubtitle)
@@ -439,7 +451,11 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
     return snapshot.docs.map((doc) {
       final data = doc.data();
       final title = _resolveLocalizedField(data, 'title', data['title'] ?? '');
-      final message = _resolveLocalizedField(data, 'message', data['message'] ?? '');
+      final message = _resolveLocalizedField(
+        data,
+        'message',
+        data['message'] ?? '',
+      );
       return AppAnnouncement(
         id: doc.id,
         title: title,

@@ -342,7 +342,11 @@ class PracticeCubit extends Cubit<PracticeState>
     );
   }
 
-  void resetQuizWithCurriculum(String curriculumKey, String boardId, String gradeId) {
+  void resetQuizWithCurriculum(
+    String curriculumKey,
+    String boardId,
+    String gradeId,
+  ) {
     _timer?.cancel();
     emit(
       state.copyWith(

@@ -10,7 +10,10 @@ class DeleteNoteUseCase {
   final SavedRepositoryPort _repository;
 
   Future<Result<void>> call(String noteId) {
-    AppLogger.trace('DeleteNoteUseCase called: $noteId', tag: AppLogTags.savedUseCase);
+    AppLogger.trace(
+      'DeleteNoteUseCase called: $noteId',
+      tag: AppLogTags.savedUseCase,
+    );
     return _repository.deleteNote(noteId);
   }
 }

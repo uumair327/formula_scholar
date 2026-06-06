@@ -41,89 +41,93 @@ void main() {
       expect(subjectsCubit!.state.errorMessage, isEmpty);
     });
 
-    test('immediately loads subjects when curriculum is already available on init', () async {
-      const initialCurriculum = SelectedCurriculum(
-        boardId: 'cbse',
-        boardName: 'CBSE',
-        gradeId: 'class_10',
-        gradeLabel: '10th',
-        gradeNumber: 10,
-      );
-      curriculumRepository.loadedCurriculum = initialCurriculum;
+    test(
+      'immediately loads subjects when curriculum is already available on init',
+      () async {
+        const initialCurriculum = SelectedCurriculum(
+          boardId: 'cbse',
+          boardName: 'CBSE',
+          gradeId: 'class_10',
+          gradeLabel: '10th',
+          gradeNumber: 10,
+        );
+        curriculumRepository.loadedCurriculum = initialCurriculum;
 
-      curriculumCubit = CurriculumCubit(
-        loadCurriculum: LoadCurriculumUseCase(curriculumRepository),
-        saveCurriculum: SaveCurriculumUseCase(curriculumRepository),
-        watchCurriculum: WatchCurriculumUseCase(curriculumRepository),
-      );
+        curriculumCubit = CurriculumCubit(
+          loadCurriculum: LoadCurriculumUseCase(curriculumRepository),
+          saveCurriculum: SaveCurriculumUseCase(curriculumRepository),
+          watchCurriculum: WatchCurriculumUseCase(curriculumRepository),
+        );
 
-      final mockSubjects = [
-        const Subject(
-          id: 'physics',
-          name: 'Physics',
-          category: 'Science',
-          description: 'Physics formulas',
-          imageUrl: 'https://example.com/physics.png',
-          unitCount: 5,
-          formulaCount: 20,
-        ),
-      ];
-      dashboardRepository.subjectsResult = Success(mockSubjects);
+        final mockSubjects = [
+          const Subject(
+            id: 'physics',
+            name: 'Physics',
+            category: 'Science',
+            description: 'Physics formulas',
+            imageUrl: 'https://example.com/physics.png',
+            unitCount: 5,
+            formulaCount: 20,
+          ),
+        ];
+        dashboardRepository.subjectsResult = Success(mockSubjects);
 
-      subjectsCubit = SubjectsCubit(getSubjectsUseCase, curriculumCubit!);
-      subjectsCubit!.stream.listen((s) {});
+        subjectsCubit = SubjectsCubit(getSubjectsUseCase, curriculumCubit!);
+        subjectsCubit!.stream.listen((s) {});
 
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+        await Future<void>.delayed(const Duration(milliseconds: 50));
 
-      expect(subjectsCubit!.state.status, SubjectsStatus.loaded);
-      expect(subjectsCubit!.state.subjects, mockSubjects);
-      expect(subjectsCubit!.state.errorMessage, isEmpty);
-    });
+        expect(subjectsCubit!.state.status, SubjectsStatus.loaded);
+        expect(subjectsCubit!.state.subjects, mockSubjects);
+        expect(subjectsCubit!.state.errorMessage, isEmpty);
+      },
+    );
 
-    test('loads subjects when curriculum state transitions from null/loading to loaded', () async {
+    test(
+      'loads subjects when curriculum state transitions from null/loading to loaded',
+      () async {
+        curriculumCubit = CurriculumCubit(
+          loadCurriculum: LoadCurriculumUseCase(curriculumRepository),
+          saveCurriculum: SaveCurriculumUseCase(curriculumRepository),
+          watchCurriculum: WatchCurriculumUseCase(curriculumRepository),
+        );
 
-      curriculumCubit = CurriculumCubit(
-        loadCurriculum: LoadCurriculumUseCase(curriculumRepository),
-        saveCurriculum: SaveCurriculumUseCase(curriculumRepository),
-        watchCurriculum: WatchCurriculumUseCase(curriculumRepository),
-      );
+        subjectsCubit = SubjectsCubit(getSubjectsUseCase, curriculumCubit!);
+        subjectsCubit!.stream.listen((s) {});
+        expect(subjectsCubit!.state.status, SubjectsStatus.initial);
 
-      subjectsCubit = SubjectsCubit(getSubjectsUseCase, curriculumCubit!);
-      subjectsCubit!.stream.listen((s) {});
-      expect(subjectsCubit!.state.status, SubjectsStatus.initial);
+        final mockSubjects = [
+          const Subject(
+            id: 'chemistry',
+            name: 'Chemistry',
+            category: 'Science',
+            description: 'Chemistry formulas',
+            imageUrl: 'https://example.com/chemistry.png',
+            unitCount: 4,
+            formulaCount: 15,
+          ),
+        ];
+        dashboardRepository.subjectsResult = Success(mockSubjects);
 
-      final mockSubjects = [
-        const Subject(
-          id: 'chemistry',
-          name: 'Chemistry',
-          category: 'Science',
-          description: 'Chemistry formulas',
-          imageUrl: 'https://example.com/chemistry.png',
-          unitCount: 4,
-          formulaCount: 15,
-        ),
-      ];
-      dashboardRepository.subjectsResult = Success(mockSubjects);
+        const curriculum = SelectedCurriculum(
+          boardId: 'icse',
+          boardName: 'ICSE',
+          gradeId: 'class_9',
+          gradeLabel: '9th',
+          gradeNumber: 9,
+        );
+        curriculumRepository.loadedCurriculum = curriculum;
 
-      const curriculum = SelectedCurriculum(
-        boardId: 'icse',
-        boardName: 'ICSE',
-        gradeId: 'class_9',
-        gradeLabel: '9th',
-        gradeNumber: 9,
-      );
-      curriculumRepository.loadedCurriculum = curriculum;
+        curriculumCubit!.applyCurriculum(curriculum);
 
-      curriculumCubit!.applyCurriculum(curriculum);
+        await Future<void>.delayed(const Duration(milliseconds: 50));
 
-      await Future<void>.delayed(const Duration(milliseconds: 50));
-
-      expect(subjectsCubit!.state.status, SubjectsStatus.loaded);
-      expect(subjectsCubit!.state.subjects, mockSubjects);
-    });
+        expect(subjectsCubit!.state.status, SubjectsStatus.loaded);
+        expect(subjectsCubit!.state.subjects, mockSubjects);
+      },
+    );
 
     test('emits error status when loading subjects fails', () async {
-
       const curriculum = SelectedCurriculum(
         boardId: 'cbse',
         boardName: 'CBSE',
@@ -139,7 +143,9 @@ void main() {
         watchCurriculum: WatchCurriculumUseCase(curriculumRepository),
       );
 
-      const failure = ServerFailure(message: 'Failed to fetch subjects from firestore');
+      const failure = ServerFailure(
+        message: 'Failed to fetch subjects from firestore',
+      );
       dashboardRepository.subjectsResult = const Error(failure);
 
       subjectsCubit = SubjectsCubit(getSubjectsUseCase, curriculumCubit!);
@@ -152,7 +158,6 @@ void main() {
     });
 
     test('resets to empty state when curriculum is cleared/null', () async {
-
       const curriculum = SelectedCurriculum(
         boardId: 'cbse',
         boardName: 'CBSE',
@@ -211,7 +216,10 @@ class _FakeDashboardRepository implements DashboardRepositoryPort {
   Result<List<Subject>>? subjectsResult;
 
   @override
-  Future<Result<List<Subject>>> getSubjects(String boardId, String gradeId) async {
+  Future<Result<List<Subject>>> getSubjects(
+    String boardId,
+    String gradeId,
+  ) async {
     return subjectsResult ?? const Success([]);
   }
 
@@ -232,11 +240,13 @@ class _FakeDashboardRepository implements DashboardRepositoryPort {
 
   @override
   Future<Result<StudyProgress>> getStudyProgress() async {
-    return const Success(StudyProgress(
-      masteryPercentage: 0.0,
-      completedChapters: 0,
-      totalChapters: 0,
-    ));
+    return const Success(
+      StudyProgress(
+        masteryPercentage: 0.0,
+        completedChapters: 0,
+        totalChapters: 0,
+      ),
+    );
   }
 
   @override

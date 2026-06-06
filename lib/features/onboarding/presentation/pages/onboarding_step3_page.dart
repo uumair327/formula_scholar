@@ -137,11 +137,13 @@ class _GradeCard extends StatefulWidget {
 class _GradeCardState extends State<_GradeCard> {
   bool _isPressed = false;
 
-  void _handleTapDown(TapDownDetails details) => setState(() => _isPressed = true);
+  void _handleTapDown(TapDownDetails details) =>
+      setState(() => _isPressed = true);
   void _handleTapUp(TapUpDetails details) {
     setState(() => _isPressed = false);
     widget.onTap();
   }
+
   void _handleTapCancel() => setState(() => _isPressed = false);
 
   @override
@@ -170,7 +172,9 @@ class _GradeCardState extends State<_GradeCard> {
                   ? AppDimensions.borderWidthThick
                   : AppDimensions.borderWidth,
             ),
-            boxShadow: widget.isSelected ? [AppShadows.ghost] : [AppShadows.subtle],
+            boxShadow: widget.isSelected
+                ? [AppShadows.ghost]
+                : [AppShadows.subtle],
           ),
           child: Stack(
             children: [
@@ -187,12 +191,16 @@ class _GradeCardState extends State<_GradeCard> {
                           : AppColors.primary.withValues(
                               alpha: AppDimensions.opacityFaint,
                             ),
-                      borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+                      borderRadius: BorderRadius.circular(
+                        AppDimensions.radiusMD,
+                      ),
                     ),
                     child: Icon(
                       LucideIcons.graduationCap,
                       size: AppDimensions.iconLG,
-                      color: widget.isSelected ? AppColors.onPrimary : AppColors.primary,
+                      color: widget.isSelected
+                          ? AppColors.onPrimary
+                          : AppColors.primary,
                     ),
                   ),
                   const SizedBox(height: AppDimensions.paddingXL),

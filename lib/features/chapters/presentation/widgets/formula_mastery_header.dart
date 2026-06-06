@@ -10,7 +10,8 @@ class FormulaMasteryHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final allMastered = state.masteredCount == state.totalCount && state.totalCount > 0;
+    final allMastered =
+        state.masteredCount == state.totalCount && state.totalCount > 0;
 
     return Row(
       children: [

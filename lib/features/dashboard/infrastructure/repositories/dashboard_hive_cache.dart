@@ -1,6 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import '../../domain/domain.dart';
+
 @LazySingleton(as: DashboardCachePort)
 class DashboardHiveCache implements DashboardCachePort {
   static const String _boxName = 'dashboard_cache';

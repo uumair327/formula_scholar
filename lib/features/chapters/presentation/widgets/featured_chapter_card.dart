@@ -24,7 +24,6 @@ class FeaturedChapterCard extends StatelessWidget {
         ? context.l10n.continueLearning
         : context.l10n.startNow;
 
-
     return AppCard(
       onTap: () => _navigateToFormulas(context, ctaText),
       padding: const EdgeInsets.all(AppDimensions.paddingXXL),

@@ -119,7 +119,10 @@ class SettingsListWidget extends StatelessWidget {
           ),
           const SizedBox(width: AppDimensions.paddingLG),
           Expanded(
-            child: Text(_resolveLabel(context, item.id, item.label), style: AppTextStyles.labelLarge),
+            child: Text(
+              _resolveLabel(context, item.id, item.label),
+              style: AppTextStyles.labelLarge,
+            ),
           ),
           Icon(
             Directionality.of(context) == TextDirection.rtl
@@ -135,7 +138,7 @@ class SettingsListWidget extends StatelessWidget {
   Widget _buildToggleItem(BuildContext context, SettingsItem item) {
     final colorScheme = Theme.of(context).colorScheme;
     final icon = _resolveIcon(item.iconName);
-    
+
     final label = _resolveLabel(context, item.id, item.label);
     final subtitle = _resolveSubtitle(context, item.id, item.subtitle);
 
@@ -169,10 +172,7 @@ class SettingsListWidget extends StatelessWidget {
               ],
             ),
           ),
-          Switch(
-            value: isDarkMode,
-            onChanged: (value) => onDarkModeToggle(),
-          ),
+          Switch(value: isDarkMode, onChanged: (value) => onDarkModeToggle()),
         ],
       ),
     );
@@ -183,10 +183,7 @@ class SettingsListWidget extends StatelessWidget {
     final icon = _resolveIcon(item.iconName);
     return AppCard(
       onTap: () {
-        AppLogger.warning(
-          'Logout tapped',
-          tag: AppLogTags.settingsListWidget,
-        );
+        AppLogger.warning('Logout tapped', tag: AppLogTags.settingsListWidget);
         onItemTapped(item.id);
       },
       padding: const EdgeInsets.symmetric(

@@ -173,6 +173,12 @@ formula-scholar-firebase-adminsdk-*.json
 *firebase-adminsdk*.json
 firebase-adminsdk*.json
 
+# Local scratch and test scripts (often contain secrets)
+test_*_key.dart
+test_secrets.dart
+test_redact.dart
+scratch_*.dart
+
 # Amplify / AWS
 amplify/
 aws-exports.dart

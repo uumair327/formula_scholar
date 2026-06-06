@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../core/core.dart';
 
-
 class ProgressBar extends StatelessWidget {
   const ProgressBar({
     super.key,
@@ -29,7 +28,8 @@ class ProgressBar extends StatelessWidget {
     return Container(
       height: height,
       decoration: BoxDecoration(
-        color: backgroundColor ??
+        color:
+            backgroundColor ??
             colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(height),
       ),
@@ -40,10 +40,9 @@ class ProgressBar extends StatelessWidget {
         curve: AppDurations.curvePremium,
         child: Container(
           decoration: BoxDecoration(
-            gradient: barGradient ??
-                (barColor != null
-                    ? null
-                    : AppColors.accentGradient),
+            gradient:
+                barGradient ??
+                (barColor != null ? null : AppColors.accentGradient),
             color: barGradient == null ? barColor : null,
             borderRadius: BorderRadius.circular(height),
           ),

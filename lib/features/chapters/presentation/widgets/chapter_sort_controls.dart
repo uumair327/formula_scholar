@@ -97,13 +97,25 @@ class ChapterSortControls extends StatelessWidget {
           const SizedBox(width: AppDimensions.paddingSM),
           buildChoiceChip(context.l10n.sortNameZA, 'name', true),
           const SizedBox(width: AppDimensions.paddingSM),
-          buildChoiceChip(context.l10n.sortProgressHigh, 'progressPercent', true),
+          buildChoiceChip(
+            context.l10n.sortProgressHigh,
+            'progressPercent',
+            true,
+          ),
           const SizedBox(width: AppDimensions.paddingSM),
-          buildChoiceChip(context.l10n.sortProgressLow, 'progressPercent', false),
+          buildChoiceChip(
+            context.l10n.sortProgressLow,
+            'progressPercent',
+            false,
+          ),
           const SizedBox(width: AppDimensions.paddingSM),
           buildChoiceChip(context.l10n.sortMostFormulas, 'totalFormulas', true),
           const SizedBox(width: AppDimensions.paddingSM),
-          buildChoiceChip(context.l10n.sortFewestFormulas, 'totalFormulas', false),
+          buildChoiceChip(
+            context.l10n.sortFewestFormulas,
+            'totalFormulas',
+            false,
+          ),
         ],
       ),
     );

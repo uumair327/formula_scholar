@@ -32,7 +32,8 @@ class QuizResult extends Equatable {
     maxPoints: json['maxPoints'] as int? ?? 0,
     timedMode: json['timedMode'] as bool? ?? false,
     timeTakenSeconds: json['timeTakenSeconds'] as int?,
-    answers: (json['answers'] as List<dynamic>?)
+    answers:
+        (json['answers'] as List<dynamic>?)
             ?.map((e) => QuizAnswerRecord.fromJson(e as Map<String, dynamic>))
             .toList() ??
         const [],

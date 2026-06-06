@@ -18,12 +18,14 @@ class AiResponseParser {
     final message = (decoded['message'] ?? '').toString().trim();
     final action = (decoded['action'] ?? 'NONE').toString().trim();
     final requiresClarification = decoded['requires_clarification'] == true;
+    final widgetConfig = decoded['widget'] as Map<String, dynamic>?;
 
     return AiProviderResponse(
       message: message.isEmpty ? _fallbackMessage(action) : message,
       actionRequest: action.isNotEmpty && action.toUpperCase() != 'NONE'
           ? AiActionRequest.fromJson(decoded)
           : null,
+      widgetConfig: widgetConfig,
       requiresClarification: requiresClarification,
     );
   }

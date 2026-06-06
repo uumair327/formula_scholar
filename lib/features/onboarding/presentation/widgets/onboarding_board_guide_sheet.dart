@@ -173,7 +173,9 @@ class _BoardGuideCard extends StatelessWidget {
               ? accent.withValues(alpha: AppDimensions.opacityLight)
               : colorScheme.surfaceContainer,
           border: Border.all(
-            color: isSelected ? accent : colorScheme.outlineVariant.withValues(alpha: 0.5),
+            color: isSelected
+                ? accent
+                : colorScheme.outlineVariant.withValues(alpha: 0.5),
           ),
           child: Row(
             children: [

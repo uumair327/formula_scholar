@@ -47,8 +47,9 @@ class AccountProfileCard extends StatelessWidget {
         );
 
         final detailsWidget = Column(
-          crossAxisAlignment:
-              isCompact ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+          crossAxisAlignment: isCompact
+              ? CrossAxisAlignment.center
+              : CrossAxisAlignment.start,
           children: [
             Text(
               profile?.name ?? context.l10n.welcomeScholar,
@@ -141,4 +142,3 @@ class AccountProfileCard extends StatelessWidget {
     );
   }
 }
-

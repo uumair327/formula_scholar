@@ -34,5 +34,13 @@ class CarouselItem extends Equatable {
   final String? bgColor;
 
   @override
-  List<Object?> get props => [id, title, imageUrl, link, isActive, displayOrder, bgColor];
+  List<Object?> get props => [
+    id,
+    title,
+    imageUrl,
+    link,
+    isActive,
+    displayOrder,
+    bgColor,
+  ];
 }

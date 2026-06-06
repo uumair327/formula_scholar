@@ -20,10 +20,10 @@ class FormulaComparison extends Equatable {
 
   @override
   List<Object?> get props => [
-        sharedVariables,
-        uniqueToA,
-        uniqueToB,
-        similarityScore,
-        descriptionOverlap,
-      ];
+    sharedVariables,
+    uniqueToA,
+    uniqueToB,
+    similarityScore,
+    descriptionOverlap,
+  ];
 }

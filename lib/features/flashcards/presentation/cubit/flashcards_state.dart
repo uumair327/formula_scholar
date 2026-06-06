@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import '../../domain/domain.dart';
+
 enum FlashcardsStatus { initial, loading, ready, finished }
 
 class FlashcardsState extends Equatable {

@@ -11,7 +11,11 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
   final FirestoreClientPort _api;
   final FirebaseAuth _firebaseAuth;
 
-  String _resolveLocalizedField(Map<String, dynamic> data, String key, String fallback) {
+  String _resolveLocalizedField(
+    Map<String, dynamic> data,
+    String key,
+    String fallback,
+  ) {
     if (!AppLocales.contentLocalizationEnabled) {
       return fallback;
     }
@@ -188,7 +192,11 @@ class ChaptersFirebaseAdapter implements ChaptersDataSourcePort {
           }
 
           final name = _resolveLocalizedField(data, 'name', data['name'] ?? '');
-          final subtitle = _resolveLocalizedField(data, 'subtitle', data['subtitle'] ?? '');
+          final subtitle = _resolveLocalizedField(
+            data,
+            'subtitle',
+            data['subtitle'] ?? '',
+          );
 
           return Chapter(
             id: data['id'] ?? doc.id,

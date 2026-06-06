@@ -53,7 +53,13 @@ abstract final class Responsive {
   }
 
   // ─── Grid Layout ────────────────────────────────────────────
-  static int gridColumns(double width, {required int mobile, int? tablet, int? desktop, int? wideDesktop}) {
+  static int gridColumns(
+    double width, {
+    required int mobile,
+    int? tablet,
+    int? desktop,
+    int? wideDesktop,
+  }) {
     final type = screenType(width);
     return switch (type) {
       ScreenType.wideDesktop => wideDesktop ?? desktop ?? tablet ?? mobile,
@@ -66,11 +72,13 @@ abstract final class Responsive {
 
 /// BuildContext extension for convenient responsive lookups.
 extension ResponsiveContext on BuildContext {
-  ScreenType get screenType => Responsive.screenType(MediaQuery.of(this).size.width);
+  ScreenType get screenType =>
+      Responsive.screenType(MediaQuery.of(this).size.width);
   bool get isMobile => Responsive.isMobile(MediaQuery.of(this).size.width);
   bool get isTablet => Responsive.isTablet(MediaQuery.of(this).size.width);
   bool get isDesktop => Responsive.isDesktop(MediaQuery.of(this).size.width);
-  bool get isWideDesktop => Responsive.isWideDesktop(MediaQuery.of(this).size.width);
+  bool get isWideDesktop =>
+      Responsive.isWideDesktop(MediaQuery.of(this).size.width);
   double get screenWidth => MediaQuery.of(this).size.width;
   double get screenHeight => MediaQuery.of(this).size.height;
 }

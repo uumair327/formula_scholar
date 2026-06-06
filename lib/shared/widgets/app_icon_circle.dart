@@ -56,7 +56,11 @@ class AppIconCircle extends StatelessWidget {
             : null,
         boxShadow: boxShadow,
       ),
-      child: Icon(icon, size: iconSize, color: iconColor ?? colorScheme.primary),
+      child: Icon(
+        icon,
+        size: iconSize,
+        color: iconColor ?? colorScheme.primary,
+      ),
     );
   }
 }

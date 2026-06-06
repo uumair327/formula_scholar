@@ -1,7 +1,6 @@
 import '../../../core/constants/app_locales.dart';
 
 class LocalizedContentItem {
-
   factory LocalizedContentItem.fromMap(Map<String, dynamic> map) {
     return LocalizedContentItem(
       key: map['key']?.toString().trim() ?? '',
@@ -26,7 +25,6 @@ class LocalizedContentItem {
 }
 
 class LocalizedContentBundle {
-
   factory LocalizedContentBundle.fromItems(
     Iterable<LocalizedContentItem> items, {
     required String localeCode,

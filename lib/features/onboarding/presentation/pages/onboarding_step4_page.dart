@@ -89,8 +89,9 @@ class OnboardingStep4Page extends StatelessWidget {
                     isSelected: context.select<OnboardingCubit, bool>(
                       (cubit) => cubit.state.selectedStudyGoalId == goal.id,
                     ),
-                    onTap: () =>
-                        context.read<OnboardingCubit>().selectStudyGoal(goal.id),
+                    onTap: () => context
+                        .read<OnboardingCubit>()
+                        .selectStudyGoal(goal.id),
                   ),
                 ),
               );
@@ -119,11 +120,13 @@ class _GoalCard extends StatefulWidget {
 class _GoalCardState extends State<_GoalCard> {
   bool _isPressed = false;
 
-  void _handleTapDown(TapDownDetails details) => setState(() => _isPressed = true);
+  void _handleTapDown(TapDownDetails details) =>
+      setState(() => _isPressed = true);
   void _handleTapUp(TapUpDetails details) {
     setState(() => _isPressed = false);
     widget.onTap();
   }
+
   void _handleTapCancel() => setState(() => _isPressed = false);
 
   Color _goalAccent(ColorScheme cs) {
@@ -149,8 +152,8 @@ class _GoalCardState extends State<_GoalCard> {
         duration: AppDurations.animationFast,
         curve: Curves.easeOutCubic,
         child: AnimatedContainer(
-        duration: AppDurations.animationFast,
-        padding: const EdgeInsets.all(AppDimensions.paddingLG),
+          duration: AppDurations.animationFast,
+          padding: const EdgeInsets.all(AppDimensions.paddingLG),
           decoration: BoxDecoration(
             color: colorScheme.surfaceContainerLowest,
             borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
@@ -162,64 +165,66 @@ class _GoalCardState extends State<_GoalCard> {
                   ? AppDimensions.borderWidthThick
                   : AppDimensions.borderWidth,
             ),
-            boxShadow: widget.isSelected ? [AppShadows.ghost] : [AppShadows.subtle],
+            boxShadow: widget.isSelected
+                ? [AppShadows.ghost]
+                : [AppShadows.subtle],
           ),
-        child: Row(
-          children: [
-            AnimatedContainer(
-              duration: AppDurations.animationFast,
-              width: AppDimensions.avatarMD,
-              height: AppDimensions.avatarMD,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: widget.isSelected
-                    ? accent
-                    : accent.withValues(alpha: AppDimensions.opacityFaint),
-              ),
-              child: Icon(
-                widget.goal.icon,
-                size: AppDimensions.iconDefault,
-                color: widget.isSelected ? colorScheme.onPrimary : accent,
-              ),
-            ),
-            const SizedBox(width: AppDimensions.paddingXL),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.goal.title,
-                    style: AppTextStyles.labelLarge.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: AppDimensions.paddingXXS),
-                  Text(
-                    widget.goal.subtitle,
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (widget.isSelected)
-              Container(
-                width: AppDimensions.iconMD,
-                height: AppDimensions.iconMD,
+          child: Row(
+            children: [
+              AnimatedContainer(
+                duration: AppDurations.animationFast,
+                width: AppDimensions.avatarMD,
+                height: AppDimensions.avatarMD,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: accent,
+                  color: widget.isSelected
+                      ? accent
+                      : accent.withValues(alpha: AppDimensions.opacityFaint),
                 ),
                 child: Icon(
-                  LucideIcons.check,
-                  size: AppDimensions.iconSM,
-                  color: colorScheme.onPrimary,
+                  widget.goal.icon,
+                  size: AppDimensions.iconDefault,
+                  color: widget.isSelected ? colorScheme.onPrimary : accent,
                 ),
               ),
-          ],
+              const SizedBox(width: AppDimensions.paddingXL),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.goal.title,
+                      style: AppTextStyles.labelLarge.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: AppDimensions.paddingXXS),
+                    Text(
+                      widget.goal.subtitle,
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (widget.isSelected)
+                Container(
+                  width: AppDimensions.iconMD,
+                  height: AppDimensions.iconMD,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: accent,
+                  ),
+                  child: Icon(
+                    LucideIcons.check,
+                    size: AppDimensions.iconSM,
+                    color: colorScheme.onPrimary,
+                  ),
+                ),
+            ],
+          ),
         ),
-      ),
       ),
     );
   }

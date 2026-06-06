@@ -38,9 +38,9 @@ class Achievement extends Equatable {
 
   bool get isUnlocked => unlockedAt != null;
   double get progressFraction => (progress / target).clamp(0.0, 1.0);
-  bool get isNew => isUnlocked && unlockedAt!.isAfter(
-    DateTime.now().subtract(const Duration(days: 1)),
-  );
+  bool get isNew =>
+      isUnlocked &&
+      unlockedAt!.isAfter(DateTime.now().subtract(const Duration(days: 1)));
 
   Map<String, dynamic> toJson() => {
     'id': id,
@@ -69,12 +69,5 @@ class Achievement extends Equatable {
   }
 
   @override
-  List<Object?> get props => [
-    id,
-    title,
-    tier,
-    progress,
-    target,
-    unlockedAt,
-  ];
+  List<Object?> get props => [id, title, tier, progress, target, unlockedAt];
 }

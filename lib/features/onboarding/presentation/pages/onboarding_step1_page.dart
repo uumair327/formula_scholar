@@ -112,12 +112,18 @@ class _OnboardingStep1PageState extends State<OnboardingStep1Page> {
                       children: [
                         Expanded(
                           flex: 7,
-                          child: EntranceWrapper.stagger(index: 1, child: formCard),
+                          child: EntranceWrapper.stagger(
+                            index: 1,
+                            child: formCard,
+                          ),
                         ),
                         const SizedBox(width: AppDimensions.paddingXL),
                         Expanded(
                           flex: 5,
-                          child: EntranceWrapper.stagger(index: 2, child: const LocationInfoCards()),
+                          child: EntranceWrapper.stagger(
+                            index: 2,
+                            child: const LocationInfoCards(),
+                          ),
                         ),
                       ],
                     );
@@ -126,7 +132,10 @@ class _OnboardingStep1PageState extends State<OnboardingStep1Page> {
                     children: [
                       EntranceWrapper.stagger(index: 1, child: formCard),
                       const SizedBox(height: AppDimensions.paddingLG),
-                      EntranceWrapper.stagger(index: 2, child: const LocationInfoCards()),
+                      EntranceWrapper.stagger(
+                        index: 2,
+                        child: const LocationInfoCards(),
+                      ),
                     ],
                   );
                 },

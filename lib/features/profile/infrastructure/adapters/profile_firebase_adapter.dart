@@ -272,40 +272,17 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
 
   List<ProfileStat> _zeroStats() {
     return const [
-      ProfileStat(
-        id: 'formulas',
-        label: '',
-        value: '0',
-        iconName: 'functions',
-      ),
-      ProfileStat(
-        id: 'streak',
-        label: '',
-        value: '0',
-        iconName: 'fire',
-      ),
-      ProfileStat(
-        id: 'points',
-        label: '',
-        value: '0',
-        iconName: 'stars',
-      ),
+      ProfileStat(id: 'formulas', label: '', value: '0', iconName: 'functions'),
+      ProfileStat(id: 'streak', label: '', value: '0', iconName: 'fire'),
+      ProfileStat(id: 'points', label: '', value: '0', iconName: 'stars'),
     ];
   }
 
   @override
   Future<List<SettingsItem>> getSettingsItems() async {
     return const [
-      SettingsItem(
-        id: 'account',
-        label: '',
-        iconName: 'person_outline',
-      ),
-      SettingsItem(
-        id: 'bookmarks',
-        label: '',
-        iconName: 'bookmark_outline',
-      ),
+      SettingsItem(id: 'account', label: '', iconName: 'person_outline'),
+      SettingsItem(id: 'bookmarks', label: '', iconName: 'bookmark_outline'),
       SettingsItem(
         id: 'study_planner',
         label: '',
@@ -336,11 +313,7 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
         iconName: 'palette_outlined',
         isToggle: true,
       ),
-      SettingsItem(
-        id: 'help',
-        label: '',
-        iconName: 'help_outline',
-      ),
+      SettingsItem(id: 'help', label: '', iconName: 'help_outline'),
       SettingsItem(
         id: 'about',
         label: '',

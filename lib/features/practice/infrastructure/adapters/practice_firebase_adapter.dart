@@ -11,7 +11,11 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
   final FirestoreClientPort _api;
   final FirebaseAuth _firebaseAuth;
 
-  String _resolveLocalizedField(Map<String, dynamic> data, String key, String fallback) {
+  String _resolveLocalizedField(
+    Map<String, dynamic> data,
+    String key,
+    String fallback,
+  ) {
     if (!AppLocales.contentLocalizationEnabled) {
       return fallback;
     }
@@ -82,7 +86,10 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
       if (subjectId != null && subjectId.isNotEmpty) {
         fallbackQuery = fallbackQuery.where('subjectId', isEqualTo: subjectId);
       } else if (categoryId != null && categoryId.isNotEmpty) {
-        fallbackQuery = fallbackQuery.where('categoryId', isEqualTo: categoryId);
+        fallbackQuery = fallbackQuery.where(
+          'categoryId',
+          isEqualTo: categoryId,
+        );
       }
 
       snapshot = await _api.execute(
@@ -94,33 +101,48 @@ class PracticeFirebaseAdapter implements PracticeDataSourcePort {
     return snapshot.docs.map((doc) {
       final data = doc.data();
       final optionsList = data['options'] as List<dynamic>? ?? [];
-      
+
       final localizedMap = data['localized'] as Map<String, dynamic>?;
-      final currentLocale = AppLocales.normalizeContentLocaleCode(AppLocales.currentLocaleCode);
-      final hasLoc = localizedMap != null && localizedMap[currentLocale] != null;
-      final locOptions = hasLoc ? (localizedMap[currentLocale]['options'] as List<dynamic>?) : null;
-      
+      final currentLocale = AppLocales.normalizeContentLocaleCode(
+        AppLocales.currentLocaleCode,
+      );
+      final hasLoc =
+          localizedMap != null && localizedMap[currentLocale] != null;
+      final locOptions = hasLoc
+          ? (localizedMap[currentLocale]['options'] as List<dynamic>?)
+          : null;
+
       final options = optionsList.map((opt) {
         final optMap = opt as Map<String, dynamic>;
         final optId = optMap['id'] as String? ?? '';
-        
+
         String optText = optMap['text'] as String? ?? '';
         if (locOptions != null) {
-          final locOpt = locOptions.firstWhere((lo) => lo['id'] == optId, orElse: () => null);
-          if (locOpt != null && locOpt['text'] != null && (locOpt['text'] as String).isNotEmpty) {
-             optText = locOpt['text'] as String;
+          final locOpt = locOptions.firstWhere(
+            (lo) => lo['id'] == optId,
+            orElse: () => null,
+          );
+          if (locOpt != null &&
+              locOpt['text'] != null &&
+              (locOpt['text'] as String).isNotEmpty) {
+            optText = locOpt['text'] as String;
           }
         }
-        
+
         return QuizOption(id: optId, text: optText);
       }).toList();
 
-      final questionText = _resolveLocalizedField(data, 'questionText', data['questionText'] ?? '');
+      final questionText = _resolveLocalizedField(
+        data,
+        'questionText',
+        data['questionText'] ?? '',
+      );
       final topic = _resolveLocalizedField(data, 'topic', data['topic'] ?? '');
 
       return QuizQuestion(
         id: data['id'] ?? doc.id,
-        category: data['category'] as String? ?? data['categoryId'] as String? ?? '',
+        category:
+            data['category'] as String? ?? data['categoryId'] as String? ?? '',
         topic: topic,
         questionText: questionText,
         imageUrl: data['imageUrl'] ?? '',

@@ -17,7 +17,11 @@ class SavedShimmer extends StatelessWidget {
             children: [
               const Row(
                 children: [
-                  ShimmerBox(width: AppDimensions.avatarMD, height: AppDimensions.avatarMD, borderRadius: AppDimensions.radiusXXL),
+                  ShimmerBox(
+                    width: AppDimensions.avatarMD,
+                    height: AppDimensions.avatarMD,
+                    borderRadius: AppDimensions.radiusXXL,
+                  ),
                   SizedBox(width: AppDimensions.paddingMD),
                   Expanded(
                     child: Column(
@@ -32,7 +36,11 @@ class SavedShimmer extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: AppDimensions.paddingXXL),
-              const ShimmerBox(width: double.infinity, height: 48, borderRadius: AppDimensions.radiusLG),
+              const ShimmerBox(
+                width: double.infinity,
+                height: 48,
+                borderRadius: AppDimensions.radiusLG,
+              ),
               const SizedBox(height: AppDimensions.paddingXL),
               const Row(
                 children: [
@@ -45,7 +53,11 @@ class SavedShimmer extends StatelessWidget {
               ),
               const SizedBox(height: AppDimensions.paddingXXL),
               for (int i = 0; i < 6; i++) ...[
-                const ShimmerBox(width: double.infinity, height: 80, borderRadius: AppDimensions.radiusLG),
+                const ShimmerBox(
+                  width: double.infinity,
+                  height: 80,
+                  borderRadius: AppDimensions.radiusLG,
+                ),
                 const SizedBox(height: AppDimensions.paddingMD),
               ],
             ],

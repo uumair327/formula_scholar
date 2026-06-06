@@ -11,6 +11,7 @@ class AiMessage extends Equatable {
     required this.content,
     required this.createdAt,
     this.actionRequest,
+    this.widgetConfig,
     this.isStreaming = false,
   });
 
@@ -19,6 +20,7 @@ class AiMessage extends Equatable {
   final String content;
   final DateTime createdAt;
   final AiActionRequest? actionRequest;
+  final Map<String, dynamic>? widgetConfig;
   final bool isStreaming;
 
   AiMessage copyWith({
@@ -27,6 +29,7 @@ class AiMessage extends Equatable {
     String? content,
     DateTime? createdAt,
     Object? actionRequest = _unset,
+    Object? widgetConfig = _unset,
     bool? isStreaming,
   }) {
     return AiMessage(
@@ -37,6 +40,9 @@ class AiMessage extends Equatable {
       actionRequest: identical(actionRequest, _unset)
           ? this.actionRequest
           : actionRequest as AiActionRequest?,
+      widgetConfig: identical(widgetConfig, _unset)
+          ? this.widgetConfig
+          : widgetConfig as Map<String, dynamic>?,
       isStreaming: isStreaming ?? this.isStreaming,
     );
   }
@@ -48,6 +54,7 @@ class AiMessage extends Equatable {
     content,
     createdAt,
     actionRequest,
+    widgetConfig,
     isStreaming,
   ];
 }

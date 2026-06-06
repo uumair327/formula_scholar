@@ -64,20 +64,20 @@ class _NativeCircuitWidgetState extends State<NativeCircuitWidget>
         Positioned.fill(
           child: RepaintBoundary(
             child: AnimatedBuilder(
-            animation: _animationController,
-            builder: (context, child) {
-              return CustomPaint(
-                painter: _CircuitPainter(
-                  v: v,
-                  r: r,
-                  i: i,
-                  animationValue: _animationController.value,
-                  colorScheme: colorScheme,
-                  textDirection: textDirection,
-                ),
-              );
-            },
-          ),
+              animation: _animationController,
+              builder: (context, child) {
+                return CustomPaint(
+                  painter: _CircuitPainter(
+                    v: v,
+                    r: r,
+                    i: i,
+                    animationValue: _animationController.value,
+                    colorScheme: colorScheme,
+                    textDirection: textDirection,
+                  ),
+                );
+              },
+            ),
           ),
         ),
 
@@ -171,13 +171,21 @@ class _CircuitPainter extends CustomPainter {
     // 1. Draw loop path wire sections (except where components are placed)
     // We will place Battery on Left segment (bottom-to-top flow)
     // Resistor on Top segment (left-to-right flow)
-    
+
     // Draw wire segments
     // Top segment (left to resistor, resistor to right)
     const resWidth = 60.0;
     final topMidX = left + width / 2;
-    canvas.drawLine(const Offset(left, top), Offset(topMidX - resWidth / 2, top), wirePaint);
-    canvas.drawLine(Offset(topMidX + resWidth / 2, top), Offset(right, top), wirePaint);
+    canvas.drawLine(
+      const Offset(left, top),
+      Offset(topMidX - resWidth / 2, top),
+      wirePaint,
+    );
+    canvas.drawLine(
+      Offset(topMidX + resWidth / 2, top),
+      Offset(right, top),
+      wirePaint,
+    );
 
     // Right segment (completely wire)
     canvas.drawLine(Offset(right, top), Offset(right, bottom), wirePaint);
@@ -188,8 +196,16 @@ class _CircuitPainter extends CustomPainter {
     // Left segment (bottom to battery, battery to top)
     const batHeight = 40.0;
     final leftMidY = top + height / 2;
-    canvas.drawLine(Offset(left, bottom), Offset(left, leftMidY + batHeight / 2), wirePaint);
-    canvas.drawLine(Offset(left, leftMidY - batHeight / 2), const Offset(left, top), wirePaint);
+    canvas.drawLine(
+      Offset(left, bottom),
+      Offset(left, leftMidY + batHeight / 2),
+      wirePaint,
+    );
+    canvas.drawLine(
+      Offset(left, leftMidY - batHeight / 2),
+      const Offset(left, top),
+      wirePaint,
+    );
 
     // 2. Draw Battery component (Left mid)
     _drawBattery(canvas, Offset(left, leftMidY), batHeight);
@@ -230,7 +246,11 @@ class _CircuitPainter extends CustomPainter {
     final textPainter = TextPainter(textDirection: textDirection);
     textPainter.text = TextSpan(
       text: '+',
-      style: TextStyle(color: colorScheme.primary, fontSize: 14, fontWeight: FontWeight.bold),
+      style: TextStyle(
+        color: colorScheme.primary,
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
+      ),
     );
     textPainter.layout();
     textPainter.paint(canvas, Offset(center.dx - 30, center.dy - 18));
@@ -272,7 +292,10 @@ class _CircuitPainter extends CustomPainter {
       style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 10),
     );
     textPainter.layout();
-    textPainter.paint(canvas, Offset(center.dx - textPainter.width / 2, center.dy - 28));
+    textPainter.paint(
+      canvas,
+      Offset(center.dx - textPainter.width / 2, center.dy - 28),
+    );
   }
 
   void _drawCurrentFlow(

@@ -31,23 +31,44 @@ class FormulasPage extends StatelessWidget {
         builder: (context, state) {
           final colorScheme = Theme.of(context).colorScheme;
 
-        if (state.status == FormulasStatus.loading ||
-            state.status == FormulasStatus.initial) {
-          return const Scaffold(body: FormulasShimmer());
-        }
+          if (state.status == FormulasStatus.loading ||
+              state.status == FormulasStatus.initial) {
+            return const Scaffold(body: FormulasShimmer());
+          }
 
-        if (state.status == FormulasStatus.error) {
+          if (state.status == FormulasStatus.error) {
+            return Scaffold(
+              body: AppErrorState(
+                message: context.localizedError(fallback: state.errorMessage),
+                onRetry: () {
+                  if (state.subjectId != null && state.chapterId != null) {
+                    final curriculumKey = context
+                        .read<CurriculumCubit>()
+                        .state
+                        .curriculum
+                        ?.curriculumKey;
+                    context.read<FormulasCubit>().loadFormulas(
+                      subjectId: state.subjectId!,
+                      chapterId: state.chapterId!,
+                      chapterName: state.chapterName,
+                      curriculumKey: curriculumKey,
+                    );
+                  }
+                },
+              ),
+            );
+          }
+
           return Scaffold(
-            body: AppErrorState(
-              message: context.localizedError(fallback: state.errorMessage),
-              onRetry: () {
+            body: RefreshIndicator(
+              onRefresh: () async {
                 if (state.subjectId != null && state.chapterId != null) {
                   final curriculumKey = context
                       .read<CurriculumCubit>()
                       .state
                       .curriculum
                       ?.curriculumKey;
-                  context.read<FormulasCubit>().loadFormulas(
+                  await context.read<FormulasCubit>().loadFormulas(
                     subjectId: state.subjectId!,
                     chapterId: state.chapterId!,
                     chapterName: state.chapterName,
@@ -55,118 +76,97 @@ class FormulasPage extends StatelessWidget {
                   );
                 }
               },
-            ),
-          );
-        }
-
-        return Scaffold(
-          body: RefreshIndicator(
-            onRefresh: () async {
-              if (state.subjectId != null && state.chapterId != null) {
-                final curriculumKey = context
-                    .read<CurriculumCubit>()
-                    .state
-                    .curriculum
-                    ?.curriculumKey;
-                await context.read<FormulasCubit>().loadFormulas(
-                  subjectId: state.subjectId!,
-                  chapterId: state.chapterId!,
-                  chapterName: state.chapterName,
-                  curriculumKey: curriculumKey,
-                );
-              }
-            },
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final isDesktop =
-                    constraints.maxWidth >= AppDimensions.breakpointDesktop;
-                final hp = isDesktop
-                    ? ((constraints.maxWidth -
-                                  AppDimensions.breakpointMaxContent) /
-                              2)
-                          .clamp(
-                            AppDimensions.paddingSectionLG,
-                            double.infinity,
-                          )
-                    : AppDimensions.paddingLG;
-                return CustomScrollView(
-                  slivers: [
-                    SliverGlassAppBar(
-                      leading: IconButton(
-                        onPressed: () => context.pop(),
-                        icon: Icon(
-                          LucideIcons.arrowLeft,
-                          color: colorScheme.onSurface,
-                        ),
-                        tooltip: MaterialLocalizations.of(
-                          context,
-                        ).backButtonTooltip,
-                      ),
-                      titleWidget: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            state.chapterName ?? context.l10n.formulasTitle,
-                            style: AppTextStyles.titleLarge.copyWith(
-                              color: colorScheme.onSurface,
-                              fontWeight: FontWeight.w800,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: AppDimensions.paddingXXS),
-                          FormulaMasteryHeader(state: state),
-                        ],
-                      ),
-                      actions: const [FormulaAppBarActions()],
-                    ),
-                    SliverPadding(
-                      padding: EdgeInsets.symmetric(horizontal: hp),
-                      sliver: SliverList(
-                        delegate: SliverChildListDelegate([
-                          const SizedBox(height: AppDimensions.paddingMD),
-                          if (state.formulas.isEmpty)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: AppDimensions.paddingXXL,
-                              ),
-                              child: AppEmptyState(
-                                icon: LucideIcons.fileQuestion,
-                                title: context.l10n.noFormulasAvailable,
-                                description:
-                                    'Content for this chapter is being prepared. Check back later!',
-                              ),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final isDesktop =
+                      constraints.maxWidth >= AppDimensions.breakpointDesktop;
+                  final hp = isDesktop
+                      ? ((constraints.maxWidth -
+                                    AppDimensions.breakpointMaxContent) /
+                                2)
+                            .clamp(
+                              AppDimensions.paddingSectionLG,
+                              double.infinity,
                             )
-                          else
-                            ...state.formulas.asMap().entries.map(
-                              (entry) => StaggeredFadeSlide(
-                                index: entry.key,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                    bottom: AppDimensions.paddingMD,
-                                  ),
-                                  child: FormulaStudyCard(
-                                    formula: entry.value,
-                                    index: entry.key,
-                                    totalCount: state.formulas.length,
+                      : AppDimensions.paddingLG;
+                  return CustomScrollView(
+                    slivers: [
+                      SliverGlassAppBar(
+                        leading: IconButton(
+                          onPressed: () => context.pop(),
+                          icon: Icon(
+                            LucideIcons.arrowLeft,
+                            color: colorScheme.onSurface,
+                          ),
+                          tooltip: MaterialLocalizations.of(
+                            context,
+                          ).backButtonTooltip,
+                        ),
+                        titleWidget: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              state.chapterName ?? context.l10n.formulasTitle,
+                              style: AppTextStyles.titleLarge.copyWith(
+                                color: colorScheme.onSurface,
+                                fontWeight: FontWeight.w800,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: AppDimensions.paddingXXS),
+                            FormulaMasteryHeader(state: state),
+                          ],
+                        ),
+                        actions: const [FormulaAppBarActions()],
+                      ),
+                      SliverPadding(
+                        padding: EdgeInsets.symmetric(horizontal: hp),
+                        sliver: SliverList(
+                          delegate: SliverChildListDelegate([
+                            const SizedBox(height: AppDimensions.paddingMD),
+                            if (state.formulas.isEmpty)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: AppDimensions.paddingXXL,
+                                ),
+                                child: AppEmptyState(
+                                  icon: LucideIcons.fileQuestion,
+                                  title: context.l10n.noFormulasAvailable,
+                                  description:
+                                      'Content for this chapter is being prepared. Check back later!',
+                                ),
+                              )
+                            else
+                              ...state.formulas.asMap().entries.map(
+                                (entry) => StaggeredFadeSlide(
+                                  index: entry.key,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                      bottom: AppDimensions.paddingMD,
+                                    ),
+                                    child: FormulaStudyCard(
+                                      formula: entry.value,
+                                      index: entry.key,
+                                      totalCount: state.formulas.length,
+                                    ),
                                   ),
                                 ),
                               ),
+                            const SizedBox(
+                              height: AppDimensions.bottomNavPadding,
                             ),
-                          const SizedBox(
-                            height: AppDimensions.bottomNavPadding,
-                          ),
-                        ]),
+                          ]),
+                        ),
                       ),
-                    ),
-                  ],
-                );
-              },
+                    ],
+                  );
+                },
+              ),
             ),
-          ),
-        );
-      },
-    ),
-  );
-}
+          );
+        },
+      ),
+    );
+  }
 }

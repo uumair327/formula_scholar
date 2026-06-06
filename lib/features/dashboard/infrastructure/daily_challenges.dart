@@ -84,12 +84,7 @@ abstract final class DailyChallenges {
       formulaTitle: 'Difference of Squares',
       formulaLatex: r'a^2 - b^2 = (a-b)(a+b)',
       question: 'What is the factorization of x² - 9?',
-      options: [
-        '(x-3)(x+3)',
-        '(x-9)(x+9)',
-        '(x-3)²',
-        '(x+3)²',
-      ],
+      options: ['(x-3)(x+3)', '(x-9)(x+9)', '(x-3)²', '(x+3)²'],
       correctIndex: 0,
     ),
     const DailyChallenge(

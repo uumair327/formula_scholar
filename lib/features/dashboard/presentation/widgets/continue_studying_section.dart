@@ -41,7 +41,10 @@ class ContinueStudyingSection extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: AppDimensions.paddingMD),
-                Text(context.l10n.noRecentTitle, style: AppTextStyles.titleLarge),
+                Text(
+                  context.l10n.noRecentTitle,
+                  style: AppTextStyles.titleLarge,
+                ),
                 const SizedBox(height: AppDimensions.paddingXS),
                 Text(
                   context.l10n.noRecentDescription,
