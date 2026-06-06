@@ -26,4 +26,14 @@ class AnalyticsRepositoryImpl implements AnalyticsRepositoryPort {
       fallback: () => _cache.getCachedAnalytics(),
     );
   }
+
+  @override
+  Future<Result<GrowthMetrics>> getGrowthMetrics() {
+    return safeOperation(
+      tag: AppLogTags.analyticsRepo,
+      operation: 'getGrowthMetrics',
+      execute: () => _dataSource.fetchGrowthMetrics(),
+      fallback: () async => null,
+    );
+  }
 }

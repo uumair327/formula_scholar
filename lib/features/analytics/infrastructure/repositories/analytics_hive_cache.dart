@@ -15,6 +15,10 @@ class AnalyticsHiveCache implements AnalyticsCachePort {
       'totalFormulas': data.totalFormulas,
       'daysStreak': data.daysStreak,
       'quizAccuracy': data.quizAccuracy,
+      'completedSessions': data.completedSessions,
+      'totalStudyMinutes': data.totalStudyMinutes,
+      'daysActive': data.daysActive,
+      'longestStreak': data.longestStreak,
       'weeklyActivity': {
         'dayLabels': data.weeklyActivity.dayLabels,
         'values': data.weeklyActivity.values,
@@ -67,6 +71,10 @@ class AnalyticsHiveCache implements AnalyticsCachePort {
       totalFormulas: m['totalFormulas'] as int? ?? 0,
       daysStreak: m['daysStreak'] as int? ?? 0,
       quizAccuracy: (m['quizAccuracy'] as num?)?.toDouble() ?? 0.0,
+      completedSessions: m['completedSessions'] as int? ?? 0,
+      totalStudyMinutes: m['totalStudyMinutes'] as int? ?? 0,
+      daysActive: m['daysActive'] as int? ?? 0,
+      longestStreak: m['longestStreak'] as int? ?? 0,
       weeklyActivity: WeeklyActivity(
         dayLabels:
             (weeklyActivity?['dayLabels'] as List<dynamic>?)?.cast<String>() ??

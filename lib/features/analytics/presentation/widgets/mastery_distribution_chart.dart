@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
@@ -30,30 +31,50 @@ class MasteryDistributionChart extends StatelessWidget {
             if (dist.total > 0)
               Column(
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
-                    child: SizedBox(
-                      height: 24,
-                      child: Row(
-                        children: [
+                  SizedBox(
+                    height: 180,
+                    child: PieChart(
+                      PieChartData(
+                        sectionsSpace: 2,
+                        centerSpaceRadius: 40,
+                        sections: [
                           if (dist.mastered > 0)
-                            Flexible(
-                              flex: dist.mastered,
-                              child: Container(color: colorScheme.secondary),
+                            PieChartSectionData(
+                              value: dist.mastered.toDouble(),
+                              title: '${dist.mastered}',
+                              color: colorScheme.secondary,
+                              radius: 50,
+                              titleStyle: AppTextStyles.labelSmall.copyWith(
+                                color: colorScheme.onSecondary,
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                           if (dist.inProgress > 0)
-                            Flexible(
-                              flex: dist.inProgress,
-                              child: Container(color: colorScheme.tertiary),
+                            PieChartSectionData(
+                              value: dist.inProgress.toDouble(),
+                              title: '${dist.inProgress}',
+                              color: colorScheme.tertiary,
+                              radius: 50,
+                              titleStyle: AppTextStyles.labelSmall.copyWith(
+                                color: colorScheme.onTertiary,
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                           if (dist.notStarted > 0)
-                            Flexible(
-                              flex: dist.notStarted,
-                              child: Container(
-                                color: colorScheme.surfaceContainerHighest,
+                            PieChartSectionData(
+                              value: dist.notStarted.toDouble(),
+                              title: '${dist.notStarted}',
+                              color: colorScheme.surfaceContainerHighest,
+                              radius: 50,
+                              titleStyle: AppTextStyles.labelSmall.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
                         ],
+                        pieTouchData: PieTouchData(
+                          touchCallback: (event, pieTouchResponse) {},
+                        ),
                       ),
                     ),
                   ),
@@ -65,16 +86,19 @@ class MasteryDistributionChart extends StatelessWidget {
                         colorScheme.secondary,
                         'Mastered',
                         '${dist.mastered}',
+                        (dist.mastered / dist.total * 100).toInt(),
                       ),
                       _legendDot(
                         colorScheme.tertiary,
                         'In Progress',
                         '${dist.inProgress}',
+                        (dist.inProgress / dist.total * 100).toInt(),
                       ),
                       _legendDot(
                         colorScheme.surfaceContainerHighest,
                         'Not Started',
                         '${dist.notStarted}',
+                        (dist.notStarted / dist.total * 100).toInt(),
                       ),
                     ],
                   ),
@@ -100,7 +124,7 @@ class MasteryDistributionChart extends StatelessWidget {
     );
   }
 
-  Widget _legendDot(Color color, String label, String count) {
+  Widget _legendDot(Color color, String label, String count, int percent) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -110,7 +134,10 @@ class MasteryDistributionChart extends StatelessWidget {
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: 6),
-        Text('$label ($count)', style: AppTextStyles.labelSmall),
+        Text(
+          '$label $count ($percent%)',
+          style: AppTextStyles.labelSmall,
+        ),
       ],
     );
   }

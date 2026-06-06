@@ -44,6 +44,26 @@ class OverviewCards extends StatelessWidget {
                   label: 'Accuracy',
                   icon: LucideIcons.award,
                 ),
+                AnalyticsStatBox(
+                  value: '${data.completedSessions}',
+                  label: 'Sessions',
+                  icon: LucideIcons.play,
+                ),
+                AnalyticsStatBox(
+                  value: '${data.totalStudyMinutes}',
+                  label: 'Study Mins',
+                  icon: LucideIcons.clock,
+                ),
+                AnalyticsStatBox(
+                  value: '${data.daysActive}',
+                  label: 'Days Active',
+                  icon: LucideIcons.calendarCheck,
+                ),
+                AnalyticsStatBox(
+                  value: '${data.longestStreak}',
+                  label: 'Best Streak',
+                  icon: LucideIcons.flame,
+                ),
               ],
             ),
           ],

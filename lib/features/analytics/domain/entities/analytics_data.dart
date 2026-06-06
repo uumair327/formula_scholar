@@ -12,6 +12,10 @@ class AnalyticsData extends Equatable {
     required this.weeklyActivity,
     required this.masteryDistribution,
     required this.recentActivity,
+    this.completedSessions = 0,
+    this.totalStudyMinutes = 0,
+    this.daysActive = 0,
+    this.longestStreak = 0,
   });
 
   final int totalFormulas;
@@ -21,6 +25,12 @@ class AnalyticsData extends Equatable {
   final MasteryDistribution masteryDistribution;
   final List<RecentActivityItem> recentActivity;
 
+  // Enhanced metrics
+  final int completedSessions;
+  final int totalStudyMinutes;
+  final int daysActive;
+  final int longestStreak;
+
   @override
   List<Object?> get props => [
     totalFormulas,
@@ -29,5 +39,9 @@ class AnalyticsData extends Equatable {
     weeklyActivity,
     masteryDistribution,
     recentActivity,
+    completedSessions,
+    totalStudyMinutes,
+    daysActive,
+    longestStreak,
   ];
 }

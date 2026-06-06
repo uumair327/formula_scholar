@@ -1,9 +1,11 @@
+import 'package:injectable/injectable.dart';
 import '../../../core/constants/app_firestore_collections.dart';
 import '../../../core/constants/app_locales.dart';
 import '../../../core/network/firestore_client_port.dart';
 import '../../domain/models/localized_content_bundle.dart';
 import '../../domain/ports/localized_content_data_source_port.dart';
 
+@LazySingleton(as: LocalizedContentDataSourcePort)
 class LocalizedContentFirebaseAdapter
     implements LocalizedContentDataSourcePort {
   const LocalizedContentFirebaseAdapter(this._api);

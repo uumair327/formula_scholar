@@ -1,6 +1,7 @@
 library;
 
 export 'entities/analytics_data.dart';
+export 'entities/growth_metrics.dart';
 export 'entities/mastery_distribution.dart';
 export 'entities/recent_activity_item.dart';
 export 'entities/weekly_activity.dart';

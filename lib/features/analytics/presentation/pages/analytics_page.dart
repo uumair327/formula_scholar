@@ -4,9 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/core.dart';
 import '../cubit/analytics_cubit.dart';
 import '../cubit/analytics_state.dart';
+import '../widgets/growth_trend_chart.dart';
 import '../widgets/mastery_distribution_chart.dart';
 import '../widgets/overview_cards.dart';
 import '../widgets/recent_activity_list.dart';
+import '../widgets/subject_performance_chart.dart';
 import '../widgets/weekly_activity_chart.dart';
 
 class AnalyticsPage extends StatelessWidget {
@@ -43,6 +45,7 @@ class AnalyticsPage extends StatelessWidget {
               context,
               state,
               colorScheme,
+              cubit,
             ),
           };
         },
@@ -54,6 +57,7 @@ class AnalyticsPage extends StatelessWidget {
     BuildContext context,
     AnalyticsState state,
     ColorScheme colorScheme,
+    AnalyticsCubit cubit,
   ) {
     final data = state.data!;
     return RefreshIndicator(
@@ -80,8 +84,31 @@ class AnalyticsPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: AppDimensions.paddingMD),
+            // Growth trend chart
+            if (state.growthMetrics != null &&
+                state.growthMetrics!.weeklyGrowth.isNotEmpty)
+              EntranceWrapper.stagger(
+                index: 3,
+                child: GrowthTrendChart(
+                  weeklyGrowth: state.growthMetrics!.weeklyGrowth,
+                  selectedMetric: state.selectedPeriod,
+                  onMetricChanged: cubit.setPeriod,
+                ),
+              ),
+            const SizedBox(height: AppDimensions.paddingMD),
+            // Subject performance breakdown
+            if (state.growthMetrics != null &&
+                state.growthMetrics!.subjectBreakdown.isNotEmpty)
+              EntranceWrapper.stagger(
+                index: 4,
+                child: SubjectPerformanceChart(
+                  subjects: state.growthMetrics!.subjectBreakdown,
+                  onSubjectTap: cubit.setSubjectFilter,
+                ),
+              ),
+            const SizedBox(height: AppDimensions.paddingMD),
             EntranceWrapper.stagger(
-              index: 3,
+              index: 5,
               child: RecentActivityList(items: data.recentActivity),
             ),
           ],

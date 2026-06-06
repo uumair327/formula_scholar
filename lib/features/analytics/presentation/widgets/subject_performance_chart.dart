@@ -4,19 +4,26 @@ import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../../core/core.dart';
 
-import '../../domain/entities/weekly_activity.dart';
+import '../../domain/entities/growth_metrics.dart';
 import 'analytics_section_header.dart';
 
-class WeeklyActivityChart extends StatelessWidget {
-  const WeeklyActivityChart({super.key, required this.activity});
+class SubjectPerformanceChart extends StatelessWidget {
+  const SubjectPerformanceChart({
+    super.key,
+    required this.subjects,
+    this.onSubjectTap,
+  });
 
-  final WeeklyActivity activity;
+  final List<SubjectPerformance> subjects;
+  final void Function(String?)? onSubjectTap;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final maxVal = activity.values.reduce((a, b) => a > b ? a : b);
+
+    if (subjects.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
     return AppCard(
       child: Padding(
@@ -25,29 +32,24 @@ class WeeklyActivityChart extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const AnalyticsSectionHeader(
-              icon: LucideIcons.calendar,
-              title: 'Weekly Activity',
-            ),
-            const SizedBox(height: 4),
-            Text(
-              'Formulas reviewed per day',
-              style: AppTextStyles.bodySmall.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
+              icon: LucideIcons.barChart3,
+              title: 'Subject Performance',
             ),
             const SizedBox(height: AppDimensions.paddingMD),
             SizedBox(
-              height: 180,
+              height: subjects.length * 56.0,
               child: BarChart(
                 BarChartData(
                   alignment: BarChartAlignment.spaceAround,
-                  maxY: (maxVal * 1.3).clamp(5, double.infinity),
                   barTouchData: BarTouchData(
                     enabled: true,
                     touchTooltipData: BarTouchTooltipData(
                       getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                        final subject = subjects[groupIndex];
                         return BarTooltipItem(
-                          '${activity.dayLabels[groupIndex]}\n${rod.toY.toInt()} formulas',
+                          '${subject.subjectName}\n'
+                          'Accuracy: ${(subject.accuracy * 100).toInt()}%\n'
+                          'Mastered: ${subject.formulasMastered}/${subject.totalFormulas}',
                           TextStyle(
                             color: colorScheme.onInverseSurface,
                             fontWeight: FontWeight.w600,
@@ -62,32 +64,33 @@ class WeeklyActivityChart extends StatelessWidget {
                     bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
+                        reservedSize: 32,
                         getTitlesWidget: (value, meta) {
                           final idx = value.toInt();
-                          if (idx < 0 || idx >= activity.dayLabels.length) {
+                          if (idx < 0 || idx >= subjects.length) {
                             return const SizedBox.shrink();
                           }
                           return Padding(
                             padding: const EdgeInsets.only(top: 4),
                             child: Text(
-                              activity.dayLabels[idx].substring(0, 3),
+                              subjects[idx].subjectName.length > 8
+                                  ? '${subjects[idx].subjectName.substring(0, 7)}..'
+                                  : subjects[idx].subjectName,
                               style: AppTextStyles.overline.copyWith(
                                 color: colorScheme.onSurfaceVariant,
                               ),
                             ),
                           );
                         },
-                        reservedSize: 20,
                       ),
                     ),
                     leftTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
-                        reservedSize: 32,
+                        reservedSize: 36,
                         getTitlesWidget: (value, meta) {
-                          if (value == 0) return const SizedBox.shrink();
                           return Text(
-                            value.toInt().toString(),
+                            '${value.toInt()}%',
                             style: AppTextStyles.overline.copyWith(
                               color: colorScheme.onSurfaceVariant,
                             ),
@@ -105,7 +108,6 @@ class WeeklyActivityChart extends StatelessWidget {
                   gridData: FlGridData(
                     show: true,
                     drawVerticalLine: false,
-                    horizontalInterval: maxVal > 0 ? (maxVal / 4).ceilToDouble() : 1,
                     getDrawingHorizontalLine: (value) {
                       return FlLine(
                         color: colorScheme.outlineVariant.withValues(alpha: 0.3),
@@ -114,19 +116,16 @@ class WeeklyActivityChart extends StatelessWidget {
                     },
                   ),
                   borderData: FlBorderData(show: false),
-                  barGroups: List.generate(7, (i) {
-                    final isHighest = activity.values[i] == maxVal && maxVal > 0;
+                  barGroups: subjects.asMap().entries.map((entry) {
+                    final subject = entry.value;
+                    final color = Color(subject.colorValue);
                     return BarChartGroupData(
-                      x: i,
+                      x: entry.key,
                       barRods: [
                         BarChartRodData(
-                          toY: activity.values[i].toDouble().clamp(4, double.infinity),
-                          color: isHighest
-                              ? colorScheme.primary
-                              : (isDark
-                                  ? AppColors.darkPrimaryGradient.colors.first
-                                  : AppColors.primaryGradient.colors.first),
-                          width: 20,
+                          toY: subject.accuracy * 100,
+                          color: color,
+                          width: 18,
                           borderRadius: const BorderRadius.vertical(
                             top: Radius.circular(4),
                           ),
@@ -134,23 +133,14 @@ class WeeklyActivityChart extends StatelessWidget {
                             begin: Alignment.bottomCenter,
                             end: Alignment.topCenter,
                             colors: [
-                              if (isHighest) ...[
-                                colorScheme.primary,
-                                colorScheme.primary.withValues(alpha: 0.6),
-                              ] else ...[
-                                isDark
-                                    ? AppColors.darkPrimaryGradient.colors.first
-                                    : AppColors.primaryGradient.colors.first,
-                                isDark
-                                    ? AppColors.darkPrimaryGradient.colors.last
-                                    : AppColors.primaryGradient.colors.last,
-                              ],
+                              color.withValues(alpha: 0.6),
+                              color,
                             ],
                           ),
                         ),
                       ],
                     );
-                  }),
+                  }).toList(),
                 ),
               ),
             ),
