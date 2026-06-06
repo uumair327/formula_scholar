@@ -25,46 +25,64 @@ class OverviewCards extends StatelessWidget {
               title: 'Overview',
             ),
             const SizedBox(height: AppDimensions.paddingMD),
-            Wrap(
-              spacing: AppDimensions.paddingMD,
-              runSpacing: AppDimensions.paddingMD,
-              children: [
-                AnalyticsStatBox(
-                  value: '${data.totalFormulas}',
-                  label: 'Total Formulas',
-                  icon: LucideIcons.calculator,
-                ),
-                AnalyticsStatBox(
-                  value: '${data.daysStreak}',
-                  label: 'Day Streak',
-                  icon: LucideIcons.zap,
-                ),
-                AnalyticsStatBox(
-                  value: '${(data.quizAccuracy * 100).toInt()}%',
-                  label: 'Accuracy',
-                  icon: LucideIcons.award,
-                ),
-                AnalyticsStatBox(
-                  value: '${data.completedSessions}',
-                  label: 'Sessions',
-                  icon: LucideIcons.play,
-                ),
-                AnalyticsStatBox(
-                  value: '${data.totalStudyMinutes}',
-                  label: 'Study Mins',
-                  icon: LucideIcons.clock,
-                ),
-                AnalyticsStatBox(
-                  value: '${data.daysActive}',
-                  label: 'Days Active',
-                  icon: LucideIcons.calendarCheck,
-                ),
-                AnalyticsStatBox(
-                  value: '${data.longestStreak}',
-                  label: 'Best Streak',
-                  icon: LucideIcons.flame,
-                ),
-              ],
+            LayoutBuilder(
+              builder: (context, constraints) {
+                // Determine cross axis count based on available width
+                final width = constraints.maxWidth;
+                int crossAxisCount = 2;
+                if (width > 600) {
+                  crossAxisCount = 4;
+                } else if (width > 400) {
+                  crossAxisCount = 3;
+                }
+
+                return GridView.count(
+                  crossAxisCount: crossAxisCount,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  mainAxisSpacing: AppDimensions.paddingMD,
+                  crossAxisSpacing: AppDimensions.paddingMD,
+                  childAspectRatio: 1.1, // slightly wider than tall
+                  children: [
+                    AnalyticsStatBox(
+                      value: '${data.totalFormulas}',
+                      label: 'Formulas',
+                      icon: LucideIcons.calculator,
+                      color: Colors.blue,
+                    ),
+                    AnalyticsStatBox(
+                      value: '${data.daysStreak}',
+                      label: 'Day Streak',
+                      icon: LucideIcons.zap,
+                      color: Colors.orange,
+                    ),
+                    AnalyticsStatBox(
+                      value: '${(data.quizAccuracy * 100).toInt()}%',
+                      label: 'Accuracy',
+                      icon: LucideIcons.award,
+                      color: Colors.green,
+                    ),
+                    AnalyticsStatBox(
+                      value: '${data.completedSessions}',
+                      label: 'Sessions',
+                      icon: LucideIcons.play,
+                      color: Colors.purple,
+                    ),
+                    AnalyticsStatBox(
+                      value: '${data.totalStudyMinutes}',
+                      label: 'Study Mins',
+                      icon: LucideIcons.clock,
+                      color: Colors.teal,
+                    ),
+                    AnalyticsStatBox(
+                      value: '${data.longestStreak}',
+                      label: 'Best Streak',
+                      icon: LucideIcons.flame,
+                      color: Colors.red,
+                    ),
+                  ],
+                );
+              },
             ),
           ],
         ),

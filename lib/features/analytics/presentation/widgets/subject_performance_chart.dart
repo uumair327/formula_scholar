@@ -5,6 +5,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../../core/core.dart';
 
 import '../../domain/entities/growth_metrics.dart';
+import 'analytics_empty_state.dart';
 import 'analytics_section_header.dart';
 
 class SubjectPerformanceChart extends StatelessWidget {
@@ -22,7 +23,28 @@ class SubjectPerformanceChart extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     if (subjects.isEmpty) {
-      return const SizedBox.shrink();
+      return const AppCard(
+        child: Padding(
+          padding: EdgeInsets.all(AppDimensions.paddingMD),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AnalyticsSectionHeader(
+                icon: LucideIcons.barChart3,
+                title: 'Subject Performance',
+              ),
+              SizedBox(height: AppDimensions.paddingMD),
+              AnalyticsEmptyState(
+                icon: LucideIcons.barChart3,
+                title: 'No Subject Data',
+                message:
+                    'Complete quizzes in different subjects to see your performance.',
+                height: 180,
+              ),
+            ],
+          ),
+        ),
+      );
     }
 
     return AppCard(
@@ -110,7 +132,9 @@ class SubjectPerformanceChart extends StatelessWidget {
                     drawVerticalLine: false,
                     getDrawingHorizontalLine: (value) {
                       return FlLine(
-                        color: colorScheme.outlineVariant.withValues(alpha: 0.3),
+                        color: colorScheme.outlineVariant.withValues(
+                          alpha: 0.3,
+                        ),
                         strokeWidth: 1,
                       );
                     },
@@ -132,10 +156,7 @@ class SubjectPerformanceChart extends StatelessWidget {
                           gradient: LinearGradient(
                             begin: Alignment.bottomCenter,
                             end: Alignment.topCenter,
-                            colors: [
-                              color.withValues(alpha: 0.6),
-                              color,
-                            ],
+                            colors: [color.withValues(alpha: 0.6), color],
                           ),
                         ),
                       ],

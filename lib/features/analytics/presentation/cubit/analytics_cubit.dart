@@ -13,9 +13,9 @@ class AnalyticsCubit extends Cubit<AnalyticsState>
   AnalyticsCubit({
     required GetAnalyticsDataUseCase getAnalytics,
     required AnalyticsRepositoryPort repository,
-  })  : _getAnalytics = getAnalytics,
-        _repository = repository,
-        super(const AnalyticsState()) {
+  }) : _getAnalytics = getAnalytics,
+       _repository = repository,
+       super(const AnalyticsState()) {
     Future.microtask(load);
   }
 

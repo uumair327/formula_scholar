@@ -5,6 +5,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../../core/core.dart';
 
 import '../../domain/entities/growth_metrics.dart';
+import 'analytics_empty_state.dart';
 import 'analytics_section_header.dart';
 
 class GrowthTrendChart extends StatelessWidget {
@@ -23,8 +24,32 @@ class GrowthTrendChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    if (weeklyGrowth.isEmpty) {
-      return const SizedBox.shrink();
+    if (weeklyGrowth.isEmpty ||
+        weeklyGrowth.every(
+          (p) => p.sessions == 0 && p.minutes == 0 && p.formulasLearned == 0,
+        )) {
+      return const AppCard(
+        child: Padding(
+          padding: EdgeInsets.all(AppDimensions.paddingMD),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AnalyticsSectionHeader(
+                icon: LucideIcons.trendingUp,
+                title: 'Growth Trend',
+              ),
+              SizedBox(height: AppDimensions.paddingMD),
+              AnalyticsEmptyState(
+                icon: LucideIcons.trendingUp,
+                title: 'No Growth Data Yet',
+                message:
+                    'Start learning formulas to see your growth trend over time.',
+                height: 200,
+              ),
+            ],
+          ),
+        ),
+      );
     }
 
     final spots = weeklyGrowth.asMap().entries.map((entry) {
@@ -90,8 +115,7 @@ class GrowthTrendChart extends StatelessWidget {
                     touchTooltipData: LineTouchTooltipData(
                       getTooltipItems: (touchedSpots) {
                         return touchedSpots.map((spot) {
-                          final point =
-                              weeklyGrowth[spot.spotIndex];
+                          final point = weeklyGrowth[spot.spotIndex];
                           return LineTooltipItem(
                             '${point.weekLabel}\n${spot.y.toStringAsFixed(1)}',
                             TextStyle(
@@ -159,7 +183,9 @@ class GrowthTrendChart extends StatelessWidget {
                     drawVerticalLine: false,
                     getDrawingHorizontalLine: (value) {
                       return FlLine(
-                        color: colorScheme.outlineVariant.withValues(alpha: 0.3),
+                        color: colorScheme.outlineVariant.withValues(
+                          alpha: 0.3,
+                        ),
                         strokeWidth: 1,
                       );
                     },
@@ -219,14 +245,10 @@ class _MetricChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: selected
-              ? colorScheme.primaryContainer
-              : Colors.transparent,
+          color: selected ? colorScheme.primaryContainer : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: selected
-                ? colorScheme.primary
-                : colorScheme.outlineVariant,
+            color: selected ? colorScheme.primary : colorScheme.outlineVariant,
           ),
         ),
         child: Text(

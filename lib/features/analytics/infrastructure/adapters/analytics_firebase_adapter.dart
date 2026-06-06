@@ -65,8 +65,9 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
       totalQuestions += (data['totalQuestions'] as num?)?.toInt() ?? 0;
       correctQuestions += (data['correctCount'] as num?)?.toInt() ?? 0;
     }
-    final accuracy =
-        totalQuestions > 0 ? correctQuestions / totalQuestions : 0.0;
+    final accuracy = totalQuestions > 0
+        ? correctQuestions / totalQuestions
+        : 0.0;
 
     var totalFormulas = 0;
     try {
@@ -86,9 +87,7 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
     // Real mastery distribution from user progress
     final masteryData = await _fetchRealMasteryDistribution(userId);
     final streakDoc = await _api.execute(
-      () => _api
-          .doc(AppFirestoreCollections.userStatsStreak(userId))
-          .get(),
+      () => _api.doc(AppFirestoreCollections.userStatsStreak(userId)).get(),
       tag: AppLogTags.analyticsDataSource,
     );
     final daysStreak =
@@ -101,8 +100,8 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
       final timeAgo = diff.inDays > 1
           ? '${diff.inDays} days ago'
           : diff.inHours > 1
-              ? '${diff.inHours} hours ago'
-              : '${diff.inMinutes} minutes ago';
+          ? '${diff.inHours} hours ago'
+          : '${diff.inMinutes} minutes ago';
       final correct = (data['correctCount'] as num?)?.toInt() ?? 0;
       final total = (data['totalQuestions'] as num?)?.toInt() ?? 0;
       final subjectName = data['subjectName'] as String? ?? '';
@@ -121,8 +120,7 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
     final totalMinutes = monthResults.fold<int>(
       0,
       (total, d) =>
-          total +
-          ((d.data()['durationSeconds'] as num?)?.toInt() ?? 0) ~/ 60,
+          total + ((d.data()['durationSeconds'] as num?)?.toInt() ?? 0) ~/ 60,
     );
     final uniqueDays = results.docs
         .map((d) {
@@ -243,7 +241,8 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
           if (formulasSnapshot.docs.isNotEmpty) {
             for (final formulaDoc in formulasSnapshot.docs) {
               final status =
-                  formulaDoc.data()['masteryStatus'] as String? ?? 'not_started';
+                  formulaDoc.data()['masteryStatus'] as String? ??
+                  'not_started';
               switch (status) {
                 case 'mastered':
                   mastered++;
@@ -258,8 +257,7 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
             }
           } else {
             // Fallback: use chapter-level progress
-            final pct =
-                (data['masteryPercentage'] as num?)?.toDouble() ?? 0;
+            final pct = (data['masteryPercentage'] as num?)?.toDouble() ?? 0;
             final total = (data['totalFormulas'] as num?)?.toInt() ?? 0;
             if (total > 0) {
               mastered += (pct / 100 * total).round();
@@ -302,7 +300,9 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
       return MasteryDistribution(
         mastered: (acc * formulaCount * 0.4).round(),
         inProgress: (formulaCount * 0.35).round(),
-        notStarted: formulaCount - (acc * formulaCount * 0.4).round() -
+        notStarted:
+            formulaCount -
+            (acc * formulaCount * 0.4).round() -
             (formulaCount * 0.35).round(),
       );
     } catch (e) {
@@ -359,9 +359,7 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
     );
 
     final streakDoc = await _api.execute(
-      () => _api
-          .doc(AppFirestoreCollections.userStatsStreak(userId))
-          .get(),
+      () => _api.doc(AppFirestoreCollections.userStatsStreak(userId)).get(),
       tag: AppLogTags.analyticsDataSource,
     );
 
@@ -373,7 +371,8 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
       final weekDocs = allResults.docs.where((d) {
         final ts = _parseDate(d.data()['completedAt']);
         if (ts == null) return false;
-        return ts.isAfter(weekStart) && ts.isBefore(weekEnd.add(const Duration(days: 1)));
+        return ts.isAfter(weekStart) &&
+            ts.isBefore(weekEnd.add(const Duration(days: 1)));
       }).toList();
 
       final weekSessions = weekDocs.length;
@@ -387,25 +386,27 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
         weekTotal += (data['totalQuestions'] as num?)?.toInt() ?? 0;
       }
 
-      weeklyPoints.add(WeeklyGrowthPoint(
-        weekLabel: _formatWeekLabel(weekStart),
-        sessions: weekSessions,
-        minutes: weekMinutes,
-        accuracy: weekTotal > 0 ? weekCorrect / weekTotal : 0,
-        formulasLearned: weekDocs.length,
-      ));
+      weeklyPoints.add(
+        WeeklyGrowthPoint(
+          weekLabel: _formatWeekLabel(weekStart),
+          sessions: weekSessions,
+          minutes: weekMinutes,
+          accuracy: weekTotal > 0 ? weekCorrect / weekTotal : 0,
+          formulasLearned: weekDocs.length,
+        ),
+      );
     }
 
     // Calculate monthly growth (last 6 months)
     final monthlyPoints = <MonthlyGrowthPoint>[];
     for (var m = 5; m >= 0; m--) {
       final monthStart = DateTime(now.year, now.month - m, 1);
-      final monthEnd =
-          DateTime(now.year, now.month - m + 1, 0);
+      final monthEnd = DateTime(now.year, now.month - m + 1, 0);
       final monthDocs = allResults.docs.where((d) {
         final ts = _parseDate(d.data()['completedAt']);
         if (ts == null) return false;
-        return ts.isAfter(monthStart) && ts.isBefore(monthEnd.add(const Duration(days: 1)));
+        return ts.isAfter(monthStart) &&
+            ts.isBefore(monthEnd.add(const Duration(days: 1)));
       }).toList();
 
       var monthSessions = 0;
@@ -420,14 +421,16 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
         monthTotal += (data['totalQuestions'] as num?)?.toInt() ?? 0;
       }
 
-      monthlyPoints.add(MonthlyGrowthPoint(
-        monthLabel: _formatMonthLabel(monthStart),
-        sessions: monthSessions,
-        minutes: monthMinutes,
-        accuracy: monthTotal > 0 ? monthCorrect / monthTotal : 0,
-        formulasLearned: monthSessions,
-        newUsers: 0,
-      ));
+      monthlyPoints.add(
+        MonthlyGrowthPoint(
+          monthLabel: _formatMonthLabel(monthStart),
+          sessions: monthSessions,
+          minutes: monthMinutes,
+          accuracy: monthTotal > 0 ? monthCorrect / monthTotal : 0,
+          formulasLearned: monthSessions,
+          newUsers: 0,
+        ),
+      );
     }
 
     // Subject breakdown
@@ -458,28 +461,29 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
 
       final totalFormulasInSubject =
           (subData['formulaCount'] as num?)?.toInt() ?? 0;
-      final masteredInSubject =
-          totalFormulasInSubject > 0
-              ? ((subTotal > 0 ? subCorrect / subTotal : 0) *
-                      totalFormulasInSubject *
-                      0.5)
-                  .round()
-              : 0;
+      final masteredInSubject = totalFormulasInSubject > 0
+          ? ((subTotal > 0 ? subCorrect / subTotal : 0) *
+                    totalFormulasInSubject *
+                    0.5)
+                .round()
+          : 0;
 
-      subjectPerformance.add(SubjectPerformance(
-        subjectId: subjectId,
-        subjectName: subjectName,
-        iconName: subData['iconName'] as String? ?? 'book-open',
-        colorValue: (subData['colorValue'] as num?)?.toInt() ?? 0xFF00639A,
-        sessionsCompleted: subjectResults.length,
-        accuracy: subTotal > 0 ? subCorrect / subTotal : 0,
-        formulasMastered: masteredInSubject,
-        totalFormulas: totalFormulasInSubject,
-        streakDays: 0,
-        lastStudied: subjectResults.isNotEmpty
-            ? _parseDate(subjectResults.first.data()['completedAt'])
-            : null,
-      ));
+      subjectPerformance.add(
+        SubjectPerformance(
+          subjectId: subjectId,
+          subjectName: subjectName,
+          iconName: subData['iconName'] as String? ?? 'book-open',
+          colorValue: (subData['colorValue'] as num?)?.toInt() ?? 0xFF00639A,
+          sessionsCompleted: subjectResults.length,
+          accuracy: subTotal > 0 ? subCorrect / subTotal : 0,
+          formulasMastered: masteredInSubject,
+          totalFormulas: totalFormulasInSubject,
+          streakDays: 0,
+          lastStudied: subjectResults.isNotEmpty
+              ? _parseDate(subjectResults.first.data()['completedAt'])
+              : null,
+        ),
+      );
     }
 
     final totalSessions = allResults.docs.length;
@@ -501,10 +505,8 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
       totalSessions: totalSessions,
       totalStudyMinutes: totalMinutes,
       daysActive: uniqueDays,
-      currentStreak:
-          (streakDoc.data()?['currentStreak'] as num?)?.toInt() ?? 0,
-      longestStreak:
-          (streakDoc.data()?['longestStreak'] as num?)?.toInt() ?? 0,
+      currentStreak: (streakDoc.data()?['currentStreak'] as num?)?.toInt() ?? 0,
+      longestStreak: (streakDoc.data()?['longestStreak'] as num?)?.toInt() ?? 0,
       weeklyGrowth: weeklyPoints,
       monthlyGrowth: monthlyPoints,
       subjectBreakdown: subjectPerformance,
@@ -526,16 +528,36 @@ class AnalyticsFirebaseAdapter implements AnalyticsDataSourcePort {
 
   String _formatWeekLabel(DateTime date) {
     final months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return '${months[date.month - 1]} ${date.day}';
   }
 
   String _formatMonthLabel(DateTime date) {
     final months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return months[date.month - 1];
   }

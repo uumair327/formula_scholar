@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
 import '../cubit/analytics_cubit.dart';
@@ -60,59 +61,98 @@ class AnalyticsPage extends StatelessWidget {
     AnalyticsCubit cubit,
   ) {
     final data = state.data!;
-    return RefreshIndicator(
-      onRefresh: () async {
-        await context.read<AnalyticsCubit>().load();
-      },
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(AppDimensions.paddingMD),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            EntranceWrapper.stagger(index: 0, child: OverviewCards(data: data)),
-            const SizedBox(height: AppDimensions.paddingMD),
-            EntranceWrapper.stagger(
-              index: 1,
-              child: WeeklyActivityChart(activity: data.weeklyActivity),
+    return DefaultTabController(
+      length: 3,
+      child: Column(
+        children: [
+          Container(
+            color: colorScheme.surface,
+            child: TabBar(
+              labelColor: colorScheme.primary,
+              unselectedLabelColor: colorScheme.onSurfaceVariant,
+              indicatorColor: colorScheme.primary,
+              indicatorWeight: 3,
+              tabs: const [
+                Tab(text: 'Overview', icon: Icon(LucideIcons.barChart3)),
+                Tab(text: 'Performance', icon: Icon(LucideIcons.target)),
+                Tab(text: 'Trends', icon: Icon(LucideIcons.trendingUp)),
+              ],
             ),
-            const SizedBox(height: AppDimensions.paddingMD),
-            EntranceWrapper.stagger(
-              index: 2,
-              child: MasteryDistributionChart(
-                distribution: data.masteryDistribution,
-              ),
-            ),
-            const SizedBox(height: AppDimensions.paddingMD),
-            // Growth trend chart
-            if (state.growthMetrics != null &&
-                state.growthMetrics!.weeklyGrowth.isNotEmpty)
-              EntranceWrapper.stagger(
-                index: 3,
-                child: GrowthTrendChart(
-                  weeklyGrowth: state.growthMetrics!.weeklyGrowth,
-                  selectedMetric: state.selectedPeriod,
-                  onMetricChanged: cubit.setPeriod,
+          ),
+          Expanded(
+            child: TabBarView(
+              children: [
+                // TAB 1: Overview
+                RefreshIndicator(
+                  onRefresh: () async => cubit.load(),
+                  child: ListView(
+                    padding: const EdgeInsets.all(AppDimensions.paddingMD),
+                    children: [
+                      EntranceWrapper.stagger(
+                        index: 0,
+                        child: OverviewCards(data: data),
+                      ),
+                      const SizedBox(height: AppDimensions.paddingMD),
+                      EntranceWrapper.stagger(
+                        index: 1,
+                        child: RecentActivityList(items: data.recentActivity),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            const SizedBox(height: AppDimensions.paddingMD),
-            // Subject performance breakdown
-            if (state.growthMetrics != null &&
-                state.growthMetrics!.subjectBreakdown.isNotEmpty)
-              EntranceWrapper.stagger(
-                index: 4,
-                child: SubjectPerformanceChart(
-                  subjects: state.growthMetrics!.subjectBreakdown,
-                  onSubjectTap: cubit.setSubjectFilter,
+                // TAB 2: Performance
+                RefreshIndicator(
+                  onRefresh: () async => cubit.load(),
+                  child: ListView(
+                    padding: const EdgeInsets.all(AppDimensions.paddingMD),
+                    children: [
+                      EntranceWrapper.stagger(
+                        index: 0,
+                        child: MasteryDistributionChart(
+                          distribution: data.masteryDistribution,
+                        ),
+                      ),
+                      const SizedBox(height: AppDimensions.paddingMD),
+                      if (state.growthMetrics != null)
+                        EntranceWrapper.stagger(
+                          index: 1,
+                          child: SubjectPerformanceChart(
+                            subjects: state.growthMetrics!.subjectBreakdown,
+                            onSubjectTap: cubit.setSubjectFilter,
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
-              ),
-            const SizedBox(height: AppDimensions.paddingMD),
-            EntranceWrapper.stagger(
-              index: 5,
-              child: RecentActivityList(items: data.recentActivity),
+                // TAB 3: Trends
+                RefreshIndicator(
+                  onRefresh: () async => cubit.load(),
+                  child: ListView(
+                    padding: const EdgeInsets.all(AppDimensions.paddingMD),
+                    children: [
+                      EntranceWrapper.stagger(
+                        index: 0,
+                        child: WeeklyActivityChart(
+                          activity: data.weeklyActivity,
+                        ),
+                      ),
+                      const SizedBox(height: AppDimensions.paddingMD),
+                      if (state.growthMetrics != null)
+                        EntranceWrapper.stagger(
+                          index: 1,
+                          child: GrowthTrendChart(
+                            weeklyGrowth: state.growthMetrics!.weeklyGrowth,
+                            selectedMetric: state.selectedPeriod,
+                            onMetricChanged: cubit.setPeriod,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

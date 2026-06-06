@@ -5,6 +5,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../../core/core.dart';
 
 import '../../domain/entities/mastery_distribution.dart';
+import 'analytics_empty_state.dart';
 import 'analytics_section_header.dart';
 
 class MasteryDistributionChart extends StatelessWidget {
@@ -27,8 +28,15 @@ class MasteryDistributionChart extends StatelessWidget {
               icon: LucideIcons.pieChart,
               title: 'Mastery Distribution',
             ),
-            const SizedBox(height: AppDimensions.paddingMD),
-            if (dist.total > 0)
+            if (dist.total == 0)
+              const AnalyticsEmptyState(
+                icon: LucideIcons.pieChart,
+                title: 'No Mastery Data',
+                message:
+                    'Start learning formulas to see your mastery distribution.',
+                height: 180,
+              )
+            else
               Column(
                 children: [
                   SizedBox(
@@ -79,8 +87,10 @@ class MasteryDistributionChart extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: AppDimensions.paddingMD),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  Wrap(
+                    spacing: 16,
+                    runSpacing: 8,
+                    alignment: WrapAlignment.center,
                     children: [
                       _legendDot(
                         colorScheme.secondary,
@@ -103,20 +113,6 @@ class MasteryDistributionChart extends StatelessWidget {
                     ],
                   ),
                 ],
-              )
-            else
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: AppDimensions.paddingLG,
-                ),
-                child: Center(
-                  child: Text(
-                    'No data yet',
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ),
               ),
           ],
         ),
@@ -134,10 +130,7 @@ class MasteryDistributionChart extends StatelessWidget {
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: 6),
-        Text(
-          '$label $count ($percent%)',
-          style: AppTextStyles.labelSmall,
-        ),
+        Text('$label $count ($percent%)', style: AppTextStyles.labelSmall),
       ],
     );
   }

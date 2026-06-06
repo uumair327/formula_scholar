@@ -59,27 +59,43 @@ class PracticePreFilter extends StatelessWidget {
                     children: [
                       EntranceWrapper.stagger(
                         index: 0,
-                        child: Text(
-                          context.l10n.practiceReadyTitle,
-                          textAlign: TextAlign.center,
-                          style: AppTextStyles.headlineSmall.copyWith(
-                            color: colorScheme.onSurface,
-                            fontWeight: FontWeight.w800,
-                          ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 40,
+                              height: 4,
+                              margin: const EdgeInsets.only(
+                                bottom: AppDimensions.paddingMD,
+                              ),
+                              decoration: BoxDecoration(
+                                color: colorScheme.primary,
+                                borderRadius: BorderRadius.circular(
+                                  AppDimensions.radiusPill,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              context.l10n.practiceReadyTitle,
+                              textAlign: TextAlign.left,
+                              style: AppTextStyles.headlineLarge.copyWith(
+                                color: colorScheme.onSurface,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: -0.5,
+                              ),
+                            ),
+                            const SizedBox(height: AppDimensions.paddingSM),
+                            Text(
+                              context.l10n.practiceReadyDesc,
+                              textAlign: TextAlign.left,
+                              style: AppTextStyles.bodyLarge.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: AppDimensions.paddingLG),
-                      EntranceWrapper.stagger(
-                        index: 1,
-                        child: Text(
-                          context.l10n.practiceReadyDesc,
-                          textAlign: TextAlign.center,
-                          style: AppTextStyles.bodyLarge.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: AppDimensions.paddingXXL),
+                      const SizedBox(height: AppDimensions.paddingSectionLG),
                       EntranceWrapper.stagger(
                         index: 2,
                         child: _SubjectSelector(
@@ -163,7 +179,7 @@ class _SubjectSelector extends StatelessWidget {
                 crossAxisCount: crossAxisCount,
                 crossAxisSpacing: AppDimensions.paddingLG,
                 mainAxisSpacing: AppDimensions.paddingLG,
-                childAspectRatio: 1.1,
+                childAspectRatio: 1.05,
               ),
               itemCount: practiceState.availableSubjects.length + 1,
               itemBuilder: (context, index) {
@@ -207,28 +223,63 @@ class _SubjectSelector extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return AppCard(
-      color: color.withValues(alpha: 0.05),
-      border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
+      color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      border: Border.all(color: color.withValues(alpha: 0.3), width: 1.5),
+      clipBehavior: Clip.antiAlias,
       onTap: onTap,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      padding: EdgeInsets.zero,
+      child: Stack(
         children: [
-          AppIconCircle(
-            icon: icon,
-            backgroundColor: color.withValues(alpha: 0.15),
-            iconColor: color,
-            size: 48,
+          Positioned(
+            right: -24,
+            bottom: -24,
+            child: Icon(icon, size: 110, color: color.withValues(alpha: 0.06)),
           ),
-          const SizedBox(height: AppDimensions.paddingSM),
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: AppTextStyles.labelLarge.copyWith(
-              fontWeight: FontWeight.w800,
-              color: colorScheme.onSurface,
+          Padding(
+            padding: const EdgeInsets.all(AppDimensions.paddingMD),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                AppIconCircle(
+                  icon: icon,
+                  backgroundColor: color.withValues(alpha: 0.15),
+                  iconColor: color,
+                  size: 40,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: AppTextStyles.titleMedium.copyWith(
+                          fontWeight: FontWeight.w800,
+                          color: colorScheme.onSurface,
+                          height: 1.1,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(width: AppDimensions.paddingSM),
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: color.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        LucideIcons.arrowRight,
+                        size: 16,
+                        color: color,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

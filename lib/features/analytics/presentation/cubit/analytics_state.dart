@@ -4,6 +4,7 @@ import '../../domain/entities/analytics_data.dart';
 import '../../domain/entities/growth_metrics.dart';
 
 enum AnalyticsStatus { initial, loading, loaded, error }
+
 enum GrowthMetricsStatus { initial, loading, loaded, error }
 
 class AnalyticsState extends Equatable {
