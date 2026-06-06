@@ -123,9 +123,6 @@ class DashboardPage extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: hp),
                         sliver: SliverList(
                           delegate: SliverChildListDelegate([
-                            const SizedBox(height: AppDimensions.paddingLG),
-                            const CurriculumFilterBar(),
-                            const SizedBox(height: AppDimensions.paddingXL),
                             if (state.announcements
                                 .where(
                                   (a) => a.isUrgent || a.isHighPriority || true,

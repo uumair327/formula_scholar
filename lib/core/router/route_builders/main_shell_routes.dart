@@ -102,6 +102,9 @@ StatefulShellBranch _dashboardBranch() {
                       curriculumCubit: getIt<CurriculumCubit>(),
                     ),
                   ),
+                  BlocProvider(
+                    create: (_) => getIt<ProfileCubit>(),
+                  ),
                 ],
                 child: const DashboardPage(),
               ),
