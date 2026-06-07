@@ -172,4 +172,8 @@ abstract final class AppRoutes {
   // ──────────────────────── Widget Preview ──────────────────────
   static const String widgetPreviewPath = '/widget-preview';
   static const String widgetPreviewName = 'widgetPreview';
+
+  // ──────────────────────── Streak ────────────────────────────
+  static const String streakPath = '/streak';
+  static const String streakName = 'streak';
 }

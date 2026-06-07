@@ -9,6 +9,7 @@ class UserProfile extends Equatable {
     this.board = '',
     required this.avatarUrl,
     this.isPro = false,
+    this.joinedAt,
   });
   final String name;
   final String email;
@@ -16,6 +17,7 @@ class UserProfile extends Equatable {
   final String board;
   final String avatarUrl;
   final bool isPro;
+  final DateTime? joinedAt;
 
   /// Display label combining board and grade, e.g. "CBSE • Class 9".
   String get curriculumLabel {
@@ -24,5 +26,5 @@ class UserProfile extends Equatable {
   }
 
   @override
-  List<Object?> get props => [name, email, grade, board, avatarUrl, isPro];
+  List<Object?> get props => [name, email, grade, board, avatarUrl, isPro, joinedAt];
 }

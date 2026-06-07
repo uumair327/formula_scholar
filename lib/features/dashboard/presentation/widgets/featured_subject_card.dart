@@ -65,27 +65,31 @@ class FeaturedSubjectCard extends StatelessWidget {
                         ),
                       ),
                       if (subject.badgeText != null)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppDimensions.chipPaddingHorizontal,
-                            vertical: AppDimensions.badgePaddingVertical,
-                          ),
-                          decoration: BoxDecoration(
-                            color: colorScheme.surfaceContainerLowest,
-                            border: Border.all(
-                              color: colorScheme.outlineVariant.withValues(
-                                alpha: AppDimensions.opacityLight,
+                        Flexible(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppDimensions.chipPaddingHorizontal,
+                              vertical: AppDimensions.badgePaddingVertical,
+                            ),
+                            decoration: BoxDecoration(
+                              color: colorScheme.surfaceContainerLowest,
+                              border: Border.all(
+                                color: colorScheme.outlineVariant.withValues(
+                                  alpha: AppDimensions.opacityLight,
+                                ),
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                AppDimensions.radiusXXL,
                               ),
                             ),
-                            borderRadius: BorderRadius.circular(
-                              AppDimensions.radiusXXL,
-                            ),
-                          ),
-                          child: Text(
-                            subject.badgeText!,
-                            style: AppTextStyles.labelSmall.copyWith(
-                              color: colorScheme.onSurfaceVariant,
-                              fontSize: AppDimensions.fontSizeXS,
+                            child: Text(
+                              subject.badgeText!,
+                              style: AppTextStyles.labelSmall.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                                fontSize: AppDimensions.fontSizeXS,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ),

@@ -89,6 +89,7 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   injectable_generator: ^2.7.0
   build_runner: ^2.4.15
+  flutter_flavorizr: ^2.5.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -129,5 +130,26 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
-  # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+flavorizr:
+  app:
+    android:
+      flavorDimensions: "flavor-type"
+
+  flavors:
+    uat:
+      app:
+        name: "Formula UAT"
+      android:
+        applicationId: "com.formulascholar.formula_scholar"
+      ios:
+        bundleId: "com.formulascholar.formulascholar"
+    prod:
+      app:
+        name: "Formula Scholar"
+      android:
+        applicationId: "com.glimfo.formulascholar"
+      ios:
+        bundleId: "com.glimfo.formulascholar"
+

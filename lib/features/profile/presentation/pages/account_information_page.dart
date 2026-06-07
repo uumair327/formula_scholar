@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-
-import '../../../auth/auth.dart';
 import '../cubit/profile_cubit.dart';
 import '../cubit/profile_state.dart';
 import '../widgets/account/account_action_tile.dart';
 import '../widgets/account/account_info_app_bar.dart';
 import '../widgets/account/account_info_tile.dart';
 import '../widgets/account/account_profile_card.dart';
-import '../widgets/account/delete_account_dialog.dart';
 import '../widgets/edit_profile_dialog.dart';
-import '../widgets/settings_list_widget.dart';
-import 'package:go_router/go_router.dart';
 
 class AccountInformationPage extends StatelessWidget {
   const AccountInformationPage({super.key});
@@ -86,6 +82,17 @@ class AccountInformationPage extends StatelessWidget {
                             onTap: () => showEditProfileBottomSheet(context),
                           ),
                         ),
+                        if (profile?.joinedAt != null) ...[
+                          const SizedBox(height: AppDimensions.paddingMD),
+                          EntranceWrapper.stagger(
+                            index: 5,
+                            child: AccountInfoTile(
+                              icon: LucideIcons.calendar,
+                              label: 'Joined On', // Using hardcoded string since not in l10n immediately
+                              value: DateFormat('MMMM yyyy').format(profile!.joinedAt!),
+                            ),
+                          ),
+                        ],
                         const SizedBox(height: AppDimensions.paddingXXL),
 
                         // Academic Information

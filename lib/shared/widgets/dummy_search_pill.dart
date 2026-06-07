@@ -10,7 +10,7 @@ class DummySearchPill extends StatelessWidget implements PreferredSizeWidget {
   const DummySearchPill({super.key});
 
   @override
-  Size get preferredSize => const Size.fromHeight(60.0);
+  Size get preferredSize => const Size.fromHeight(64.0);
 
   @override
   Widget build(BuildContext context) {

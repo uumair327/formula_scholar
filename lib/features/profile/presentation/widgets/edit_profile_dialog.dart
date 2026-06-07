@@ -125,7 +125,7 @@ class _EditProfileBottomSheetContentState
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: colorScheme.onSurfaceVariant.withOpacity(0.4),
+                color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
               ),
             ),
@@ -180,7 +180,7 @@ class _EditProfileBottomSheetContentState
                       boxShadow: isSelected
                           ? [
                               BoxShadow(
-                                color: AppColors.primary.withOpacity(0.3),
+                                color: AppColors.primary.withValues(alpha: 0.3),
                                 blurRadius: 8,
                                 spreadRadius: 2,
                               )

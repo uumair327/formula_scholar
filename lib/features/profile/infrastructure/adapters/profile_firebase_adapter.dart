@@ -123,6 +123,7 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
         board: '',
         avatarUrl: AppAssets.profileHeroAvatarUrl,
         isPro: false,
+        joinedAt: null,
       );
     }
 
@@ -163,6 +164,7 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
             ? authPhoto
             : AppAssets.profileHeroAvatarUrl,
         isPro: false,
+        joinedAt: currentUser.metadata.creationTime,
       );
     }
 
@@ -212,6 +214,7 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
       board: fsBoard,
       avatarUrl: resolvedAvatar,
       isPro: fsIsPro,
+      joinedAt: currentUser.metadata.creationTime,
     );
   }
 

@@ -134,7 +134,7 @@ class ProfileInsightsSheet extends StatelessWidget {
                         crossAxisCount: crossAxisCount,
                         mainAxisSpacing: AppDimensions.paddingMD,
                         crossAxisSpacing: AppDimensions.paddingMD,
-                        childAspectRatio: crossAxisCount == 1 ? 4.5 : 2.6,
+                        childAspectRatio: crossAxisCount == 1 ? 3.8 : 2.6,
                       ),
                       itemCount: stats.length,
                       itemBuilder: (context, index) {

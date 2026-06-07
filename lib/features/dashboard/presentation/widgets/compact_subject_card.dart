@@ -52,23 +52,27 @@ class CompactSubjectCard extends StatelessWidget {
                 ),
               ),
               if (subject.badgeText != null)
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppDimensions.paddingSM,
-                    vertical: AppDimensions.paddingXXS,
-                  ),
-                  decoration: BoxDecoration(
-                    color: faintColor,
-                    borderRadius: BorderRadius.circular(
-                      AppDimensions.radiusXXL,
+                Flexible(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimensions.paddingSM,
+                      vertical: AppDimensions.paddingXXS,
                     ),
-                  ),
-                  child: Text(
-                    subject.badgeText!,
-                    style: AppTextStyles.labelSmall.copyWith(
-                      color: accentColor,
-                      fontSize: AppDimensions.fontSizeXXS,
-                      fontWeight: FontWeight.w800,
+                    decoration: BoxDecoration(
+                      color: faintColor,
+                      borderRadius: BorderRadius.circular(
+                        AppDimensions.radiusXXL,
+                      ),
+                    ),
+                    child: Text(
+                      subject.badgeText!,
+                      style: AppTextStyles.labelSmall.copyWith(
+                        color: accentColor,
+                        fontSize: AppDimensions.fontSizeXXS,
+                        fontWeight: FontWeight.w800,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ),

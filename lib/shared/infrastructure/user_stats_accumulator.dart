@@ -12,8 +12,17 @@ class UserStatsAccumulator {
     return _firestoreClient.doc(AppFirestoreCollections.userStatsCurrent(uid));
   }
 
+  DocumentReference<Map<String, dynamic>> _activityMonthRef(
+    String uid,
+    DateTime date,
+  ) {
+    final yearMonth = '${date.year}-${date.month.toString().padLeft(2, '0')}';
+    return _firestoreClient.doc('users/$uid/activity_history/$yearMonth');
+  }
+
   Future<void> incrementMasteredFormulas(String uid, int delta) async {
-    final todayKey = _dateKey(DateTime.now().toUtc());
+    final now = DateTime.now();
+    final todayKey = _dateKey(now);
 
     await _firestoreClient.runTransaction((tx) async {
       final snapshot = await tx.get(_statsRef(uid));
@@ -41,11 +50,21 @@ class UserStatsAccumulator {
         'lastStudyDate': todayKey,
         'lastUpdated': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
+
+      tx.set(
+        _activityMonthRef(uid, now),
+        {
+          'activeDays': FieldValue.arrayUnion([now.day]),
+          'lastUpdated': FieldValue.serverTimestamp(),
+        },
+        SetOptions(merge: true),
+      );
     });
   }
 
   Future<void> touchDailyStreak(String uid) async {
-    final todayKey = _dateKey(DateTime.now().toUtc());
+    final now = DateTime.now();
+    final todayKey = _dateKey(now);
 
     await _firestoreClient.runTransaction((tx) async {
       final snapshot = await tx.get(_statsRef(uid));
@@ -66,11 +85,21 @@ class UserStatsAccumulator {
         'lastStudyDate': todayKey,
         'lastUpdated': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
+
+      tx.set(
+        _activityMonthRef(uid, now),
+        {
+          'activeDays': FieldValue.arrayUnion([now.day]),
+          'lastUpdated': FieldValue.serverTimestamp(),
+        },
+        SetOptions(merge: true),
+      );
     });
   }
 
   Future<void> addPoints(String uid, int points) async {
-    final todayKey = _dateKey(DateTime.now().toUtc());
+    final now = DateTime.now();
+    final todayKey = _dateKey(now);
 
     await _firestoreClient.runTransaction((tx) async {
       final snapshot = await tx.get(_statsRef(uid));
@@ -94,6 +123,15 @@ class UserStatsAccumulator {
         'lastQuizAt': FieldValue.serverTimestamp(),
         'lastUpdated': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
+
+      tx.set(
+        _activityMonthRef(uid, now),
+        {
+          'activeDays': FieldValue.arrayUnion([now.day]),
+          'lastUpdated': FieldValue.serverTimestamp(),
+        },
+        SetOptions(merge: true),
+      );
     });
   }
 
@@ -114,9 +152,9 @@ class UserStatsAccumulator {
     return 1;
   }
 
-  static String _dateKey(DateTime utcDate) {
-    final month = utcDate.month.toString().padLeft(2, '0');
-    final day = utcDate.day.toString().padLeft(2, '0');
-    return '${utcDate.year}-$month-$day';
+  static String _dateKey(DateTime date) {
+    final month = date.month.toString().padLeft(2, '0');
+    final day = date.day.toString().padLeft(2, '0');
+    return '${date.year}-$month-$day';
   }
 }

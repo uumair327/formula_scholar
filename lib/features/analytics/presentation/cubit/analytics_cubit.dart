@@ -26,9 +26,11 @@ class AnalyticsCubit extends Cubit<AnalyticsState>
   String get logTag => AppLogTags.analyticsCubit;
 
   Future<void> load() async {
+    if (isClosed) return;
     emit(state.copyWith(status: AnalyticsStatus.loading));
 
     final result = await _getAnalytics();
+    if (isClosed) return;
     switch (result) {
       case Success(:final data):
         emit(state.copyWith(status: AnalyticsStatus.loaded, data: data));
@@ -47,9 +49,11 @@ class AnalyticsCubit extends Cubit<AnalyticsState>
   }
 
   Future<void> loadGrowthMetrics() async {
+    if (isClosed) return;
     emit(state.copyWith(growthStatus: GrowthMetricsStatus.loading));
 
     final result = await _repository.getGrowthMetrics();
+    if (isClosed) return;
     switch (result) {
       case Success(:final data):
         emit(
@@ -70,10 +74,12 @@ class AnalyticsCubit extends Cubit<AnalyticsState>
   }
 
   void setPeriod(String period) {
+    if (isClosed) return;
     emit(state.copyWith(selectedPeriod: period));
   }
 
   void setSubjectFilter(String? subjectId) {
+    if (isClosed) return;
     emit(state.copyWith(selectedSubjectId: subjectId));
   }
 }

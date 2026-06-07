@@ -91,7 +91,7 @@ class ProgressStatsWidget extends StatelessWidget {
     final hasBorder = index == 1; // streak card has bottom border
 
     return Container(
-      padding: const EdgeInsets.all(AppDimensions.paddingXL),
+      padding: const EdgeInsets.all(AppDimensions.paddingLG),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
@@ -107,13 +107,14 @@ class ProgressStatsWidget extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           AppIconCircle(
             icon: iconData,
             backgroundColor: iconBgColor,
             iconColor: iconColor,
           ),
-          const SizedBox(height: AppDimensions.paddingLG),
+          const SizedBox(height: AppDimensions.paddingMD),
           Text(
             stat.value,
             style: AppTextStyles.displayLarge.copyWith(
@@ -122,12 +123,14 @@ class ProgressStatsWidget extends StatelessWidget {
               height: AppDimensions.lineHeightTight,
             ),
           ),
-          const SizedBox(height: AppDimensions.paddingXS),
-          AppText(
+          const SizedBox(height: AppDimensions.paddingXXS),
+          Text(
             _resolveStatLabel(context, stat.id, stat.label),
             style: AppTextStyles.labelSmall.copyWith(
               color: colorScheme.onSurfaceVariant,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

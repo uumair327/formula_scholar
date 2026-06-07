@@ -206,6 +206,13 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    match /dashboard_content_values/{document} {
+      allow read: if isAuth();
+      allow create: if isRegistrar();
+      allow update: if isRegistrar();
+      allow delete: if isAdmin();
+    }
+
     match /dashboard_governance_audit/{document} {
       allow read: if isAuth();
       allow create: if isAuth();
@@ -327,6 +334,11 @@ service cloud.firestore {
 
       // ─── Stats — self-only ───────────────────────────────────
       match /stats/{document} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // ─── Activity History — self-only ────────────────────────
+      match /activity_history/{document} {
         allow read, write: if isOwner(userId);
       }
 

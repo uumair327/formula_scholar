@@ -2,6 +2,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
@@ -50,10 +51,13 @@ class DashboardAppBar extends StatelessWidget {
                 icon: LucideIcons.flame,
                 value: streak,
                 iconColor: Colors.orangeAccent,
-                onTap: () => _showStatMessage(
-                  context,
-                  'You are on a $streak-day streak! Keep it up! 🔥',
-                ),
+                onTap: () {
+                  HapticsHelper.lightImpact();
+                  context.pushNamed(
+                    AppRoutes.streakName,
+                    queryParameters: {'streak': streak},
+                  );
+                },
               ),
               const SizedBox(width: AppDimensions.paddingXXS),
               _StatBadge(

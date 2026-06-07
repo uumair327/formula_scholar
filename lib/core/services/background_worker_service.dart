@@ -1,10 +1,9 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:workmanager/workmanager.dart';
 import 'widget_sync_service.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/constants/app_firestore_collections.dart';
 
@@ -12,12 +11,12 @@ import '../../core/constants/app_firestore_collections.dart';
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     try {
-      debugPrint("Native called background task: $task");
+      debugPrint('Native called background task: $task');
 
-      // Initialize Firebase in background isolate
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
+      WidgetsFlutterBinding.ensureInitialized();
+
+      // Initialize Firebase in background isolate natively
+      await Firebase.initializeApp();
 
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
@@ -88,7 +87,7 @@ void callbackDispatcher() {
 
       return Future.value(true);
     } catch (err) {
-      debugPrint("BackgroundWorkerService error: $err");
+      debugPrint('BackgroundWorkerService error: $err');
       return Future.value(false); // Return false on error so Workmanager knows it failed
     }
   });
@@ -103,7 +102,6 @@ class BackgroundWorkerService {
     try {
       await Workmanager().initialize(
         callbackDispatcher,
-        isInDebugMode: kDebugMode,
       );
       
       debugPrint('BackgroundWorkerService: Initialized successfully.');
@@ -116,7 +114,7 @@ class BackgroundWorkerService {
   static void registerPeriodicSync() {
     try {
       Workmanager().registerPeriodicTask(
-        "1",
+        '1',
         _syncTaskName,
         frequency: const Duration(minutes: 15),
       );

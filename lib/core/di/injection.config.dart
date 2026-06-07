@@ -253,6 +253,10 @@ import '../../features/search/infrastructure/adapters/search_firebase_adapter.da
 import '../../features/search/infrastructure/repositories/search_repository_impl.dart'
     as _i702;
 import '../../features/search/presentation/cubit/search_cubit.dart' as _i341;
+import '../../features/streak/domain/domain.dart' as _i442;
+import '../../features/streak/infrastructure/adapters/streak_firebase_adapter.dart'
+    as _i406;
+import '../../features/streak/presentation/cubit/streak_cubit.dart' as _i810;
 import '../../features/study_planner/domain/domain.dart' as _i62;
 import '../../features/study_planner/domain/ports/study_planner_repository_port.dart'
     as _i79;
@@ -523,6 +527,12 @@ extension GetItInjectableX on _i174.GetIt {
         forgotPassword: gh<_i140.ForgotPasswordUseCase>(),
       ),
     );
+    gh.factory<_i442.StreakRepository>(
+      () => _i406.StreakFirebaseAdapter(
+        firestoreClient: gh<_i351.FirestoreClientPort>(),
+        firebaseAuth: gh<_i59.FirebaseAuth>(),
+      ),
+    );
     gh.lazySingleton<_i62.StudyPlannerRepositoryPort>(
       () => _i66.StudyPlannerRepositoryImpl(
         dataSource: gh<_i62.StudyPlannerPort>(),
@@ -703,6 +713,9 @@ extension GetItInjectableX on _i174.GetIt {
         updateProfile: gh<_i193.UpdateProfileUseCase>(),
         activityRefreshCubit: gh<_i351.ActivityRefreshCubit>(),
       ),
+    );
+    gh.factory<_i810.StreakCubit>(
+      () => _i810.StreakCubit(streakRepository: gh<_i442.StreakRepository>()),
     );
     gh.factory<_i445.SearchFormulasUseCase>(
       () => _i445.SearchFormulasUseCase(

@@ -114,7 +114,7 @@ class _AnalyticsButton extends StatelessWidget {
           }
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Failed to load analytics')),
+              const SnackBar(content: Text('Failed to load analytics')),
             );
           }
         } finally {

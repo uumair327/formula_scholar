@@ -172,6 +172,7 @@ abstract final class AppRouter {
       ...studyPlannerRoutes(),
       ...legalRoutes(),
       ...practiceHistoryRoutes(),
+      ...streakRoutes(),
       onboardingRoutes(),
       mainShellRoute(),
       GoRoute(
