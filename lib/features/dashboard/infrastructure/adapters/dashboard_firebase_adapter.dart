@@ -216,12 +216,31 @@ class DashboardFirebaseAdapter implements DashboardDataSourcePort {
 
     return snapshot.docs.map((doc) {
       final data = doc.data();
+      final viewedAt = (data['viewedAt'] as Timestamp?)?.toDate();
+      
+      String formattedTime = 'Just now';
+      if (viewedAt != null) {
+        final now = DateTime.now();
+        final difference = now.difference(viewedAt);
+        if (difference.inSeconds < 60) {
+          formattedTime = 'Just now';
+        } else if (difference.inMinutes < 60) {
+          formattedTime = '${difference.inMinutes}m ago';
+        } else if (difference.inHours < 24) {
+          formattedTime = '${difference.inHours}h ago';
+        } else if (difference.inDays < 7) {
+          formattedTime = '${difference.inDays}d ago';
+        } else {
+          formattedTime = '${viewedAt.day}/${viewedAt.month}';
+        }
+      }
+
       return RecentStudy(
         id: data['id'] ?? doc.id,
         subjectId: data['subjectId'] ?? '',
         title: data['title'] ?? '',
         subject: data['subject'] ?? '',
-        lastViewed: data['lastViewed'] ?? '',
+        lastViewed: formattedTime,
         iconName: data['iconName'] ?? 'book-open',
         colorValue: data['colorValue'] ?? 0xFF00639A,
         backgroundColorValue: data['backgroundColorValue'] ?? 0xFFCEE5FF,

@@ -169,22 +169,19 @@ class ContinueStudyingSection extends StatelessWidget {
     if (study.subjectId.isNotEmpty) {
       final chapterId = study.id.replaceFirst('${study.subjectId}_', '');
 
+      if (chapterId.isNotEmpty && chapterId != study.id) {
+        context.goNamed(
+          AppRoutes.formulaDetailName,
+          pathParameters: {'subjectId': study.subjectId, 'chapterId': chapterId},
+          queryParameters: {'name': study.title},
+        );
+        return;
+      }
+
       final byId = subjects.where((s) => s.id == study.subjectId).toList();
-
       if (byId.isNotEmpty) {
-        final subject = byId.first;
-
-        if (chapterId.isNotEmpty && chapterId != study.id) {
-          context.goNamed(
-            AppRoutes.formulaDetailName,
-            pathParameters: {'subjectId': subject.id, 'chapterId': chapterId},
-            queryParameters: {'name': study.title},
-          );
-          return;
-        } else {
-          onSubjectTap(subject);
-          return;
-        }
+        onSubjectTap(byId.first);
+        return;
       }
     }
 
