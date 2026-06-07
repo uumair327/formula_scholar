@@ -47,12 +47,6 @@ class _LoginPageState extends State<LoginPage> {
         if (state.status == AuthStatus.authenticated) {
           final curriculumCubit = listenerContext.read<CurriculumCubit>();
           await curriculumCubit.refresh();
-          if (!listenerContext.mounted) return;
-          listenerContext.go(
-            curriculumCubit.state.hasSelection
-                ? AppRoutes.dashboardPath
-                : AppRoutes.onboardingPath,
-          );
         } else if (state.status == AuthStatus.error &&
             state.errorMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(

@@ -208,6 +208,20 @@ class FormulasFirebaseAdapter implements FormulasDataSourcePort {
         tag: AppLogTags.formulasDataSource,
       );
     }
+
+    if (formula.canonicalFormulaId != null) {
+      final canonicalRef = _api.collection('canonical_formulas').doc(formula.canonicalFormulaId);
+      try {
+        await _api.execute(
+          () => canonicalRef.update({
+            'vaultCount': FieldValue.increment(formula.isBookmarked ? -1 : 1),
+          }),
+          tag: AppLogTags.formulasDataSource,
+        );
+      } catch (e) {
+        AppLogger.warning('Failed to update canonical formula vaultCount: $e', tag: AppLogTags.formulasDataSource);
+      }
+    }
   }
 
   @override

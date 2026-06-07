@@ -321,9 +321,20 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
         iconName: 'info_outline',
       ),
       SettingsItem(
+        id: 'change_password',
+        label: '',
+        iconName: 'lock_outline',
+      ),
+      SettingsItem(
         id: 'logout',
         label: '',
         iconName: 'logout',
+        isDestructive: true,
+      ),
+      SettingsItem(
+        id: 'delete_account',
+        label: '',
+        iconName: 'delete_outline',
         isDestructive: true,
       ),
     ];

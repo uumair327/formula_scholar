@@ -51,6 +51,12 @@ class SubjectChaptersPage extends StatelessWidget {
         return prevId != currId && currId != null;
       },
       listener: (context, subjectState) {
+        FabVisibilityManager.hasSubjectSelection = subjectState.hasSelection;
+        final path = GoRouterState.of(context).uri.path;
+        if (path.contains('subject-chapters')) {
+          FabVisibilityManager.fabOffset.value = subjectState.hasSelection ? 80.0 : 0.0;
+        }
+
         if (subjectState.hasSelection) {
           final curriculumKey = context
               .read<CurriculumCubit>()
@@ -72,6 +78,14 @@ class SubjectChaptersPage extends StatelessWidget {
       child: BlocBuilder<SubjectSelectionCubit, SubjectSelectionState>(
         builder: (context, subjectState) {
           final subject = subjectState.subject;
+
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            FabVisibilityManager.hasSubjectSelection = subjectState.hasSelection;
+            final path = GoRouterState.of(context).uri.path;
+            if (path.contains('subject-chapters')) {
+              FabVisibilityManager.fabOffset.value = subjectState.hasSelection ? 80.0 : 0.0;
+            }
+          });
 
           return Scaffold(
             body: RefreshIndicator(

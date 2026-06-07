@@ -231,7 +231,7 @@ abstract class AppLocalizations {
   /// No description provided for @navSaved.
   ///
   /// In en, this message translates to:
-  /// **'Saved'**
+  /// **'Formula Vault'**
   String get navSaved;
 
   /// No description provided for @navProfile.
@@ -852,6 +852,24 @@ abstract class AppLocalizations {
   /// **'Failed to update mastery progress'**
   String get chaptersToggleMasteryFailed;
 
+  /// No description provided for @preferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get preferences;
+
+  /// No description provided for @supportAndAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'Support & About'**
+  String get supportAndAbout;
+
+  /// No description provided for @dangerZone.
+  ///
+  /// In en, this message translates to:
+  /// **'Danger Zone'**
+  String get dangerZone;
+
   /// No description provided for @chaptersToggleBookmarkFailed.
   ///
   /// In en, this message translates to:
@@ -923,6 +941,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We are committed to protecting your personal information and providing a safe learning environment.'**
   String get legalFooterDesc;
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get deleteAccount;
+
+  /// No description provided for @changePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get changePassword;
+
+  /// No description provided for @achievements.
+  ///
+  /// In en, this message translates to:
+  /// **'Milestone Alerts'**
+  String get achievements;
+
+  /// No description provided for @achievementsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'When you hit learning milestones'**
+  String get achievementsDesc;
 
   /// No description provided for @legalEffectiveDate.
   ///
@@ -1029,19 +1071,19 @@ abstract class AppLocalizations {
   /// No description provided for @removeBookmark.
   ///
   /// In en, this message translates to:
-  /// **'Remove Bookmark'**
+  /// **'Remove from Vault'**
   String get removeBookmark;
 
   /// No description provided for @bookmarkChapter.
   ///
   /// In en, this message translates to:
-  /// **'Bookmark Chapter'**
+  /// **'Add to Vault'**
   String get bookmarkChapter;
 
   /// No description provided for @removeSavedChapter.
   ///
   /// In en, this message translates to:
-  /// **'Remove Saved Chapter'**
+  /// **'Remove from Vault'**
   String get removeSavedChapter;
 
   /// No description provided for @percentDone.
@@ -1383,19 +1425,19 @@ abstract class AppLocalizations {
   /// No description provided for @savedChapters.
   ///
   /// In en, this message translates to:
-  /// **'Saved Chapters'**
+  /// **'Vaulted Chapters'**
   String get savedChapters;
 
   /// No description provided for @savedFormulas.
   ///
   /// In en, this message translates to:
-  /// **'Saved Formulas'**
+  /// **'Vaulted Formulas'**
   String get savedFormulas;
 
   /// No description provided for @savedNotes.
   ///
   /// In en, this message translates to:
-  /// **'Saved Notes'**
+  /// **'Vaulted Notes'**
   String get savedNotes;
 
   /// No description provided for @editNote.
@@ -1506,18 +1548,6 @@ abstract class AppLocalizations {
   /// **'Achievements'**
   String get achievementNotifications;
 
-  /// No description provided for @achievements.
-  ///
-  /// In en, this message translates to:
-  /// **'Milestone Alerts'**
-  String get achievements;
-
-  /// No description provided for @achievementsDesc.
-  ///
-  /// In en, this message translates to:
-  /// **'When you hit learning milestones'**
-  String get achievementsDesc;
-
   /// No description provided for @allSubjects.
   ///
   /// In en, this message translates to:
@@ -1529,12 +1559,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Browse Lessons'**
   String get browseLessons;
-
-  /// No description provided for @changePassword.
-  ///
-  /// In en, this message translates to:
-  /// **'Change Password'**
-  String get changePassword;
 
   /// No description provided for @chatWithUs.
   ///
@@ -1638,12 +1662,6 @@ abstract class AppLocalizations {
   /// **'Retry board/class options'**
   String get dashboardRetryCurriculumOptions;
 
-  /// No description provided for @deleteAccount.
-  ///
-  /// In en, this message translates to:
-  /// **'Delete Account'**
-  String get deleteAccount;
-
   /// No description provided for @deliveryChannels.
   ///
   /// In en, this message translates to:
@@ -1713,7 +1731,7 @@ abstract class AppLocalizations {
   /// No description provided for @emptyBookmarksDesc.
   ///
   /// In en, this message translates to:
-  /// **'Empty Bookmarks Desc'**
+  /// **'Your vault is empty. Start adding formulas to quickly access them here.'**
   String get emptyBookmarksDesc;
 
   /// No description provided for @encouragementMessage.
@@ -2061,13 +2079,13 @@ abstract class AppLocalizations {
   /// No description provided for @noBookmarksFoundDesc.
   ///
   /// In en, this message translates to:
-  /// **'Try a different search term or clear the filter to see all saved formulas and chapters.'**
+  /// **'Try a different search term or clear the filter to see all vaulted formulas and chapters.'**
   String get noBookmarksFoundDesc;
 
   /// No description provided for @noBookmarksFoundTitle.
   ///
   /// In en, this message translates to:
-  /// **'No bookmarks found'**
+  /// **'No items in vault'**
   String get noBookmarksFoundTitle;
 
   /// No description provided for @noFormulasLabel.
@@ -2253,7 +2271,7 @@ abstract class AppLocalizations {
   /// No description provided for @refreshBookmarks.
   ///
   /// In en, this message translates to:
-  /// **'Refresh Bookmarks'**
+  /// **'Refresh Vault'**
   String get refreshBookmarks;
 
   /// No description provided for @reset.
@@ -2277,7 +2295,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchBookmarks.
   ///
   /// In en, this message translates to:
-  /// **'Search Bookmarks'**
+  /// **'Search Vault'**
   String get searchBookmarks;
 
   /// No description provided for @settings.
@@ -2679,7 +2697,7 @@ abstract class AppLocalizations {
   /// No description provided for @myBookmarks.
   ///
   /// In en, this message translates to:
-  /// **'My Bookmarks'**
+  /// **'My Formula Vault'**
   String get myBookmarks;
 
   /// No description provided for @studyPlannerSubtitle.
@@ -2897,6 +2915,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Fewest Formulas'**
   String get sortFewestFormulas;
+
+  /// No description provided for @vaultStatsFormulas.
+  ///
+  /// In en, this message translates to:
+  /// **'Formulas'**
+  String get vaultStatsFormulas;
+
+  /// No description provided for @vaultStatsChapters.
+  ///
+  /// In en, this message translates to:
+  /// **'Chapters'**
+  String get vaultStatsChapters;
+
+  /// No description provided for @vaultStatsNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get vaultStatsNotes;
+
+  /// No description provided for @vaultStatsSubjects.
+  ///
+  /// In en, this message translates to:
+  /// **'Subjects'**
+  String get vaultStatsSubjects;
+
+  /// No description provided for @vaultFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get vaultFilterAll;
+
+  /// No description provided for @quickRevisionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Revision'**
+  String get quickRevisionTitle;
+
+  /// No description provided for @quickRevisionEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Vault some formulas first to start a quick revision session.'**
+  String get quickRevisionEmpty;
+
+  /// No description provided for @quickRevisionProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{current} of {total}'**
+  String quickRevisionProgress(int current, int total);
+
+  /// No description provided for @shareVault.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Vault'**
+  String get shareVault;
+
+  /// No description provided for @vaultCopiedToClipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Vault summary copied to clipboard!'**
+  String get vaultCopiedToClipboard;
+
+  /// No description provided for @vaultSummaryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Formula Vault'**
+  String get vaultSummaryTitle;
+
+  /// No description provided for @vaultedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'VAULTED'**
+  String get vaultedOn;
+
+  /// No description provided for @undoLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undoLabel;
+
+  /// No description provided for @formulaRemovedFromVault.
+  ///
+  /// In en, this message translates to:
+  /// **'Formula removed from vault'**
+  String get formulaRemovedFromVault;
+
+  /// No description provided for @chapterRemovedFromVault.
+  ///
+  /// In en, this message translates to:
+  /// **'Chapter removed from vault'**
+  String get chapterRemovedFromVault;
+
+  /// No description provided for @noteRemovedFromVault.
+  ///
+  /// In en, this message translates to:
+  /// **'Note removed from vault'**
+  String get noteRemovedFromVault;
+
+  /// No description provided for @swipeToRemoveHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe left to remove'**
+  String get swipeToRemoveHint;
 }
 
 class _AppLocalizationsDelegate

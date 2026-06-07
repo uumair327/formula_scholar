@@ -142,8 +142,8 @@ class CurriculumCubit extends Cubit<CurriculumState> {
   }
 
   void clear() {
-    AppLogger.debug('Curriculum cleared', tag: AppLogTags.curriculumCubit);
-    const clearedState = CurriculumState(isLoading: false, isInitialized: true);
+    AppLogger.debug('Curriculum cleared (reset to uninitialized)', tag: AppLogTags.curriculumCubit);
+    const clearedState = CurriculumState(isLoading: false, isInitialized: false);
     if (state != clearedState) {
       emit(clearedState);
     }

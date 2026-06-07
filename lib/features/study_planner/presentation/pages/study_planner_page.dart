@@ -17,6 +17,13 @@ class StudyPlannerPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final path = GoRouterState.of(context).uri.path;
+      if (path.contains('study-planner')) {
+        FabVisibilityManager.fabOffset.value = 80.0;
+      }
+    });
+
     return Scaffold(
       appBar: GlassAppBar(
         titleWidget: Text(

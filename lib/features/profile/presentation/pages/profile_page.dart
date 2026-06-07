@@ -8,6 +8,7 @@ import '../../../../core/core.dart';
 import '../../../auth/auth.dart';
 import '../cubit/profile_cubit.dart';
 import '../cubit/profile_state.dart';
+import '../widgets/account/delete_account_dialog.dart';
 import '../widgets/profile_hero_widget.dart';
 import '../widgets/profile_insights_sheet.dart';
 import '../widgets/progress_stats_widget.dart';
@@ -85,14 +86,67 @@ class ProfilePage extends StatelessWidget {
                               buildWhen: (prev, curr) =>
                                   prev.isDarkMode != curr.isDarkMode,
                               builder: (context, themeState) {
-                                return SettingsListWidget(
-                                  items: state.settingsItems,
-                                  isDarkMode: themeState.isDarkMode,
-                                  onDarkModeToggle: () {
-                                    context.read<ThemeCubit>().toggleTheme();
-                                  },
-                                  onItemTapped: (id) =>
-                                      _handleSettingsNavigation(context, id),
+                                final allItems = state.settingsItems;
+
+                                final appFeatures = allItems.where((item) =>
+                                    ['account', 'bookmarks', 'study_planner', 'achievements']
+                                        .contains(item.id)).toList();
+                                        
+                                final preferences = allItems.where((item) =>
+                                    ['notifications', 'language', 'appearance']
+                                        .contains(item.id)).toList();
+                                        
+                                final supportInfo = allItems.where((item) =>
+                                    ['help', 'about'].contains(item.id)).toList();
+                                    
+                                final dangerZone = allItems.where((item) =>
+                                    ['logout'].contains(item.id)).toList();
+
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SettingsListWidget(
+                                      title: context.l10n.accountInformation,
+                                      items: appFeatures,
+                                      isDarkMode: themeState.isDarkMode,
+                                      startIndex: 3,
+                                      onDarkModeToggle: () {},
+                                      onItemTapped: (id) =>
+                                          _handleSettingsNavigation(context, id),
+                                    ),
+                                    const SizedBox(height: AppDimensions.paddingXXL),
+                                    SettingsListWidget(
+                                      title: context.l10n.preferences,
+                                      items: preferences,
+                                      isDarkMode: themeState.isDarkMode,
+                                      startIndex: 8,
+                                      onDarkModeToggle: () {
+                                        context.read<ThemeCubit>().toggleTheme();
+                                      },
+                                      onItemTapped: (id) =>
+                                          _handleSettingsNavigation(context, id),
+                                    ),
+                                    const SizedBox(height: AppDimensions.paddingXXL),
+                                    SettingsListWidget(
+                                      title: context.l10n.supportAndAbout,
+                                      items: supportInfo,
+                                      isDarkMode: themeState.isDarkMode,
+                                      startIndex: 12,
+                                      onDarkModeToggle: () {},
+                                      onItemTapped: (id) =>
+                                          _handleSettingsNavigation(context, id),
+                                    ),
+                                    const SizedBox(height: AppDimensions.paddingXXL),
+                                    SettingsListWidget(
+                                      title: context.l10n.dangerZone,
+                                      items: dangerZone,
+                                      isDarkMode: themeState.isDarkMode,
+                                      startIndex: 15,
+                                      onDarkModeToggle: () {},
+                                      onItemTapped: (id) =>
+                                          _handleSettingsNavigation(context, id),
+                                    ),
+                                  ],
                                 );
                               },
                             ),
@@ -161,7 +215,7 @@ class ProfilePage extends StatelessWidget {
               LucideIcons.settings,
               color: colorScheme.onSurfaceVariant,
             ),
-            tooltip: context.l10n.navProfile,
+            tooltip: context.l10n.settings,
           ),
         ),
       ],
@@ -195,8 +249,15 @@ class ProfilePage extends StatelessWidget {
       case 'about':
         context.push(AppRoutes.aboutAppPath);
         return;
+      case 'change_password':
+        final state = context.read<ProfileCubit>().state;
+        showForgotPasswordDialog(context, state.profile?.email ?? '');
+        return;
       case 'logout':
         _handleLogout(context);
+        return;
+      case 'delete_account':
+        DeleteAccountDialog.show(context);
         return;
       default:
         return;
@@ -206,8 +267,8 @@ class ProfilePage extends StatelessWidget {
   /// Handles sign-out via [AuthCubit] resolved from DI.
   Future<void> _handleLogout(BuildContext context) async {
     await context.read<AuthCubit>().signOut();
-
     if (context.mounted) {
+      context.read<CurriculumCubit>().clear();
       context.go(AppRoutes.loginPath);
     }
   }

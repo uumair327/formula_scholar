@@ -75,7 +75,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navPractice => 'Practice';
 
   @override
-  String get navSaved => 'Saved';
+  String get navSaved => 'Formula Vault';
 
   @override
   String get navProfile => 'Profile';
@@ -399,6 +399,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chaptersToggleMasteryFailed => 'Failed to update mastery progress';
 
   @override
+  String get preferences => 'Preferences';
+
+  @override
+  String get supportAndAbout => 'Support & About';
+
+  @override
+  String get dangerZone => 'Danger Zone';
+
+  @override
   String get chaptersToggleBookmarkFailed => 'Failed to bookmark formula';
 
   @override
@@ -436,6 +445,18 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get legalFooterDesc =>
       'We are committed to protecting your personal information and providing a safe learning environment.';
+
+  @override
+  String get deleteAccount => 'Delete Account';
+
+  @override
+  String get changePassword => 'Change Password';
+
+  @override
+  String get achievements => 'Milestone Alerts';
+
+  @override
+  String get achievementsDesc => 'When you hit learning milestones';
 
   @override
   String get legalEffectiveDate => 'Effective: April 2026';
@@ -490,13 +511,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get formulasLabel => 'formulas';
 
   @override
-  String get removeBookmark => 'Remove Bookmark';
+  String get removeBookmark => 'Remove from Vault';
 
   @override
-  String get bookmarkChapter => 'Bookmark Chapter';
+  String get bookmarkChapter => 'Add to Vault';
 
   @override
-  String get removeSavedChapter => 'Remove Saved Chapter';
+  String get removeSavedChapter => 'Remove from Vault';
 
   @override
   String percentDone(Object percent) {
@@ -677,13 +698,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get backToDashboard => 'Back to Dashboard';
 
   @override
-  String get savedChapters => 'Saved Chapters';
+  String get savedChapters => 'Vaulted Chapters';
 
   @override
-  String get savedFormulas => 'Saved Formulas';
+  String get savedFormulas => 'Vaulted Formulas';
 
   @override
-  String get savedNotes => 'Saved Notes';
+  String get savedNotes => 'Vaulted Notes';
 
   @override
   String get editNote => 'Edit Note';
@@ -741,19 +762,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get achievementNotifications => 'Achievements';
 
   @override
-  String get achievements => 'Milestone Alerts';
-
-  @override
-  String get achievementsDesc => 'When you hit learning milestones';
-
-  @override
   String get allSubjects => 'All Subjects';
 
   @override
   String get browseLessons => 'Browse Lessons';
-
-  @override
-  String get changePassword => 'Change Password';
 
   @override
   String get chatWithUs => 'Chat';
@@ -811,9 +823,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dashboardRetryCurriculumOptions => 'Retry board/class options';
 
   @override
-  String get deleteAccount => 'Delete Account';
-
-  @override
   String get deliveryChannels => 'Delivery Channels';
 
   @override
@@ -848,7 +857,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get emailUs => 'Email';
 
   @override
-  String get emptyBookmarksDesc => 'Empty Bookmarks Desc';
+  String get emptyBookmarksDesc =>
+      'Your vault is empty. Start adding formulas to quickly access them here.';
 
   @override
   String get encouragementMessage =>
@@ -1044,10 +1054,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noBookmarksFoundDesc =>
-      'Try a different search term or clear the filter to see all saved formulas and chapters.';
+      'Try a different search term or clear the filter to see all vaulted formulas and chapters.';
 
   @override
-  String get noBookmarksFoundTitle => 'No bookmarks found';
+  String get noBookmarksFoundTitle => 'No items in vault';
 
   @override
   String get noFormulasLabel => 'No Formulas Label';
@@ -1144,7 +1154,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get readyForMore => 'Ready for more?';
 
   @override
-  String get refreshBookmarks => 'Refresh Bookmarks';
+  String get refreshBookmarks => 'Refresh Vault';
 
   @override
   String get reset => 'Reset';
@@ -1156,7 +1166,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get saveChanges => 'Save Changes';
 
   @override
-  String get searchBookmarks => 'Search Bookmarks';
+  String get searchBookmarks => 'Search Vault';
 
   @override
   String get settings => 'Settings';
@@ -1364,7 +1374,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aboutShareDesc => 'Tell your friends about this app';
 
   @override
-  String get myBookmarks => 'My Bookmarks';
+  String get myBookmarks => 'My Formula Vault';
 
   @override
   String get studyPlannerSubtitle => 'Plan and track your study sessions';
@@ -1485,4 +1495,58 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sortFewestFormulas => 'Fewest Formulas';
+
+  @override
+  String get vaultStatsFormulas => 'Formulas';
+
+  @override
+  String get vaultStatsChapters => 'Chapters';
+
+  @override
+  String get vaultStatsNotes => 'Notes';
+
+  @override
+  String get vaultStatsSubjects => 'Subjects';
+
+  @override
+  String get vaultFilterAll => 'All';
+
+  @override
+  String get quickRevisionTitle => 'Quick Revision';
+
+  @override
+  String get quickRevisionEmpty =>
+      'Vault some formulas first to start a quick revision session.';
+
+  @override
+  String quickRevisionProgress(int current, int total) {
+    return '$current of $total';
+  }
+
+  @override
+  String get shareVault => 'Share Vault';
+
+  @override
+  String get vaultCopiedToClipboard => 'Vault summary copied to clipboard!';
+
+  @override
+  String get vaultSummaryTitle => 'My Formula Vault';
+
+  @override
+  String get vaultedOn => 'VAULTED';
+
+  @override
+  String get undoLabel => 'Undo';
+
+  @override
+  String get formulaRemovedFromVault => 'Formula removed from vault';
+
+  @override
+  String get chapterRemovedFromVault => 'Chapter removed from vault';
+
+  @override
+  String get noteRemovedFromVault => 'Note removed from vault';
+
+  @override
+  String get swipeToRemoveHint => 'Swipe left to remove';
 }

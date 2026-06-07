@@ -13,6 +13,8 @@ import '../widgets/account/account_info_tile.dart';
 import '../widgets/account/account_profile_card.dart';
 import '../widgets/account/delete_account_dialog.dart';
 import '../widgets/edit_profile_dialog.dart';
+import '../widgets/settings_list_widget.dart';
+import 'package:go_router/go_router.dart';
 
 class AccountInformationPage extends StatelessWidget {
   const AccountInformationPage({super.key});
@@ -49,15 +51,16 @@ class AccountInformationPage extends StatelessWidget {
                           child: AccountProfileCard(profile: profile),
                         ),
                         const SizedBox(height: AppDimensions.paddingXXL),
+                        // Personal Information
                         EntranceWrapper.stagger(
-                          index: 1,
+                          index: 2,
                           child: AppSectionTitle(
                             title: context.l10n.personalInfo,
                           ),
                         ),
                         const SizedBox(height: AppDimensions.paddingLG),
                         EntranceWrapper.stagger(
-                          index: 2,
+                          index: 3,
                           child: AccountInfoTile(
                             icon: LucideIcons.user,
                             label: context.l10n.fullName,
@@ -66,23 +69,35 @@ class AccountInformationPage extends StatelessWidget {
                         ),
                         const SizedBox(height: AppDimensions.paddingMD),
                         EntranceWrapper.stagger(
-                          index: 3,
+                          index: 4,
                           child: AccountInfoTile(
                             icon: LucideIcons.mail,
                             label: context.l10n.emailAddress,
                             value: profile?.email ?? '—',
                           ),
                         ),
-                        const SizedBox(height: AppDimensions.paddingXXL),
+                        const SizedBox(height: AppDimensions.paddingMD),
                         EntranceWrapper.stagger(
-                          index: 4,
+                          index: 5,
+                          child: AccountActionTile(
+                            icon: LucideIcons.edit3,
+                            label: context.l10n.editProfile,
+                            color: AppColors.primary,
+                            onTap: () => showEditProfileBottomSheet(context),
+                          ),
+                        ),
+                        const SizedBox(height: AppDimensions.paddingXXL),
+
+                        // Academic Information
+                        EntranceWrapper.stagger(
+                          index: 6,
                           child: AppSectionTitle(
                             title: context.l10n.academicInfo,
                           ),
                         ),
                         const SizedBox(height: AppDimensions.paddingLG),
                         EntranceWrapper.stagger(
-                          index: 5,
+                          index: 7,
                           child: AccountInfoTile(
                             icon: LucideIcons.graduationCap,
                             label: context.l10n.currentGrade,
@@ -91,7 +106,7 @@ class AccountInformationPage extends StatelessWidget {
                         ),
                         const SizedBox(height: AppDimensions.paddingMD),
                         EntranceWrapper.stagger(
-                          index: 6,
+                          index: 8,
                           child: AccountInfoTile(
                             icon: LucideIcons.award,
                             label: context.l10n.accountType,
@@ -104,45 +119,7 @@ class AccountInformationPage extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: AppDimensions.paddingXXL),
-                        EntranceWrapper.stagger(
-                          index: 7,
-                          child: AppSectionTitle(
-                            title: context.l10n.accountActions,
-                          ),
-                        ),
-                        const SizedBox(height: AppDimensions.paddingLG),
-                        EntranceWrapper.stagger(
-                          index: 8,
-                          child: AccountActionTile(
-                            icon: LucideIcons.edit3,
-                            label: context.l10n.editProfile,
-                            color: AppColors.primary,
-                            onTap: () => showEditProfileDialog(context),
-                          ),
-                        ),
-                        const SizedBox(height: AppDimensions.paddingMD),
-                        EntranceWrapper.stagger(
-                          index: 9,
-                          child: AccountActionTile(
-                            icon: LucideIcons.lock,
-                            label: context.l10n.changePassword,
-                            color: AppColors.primary,
-                            onTap: () => showForgotPasswordDialog(
-                              context,
-                              profile?.email ?? '',
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: AppDimensions.paddingMD),
-                        EntranceWrapper.stagger(
-                          index: 10,
-                          child: AccountActionTile(
-                            icon: LucideIcons.trash2,
-                            label: context.l10n.deleteAccount,
-                            color: AppColors.error,
-                            onTap: () => DeleteAccountDialog.show(context),
-                          ),
-                        ),
+
                         const SizedBox(height: AppDimensions.bottomNavPadding),
                       ]),
                     ),

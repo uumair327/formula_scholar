@@ -120,20 +120,6 @@ class SubjectsPage extends StatelessWidget {
               fontWeight: FontWeight.w800,
             ),
           ),
-          BlocBuilder<CurriculumCubit, CurriculumState>(
-            buildWhen: (prev, curr) => prev.curriculum != curr.curriculum,
-            builder: (context, currState) {
-              final curriculum = currState.curriculum;
-              if (curriculum == null) return const SizedBox.shrink();
-              return Text(
-                '${curriculum.boardName} • ${curriculum.gradeLabel}',
-                style: AppTextStyles.overline.copyWith(
-                  color: colorScheme.primary,
-                  fontSize: AppDimensions.fontSizeXS,
-                ),
-              );
-            },
-          ),
         ],
       ),
       bottom: const DummySearchPill(),

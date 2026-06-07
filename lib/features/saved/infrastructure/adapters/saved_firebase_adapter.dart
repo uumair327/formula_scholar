@@ -38,10 +38,6 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
           final data = doc.data();
           final docCurriculumKey = data['curriculumKey'] as String?;
 
-          if (docCurriculumKey != null && docCurriculumKey != curriculumKey) {
-            return null;
-          }
-
           return BookmarkedFormula(
             id: data['id'] ?? doc.id,
             title: data['title'] ?? '',
@@ -68,12 +64,9 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
       return const [];
     }
 
-    final subjectDocs = await _api.execute(
-      () => _api
-          .collection(
-            AppFirestoreCollections.savedChapterSubjects(uid, curriculumKey),
-          )
-          .get(),
+    // Fetch all curriculums the user has saved chapters for
+    final curriculumDocs = await _api.execute(
+      () => _api.collection(AppFirestoreCollections.userSavedChapters(uid)).get(),
       tag: AppLogTags.savedDataSource,
     );
 
@@ -82,61 +75,55 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
     final subjectNameBySubject = <String, String>{};
     final savedAtBySubject = <String, DateTime>{};
 
-    for (final subjectDoc in subjectDocs.docs) {
-      final data = subjectDoc.data();
-      final subjectId = subjectDoc.id;
-      final subjectName = data['subject'] as String? ?? subjectId;
-      final savedAt =
-          (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now();
-      final chapterIds = _asChapterIds(data['chapters']);
-
-      if (chapterIds.isNotEmpty) {
-        chapterIdsBySubject
-            .putIfAbsent(subjectId, () => <String>{})
-            .addAll(chapterIds);
-        subjectNameBySubject[subjectId] = subjectName;
-        savedAtBySubject[subjectId] = savedAt;
-      }
-    }
-
-    final legacyDocs = await _api.execute(
-      () =>
-          _api.collection(AppFirestoreCollections.userSavedChapters(uid)).get(),
-      tag: AppLogTags.savedDataSource,
-    );
-
-    for (final doc in legacyDocs.docs) {
-      if (doc.id == curriculumKey) {
-        continue;
-      }
-
-      final data = doc.data();
-      final subjectId = data['subjectId'] as String?;
-      if (subjectId == null || subjectId.isEmpty) {
-        continue;
-      }
-
-      final legacyCurriculum = data['curriculumKey'] as String?;
-      if (legacyCurriculum != null && legacyCurriculum != curriculumKey) {
-        continue;
-      }
-
-      final chapterIds = _asChapterIds(data['chapters']);
-      if (chapterIds.isEmpty) {
-        continue;
-      }
-
-      chapterIdsBySubject
-          .putIfAbsent(subjectId, () => <String>{})
-          .addAll(chapterIds);
-      subjectNameBySubject.putIfAbsent(
-        subjectId,
-        () => data['subject'] as String? ?? subjectId,
+    for (final currDoc in curriculumDocs.docs) {
+      final currKey = currDoc.id;
+      
+      // Fetch subjects for this curriculum
+      final subjectDocs = await _api.execute(
+        () => _api
+            .collection(
+              AppFirestoreCollections.savedChapterSubjects(uid, currKey),
+            )
+            .get(),
+        tag: AppLogTags.savedDataSource,
       );
-      savedAtBySubject.putIfAbsent(
-        subjectId,
-        () => (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      );
+
+      for (final subjectDoc in subjectDocs.docs) {
+        final data = subjectDoc.data();
+        final subjectId = subjectDoc.id;
+        final subjectName = data['subject'] as String? ?? subjectId;
+        final savedAt =
+            (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now();
+        final chapterIds = _asChapterIds(data['chapters']);
+
+        if (chapterIds.isNotEmpty) {
+          chapterIdsBySubject
+              .putIfAbsent(subjectId, () => <String>{})
+              .addAll(chapterIds);
+          subjectNameBySubject[subjectId] = subjectName;
+          savedAtBySubject[subjectId] = savedAt;
+        }
+      }
+
+      // Also process legacy fields on the curriculum doc itself
+      final legacyData = currDoc.data();
+      final legacySubjectId = legacyData['subjectId'] as String?;
+      if (legacySubjectId != null && legacySubjectId.isNotEmpty) {
+        final legacyChapterIds = _asChapterIds(legacyData['chapters']);
+        if (legacyChapterIds.isNotEmpty) {
+          chapterIdsBySubject
+              .putIfAbsent(legacySubjectId, () => <String>{})
+              .addAll(legacyChapterIds);
+          subjectNameBySubject.putIfAbsent(
+            legacySubjectId,
+            () => legacyData['subject'] as String? ?? legacySubjectId,
+          );
+          savedAtBySubject.putIfAbsent(
+            legacySubjectId,
+            () => (legacyData['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+          );
+        }
+      }
     }
 
     for (final entry in chapterIdsBySubject.entries) {
@@ -209,10 +196,6 @@ class SavedFirebaseAdapter implements SavedDataSourcePort {
         .map((doc) {
           final data = doc.data();
           final docCurriculumKey = data['curriculumKey'] as String?;
-
-          if (docCurriculumKey != null && docCurriculumKey != curriculumKey) {
-            return null;
-          }
 
           return SavedNote(
             id: data['id'] ?? doc.id,

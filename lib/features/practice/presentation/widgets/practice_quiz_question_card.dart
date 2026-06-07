@@ -74,7 +74,10 @@ class QuizQuestionCard extends StatelessWidget {
 
   /// Renders text that may contain inline LaTeX delimited by `$...$`.
   /// Plain segments are rendered as [Text], LaTeX segments as [Math.tex].
-  static Widget _buildRichText(String text, TextStyle style) {
+  static Widget _buildRichText(String rawText, TextStyle style) {
+    // Sanitize common escaping issues or typos from the database
+    final text = rawText.replaceAll(r'\ ext', r'\text');
+
     // If there are no LaTeX delimiters, return plain text.
     if (!text.contains('\$')) {
       return Text(text, style: style);
@@ -98,6 +101,10 @@ class QuizQuestionCard extends StatelessWidget {
           child: Math.tex(
             match.group(1)!,
             textStyle: style.copyWith(fontWeight: FontWeight.w700),
+            onErrorFallback: (err) => Text(
+              match.group(1)!,
+              style: style.copyWith(fontWeight: FontWeight.w700),
+            ),
           ),
         ),
       );

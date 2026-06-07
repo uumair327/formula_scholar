@@ -55,7 +55,9 @@ class _PracticePageState extends State<PracticePage> {
                 prev.questions != curr.questions ||
                 prev.currentIndex != curr.currentIndex ||
                 prev.selectedOptionId != curr.selectedOptionId ||
-                prev.showResult != curr.showResult,
+                prev.showResult != curr.showResult ||
+                prev.selectedTimedMode != curr.selectedTimedMode ||
+                prev.selectedTimedDurationSeconds != curr.selectedTimedDurationSeconds,
             builder: (context, state) {
               switch (state.status) {
                 case PracticeStatus.initial:

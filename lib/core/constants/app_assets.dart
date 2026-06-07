@@ -25,6 +25,20 @@ abstract final class AppAssets {
   static const String profileHeroAvatarUrl =
       'https://lh3.googleusercontent.com/aida-public/AB6AXuBKkvA68Xw_4MMjE_ZeYpjnn_GMFY_6fsx0palG7alaHlcXcKNElydYoC8igJDmRK45fEHqub0Ik-UyISt_8X2hAWiGx6CO96f69H5wjy-_h0wrAOOPPQb2Ee4h26x0d3Rj4fnVfTQ0nl8fVZJrSKQdE_KBqUjSwro_6Y5FXOs_--Q7bWqlMXVa9oxMD80ERceiEMB_L6OmD9KyenXUTIn79Lk-7i1w9tGPRimWM7pFMStyPBZ9JzJY4AGoGKMkjpw8FUFz4PUKUkU';
 
+  /// Predefined list of advanced avatar options using DiceBear.
+  static const List<String> avatarPresets = [
+    'https://api.dicebear.com/7.x/avataaars/png?seed=Felix&backgroundColor=b6e3f4',
+    'https://api.dicebear.com/7.x/avataaars/png?seed=Aneka&backgroundColor=c0aede',
+    'https://api.dicebear.com/7.x/avataaars/png?seed=Jocelyn&backgroundColor=ffdfbf',
+    'https://api.dicebear.com/7.x/avataaars/png?seed=Christian&backgroundColor=d1d4f9',
+    'https://api.dicebear.com/7.x/avataaars/png?seed=Eden&backgroundColor=c0aede',
+    'https://api.dicebear.com/7.x/avataaars/png?seed=Liam&backgroundColor=b6e3f4',
+    'https://api.dicebear.com/7.x/avataaars/png?seed=Mia&backgroundColor=ffdfbf',
+    'https://api.dicebear.com/7.x/avataaars/png?seed=Oliver&backgroundColor=d1d4f9',
+    'https://api.dicebear.com/7.x/avataaars/png?seed=Sophia&backgroundColor=ffdfbf',
+    'https://api.dicebear.com/7.x/avataaars/png?seed=Lucas&backgroundColor=b6e3f4',
+  ];
+
   // ──────────────────────── Onboarding Images ─────────────────
   /// Board selection decorative image.
   static const String onboardingBoardImageUrl =

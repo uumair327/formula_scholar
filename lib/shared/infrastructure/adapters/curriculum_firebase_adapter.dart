@@ -87,7 +87,6 @@ class CurriculumFirebaseAdapter implements CurriculumDataSourcePort {
           (user) async {
             await cancelDocumentSubscription();
             if (user == null) {
-              controller.add(null);
               return;
             }
 

@@ -181,14 +181,30 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
     }
   }
 
-  /// Removes a bookmark and reloads.
+  // ─── Subject Filter ─────────────────────────────────────────
+
+  /// Sets the subject filter. Pass `null` for "All".
+  void setSubjectFilter(String? subject) {
+    emit(state.copyWith(selectedSubjectFilter: subject));
+  }
+
+  // ─── Remove with Undo Support ───────────────────────────────
+
+  /// Removes a bookmark and caches it for undo.
   Future<void> removeBookmark(String formulaId) async {
-    // Optimistic update
     final initialBookmarks = List<BookmarkedFormula>.from(state.bookmarks);
+    final removedItem = initialBookmarks
+        .cast<BookmarkedFormula?>()
+        .firstWhere((e) => e!.id == formulaId, orElse: () => null);
     final updatedList = initialBookmarks
         .where((element) => element.id != formulaId)
         .toList();
-    emit(state.copyWith(bookmarks: updatedList));
+
+    // Optimistic update + cache for undo
+    emit(state.copyWith(
+      bookmarks: updatedList,
+      lastRemovedBookmark: removedItem,
+    ));
 
     final result = await _removeBookmark(formulaId);
     if (isClosed) return;
@@ -198,10 +214,98 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
         state.copyWith(
           bookmarks: initialBookmarks,
           errorMessage: 'Failed to remove bookmark',
+          lastRemovedBookmark: null,
         ),
       );
     }
   }
+
+  /// Restores the last removed bookmark into the local list.
+  void undoRemoveBookmark() {
+    final removed = state.lastRemovedBookmark;
+    if (removed == null) return;
+
+    final updatedBookmarks = List<BookmarkedFormula>.from(state.bookmarks)
+      ..add(removed);
+
+    emit(state.copyWith(
+      bookmarks: updatedBookmarks,
+      lastRemovedBookmark: null,
+    ));
+
+    // Re-fetch to sync with Firestore truth on next load.
+    final curriculumKey = _activeCurriculumKey;
+    if (curriculumKey != null) {
+      unawaited(loadBookmarks(curriculumKey: curriculumKey));
+    }
+  }
+
+  /// Removes a saved chapter and caches it for undo.
+  Future<void> removeSavedChapter({
+    required String subjectId,
+    required String chapterId,
+  }) async {
+    final curriculumKey = _activeCurriculumKey;
+    if (curriculumKey == null) {
+      emit(state.copyWith(errorMessage: 'No active curriculum selected'));
+      return;
+    }
+
+    final initialChapters = List<BookmarkedChapter>.from(state.chapters);
+    final removedItem = initialChapters
+        .cast<BookmarkedChapter?>()
+        .firstWhere(
+          (c) => c!.subjectId == subjectId && c.chapterId == chapterId,
+          orElse: () => null,
+        );
+    final updatedList = initialChapters
+        .where((c) => !(c.subjectId == subjectId && c.chapterId == chapterId))
+        .toList();
+
+    emit(state.copyWith(
+      chapters: updatedList,
+      lastRemovedChapter: removedItem,
+    ));
+
+    final result = await _removeSavedChapter(
+      curriculumKey: curriculumKey,
+      subjectId: subjectId,
+      chapterId: chapterId,
+    );
+
+    if (isClosed) return;
+    if (result is Error<void>) {
+      logFailure('remove saved chapter', result.failure);
+      emit(
+        state.copyWith(
+          chapters: initialChapters,
+          errorMessage: 'Failed to remove saved chapter',
+          lastRemovedChapter: null,
+        ),
+      );
+    }
+  }
+
+  /// Restores the last removed chapter into the local list.
+  void undoRemoveChapter() {
+    final removed = state.lastRemovedChapter;
+    if (removed == null) return;
+
+    final updatedChapters = List<BookmarkedChapter>.from(state.chapters)
+      ..add(removed);
+
+    emit(state.copyWith(
+      chapters: updatedChapters,
+      lastRemovedChapter: null,
+    ));
+
+    final curriculumKey = _activeCurriculumKey;
+    if (curriculumKey != null) {
+      unawaited(loadBookmarks(curriculumKey: curriculumKey));
+    }
+  }
+
+  // ─── Notes ─────────────────────────────────────────────────
 
   /// Adds a new note and reloads.
   Future<void> addNote({
@@ -266,11 +370,18 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
     emit(state.copyWith(notes: updatedNotes, isSavingNote: false));
   }
 
-  /// Deletes a note.
+  /// Deletes a note with undo support.
   Future<void> removeNote(String noteId) async {
     final initialNotes = List<SavedNote>.from(state.notes);
+    final removedItem = initialNotes
+        .cast<SavedNote?>()
+        .firstWhere((n) => n!.id == noteId, orElse: () => null);
     final updatedList = initialNotes.where((n) => n.id != noteId).toList();
-    emit(state.copyWith(notes: updatedList));
+
+    emit(state.copyWith(
+      notes: updatedList,
+      lastRemovedNote: removedItem,
+    ));
 
     final result = await _deleteNote(noteId);
     if (isClosed) return;
@@ -280,43 +391,27 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
         state.copyWith(
           notes: initialNotes,
           errorMessage: 'Failed to delete note',
+          lastRemovedNote: null,
         ),
       );
     }
   }
 
-  /// Removes a saved chapter and updates state optimistically.
-  Future<void> removeSavedChapter({
-    required String subjectId,
-    required String chapterId,
-  }) async {
+  /// Restores the last removed note into the local list.
+  void undoRemoveNote() {
+    final removed = state.lastRemovedNote;
+    if (removed == null) return;
+
+    final updatedNotes = List<SavedNote>.from(state.notes)..add(removed);
+
+    emit(state.copyWith(
+      notes: updatedNotes,
+      lastRemovedNote: null,
+    ));
+
     final curriculumKey = _activeCurriculumKey;
-    if (curriculumKey == null) {
-      emit(state.copyWith(errorMessage: 'No active curriculum selected'));
-      return;
-    }
-
-    final initialChapters = List<BookmarkedChapter>.from(state.chapters);
-    final updatedList = initialChapters
-        .where((c) => !(c.subjectId == subjectId && c.chapterId == chapterId))
-        .toList();
-    emit(state.copyWith(chapters: updatedList));
-
-    final result = await _removeSavedChapter(
-      curriculumKey: curriculumKey,
-      subjectId: subjectId,
-      chapterId: chapterId,
-    );
-
-    if (isClosed) return;
-    if (result is Error<void>) {
-      logFailure('remove saved chapter', result.failure);
-      emit(
-        state.copyWith(
-          chapters: initialChapters,
-          errorMessage: 'Failed to remove saved chapter',
-        ),
-      );
+    if (curriculumKey != null) {
+      unawaited(loadBookmarks(curriculumKey: curriculumKey));
     }
   }
 

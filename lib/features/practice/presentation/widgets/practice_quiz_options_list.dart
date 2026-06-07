@@ -148,7 +148,10 @@ class QuizOptionsList extends StatelessWidget {
   }
 
   /// Renders option text that may contain inline LaTeX delimited by `$...$`.
-  static Widget _buildOptionText(String text, TextStyle style) {
+  static Widget _buildOptionText(String rawText, TextStyle style) {
+    // Sanitize common escaping issues or typos from the database
+    final text = rawText.replaceAll(r'\ ext', r'\text');
+
     if (!text.contains('\$')) {
       return Text(text, style: style);
     }
@@ -166,7 +169,14 @@ class QuizOptionsList extends StatelessWidget {
       parts.add(
         WidgetSpan(
           alignment: PlaceholderAlignment.middle,
-          child: Math.tex(match.group(1)!, textStyle: style),
+          child: Math.tex(
+            match.group(1)!,
+            textStyle: style,
+            onErrorFallback: (err) => Text(
+              match.group(1)!,
+              style: style,
+            ),
+          ),
         ),
       );
       lastEnd = match.end;

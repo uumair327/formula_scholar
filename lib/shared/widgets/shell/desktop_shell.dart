@@ -75,19 +75,25 @@ class DesktopShell extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: AppDimensions.paddingSM),
-                ...navItems(context).asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final item = entry.value;
-                  return DesktopNavItem(
-                    icon: item.icon,
-                    label: item.label,
-                    isSelected: index == currentIndex,
-                    onTap: () => navigationShell.goBranch(
-                      index,
-                      initialLocation: index == currentIndex,
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: navItems(context).asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final item = entry.value;
+                        return DesktopNavItem(
+                          icon: item.icon,
+                          label: item.label,
+                          isSelected: index == currentIndex,
+                          onTap: () => navigationShell.goBranch(
+                            index,
+                            initialLocation: index == currentIndex,
+                          ),
+                        );
+                      }).toList(),
                     ),
-                  );
-                }),
+                  ),
+                ),
               ],
             ),
           ),

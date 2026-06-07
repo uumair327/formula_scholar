@@ -155,7 +155,7 @@ service cloud.firestore {
     match /canonical_formulas/{document} {
       allow read: if true;
       allow create: if isRegistrar();
-      allow update: if isRegistrar();
+      allow update: if isRegistrar() || (isAuth() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['vaultCount']));
       allow delete: if isAdmin();
     }
 
@@ -165,6 +165,11 @@ service cloud.firestore {
       allow create: if isEditor();
       allow update: if isEditor();
       allow delete: if isAdmin();
+    }
+
+    // ─── CollectionGroup Queries ────────────────────────────────
+    match /{path=**}/formulas/{formula} {
+      allow read: if isAuth();
     }
 
     // ─── Top-Level Saved Notes (legacy scripts) ─────────────────

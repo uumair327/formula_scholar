@@ -96,7 +96,6 @@ abstract final class AppRoutes {
   /// Account Information page.
   static const String accountInfoPath = '/profile/account';
   static const String accountInfoName = 'accountInfo';
-
   /// Notifications settings page.
   static const String notificationsPath = '/profile/notifications';
   static const String notificationsName = 'notifications';

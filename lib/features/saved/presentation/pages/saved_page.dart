@@ -21,7 +21,8 @@ class SavedPage extends StatelessWidget {
           prev.notes != curr.notes ||
           prev.searchQuery != curr.searchQuery ||
           prev.sortByField != curr.sortByField ||
-          prev.sortDirection != curr.sortDirection,
+          prev.sortDirection != curr.sortDirection ||
+          prev.selectedSubjectFilter != curr.selectedSubjectFilter,
       builder: (context, state) {
         if (state.status == SavedStatus.loading ||
             state.status == SavedStatus.initial) {
@@ -110,9 +111,13 @@ class SavedPage extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.all(AppDimensions.paddingXXL),
               children: [
+                const VaultStatsHeader(),
+                const SizedBox(height: AppDimensions.paddingXXL),
                 const SavedSearchBar(),
                 const SizedBox(height: AppDimensions.paddingLG),
                 SavedSortControls(state: state),
+                const SizedBox(height: AppDimensions.paddingLG),
+                const VaultSubjectFilter(),
                 const SizedBox(height: AppDimensions.paddingXXL),
                 if (hasSearchQuery && !state.hasFilteredResults)
                   NoSearchResultsState(

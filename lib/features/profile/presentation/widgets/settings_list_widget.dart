@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../domain/domain.dart';
-import '../../../../core/core.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
-/// Settings list widget – account options with icons, toggles, and destructive actions.
-///
-/// Matches the React `SettingsList` component.
-/// Maps domain `iconName` strings to Flutter `IconData` in the presentation layer,
-/// keeping the domain layer free of framework dependencies.
+import '../../../../core/core.dart';
+import '../../domain/domain.dart';
+
+/// Settings list widget – premium styled options with icons, toggles, and actions.
 class SettingsListWidget extends StatelessWidget {
   const SettingsListWidget({
     super.key,
@@ -14,26 +12,65 @@ class SettingsListWidget extends StatelessWidget {
     required this.isDarkMode,
     required this.onDarkModeToggle,
     required this.onItemTapped,
+    this.startIndex = 11, // Default to 11 to continue from AccountInformationPage
+    this.title,
   });
+
   final List<SettingsItem> items;
   final bool isDarkMode;
   final VoidCallback onDarkModeToggle;
   final ValueChanged<String> onItemTapped;
+  final int startIndex;
+  final String? title;
 
-  /// Maps domain icon name strings to Flutter `IconData`.
-  static IconData _resolveIcon(String iconName) {
-    return switch (iconName) {
-      'person_outline' => Icons.person_outline,
-      'bookmark_outline' => Icons.bookmark_outline,
-      'notifications_outlined' => Icons.notifications_outlined,
-      'language' => Icons.language,
-      'palette_outlined' => Icons.palette_outlined,
-      'help_outline' => Icons.help_outline,
-      'info_outline' => Icons.info_outline,
-      'logout' => Icons.logout,
-      'emoji_events' => Icons.emoji_events,
-      'calendar_today' => Icons.calendar_today,
-      _ => Icons.settings,
+  (IconData, Color) _getIconAndColor(BuildContext context, String id) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return switch (id) {
+      'account' => (LucideIcons.user, AppColors.primary),
+      'bookmarks' => (LucideIcons.bookmark, AppColors.secondary),
+      'study_planner' => (LucideIcons.calendar, AppColors.primary),
+      'achievements' => (LucideIcons.trophy, AppColors.orange500),
+      'notifications' => (LucideIcons.bell, AppColors.primary),
+      'language' => (LucideIcons.globe, colorScheme.outline),
+      'appearance' => (LucideIcons.palette, AppColors.secondary),
+      'help' => (LucideIcons.helpCircle, AppColors.tertiary),
+      'about' => (LucideIcons.info, AppColors.primary),
+      'change_password' => (LucideIcons.lock, AppColors.primary),
+      'logout' => (Icons.logout, AppColors.error),
+      'delete_account' => (LucideIcons.trash2, AppColors.error),
+      _ => (LucideIcons.settings, colorScheme.outline),
+    };
+  }
+
+  String _resolveLabel(BuildContext context, String id, String fallback) {
+    return switch (id) {
+      'account' => context.l10n.accountInformation,
+      'bookmarks' => context.l10n.myBookmarks,
+      'study_planner' => context.l10n.studyPlanner,
+      'achievements' => context.l10n.achievements,
+      'notifications' => context.l10n.notifications,
+      'language' => context.l10n.languageAndLocalization,
+      'appearance' => context.l10n.appearance,
+      'help' => context.l10n.helpAndSupport,
+      'about' => context.l10n.aboutApp,
+      'change_password' => context.l10n.changePassword,
+      'logout' => context.l10n.logout,
+      'delete_account' => context.l10n.deleteAccount,
+      _ => fallback,
+    };
+  }
+
+  String? _resolveSubtitle(BuildContext context, String id, String? fallback) {
+    return switch (id) {
+      'account' => null, 
+      'study_planner' => context.l10n.studyPlannerSubtitle,
+      'achievements' => context.l10n.achievementsDesc,
+      'language' => context.l10n.languageAndLocalizationSubtitle,
+      'appearance' => context.l10n.toggleDarkMode,
+      'about' => context.l10n.aboutAppSubtitle,
+      'change_password' => null,
+      'delete_account' => null,
+      _ => fallback,
     };
   }
 
@@ -42,13 +79,23 @@ class SettingsListWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppSectionTitle(title: context.l10n.settings),
-        const SizedBox(height: AppDimensions.paddingLG),
+        if (title != null) ...[
+          EntranceWrapper.stagger(
+            index: startIndex,
+            child: AppSectionTitle(title: title!),
+          ),
+          const SizedBox(height: AppDimensions.paddingLG),
+        ],
         Column(
-          children: items.map((item) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: AppDimensions.paddingSM),
-              child: _buildSettingsItem(context, item),
+          children: items.asMap().entries.map((entry) {
+            final index = entry.key;
+            final item = entry.value;
+            return EntranceWrapper.stagger(
+              index: startIndex + 1 + index,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: AppDimensions.paddingMD),
+                child: _buildSettingsItem(context, item),
+              ),
             );
           }).toList(),
         ),
@@ -60,45 +107,17 @@ class SettingsListWidget extends StatelessWidget {
     if (item.isToggle) {
       return _buildToggleItem(context, item);
     }
-    if (item.isDestructive) {
-      return _buildDestructiveItem(context, item);
-    }
     return _buildNavigationItem(context, item);
-  }
-
-  String _resolveLabel(BuildContext context, String id, String fallback) {
-    return switch (id) {
-      'account' => context.l10n.accountInformation,
-      'bookmarks' => context.l10n.myBookmarks,
-      'planner' => context.l10n.studyPlanner,
-      'study_planner' => context.l10n.studyPlanner,
-      'achievements' => context.l10n.achievements,
-      'notifications' => context.l10n.notifications,
-      'language' => context.l10n.languageAndLocalization,
-      'appearance' => context.l10n.appearance,
-      'help' => context.l10n.helpAndSupport,
-      'about' => context.l10n.aboutApp,
-      'logout' => context.l10n.logout,
-      _ => fallback,
-    };
-  }
-
-  String? _resolveSubtitle(BuildContext context, String id, String? fallback) {
-    return switch (id) {
-      'planner' => context.l10n.studyPlannerSubtitle,
-      'study_planner' => context.l10n.studyPlannerSubtitle,
-      'achievements' => context.l10n.achievementsDesc,
-      'language' => context.l10n.languageAndLocalizationSubtitle,
-      'appearance' => context.l10n.toggleDarkMode,
-      'about' => context.l10n.aboutAppSubtitle,
-      _ => fallback,
-    };
   }
 
   Widget _buildNavigationItem(BuildContext context, SettingsItem item) {
     final colorScheme = Theme.of(context).colorScheme;
-    final icon = _resolveIcon(item.iconName);
+    final (icon, color) = _getIconAndColor(context, item.id);
+    final label = _resolveLabel(context, item.id, item.label);
+    final subtitle = _resolveSubtitle(context, item.id, item.subtitle);
+
     return AppCard(
+      boxShadow: const [AppShadows.subtle],
       onTap: () {
         AppLogger.info(
           'Settings nav tapped: ${item.id}',
@@ -114,53 +133,25 @@ class SettingsListWidget extends StatelessWidget {
         children: [
           AppIconCircle(
             icon: icon,
-            backgroundColor: colorScheme.surfaceContainerHigh,
-            iconColor: colorScheme.outline,
-          ),
-          const SizedBox(width: AppDimensions.paddingLG),
-          Expanded(
-            child: Text(
-              _resolveLabel(context, item.id, item.label),
-              style: AppTextStyles.labelLarge,
+            backgroundColor: color.withValues(
+              alpha: AppDimensions.opacityFaint,
             ),
-          ),
-          Icon(
-            Directionality.of(context) == TextDirection.rtl
-                ? Icons.chevron_left
-                : Icons.chevron_right,
-            color: colorScheme.outlineVariant,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildToggleItem(BuildContext context, SettingsItem item) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final icon = _resolveIcon(item.iconName);
-
-    final label = _resolveLabel(context, item.id, item.label);
-    final subtitle = _resolveSubtitle(context, item.id, item.subtitle);
-
-    return AppCard(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppDimensions.paddingXL,
-        vertical: AppDimensions.paddingMD,
-      ),
-      child: Row(
-        children: [
-          AppIconCircle(
-            icon: icon,
-            backgroundColor: colorScheme.surfaceContainerHigh,
-            iconColor: colorScheme.outline,
+            iconColor: color,
           ),
           const SizedBox(width: AppDimensions.paddingLG),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text(label, style: AppTextStyles.labelLarge),
-                if (subtitle != null) ...[
+                Text(
+                  label,
+                  style: AppTextStyles.labelLarge.copyWith(
+                    color: item.isDestructive ? color : colorScheme.onSurface,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                if (subtitle != null && subtitle.isNotEmpty) ...[
                   const SizedBox(height: AppDimensions.paddingXS),
                   Text(
                     subtitle,
@@ -172,41 +163,69 @@ class SettingsListWidget extends StatelessWidget {
               ],
             ),
           ),
-          Switch(value: isDarkMode, onChanged: (value) => onDarkModeToggle()),
+          if (!item.isDestructive)
+            Icon(
+              Directionality.of(context) == TextDirection.rtl
+                  ? LucideIcons.chevronLeft
+                  : LucideIcons.chevronRight,
+              size: AppDimensions.iconMD,
+              color: colorScheme.outlineVariant,
+            ),
         ],
       ),
     );
   }
 
-  Widget _buildDestructiveItem(BuildContext context, SettingsItem item) {
+  Widget _buildToggleItem(BuildContext context, SettingsItem item) {
     final colorScheme = Theme.of(context).colorScheme;
-    final icon = _resolveIcon(item.iconName);
+    final (icon, color) = _getIconAndColor(context, item.id);
+    final label = _resolveLabel(context, item.id, item.label);
+    final subtitle = _resolveSubtitle(context, item.id, item.subtitle);
+
     return AppCard(
-      onTap: () {
-        AppLogger.warning('Logout tapped', tag: AppLogTags.settingsListWidget);
-        onItemTapped(item.id);
-      },
+      boxShadow: const [AppShadows.subtle],
       padding: const EdgeInsets.symmetric(
         horizontal: AppDimensions.paddingXL,
-        vertical: AppDimensions.paddingLG,
+        vertical: AppDimensions.paddingMD,
       ),
       child: Row(
         children: [
           AppIconCircle(
             icon: icon,
-            backgroundColor: AppColors.errorContainer.withValues(
-              alpha: AppDimensions.opacityLight,
+            backgroundColor: color.withValues(
+              alpha: AppDimensions.opacityFaint,
             ),
-            iconColor: AppColors.error,
+            iconColor: color,
           ),
           const SizedBox(width: AppDimensions.paddingLG),
           Expanded(
-            child: Text(
-              _resolveLabel(context, item.id, item.label),
-              style: AppTextStyles.labelLarge.copyWith(
-                color: colorScheme.error,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  label,
+                  style: AppTextStyles.labelLarge.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                if (subtitle != null && subtitle.isNotEmpty) ...[
+                  const SizedBox(height: AppDimensions.paddingXS),
+                  Text(
+                    subtitle,
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ],
             ),
+          ),
+          Switch(
+            value: isDarkMode,
+            onChanged: (value) => onDarkModeToggle(),
+            activeTrackColor: color.withValues(alpha: 0.5),
+            activeThumbColor: color,
           ),
         ],
       ),

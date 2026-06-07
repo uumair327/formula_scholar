@@ -13,6 +13,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/core.dart';
+import 'core/services/widget_sync_service.dart';
+import 'core/services/background_worker_service.dart';
 import 'features/auth/auth.dart';
 
 import 'features/dashboard/dashboard.dart';
@@ -98,6 +100,13 @@ void main() {
       configureDependencies();
       registerRuntimeDependencies();
       AppLogger.info('DI configured', tag: AppLogTags.main);
+
+      // Initialize Home Widget and Background Sync
+      if (!kIsWeb) {
+        await WidgetSyncService.initialize();
+        await BackgroundWorkerService.initialize();
+        BackgroundWorkerService.registerPeriodicSync();
+      }
 
       // Start listening for dashboard command synchronization events.
       try {

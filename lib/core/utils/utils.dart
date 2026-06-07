@@ -12,4 +12,5 @@ export 'cubit_failure_logger.dart';
 export 'responsive.dart';
 export 'safe_operation.dart';
 export 'unset_sentinel.dart';
+export 'fab_visibility_manager.dart';
 export 'haptics_helper.dart';

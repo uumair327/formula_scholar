@@ -144,6 +144,7 @@ abstract final class AppRouter {
       if (isLoggedIn && !isOnboardingPage && !isAuthPage) {
         final curriculumCubit = getIt<CurriculumCubit>();
         if (curriculumCubit.state.isInitialized &&
+            !curriculumCubit.state.isLoading &&
             !curriculumCubit.state.hasSelection) {
           AppLogger.info(
             'User without curriculum redirected to onboarding from ${state.uri}',

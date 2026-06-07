@@ -34,32 +34,6 @@ class SubjectChaptersAppBar extends StatelessWidget {
               fontWeight: FontWeight.w800,
             ),
           ),
-          if (subject != null)
-            Row(
-              children: [
-                Text(
-                  context.l10n.breadcrumbHome,
-                  style: AppTextStyles.overline.copyWith(
-                    color: colorScheme.outline,
-                    fontSize: AppDimensions.fontSizeXS,
-                  ),
-                ),
-                Icon(
-                  Directionality.of(context) == TextDirection.rtl
-                      ? LucideIcons.chevronLeft
-                      : LucideIcons.chevronRight,
-                  size: AppDimensions.iconXS,
-                  color: colorScheme.outlineVariant,
-                ),
-                Text(
-                  subject!.name.toUpperCase(),
-                  style: AppTextStyles.overline.copyWith(
-                    color: colorScheme.primary,
-                    fontSize: AppDimensions.fontSizeXS,
-                  ),
-                ),
-              ],
-            ),
         ],
       ),
       actions: [
@@ -118,10 +92,12 @@ class _AnalyticsButton extends StatelessWidget {
           context.read<ChaptersCubit>(),
           context.read<CurriculumCubit>(),
         );
+        bool dialogPopped = false;
         try {
           final data = await cubit.loadSelected();
           if (!context.mounted) return;
-          Navigator.of(context).pop();
+          Navigator.of(context, rootNavigator: true).pop();
+          dialogPopped = true;
           SubjectAnalyticsSheet.show(
             context,
             subjectName: subject!.name,
@@ -131,6 +107,16 @@ class _AnalyticsButton extends StatelessWidget {
             currentStreak: data.currentStreak,
             grade: data.gradeLabel,
           );
+        } catch (e) {
+          if (!dialogPopped && context.mounted) {
+            Navigator.of(context, rootNavigator: true).pop();
+            dialogPopped = true;
+          }
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Failed to load analytics')),
+            );
+          }
         } finally {
           await cubit.close();
         }

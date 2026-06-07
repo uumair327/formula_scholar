@@ -398,6 +398,15 @@ class AppLocalizationsUr extends AppLocalizations {
   String get chaptersToggleMasteryFailed => 'Failed to update mastery progress';
 
   @override
+  String get preferences => 'Preferences';
+
+  @override
+  String get supportAndAbout => 'Support & About';
+
+  @override
+  String get dangerZone => 'Danger Zone';
+
+  @override
   String get chaptersToggleBookmarkFailed => 'Failed to bookmark formula';
 
   @override
@@ -435,6 +444,18 @@ class AppLocalizationsUr extends AppLocalizations {
   @override
   String get legalFooterDesc =>
       'We prioritize your privacy and security — your data stays private.';
+
+  @override
+  String get deleteAccount => 'Delete Account';
+
+  @override
+  String get changePassword => 'Change Password';
+
+  @override
+  String get achievements => 'Achievements';
+
+  @override
+  String get achievementsDesc => 'Achievements Desc';
 
   @override
   String get legalEffectiveDate => 'Effective: Jan 1, 2026';
@@ -735,19 +756,10 @@ class AppLocalizationsUr extends AppLocalizations {
   String get achievementNotifications => 'Achievement Notifications';
 
   @override
-  String get achievements => 'Achievements';
-
-  @override
-  String get achievementsDesc => 'Achievements Desc';
-
-  @override
   String get allSubjects => 'All Subjects';
 
   @override
   String get browseLessons => 'Browse Lessons';
-
-  @override
-  String get changePassword => 'Change Password';
 
   @override
   String get chatWithUs => 'Chat With Us';
@@ -802,9 +814,6 @@ class AppLocalizationsUr extends AppLocalizations {
   @override
   String get dashboardRetryCurriculumOptions =>
       'Dashboard Retry Curriculum Options';
-
-  @override
-  String get deleteAccount => 'Delete Account';
 
   @override
   String get deliveryChannels => 'Delivery Channels';
@@ -1326,7 +1335,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get aboutShareDesc => 'Tell your friends about this app';
 
   @override
-  String get myBookmarks => 'My Bookmarks';
+  String get myBookmarks => 'My Formula Vault';
 
   @override
   String get studyPlannerSubtitle => 'Plan and track your study sessions';
@@ -1447,4 +1456,58 @@ class AppLocalizationsUr extends AppLocalizations {
 
   @override
   String get sortFewestFormulas => 'سب سے کم فارمولے';
+
+  @override
+  String get vaultStatsFormulas => 'Formulas';
+
+  @override
+  String get vaultStatsChapters => 'Chapters';
+
+  @override
+  String get vaultStatsNotes => 'Notes';
+
+  @override
+  String get vaultStatsSubjects => 'Subjects';
+
+  @override
+  String get vaultFilterAll => 'All';
+
+  @override
+  String get quickRevisionTitle => 'Quick Revision';
+
+  @override
+  String get quickRevisionEmpty =>
+      'Vault some formulas first to start a quick revision session.';
+
+  @override
+  String quickRevisionProgress(int current, int total) {
+    return '$current of $total';
+  }
+
+  @override
+  String get shareVault => 'Share Vault';
+
+  @override
+  String get vaultCopiedToClipboard => 'Vault summary copied to clipboard!';
+
+  @override
+  String get vaultSummaryTitle => 'My Formula Vault';
+
+  @override
+  String get vaultedOn => 'VAULTED';
+
+  @override
+  String get undoLabel => 'Undo';
+
+  @override
+  String get formulaRemovedFromVault => 'Formula removed from vault';
+
+  @override
+  String get chapterRemovedFromVault => 'Chapter removed from vault';
+
+  @override
+  String get noteRemovedFromVault => 'Note removed from vault';
+
+  @override
+  String get swipeToRemoveHint => 'Swipe left to remove';
 }

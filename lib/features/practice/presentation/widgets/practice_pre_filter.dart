@@ -95,24 +95,24 @@ class PracticePreFilter extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(height: AppDimensions.paddingSectionLG),
-                      EntranceWrapper.stagger(
-                        index: 2,
-                        child: _SubjectSelector(
-                          practiceState: practiceState,
-                          curriculumState: curriculumState,
-                          onSubjectSelected: (id) =>
-                              _startQuiz(context, curriculumState, id),
-                        ),
-                      ),
                       const SizedBox(height: AppDimensions.paddingLG),
                       EntranceWrapper.stagger(
-                        index: 3,
+                        index: 2,
                         child: PreFilterTimedModeCard(
                           isTimed: isTimed,
                           timedDuration: timedDuration,
                           onTimedChanged: onTimedChanged,
                           onDurationChanged: onDurationChanged,
+                        ),
+                      ),
+                      const SizedBox(height: AppDimensions.paddingSectionLG),
+                      EntranceWrapper.stagger(
+                        index: 3,
+                        child: _SubjectSelector(
+                          practiceState: practiceState,
+                          curriculumState: curriculumState,
+                          onSubjectSelected: (id) =>
+                              _startQuiz(context, curriculumState, id),
                         ),
                       ),
                     ],
