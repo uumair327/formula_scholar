@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import '../../domain/domain.dart';
+import '../../../saved/domain/domain.dart';
 import '../../../../core/core.dart';
 
 import 'dashboard_state.dart';
@@ -199,7 +200,34 @@ class DashboardCubit extends Cubit<DashboardState>
     };
 
     if (progress != null && subjects != null && recentStudies != null) {
-      final vaultItems = subjects
+      final savedRepo = getIt<SavedRepositoryPort>();
+      final (formulasRes, chaptersRes, notesRes) = await (
+        savedRepo.getBookmarks(curriculumKey: curriculum.curriculumKey),
+        savedRepo.getSavedChapters(curriculumKey: curriculum.curriculumKey),
+        savedRepo.getSavedNotes(curriculumKey: curriculum.curriculumKey),
+      ).wait;
+
+      final Set<String> activeSubjectIds = {};
+      final Set<String> activeSubjectNames = {};
+      
+      if (formulasRes is Success<List<BookmarkedFormula>>) {
+        activeSubjectNames.addAll(formulasRes.data.map((e) => e.subject));
+      }
+      if (chaptersRes is Success<List<BookmarkedChapter>>) {
+        activeSubjectIds.addAll(chaptersRes.data.map((e) => e.subjectId));
+      }
+      if (notesRes is Success<List<SavedNote>>) {
+        activeSubjectNames.addAll(notesRes.data.map((e) => e.subject));
+        for (final note in notesRes.data) {
+          if (note.subjectId != null) activeSubjectIds.add(note.subjectId!);
+        }
+      }
+
+      final activeSubjects = subjects
+          .where((s) => activeSubjectIds.contains(s.id) || activeSubjectNames.contains(s.name))
+          .toList();
+
+      final vaultItems = activeSubjects
           .map(
             (subject) => FormulaVaultItem(
               id: subject.id,

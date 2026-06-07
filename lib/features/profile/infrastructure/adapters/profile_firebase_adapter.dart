@@ -156,7 +156,7 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
       );
 
       return UserProfile(
-        name: authName.isNotEmpty ? authName : 'Scholar',
+        name: authName.isNotEmpty ? authName : 'Lone Wolf',
         email: authEmail,
         grade: 'Class 10',
         board: '',
@@ -208,7 +208,7 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
     return UserProfile(
       name: (fsName.isNotEmpty ? fsName : authName).isNotEmpty
           ? (fsName.isNotEmpty ? fsName : authName)
-          : 'Scholar',
+          : 'Lone Wolf',
       email: fsEmail.isNotEmpty ? fsEmail : authEmail,
       grade: fsGrade,
       board: fsBoard,

@@ -22,21 +22,13 @@ abstract final class AppAssets {
       'https://lh3.googleusercontent.com/aida-public/AB6AXuDz8div5w1Pk9ye0kwi2kuW_XnrX1vZ1-744PVOV0UDX4OoFTq9ld8NiJ-CaaLJXnrF3cqm8j-eH5lRHSjlz9zVkpn4DKcPerzNsyvlnclqj0lRf5sabjOvCrSdmPYIgoeviomsqTmKIH0ebkc4DEq_iuCIvUejea45SfVh0dvy5gyuWBChdJf6QsGxEeCwTsU1gK2W4e6Nscmd5hv6j5DZ7bqc5TCdqn65cTsgyzqsGpZ5LuK5xGBv80qy0EcguWr5dimVbz2mMGY';
 
   /// Profile hero avatar (used in profile local datasource).
-  static const String profileHeroAvatarUrl =
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuBKkvA68Xw_4MMjE_ZeYpjnn_GMFY_6fsx0palG7alaHlcXcKNElydYoC8igJDmRK45fEHqub0Ik-UyISt_8X2hAWiGx6CO96f69H5wjy-_h0wrAOOPPQb2Ee4h26x0d3Rj4fnVfTQ0nl8fVZJrSKQdE_KBqUjSwro_6Y5FXOs_--Q7bWqlMXVa9oxMD80ERceiEMB_L6OmD9KyenXUTIn79Lk-7i1w9tGPRimWM7pFMStyPBZ9JzJY4AGoGKMkjpw8FUFz4PUKUkU';
+  static const String profileHeroAvatarUrl = 'assets/images/wolf.png';
 
   /// Predefined list of advanced avatar options using DiceBear.
   static const List<String> avatarPresets = [
-    'https://api.dicebear.com/7.x/avataaars/png?seed=Felix&backgroundColor=b6e3f4',
-    'https://api.dicebear.com/7.x/avataaars/png?seed=Aneka&backgroundColor=c0aede',
-    'https://api.dicebear.com/7.x/avataaars/png?seed=Jocelyn&backgroundColor=ffdfbf',
-    'https://api.dicebear.com/7.x/avataaars/png?seed=Christian&backgroundColor=d1d4f9',
-    'https://api.dicebear.com/7.x/avataaars/png?seed=Eden&backgroundColor=c0aede',
-    'https://api.dicebear.com/7.x/avataaars/png?seed=Liam&backgroundColor=b6e3f4',
-    'https://api.dicebear.com/7.x/avataaars/png?seed=Mia&backgroundColor=ffdfbf',
-    'https://api.dicebear.com/7.x/avataaars/png?seed=Oliver&backgroundColor=d1d4f9',
-    'https://api.dicebear.com/7.x/avataaars/png?seed=Sophia&backgroundColor=ffdfbf',
-    'https://api.dicebear.com/7.x/avataaars/png?seed=Lucas&backgroundColor=b6e3f4',
+    'assets/images/wolf.png',
+    'assets/images/fox.png',
+    'assets/images/deer.png',
   ];
 
   // ──────────────────────── Onboarding Images ─────────────────

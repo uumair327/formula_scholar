@@ -13,6 +13,7 @@ class StreakCalendar extends StatelessWidget {
     required this.history,
     required this.onPrevious,
     required this.onNext,
+    this.joinDate,
     this.canGoPrevious = true,
   });
 
@@ -21,6 +22,7 @@ class StreakCalendar extends StatelessWidget {
   final StreakHistoryMonth? history;
   final VoidCallback onPrevious;
   final VoidCallback onNext;
+  final DateTime? joinDate;
   final bool canGoPrevious;
 
   @override
@@ -109,11 +111,16 @@ class StreakCalendar extends StatelessWidget {
               
               final isActive = history?.activeDays.contains(day) ?? false;
               final isFreeze = history?.freezeDays.contains(day) ?? false;
+              final isJoinDate = joinDate != null && 
+                  joinDate!.year == year && 
+                  joinDate!.month == month && 
+                  joinDate!.day == day;
               
               return _DayCell(
                 day: day,
                 isActive: isActive,
                 isFreeze: isFreeze,
+                isJoinDate: isJoinDate,
                 colorScheme: colorScheme,
               );
             },
@@ -129,12 +136,14 @@ class _DayCell extends StatelessWidget {
     required this.day,
     required this.isActive,
     required this.isFreeze,
+    this.isJoinDate = false,
     required this.colorScheme,
   });
 
   final int day;
   final bool isActive;
   final bool isFreeze;
+  final bool isJoinDate;
   final ColorScheme colorScheme;
 
   @override
@@ -148,12 +157,18 @@ class _DayCell extends StatelessWidget {
     } else if (isFreeze) {
       bgColor = Colors.lightBlueAccent;
       textColor = Colors.white;
+    } else if (isJoinDate) {
+      bgColor = Colors.redAccent.withValues(alpha: 0.1);
+      textColor = Colors.redAccent;
     }
 
     return Container(
       decoration: BoxDecoration(
         color: bgColor,
         shape: BoxShape.circle,
+        border: isJoinDate && !isActive
+            ? Border.all(color: Colors.redAccent, width: 2)
+            : null,
       ),
       alignment: Alignment.center,
       child: Stack(
@@ -183,6 +198,15 @@ class _DayCell extends StatelessWidget {
                 Icons.ac_unit_rounded,
                 size: 12,
                 color: Colors.white,
+              ),
+            )
+          else if (isJoinDate)
+            const Positioned(
+              bottom: -8,
+              child: Icon(
+                LucideIcons.sparkles,
+                size: 12,
+                color: Colors.redAccent,
               ),
             ),
         ],

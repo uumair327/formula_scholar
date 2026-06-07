@@ -43,8 +43,9 @@ class AppAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipOval(
-      child: CachedNetworkImage(
+    Widget imageWidget;
+    if (imageUrl.startsWith('http')) {
+      imageWidget = CachedNetworkImage(
         imageUrl: imageUrl,
         width: size,
         height: size,
@@ -72,7 +73,45 @@ class AppAvatar extends StatelessWidget {
             color: fallbackIconColor,
           ),
         ),
-      ),
-    );
+      );
+    } else if (imageUrl.startsWith('assets/')) {
+      imageWidget = Image.asset(
+        imageUrl,
+        width: size,
+        height: size,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: placeholderColor,
+            border: border,
+          ),
+          child: Icon(
+            fallbackIcon,
+            size: fallbackIconSize,
+            color: fallbackIconColor,
+          ),
+        ),
+      );
+    } else {
+      imageWidget = Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: placeholderColor,
+          border: border,
+        ),
+        child: Icon(
+          fallbackIcon,
+          size: fallbackIconSize,
+          color: fallbackIconColor,
+        ),
+      );
+    }
+
+    return ClipOval(child: imageWidget);
   }
 }

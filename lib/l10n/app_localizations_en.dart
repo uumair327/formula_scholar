@@ -631,7 +631,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get startQuiz => 'Start Quiz';
 
   @override
-  String get welcomeScholar => 'Welcome, Scholar';
+  String get welcomeScholar => 'Welcome to the Pack';
 
   @override
   String get myProgress => 'My Progress';

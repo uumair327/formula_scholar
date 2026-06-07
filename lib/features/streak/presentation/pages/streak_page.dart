@@ -119,26 +119,41 @@ class _PersonalStreakView extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (currentStreak >= 365) ...[
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppDimensions.paddingSM,
-                          vertical: AppDimensions.paddingXXS,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.orange.shade300,
-                          borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
-                        ),
-                        child: Text(
-                          'STREAK SOCIETY',
-                          style: AppTextStyles.labelSmall.copyWith(
-                            color: Colors.orange.shade900,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppDimensions.paddingSM,
+                        vertical: AppDimensions.paddingXXS,
                       ),
-                      const SizedBox(height: AppDimensions.paddingMD),
-                    ],
+                      decoration: BoxDecoration(
+                        color: currentStreak >= 365 
+                            ? Colors.orange.shade300 
+                            : Colors.white.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (currentStreak < 365) ...[
+                            Icon(
+                              LucideIcons.lock,
+                              size: 14,
+                              color: Colors.white.withValues(alpha: 0.8),
+                            ),
+                            const SizedBox(width: 4),
+                          ],
+                          Text(
+                            currentStreak >= 365 ? 'ALPHA WOLF PACK' : 'ALPHA WOLF PACK (Unlocks at 365)',
+                            style: AppTextStyles.labelSmall.copyWith(
+                              color: currentStreak >= 365 
+                                  ? Colors.orange.shade900 
+                                  : Colors.white.withValues(alpha: 0.8),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: AppDimensions.paddingMD),
                     Text(
                       currentStreak.toString(),
                       style: AppTextStyles.displayLarge.copyWith(
@@ -200,6 +215,7 @@ class _PersonalStreakView extends StatelessWidget {
                       year: state.viewingYear,
                       month: state.viewingMonth,
                       history: state.currentMonthHistory,
+                      joinDate: state.joinDate,
                       canGoPrevious: canGoPrev,
                       onPrevious: () => context.read<StreakCubit>().previousMonth(),
                       onNext: () => context.read<StreakCubit>().nextMonth(),
@@ -297,7 +313,7 @@ class _PersonalStreakView extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  'Complete a practice session or master new formulas every day to keep your streak alive.',
+                                  'Your streak grows with every consecutive day you study for at least 5 minutes or complete a module. The counter resets at midnight local time.',
                                   style: AppTextStyles.bodyMedium.copyWith(
                                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                                   ),

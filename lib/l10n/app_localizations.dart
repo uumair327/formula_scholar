@@ -1293,7 +1293,7 @@ abstract class AppLocalizations {
   /// No description provided for @welcomeScholar.
   ///
   /// In en, this message translates to:
-  /// **'Welcome, Scholar'**
+  /// **'Welcome to the Pack'**
   String get welcomeScholar;
 
   /// No description provided for @myProgress.

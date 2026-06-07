@@ -194,16 +194,9 @@ class _EditProfileBottomSheetContentState
                         color: colorScheme.surfaceContainerHighest,
                       ),
                       clipBehavior: Clip.antiAlias,
-                      child: CachedNetworkImage(
+                      child: AppAvatar(
                         imageUrl: url,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => const Center(
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        ),
-                        errorWidget: (context, url, error) => const Icon(
-                          LucideIcons.user,
-                          size: 32,
-                        ),
+                        size: 74,
                       ),
                     ),
                   ),

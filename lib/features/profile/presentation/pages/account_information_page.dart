@@ -89,7 +89,7 @@ class AccountInformationPage extends StatelessWidget {
                             child: AccountInfoTile(
                               icon: LucideIcons.calendar,
                               label: 'Joined On', // Using hardcoded string since not in l10n immediately
-                              value: DateFormat('MMMM yyyy').format(profile!.joinedAt!),
+                              value: DateFormat('d MMMM yyyy').format(profile!.joinedAt!),
                             ),
                           ),
                         ],
