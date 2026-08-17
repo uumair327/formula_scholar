@@ -11,12 +11,12 @@ class VaultGrid extends StatelessWidget {
     super.key,
     required this.vaultItems,
     required this.subjects,
-    required this.onSubjectTap,
+    required this.onVaultItemTap,
   });
 
   final List<FormulaVaultItem> vaultItems;
   final List<Subject> subjects;
-  final void Function(Subject subject) onSubjectTap;
+  final void Function(Subject subject) onVaultItemTap;
 
   @override
   Widget build(BuildContext context) {
@@ -138,10 +138,9 @@ class VaultGrid extends StatelessWidget {
     }
 
     if (subject != null) {
-      onSubjectTap(subject);
-      return;
+      onVaultItemTap(subject);
+    } else {
+      StatefulNavigationShell.of(context).goBranch(3);
     }
-
-    StatefulNavigationShell.of(context).goBranch(3);
   }
 }

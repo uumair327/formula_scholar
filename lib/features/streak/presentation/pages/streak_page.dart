@@ -171,10 +171,15 @@ class _PersonalStreakView extends StatelessWidget {
                     ),
                   ],
                 ),
-                Icon(
-                  LucideIcons.flame,
-                  size: 100,
-                  color: Colors.orange.shade300,
+                Image.asset(
+                  currentStreak >= 365 
+                      ? 'assets/images/wolf.png'
+                      : currentStreak >= 30 
+                          ? 'assets/images/fox.png' 
+                          : 'assets/images/deer.png',
+                  width: 120,
+                  height: 120,
+                  fit: BoxFit.contain,
                 ),
               ],
             ),

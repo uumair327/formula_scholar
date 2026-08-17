@@ -13,13 +13,13 @@ class FormulaVaultSection extends StatelessWidget {
     required this.description,
     required this.vaultItems,
     required this.subjects,
-    required this.onSubjectTap,
+    required this.onVaultItemTap,
   });
 
   final String description;
   final List<FormulaVaultItem> vaultItems;
   final List<Subject> subjects;
-  final void Function(Subject subject) onSubjectTap;
+  final void Function(Subject subject) onVaultItemTap;
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +74,7 @@ class FormulaVaultSection extends StatelessWidget {
             VaultGrid(
               vaultItems: vaultItems,
               subjects: subjects,
-              onSubjectTap: onSubjectTap,
+              onVaultItemTap: onVaultItemTap,
             ),
         ],
       ),

@@ -101,6 +101,19 @@ class _HeroStatusCardState extends State<HeroStatusCard>
                 ),
               ),
             ),
+            Positioned(
+              right: -15,
+              bottom: -10,
+              child: Opacity(
+                opacity: 0.8,
+                child: Image.asset(
+                  'assets/images/wolf.png',
+                  width: 160,
+                  height: 160,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

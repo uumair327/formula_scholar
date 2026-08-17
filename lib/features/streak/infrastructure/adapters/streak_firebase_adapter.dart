@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
 import '../../../../core/core.dart';
@@ -59,6 +60,20 @@ class StreakFirebaseAdapter implements StreakRepository {
       tag: 'StreakFirebaseAdapter',
       operation: 'getJoinDate',
       execute: () async {
+        final uid = _firebaseAuth.currentUser?.uid;
+        if (uid == null) return null;
+        
+        final snapshot = await _firestoreClient
+            .doc(AppFirestoreCollections.userDoc(uid))
+            .get();
+            
+        if (snapshot.exists) {
+          final data = snapshot.data()!;
+          if (data['joinedAt'] != null) {
+            return (data['joinedAt'] as Timestamp).toDate();
+          }
+        }
+        
         return _firebaseAuth.currentUser?.metadata.creationTime;
       },
     );

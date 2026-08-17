@@ -5,6 +5,7 @@ import '../../../../core/core.dart';
 import '../cubit/dashboard_cubit.dart';
 import '../cubit/dashboard_state.dart';
 import '../cubit/daily_challenges_cubit.dart';
+import '../../saved/presentation/cubit/saved_cubit.dart';
 import '../widgets/widgets.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -338,8 +339,11 @@ class DashboardPage extends StatelessWidget {
                                     description: vaultDesc,
                                     vaultItems: state.vaultItems,
                                     subjects: state.subjects,
-                                    onSubjectTap: (subject) =>
-                                        onSubjectTap(context, subject),
+                                    onVaultItemTap: (subject) {
+                                      // Navigate to bookmarks tab with filter
+                                      context.read<SavedCubit>().setSubjectFilter(subject.name);
+                                      StatefulNavigationShell.of(context).goBranch(3);
+                                    },
                                   );
                                 },
                               ),

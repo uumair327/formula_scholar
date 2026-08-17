@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../core/core.dart';
 import '../../domain/domain.dart';
@@ -100,7 +101,7 @@ class ProfileHeroWidget extends StatelessWidget {
           ),
           const SizedBox(height: AppDimensions.paddingXS),
           Text(
-            profile.name,
+            profile.name.isEmpty ? l10n.welcomeScholar : profile.name,
             style: AppTextStyles.headlineLarge.copyWith(
               color: colorScheme.onPrimary,
             ),
@@ -108,6 +109,19 @@ class ProfileHeroWidget extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
+          if (profile.joinedAt != null) ...[
+            const SizedBox(height: AppDimensions.paddingXS),
+            Text(
+              'Joined ${DateFormat('MMMM yyyy').format(profile.joinedAt!)}',
+              style: AppTextStyles.labelSmall.copyWith(
+                color: colorScheme.onPrimary.withValues(
+                  alpha: AppDimensions.opacityHigh,
+                ),
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+          const SizedBox(height: AppDimensions.paddingLG),
           if (profile.email.isNotEmpty) ...[
             const SizedBox(height: AppDimensions.paddingXXS),
             Text(
