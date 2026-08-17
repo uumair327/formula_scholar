@@ -38,6 +38,8 @@ import '../../features/analytics/domain/ports/analytics_repository_port.dart'
     as _i813;
 import '../../features/analytics/domain/usecases/get_analytics_data_use_case.dart'
     as _i390;
+import '../../features/analytics/domain/usecases/get_growth_metrics_use_case.dart'
+    as _i830;
 import '../../features/analytics/infrastructure/adapters/analytics_firebase_adapter.dart'
     as _i186;
 import '../../features/analytics/infrastructure/repositories/analytics_hive_cache.dart'
@@ -126,6 +128,8 @@ import '../../features/dashboard/domain/usecases/get_announcements_use_case.dart
     as _i996;
 import '../../features/dashboard/domain/usecases/get_banners_use_case.dart'
     as _i273;
+import '../../features/dashboard/domain/usecases/get_random_daily_challenge_use_case.dart'
+    as _i821;
 import '../../features/dashboard/domain/usecases/get_recent_studies_use_case.dart'
     as _i834;
 import '../../features/dashboard/domain/usecases/get_study_progress_use_case.dart'
@@ -140,6 +144,8 @@ import '../../features/dashboard/infrastructure/repositories/dashboard_hive_cach
     as _i990;
 import '../../features/dashboard/infrastructure/repositories/dashboard_repository_impl.dart'
     as _i367;
+import '../../features/dashboard/presentation/cubit/daily_challenges_cubit.dart'
+    as _i924;
 import '../../features/dashboard/presentation/cubit/dashboard_cubit.dart'
     as _i24;
 import '../../features/flashcards/domain/domain.dart' as _i944;
@@ -254,6 +260,14 @@ import '../../features/search/infrastructure/repositories/search_repository_impl
     as _i702;
 import '../../features/search/presentation/cubit/search_cubit.dart' as _i341;
 import '../../features/streak/domain/domain.dart' as _i442;
+import '../../features/streak/domain/repositories/streak_repository.dart'
+    as _i55;
+import '../../features/streak/domain/usecases/get_available_freezes_use_case.dart'
+    as _i807;
+import '../../features/streak/domain/usecases/get_join_date_use_case.dart'
+    as _i867;
+import '../../features/streak/domain/usecases/get_month_history_use_case.dart'
+    as _i36;
 import '../../features/streak/infrastructure/adapters/streak_firebase_adapter.dart'
     as _i406;
 import '../../features/streak/presentation/cubit/streak_cubit.dart' as _i810;
@@ -286,6 +300,8 @@ import '../../shared/domain/ports/localized_content_data_source_port.dart'
     as _i166;
 import '../../shared/domain/ports/localized_content_repository_port.dart'
     as _i344;
+import '../../shared/domain/usecases/get_localized_content_use_case.dart'
+    as _i352;
 import '../../shared/domain/usecases/load_curriculum_use_case.dart' as _i1052;
 import '../../shared/domain/usecases/load_theme_preference_use_case.dart'
     as _i847;
@@ -332,7 +348,10 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final firebaseModule = _$FirebaseModule();
     gh.factory<_i350.FormulaCompareService>(
-      () => _i350.FormulaCompareService(),
+      () => const _i350.FormulaCompareService(),
+    );
+    gh.factory<_i821.GetRandomDailyChallengeUseCase>(
+      () => _i821.GetRandomDailyChallengeUseCase(),
     );
     gh.lazySingleton<_i59.FirebaseAuth>(() => firebaseModule.firebaseAuth);
     gh.lazySingleton<_i974.FirebaseFirestore>(() => firebaseModule.firestore);
@@ -368,6 +387,11 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i970.AchievementCachePort>(
       () => _i848.AchievementHiveCache(),
+    );
+    gh.factory<_i924.DailyChallengesCubit>(
+      () => _i924.DailyChallengesCubit(
+        gh<_i821.GetRandomDailyChallengeUseCase>(),
+      ),
     );
     gh.lazySingleton<_i226.CrashlyticsServicePort>(
       () => _i199.FirebaseCrashlyticsAdapter(),
@@ -666,8 +690,24 @@ extension GetItInjectableX on _i174.GetIt {
         cache: gh<_i899.PracticeCachePort>(),
       ),
     );
+    gh.factory<_i807.GetAvailableFreezesUseCase>(
+      () => _i807.GetAvailableFreezesUseCase(gh<_i55.StreakRepository>()),
+    );
+    gh.factory<_i867.GetJoinDateUseCase>(
+      () => _i867.GetJoinDateUseCase(gh<_i55.StreakRepository>()),
+    );
+    gh.factory<_i36.GetMonthHistoryUseCase>(
+      () => _i36.GetMonthHistoryUseCase(gh<_i55.StreakRepository>()),
+    );
     gh.lazySingleton<_i388.DashboardCommandListener>(
       () => _i388.DashboardCommandListener(gh<_i351.FirestoreClientPort>()),
+    );
+    gh.factory<_i810.StreakCubit>(
+      () => _i810.StreakCubit(
+        getAvailableFreezes: gh<_i807.GetAvailableFreezesUseCase>(),
+        getJoinDate: gh<_i867.GetJoinDateUseCase>(),
+        getMonthHistory: gh<_i36.GetMonthHistoryUseCase>(),
+      ),
     );
     gh.factory<_i996.GetAnnouncementsUseCase>(
       () => _i996.GetAnnouncementsUseCase(
@@ -713,9 +753,6 @@ extension GetItInjectableX on _i174.GetIt {
         updateProfile: gh<_i193.UpdateProfileUseCase>(),
         activityRefreshCubit: gh<_i351.ActivityRefreshCubit>(),
       ),
-    );
-    gh.factory<_i810.StreakCubit>(
-      () => _i810.StreakCubit(streakRepository: gh<_i442.StreakRepository>()),
     );
     gh.factory<_i445.SearchFormulasUseCase>(
       () => _i445.SearchFormulasUseCase(
@@ -811,6 +848,11 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i414.SubjectSelectionCubit(
         watchCurriculum: gh<_i351.WatchCurriculumUseCase>(),
         getSubjects: gh<_i95.GetSubjectsUseCase>(),
+      ),
+    );
+    gh.factory<_i352.GetLocalizedContentUseCase>(
+      () => _i352.GetLocalizedContentUseCase(
+        gh<_i351.LocalizedContentRepositoryPort>(),
       ),
     );
     gh.factory<_i525.GetQuestionsUseCase>(
@@ -925,6 +967,9 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i642.UpdateNoteUseCase(repository: gh<_i793.SavedRepositoryPort>()),
     );
+    gh.factory<_i830.GetGrowthMetricsUseCase>(
+      () => _i830.GetGrowthMetricsUseCase(gh<_i813.AnalyticsRepositoryPort>()),
+    );
     gh.factory<_i30.PracticeHistoryCubit>(
       () => _i30.PracticeHistoryCubit(
         getRecentQuizResults: gh<_i611.GetRecentQuizResultsUseCase>(),
@@ -939,6 +984,22 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i522.SubjectsCubit(
         gh<_i95.GetSubjectsUseCase>(),
         gh<_i351.CurriculumCubit>(),
+      ),
+    );
+    gh.factory<_i24.DashboardCubit>(
+      () => _i24.DashboardCubit(
+        getStudyProgress: gh<_i95.GetStudyProgressUseCase>(),
+        getSubjects: gh<_i95.GetSubjectsUseCase>(),
+        getRecentStudies: gh<_i95.GetRecentStudiesUseCase>(),
+        getBanners: gh<_i95.GetBannersUseCase>(),
+        getAnnouncements: gh<_i95.GetAnnouncementsUseCase>(),
+        getWeakAreas: gh<_i95.GetWeakAreasUseCase>(),
+        getLocalizedContent: gh<_i352.GetLocalizedContentUseCase>(),
+        getBookmarks: gh<_i385.GetBookmarksUseCase>(),
+        getSavedChapters: gh<_i385.GetSavedChaptersUseCase>(),
+        getSavedNotes: gh<_i385.GetSavedNotesUseCase>(),
+        curriculumCubit: gh<_i351.CurriculumCubit>(),
+        activityRefreshCubit: gh<_i351.ActivityRefreshCubit>(),
       ),
     );
     gh.factory<_i919.ChaptersCubit>(
@@ -973,16 +1034,10 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i40.MasteryToolsCubit>(
       () => _i40.MasteryToolsCubit(getFormulas: gh<_i750.GetFormulasUseCase>()),
     );
-    gh.factory<_i24.DashboardCubit>(
-      () => _i24.DashboardCubit(
-        getStudyProgress: gh<_i95.GetStudyProgressUseCase>(),
-        getSubjects: gh<_i95.GetSubjectsUseCase>(),
-        getRecentStudies: gh<_i95.GetRecentStudiesUseCase>(),
-        getBanners: gh<_i95.GetBannersUseCase>(),
-        getAnnouncements: gh<_i95.GetAnnouncementsUseCase>(),
-        getWeakAreas: gh<_i95.GetWeakAreasUseCase>(),
-        curriculumCubit: gh<_i351.CurriculumCubit>(),
-        activityRefreshCubit: gh<_i351.ActivityRefreshCubit>(),
+    gh.factory<_i821.AnalyticsCubit>(
+      () => _i821.AnalyticsCubit(
+        getAnalytics: gh<_i658.GetAnalyticsDataUseCase>(),
+        getGrowthMetrics: gh<_i830.GetGrowthMetricsUseCase>(),
       ),
     );
     gh.factory<_i712.SavedCubit>(
@@ -996,12 +1051,6 @@ extension GetItInjectableX on _i174.GetIt {
         updateNote: gh<_i385.UpdateNoteUseCase>(),
         deleteNote: gh<_i385.DeleteNoteUseCase>(),
         curriculumCubit: gh<_i351.CurriculumCubit>(),
-      ),
-    );
-    gh.factory<_i821.AnalyticsCubit>(
-      () => _i821.AnalyticsCubit(
-        getAnalytics: gh<_i658.GetAnalyticsDataUseCase>(),
-        repository: gh<_i658.AnalyticsRepositoryPort>(),
       ),
     );
     return this;

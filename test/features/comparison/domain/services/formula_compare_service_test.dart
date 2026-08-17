@@ -7,7 +7,7 @@ void main() {
     late FormulaCompareService service;
 
     setUp(() {
-      service = FormulaCompareService();
+      service = const FormulaCompareService();
     });
 
     group('extractVariables', () {

@@ -289,7 +289,7 @@ class DashboardPage extends StatelessWidget {
                             EntranceWrapper(
                               delay: const Duration(milliseconds: 100),
                               child: BlocProvider(
-                                create: (_) => DailyChallengesCubit(),
+                                create: (_) => getIt<DailyChallengesCubit>(),
                                 child: AcademicPathSection(
                                   subjects: state.subjects,
                                   onSubjectTap: (subject) =>

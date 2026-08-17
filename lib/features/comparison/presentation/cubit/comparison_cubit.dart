@@ -7,8 +7,8 @@ import 'comparison_state.dart';
 
 @injectable
 class ComparisonCubit extends Cubit<ComparisonState> {
-  ComparisonCubit({FormulaCompareService? compareService})
-    : _compareService = compareService ?? FormulaCompareService(),
+  ComparisonCubit({required FormulaCompareService compareService})
+    : _compareService = compareService,
       super(const ComparisonState());
 
   final FormulaCompareService _compareService;

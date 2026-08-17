@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
 import '../../domain/domain.dart';
+import '../../domain/usecases/get_growth_metrics_use_case.dart';
 import 'analytics_state.dart';
 
 @injectable
@@ -12,15 +13,15 @@ class AnalyticsCubit extends Cubit<AnalyticsState>
     with CubitFailureLogger<AnalyticsState> {
   AnalyticsCubit({
     required GetAnalyticsDataUseCase getAnalytics,
-    required AnalyticsRepositoryPort repository,
+    required GetGrowthMetricsUseCase getGrowthMetrics,
   }) : _getAnalytics = getAnalytics,
-       _repository = repository,
+       _getGrowthMetrics = getGrowthMetrics,
        super(const AnalyticsState()) {
     Future.microtask(load);
   }
 
   final GetAnalyticsDataUseCase _getAnalytics;
-  final AnalyticsRepositoryPort _repository;
+  final GetGrowthMetricsUseCase _getGrowthMetrics;
 
   @override
   String get logTag => AppLogTags.analyticsCubit;
@@ -52,7 +53,7 @@ class AnalyticsCubit extends Cubit<AnalyticsState>
     if (isClosed) return;
     emit(state.copyWith(growthStatus: GrowthMetricsStatus.loading));
 
-    final result = await _repository.getGrowthMetrics();
+    final result = await _getGrowthMetrics();
     if (isClosed) return;
     switch (result) {
       case Success(:final data):

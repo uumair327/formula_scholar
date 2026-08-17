@@ -224,4 +224,10 @@ abstract final class AppColors {
       Theme.of(context).brightness == Brightness.dark
       ? darkErrorGradient
       : errorGradient;
+
+  // ──────────────────────── Achievements ─────────────────────────
+  static const Color tierBronze = Color(0xFFCD7F32);
+  static const Color tierSilver = Color(0xFFC0C0C0);
+  static const Color tierGold = Color(0xFFFFD700);
+  static const Color tierDiamond = Color(0xFF00CED1);
 }

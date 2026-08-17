@@ -54,7 +54,7 @@ void main() {
     late ComparisonCubit cubit;
 
     setUp(() {
-      cubit = ComparisonCubit();
+      cubit = ComparisonCubit(compareService: const FormulaCompareService());
     });
 
     tearDown(() {

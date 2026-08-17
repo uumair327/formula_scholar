@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class AppAnnouncement extends Equatable {
@@ -11,19 +10,6 @@ class AppAnnouncement extends Equatable {
     this.publishAt,
     this.expiresAt,
   });
-
-  factory AppAnnouncement.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    return AppAnnouncement(
-      id: doc.id,
-      title: data['title'] as String? ?? '',
-      message: data['message'] as String? ?? '',
-      priority: data['priority'] as String? ?? 'normal',
-      status: data['status'] as String? ?? 'draft',
-      publishAt: data['publishAt'] as String?,
-      expiresAt: data['expiresAt'] as String?,
-    );
-  }
 
   final String id;
   final String title;

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class CarouselItem extends Equatable {
@@ -11,19 +10,6 @@ class CarouselItem extends Equatable {
     this.displayOrder,
     this.bgColor,
   });
-
-  factory CarouselItem.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    return CarouselItem(
-      id: doc.id,
-      title: data['title'] as String? ?? '',
-      imageUrl: data['imageUrl'] as String? ?? '',
-      link: data['link'] as String? ?? '',
-      isActive: data['isActive'] as bool? ?? false,
-      displayOrder: data['displayOrder'] as int?,
-      bgColor: data['bgColor'] as String?,
-    );
-  }
 
   final String id;
   final String title;

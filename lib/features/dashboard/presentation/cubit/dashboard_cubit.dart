@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 import '../../domain/domain.dart';
 import '../../../saved/domain/domain.dart';
 import '../../../../core/core.dart';
+import '../../../../shared/domain/usecases/get_localized_content_use_case.dart';
 
 import 'dashboard_state.dart';
 
@@ -18,6 +19,10 @@ class DashboardCubit extends Cubit<DashboardState>
     required GetBannersUseCase getBanners,
     required GetAnnouncementsUseCase getAnnouncements,
     required GetWeakAreasUseCase getWeakAreas,
+    required GetLocalizedContentUseCase getLocalizedContent,
+    required GetBookmarksUseCase getBookmarks,
+    required GetSavedChaptersUseCase getSavedChapters,
+    required GetSavedNotesUseCase getSavedNotes,
     required CurriculumCubit curriculumCubit,
     required ActivityRefreshCubit activityRefreshCubit,
   }) : _getStudyProgress = getStudyProgress,
@@ -26,6 +31,10 @@ class DashboardCubit extends Cubit<DashboardState>
        _getBanners = getBanners,
        _getAnnouncements = getAnnouncements,
        _getWeakAreas = getWeakAreas,
+       _getLocalizedContent = getLocalizedContent,
+       _getBookmarks = getBookmarks,
+       _getSavedChapters = getSavedChapters,
+       _getSavedNotes = getSavedNotes,
        _curriculumCubit = curriculumCubit,
        _activityRefreshCubit = activityRefreshCubit,
        super(const DashboardState()) {
@@ -39,6 +48,10 @@ class DashboardCubit extends Cubit<DashboardState>
   final GetBannersUseCase _getBanners;
   final GetAnnouncementsUseCase _getAnnouncements;
   final GetWeakAreasUseCase _getWeakAreas;
+  final GetLocalizedContentUseCase _getLocalizedContent;
+  final GetBookmarksUseCase _getBookmarks;
+  final GetSavedChaptersUseCase _getSavedChapters;
+  final GetSavedNotesUseCase _getSavedNotes;
   final CurriculumCubit _curriculumCubit;
   final ActivityRefreshCubit _activityRefreshCubit;
   String _contentLocaleCode = AppLocales.defaultContentLocaleCode;
@@ -155,9 +168,7 @@ class DashboardCubit extends Cubit<DashboardState>
       _getBanners(),
       _getAnnouncements(),
       _getWeakAreas(),
-      getIt<LocalizedContentRepositoryPort>().getContentBundle(
-        _contentLocaleCode,
-      ),
+      _getLocalizedContent(_contentLocaleCode),
     ).wait;
 
     if (isClosed) return;
@@ -194,17 +205,17 @@ class DashboardCubit extends Cubit<DashboardState>
 
     final localizedContent = switch (localizedContentResult) {
       Success(:final data) => data,
-      Error(:final failure) =>
-        logFailure('localized content', failure) ??
-            const LocalizedContentBundle.empty(),
+      Error(:final failure) => () {
+        logFailure('localized content', failure);
+        return const LocalizedContentBundle.empty();
+      }()
     };
 
     if (progress != null && subjects != null && recentStudies != null) {
-      final savedRepo = getIt<SavedRepositoryPort>();
       final (formulasRes, chaptersRes, notesRes) = await (
-        savedRepo.getBookmarks(curriculumKey: curriculum.curriculumKey),
-        savedRepo.getSavedChapters(curriculumKey: curriculum.curriculumKey),
-        savedRepo.getSavedNotes(curriculumKey: curriculum.curriculumKey),
+        _getBookmarks(curriculumKey: curriculum.curriculumKey),
+        _getSavedChapters(curriculumKey: curriculum.curriculumKey),
+        _getSavedNotes(curriculumKey: curriculum.curriculumKey),
       ).wait;
 
       final Set<String> activeSubjectIds = {};

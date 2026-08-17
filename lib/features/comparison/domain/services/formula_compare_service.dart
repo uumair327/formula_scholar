@@ -5,6 +5,8 @@ import '../entities/formula_comparison.dart';
 
 @injectable
 class FormulaCompareService {
+  const FormulaCompareService();
+
   static final _commandPattern = RegExp(r'\\[a-zA-Z]+');
   static final _commonCommands = {
     'frac',

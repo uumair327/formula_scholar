@@ -132,13 +132,13 @@ class AchievementTile extends StatelessWidget {
   Color _tierColor() {
     switch (achievement.tier) {
       case AchievementTier.bronze:
-        return const Color(0xFFCD7F32);
+        return AppColors.tierBronze;
       case AchievementTier.silver:
-        return const Color(0xFFC0C0C0);
+        return AppColors.tierSilver;
       case AchievementTier.gold:
-        return const Color(0xFFFFD700);
+        return AppColors.tierGold;
       case AchievementTier.diamond:
-        return const Color(0xFF00CED1);
+        return AppColors.tierDiamond;
     }
   }
 

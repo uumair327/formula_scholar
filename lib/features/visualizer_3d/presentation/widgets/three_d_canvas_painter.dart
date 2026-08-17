@@ -345,10 +345,10 @@ class ThreeDCanvasPainter extends CustomPainter {
     final helixRadius = radiusBase * 0.7 * paramA;
     final helixLength = radiusBase * 1.8 * paramB;
     final rPaint = Paint()
-      ..color = const Color(0xFF00FFFF)
+      ..color = colorScheme.secondary
       ..strokeWidth = 3.0;
     final gPaint = Paint()
-      ..color = const Color(0xFFFF00FF)
+      ..color = colorScheme.tertiary
       ..strokeWidth = 3.0;
     final strandPaint = Paint()
       ..color = colorScheme.primary.withValues(alpha: 0.4)

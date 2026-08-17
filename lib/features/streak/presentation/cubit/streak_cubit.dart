@@ -2,7 +2,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
-import '../../domain/domain.dart';
+import '../../domain/usecases/get_available_freezes_use_case.dart';
+import '../../domain/usecases/get_join_date_use_case.dart';
+import '../../domain/usecases/get_month_history_use_case.dart';
 import 'streak_state.dart';
 
 export 'streak_state.dart';
@@ -10,11 +12,17 @@ export 'streak_state.dart';
 @injectable
 class StreakCubit extends Cubit<StreakState> with CubitFailureLogger<StreakState> {
   StreakCubit({
-    required StreakRepository streakRepository,
-  })  : _streakRepository = streakRepository,
+    required GetAvailableFreezesUseCase getAvailableFreezes,
+    required GetJoinDateUseCase getJoinDate,
+    required GetMonthHistoryUseCase getMonthHistory,
+  })  : _getAvailableFreezes = getAvailableFreezes,
+        _getJoinDate = getJoinDate,
+        _getMonthHistory = getMonthHistory,
         super(const StreakState());
 
-  final StreakRepository _streakRepository;
+  final GetAvailableFreezesUseCase _getAvailableFreezes;
+  final GetJoinDateUseCase _getJoinDate;
+  final GetMonthHistoryUseCase _getMonthHistory;
 
   @override
   String get logTag => 'StreakCubit';
@@ -23,8 +31,8 @@ class StreakCubit extends Cubit<StreakState> with CubitFailureLogger<StreakState
     final now = DateTime.now();
     await loadMonth(now.year, now.month);
     
-    final freezesResult = await _streakRepository.getAvailableFreezes();
-    final joinDateResult = await _streakRepository.getJoinDate();
+    final freezesResult = await _getAvailableFreezes();
+    final joinDateResult = await _getJoinDate();
     
     if (!isClosed) {
       emit(state.copyWith(
@@ -41,7 +49,7 @@ class StreakCubit extends Cubit<StreakState> with CubitFailureLogger<StreakState
       viewingMonth: month,
     ));
 
-    final result = await _streakRepository.getMonthHistory(year, month);
+    final result = await _getMonthHistory(year, month);
 
     if (isClosed) return;
 

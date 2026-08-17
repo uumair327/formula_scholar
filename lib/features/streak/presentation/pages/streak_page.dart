@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-import '../../../../core/di/injection.dart';
 import '../cubit/streak_cubit.dart';
 import '../widgets/streak_calendar.dart';
 
@@ -296,7 +295,7 @@ class _PersonalStreakView extends StatelessWidget {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(
+                          const Icon(
                             LucideIcons.flame,
                             color: Colors.orangeAccent,
                             size: 24,
