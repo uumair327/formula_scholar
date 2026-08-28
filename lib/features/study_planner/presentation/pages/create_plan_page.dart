@@ -75,7 +75,7 @@ class _CreatePlanPageState extends State<CreatePlanPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Create Study Plan'), centerTitle: true),
+      appBar: AppBar(title: Text(context.l10n.studyPlannerCreateTitle), centerTitle: true),
       body: BlocListener<StudyPlannerCubit, StudyPlannerState>(
         listenWhen: (prev, curr) => curr.status == StudyPlannerStatus.error,
         listener: (context, state) {
@@ -83,7 +83,7 @@ class _CreatePlanPageState extends State<CreatePlanPage> {
             SnackBar(
               content: Text(
                 context.localizedError(
-                  fallback: state.errorMessage ?? 'Failed to create plan',
+                  fallback: state.errorMessage ?? context.l10n.studyPlannerCreateFailed,
                 ),
               ),
             ),
@@ -105,28 +105,28 @@ class _CreatePlanPageState extends State<CreatePlanPage> {
               const SizedBox(height: AppDimensions.paddingMD),
               TextField(
                 controller: _descCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Description (optional)',
-                  hintText: 'e.g. Cover chapters 1-3',
-                  prefixIcon: Icon(LucideIcons.fileText),
+                decoration: InputDecoration(
+                  labelText: context.l10n.studyPlannerDescLabel,
+                  // hintText: context.l10n.studyPlannerDescHint,
+                  prefixIcon: const Icon(LucideIcons.fileText),
                 ),
                 maxLines: 2,
               ),
               const SizedBox(height: AppDimensions.paddingMD),
               TextField(
                 controller: _sessionCountCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Number of Sessions',
-                  prefixIcon: Icon(LucideIcons.list),
+                decoration: InputDecoration(
+                  labelText: context.l10n.studyPlannerSessionsCount,
+                  prefixIcon: const Icon(LucideIcons.list),
                 ),
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: AppDimensions.paddingMD),
               TextField(
                 controller: _durationCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Duration per Session (min)',
-                  prefixIcon: Icon(LucideIcons.clock),
+                decoration: InputDecoration(
+                  labelText: context.l10n.studyPlannerSessionDuration,
+                  prefixIcon: const Icon(LucideIcons.clock),
                 ),
                 keyboardType: TextInputType.number,
               ),

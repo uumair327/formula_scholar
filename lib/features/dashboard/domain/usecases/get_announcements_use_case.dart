@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
-import '../models/announcement.dart';
+import '../entities/announcement.dart';
 import '../ports/dashboard_repository_port.dart';
 
 @injectable

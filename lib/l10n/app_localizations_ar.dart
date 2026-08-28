@@ -758,6 +758,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get allSubjects => 'All Subjects';
 
   @override
+  String profileJoinedFormat(String date) {
+    return 'Joined $date';
+  }
+
+  @override
   String get browseLessons => 'Browse Lessons';
 
   @override
@@ -1507,4 +1512,134 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get swipeToRemoveHint => 'Swipe left to remove';
+
+  @override
+  String get deleteLabel => 'Delete';
+
+  @override
+  String get studyPlannerFailedToLoad => 'Failed to load plans';
+
+  @override
+  String get studyPlannerEmptyDesc =>
+      'Create your first study plan to get started';
+
+  @override
+  String studyPlannerDeleteConfirm(String planTitle) {
+    return 'Delete \"$planTitle\"?';
+  }
+
+  @override
+  String get studyPlannerCreateTitle => 'Create Study Plan';
+
+  @override
+  String get studyPlannerCreateFailed => 'Failed to create plan';
+
+  @override
+  String get studyPlannerDescLabel => 'Description (optional)';
+
+  @override
+  String get studyPlannerSessionsCount => 'Number of Sessions';
+
+  @override
+  String get studyPlannerSessionDuration => 'Duration per Session (min)';
+
+  @override
+  String get studyPlannerDetailTitle => 'Plan Details';
+
+  @override
+  String get studyPlannerNotFound => 'Plan not found';
+
+  @override
+  String get studyPlannerSessionsTitle => 'Sessions';
+
+  @override
+  String get studyPlannerNoSessions => 'No sessions in this plan';
+
+  @override
+  String studyPlannerCreatedFormat(String date) {
+    return 'Created $date';
+  }
+
+  @override
+  String get studyPlannerProgress => 'Progress';
+
+  @override
+  String get studyPlannerSessionComplete => 'Session marked as complete';
+
+  @override
+  String get studyPlannerUpdateFailed => 'Failed to update plan';
+
+  @override
+  String get studyPlannerTitleHintEdit => 'e.g. Week 1 Revision';
+
+  @override
+  String studyPlannerMinStudy(int mins) {
+    return '$mins min study';
+  }
+
+  @override
+  String get studyPlannerCompleteAction => 'Complete';
+
+  @override
+  String get chaptersAnalyticsFailed => 'Failed to load analytics';
+
+  @override
+  String get cheatSheetPrintReady =>
+      'Print ready — use browser Print or screenshot';
+
+  @override
+  String get curriculumUpdated => 'Curriculum updated';
+
+  @override
+  String get friendsFeatureComingSoon => 'Friends Feature Coming Soon';
+
+  @override
+  String copiedEmail(String email) {
+    return 'Copied $email';
+  }
+
+  @override
+  String get copyAction => 'Copy';
+
+  @override
+  String get doneAction => 'Done';
+
+  @override
+  String get selectTwoFormulas => 'Select two formulas to compare';
+
+  @override
+  String get variablesLabel => 'Variables';
+
+  @override
+  String get quitPracticeConfirmTitle => 'Quit Practice?';
+
+  @override
+  String get quitAction => 'Quit';
+
+  @override
+  String get validateKeyAction => 'Validate Key';
+
+  @override
+  String get deleteKeyAction => 'Delete Key';
+
+  @override
+  String get latexCopied => 'LaTeX copied to clipboard';
+
+  @override
+  String get addEditNote => 'Add / Edit Note';
+
+  @override
+  String get compareFormula => 'Compare Formula';
+
+  @override
+  String get copyLatex => 'Copy LaTeX';
+
+  @override
+  String get deleteNoteConfirmTitle => 'Delete note?';
+
+  @override
+  String get deleteNoteConfirmDesc => 'This cannot be undone.';
+
+  @override
+  String get closeDetails => 'Close Details';
 }

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:formula_scholar/features/chapters/domain/entities/formula.dart';
+import 'package:formula_scholar/core/domain/entities/formula.dart';
 import 'package:formula_scholar/features/comparison/comparison.dart';
 
 void main() {

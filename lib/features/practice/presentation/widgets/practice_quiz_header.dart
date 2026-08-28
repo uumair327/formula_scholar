@@ -56,14 +56,14 @@ class QuizHeader extends StatelessWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Quit Practice?'),
+        title: Text(context.l10n.quitPracticeConfirmTitle),
         content: const Text(
           'Are you sure you want to quit? Your progress will be lost.',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.quitAction),
           ),
           FilledButton(
             style: FilledButton.styleFrom(
@@ -73,7 +73,7 @@ class QuizHeader extends StatelessWidget {
               Navigator.of(ctx).pop();
               context.read<PracticeCubit>().resetQuiz();
             },
-            child: const Text('Quit'),
+            child: Text(context.l10n.quitAction),
           ),
         ],
       ),

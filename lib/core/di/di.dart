@@ -6,4 +6,5 @@
 library;
 
 export 'firebase_module.dart';
+export 'network_module.dart';
 export 'injection.dart';

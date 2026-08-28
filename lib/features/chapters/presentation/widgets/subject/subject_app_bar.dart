@@ -8,7 +8,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../../core/core.dart';
 
 import '../../../../auth/auth.dart';
-import '../../../../profile/domain/domain.dart';
+import '../../../../../shared/domain/ports/streak_provider_port.dart';
 import '../../cubit/chapters_cubit.dart';
 import '../../cubit/subject_stats_cubit.dart';
 import '../subject_analytics_sheet.dart';
@@ -88,7 +88,7 @@ class _AnalyticsButton extends StatelessWidget {
           ),
         );
         final cubit = SubjectStatsCubit(
-          getIt<GetProfileStatsUseCase>(),
+          getIt<StreakProviderPort>(),
           context.read<ChaptersCubit>(),
           context.read<CurriculumCubit>(),
         );
@@ -114,7 +114,7 @@ class _AnalyticsButton extends StatelessWidget {
           }
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Failed to load analytics')),
+              SnackBar(content: Text(context.l10n.chaptersAnalyticsFailed)),
             );
           }
         } finally {

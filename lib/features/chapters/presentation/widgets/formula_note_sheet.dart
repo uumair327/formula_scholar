@@ -67,16 +67,16 @@ class _FormulaNoteSheetState extends State<FormulaNoteSheet> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Delete note?'),
-        content: const Text('This cannot be undone.'),
+        title: Text(context.l10n.deleteNoteConfirmTitle),
+        content: Text(context.l10n.deleteNoteConfirmDesc),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.quitAction),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Delete'),
+            child: Text(context.l10n.deleteKeyAction.split(' ')[0]),
           ),
         ],
       ),
@@ -156,7 +156,7 @@ class _FormulaNoteSheetState extends State<FormulaNoteSheet> {
                 TextButton.icon(
                   onPressed: _delete,
                   icon: const Icon(LucideIcons.trash2, size: 16),
-                  label: const Text('Delete'),
+                  label: Text(context.l10n.deleteKeyAction.split(' ')[0]),
                   style: TextButton.styleFrom(
                     foregroundColor: colorScheme.error,
                   ),

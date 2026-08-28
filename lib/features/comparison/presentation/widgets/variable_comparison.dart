@@ -28,7 +28,7 @@ class VariableComparison extends StatelessWidget {
                   color: colorScheme.primary,
                 ),
                 const SizedBox(width: AppDimensions.paddingXS),
-                Text('Variables', style: AppTextStyles.titleSmall),
+                Text(context.l10n.variablesLabel, style: AppTextStyles.titleSmall),
               ],
             ),
             const Divider(),

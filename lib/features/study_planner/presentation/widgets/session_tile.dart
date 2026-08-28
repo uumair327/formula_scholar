@@ -29,7 +29,7 @@ class SessionTile extends StatelessWidget {
             : colorScheme.outline,
       ),
       title: Text(
-        '${session.durationMinutes} min study',
+        context.l10n.studyPlannerMinStudy(session.durationMinutes),
         style: AppTextStyles.bodyMedium,
       ),
       subtitle: Text(
@@ -43,7 +43,7 @@ class SessionTile extends StatelessWidget {
           : (onComplete != null
                 ? TextButton(
                     onPressed: onComplete,
-                    child: const Text('Complete'),
+                    child: Text(context.l10n.studyPlannerCompleteAction),
                   )
                 : null),
     );

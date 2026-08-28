@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
-import '../models/carousel_item.dart';
+import '../entities/carousel_item.dart';
 import '../ports/dashboard_repository_port.dart';
 
 @injectable

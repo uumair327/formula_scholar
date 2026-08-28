@@ -4,7 +4,7 @@ import 'package:injectable/injectable.dart';
 import '../../domain/domain.dart';
 import '../../../../core/core.dart';
 
-@LazySingleton(as: FormulasDataSourcePort)
+// @LazySingleton(as: FormulasDataSourcePort)
 class FormulasFirebaseAdapter implements FormulasDataSourcePort {
   FormulasFirebaseAdapter(this._api, this._firebaseAuth)
     : _statsAccumulator = UserStatsAccumulator(_api);

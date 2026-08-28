@@ -112,7 +112,7 @@ class ProfileHeroWidget extends StatelessWidget {
           if (profile.joinedAt != null) ...[
             const SizedBox(height: AppDimensions.paddingXS),
             Text(
-              'Joined ${DateFormat('MMMM yyyy').format(profile.joinedAt!)}',
+              l10n.profileJoinedFormat(DateFormat('MMMM yyyy').format(profile.joinedAt!)),
               style: AppTextStyles.labelSmall.copyWith(
                 color: colorScheme.onPrimary.withValues(
                   alpha: AppDimensions.opacityHigh,

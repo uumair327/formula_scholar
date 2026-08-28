@@ -247,6 +247,14 @@
   "achievements": "Milestone Alerts",
   "achievementsDesc": "When you hit learning milestones",
   "allSubjects": "All Subjects",
+  "profileJoinedFormat": "Joined {date}",
+  "@profileJoinedFormat": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "browseLessons": "Browse Lessons",
   "changePassword": "Change Password",
   "chatWithUs": "Chat",
@@ -519,5 +527,65 @@
   "formulaRemovedFromVault": "Formula removed from vault",
   "chapterRemovedFromVault": "Chapter removed from vault",
   "noteRemovedFromVault": "Note removed from vault",
-  "swipeToRemoveHint": "Swipe left to remove"
+  "swipeToRemoveHint": "Swipe left to remove",
+  "deleteLabel": "Delete",
+  "studyPlannerFailedToLoad": "Failed to load plans",
+  "studyPlannerEmptyDesc": "Create your first study plan to get started",
+  "studyPlannerDeleteConfirm": "Delete \"{planTitle}\"?",
+  "@studyPlannerDeleteConfirm": {
+    "placeholders": {
+      "planTitle": { "type": "String" }
+    }
+  },
+  "studyPlannerCreateTitle": "Create Study Plan",
+  "studyPlannerCreateFailed": "Failed to create plan",
+  "studyPlannerDescLabel": "Description (optional)",
+  "studyPlannerSessionsCount": "Number of Sessions",
+  "studyPlannerSessionDuration": "Duration per Session (min)",
+  "studyPlannerDetailTitle": "Plan Details",
+  "studyPlannerNotFound": "Plan not found",
+  "studyPlannerSessionsTitle": "Sessions",
+  "studyPlannerNoSessions": "No sessions in this plan",
+  "studyPlannerCreatedFormat": "Created {date}",
+  "@studyPlannerCreatedFormat": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "studyPlannerProgress": "Progress",
+  "studyPlannerSessionComplete": "Session marked as complete",
+  "studyPlannerUpdateFailed": "Failed to update plan",
+  "studyPlannerTitleHintEdit": "e.g. Week 1 Revision",
+  "studyPlannerMinStudy": "{mins} min study",
+  "@studyPlannerMinStudy": {
+    "placeholders": {
+      "mins": { "type": "int" }
+    }
+  },
+  "studyPlannerCompleteAction": "Complete",
+  "chaptersAnalyticsFailed": "Failed to load analytics",
+  "cheatSheetPrintReady": "Print ready — use browser Print or screenshot",
+  "curriculumUpdated": "Curriculum updated",
+  "friendsFeatureComingSoon": "Friends Feature Coming Soon",
+  "copiedEmail": "Copied {email}",
+  "@copiedEmail": {
+    "placeholders": {
+      "email": { "type": "String" }
+    }
+  },
+  "copyAction": "Copy",
+  "doneAction": "Done",
+  "selectTwoFormulas": "Select two formulas to compare",
+  "variablesLabel": "Variables",
+  "quitPracticeConfirmTitle": "Quit Practice?",
+  "quitAction": "Quit",
+  "validateKeyAction": "Validate Key",
+  "deleteKeyAction": "Delete Key",
+  "latexCopied": "LaTeX copied to clipboard",
+  "addEditNote": "Add / Edit Note",
+  "compareFormula": "Compare Formula",
+  "copyLatex": "Copy LaTeX",
+  "deleteNoteConfirmTitle": "Delete note?",
+  "deleteNoteConfirmDesc": "This cannot be undone.",
+  "closeDetails": "Close Details"
 }

@@ -33,7 +33,7 @@ class ComparisonPage extends StatelessWidget {
             p.comparison != n.comparison,
         builder: (context, state) {
           if (state.status == ComparisonStatus.initial) {
-            return const Center(child: Text('Select two formulas to compare'));
+            return Center(child: Text(context.l10n.selectTwoFormulas));
           }
 
           final colorScheme = Theme.of(context).colorScheme;

@@ -156,7 +156,7 @@ class SubjectAnalyticsSheet extends StatelessWidget {
               child: ElevatedButton.icon(
                 onPressed: () => Navigator.of(context).pop(),
                 icon: const Icon(LucideIcons.check, size: AppDimensions.iconSM),
-                label: const Text('Close Details'),
+                label: Text(context.l10n.closeDetails),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: colorScheme.surfaceContainerHigh,
                   foregroundColor: colorScheme.onSurface,

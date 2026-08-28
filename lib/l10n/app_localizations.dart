@@ -1554,6 +1554,12 @@ abstract class AppLocalizations {
   /// **'All Subjects'**
   String get allSubjects;
 
+  /// No description provided for @profileJoinedFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Joined {date}'**
+  String profileJoinedFormat(String date);
+
   /// No description provided for @browseLessons.
   ///
   /// In en, this message translates to:
@@ -3017,6 +3023,246 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Swipe left to remove'**
   String get swipeToRemoveHint;
+
+  /// No description provided for @deleteLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteLabel;
+
+  /// No description provided for @studyPlannerFailedToLoad.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load plans'**
+  String get studyPlannerFailedToLoad;
+
+  /// No description provided for @studyPlannerEmptyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first study plan to get started'**
+  String get studyPlannerEmptyDesc;
+
+  /// No description provided for @studyPlannerDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete \"{planTitle}\"?'**
+  String studyPlannerDeleteConfirm(String planTitle);
+
+  /// No description provided for @studyPlannerCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Study Plan'**
+  String get studyPlannerCreateTitle;
+
+  /// No description provided for @studyPlannerCreateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to create plan'**
+  String get studyPlannerCreateFailed;
+
+  /// No description provided for @studyPlannerDescLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Description (optional)'**
+  String get studyPlannerDescLabel;
+
+  /// No description provided for @studyPlannerSessionsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of Sessions'**
+  String get studyPlannerSessionsCount;
+
+  /// No description provided for @studyPlannerSessionDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration per Session (min)'**
+  String get studyPlannerSessionDuration;
+
+  /// No description provided for @studyPlannerDetailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan Details'**
+  String get studyPlannerDetailTitle;
+
+  /// No description provided for @studyPlannerNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan not found'**
+  String get studyPlannerNotFound;
+
+  /// No description provided for @studyPlannerSessionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions'**
+  String get studyPlannerSessionsTitle;
+
+  /// No description provided for @studyPlannerNoSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'No sessions in this plan'**
+  String get studyPlannerNoSessions;
+
+  /// No description provided for @studyPlannerCreatedFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Created {date}'**
+  String studyPlannerCreatedFormat(String date);
+
+  /// No description provided for @studyPlannerProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get studyPlannerProgress;
+
+  /// No description provided for @studyPlannerSessionComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Session marked as complete'**
+  String get studyPlannerSessionComplete;
+
+  /// No description provided for @studyPlannerUpdateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update plan'**
+  String get studyPlannerUpdateFailed;
+
+  /// No description provided for @studyPlannerTitleHintEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Week 1 Revision'**
+  String get studyPlannerTitleHintEdit;
+
+  /// No description provided for @studyPlannerMinStudy.
+  ///
+  /// In en, this message translates to:
+  /// **'{mins} min study'**
+  String studyPlannerMinStudy(int mins);
+
+  /// No description provided for @studyPlannerCompleteAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get studyPlannerCompleteAction;
+
+  /// No description provided for @chaptersAnalyticsFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load analytics'**
+  String get chaptersAnalyticsFailed;
+
+  /// No description provided for @cheatSheetPrintReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Print ready — use browser Print or screenshot'**
+  String get cheatSheetPrintReady;
+
+  /// No description provided for @curriculumUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Curriculum updated'**
+  String get curriculumUpdated;
+
+  /// No description provided for @friendsFeatureComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Friends Feature Coming Soon'**
+  String get friendsFeatureComingSoon;
+
+  /// No description provided for @copiedEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied {email}'**
+  String copiedEmail(String email);
+
+  /// No description provided for @copyAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get copyAction;
+
+  /// No description provided for @doneAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get doneAction;
+
+  /// No description provided for @selectTwoFormulas.
+  ///
+  /// In en, this message translates to:
+  /// **'Select two formulas to compare'**
+  String get selectTwoFormulas;
+
+  /// No description provided for @variablesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Variables'**
+  String get variablesLabel;
+
+  /// No description provided for @quitPracticeConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Quit Practice?'**
+  String get quitPracticeConfirmTitle;
+
+  /// No description provided for @quitAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Quit'**
+  String get quitAction;
+
+  /// No description provided for @validateKeyAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Validate Key'**
+  String get validateKeyAction;
+
+  /// No description provided for @deleteKeyAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Key'**
+  String get deleteKeyAction;
+
+  /// No description provided for @latexCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'LaTeX copied to clipboard'**
+  String get latexCopied;
+
+  /// No description provided for @addEditNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Add / Edit Note'**
+  String get addEditNote;
+
+  /// No description provided for @compareFormula.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare Formula'**
+  String get compareFormula;
+
+  /// No description provided for @copyLatex.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy LaTeX'**
+  String get copyLatex;
+
+  /// No description provided for @deleteNoteConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete note?'**
+  String get deleteNoteConfirmTitle;
+
+  /// No description provided for @deleteNoteConfirmDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'This cannot be undone.'**
+  String get deleteNoteConfirmDesc;
+
+  /// No description provided for @closeDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Close Details'**
+  String get closeDetails;
 }
 
 class _AppLocalizationsDelegate

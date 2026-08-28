@@ -59,8 +59,8 @@ class FormulaStudyCard extends StatelessWidget {
       case 'copy':
         Clipboard.setData(ClipboardData(text: formula.latex));
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('LaTeX copied to clipboard'),
+          SnackBar(
+            content: Text(context.l10n.latexCopied),
             behavior: SnackBarBehavior.floating,
             duration: AppDurations.delayMedium,
           ),

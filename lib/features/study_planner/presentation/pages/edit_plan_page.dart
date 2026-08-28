@@ -70,7 +70,7 @@ class _EditPlanPageState extends State<EditPlanPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Plan'), centerTitle: true),
+      appBar: AppBar(title: Text(context.l10n.editPlan), centerTitle: true),
       body: BlocListener<StudyPlannerCubit, StudyPlannerState>(
         listenWhen: (prev, curr) => curr.status == StudyPlannerStatus.error,
         listener: (context, state) {
@@ -78,7 +78,7 @@ class _EditPlanPageState extends State<EditPlanPage> {
             SnackBar(
               content: Text(
                 context.localizedError(
-                  fallback: state.errorMessage ?? 'Failed to update plan',
+                  fallback: state.errorMessage ?? context.l10n.studyPlannerUpdateFailed,
                 ),
               ),
             ),
@@ -91,19 +91,19 @@ class _EditPlanPageState extends State<EditPlanPage> {
             children: [
               TextField(
                 controller: _titleCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Plan Title',
-                  hintText: 'e.g. Week 1 Revision',
-                  prefixIcon: Icon(LucideIcons.calendar),
+                decoration: InputDecoration(
+                  labelText: context.l10n.planTitle,
+                  hintText: context.l10n.studyPlannerTitleHintEdit,
+                  prefixIcon: const Icon(LucideIcons.calendar),
                 ),
               ),
               const SizedBox(height: AppDimensions.paddingMD),
               TextField(
                 controller: _descCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Description (optional)',
-                  hintText: 'e.g. Cover chapters 1-3',
-                  prefixIcon: Icon(LucideIcons.fileText),
+                decoration: InputDecoration(
+                  labelText: context.l10n.studyPlannerDescLabel,
+                  // hintText: context.l10n.studyPlannerDescHint,
+                  prefixIcon: const Icon(LucideIcons.fileText),
                 ),
                 maxLines: 2,
               ),
@@ -111,7 +111,7 @@ class _EditPlanPageState extends State<EditPlanPage> {
               FilledButton.icon(
                 onPressed: _savePlan,
                 icon: const Icon(LucideIcons.save),
-                label: const Text('Save Changes'),
+                label: Text(context.l10n.saveChanges),
               ),
             ],
           ),

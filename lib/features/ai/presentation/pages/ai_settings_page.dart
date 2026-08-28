@@ -192,7 +192,7 @@ class _AiSettingsPageState extends State<AiSettingsPage> {
                                       .read<AiSettingsCubit>()
                                       .validate(),
                             icon: const Icon(LucideIcons.checkCircle2),
-                            label: const Text('Validate Key'),
+                            label: Text(context.l10n.validateKeyAction),
                           ),
                         ),
                         if (state.settings.hasApiKey) ...[
@@ -216,7 +216,7 @@ class _AiSettingsPageState extends State<AiSettingsPage> {
                                         .read<AiSettingsCubit>()
                                         .deleteApiKey(),
                               icon: const Icon(LucideIcons.trash2),
-                              label: const Text('Delete Key'),
+                              label: Text(context.l10n.deleteKeyAction),
                             ),
                           ),
                         ],

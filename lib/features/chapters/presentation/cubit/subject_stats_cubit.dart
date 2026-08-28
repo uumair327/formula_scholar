@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:formula_scholar/core/core.dart';
-import 'package:formula_scholar/features/profile/domain/domain.dart';
+import 'package:formula_scholar/shared/domain/ports/streak_provider_port.dart';
 import 'package:formula_scholar/features/chapters/presentation/cubit/chapters_cubit.dart';
 
 class SubjectStatsData {
@@ -22,24 +22,17 @@ class SubjectStatsData {
 
 class SubjectStatsCubit extends Cubit<void> {
   SubjectStatsCubit(
-    this._getProfileStatsUseCase,
+    this._streakProvider,
     this._chaptersCubit,
     this._curriculumCubit,
   ) : super(null);
 
-  final GetProfileStatsUseCase _getProfileStatsUseCase;
+  final StreakProviderPort _streakProvider;
   final ChaptersCubit _chaptersCubit;
   final CurriculumCubit _curriculumCubit;
 
   Future<SubjectStatsData> loadSelected() async {
-    var currentStreak = 0;
-    final statsResult = await _getProfileStatsUseCase.call();
-    if (statsResult is Success<List<ProfileStat>>) {
-      final streakStat = statsResult.data
-          .where((s) => s.id == 'streak')
-          .firstOrNull;
-      currentStreak = int.tryParse(streakStat?.value ?? '0') ?? 0;
-    }
+    final currentStreak = await _streakProvider.getCurrentStreak();
 
     final chapterState = _chaptersCubit.state;
     var total = 0;

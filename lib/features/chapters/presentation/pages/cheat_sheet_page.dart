@@ -89,8 +89,8 @@ class CheatSheetPage extends StatelessWidget {
 
   void _printCheatSheet(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Print ready — use browser Print or screenshot'),
+      SnackBar(
+        content: Text(context.l10n.cheatSheetPrintReady),
       ),
     );
   }

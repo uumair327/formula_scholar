@@ -5,7 +5,6 @@ import '../../../../core/core.dart';
 import '../cubit/dashboard_cubit.dart';
 import '../cubit/dashboard_state.dart';
 import '../cubit/daily_challenges_cubit.dart';
-import '../../saved/presentation/cubit/saved_cubit.dart';
 import '../widgets/widgets.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -77,8 +76,8 @@ class DashboardPage extends StatelessWidget {
               prev.isLoading && !curr.isLoading && curr.curriculum != null,
           listener: (context, state) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Curriculum updated'),
+              SnackBar(
+                content: Text(context.l10n.curriculumUpdated),
                 behavior: SnackBarBehavior.floating,
               ),
             );
@@ -126,7 +125,7 @@ class DashboardPage extends StatelessWidget {
                           delegate: SliverChildListDelegate([
                             if (state.announcements
                                 .where(
-                                  (a) => a.isUrgent || a.isHighPriority || true,
+                                  (a) => a.isUrgent || a.isHighPriority,
                                 )
                                 .isNotEmpty)
                               AnnouncementBanner(
@@ -341,8 +340,10 @@ class DashboardPage extends StatelessWidget {
                                     subjects: state.subjects,
                                     onVaultItemTap: (subject) {
                                       // Navigate to bookmarks tab with filter
-                                      context.read<SavedCubit>().setSubjectFilter(subject.name);
-                                      StatefulNavigationShell.of(context).goBranch(3);
+                                      context.goNamed(
+                                        AppRoutes.savedName,
+                                        queryParameters: {'subject': subject.name},
+                                      );
                                     },
                                   );
                                 },

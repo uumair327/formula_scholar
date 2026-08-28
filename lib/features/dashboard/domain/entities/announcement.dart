@@ -1,5 +1,18 @@
 import 'package:equatable/equatable.dart';
 
+class AnnouncementPriority {
+  static const urgent = 'urgent';
+  static const high = 'high';
+  static const normal = 'normal';
+  static const low = 'low';
+}
+
+class AnnouncementStatus {
+  static const published = 'published';
+  static const draft = 'draft';
+  static const archived = 'archived';
+}
+
 class AppAnnouncement extends Equatable {
   const AppAnnouncement({
     required this.id,
@@ -19,8 +32,8 @@ class AppAnnouncement extends Equatable {
   final String? publishAt;
   final String? expiresAt;
 
-  bool get isUrgent => priority == 'urgent';
-  bool get isHighPriority => priority == 'high' || priority == 'urgent';
+  bool get isUrgent => priority == AnnouncementPriority.urgent;
+  bool get isHighPriority => priority == AnnouncementPriority.high || priority == AnnouncementPriority.urgent;
 
   @override
   List<Object?> get props => [

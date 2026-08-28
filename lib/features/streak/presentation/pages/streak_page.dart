@@ -83,7 +83,7 @@ class _StreakPageState extends State<StreakPage> with SingleTickerProviderStateM
                 controller: _tabController,
                 children: [
                   _PersonalStreakView(currentStreak: widget.currentStreak),
-                  const Center(child: Text('Friends Feature Coming Soon')),
+                  Center(child: Text(context.l10n.friendsFeatureComingSoon)),
                 ],
               ),
             ),

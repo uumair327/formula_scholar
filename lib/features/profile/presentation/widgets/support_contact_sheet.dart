@@ -122,9 +122,9 @@ class SupportContactSheet extends StatelessWidget {
                       if (!context.mounted) return;
                       ScaffoldMessenger.of(
                         context,
-                      ).showSnackBar(SnackBar(content: Text('Copied $email')));
+                      ).showSnackBar(SnackBar(content: Text(context.l10n.copiedEmail(email))));
                     },
-                    child: const Text('Copy'),
+                    child: Text(context.l10n.copyAction),
                   ),
                 ],
               ),
@@ -146,7 +146,7 @@ class SupportContactSheet extends StatelessWidget {
             Center(
               child: FilledButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Done'),
+                child: Text(context.l10n.doneAction),
               ),
             ),
             const SizedBox(height: AppDimensions.paddingMD),

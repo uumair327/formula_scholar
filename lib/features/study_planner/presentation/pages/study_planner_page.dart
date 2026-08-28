@@ -45,7 +45,7 @@ class StudyPlannerPage extends StatelessWidget {
         child: FloatingActionButton.extended(
           onPressed: () => context.pushNamed(AppRoutes.createPlanName),
           icon: const Icon(LucideIcons.plus),
-          label: const Text('New Plan'),
+          label: Text(context.l10n.newPlan),
           backgroundColor: AppColors.transparent,
           foregroundColor: AppColors.onPrimary,
           elevation: 0,
@@ -72,7 +72,7 @@ class StudyPlannerPage extends StatelessWidget {
                   const SizedBox(height: 16),
                   Text(
                     context.localizedError(
-                      fallback: state.errorMessage ?? 'Failed to load plans',
+                      fallback: state.errorMessage ?? context.l10n.studyPlannerFailedToLoad,
                     ),
                   ),
                 ],
@@ -88,7 +88,7 @@ class StudyPlannerPage extends StatelessWidget {
                   AppEmptyState(
                     icon: LucideIcons.calendar,
                     title: context.l10n.noPlansYet,
-                    description: 'Create your first study plan to get started',
+                    description: context.l10n.studyPlannerEmptyDesc,
                   ),
                   const SizedBox(height: AppDimensions.paddingXL),
                   Padding(
@@ -146,12 +146,12 @@ class StudyPlannerPage extends StatelessWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Delete Plan'),
-        content: Text('Delete "${plan.title}"?'),
+        title: Text(context.l10n.deletePlan),
+        content: Text(context.l10n.studyPlannerDeleteConfirm(plan.title)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancelLabel),
           ),
           TextButton(
             onPressed: () {
@@ -164,7 +164,7 @@ class StudyPlannerPage extends StatelessWidget {
               }
               Navigator.of(ctx).pop();
             },
-            child: const Text('Delete'),
+            child: Text(context.l10n.deleteLabel),
           ),
         ],
       ),

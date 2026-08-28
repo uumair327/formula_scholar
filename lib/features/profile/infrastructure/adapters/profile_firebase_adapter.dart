@@ -4,6 +4,12 @@ import 'package:injectable/injectable.dart';
 import '../../domain/domain.dart';
 import '../../../../core/core.dart';
 
+class ProfileConstants {
+  static const defaultName = 'Lone Wolf';
+  static const defaultGrade = 'Class 10';
+  static const guestName = 'Guest';
+}
+
 @LazySingleton(as: ProfileDataSourcePort)
 class ProfileFirebaseAdapter implements ProfileDataSourcePort {
   ProfileFirebaseAdapter(this._api, this._firebaseAuth);
@@ -117,9 +123,9 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
     final currentUser = _firebaseAuth.currentUser;
     if (currentUser == null) {
       return const UserProfile(
-        name: 'Guest',
+        name: ProfileConstants.guestName,
         email: '',
-        grade: 'Class 10',
+        grade: ProfileConstants.defaultGrade,
         board: '',
         avatarUrl: AppAssets.profileHeroAvatarUrl,
         isPro: false,
@@ -147,7 +153,7 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
         'name': authName,
         'email': authEmail,
         'avatarUrl': authPhoto,
-        'grade': 'Class 10',
+        'grade': ProfileConstants.defaultGrade,
         'isPro': false,
       };
       await _api.execute(
@@ -156,9 +162,9 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
       );
 
       return UserProfile(
-        name: authName.isNotEmpty ? authName : 'Lone Wolf',
+        name: authName.isNotEmpty ? authName : ProfileConstants.defaultName,
         email: authEmail,
-        grade: 'Class 10',
+        grade: ProfileConstants.defaultGrade,
         board: '',
         avatarUrl: authPhoto.isNotEmpty
             ? authPhoto
@@ -174,7 +180,7 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
     final fsGrade = _readString(
       data,
       'gradeLabel',
-      fallback: _readString(data, 'grade', fallback: 'Class 10'),
+      fallback: _readString(data, 'grade', fallback: ProfileConstants.defaultGrade),
     );
     final fsBoard = _readString(data, 'boardName');
     final fsAvatarUrl = _readString(data, 'avatarUrl');
@@ -208,7 +214,7 @@ class ProfileFirebaseAdapter implements ProfileDataSourcePort {
     return UserProfile(
       name: (fsName.isNotEmpty ? fsName : authName).isNotEmpty
           ? (fsName.isNotEmpty ? fsName : authName)
-          : 'Lone Wolf',
+          : ProfileConstants.defaultName,
       email: fsEmail.isNotEmpty ? fsEmail : authEmail,
       grade: fsGrade,
       board: fsBoard,

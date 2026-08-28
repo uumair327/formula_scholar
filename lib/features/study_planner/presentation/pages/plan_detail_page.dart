@@ -20,7 +20,7 @@ class PlanDetailPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Plan Details'),
+        title: Text(context.l10n.studyPlannerDetailTitle),
         centerTitle: true,
         actions: [
           IconButton(
@@ -60,7 +60,7 @@ class PlanDetailPage extends StatelessWidget {
                     color: colorScheme.error,
                   ),
                   const SizedBox(height: 16),
-                  const Text('Plan not found'),
+                  Text(context.l10n.studyPlannerNotFound),
                 ],
               ),
             );
@@ -94,16 +94,16 @@ class PlanDetailPage extends StatelessWidget {
       children: [
         _buildHeader(context, plan, colorScheme),
         const SizedBox(height: AppDimensions.paddingLG),
-        _buildProgressSection(plan, colorScheme),
+        _buildProgressSection(context, plan, colorScheme),
         const SizedBox(height: AppDimensions.paddingLG),
-        Text('Sessions', style: AppTextStyles.titleMedium),
+        Text(context.l10n.studyPlannerSessionsTitle, style: AppTextStyles.titleMedium),
         const SizedBox(height: AppDimensions.paddingSM),
         if (plan.sessions.isEmpty)
           Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 32),
               child: Text(
-                'No sessions in this plan',
+                context.l10n.studyPlannerNoSessions,
                 style: AppTextStyles.bodySmall.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),
@@ -144,7 +144,7 @@ class PlanDetailPage extends StatelessWidget {
         ],
         const SizedBox(height: AppDimensions.paddingXS),
         Text(
-          'Created ${_formatDate(plan.createdAt)}',
+          context.l10n.studyPlannerCreatedFormat(_formatDate(plan.createdAt)),
           style: AppTextStyles.labelSmall.copyWith(
             color: colorScheme.onSurfaceVariant,
           ),
@@ -153,14 +153,14 @@ class PlanDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _buildProgressSection(StudyPlan plan, ColorScheme colorScheme) {
+  Widget _buildProgressSection(BuildContext context, StudyPlan plan, ColorScheme colorScheme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Progress', style: AppTextStyles.labelLarge),
+            Text(context.l10n.studyPlannerProgress, style: AppTextStyles.labelLarge),
             Text(
               '${plan.completedSessions}/${plan.totalSessions}',
               style: AppTextStyles.labelLarge.copyWith(
@@ -197,7 +197,7 @@ class PlanDetailPage extends StatelessWidget {
     // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Session marked as complete')));
+    ).showSnackBar(SnackBar(content: Text(context.l10n.studyPlannerSessionComplete)));
   }
 
   String _formatDate(DateTime date) {

@@ -17,6 +17,7 @@ export 'router/router.dart';
 export 'security/security.dart';
 export 'services/services.dart';
 export 'theme/theme.dart';
+export 'network/api_client.dart';
 export 'utils/utils.dart';
 // Also expose shared localization helpers
 export '../shared/localized_error_extensions.dart';
