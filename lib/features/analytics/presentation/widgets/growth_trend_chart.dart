@@ -245,7 +245,7 @@ class _MetricChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: selected ? colorScheme.primaryContainer : Colors.transparent,
+          color: selected ? colorScheme.primaryContainer : AppColors.transparent,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: selected ? colorScheme.primary : colorScheme.outlineVariant,

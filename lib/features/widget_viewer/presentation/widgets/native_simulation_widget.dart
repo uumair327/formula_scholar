@@ -223,10 +223,10 @@ class _SimulationPainter extends CustomPainter {
     // Paint projectile bob
     final currentPos = toScreen(x, y);
     final ballPaint = Paint()
-      ..color = Colors.redAccent
+      ..color = AppColors.error
       ..style = PaintingStyle.fill;
     final glowPaint = Paint()
-      ..color = Colors.redAccent.withValues(alpha: 0.3)
+      ..color = AppColors.error.withValues(alpha: 0.3)
       ..style = PaintingStyle.fill;
 
     canvas.drawCircle(currentPos, 10.0, glowPaint);
@@ -235,7 +235,7 @@ class _SimulationPainter extends CustomPainter {
     // Paint velocity vectors (Vx and Vy) at current position
     final double currentVy = vy0 - g * t;
     final vecPaint = Paint()
-      ..color = Colors.greenAccent
+      ..color = AppColors.successGreen
       ..strokeWidth = 2.0;
 
     // Draw Vx vector
@@ -309,7 +309,7 @@ class _SimulationPainter extends CustomPainter {
     canvas.drawLine(
       bobPos,
       bobPos + const Offset(0, 30),
-      vectorPaint..color = Colors.orangeAccent,
+      vectorPaint..color = AppColors.warningAmber,
     );
 
     // Draw Tension arrow (inwards along string)
@@ -321,7 +321,7 @@ class _SimulationPainter extends CustomPainter {
     canvas.drawLine(
       bobPos,
       bobPos + tensionVec,
-      vectorPaint..color = Colors.blueAccent,
+      vectorPaint..color = AppColors.infoBlue,
     );
 
     // Draw Bob circle
@@ -385,7 +385,7 @@ class _SimulationPainter extends CustomPainter {
 
     // Draw oscillating particles (beads on string) to highlight movement
     final particlePaint = Paint()
-      ..color = Colors.white
+      ..color = AppColors.white
       ..style = PaintingStyle.fill;
 
     for (double x = 50.0; x < size.width - 50; x += 40.0) {

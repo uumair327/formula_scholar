@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:formula_scholar/features/widget_viewer/presentation/widgets/native_graph_widget.dart';
+import 'package:formula_scholar/features/widget_viewer/presentation/widgets/graph_expression_evaluator.dart';
 
 void main() {
   group('GraphExpressionEvaluator & ExprParser Tests', () {

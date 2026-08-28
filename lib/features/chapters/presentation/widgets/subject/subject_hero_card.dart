@@ -26,7 +26,7 @@ class SubjectHeroCard extends StatelessWidget {
               Text(
                 subject.name,
                 style: AppTextStyles.headlineLarge.copyWith(
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontWeight: FontWeight.w800,
                   letterSpacing: -0.5,
                 ),
@@ -37,7 +37,7 @@ class SubjectHeroCard extends StatelessWidget {
                     ? '${subject.subtitle}. ${subject.description}'
                     : subject.description,
                 style: AppTextStyles.bodyMedium.copyWith(
-                  color: Colors.white.withValues(
+                  color: AppColors.white.withValues(
                     alpha: AppDimensions.opacityHigh,
                   ),
                   height: AppDimensions.lineHeightRelaxed,
@@ -57,7 +57,7 @@ class SubjectHeroCard extends StatelessWidget {
                   child: Icon(
                     AppIconMapper.resolve(subject.iconName),
                     size: 160,
-                    color: Colors.white,
+                    color: AppColors.white,
                   ),
                 ),
               ),

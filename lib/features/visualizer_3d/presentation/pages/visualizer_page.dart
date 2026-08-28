@@ -186,14 +186,14 @@ class _Canvas3D extends StatelessWidget {
             ),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.4),
+                color: AppColors.black.withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
                 border: Border.all(
                   color: colorScheme.outline.withValues(alpha: 0.1),
                 ),
                 boxShadow: const [
                   BoxShadow(
-                    color: Colors.black26,
+                    color: AppColors.black26,
                     blurRadius: 15,
                     offset: Offset(0, 5),
                   ),

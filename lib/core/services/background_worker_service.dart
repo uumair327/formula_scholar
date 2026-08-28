@@ -6,12 +6,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/constants/app_firestore_collections.dart';
+import '../utils/app_logger.dart';
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     try {
-      debugPrint('Native called background task: $task');
+      AppLogger.info('Native called background task: $task');
 
       WidgetsFlutterBinding.ensureInitialized();
 
@@ -87,7 +88,7 @@ void callbackDispatcher() {
 
       return Future.value(true);
     } catch (err) {
-      debugPrint('BackgroundWorkerService error: $err');
+      AppLogger.error('BackgroundWorkerService error', error: err);
       return Future.value(false); // Return false on error so Workmanager knows it failed
     }
   });
@@ -104,9 +105,9 @@ class BackgroundWorkerService {
         callbackDispatcher,
       );
       
-      debugPrint('BackgroundWorkerService: Initialized successfully.');
+      AppLogger.info('BackgroundWorkerService: Initialized successfully.');
     } catch (e) {
-      debugPrint('BackgroundWorkerService: Failed to initialize. Error: $e');
+      AppLogger.error('BackgroundWorkerService: Failed to initialize. Error', error: e);
     }
   }
 
@@ -118,9 +119,9 @@ class BackgroundWorkerService {
         _syncTaskName,
         frequency: const Duration(minutes: 15),
       );
-      debugPrint('BackgroundWorkerService: Registered periodic sync task.');
+      AppLogger.info('BackgroundWorkerService: Registered periodic sync task.');
     } catch (e) {
-      debugPrint('BackgroundWorkerService: Failed to register periodic task. Error: $e');
+      AppLogger.error('BackgroundWorkerService: Failed to register periodic task. Error', error: e);
     }
   }
 }

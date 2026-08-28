@@ -89,7 +89,7 @@ class _NativeCircuitWidgetState extends State<NativeCircuitWidget>
               vertical: AppDimensions.paddingSM,
             ),
             decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.7),
+              color: AppColors.black.withValues(alpha: 0.7),
               borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
               border: Border.all(
                 color: colorScheme.primary.withValues(alpha: 0.3),
@@ -111,7 +111,7 @@ class _NativeCircuitWidgetState extends State<NativeCircuitWidget>
                 Text(
                   'I = ${i.toStringAsFixed(2)} A',
                   style: AppTextStyles.titleMedium.copyWith(
-                    color: Colors.greenAccent,
+                    color: AppColors.successGreen,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'monospace',
                   ),
@@ -265,7 +265,7 @@ class _CircuitPainter extends CustomPainter {
 
   void _drawResistor(Canvas canvas, Offset center, double width) {
     final compPaint = Paint()
-      ..color = Colors.orangeAccent
+      ..color = AppColors.warningAmber
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.5;
 
@@ -317,11 +317,11 @@ class _CircuitPainter extends CustomPainter {
     // Left: bottom to top (from y=bottom to y=top)
 
     final electronPaint = Paint()
-      ..color = Colors.yellowAccent
+      ..color = AppColors.warningAmberLight
       ..style = PaintingStyle.fill;
 
     final glowPaint = Paint()
-      ..color = Colors.yellowAccent.withValues(alpha: 0.3)
+      ..color = AppColors.warningAmberLight.withValues(alpha: 0.3)
       ..style = PaintingStyle.fill;
 
     // Number of charges to animate in the loop

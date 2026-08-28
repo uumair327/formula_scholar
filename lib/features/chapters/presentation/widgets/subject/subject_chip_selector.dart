@@ -52,7 +52,7 @@ class SubjectChipSelector extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: isSelected
                       ? colorScheme.primaryContainer
-                      : Colors.transparent,
+                      : AppColors.transparent,
                   borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
                 ),
                 child: Text(

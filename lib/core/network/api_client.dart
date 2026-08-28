@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
 import '../core.dart';
+import '../../core/utils/app_logger.dart';
 
 @lazySingleton
 class ApiClient {
@@ -27,7 +28,7 @@ class ApiClient {
       final response = await _client.get(Uri.parse('$_baseUrl$path'), headers: headers);
       return _processResponse(response);
     } catch (e) {
-      print('GET request failed: $e');
+      AppLogger.error('GET request failed', error: e);
       throw Exception(e.toString());
     }
   }
@@ -42,7 +43,7 @@ class ApiClient {
       );
       return _processResponse(response);
     } catch (e) {
-      print('POST request failed: $e');
+      AppLogger.error('POST request failed', error: e);
       throw Exception(e.toString());
     }
   }
@@ -52,7 +53,7 @@ class ApiClient {
       if (response.body.isEmpty) return null;
       return jsonDecode(response.body);
     } else {
-      print('API Error: ${response.statusCode} - ${response.body}');
+      AppLogger.error('API Error: ${response.statusCode} - ${response.body}');
       throw Exception('HTTP ${response.statusCode}');
     }
   }

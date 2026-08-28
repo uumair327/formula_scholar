@@ -110,7 +110,7 @@ class PreFilterTimedModeCard extends StatelessWidget {
                               border: Border.all(
                                 color: isSelected
                                     ? colorScheme.primary
-                                    : Colors.transparent,
+                                    : AppColors.transparent,
                               ),
                               child: Text(
                                 '$mins min',

@@ -43,7 +43,7 @@ class EmptyBookmarksState extends StatelessWidget {
                 child: const Icon(
                   LucideIcons.bookmark,
                   size: AppDimensions.imageLG,
-                  color: Colors.white,
+                  color: AppColors.white,
                 ),
               ),
               Positioned(

@@ -124,12 +124,12 @@ class _NativeImageWidgetState extends State<NativeImageWidget>
                               color: colorScheme.primary,
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: Colors.white,
+                                color: AppColors.white,
                                 width: 1.5,
                               ),
                               boxShadow: const [
                                 BoxShadow(
-                                  color: Colors.black38,
+                                  color: AppColors.black38,
                                   blurRadius: 4,
                                   offset: Offset(0, 2),
                                 ),
@@ -162,7 +162,7 @@ class _NativeImageWidgetState extends State<NativeImageWidget>
                 ),
                 boxShadow: const [
                   BoxShadow(
-                    color: Colors.black26,
+                    color: AppColors.black26,
                     blurRadius: 10,
                     offset: Offset(0, 4),
                   ),

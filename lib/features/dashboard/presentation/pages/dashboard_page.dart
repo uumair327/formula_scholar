@@ -6,6 +6,7 @@ import '../cubit/dashboard_cubit.dart';
 import '../cubit/dashboard_state.dart';
 import '../cubit/daily_challenges_cubit.dart';
 import '../widgets/widgets.dart';
+import '../widgets/dashboard_sections.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -123,192 +124,36 @@ class DashboardPage extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: hp),
                         sliver: SliverList(
                           delegate: SliverChildListDelegate([
-                            if (state.announcements
-                                .where(
-                                  (a) => a.isUrgent || a.isHighPriority,
-                                )
-                                .isNotEmpty)
-                              AnnouncementBanner(
-                                announcements: state.announcements,
-                                dismissedAnnouncementIds:
-                                    state.dismissedAnnouncementIds,
-                                currentIndex: state.currentAnnouncementIndex,
-                                onPageChanged: (index) => context
-                                    .read<DashboardCubit>()
-                                    .setAnnouncementIndex(index),
-                                onDismiss: (id) => context
-                                    .read<DashboardCubit>()
-                                    .dismissAnnouncement(id),
-                              ),
+                            DashboardAnnouncementSection(state: state),
                             const SizedBox(
                               height: AppDimensions.paddingSection,
                             ),
                             EntranceWrapper(
-                              child: Builder(
-                                builder: (context) {
-                                  final String heroBadge =
-                                      (state.localizedContent['dashboard.hero.badge']
-                                              ?.trim()
-                                              .isNotEmpty ??
-                                          false)
-                                      ? state
-                                            .localizedContent['dashboard.hero.badge']!
-                                      : context.l10n.dashboardHeroBadge;
-
-                                  final String heroTitle =
-                                      (state.localizedContent['dashboard.hero.title']
-                                              ?.trim()
-                                              .isNotEmpty ??
-                                          false)
-                                      ? state
-                                            .localizedContent['dashboard.hero.title']!
-                                      : context.l10n.dashboardHeroTitle;
-
-                                  final progressVal =
-                                      state.progress?.masteryPercentage
-                                          .toInt() ??
-                                      0;
-                                  String heroDescription;
-                                  if (state
-                                          .localizedContent['dashboard.hero.description']
-                                          ?.trim()
-                                          .isNotEmpty ??
-                                      false) {
-                                    heroDescription = state
-                                        .localizedContent['dashboard.hero.description']!
-                                        .replaceAll(
-                                          '{progress}',
-                                          progressVal.toString(),
-                                        );
-                                  } else {
-                                    heroDescription = context.l10n
-                                        .dashboardHeroDescription(progressVal);
-                                  }
-
-                                  final String resumeLabel =
-                                      (state.localizedContent['dashboard.hero.resume']
-                                              ?.trim()
-                                              .isNotEmpty ??
-                                          false)
-                                      ? state
-                                            .localizedContent['dashboard.hero.resume']!
-                                      : context.l10n.dashboardResumeLesson;
-
-                                  final String semanticLabel =
-                                      (state.localizedContent['dashboard.hero.resumeSemantic']
-                                              ?.trim()
-                                              .isNotEmpty ??
-                                          false)
-                                      ? state
-                                            .localizedContent['dashboard.hero.resumeSemantic']!
-                                      : context.l10n.dashboardResumeSemantic;
-
-                                  return HeroStatusCard(
-                                    badge: heroBadge,
-                                    title: heroTitle,
-                                    description: heroDescription,
-                                    resumeLabel: resumeLabel,
-                                    semanticLabel: semanticLabel,
-                                    onResume: () =>
-                                        resumeLearning(context, state),
-                                  );
-                                },
+                              child: DashboardHeroSection(
+                                state: state,
+                                onResume: (ctx, s) => resumeLearning(ctx, s),
                               ),
                             ),
                             const SizedBox(
                               height: AppDimensions.paddingSection,
                             ),
-                            if (state.banners
-                                .where((b) => b.isActive)
-                                .isNotEmpty)
-                              EntranceWrapper(
-                                delay: const Duration(milliseconds: 50),
-                                child: CarouselBanners(
-                                  banners: state.banners,
-                                  currentPage: state.currentBannerIndex,
-                                  onPageChanged: (index) => context
-                                      .read<DashboardCubit>()
-                                      .setBannerIndex(index),
-                                ),
-                              ),
+                            DashboardBannersSection(state: state),
                             const SizedBox(
                               height: AppDimensions.paddingSection,
                             ),
                             EntranceWrapper(
                               delay: const Duration(milliseconds: 100),
-                              child: Builder(
-                                builder: (context) {
-                                  final sectionTitle =
-                                      (state.localizedContent['dashboard.quickActions.title']
-                                              ?.trim()
-                                              .isNotEmpty ??
-                                          false)
-                                      ? state
-                                            .localizedContent['dashboard.quickActions.title']!
-                                      : context.l10n.quickActionsTitle;
-
-                                  final studyPlannerLabel =
-                                      (state.localizedContent['dashboard.quickActions.studyPlanner']
-                                              ?.trim()
-                                              .isNotEmpty ??
-                                          false)
-                                      ? state
-                                            .localizedContent['dashboard.quickActions.studyPlanner']!
-                                      : context.l10n.studyPlanner;
-
-                                  final analyticsLabel =
-                                      (state.localizedContent['dashboard.quickActions.analytics']
-                                              ?.trim()
-                                              .isNotEmpty ??
-                                          false)
-                                      ? state
-                                            .localizedContent['dashboard.quickActions.analytics']!
-                                      : context.l10n.viewAnalytics;
-
-                                  final flashcardsLabel =
-                                      (state.localizedContent['dashboard.quickActions.flashcards']
-                                              ?.trim()
-                                              .isNotEmpty ??
-                                          false)
-                                      ? state
-                                            .localizedContent['dashboard.quickActions.flashcards']!
-                                      : context.l10n.flashcards;
-
-                                  return QuickActionsSection(
-                                    sectionTitle: sectionTitle,
-                                    studyPlannerLabel: studyPlannerLabel,
-                                    analyticsLabel: analyticsLabel,
-                                    flashcardsLabel: flashcardsLabel,
-                                  );
-                                },
-                              ),
+                              child: DashboardQuickActionsSection(state: state),
                             ),
                             const SizedBox(
                               height: AppDimensions.paddingSection,
                             ),
                             EntranceWrapper(
                               delay: const Duration(milliseconds: 100),
-                              child: BlocProvider(
-                                create: (_) => getIt<DailyChallengesCubit>(),
-                                child: AcademicPathSection(
-                                  subjects: state.subjects,
-                                  onSubjectTap: (subject) =>
-                                      onSubjectTap(context, subject),
-                                  onShowAnalytics: (subject) =>
-                                      showSubjectAnalytics(
-                                        context,
-                                        state,
-                                        subject,
-                                      ),
-                                  onViewAll: () {
-                                    context
-                                        .read<SubjectSelectionCubit>()
-                                        .clearSelection();
-                                    StatefulNavigationShell.of(
-                                      context,
-                                    ).goBranch(1);
-                                  },
-                                ),
+                              child: DashboardAcademicPathSection(
+                                state: state,
+                                onSubjectTap: onSubjectTap,
+                                showSubjectAnalytics: showSubjectAnalytics,
                               ),
                             ),
                             const SizedBox(
@@ -316,38 +161,7 @@ class DashboardPage extends StatelessWidget {
                             ),
                             EntranceWrapper(
                               delay: const Duration(milliseconds: 150),
-                              child: Builder(
-                                builder: (context) {
-                                  final vaultDesc =
-                                      (state.localizedContent['dashboard.vault.description']
-                                              ?.trim()
-                                              .isNotEmpty ??
-                                          false)
-                                      ? state
-                                            .localizedContent['dashboard.vault.description']!
-                                      : context.l10n
-                                            .dashboardVaultDescWithCounts(
-                                              state.subjects.fold<int>(
-                                                0,
-                                                (sum, s) =>
-                                                    sum + s.formulaCount,
-                                              ),
-                                              state.subjects.length,
-                                            );
-                                  return FormulaVaultSection(
-                                    description: vaultDesc,
-                                    vaultItems: state.vaultItems,
-                                    subjects: state.subjects,
-                                    onVaultItemTap: (subject) {
-                                      // Navigate to bookmarks tab with filter
-                                      context.goNamed(
-                                        AppRoutes.savedName,
-                                        queryParameters: {'subject': subject.name},
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
+                              child: DashboardFormulaVaultSection(state: state),
                             ),
                             const SizedBox(height: AppDimensions.paddingLG),
                             EntranceWrapper(

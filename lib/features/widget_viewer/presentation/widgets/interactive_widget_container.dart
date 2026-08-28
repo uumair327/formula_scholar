@@ -164,7 +164,7 @@ class _InteractiveWidgetContainerState
             height: 280,
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.15),
+              color: AppColors.black.withValues(alpha: 0.15),
               border: Border(
                 top: BorderSide(
                   color: colorScheme.outline.withValues(alpha: 0.05),

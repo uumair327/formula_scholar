@@ -8,7 +8,7 @@ Future<void> showEditProfileBottomSheet(BuildContext context) async {
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
-    backgroundColor: Colors.transparent,
+    backgroundColor: AppColors.transparent,
     builder: (bottomSheetContext) {
       return BlocProvider.value(
         value: context.read<ProfileCubit>(),
@@ -171,7 +171,7 @@ class _EditProfileBottomSheetContentState
                       border: Border.all(
                         color: isSelected 
                             ? AppColors.primary 
-                            : Colors.transparent,
+                            : AppColors.transparent,
                         width: 3,
                       ),
                       boxShadow: isSelected
@@ -241,7 +241,7 @@ class _EditProfileBottomSheetContentState
                           width: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
                           ),
                         )
                       : Text(context.l10n.saveChanges),

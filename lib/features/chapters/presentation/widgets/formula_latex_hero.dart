@@ -32,8 +32,8 @@ class FormulaLatexHero extends StatelessWidget {
             end: Alignment.bottomRight,
             colors: isDark
                 ? [
-                    const Color(0xFF111827), // Deep cool gray
-                    const Color(0xFF1F2937),
+                    colorScheme.surfaceContainerLowest, // Deep cool gray equivalent
+                    colorScheme.surfaceContainerLow,
                   ]
                 : [
                     colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
@@ -63,7 +63,7 @@ class FormulaLatexHero extends StatelessWidget {
             child: Math.tex(
               formula.latex,
               textStyle: AppTextStyles.headlineMedium.copyWith(
-                color: isDark ? Colors.white : colorScheme.onSurface,
+                color: isDark ? AppColors.white : colorScheme.onSurface,
                 fontWeight: FontWeight.w600,
               ),
             ),

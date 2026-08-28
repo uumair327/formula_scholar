@@ -135,49 +135,47 @@ class DailyChallengeDialog extends StatelessWidget {
   }
 
   void _showResult(NavigatorState navigator, bool isCorrect) {
-    navigator.push(
-      DialogRoute(
-        context: navigator.context,
-        builder: (dialogContext) {
-          final colorScheme = Theme.of(dialogContext).colorScheme;
+    showDialog(
+      context: navigator.context,
+      builder: (dialogContext) {
+        final colorScheme = Theme.of(dialogContext).colorScheme;
 
-          return AlertDialog(
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  isCorrect ? LucideIcons.checkCircle : LucideIcons.xCircle,
-                  size: 48,
-                  color: isCorrect ? colorScheme.secondary : colorScheme.error,
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                isCorrect ? LucideIcons.checkCircle : LucideIcons.xCircle,
+                size: 48,
+                color: isCorrect ? colorScheme.secondary : colorScheme.error,
+              ),
+              const SizedBox(height: AppDimensions.paddingMD),
+              Text(
+                isCorrect ? 'Correct!' : 'Not quite',
+                style: AppTextStyles.titleLarge.copyWith(
+                  fontWeight: FontWeight.w700,
                 ),
-                const SizedBox(height: AppDimensions.paddingMD),
-                Text(
-                  isCorrect ? 'Correct!' : 'Not quite',
-                  style: AppTextStyles.titleLarge.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+              ),
+              const SizedBox(height: AppDimensions.paddingSM),
+              Text(
+                isCorrect
+                    ? 'Great job! Keep up the daily practice.'
+                    : 'Keep practicing! You will get it next time.',
+                textAlign: TextAlign.center,
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: colorScheme.onSurfaceVariant,
                 ),
-                const SizedBox(height: AppDimensions.paddingSM),
-                Text(
-                  isCorrect
-                      ? 'Great job! Keep up the daily practice.'
-                      : 'Keep practicing! You will get it next time.',
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(dialogContext).pop(),
-                child: Text(dialogContext.l10n.gotIt),
               ),
             ],
-          );
-        },
-      ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text(dialogContext.l10n.gotIt),
+            ),
+          ],
+        );
+      },
     );
   }
 }

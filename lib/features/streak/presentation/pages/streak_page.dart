@@ -37,7 +37,7 @@ class _StreakPageState extends State<StreakPage> with SingleTickerProviderStateM
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: AppColors.transparent,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
@@ -126,7 +126,7 @@ class _PersonalStreakView extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: currentStreak >= 365 
                             ? Colors.orange.shade300 
-                            : Colors.white.withValues(alpha: 0.2),
+                            : AppColors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
                       ),
                       child: Row(
@@ -136,7 +136,7 @@ class _PersonalStreakView extends StatelessWidget {
                             Icon(
                               LucideIcons.lock,
                               size: 14,
-                              color: Colors.white.withValues(alpha: 0.8),
+                              color: AppColors.white.withValues(alpha: 0.8),
                             ),
                             const SizedBox(width: 4),
                           ],
@@ -145,7 +145,7 @@ class _PersonalStreakView extends StatelessWidget {
                             style: AppTextStyles.labelSmall.copyWith(
                               color: currentStreak >= 365 
                                   ? Colors.orange.shade900 
-                                  : Colors.white.withValues(alpha: 0.8),
+                                  : AppColors.white.withValues(alpha: 0.8),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -156,7 +156,7 @@ class _PersonalStreakView extends StatelessWidget {
                     Text(
                       currentStreak.toString(),
                       style: AppTextStyles.displayLarge.copyWith(
-                        color: Colors.white,
+                        color: AppColors.white,
                         fontWeight: FontWeight.w900,
                         fontSize: 64,
                         height: 1,
@@ -165,7 +165,7 @@ class _PersonalStreakView extends StatelessWidget {
                     Text(
                       'day streak!',
                       style: AppTextStyles.titleLarge.copyWith(
-                        color: Colors.white,
+                        color: AppColors.white,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -248,7 +248,7 @@ class _PersonalStreakView extends StatelessWidget {
                             ),
                             child: const Icon(
                               Icons.ac_unit_rounded,
-                              color: Colors.white,
+                              color: AppColors.white,
                             ),
                           ),
                           const SizedBox(width: AppDimensions.paddingMD),

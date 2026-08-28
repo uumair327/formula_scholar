@@ -272,7 +272,7 @@ class ThreeDCanvasPainter extends CustomPainter {
     );
 
     final laserIn = Paint()
-      ..color = Colors.white
+      ..color = AppColors.white
       ..strokeWidth = 3.0;
     canvas.drawLine(inputStart, inputEnd, laserIn);
     final laserRefract = Paint()

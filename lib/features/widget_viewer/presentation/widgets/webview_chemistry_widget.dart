@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../../../../core/core.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:webview_flutter/webview_flutter.dart';
 import 'platform_view_registry.dart';
@@ -35,7 +36,7 @@ class _WebviewChemistryWidgetState extends State<WebviewChemistryWidget> {
     } else {
       _controller = WebViewController()
         ..setJavaScriptMode(JavaScriptMode.unrestricted)
-        ..setBackgroundColor(Colors.transparent)
+        ..setBackgroundColor(AppColors.transparent)
         ..setNavigationDelegate(
           NavigationDelegate(
             onPageFinished: (url) {
@@ -77,7 +78,7 @@ class _WebviewChemistryWidgetState extends State<WebviewChemistryWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black.withValues(alpha: 0.4),
+      color: AppColors.black.withValues(alpha: 0.4),
       child: kIsWeb
           ? HtmlElementView(viewType: _viewId)
           : WebViewWidget(controller: _controller!),

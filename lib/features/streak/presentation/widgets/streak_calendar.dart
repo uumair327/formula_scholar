@@ -152,14 +152,14 @@ class _DayCell extends StatelessWidget {
     Color textColor = colorScheme.onSurface;
     
     if (isActive) {
-      bgColor = Colors.orangeAccent;
-      textColor = Colors.white;
+      bgColor = AppColors.warningAmber;
+      textColor = AppColors.white;
     } else if (isFreeze) {
-      bgColor = Colors.lightBlueAccent;
-      textColor = Colors.white;
+      bgColor = AppColors.infoBlueLight;
+      textColor = AppColors.white;
     } else if (isJoinDate) {
-      bgColor = Colors.redAccent.withValues(alpha: 0.1);
-      textColor = Colors.redAccent;
+      bgColor = AppColors.error.withValues(alpha: 0.1);
+      textColor = AppColors.error;
     }
 
     return Container(
@@ -167,7 +167,7 @@ class _DayCell extends StatelessWidget {
         color: bgColor,
         shape: BoxShape.circle,
         border: isJoinDate && !isActive
-            ? Border.all(color: Colors.redAccent, width: 2)
+            ? Border.all(color: AppColors.error, width: 2)
             : null,
       ),
       alignment: Alignment.center,
@@ -188,7 +188,7 @@ class _DayCell extends StatelessWidget {
               child: Icon(
                 LucideIcons.flame,
                 size: 12,
-                color: Colors.white,
+                color: AppColors.white,
               ),
             )
           else if (isFreeze)
@@ -197,7 +197,7 @@ class _DayCell extends StatelessWidget {
               child: Icon(
                 Icons.ac_unit_rounded,
                 size: 12,
-                color: Colors.white,
+                color: AppColors.white,
               ),
             )
           else if (isJoinDate)
@@ -206,7 +206,7 @@ class _DayCell extends StatelessWidget {
               child: Icon(
                 LucideIcons.sparkles,
                 size: 12,
-                color: Colors.redAccent,
+                color: AppColors.error,
               ),
             ),
         ],

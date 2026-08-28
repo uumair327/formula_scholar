@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/core.dart';
 
 import '../../../visualizer_3d/visualizer_3d.dart';
+import '../widgets/visualizer_widgets.dart';
 import '../cubit/formulas_cubit.dart';
 import '../cubit/formulas_state.dart';
 import '../../domain/entities/formula.dart';
@@ -128,7 +129,30 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
             child: Column(
               children: [
                 // Top Formula Card Selector
-                _buildFormulaSelector(context, colorScheme),
+                VisualizerFormulaSelector(
+                  subjectFormulas: _subjectFormulas,
+                  selectedFormulaIndex: _selectedFormulaIndex,
+                  onPrevious: _selectedFormulaIndex > 0
+                      ? () {
+                          setState(() {
+                            _selectedFormulaIndex--;
+                            _resetParamsForFormula(
+                              _subjectFormulas[_selectedFormulaIndex],
+                            );
+                          });
+                        }
+                      : null,
+                  onNext: _selectedFormulaIndex < _subjectFormulas.length - 1
+                      ? () {
+                          setState(() {
+                            _selectedFormulaIndex++;
+                            _resetParamsForFormula(
+                              _subjectFormulas[_selectedFormulaIndex],
+                            );
+                          });
+                        }
+                      : null,
+                ),
 
                 // Beautiful interactive canvas
                 Expanded(
@@ -148,7 +172,7 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
                       ),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.4),
+                          color: AppColors.black.withValues(alpha: 0.4),
                           borderRadius: BorderRadius.circular(
                             AppDimensions.radiusXL,
                           ),
@@ -157,7 +181,7 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
                           ),
                           boxShadow: const [
                             BoxShadow(
-                              color: Colors.black26,
+                              color: AppColors.black26,
                               blurRadius: 15,
                               offset: Offset(0, 5),
                             ),
@@ -200,9 +224,9 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
                                         TextDirection.rtl
                                     ? AppDimensions.paddingMD
                                     : null,
-                                child: _buildHologramStat(
-                                  'ROTATION Y',
-                                  '${(_angleY * 180 / math.pi).round() % 360}°',
+                                child: HologramStatIndicator(
+                                  label: 'ROTATION Y',
+                                  value: '${(_angleY * 180 / math.pi).round() % 360}°',
                                 ),
                               ),
                               Positioned(
@@ -217,9 +241,9 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
                                         TextDirection.rtl
                                     ? AppDimensions.paddingMD
                                     : null,
-                                child: _buildHologramStat(
-                                  'VISUALIZER MODE',
-                                  type.name.toUpperCase(),
+                                child: HologramStatIndicator(
+                                  label: 'VISUALIZER MODE',
+                                  value: type.name.toUpperCase(),
                                 ),
                               ),
                             ],
@@ -231,246 +255,21 @@ class _Visualizer3DPageState extends State<Visualizer3DPage>
                 ),
 
                 // Controls & Interaction panel
-                _buildControlsPanel(context, formula, colorScheme),
+                VisualizerControlsPanel(
+                  formula: formula,
+                  visualizerType: type,
+                  paramA: _paramA,
+                  paramB: _paramB,
+                  paramC: _paramC,
+                  onParamAChanged: (val) => setState(() => _paramA = val),
+                  onParamBChanged: (val) => setState(() => _paramB = val),
+                  onParamCChanged: (val) => setState(() => _paramC = val),
+                ),
               ],
             ),
           );
         },
       ),
-    );
-  }
-
-  Widget _buildHologramStat(String label, String value) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppDimensions.paddingSM,
-        vertical: AppDimensions.paddingXS,
-      ),
-      decoration: BoxDecoration(
-        color: colorScheme.surface.withValues(alpha: 0.6),
-        borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
-        border: Border.all(color: colorScheme.primary.withValues(alpha: 0.2)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: AppTextStyles.bodySmall.copyWith(
-              fontSize: 8,
-              letterSpacing: 1.5,
-              fontWeight: FontWeight.bold,
-              color: colorScheme.primary.withValues(alpha: 0.7),
-            ),
-          ),
-          Text(
-            value,
-            style: AppTextStyles.bodySmall.copyWith(
-              fontSize: 10,
-              fontWeight: FontWeight.w700,
-              color: colorScheme.onSurface,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFormulaSelector(BuildContext context, ColorScheme colorScheme) {
-    return Padding(
-      padding: const EdgeInsets.all(AppDimensions.paddingMD),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'STUDY REFERENCE',
-                style: AppTextStyles.bodySmall.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: colorScheme.primary,
-                ),
-              ),
-              Text(
-                '${_selectedFormulaIndex + 1} of ${_subjectFormulas.length}',
-                style: AppTextStyles.bodySmall.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppDimensions.paddingXS),
-          AppCard(
-            color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.8),
-            child: Row(
-              children: [
-                IconButton(
-                  icon: Icon(
-                    Directionality.of(context) == TextDirection.rtl
-                        ? LucideIcons.chevronRight
-                        : LucideIcons.chevronLeft,
-                  ),
-                  tooltip: context.l10n.previousFormula,
-                  onPressed: _selectedFormulaIndex > 0
-                      ? () {
-                          setState(() {
-                            _selectedFormulaIndex--;
-                            _resetParamsForFormula(
-                              _subjectFormulas[_selectedFormulaIndex],
-                            );
-                          });
-                        }
-                      : null,
-                ),
-                Expanded(
-                  child: Column(
-                    children: [
-                      Text(
-                        _subjectFormulas[_selectedFormulaIndex].title,
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: AppDimensions.paddingXS),
-                      Text(
-                        _subjectFormulas[_selectedFormulaIndex].latex,
-                        style: AppTextStyles.bodySmall.copyWith(
-                          fontFamily: 'monospace',
-                          color: colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(
-                    Directionality.of(context) == TextDirection.rtl
-                        ? LucideIcons.chevronLeft
-                        : LucideIcons.chevronRight,
-                  ),
-                  tooltip: context.l10n.nextFormula,
-                  onPressed: _selectedFormulaIndex < _subjectFormulas.length - 1
-                      ? () {
-                          setState(() {
-                            _selectedFormulaIndex++;
-                            _resetParamsForFormula(
-                              _subjectFormulas[_selectedFormulaIndex],
-                            );
-                          });
-                        }
-                      : null,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildControlsPanel(
-    BuildContext context,
-    Formula formula,
-    ColorScheme colorScheme,
-  ) {
-    final type = _getVisualizerType(formula);
-    String labelA = 'Radius';
-    String labelB = 'Height';
-    String labelC = 'Rotation';
-
-    if (type == VisualizerType.frustum) {
-      labelA = 'Bottom Radius';
-      labelB = 'Top Radius';
-      labelC = 'Height';
-    } else if (type == VisualizerType.gravitation) {
-      labelA = 'Mass Factor';
-      labelB = 'Orbit Distance';
-      labelC = 'Orbital Speed';
-    } else if (type == VisualizerType.refraction) {
-      labelA = 'Beam Angle';
-      labelB = 'Prism Size';
-      labelC = 'Refraction Index';
-    } else if (type == VisualizerType.quadratic) {
-      labelA = 'Variable A';
-      labelB = 'Variable B';
-      labelC = 'Variable C';
-    }
-
-    return Padding(
-      padding: const EdgeInsets.all(AppDimensions.paddingMD),
-      child: AppCard(
-        child: Column(
-          children: [
-            _buildSliderRow(labelA, _paramA, 0.2, 2.0, (val) {
-              setState(() => _paramA = val);
-            }, colorScheme),
-            _buildSliderRow(labelB, _paramB, 0.5, 2.5, (val) {
-              setState(() => _paramB = val);
-            }, colorScheme),
-            _buildSliderRow(labelC, _paramC, 0.1, 2.0, (val) {
-              setState(() => _paramC = val);
-            }, colorScheme),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSliderRow(
-    String label,
-    double value,
-    double min,
-    double max,
-    ValueChanged<double> onChanged,
-    ColorScheme colorScheme,
-  ) {
-    return Row(
-      children: [
-        SizedBox(
-          width: 90,
-          child: Text(
-            label,
-            style: AppTextStyles.bodySmall.copyWith(
-              fontWeight: FontWeight.bold,
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ),
-        Expanded(
-          child: SliderTheme(
-            data: SliderThemeData(
-              activeTrackColor: colorScheme.primary,
-              inactiveTrackColor: colorScheme.outline.withValues(alpha: 0.2),
-              thumbColor: colorScheme.primary,
-              overlayColor: colorScheme.primary.withValues(alpha: 0.1),
-            ),
-            child: Slider(
-              value: value,
-              min: min,
-              max: max,
-              onChanged: onChanged,
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 40,
-          child: Text(
-            value.toStringAsFixed(2),
-            style: AppTextStyles.bodySmall.copyWith(
-              fontWeight: FontWeight.bold,
-              fontFamily: 'monospace',
-            ),
-            textAlign: TextAlign.end,
-          ),
-        ),
-      ],
     );
   }
 

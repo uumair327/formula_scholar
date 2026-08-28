@@ -126,7 +126,7 @@ class _CurriculumButton extends StatelessWidget {
       label: 'Select curriculum',
       button: true,
       child: Material(
-        color: Colors.transparent,
+        color: AppColors.transparent,
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
@@ -242,7 +242,7 @@ class _StatBadge extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Material(
-      color: Colors.transparent,
+      color: AppColors.transparent,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppDimensions.radiusPill),

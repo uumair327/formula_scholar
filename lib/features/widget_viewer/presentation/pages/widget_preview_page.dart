@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import '../../../../core/core.dart';
 import '../widgets/interactive_widget_container.dart';
 
 class WidgetPreviewScreen extends StatelessWidget {
@@ -11,7 +12,7 @@ class WidgetPreviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     if (configB64 == null || configB64!.isEmpty) {
       return const Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.transparent,
         body: Center(
           child: Text(
             'No configuration provided.',
@@ -30,7 +31,7 @@ class WidgetPreviewScreen extends StatelessWidget {
       widgetConfig = jsonDecode(jsonStr) as Map<String, dynamic>;
     } catch (e) {
       return Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.transparent,
         body: Center(
           child: Text(
             'Invalid configuration: $e',
@@ -41,7 +42,7 @@ class WidgetPreviewScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       body: Center(
         child: InteractiveWidgetContainer(widgetConfig: widgetConfig),
       ),

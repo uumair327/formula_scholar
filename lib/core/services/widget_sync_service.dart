@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import '../utils/app_logger.dart';
 import 'package:home_widget/home_widget.dart';
 
 /// Service responsible for syncing app state data to native home screen widgets.
@@ -25,9 +26,9 @@ class WidgetSyncService {
       // Handle app opened from a widget while app is running
       HomeWidget.widgetClicked.listen(_handleWidgetRouting);
 
-      debugPrint('WidgetSyncService: Initialized successfully.');
+      AppLogger.info('WidgetSyncService: Initialized successfully.');
     } catch (e) {
-      debugPrint('WidgetSyncService: Failed to initialize. Error: $e');
+      AppLogger.error('WidgetSyncService: Failed to initialize. Error', error: e);
     }
   }
 
@@ -41,7 +42,7 @@ class WidgetSyncService {
         // AppRouter.router.go(AppRoutes.studyPlannerPath)
       }
     } catch (e) {
-      debugPrint('Widget routing failed: $e');
+      AppLogger.error('Widget routing failed', error: e);
     }
   }
 
@@ -73,9 +74,9 @@ class WidgetSyncService {
         androidName: androidStreakWidgetName,
       );
 
-      debugPrint('WidgetSyncService: Streak widget updated successfully.');
+      AppLogger.info('WidgetSyncService: Streak widget updated successfully.');
     } catch (e) {
-      debugPrint('WidgetSyncService: Failed to update streak widget. Error: $e');
+      AppLogger.error('WidgetSyncService: Failed to update streak widget. Error', error: e);
     }
   }
 
@@ -103,9 +104,9 @@ class WidgetSyncService {
         androidName: androidPlannerWidgetName,
       );
 
-      debugPrint('WidgetSyncService: Planner widget updated successfully.');
+      AppLogger.info('WidgetSyncService: Planner widget updated successfully.');
     } catch (e) {
-      debugPrint('WidgetSyncService: Failed to update planner widget. Error: $e');
+      AppLogger.error('WidgetSyncService: Failed to update planner widget. Error', error: e);
     }
   }
 }

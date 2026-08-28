@@ -79,7 +79,7 @@ class _NativeModel3DWidgetState extends State<NativeModel3DWidget>
         });
       },
       child: Container(
-        color: Colors.black.withValues(alpha: 0.3),
+        color: AppColors.black.withValues(alpha: 0.3),
         child: RepaintBoundary(
           child: Stack(
             children: [

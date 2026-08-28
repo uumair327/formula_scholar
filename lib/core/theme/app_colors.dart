@@ -118,6 +118,9 @@ abstract final class AppColors {
   // ──────────────────────── Core utility ─────────────────────────
   static const Color white = Color(0xFFFFFFFF);
   static const Color transparent = Color(0x00000000);
+  static const Color black = Color(0xFF000000);
+  static const Color black38 = Color(0x61000000);
+  static const Color black26 = Color(0x42000000);
 
   // ═══════════════════════════════════════════════════════════════
   // PREMIUM DESIGN EXTENSIONS

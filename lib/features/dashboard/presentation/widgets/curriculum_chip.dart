@@ -50,11 +50,11 @@ class _CurriculumChipState extends State<CurriculumChip> {
                       ? AppColors.darkPrimaryGradient
                       : AppColors.primaryGradient)
                 : null,
-            color: selected ? null : Colors.transparent,
+            color: selected ? null : AppColors.transparent,
             borderRadius: BorderRadius.circular(AppDimensions.radiusXXL),
             border: Border.all(
               color: selected
-                  ? Colors.transparent
+                  ? AppColors.transparent
                   : colorScheme.outlineVariant.withValues(alpha: 0.4),
             ),
             boxShadow: selected ? const [AppShadows.chip] : null,

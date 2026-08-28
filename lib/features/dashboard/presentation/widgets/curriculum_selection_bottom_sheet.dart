@@ -16,7 +16,7 @@ Future<void> showCurriculumSelectionBottomSheet(
   return showModalBottomSheet(
     context: context,
     isScrollControlled: true,
-    backgroundColor: Colors.transparent,
+    backgroundColor: AppColors.transparent,
     builder: (sheetContext) => BlocProvider.value(
       value: optionsCubit,
       child: const CurriculumSelectionBottomSheet(),
