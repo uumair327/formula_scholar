@@ -207,6 +207,13 @@ abstract final class AppColors {
     colors: [Color(0xFF690005), Color(0xFFBA1A1A)],
   );
 
+  /// Dark mode interactive widget container gradient.
+  static const LinearGradient darkInteractiveWidgetGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF111827), Color(0xFF1F2937)],
+  );
+
   /// Returns the primary gradient for the current brightness.
   static LinearGradient primaryGradientOf(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark

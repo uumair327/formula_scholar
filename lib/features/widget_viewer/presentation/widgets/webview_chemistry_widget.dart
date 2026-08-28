@@ -35,7 +35,7 @@ class _WebviewChemistryWidgetState extends State<WebviewChemistryWidget> {
     } else {
       _controller = WebViewController()
         ..setJavaScriptMode(JavaScriptMode.unrestricted)
-        ..setBackgroundColor(const Color(0x00000000))
+        ..setBackgroundColor(Colors.transparent)
         ..setNavigationDelegate(
           NavigationDelegate(
             onPageFinished: (url) {

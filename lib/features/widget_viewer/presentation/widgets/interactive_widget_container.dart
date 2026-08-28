@@ -85,12 +85,12 @@ class _InteractiveWidgetContainerState
 
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: isDark
-              ? [const Color(0xFF111827), const Color(0xFF1F2937)]
-              : [
+        gradient: isDark
+            ? AppColors.darkInteractiveWidgetGradient
+            : LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
                   colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                   colorScheme.surfaceContainerHighest.withValues(alpha: 0.1),
                 ],
