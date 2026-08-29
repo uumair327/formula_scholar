@@ -260,6 +260,7 @@ class _FakeRepository implements StudyPlannerRepositoryPort {
     required String userId,
     required String planId,
     required String sessionId,
+    SessionStatus? status,
     DocumentReference? transactionRef,
   }) async {}
 }
@@ -378,6 +379,7 @@ class MockUpdateSessionUseCase extends UpdateSessionUseCase {
     required String userId,
     required String planId,
     required String sessionId,
+    SessionStatus? status,
     DocumentReference? transactionRef,
   }) async {
     callCount++;

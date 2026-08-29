@@ -29,10 +29,17 @@ class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
     );
   }
 
+  DateTime _parseDate(dynamic d) {
+    if (d is Timestamp) return d.toDate();
+    if (d is String) return DateTime.tryParse(d) ?? DateTime.now();
+    return DateTime.now();
+  }
+
   StudyPlan _docToPlan(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data() as Map<String, dynamic>? ?? {};
     final sessionsData = (data['sessions'] as List<dynamic>? ?? [])
-        .map((s) => _sessionFromMap(s as Map<String, dynamic>))
+        .whereType<Map>()
+        .map((s) => _sessionFromMap(Map<String, dynamic>.from(s)))
         .toList();
     return StudyPlan(
       id: doc.id,
@@ -40,8 +47,8 @@ class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
       description: data['description'] as String?,
       sessions: sessionsData,
       isActive: data['isActive'] as bool? ?? true,
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      createdAt: _parseDate(data['createdAt']),
+      updatedAt: _parseDate(data['updatedAt']),
     );
   }
 
@@ -50,13 +57,13 @@ class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
       id: data['id'] as String? ?? '',
       subjectId: data['subjectId'] as String? ?? '',
       chapterId: data['chapterId'] as String?,
-      scheduledDate: (data['scheduledDate'] as Timestamp).toDate(),
-      durationMinutes: data['durationMinutes'] as int? ?? 30,
+      scheduledDate: _parseDate(data['scheduledDate']),
+      durationMinutes: (data['durationMinutes'] as num?)?.toInt() ?? 30,
       status: SessionStatus.values.firstWhere(
         (e) => e.name == data['status'],
         orElse: () => SessionStatus.scheduled,
       ),
-      score: data['score'] as int?,
+      score: (data['score'] as num?)?.toInt(),
       notes: data['notes'] as String?,
     );
   }
@@ -110,7 +117,10 @@ class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
       tag: AppLogTags.studyPlannerDataSource,
     );
     await _api.execute(
-      () => _plansRef(userId).doc(plan.id).update(_planToMap(plan)),
+      () => _plansRef(userId).doc(plan.id).set(
+        _planToMap(plan),
+        SetOptions(merge: true),
+      ),
       tag: AppLogTags.studyPlannerDataSource,
     );
   }
@@ -135,9 +145,10 @@ class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
     required String userId,
     required String planId,
     required String sessionId,
+    SessionStatus? status,
   }) async {
     AppLogger.trace(
-      'updateSessionStatus($userId, $planId, $sessionId)',
+      'updateSessionStatus($userId, $planId, $sessionId, status: $status)',
       tag: AppLogTags.studyPlannerDataSource,
     );
     final docRef = _plansRef(userId).doc(planId);
@@ -153,8 +164,9 @@ class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
       );
       return;
     }
-    final sessions = (data['sessions'] as List<dynamic>)
-        .map((s) => Map<String, dynamic>.from(s as Map))
+    final sessions = (data['sessions'] as List<dynamic>? ?? [])
+        .whereType<Map>()
+        .map((s) => Map<String, dynamic>.from(s))
         .toList();
     final idx = sessions.indexWhere((s) => s['id'] == sessionId);
     if (idx == -1) {
@@ -164,9 +176,19 @@ class FirestoreStudyPlannerAdapter implements StudyPlannerPort {
       );
       return;
     }
-    sessions[idx]['status'] = SessionStatus.completed.name;
+
+    final currentStatusStr = sessions[idx]['status'] as String?;
+    final targetStatus = status?.name ??
+        (currentStatusStr == SessionStatus.completed.name
+            ? SessionStatus.scheduled.name
+            : SessionStatus.completed.name);
+
+    sessions[idx]['status'] = targetStatus;
     await _api.execute(
-      () => docRef.update({'sessions': sessions, 'updatedAt': Timestamp.now()}),
+      () => docRef.set({
+        'sessions': sessions,
+        'updatedAt': Timestamp.now(),
+      }, SetOptions(merge: true)),
       tag: AppLogTags.studyPlannerDataSource,
     );
   }

@@ -1,4 +1,5 @@
 import '../entities/study_plan.dart';
+import '../entities/scheduled_session.dart';
 
 abstract interface class StudyPlannerRepositoryPort {
   Stream<List<StudyPlan>> watchPlans(String userId);
@@ -13,5 +14,6 @@ abstract interface class StudyPlannerRepositoryPort {
     required String userId,
     required String planId,
     required String sessionId,
+    SessionStatus? status,
   });
 }

@@ -22,7 +22,8 @@ class SearchCubit extends Cubit<SearchState>
 
   void search(String query, {String? curriculumKey}) {
     _debounce?.cancel();
-    if (query.trim().isEmpty) {
+    final trimmed = query.trim();
+    if (trimmed.isEmpty) {
       emit(const SearchState());
       return;
     }
@@ -30,8 +31,8 @@ class SearchCubit extends Cubit<SearchState>
     emit(state.copyWith(status: SearchStatus.loading, query: query));
 
     _debounce = Timer(AppDurations.debounceDefault, () async {
-      final result = await _searchFormulas(query, curriculumKey: curriculumKey);
-      if (isClosed) return;
+      final result = await _searchFormulas(trimmed, curriculumKey: curriculumKey);
+      if (isClosed || state.query != query) return;
       switch (result) {
         case Success(:final data):
           emit(state.copyWith(status: SearchStatus.loaded, results: data));

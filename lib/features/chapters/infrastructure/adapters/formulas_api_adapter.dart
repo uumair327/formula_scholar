@@ -2,7 +2,7 @@ import 'package:injectable/injectable.dart';
 import '../../domain/domain.dart';
 import '../../../../core/core.dart';
 
-@LazySingleton(as: FormulasDataSourcePort)
+// @LazySingleton(as: FormulasDataSourcePort)
 class FormulasApiAdapter implements FormulasDataSourcePort {
   final ApiClient _apiClient;
 

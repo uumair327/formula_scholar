@@ -125,15 +125,17 @@ class StudyPlannerCubit extends Cubit<StudyPlannerState>
     }
   }
 
-  Future<void> markSessionComplete({
+  Future<void> updateSessionStatus({
     required String userId,
     required String planId,
     required String sessionId,
+    SessionStatus? status,
   }) async {
     final result = await _updateSession(
       userId: userId,
       planId: planId,
       sessionId: sessionId,
+      status: status,
     );
     if (isClosed) return;
     if (result is Error) {
@@ -145,6 +147,17 @@ class StudyPlannerCubit extends Cubit<StudyPlannerState>
       );
     }
   }
+
+  Future<void> markSessionComplete({
+    required String userId,
+    required String planId,
+    required String sessionId,
+  }) => updateSessionStatus(
+    userId: userId,
+    planId: planId,
+    sessionId: sessionId,
+    status: SessionStatus.completed,
+  );
 
   void selectPlan(StudyPlan? plan) {
     emit(state.copyWith(selectedPlan: plan));

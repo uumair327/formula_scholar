@@ -26,10 +26,11 @@ class _EditPlanPageState extends State<EditPlanPage> {
     if (_plan == null) {
       final planId = GoRouterState.of(context).pathParameters['planId'] ?? '';
       final state = context.read<StudyPlannerCubit>().state;
-      _plan = state.plans.firstWhere(
-        (p) => p.id == planId,
-        orElse: () => state.selectedPlan ?? _plan!,
-      );
+      try {
+        _plan = state.plans.firstWhere((p) => p.id == planId);
+      } catch (_) {
+        _plan = state.selectedPlan;
+      }
       if (_plan != null) {
         _titleCtrl.text = _plan!.title;
         _descCtrl.text = _plan!.description ?? '';

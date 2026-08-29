@@ -4,7 +4,7 @@ import 'package:injectable/injectable.dart';
 import '../../domain/domain.dart';
 import '../../../../core/core.dart';
 
-// @LazySingleton(as: DashboardDataSourcePort)
+@LazySingleton(as: DashboardDataSourcePort)
 class DashboardFirebaseAdapter implements DashboardDataSourcePort {
   DashboardFirebaseAdapter(this._api, this._firebaseAuth);
   final FirestoreClientPort _api;

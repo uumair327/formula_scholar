@@ -95,14 +95,16 @@ class StudyPlannerRepositoryImpl implements StudyPlannerRepositoryPort {
     required String userId,
     required String planId,
     required String sessionId,
+    SessionStatus? status,
   }) async {
     final result = await safeOperation(
       tag: AppLogTags.studyPlannerRepo,
-      operation: 'updateSessionStatus($userId, $planId, $sessionId)',
+      operation: 'updateSessionStatus($userId, $planId, $sessionId, status: $status)',
       execute: () => _dataSource.updateSessionStatus(
         userId: userId,
         planId: planId,
         sessionId: sessionId,
+        status: status,
       ),
     );
     if (result is Error) throw result.failure;

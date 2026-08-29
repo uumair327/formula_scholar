@@ -31,6 +31,11 @@ class PlanDetailPage extends StatelessWidget {
             ),
             tooltip: context.l10n.editPlan,
           ),
+          IconButton(
+            icon: Icon(LucideIcons.trash2, color: colorScheme.error),
+            onPressed: () => _confirmDelete(context, planId),
+            tooltip: context.l10n.deletePlan,
+          ),
         ],
       ),
       body: BlocBuilder<StudyPlannerCubit, StudyPlannerState>(
@@ -68,6 +73,39 @@ class PlanDetailPage extends StatelessWidget {
 
           return _buildContent(context, plan, colorScheme);
         },
+      ),
+    );
+  }
+
+  void _confirmDelete(BuildContext context, String planId) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(context.l10n.deletePlan),
+        content: const Text('Are you sure you want to delete this study plan?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(context.l10n.cancelLabel),
+          ),
+          TextButton(
+            onPressed: () {
+              final userId = context.read<AuthCubit>().state.user?.uid;
+              if (userId != null) {
+                context.read<StudyPlannerCubit>().deletePlan(
+                  userId: userId,
+                  planId: planId,
+                );
+              }
+              Navigator.of(ctx).pop();
+              context.pop();
+            },
+            child: Text(
+              context.l10n.deleteLabel,
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -114,9 +152,7 @@ class PlanDetailPage extends StatelessWidget {
           ...plan.sessions.map((session) {
             return SessionTile(
               session: session,
-              onComplete: session.status == SessionStatus.scheduled
-                  ? () => _completeSession(context, plan, session)
-                  : null,
+              onToggle: () => _toggleSession(context, plan, session),
             );
           }),
         const SizedBox(height: 32),
@@ -165,21 +201,25 @@ class PlanDetailPage extends StatelessWidget {
               '${plan.completedSessions}/${plan.totalSessions}',
               style: AppTextStyles.labelLarge.copyWith(
                 color: colorScheme.primary,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ],
         ),
         const SizedBox(height: AppDimensions.paddingSM),
-        LinearProgressIndicator(
-          value: plan.progressPercent,
-          minHeight: 8,
-          backgroundColor: colorScheme.surfaceContainerHighest,
+        ClipRRect(
+          borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
+          child: LinearProgressIndicator(
+            value: plan.progressPercent,
+            minHeight: 10,
+            backgroundColor: colorScheme.surfaceContainerHighest,
+          ),
         ),
       ],
     );
   }
 
-  Future<void> _completeSession(
+  Future<void> _toggleSession(
     BuildContext context,
     StudyPlan plan,
     ScheduledSession session,
@@ -187,17 +227,28 @@ class PlanDetailPage extends StatelessWidget {
     final userId = context.read<AuthCubit>().state.user?.uid;
     if (userId == null) return;
 
-    await context.read<StudyPlannerCubit>().markSessionComplete(
+    final nextStatus = session.status == SessionStatus.completed
+        ? SessionStatus.scheduled
+        : SessionStatus.completed;
+
+    await context.read<StudyPlannerCubit>().updateSessionStatus(
       userId: userId,
       planId: plan.id,
       sessionId: session.id,
+      status: nextStatus,
     );
 
     if (!context.mounted) return;
-    // ignore: use_build_context_synchronously
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(context.l10n.studyPlannerSessionComplete)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          nextStatus == SessionStatus.completed
+              ? context.l10n.studyPlannerSessionComplete
+              : 'Session marked as scheduled',
+        ),
+        duration: const Duration(seconds: 1),
+      ),
+    );
   }
 
   String _formatDate(DateTime date) {

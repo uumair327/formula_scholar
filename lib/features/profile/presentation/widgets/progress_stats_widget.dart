@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import '../../domain/domain.dart';
 import '../../../../core/core.dart';
 
@@ -6,7 +7,8 @@ import 'profile_insights_sheet.dart';
 
 /// Progress stats grid – displays stat cards.
 ///
-/// Matches the React `ProgressStats` component.
+/// Follows premium design system with uniform card borders,
+/// harmonious translucent accents, and responsive layout.
 class ProgressStatsWidget extends StatelessWidget {
   const ProgressStatsWidget({
     super.key,
@@ -25,17 +27,7 @@ class ProgressStatsWidget extends StatelessWidget {
         AppSectionTitle(
           title: context.l10n.myProgress,
           actionLabel: context.l10n.viewHistory,
-          onAction: () {
-            AppLogger.debug(
-              'View History tapped',
-              tag: AppLogTags.progressStatsWidget,
-            );
-            ProfileInsightsSheet.show(
-              context,
-              displayName: displayName,
-              stats: stats,
-            );
-          },
+          onAction: () => _openInsights(context),
         ),
         const SizedBox(height: AppDimensions.paddingLG),
         // Stats grid
@@ -68,13 +60,14 @@ class ProgressStatsWidget extends StatelessWidget {
                       Expanded(child: _buildStatCard(context, stats[1], 1)),
                   ],
                 ),
-                const SizedBox(height: AppDimensions.paddingMD),
-                if (stats.length > 2)
+                if (stats.length > 2) ...[
+                  const SizedBox(height: AppDimensions.paddingMD),
                   Row(
                     children: [
                       Expanded(child: _buildStatCard(context, stats[2], 2)),
                     ],
                   ),
+                ],
               ],
             );
           },
@@ -83,36 +76,44 @@ class ProgressStatsWidget extends StatelessWidget {
     );
   }
 
+  void _openInsights(BuildContext context) {
+    AppLogger.debug(
+      'View History tapped',
+      tag: AppLogTags.progressStatsWidget,
+    );
+    ProfileInsightsSheet.show(
+      context,
+      displayName: displayName,
+      stats: stats,
+    );
+  }
+
   Widget _buildStatCard(BuildContext context, ProfileStat stat, int index) {
     final colorScheme = Theme.of(context).colorScheme;
     final iconData = _getStatIcon(stat.iconName);
-    final iconBgColor = _getIconBgColor(index);
-    final iconColor = _getIconColor(index);
-    final hasBorder = index == 1; // streak card has bottom border
+    final accentColor = _getAccentColor(index);
 
-    return Container(
+    return AppCard(
+      boxShadow: const [AppShadows.subtle],
       padding: const EdgeInsets.all(AppDimensions.paddingLG),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(AppDimensions.radiusLG),
-        border: hasBorder
-            ? const Border(
-                bottom: BorderSide(
-                  color: AppColors.secondaryFixedDim,
-                  width: AppDimensions.borderWidthThick,
-                ),
-              )
-            : null,
-        boxShadow: const [AppShadows.ghost],
+      border: Border.all(
+        color: colorScheme.outlineVariant.withValues(
+          alpha: AppDimensions.opacityFaint,
+        ),
       ),
+      onTap: () => _openInsights(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           AppIconCircle(
             icon: iconData,
-            backgroundColor: iconBgColor,
-            iconColor: iconColor,
+            backgroundColor: accentColor.withValues(
+              alpha: AppDimensions.opacityFaint,
+            ),
+            iconColor: accentColor,
+            size: AppDimensions.avatarMD,
+            iconSize: AppDimensions.iconDefault,
           ),
           const SizedBox(height: AppDimensions.paddingMD),
           Text(
@@ -128,6 +129,7 @@ class ProgressStatsWidget extends StatelessWidget {
             _resolveStatLabel(context, stat.id, stat.label),
             style: AppTextStyles.labelSmall.copyWith(
               color: colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w600,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -149,30 +151,17 @@ class ProgressStatsWidget extends StatelessWidget {
   IconData _getStatIcon(String iconName) {
     switch (iconName) {
       case 'functions':
-        return Icons.functions;
+        return LucideIcons.functionSquare;
       case 'fire':
-        return Icons.local_fire_department;
+        return LucideIcons.flame;
       case 'stars':
-        return Icons.stars;
+        return LucideIcons.sparkles;
       default:
-        return Icons.analytics;
+        return LucideIcons.barChart3;
     }
   }
 
-  Color _getIconBgColor(int index) {
-    switch (index) {
-      case 0:
-        return AppColors.primaryFixed;
-      case 1:
-        return AppColors.secondaryFixed;
-      case 2:
-        return AppColors.tertiaryFixed;
-      default:
-        return AppColors.primaryFixed;
-    }
-  }
-
-  Color _getIconColor(int index) {
+  Color _getAccentColor(int index) {
     switch (index) {
       case 0:
         return AppColors.primary;

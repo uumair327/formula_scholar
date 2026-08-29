@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/core.dart';
+import '../entities/scheduled_session.dart';
 import '../ports/study_planner_repository_port.dart';
 
 @injectable
@@ -14,12 +15,14 @@ class UpdateSessionUseCase {
     required String userId,
     required String planId,
     required String sessionId,
+    SessionStatus? status,
   }) async {
     try {
       await _repository.updateSessionStatus(
         userId: userId,
         planId: planId,
         sessionId: sessionId,
+        status: status,
       );
       return const Success(null);
     } catch (e) {

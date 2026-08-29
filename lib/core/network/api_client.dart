@@ -9,8 +9,8 @@ class ApiClient {
   final http.Client _client;
   final String _baseUrl;
 
-  ApiClient({http.Client? client, String baseUrl = 'http://localhost:3000/api'})
-      : _client = client ?? http.Client(),
+  ApiClient({@Named('baseUrl') required String baseUrl})
+      : _client = http.Client(),
         _baseUrl = baseUrl;
 
   Future<Map<String, String>> _getHeaders() async {

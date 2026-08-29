@@ -157,6 +157,7 @@ class _FakeStudyPlannerRepository implements StudyPlannerRepositoryPort {
     required String userId,
     required String planId,
     required String sessionId,
+    SessionStatus? status,
     DocumentReference? transactionRef,
   }) async {
     if (throwOnUpdateSession) {

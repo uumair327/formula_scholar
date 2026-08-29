@@ -2,7 +2,7 @@ import 'package:injectable/injectable.dart';
 import '../../domain/domain.dart';
 import '../../../../core/core.dart';
 
-@LazySingleton(as: DashboardDataSourcePort)
+// @LazySingleton(as: DashboardDataSourcePort)
 class DashboardApiAdapter implements DashboardDataSourcePort {
   final ApiClient _apiClient;
 
