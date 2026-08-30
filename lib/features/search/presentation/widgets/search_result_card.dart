@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:go_router/go_router.dart';
-import '../../domain/domain.dart';
 import '../../../../core/core.dart';
+import '../../domain/domain.dart';
 
 import 'search_subject_badge.dart';
 
@@ -12,6 +13,7 @@ class SearchResultCard extends StatelessWidget {
     required this.result,
     required this.query,
   });
+
   final SearchResult result;
   final String query;
 
@@ -20,10 +22,17 @@ class SearchResultCard extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppDimensions.paddingSM),
+      padding: const EdgeInsets.only(bottom: AppDimensions.paddingMD),
       child: AppCard(
         onTap: () {
-          context.pushNamed(
+          context.read<SubjectSelectionCubit>().selectSubject(
+            id: result.subjectId,
+            name: result.subjectName,
+            category: '',
+            description: '',
+            iconName: '',
+          );
+          context.goNamed(
             AppRoutes.formulaDetailName,
             pathParameters: {
               'subjectId': result.subjectId,
@@ -33,7 +42,7 @@ class SearchResultCard extends StatelessWidget {
           );
         },
         child: Padding(
-          padding: const EdgeInsets.all(AppDimensions.paddingMD),
+          padding: const EdgeInsets.all(AppDimensions.paddingLG),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -41,10 +50,14 @@ class SearchResultCard extends StatelessWidget {
                 children: [
                   SubjectBadge(subject: result.subjectName),
                   const SizedBox(width: AppDimensions.paddingSM),
-                  Text(
-                    result.chapterName,
-                    style: AppTextStyles.overline.copyWith(
-                      color: colorScheme.outline,
+                  Expanded(
+                    child: Text(
+                      result.chapterName,
+                      style: AppTextStyles.labelMedium.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   if (query.isNotEmpty) ...[
@@ -60,21 +73,30 @@ class SearchResultCard extends StatelessWidget {
                 AppTextStyles.titleMedium.copyWith(fontWeight: FontWeight.w700),
                 colorScheme,
               ),
-              const SizedBox(height: AppDimensions.paddingSM),
+              const SizedBox(height: AppDimensions.paddingMD),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(AppDimensions.paddingSM),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppDimensions.paddingLG,
+                  vertical: AppDimensions.paddingMD,
+                ),
                 decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerLow,
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
+                  color: colorScheme.surfaceContainerHighest.withValues(
+                    alpha: 0.4,
+                  ),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+                  border: Border.all(
+                    color: colorScheme.outlineVariant.withValues(alpha: 0.25),
+                  ),
                 ),
                 child: Center(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
                     child: Math.tex(
                       result.latex,
-                      textStyle: AppTextStyles.bodyLarge.copyWith(
+                      textStyle: AppTextStyles.titleLarge.copyWith(
                         color: colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -93,8 +115,9 @@ class SearchResultCard extends StatelessWidget {
     TextStyle style,
     ColorScheme colorScheme,
   ) {
+    final baseStyle = style.copyWith(color: colorScheme.onSurface);
     if (query.isEmpty) {
-      return Text(text, style: style);
+      return Text(text, style: baseStyle);
     }
 
     final lowerText = text.toLowerCase();
@@ -102,23 +125,23 @@ class SearchResultCard extends StatelessWidget {
     final index = lowerText.indexOf(lowerQuery);
 
     if (index == -1) {
-      return Text(text, style: style);
+      return Text(text, style: baseStyle);
     }
 
     final before = text.substring(0, index);
     final match = text.substring(index, index + query.length);
     final after = text.substring(index + query.length);
 
-    return RichText(
-      text: TextSpan(
-        style: style,
+    return Text.rich(
+      TextSpan(
+        style: baseStyle,
         children: [
           if (before.isNotEmpty) TextSpan(text: before),
           TextSpan(
             text: match,
-            style: style.copyWith(
+            style: baseStyle.copyWith(
               color: colorScheme.primary,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w800,
             ),
           ),
           if (after.isNotEmpty) TextSpan(text: after),
@@ -142,7 +165,7 @@ class SearchResultCard extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: AppDimensions.paddingXS,
+        horizontal: AppDimensions.paddingXS + 2,
         vertical: AppDimensions.paddingXXS,
       ),
       decoration: BoxDecoration(
