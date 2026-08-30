@@ -75,36 +75,59 @@ class _SearchPageState extends State<SearchPage> {
                   p.results != n.results ||
                   p.query != n.query,
               builder: (context, state) {
-                switch (state.status) {
-                  case SearchStatus.initial:
-                    return _buildInitialState(context);
-                  case SearchStatus.loading:
-                    return const Center(child: CircularProgressIndicator());
-                  case SearchStatus.loaded when state.isEmpty:
-                    return AppEmptyState(
-                      icon: LucideIcons.searchX,
-                      title: l10n.noResultsFound,
-                      description: l10n.tryDifferentSearch,
-                    );
-                  case SearchStatus.loaded:
-                    return _buildResultsList(context, state);
-                  case SearchStatus.error:
-                    return AppErrorState(
-                      message: context.localizedError(
-                        fallback: state.errorMessage,
-                      ),
-                      onRetry: () {
-                        context.read<SearchCubit>().search(
-                          state.query,
-                          curriculumKey: context
-                              .read<CurriculumCubit>()
-                              .state
-                              .curriculum
-                              ?.curriculumKey,
-                        );
-                      },
-                    );
+                if (state.status == SearchStatus.initial && state.query.isEmpty) {
+                  return _buildInitialState(context);
                 }
+
+                if (state.status == SearchStatus.loading && state.results.isEmpty) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (state.status == SearchStatus.loaded && state.isEmpty) {
+                  return AppEmptyState(
+                    icon: LucideIcons.searchX,
+                    title: l10n.noResultsFound,
+                    description: l10n.tryDifferentSearch,
+                    mascotMessage: 'No formulas found! 🔍',
+                  );
+                }
+
+                if (state.status == SearchStatus.error && state.results.isEmpty) {
+                  return AppErrorState(
+                    message: context.localizedError(
+                      fallback: state.errorMessage,
+                    ),
+                    onRetry: () {
+                      context.read<SearchCubit>().search(
+                        state.query,
+                        curriculumKey: context
+                            .read<CurriculumCubit>()
+                            .state
+                            .curriculum
+                            ?.curriculumKey,
+                      );
+                    },
+                  );
+                }
+
+                return Stack(
+                  children: [
+                    _buildResultsList(context, state),
+                    if (state.status == SearchStatus.loading)
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        child: LinearProgressIndicator(
+                          minHeight: 2,
+                          backgroundColor: Colors.transparent,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ),
+                  ],
+                );
               },
             ),
           ),

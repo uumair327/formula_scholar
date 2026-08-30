@@ -3,6 +3,9 @@ import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/widgets/app_mascot.dart';
+import '../../../../shared/widgets/mascot_painter.dart';
+import '../../../../shared/widgets/mascot_speech_bubble.dart';
 
 class DailyChallengeDialog extends StatelessWidget {
   const DailyChallengeDialog({
@@ -54,7 +57,12 @@ class DailyChallengeDialog extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(LucideIcons.zap, size: 40, color: colorScheme.primary),
+              const MascotSpeechBubble(message: 'Can you solve this? 🧠'),
+              const AppMascot(
+                mood: MascotMood.thinking,
+                size: 72,
+                animate: true,
+              ),
               const SizedBox(height: AppDimensions.paddingMD),
               Text(
                 context.l10n.dailyChallenge,

@@ -3,6 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../core/core.dart';
+import 'app_mascot.dart';
+import 'mascot_painter.dart';
+import 'mascot_speech_bubble.dart';
 
 /// 404 / Not Found page displayed when [GoRouter] cannot match a route.
 ///
@@ -33,18 +36,10 @@ class NotFoundPage extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                width: AppDimensions.avatarProfile,
-                height: AppDimensions.avatarProfile,
-                decoration: BoxDecoration(
-                  color: colorScheme.primaryFixed,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  LucideIcons.mapPinOff,
-                  size: AppDimensions.iconHero,
-                  color: colorScheme.primary,
-                ),
+              const MascotSpeechBubble(message: 'Where are we? 🤔'),
+              const AppMascot(
+                mood: MascotMood.thinking,
+                size: AppDimensions.mascotLG,
               ),
               const SizedBox(height: AppDimensions.paddingHero),
               Text(

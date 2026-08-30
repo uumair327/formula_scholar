@@ -188,6 +188,19 @@ abstract final class AppDimensions {
   static const double imageMD = 48.0;
   static const double imageXS = 250.0;
 
+  // ──────────────────────── Mascot Sizes ──────────────────────
+  /// Small mascot — inline accent, hero card corner.
+  static const double mascotSM = 64.0;
+
+  /// Medium mascot — empty/error states, flashcard views.
+  static const double mascotMD = 96.0;
+
+  /// Large mascot — completion screens, 404 page.
+  static const double mascotLG = 128.0;
+
+  /// Extra-large mascot — onboarding, splash moments.
+  static const double mascotXL = 180.0;
+
   // ──────────────────────── Position Offsets ──────────────────
   static const double positionTopLG = 100.0;
   static const double positionBottomLG = 80.0;

@@ -147,15 +147,23 @@ class SubjectChaptersPage extends StatelessWidget {
                               prev.chapters != curr.chapters ||
                               prev.masteryTools != curr.masteryTools ||
                               prev.sortBy != curr.sortBy ||
-                              prev.sortDesc != curr.sortDesc,
+                              prev.sortDesc != curr.sortDesc ||
+                              prev.searchQuery != curr.searchQuery,
                           builder: (context, state) {
-                            if (state.status == ChaptersStatus.loading ||
-                                state.status == ChaptersStatus.initial) {
+                            final isInitialLoad =
+                                (state.status == ChaptersStatus.loading ||
+                                    state.status == ChaptersStatus.initial) &&
+                                state.chapters.isEmpty &&
+                                state.searchQuery.isEmpty;
+
+                            if (isInitialLoad) {
                               return const SliverFillRemaining(
                                 child: ChaptersShimmer(),
                               );
                             }
-                            if (state.status == ChaptersStatus.error) {
+
+                            if (state.status == ChaptersStatus.error &&
+                                state.chapters.isEmpty) {
                               return SliverFillRemaining(
                                 child: AppErrorState(
                                   message: context.localizedError(
@@ -166,27 +174,7 @@ class SubjectChaptersPage extends StatelessWidget {
                                 ),
                               );
                             }
-                            if (state.chapters.isEmpty) {
-                              return SliverFillRemaining(
-                                hasScrollBody: false,
-                                child: AppEmptyState(
-                                  title: context.l10n.chaptersNoContentTitle,
-                                  description:
-                                      context.l10n.chaptersNoContentDescription,
-                                  icon: LucideIcons.bookOpen,
-                                  actionLabel:
-                                      context.l10n.chaptersBrowseSubjects,
-                                  onAction: () {
-                                    context
-                                        .read<SubjectSelectionCubit>()
-                                        .clearSelection();
-                                    StatefulNavigationShell.of(
-                                      context,
-                                    ).goBranch(0);
-                                  },
-                                ),
-                              );
-                            }
+
                             return SliverPadding(
                               padding: EdgeInsets.symmetric(horizontal: hp),
                               sliver: SliverList(
@@ -201,6 +189,10 @@ class SubjectChaptersPage extends StatelessWidget {
                                     height: AppDimensions.paddingXXL,
                                   ),
                                   const ChapterSearchBar(),
+                                  if (state.status == ChaptersStatus.loading) ...[
+                                    const SizedBox(height: AppDimensions.paddingXS),
+                                    const LinearProgressIndicator(minHeight: 2),
+                                  ],
                                   const SizedBox(
                                     height: AppDimensions.paddingLG,
                                   ),
@@ -211,10 +203,38 @@ class SubjectChaptersPage extends StatelessWidget {
                                   const SizedBox(
                                     height: AppDimensions.paddingLG,
                                   ),
-                                  ChapterCardsList(
-                                    chapters: state.chapters,
-                                    subjectId: subjectState.subject!.id,
-                                  ),
+                                  if (state.chapters.isEmpty)
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: AppDimensions.paddingXXL,
+                                      ),
+                                      child: state.searchQuery.isNotEmpty
+                                          ? AppEmptyState(
+                                              title: context.l10n.noResultsFound,
+                                              description: context.l10n.tryDifferentSearch,
+                                              icon: LucideIcons.searchX,
+                                              mascotMessage: 'No matching chapters! 📖',
+                                            )
+                                          : AppEmptyState(
+                                              title: context.l10n.chaptersNoContentTitle,
+                                              description: context.l10n.chaptersNoContentDescription,
+                                              icon: LucideIcons.bookOpen,
+                                              actionLabel: context.l10n.chaptersBrowseSubjects,
+                                              onAction: () {
+                                                context
+                                                    .read<SubjectSelectionCubit>()
+                                                    .clearSelection();
+                                                StatefulNavigationShell.of(
+                                                  context,
+                                                ).goBranch(0);
+                                              },
+                                            ),
+                                    )
+                                  else
+                                    ChapterCardsList(
+                                      chapters: state.chapters,
+                                      subjectId: subjectState.subject!.id,
+                                    ),
                                   const SizedBox(
                                     height: AppDimensions.paddingSection,
                                   ),

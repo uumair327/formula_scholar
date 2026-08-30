@@ -4,6 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/widgets/app_mascot.dart';
+import '../../../../shared/widgets/mascot_painter.dart';
+import '../../../../shared/widgets/mascot_speech_bubble.dart';
 
 import '../cubit/practice_cubit.dart';
 import '../cubit/practice_state.dart';
@@ -33,10 +36,8 @@ class PracticeCompletionScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _buildTrophyIcon(context),
-                    const SizedBox(height: AppDimensions.paddingXL),
-                    _buildStarRating(context, stars),
-                    const SizedBox(height: AppDimensions.paddingSM),
+                    _buildMascot(context, pct),
+                    const SizedBox(height: AppDimensions.paddingLG),
                     Text(
                       context.l10n.quizCompleteTitle,
                       style: AppTextStyles.headlineLarge.copyWith(
@@ -147,20 +148,24 @@ class PracticeCompletionScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTrophyIcon(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Container(
-      width: AppDimensions.imageXL,
-      height: AppDimensions.imageXL,
-      decoration: BoxDecoration(
-        color: colorScheme.secondaryContainer,
-        shape: BoxShape.circle,
-      ),
-      child: Icon(
-        LucideIcons.trophy,
-        size: AppDimensions.imageLG,
-        color: colorScheme.secondary,
-      ),
+  Widget _buildMascot(BuildContext context, int pct) {
+    final message = pct >= 80
+        ? 'Amazing! 🌟'
+        : pct >= 50
+            ? 'Good job! 💪'
+            : 'Keep trying! 📖';
+    final mood =
+        pct >= 80 ? MascotMood.celebrating : MascotMood.encouraging;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        MascotSpeechBubble(message: message),
+        AppMascot(
+          mood: mood,
+          size: AppDimensions.mascotLG,
+        ),
+      ],
     );
   }
 

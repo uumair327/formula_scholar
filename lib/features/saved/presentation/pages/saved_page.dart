@@ -2,17 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/widgets/widgets.dart';
 
+import '../../domain/domain.dart';
 import '../cubit/saved_cubit.dart';
 import '../cubit/saved_state.dart';
 import '../widgets/widgets.dart';
 
-class SavedPage extends StatelessWidget {
+/// The Formula Vault screen organizing saved formulas, chapters, and notes
+/// into clear, interactive tabs with search, sorting, and subject filters.
+class SavedPage extends StatefulWidget {
   const SavedPage({super.key});
 
   @override
+  State<SavedPage> createState() => _SavedPageState();
+}
+
+class _SavedPageState extends State<SavedPage> {
+  VaultTab _selectedTab = VaultTab.formulas;
+
+  @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     return BlocBuilder<SavedCubit, SavedState>(
       buildWhen: (prev, curr) =>
           prev.status != curr.status ||
@@ -91,7 +101,6 @@ class SavedPage extends StatelessWidget {
         final filteredBookmarks = state.filteredBookmarks;
         final filteredChapters = state.filteredChapters;
         final filteredNotes = state.filteredNotes;
-        final hasSearchQuery = state.searchQuery.trim().isNotEmpty;
 
         return Scaffold(
           appBar: const PreferredSize(
@@ -111,110 +120,135 @@ class SavedPage extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.all(AppDimensions.paddingXXL),
               children: [
-                const VaultStatsHeader(),
-                const SizedBox(height: AppDimensions.paddingXXL),
+                VaultTabBar(
+                  selectedTab: _selectedTab,
+                  onTabChanged: (tab) => setState(() => _selectedTab = tab),
+                  formulaCount: filteredBookmarks.length,
+                  chapterCount: filteredChapters.length,
+                  noteCount: filteredNotes.length,
+                ),
+                const SizedBox(height: AppDimensions.paddingLG),
                 const SavedSearchBar(),
                 const SizedBox(height: AppDimensions.paddingLG),
                 SavedSortControls(state: state),
-                const SizedBox(height: AppDimensions.paddingLG),
-                const VaultSubjectFilter(),
-                const SizedBox(height: AppDimensions.paddingXXL),
-                if (hasSearchQuery && !state.hasFilteredResults)
-                  NoSearchResultsState(
-                    onClearSearch: () =>
-                        context.read<SavedCubit>().updateSearchQuery(''),
-                  ),
-                if (!hasSearchQuery || state.hasFilteredResults) ...[
-                  if (filteredChapters.isNotEmpty) ...[
-                    const SizedBox(height: AppDimensions.paddingLG),
-                    EntranceWrapper.stagger(
-                      index: 0,
-                      child: Text(
-                        context.l10n.savedChapters,
-                        style: AppTextStyles.titleLarge.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: colorScheme.onSurface,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: AppDimensions.paddingLG),
-                    ...filteredChapters.asMap().entries.map(
-                      (entry) => Padding(
-                        padding: const EdgeInsets.only(
-                          bottom: AppDimensions.paddingLG,
-                        ),
-                        child: EntranceWrapper.stagger(
-                          index: 1 + entry.key,
-                          child: SavedChapterCard(chapter: entry.value),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: AppDimensions.paddingMD),
-                  ],
-                  if (filteredBookmarks.isNotEmpty) ...[
-                    const SizedBox(height: AppDimensions.paddingLG),
-                    EntranceWrapper.stagger(
-                      index: filteredChapters.length + 1,
-                      child: Text(
-                        context.l10n.savedFormulas,
-                        style: AppTextStyles.titleLarge.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: colorScheme.onSurface,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: AppDimensions.paddingLG),
-                    ...filteredBookmarks.asMap().entries.map(
-                      (entry) => Padding(
-                        padding: const EdgeInsets.only(
-                          bottom: AppDimensions.paddingLG,
-                        ),
-                        child: EntranceWrapper.stagger(
-                          index: filteredChapters.length + 2 + entry.key,
-                          child: BookmarkCard(bookmark: entry.value),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: AppDimensions.paddingMD),
-                  ],
-                  if (filteredNotes.isNotEmpty) ...[
-                    const SizedBox(height: AppDimensions.paddingLG),
-                    EntranceWrapper.stagger(
-                      index:
-                          filteredChapters.length +
-                          filteredBookmarks.length +
-                          2,
-                      child: Text(
-                        context.l10n.savedNotes,
-                        style: AppTextStyles.titleLarge.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: colorScheme.onSurface,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: AppDimensions.paddingLG),
-                    ...filteredNotes.asMap().entries.map(
-                      (entry) => Padding(
-                        padding: const EdgeInsets.only(
-                          bottom: AppDimensions.paddingLG,
-                        ),
-                        child: EntranceWrapper.stagger(
-                          index:
-                              filteredChapters.length +
-                              filteredBookmarks.length +
-                              3 +
-                              entry.key,
-                          child: SavedNoteCard(note: entry.value),
-                        ),
-                      ),
-                    ),
-                  ],
+                if (_selectedTab != VaultTab.notes) ...[
+                  const SizedBox(height: AppDimensions.paddingLG),
+                  const VaultSubjectFilter(),
                 ],
+                const SizedBox(height: AppDimensions.paddingXXL),
+                _buildActiveTabContent(
+                  context,
+                  state,
+                  filteredBookmarks,
+                  filteredChapters,
+                  filteredNotes,
+                ),
+                const SizedBox(height: AppDimensions.bottomNavPadding),
               ],
             ),
           ),
         );
       },
     );
+  }
+
+  Widget _buildActiveTabContent(
+    BuildContext context,
+    SavedState state,
+    List<BookmarkedFormula> filteredBookmarks,
+    List<BookmarkedChapter> filteredChapters,
+    List<SavedNote> filteredNotes,
+  ) {
+    final hasSearchQuery = state.searchQuery.trim().isNotEmpty;
+
+    switch (_selectedTab) {
+      case VaultTab.formulas:
+        if (filteredBookmarks.isEmpty) {
+          if (hasSearchQuery) {
+            return NoSearchResultsState(
+              onClearSearch: () =>
+                  context.read<SavedCubit>().updateSearchQuery(''),
+            );
+          }
+          return AppEmptyState(
+            title: context.l10n.savedFormulas,
+            description: state.selectedSubjectFilter != null
+                ? 'No vaulted formulas found for ${state.selectedSubjectFilter}.'
+                : 'Formulas you bookmark during study sessions will appear here.',
+            mascotMessage: 'No formulas yet! 📐',
+          );
+        }
+        return Column(
+          children: filteredBookmarks.asMap().entries.map(
+            (entry) => Padding(
+              padding: const EdgeInsets.only(
+                bottom: AppDimensions.paddingLG,
+              ),
+              child: EntranceWrapper.stagger(
+                index: entry.key,
+                child: BookmarkCard(bookmark: entry.value),
+              ),
+            ),
+          ).toList(),
+        );
+
+      case VaultTab.chapters:
+        if (filteredChapters.isEmpty) {
+          if (hasSearchQuery) {
+            return NoSearchResultsState(
+              onClearSearch: () =>
+                  context.read<SavedCubit>().updateSearchQuery(''),
+            );
+          }
+          return AppEmptyState(
+            title: context.l10n.savedChapters,
+            description: state.selectedSubjectFilter != null
+                ? 'No vaulted chapters found for ${state.selectedSubjectFilter}.'
+                : 'Chapters you bookmark will appear here so you can revise entire topics easily.',
+            mascotMessage: 'No chapters saved! 📖',
+          );
+        }
+        return Column(
+          children: filteredChapters.asMap().entries.map(
+            (entry) => Padding(
+              padding: const EdgeInsets.only(
+                bottom: AppDimensions.paddingLG,
+              ),
+              child: EntranceWrapper.stagger(
+                index: entry.key,
+                child: SavedChapterCard(chapter: entry.value),
+              ),
+            ),
+          ).toList(),
+        );
+
+      case VaultTab.notes:
+        if (filteredNotes.isEmpty) {
+          if (hasSearchQuery) {
+            return NoSearchResultsState(
+              onClearSearch: () =>
+                  context.read<SavedCubit>().updateSearchQuery(''),
+            );
+          }
+          return AppEmptyState(
+            title: context.l10n.savedNotes,
+            description: 'Personal study notes and formula reminders will appear here.',
+            mascotMessage: 'No notes here! ✍️',
+          );
+        }
+        return Column(
+          children: filteredNotes.asMap().entries.map(
+            (entry) => Padding(
+              padding: const EdgeInsets.only(
+                bottom: AppDimensions.paddingLG,
+              ),
+              child: EntranceWrapper.stagger(
+                index: entry.key,
+                child: SavedNoteCard(note: entry.value),
+              ),
+            ),
+          ).toList(),
+        );
+    }
   }
 }

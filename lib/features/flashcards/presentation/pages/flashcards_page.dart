@@ -23,7 +23,6 @@ class FlashcardsPage extends StatelessWidget {
         ),
       ),
       body: BlocBuilder<FlashcardsCubit, FlashcardsState>(
-        buildWhen: (p, n) => p.status != n.status,
         builder: (context, state) {
           return switch (state.status) {
             FlashcardsStatus.initial ||

@@ -2,9 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/core.dart';
+import 'app_mascot.dart';
+import 'mascot_painter.dart';
 
-/// Reusable circular avatar with cached network image, placeholder, and error
-/// fallback.
+/// Reusable circular avatar with cached network image, mascot avatar, placeholder,
+/// and error fallback.
 ///
 /// Replaces the repeated ClipOval + CachedNetworkImage + placeholder/error
 /// pattern found in every app bar and profile hero across the project.
@@ -20,7 +22,7 @@ class AppAvatar extends StatelessWidget {
     this.fallbackIconColor = AppColors.onSurfaceVariant,
   });
 
-  /// The network image URL to display.
+  /// The network image URL, asset path, or `mascot:<mood>` string to display.
   final String imageUrl;
 
   /// Diameter of the avatar.
@@ -44,7 +46,30 @@ class AppAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget imageWidget;
-    if (imageUrl.startsWith('http')) {
+    if (imageUrl.startsWith('mascot')) {
+      final parts = imageUrl.split(':');
+      final moodName = parts.length > 1 ? parts[1] : 'happy';
+      final mood = MascotMood.values.firstWhere(
+        (m) => m.name == moodName,
+        orElse: () => MascotMood.happy,
+      );
+      imageWidget = Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: placeholderColor,
+          border: border,
+        ),
+        child: Center(
+          child: AppMascot(
+            mood: mood,
+            size: size * 0.85,
+            animate: false,
+          ),
+        ),
+      );
+    } else if (imageUrl.startsWith('http')) {
       imageWidget = CachedNetworkImage(
         imageUrl: imageUrl,
         width: size,

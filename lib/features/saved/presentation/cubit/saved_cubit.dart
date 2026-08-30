@@ -74,7 +74,9 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
   Future<void> loadBookmarks({required String curriculumKey}) async {
     _activeCurriculumKey = curriculumKey;
     AppLogger.info('Loading bookmarks', tag: AppLogTags.savedCubit);
-    emit(state.copyWith(status: SavedStatus.loading));
+    if (state.isEmpty || state.status == SavedStatus.initial) {
+      emit(state.copyWith(status: SavedStatus.loading));
+    }
 
     // Build query with server-side sort authority (golden rule).
     final query = SavedQuery(
@@ -108,7 +110,7 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
     }
 
     if (chaptersResult is Error<List<BookmarkedChapter>>) {
-      logFailure('saved chapters', chaptersResult.failure);
+      logFailure('chapters', chaptersResult.failure);
       emit(
         state.copyWith(
           status: SavedStatus.error,
@@ -119,7 +121,7 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
     }
 
     if (notesResult is Error<List<SavedNote>>) {
-      logFailure('saved notes', notesResult.failure);
+      logFailure('notes', notesResult.failure);
       emit(
         state.copyWith(
           status: SavedStatus.error,
@@ -129,18 +131,18 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
       return;
     }
 
-    final formulas = (formulasResult as Success<List<BookmarkedFormula>>).data;
+    final bookmarks = (formulasResult as Success<List<BookmarkedFormula>>).data;
     final chapters = (chaptersResult as Success<List<BookmarkedChapter>>).data;
     final notes = (notesResult as Success<List<SavedNote>>).data;
 
     AppLogger.info(
-      'Loaded ${formulas.length} bookmarks, ${chapters.length} saved chapters and ${notes.length} saved notes',
+      'Loaded ${bookmarks.length} bookmarks, ${chapters.length} chapters, ${notes.length} notes',
       tag: AppLogTags.savedCubit,
     );
     emit(
       state.copyWith(
         status: SavedStatus.loaded,
-        bookmarks: formulas,
+        bookmarks: bookmarks,
         chapters: chapters,
         notes: notes,
         searchQuery: state.searchQuery,
@@ -150,10 +152,6 @@ class SavedCubit extends Cubit<SavedState> with CubitFailureLogger<SavedState> {
 
   void updateSearchQuery(String query) {
     emit(state.copyWith(searchQuery: query));
-    final curriculumKey = _activeCurriculumKey;
-    if (curriculumKey != null) {
-      unawaited(loadBookmarks(curriculumKey: curriculumKey));
-    }
   }
 
   /// Updates the sort-by-field and reloads bookmarks.

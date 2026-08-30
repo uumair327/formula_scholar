@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/widgets/app_mascot.dart';
+import '../../../../shared/widgets/mascot_painter.dart';
 
 class HeroStatusCard extends StatefulWidget {
   const HeroStatusCard({
@@ -102,16 +104,12 @@ class _HeroStatusCardState extends State<HeroStatusCard>
               ),
             ),
             Positioned(
-              right: -15,
-              bottom: -10,
-              child: Opacity(
-                opacity: 0.8,
-                child: Image.asset(
-                  'assets/images/wolf.png',
-                  width: 160,
-                  height: 160,
-                  fit: BoxFit.contain,
-                ),
+              right: -10,
+              bottom: -15,
+              child: const AppMascot(
+                mood: MascotMood.happy,
+                size: 140,
+                animate: true,
               ),
             ),
             Column(

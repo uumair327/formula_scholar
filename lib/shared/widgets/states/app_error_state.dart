@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../core/core.dart';
+import '../app_mascot.dart';
+import '../mascot_painter.dart';
+import '../mascot_speech_bubble.dart';
 
 class AppErrorState extends StatelessWidget {
   const AppErrorState({
@@ -30,30 +33,12 @@ class AppErrorState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: colorScheme.errorContainer.withValues(alpha: 0.3),
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Container(
-                  width: 56,
-                  height: 56,
-                  decoration: BoxDecoration(
-                    color: colorScheme.errorContainer.withValues(alpha: 0.5),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    icon,
-                    size: AppDimensions.iconXL,
-                    color: colorScheme.error,
-                  ),
-                ),
-              ),
+            const MascotSpeechBubble(message: 'Oops!'),
+            const AppMascot(
+              mood: MascotMood.sad,
+              size: AppDimensions.mascotMD,
             ),
-            const SizedBox(height: AppDimensions.paddingXXL),
+            const SizedBox(height: AppDimensions.paddingLG),
             AppText(
               context.l10n.somethingWentWrong,
               style: AppTextStyles.titleLarge.copyWith(
@@ -105,3 +90,4 @@ class AppErrorState extends StatelessWidget {
     );
   }
 }
+

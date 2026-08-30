@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../core/core.dart';
+import '../app_mascot.dart';
+import '../mascot_painter.dart';
+import '../mascot_speech_bubble.dart';
 
 class AppEmptyState extends StatelessWidget {
   const AppEmptyState({
     super.key,
     required this.title,
     this.description,
-    this.icon = LucideIcons.inbox,
+    this.icon,
     this.actionLabel,
     this.onAction,
+    this.mascotMessage,
   });
 
   final String title;
   final String? description;
-  final IconData icon;
+  final IconData? icon;
   final String? actionLabel;
   final VoidCallback? onAction;
+
+  /// Optional message shown in a speech bubble above the mascot.
+  final String? mascotMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -31,30 +37,13 @@ class AppEmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 96,
-              height: 96,
-              decoration: BoxDecoration(
-                color: colorScheme.primaryContainer.withValues(alpha: 0.15),
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Container(
-                  width: 64,
-                  height: 64,
-                  decoration: BoxDecoration(
-                    color: colorScheme.primaryContainer.withValues(alpha: 0.25),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    icon,
-                    size: AppDimensions.iconXXL,
-                    color: colorScheme.primary,
-                  ),
-                ),
-              ),
+            if (mascotMessage != null)
+              MascotSpeechBubble(message: mascotMessage!),
+            const AppMascot(
+              mood: MascotMood.sad,
+              size: AppDimensions.mascotMD,
             ),
-            const SizedBox(height: AppDimensions.paddingXXL),
+            const SizedBox(height: AppDimensions.paddingLG),
             AppText(
               title,
               textAlign: TextAlign.center,
@@ -97,3 +86,4 @@ class AppEmptyState extends StatelessWidget {
     );
   }
 }
+

@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/widgets/app_mascot.dart';
+import '../../../../shared/widgets/mascot_painter.dart';
 import '../cubit/streak_cubit.dart';
 import '../widgets/streak_calendar.dart';
 
@@ -171,15 +173,16 @@ class _PersonalStreakView extends StatelessWidget {
                     ),
                   ],
                 ),
-                Image.asset(
-                  currentStreak >= 365 
-                      ? 'assets/images/wolf.png'
-                      : currentStreak >= 30 
-                          ? 'assets/images/fox.png' 
-                          : 'assets/images/deer.png',
-                  width: 120,
-                  height: 120,
-                  fit: BoxFit.contain,
+                AppMascot(
+                  mood: currentStreak >= 30
+                      ? MascotMood.celebrating
+                      : currentStreak >= 7
+                          ? MascotMood.happy
+                          : currentStreak > 0
+                              ? MascotMood.encouraging
+                              : MascotMood.sleeping,
+                  size: 120,
+                  animate: true,
                 ),
               ],
             ),

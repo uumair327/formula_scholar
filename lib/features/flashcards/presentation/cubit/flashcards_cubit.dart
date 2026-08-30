@@ -34,6 +34,11 @@ class FlashcardsCubit extends Cubit<FlashcardsState>
     required String userId,
   }) async {
     _userId = userId;
+    if (cards.isEmpty) {
+      emit(const FlashcardsState(status: FlashcardsStatus.initial));
+      return;
+    }
+    emit(state.copyWith(status: FlashcardsStatus.loading));
     AppLogger.info(
       'Starting flashcard session with ${cards.length} cards',
       tag: AppLogTags.flashcardsCubit,
@@ -52,6 +57,13 @@ class FlashcardsCubit extends Cubit<FlashcardsState>
         );
       case Error(:final failure):
         logFailure('loadReviews', failure);
+        emit(
+          FlashcardsState(
+            status: FlashcardsStatus.ready,
+            session: FlashcardSession(cards: cards),
+            totalCardCount: cards.length,
+          ),
+        );
     }
   }
 
@@ -112,7 +124,8 @@ class FlashcardsCubit extends Cubit<FlashcardsState>
 
   void _checkComplete() {
     final session = state.session;
-    if (session.graduatedIds.length >= session.cards.length) {
+    if (session.currentIndex >= session.cards.length ||
+        session.graduatedIds.length >= session.cards.length) {
       emit(
         state.copyWith(
           status: FlashcardsStatus.finished,
@@ -134,6 +147,35 @@ class FlashcardsCubit extends Cubit<FlashcardsState>
   }
 
   void restart() {
-    emit(const FlashcardsState());
+    final allCards = state.session.cards;
+    if (allCards.isNotEmpty) {
+      emit(
+        FlashcardsState(
+          status: FlashcardsStatus.ready,
+          session: FlashcardSession(cards: allCards),
+          totalCardCount: allCards.length,
+        ),
+      );
+    } else {
+      emit(const FlashcardsState());
+    }
+  }
+
+  void reviewRemaining() {
+    final reviewSet = state.session.reviewIds.toSet();
+    final remainingCards = state.session.cards
+        .where((c) => reviewSet.contains(c.id))
+        .toList();
+    if (remainingCards.isNotEmpty) {
+      emit(
+        FlashcardsState(
+          status: FlashcardsStatus.ready,
+          session: FlashcardSession(cards: remainingCards),
+          totalCardCount: remainingCards.length,
+        ),
+      );
+    } else {
+      restart();
+    }
   }
 }

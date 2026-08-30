@@ -22,10 +22,14 @@ abstract final class AppAssets {
       'https://lh3.googleusercontent.com/aida-public/AB6AXuDz8div5w1Pk9ye0kwi2kuW_XnrX1vZ1-744PVOV0UDX4OoFTq9ld8NiJ-CaaLJXnrF3cqm8j-eH5lRHSjlz9zVkpn4DKcPerzNsyvlnclqj0lRf5sabjOvCrSdmPYIgoeviomsqTmKIH0ebkc4DEq_iuCIvUejea45SfVh0dvy5gyuWBChdJf6QsGxEeCwTsU1gK2W4e6Nscmd5hv6j5DZ7bqc5TCdqn65cTsgyzqsGpZ5LuK5xGBv80qy0EcguWr5dimVbz2mMGY';
 
   /// Profile hero avatar (used in profile local datasource).
-  static const String profileHeroAvatarUrl = 'assets/images/wolf.png';
+  static const String profileHeroAvatarUrl = 'mascot:happy';
 
-  /// Predefined list of advanced avatar options using DiceBear.
+  /// Predefined list of avatar options including Sigma mascot expressions.
   static const List<String> avatarPresets = [
+    'mascot:happy',
+    'mascot:celebrating',
+    'mascot:thinking',
+    'mascot:encouraging',
     'assets/images/wolf.png',
     'assets/images/fox.png',
     'assets/images/deer.png',

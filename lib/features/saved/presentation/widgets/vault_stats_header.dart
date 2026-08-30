@@ -7,10 +7,24 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../core/core.dart';
 import '../cubit/saved_cubit.dart';
 import '../cubit/saved_state.dart';
+import 'vault_tab_bar.dart';
 
 /// Compact stats banner showing vault totals at a glance.
+///
+/// Can optionally accept [selectedTab] and [onTabSelected] to make
+/// stat items interactive shortcuts to their respective tabs.
 class VaultStatsHeader extends StatelessWidget {
-  const VaultStatsHeader({super.key});
+  const VaultStatsHeader({
+    super.key,
+    this.selectedTab,
+    this.onTabSelected,
+  });
+
+  /// Currently selected vault tab.
+  final VaultTab? selectedTab;
+
+  /// Callback when a stat item is tapped to switch tab.
+  final ValueChanged<VaultTab>? onTabSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +48,10 @@ class VaultStatsHeader extends StatelessWidget {
                 count: state.totalFormulas,
                 color: colorScheme.primary,
                 isDark: isDark,
+                isSelected: selectedTab == VaultTab.formulas,
+                onTap: onTabSelected != null
+                    ? () => onTabSelected!(VaultTab.formulas)
+                    : null,
               ),
               _divider(colorScheme),
               _StatItem(
@@ -42,6 +60,10 @@ class VaultStatsHeader extends StatelessWidget {
                 count: state.totalChapters,
                 color: colorScheme.tertiary,
                 isDark: isDark,
+                isSelected: selectedTab == VaultTab.chapters,
+                onTap: onTabSelected != null
+                    ? () => onTabSelected!(VaultTab.chapters)
+                    : null,
               ),
               _divider(colorScheme),
               _StatItem(
@@ -50,6 +72,10 @@ class VaultStatsHeader extends StatelessWidget {
                 count: state.totalNotes,
                 color: colorScheme.secondary,
                 isDark: isDark,
+                isSelected: selectedTab == VaultTab.notes,
+                onTap: onTabSelected != null
+                    ? () => onTabSelected!(VaultTab.notes)
+                    : null,
               ),
               _divider(colorScheme),
               _StatItem(
@@ -85,6 +111,8 @@ class _StatItem extends StatelessWidget {
     required this.count,
     required this.color,
     required this.isDark,
+    this.isSelected = false,
+    this.onTap,
   });
 
   final IconData icon;
@@ -92,42 +120,65 @@ class _StatItem extends StatelessWidget {
   final int count;
   final Color color;
   final bool isDark;
+  final bool isSelected;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Expanded(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: AppDimensions.avatarMD,
-            height: AppDimensions.avatarMD,
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
-            ),
-            child: Icon(icon, size: AppDimensions.iconSM, color: color),
+    Widget content = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AnimatedContainer(
+          duration: AppDurations.animationFast,
+          width: AppDimensions.avatarMD,
+          height: AppDimensions.avatarMD,
+          decoration: BoxDecoration(
+            color: isSelected
+                ? color.withValues(alpha: 0.25)
+                : color.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
+            border: isSelected
+                ? Border.all(color: color, width: 2)
+                : null,
           ),
-          const SizedBox(height: AppDimensions.paddingXS),
-          Text(
-            '$count',
-            style: AppTextStyles.titleMedium.copyWith(
-              fontWeight: FontWeight.w800,
-              color: colorScheme.onSurface,
-            ),
+          child: Icon(icon, size: AppDimensions.iconSM, color: color),
+        ),
+        const SizedBox(height: AppDimensions.paddingXS),
+        Text(
+          '$count',
+          style: AppTextStyles.titleMedium.copyWith(
+            fontWeight: FontWeight.w800,
+            color: isSelected ? color : colorScheme.onSurface,
           ),
-          Text(
-            label,
-            style: AppTextStyles.labelSmall.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+        ),
+        Text(
+          label,
+          style: AppTextStyles.labelSmall.copyWith(
+            color: isSelected ? color : colorScheme.onSurfaceVariant,
+            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
           ),
-        ],
-      ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
     );
+
+    if (onTap != null) {
+      content = Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: content,
+          ),
+        ),
+      );
+    }
+
+    return Expanded(child: content);
   }
 }
