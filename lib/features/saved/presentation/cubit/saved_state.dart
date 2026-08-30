@@ -68,9 +68,10 @@ class SavedState extends Equatable {
 
   // ─── Filtered Getters (search + subject) ──────────────────
 
-  /// Returns bookmarks filtered by [searchQuery] and [selectedSubjectFilter].
+  /// Returns bookmarks filtered by [searchQuery] and [selectedSubjectFilter],
+  /// and sorted by [sortByField] and [sortDirection].
   List<BookmarkedFormula> get filteredBookmarks {
-    var result = bookmarks;
+    var result = List<BookmarkedFormula>.from(bookmarks);
 
     // Subject filter
     if (selectedSubjectFilter != null) {
@@ -92,12 +93,26 @@ class SavedState extends Equatable {
           .toList();
     }
 
+    // In-memory instant sort
+    result.sort((a, b) {
+      int cmp;
+      if (sortByField == 'title') {
+        cmp = a.title.toLowerCase().compareTo(b.title.toLowerCase());
+      } else {
+        final aDate = a.savedAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+        final bDate = b.savedAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+        cmp = aDate.compareTo(bDate);
+      }
+      return sortDirection == SortDirection.desc ? -cmp : cmp;
+    });
+
     return result;
   }
 
-  /// Returns chapters filtered by [searchQuery] and [selectedSubjectFilter].
+  /// Returns chapters filtered by [searchQuery] and [selectedSubjectFilter],
+  /// and sorted by [sortByField] and [sortDirection].
   List<BookmarkedChapter> get filteredChapters {
-    var result = chapters;
+    var result = List<BookmarkedChapter>.from(chapters);
 
     // Subject filter
     if (selectedSubjectFilter != null) {
@@ -118,20 +133,47 @@ class SavedState extends Equatable {
           .toList();
     }
 
+    // In-memory instant sort
+    result.sort((a, b) {
+      int cmp;
+      if (sortByField == 'title' || sortByField == 'chapterName') {
+        cmp = a.chapterName.toLowerCase().compareTo(b.chapterName.toLowerCase());
+      } else {
+        final aDate = a.savedAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+        final bDate = b.savedAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+        cmp = aDate.compareTo(bDate);
+      }
+      return sortDirection == SortDirection.desc ? -cmp : cmp;
+    });
+
     return result;
   }
 
-  /// Returns notes filtered by [searchQuery] (notes don't have subjects).
+  /// Returns notes filtered by [searchQuery] and sorted by [sortByField] and [sortDirection].
   List<SavedNote> get filteredNotes {
-    if (searchQuery.isEmpty) return notes;
-    final query = searchQuery.toLowerCase();
-    return notes
-        .where(
-          (n) =>
-              n.title.toLowerCase().contains(query) ||
-              n.content.toLowerCase().contains(query),
-        )
-        .toList();
+    var result = List<SavedNote>.from(notes);
+    if (searchQuery.isNotEmpty) {
+      final query = searchQuery.toLowerCase();
+      result = result
+          .where(
+            (n) =>
+                n.title.toLowerCase().contains(query) ||
+                n.content.toLowerCase().contains(query),
+          )
+          .toList();
+    }
+
+    result.sort((a, b) {
+      int cmp;
+      if (sortByField == 'title') {
+        cmp = a.title.toLowerCase().compareTo(b.title.toLowerCase());
+      } else {
+        cmp = a.savedAt.compareTo(b.savedAt);
+      }
+      return sortDirection == SortDirection.desc ? -cmp : cmp;
+    });
+
+    return result;
   }
 
   /// Whether any filtered results exist.

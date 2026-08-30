@@ -23,6 +23,7 @@ abstract final class AppDimensions {
   static const double radiusXL = 20.0;
   static const double radiusXXL = 24.0;
   static const double radiusShell = 28.0;
+  static const double radiusFull = 999.0;
 
   // ──────────────────────── Icon Sizes ───────────────────────
   static const double iconXS = 12.0;

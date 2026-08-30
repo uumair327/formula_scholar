@@ -129,12 +129,12 @@ class _SavedPageState extends State<SavedPage> {
                 ),
                 const SizedBox(height: AppDimensions.paddingLG),
                 const SavedSearchBar(),
-                const SizedBox(height: AppDimensions.paddingLG),
-                SavedSortControls(state: state),
                 if (_selectedTab != VaultTab.notes) ...[
                   const SizedBox(height: AppDimensions.paddingLG),
                   const VaultSubjectFilter(),
                 ],
+                const SizedBox(height: AppDimensions.paddingMD),
+                SavedSortControls(state: state),
                 const SizedBox(height: AppDimensions.paddingXXL),
                 _buildActiveTabContent(
                   context,
