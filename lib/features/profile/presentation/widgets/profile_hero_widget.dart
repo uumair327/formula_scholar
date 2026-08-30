@@ -1,8 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/widgets/widgets.dart';
 import '../../domain/domain.dart';
 
 /// Profile hero card – gradient card with avatar, name, grade, and Pro badge.
@@ -42,21 +42,13 @@ class ProfileHeroWidget extends StatelessWidget {
                     width: AppDimensions.borderWidthThick,
                   ),
                 ),
-                child: ClipOval(
-                  child: CachedNetworkImage(
-                    imageUrl: profile.avatarUrl,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) =>
-                        Container(color: AppColors.primaryFixed),
-                    errorWidget: (context, url, error) => Container(
-                      color: AppColors.primaryFixed,
-                      child: Icon(
-                        Icons.person,
-                        size: AppDimensions.avatarMD,
-                        color: colorScheme.onPrimary,
-                      ),
-                    ),
-                  ),
+                child: AppAvatar(
+                  imageUrl: profile.avatarUrl.isNotEmpty
+                      ? profile.avatarUrl
+                      : AppAssets.profileHeroAvatarUrl,
+                  size: AppDimensions.avatarProfile,
+                  placeholderColor: AppColors.primaryFixed,
+                  fallbackIconColor: colorScheme.onPrimary,
                 ),
               ),
               // Pro badge
@@ -112,7 +104,9 @@ class ProfileHeroWidget extends StatelessWidget {
           if (profile.joinedAt != null) ...[
             const SizedBox(height: AppDimensions.paddingXS),
             Text(
-              l10n.profileJoinedFormat(DateFormat('MMMM yyyy').format(profile.joinedAt!)),
+              l10n.profileJoinedFormat(
+                DateFormat('MMMM yyyy').format(profile.joinedAt!),
+              ),
               style: AppTextStyles.labelSmall.copyWith(
                 color: colorScheme.onPrimary.withValues(
                   alpha: AppDimensions.opacityHigh,
