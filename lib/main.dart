@@ -20,6 +20,7 @@ import 'core/services/background_worker_service.dart';
 import 'features/auth/auth.dart';
 
 import 'features/dashboard/dashboard.dart';
+import 'features/monetization/monetization.dart';
 import 'features/profile/profile.dart';
 import 'l10n/app_localizations.dart';
 import 'core/analytics/analytics_service.dart';
@@ -275,6 +276,8 @@ class _FormulaScholarAppState extends State<FormulaScholarApp>
         BlocProvider(
           create: (_) => LocalizationCubit()..listenToBackendConfig(),
         ),
+        BlocProvider(create: (_) => getIt<AdCubit>()),
+        BlocProvider(create: (_) => getIt<PremiumCubit>()),
       ],
       child: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, themeState) {

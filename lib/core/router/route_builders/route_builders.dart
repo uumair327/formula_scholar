@@ -16,3 +16,5 @@ export 'search_routes.dart';
 export 'study_planner_routes.dart';
 export 'visualizer3d_routes.dart';
 export 'streak_routes.dart';
+export 'monetization_routes.dart';
+

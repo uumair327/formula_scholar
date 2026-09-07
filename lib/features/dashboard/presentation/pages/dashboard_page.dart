@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/core.dart';
+import '../../../monetization/monetization.dart';
 import '../cubit/dashboard_cubit.dart';
 import '../cubit/dashboard_state.dart';
 import '../cubit/daily_challenges_cubit.dart';
@@ -134,10 +135,8 @@ class DashboardPage extends StatelessWidget {
                                 onResume: (ctx, s) => resumeLearning(ctx, s),
                               ),
                             ),
-                            const SizedBox(
-                              height: AppDimensions.paddingSection,
-                            ),
                             DashboardBannersSection(state: state),
+                            const FormulaScholarBannerAd(),
                             const SizedBox(
                               height: AppDimensions.paddingSection,
                             ),

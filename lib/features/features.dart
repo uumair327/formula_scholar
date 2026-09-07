@@ -20,3 +20,5 @@ export 'analytics/analytics.dart';
 export 'study_planner/study_planner.dart';
 export 'visualizer_3d/visualizer_3d.dart';
 export 'widget_viewer/widget_viewer.dart';
+export 'streak/streak.dart';
+export 'monetization/monetization.dart';

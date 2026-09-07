@@ -176,4 +176,13 @@ abstract final class AppRoutes {
   // ──────────────────────── Streak ────────────────────────────
   static const String streakPath = '/streak';
   static const String streakName = 'streak';
+
+  // ──────────────────────── Monetization & Premium ────────────
+  /// Premium Subscription & Paywall Store.
+  static const String premiumPath = '/premium';
+  static const String premiumName = 'premium';
+
+  /// Developer / QA console for testing ad density and premium state.
+  static const String monetizationDebugPath = '/monetization-debug';
+  static const String monetizationDebugName = 'monetizationDebug';
 }

@@ -7,7 +7,9 @@ import 'package:speech_to_text/speech_to_text.dart';
 
 import '../../features/ai/ai.dart';
 import '../../features/auth/auth.dart';
+import '../../features/monetization/monetization.dart';
 import '../../shared/shared.dart';
+import '../config/feature_flag_port.dart';
 import '../network/firestore_client_port.dart';
 import '../router/app_router.dart';
 import 'injection.config.dart';
@@ -46,6 +48,7 @@ void registerRuntimeDependencies() {
     );
   }
   _registerAiRuntimeDependencies();
+  _registerMonetizationRuntimeDependencies();
 }
 
 void _registerAiRuntimeDependencies() {
@@ -207,6 +210,113 @@ void _registerAiRuntimeDependencies() {
       () => AiChatCubit(
         runPrompt: getIt<RunAiPromptUseCase>(),
         voiceService: getIt<AiVoiceServicePort>(),
+      ),
+    );
+  }
+}
+
+void _registerMonetizationRuntimeDependencies() {
+  if (!getIt.isRegistered<AdLocalDataSource>()) {
+    getIt.registerLazySingleton<AdLocalDataSource>(AdLocalDataSourceImpl.new);
+  }
+  if (!getIt.isRegistered<PremiumLocalDataSource>()) {
+    getIt.registerLazySingleton<PremiumLocalDataSource>(
+      PremiumLocalDataSourceImpl.new,
+    );
+  }
+  if (!getIt.isRegistered<AdServicePort>()) {
+    getIt.registerLazySingleton<AdServicePort>(DuolingoAdServiceAdapter.new);
+  }
+  if (!getIt.isRegistered<PremiumServiceAdapter>()) {
+    getIt.registerLazySingleton<PremiumServiceAdapter>(
+      PremiumServiceAdapterImpl.new,
+    );
+  }
+  if (!getIt.isRegistered<AdRepositoryPort>()) {
+    getIt.registerLazySingleton<AdRepositoryPort>(
+      () => AdRepositoryImpl(getIt<AdLocalDataSource>()),
+    );
+  }
+  if (!getIt.isRegistered<PremiumRepositoryPort>()) {
+    getIt.registerLazySingleton<PremiumRepositoryPort>(
+      () => PremiumRepositoryImpl(
+        getIt<PremiumLocalDataSource>(),
+        getIt<PremiumServiceAdapter>(),
+      ),
+    );
+  }
+  if (!getIt.isRegistered<GetAdConfigUseCase>()) {
+    getIt.registerFactory<GetAdConfigUseCase>(
+      () => GetAdConfigUseCase(getIt<AdRepositoryPort>()),
+    );
+  }
+  if (!getIt.isRegistered<SetAdDensityUseCase>()) {
+    getIt.registerFactory<SetAdDensityUseCase>(
+      () => SetAdDensityUseCase(getIt<AdRepositoryPort>()),
+    );
+  }
+  if (!getIt.isRegistered<ShouldShowAdUseCase>()) {
+    getIt.registerFactory<ShouldShowAdUseCase>(
+      () => ShouldShowAdUseCase(
+        adRepository: getIt<AdRepositoryPort>(),
+        premiumRepository: getIt<PremiumRepositoryPort>(),
+        featureFlagPort: getIt<FeatureFlagPort>(),
+      ),
+    );
+  }
+  if (!getIt.isRegistered<ShowInterstitialAdUseCase>()) {
+    getIt.registerFactory<ShowInterstitialAdUseCase>(
+      () => ShowInterstitialAdUseCase(
+        shouldShowAd: getIt<ShouldShowAdUseCase>(),
+        adService: getIt<AdServicePort>(),
+        adRepository: getIt<AdRepositoryPort>(),
+      ),
+    );
+  }
+  if (!getIt.isRegistered<ShowRewardedAdUseCase>()) {
+    getIt.registerFactory<ShowRewardedAdUseCase>(
+      () => ShowRewardedAdUseCase(
+        shouldShowAd: getIt<ShouldShowAdUseCase>(),
+        adService: getIt<AdServicePort>(),
+        adRepository: getIt<AdRepositoryPort>(),
+      ),
+    );
+  }
+  if (!getIt.isRegistered<GetUserEntitlementsUseCase>()) {
+    getIt.registerFactory<GetUserEntitlementsUseCase>(
+      () => GetUserEntitlementsUseCase(getIt<PremiumRepositoryPort>()),
+    );
+  }
+  if (!getIt.isRegistered<UpgradeToPremiumUseCase>()) {
+    getIt.registerFactory<UpgradeToPremiumUseCase>(
+      () => UpgradeToPremiumUseCase(getIt<PremiumRepositoryPort>()),
+    );
+  }
+  if (!getIt.isRegistered<RestorePurchasesUseCase>()) {
+    getIt.registerFactory<RestorePurchasesUseCase>(
+      () => RestorePurchasesUseCase(getIt<PremiumRepositoryPort>()),
+    );
+  }
+  if (!getIt.isRegistered<AdCubit>()) {
+    getIt.registerLazySingleton<AdCubit>(
+      () => AdCubit(
+        getAdConfig: getIt<GetAdConfigUseCase>(),
+        setAdDensity: getIt<SetAdDensityUseCase>(),
+        shouldShowAd: getIt<ShouldShowAdUseCase>(),
+        showInterstitialAd: getIt<ShowInterstitialAdUseCase>(),
+        showRewardedAd: getIt<ShowRewardedAdUseCase>(),
+        adRepository: getIt<AdRepositoryPort>(),
+        premiumRepository: getIt<PremiumRepositoryPort>(),
+      ),
+    );
+  }
+  if (!getIt.isRegistered<PremiumCubit>()) {
+    getIt.registerLazySingleton<PremiumCubit>(
+      () => PremiumCubit(
+        getUserEntitlements: getIt<GetUserEntitlementsUseCase>(),
+        upgradeToPremium: getIt<UpgradeToPremiumUseCase>(),
+        restorePurchases: getIt<RestorePurchasesUseCase>(),
+        premiumRepository: getIt<PremiumRepositoryPort>(),
       ),
     );
   }

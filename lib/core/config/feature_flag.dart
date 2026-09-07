@@ -64,7 +64,26 @@ enum FeatureFlag {
   flashcardsEnabled(defaultEnabled: true),
 
   /// AI-powered formula suggestions.
-  aiSuggestionsEnabled(defaultEnabled: false);
+  aiSuggestionsEnabled(defaultEnabled: false),
+
+  // ──────────────────────── Monetization & Ads ─────────────────
+  /// Master switch for in-app advertisements.
+  adsMasterEnabled(defaultEnabled: true),
+
+  /// Banner ad placements.
+  bannerAdsEnabled(defaultEnabled: true),
+
+  /// Fullscreen interstitial ads between study activities.
+  interstitialAdsEnabled(defaultEnabled: true),
+
+  /// Rewarded ads for streak revives & bonus study XP.
+  rewardedAdsEnabled(defaultEnabled: true),
+
+  /// High-fidelity Duolingo-style animated ad window experience.
+  duolingoAdWindowEnabled(defaultEnabled: true),
+
+  /// Premium subscription store & paywall access.
+  premiumStoreEnabled(defaultEnabled: true);
 
   // ──────────────────────── Constructor ───────────────────────
   const FeatureFlag({required this.defaultEnabled});
@@ -93,6 +112,12 @@ enum FeatureFlag {
       FeatureFlag.studyPlannerEnabled => 'study_planner_enabled',
       FeatureFlag.flashcardsEnabled => 'flashcards_enabled',
       FeatureFlag.aiSuggestionsEnabled => 'ai_suggestions_enabled',
+      FeatureFlag.adsMasterEnabled => 'ads_master_enabled',
+      FeatureFlag.bannerAdsEnabled => 'banner_ads_enabled',
+      FeatureFlag.interstitialAdsEnabled => 'interstitial_ads_enabled',
+      FeatureFlag.rewardedAdsEnabled => 'rewarded_ads_enabled',
+      FeatureFlag.duolingoAdWindowEnabled => 'duolingo_ad_window_enabled',
+      FeatureFlag.premiumStoreEnabled => 'premium_store_enabled',
     };
   }
 }

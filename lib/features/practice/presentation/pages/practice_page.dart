@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../shared/shared.dart';
 import '../../../auth/auth.dart';
+import '../../../monetization/monetization.dart';
 import '../cubit/practice_cubit.dart';
 import '../cubit/practice_state.dart';
 import '../widgets/widgets.dart';
@@ -30,22 +31,37 @@ class _PracticePageState extends State<PracticePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<CurriculumCubit, CurriculumState>(
-      listenWhen: (prev, curr) => prev.curriculum != curr.curriculum,
-      listener: (context, state) {
-        final curr = state.curriculum;
-        if (curr != null) {
-          context.read<PracticeCubit>().loadSubjects(
-            curr.boardId,
-            curr.gradeId,
-          );
-          context.read<PracticeCubit>().resetQuizWithCurriculum(
-            curr.curriculumKey,
-            curr.boardId,
-            curr.gradeId,
-          );
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<CurriculumCubit, CurriculumState>(
+          listenWhen: (prev, curr) => prev.curriculum != curr.curriculum,
+          listener: (context, state) {
+            final curr = state.curriculum;
+            if (curr != null) {
+              context.read<PracticeCubit>().loadSubjects(
+                curr.boardId,
+                curr.gradeId,
+              );
+              context.read<PracticeCubit>().resetQuizWithCurriculum(
+                curr.curriculumKey,
+                curr.boardId,
+                curr.gradeId,
+              );
+            }
+          },
+        ),
+        BlocListener<PracticeCubit, PracticeState>(
+          listenWhen: (prev, curr) =>
+              prev.status != curr.status &&
+              curr.status == PracticeStatus.completed,
+          listener: (context, state) {
+            // Notify monetization layer of completed study activity
+            context.read<AdCubit>().notifyStudyActionCompleted(
+                  potentialPlacement: AdPlacement.postQuizInterstitial,
+                );
+          },
+        ),
+      ],
       child: BlocBuilder<AuthCubit, AuthState>(
         buildWhen: (prev, curr) => prev.user != curr.user,
         builder: (context, authState) {

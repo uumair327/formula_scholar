@@ -152,4 +152,18 @@ abstract final class AppLogTags {
   static const String studyPlannerDataSource = 'StudyPlannerDataSource';
   static const String studyPlannerCache = 'StudyPlannerCache';
   static const String studyPlannerUseCase = 'StudyPlannerUseCase';
+
+  // ──────────────────────── Monetization & Ads ────────────────────
+  static const String adCubit = 'AdCubit';
+  static const String adRepo = 'AdRepo';
+  static const String adDataSource = 'AdDataSource';
+  static const String adService = 'AdService';
+  static const String adUseCase = 'AdUseCase';
+  static const String duolingoAd = 'DuolingoAd';
+  static const String premiumCubit = 'PremiumCubit';
+  static const String premiumRepo = 'PremiumRepo';
+  static const String premiumDataSource = 'PremiumDataSource';
+  static const String premiumService = 'PremiumService';
+  static const String premiumUseCase = 'PremiumUseCase';
+  static const String premiumPaywall = 'PremiumPaywall';
 }

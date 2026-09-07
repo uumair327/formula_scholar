@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/core.dart';
-
 import '../../../auth/auth.dart';
+import '../../../monetization/monetization.dart';
 import '../cubit/profile_cubit.dart';
 import '../cubit/profile_state.dart';
 import '../widgets/account/delete_account_dialog.dart';
@@ -183,6 +183,12 @@ class ProfilePage extends StatelessWidget {
         ),
       ),
       actions: [
+        const Center(
+          child: Padding(
+            padding: EdgeInsetsDirectional.only(end: AppDimensions.paddingSM),
+            child: PremiumBadgeChip(),
+          ),
+        ),
         Container(
           margin: const EdgeInsetsDirectional.only(
             end: AppDimensions.paddingSM,
